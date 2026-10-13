@@ -58,6 +58,7 @@ let recorder:RunRecorder|null=null,replay:ReplayPlayer|null=null,lastRun:Recorde
 let friends:FriendsSession|null=null;let friendsOpen=false;const lobbyBrowser=new LobbyBrowser();let lobbyStarted=false;let lobbyCrewCount=1;let receivedEpoch=-1;let lastSnapshotAt=0;
 const buttonEdges:{button:'fire'|'homing'|'jump';held:boolean}[]=[];let sampledFire=false,sampledHoming=false,sampledJump=false;let capturingMouse=false,captureTicket=0;
 let previousPad:ReturnType<typeof controllerState>|null=null;let activePadIndex:number|null=null;let padFire=false,padHoming=false,padJump=false;
+let waitingForController=false;
 let movement={forward:0,strafe:0,jump:false},controllerDown=false,controllerFast=false;
 let blockedPadJump=true,blockedPadFire=true,blockedPadHoming=true;
 const format=(time:number)=>time.toFixed(3);
@@ -83,7 +84,7 @@ function startRun(setup:RunSetup=DEFAULT_SETUP) {music.unlock();
   if(!renderer.originalEnemies.ready||!renderer.originalWeapon.ready)return;
   const previewParams=new URLSearchParams(location.search),previewHand=Number(previewParams.get('hand-preview'));const devPreview=import.meta.env.DEV&&((previewHand>=1&&previewHand<=4)||ENEMY_KINDS.includes(previewParams.get('enemy-preview') as typeof ENEMY_KINDS[number]));
   if(!devPreview&&setup.time===0&&setup.level===1&&setup.reserve===0&&!profile.configured){openProfile('start');return;}
-  runNickname=profile.name;runAutomatic=profile.automatic;lastRun=null;resetDeathAnalysis();
+  waitingForController=false;runNickname=profile.name;runAutomatic=profile.automatic;lastRun=null;resetDeathAnalysis();
   renderer.clear();sound.clear();renderer.topDown=false;replay=null;const seed=crypto.getRandomValues(new Uint32Array(1))[0];world=createRun(seed,setup);recorder=new RunRecorder(seed,setup);practice=setup.time!==0||setup.level!==1||setup.reserve!==0;historyOpen=false;leaderboardOpen=false;
   if(import.meta.env.DEV){const preview=Number(new URLSearchParams(location.search).get('hand-preview'));if(preview>=1&&preview<=4){practice=true;world.level=preview;world.stats.collected=preview===1?0:preview===2?10:70;world.reserve=preview===4?150:preview===3?50:0;}}
   if(import.meta.env.DEV){const preview=new URLSearchParams(location.search).get('enemy-preview');const kinds=ENEMY_KINDS;if(kinds.includes(preview as typeof kinds[number])){practice=true;const kind=preview as typeof kinds[number];const y=kind==='leviathan'?15:kind==='orb'?5:kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?7:kind==='spider'?1.65:kind==='centipede'?3:1;world.player.pos.z=-14;const e=world.spawn(kind,{x:0,y,z:-26});e.age=kind==='spider2'?9.5:kind==='leviathan'?9:kind==='orb'?7:isSpider(kind)||isPede(kind)||kind==='thorn'?3.5:1.2;if(isSpider(kind))e.headExposure=1;if(kind.startsWith('squid')){e.phase=Math.PI;}}}
@@ -96,13 +97,15 @@ function enterArena(){
   entrance=false;entranceRun=null;world=createRun(seed,setup);recorder=new RunRecorder(seed,setup);
   yaw=0;pitch=0;clearInput();deathHistory.reset();deathHistory.capture(world,yaw,pitch,true,input.fire||input.homing);renderer.clear();sound.clear();showPanels();void sound.collectDagger(best);notice('KEEP MOVING. RELEASE FIRE TO COLLECT.',4);
 }
-function resume() {music.unlock();if(!world||profileOpen||leaderboardOpen||historyOpen||friendsOpen)return;clearInput();(document.activeElement as HTMLElement|null)?.blur();mode='playing';settingsOpen=false;accumulator=0;last=performance.now();showPanels();if(entrance)void sound.prepareEntrance(best);else void sound.start();void captureMouse();}
-function home() {resetDeathAnalysis(true);entrance=false;entranceRun=null;leaveMobileFullscreen();spectator.reset();leaderboardOpen=false;friends?.close();friends=null;friendsOpen=false;replay=null;recorder=null;renderer.topDown=false;historyOpen=false;mode='menu';world=null;settingsOpen=false;clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();sound.pause();updateBest();showPanels();}
+function resume() {music.unlock();if(!world||profileOpen||leaderboardOpen||historyOpen||friendsOpen)return;
+  if(settings.controlScheme==='controller'&&!readControllers().pad){waitingForController=true;clearInput();return;}
+  waitingForController=false;clearInput();(document.activeElement as HTMLElement|null)?.blur();mode='playing';settingsOpen=false;accumulator=0;last=performance.now();showPanels();if(entrance)void sound.prepareEntrance(best);else void sound.start();void captureMouse();}
+function home() {waitingForController=false;resetDeathAnalysis(true);entrance=false;entranceRun=null;leaveMobileFullscreen();spectator.reset();leaderboardOpen=false;friends?.close();friends=null;friendsOpen=false;replay=null;recorder=null;renderer.topDown=false;historyOpen=false;mode='menu';world=null;settingsOpen=false;clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();sound.pause();updateBest();showPanels();}
 function paused() {
   if(mode!=='playing')return;
   // Browser interruptions release held controls, but multiplayer never pauses.
   if(friends){friends.releaseControls();clearInput();return;}
-  mode='paused';accumulator=0;clearInput();document.exitPointerLock?.();sound.pause();showPanels();
+  waitingForController=false;mode='paused';accumulator=0;clearInput();document.exitPointerLock?.();sound.pause();showPanels();
 }
 function death() {
   if(!world)return;mode='dead';clearInput();document.exitPointerLock?.();
@@ -385,25 +388,33 @@ function controllerMenu(state:ReturnType<typeof controllerState>,previous:Return
  }
  if(edge('jump')){focusControl(target);if(target instanceof HTMLInputElement&&target.type==='checkbox'){target.checked=!target.checked;target.dispatchEvent(new Event('change'));}else if(target instanceof HTMLButtonElement||target.tagName==='SUMMARY')target.click();}
 }
+function readControllers(){
+ let pads:(Gamepad|null)[]=[],unavailable=!navigator.getGamepads;
+ try{pads=Array.from(navigator.getGamepads?.()??[]);}catch{unavailable=true;}
+ const standard=pads.filter((p):p is Gamepad=>!!p?.connected&&p.mapping==='standard');
+ return {pads,standard,unavailable,pad:standard.find(p=>p.index===activePadIndex)??standard[0]};
+}
 function pollController(dt:number){
  movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;
- let pads:(Gamepad|null)[]=[];try{pads=Array.from(navigator.getGamepads?.()??[]);}catch{/* API may be blocked by browser permissions. */}
- const standard=pads.filter((p):p is Gamepad=>!!p?.connected&&p.mapping==='standard');
+ const {pads,standard,unavailable}=readControllers();
  let pad=standard.find(p=>p.index===activePadIndex);
  if(!pad&&activePadIndex!==null){
   if(settings.controlScheme==='controller'&&mode==='playing'){paused();notice('CONTROLLER DISCONNECTED · RECONNECT TO RETURN',5);}
   activePadIndex=null;previousPad=null;
  }
  pad??=standard[0];
- const status=pad?`Connected · ${pad.id}`:pads.some(p=>p?.connected)?'This controller has no standard mapping. Use a standard Xbox / PlayStation compatible controller.':'Connect a controller and press a button to detect it.';
+ const status=pad?`Connected · ${pad.id}`:unavailable?'This browser is not allowing controller access. Open the game directly in a browser with controller support.':pads.some(p=>p?.connected)?'This controller has no standard mapping. Use a standard Xbox / PlayStation compatible controller.':'Connect a controller and press a button to detect it.';
  if($('controller-status').textContent!==status)$('controller-status').textContent=status;
- if(!pad){if(settings.controlScheme==='controller'&&mode==='playing'){paused();notice('CONNECT A CONTROLLER OR CHOOSE KEYBOARD CONTROLS',5);}previousPad=null;return;}
+ const pauseMessage=settings.controlScheme==='controller'?pad?'Your run is paused. Press Start / Options or Return to resume.':`${status} ${waitingForController?'The game will continue once detected.':'Then press Return to resume.'} You can also choose keyboard controls in Settings.`:'Your run is paused.';
+ if(!friends&&$('pause').querySelector('p')!.textContent!==pauseMessage)$('pause').querySelector('p')!.textContent=pauseMessage;
+ if(!pad){if(settings.controlScheme==='controller'&&mode==='playing'){paused();waitingForController=!friends;}previousPad=null;return;}
  const state=controllerState(pad,settings.controllerDeadzone),previous=previousPad;previousPad=state;
- // Detecting or replacing a controller establishes a baseline; the wake-up
- // button must not also activate a menu or resume a run.
+ // Establish a baseline so the detection button cannot activate menus or
+ // become a held gameplay action. Connection waits resume on a later frame.
  if(activePadIndex!==pad.index){activePadIndex=pad.index;if(settings.controlScheme==='controller')clearInput();return;}
  if(!state.jump)blockedPadJump=false;if(!state.fire)blockedPadFire=false;if(!state.homing)blockedPadHoming=false;
  if(document.hidden||!document.hasFocus())return;
+ if(waitingForController&&settings.controlScheme==='controller'&&mode==='paused'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!historyOpen&&!friendsOpen){resume();return;}
  if(controlMenuRoot()){
   if(state.pause&&!previous?.pause&&mode==='paused'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!historyOpen&&!friendsOpen){resume();return;}
   controllerMenu(state,previous);return;
@@ -421,7 +432,7 @@ function setupSettings() {
     const el=$<HTMLInputElement>(name);el.value=String(settings[name]);$(name+'-value').textContent=(name==='volume'||name==='musicVolume')?`${settings[name]}%`:String(settings[name]);
     el.oninput=()=>{settings[name]=Number(el.value);$(name+'-value').textContent=(name==='volume'||name==='musicVolume')?`${el.value}%`:el.value;saveStore('abyss-settings',settings);sound.setVolume(settings.volume/100);music.setVolume(settings.musicVolume/100);renderer.configure(settings);};
   }
-  const scheme=$<HTMLSelectElement>('control-scheme');scheme.value=settings.controlScheme;scheme.onchange=()=>{settings.controlScheme=scheme.value as ControlScheme;clearInput();saveStore('abyss-settings',settings);updateControlHints();};updateControlHints();
+  const scheme=$<HTMLSelectElement>('control-scheme');scheme.value=settings.controlScheme;scheme.onchange=()=>{settings.controlScheme=scheme.value as ControlScheme;waitingForController=false;clearInput();saveStore('abyss-settings',settings);updateControlHints();};updateControlHints();
   const q=$<HTMLSelectElement>('quality');q.value=settings.quality;q.onchange=()=>{settings.quality=q.value;saveStore('abyss-settings',settings);renderer.configure(settings);};
   const cues=$<HTMLInputElement>('threat-cues');cues.checked=settings.threatCues;cues.onchange=()=>{settings.threatCues=cues.checked;saveStore('abyss-settings',settings);};
 }
