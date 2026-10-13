@@ -1,3 +1,5 @@
+import {touchesPede} from './pede-contact';
+import {initializeGigapede,updateGigapede,type GigapedeMotion} from './gigapede-motion';
 import {updateCentipede as updateLegacyCentipede} from './legacy-centipede-motion';
 import {initializeCentipede,updateCentipede,type CentipedeMotion} from './centipede-motion';
 import {armorBounds,sweepArmor} from './projectile-collision';
@@ -22,14 +24,14 @@ export const v=(x=0,y=0,z=0):Vec=>({x,y,z});
 export const distance=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 export function direction(a:Vec,b:Vec):Vec{const d=Math.max(distance(a,b),.001);return v((b.x-a.x)/d,(b.y-a.y)/d,(b.z-a.z)/d);}
 const clamp=(n:number,lo:number,hi:number)=>Math.max(lo,Math.min(hi,n));
-export type Enemy={id:number;kind:EnemyKind;pos:Vec;hp:number;age:number;phase:number;nextSpawn:number;radius:number;gems:number;eaten:number;segments:{pos:Vec;hp:number}[];weakpoints:{local:Vec;hp:number}[];vel:Vec;headExposure:number;lastHit:number;duckUntil:number;pendingDuck:boolean;nextMove:number;orbitSpeed:number;radialOffset:number;facingYaw:number;towerSpinDirection?:number;spawnRadius?:number;towerEntrance?:{born:number;elapsed:number};towerEmission?:{born:number;burst:number;index:number};eggCooldown:number;target:Vec;status:'emerging'|'idle'|'hunting'|'burrowing';statusUntil:number;activeAt:number;nextBeckon:number;size:number;centipedeMotion?:CentipedeMotion;towerFlight?:{gravity:number;height:number;descentSpeed:number;agility:number;curl:number}};
+export type Enemy={id:number;kind:EnemyKind;pos:Vec;hp:number;age:number;phase:number;nextSpawn:number;radius:number;gems:number;eaten:number;segments:{pos:Vec;hp:number}[];weakpoints:{local:Vec;hp:number}[];vel:Vec;headExposure:number;lastHit:number;duckUntil:number;pendingDuck:boolean;nextMove:number;orbitSpeed:number;radialOffset:number;facingYaw:number;towerSpinDirection?:number;spawnRadius?:number;towerEntrance?:{born:number;elapsed:number};towerEmission?:{born:number;burst:number;index:number};eggCooldown:number;target:Vec;status:'emerging'|'idle'|'hunting'|'burrowing';statusUntil:number;activeAt:number;nextBeckon:number;size:number;centipedeMotion?:CentipedeMotion;gigapedeMotion?:GigapedeMotion;towerFlight?:{gravity:number;height:number;descentSpeed:number;agility:number;curl:number}};
 export type Projectile={shotKey?:string;id:number;pos:Vec;previous?:Vec;vel:Vec;age:number;homing:boolean;level?:number;energy?:number;floorBounces?:number;path?:{pos:Vec;t:number}[]};
 export type Gem={id:number;pos:Vec;vel:Vec;age:number};
 export type Ring={id:number;owner:number;pos:Vec;radius:number;previous:number;age:number};
 export type Effect={bloodId?:number;bloodTime?:number;bloodSources?:Vec[];bloodSegment?:boolean;shotKey?:string;networkId?:number;shooterId?:string;deathCause?:string;kind:'shot'|'burst'|'hit'|'kill'|'pickup'|'upgrade'|'spawn'|'jump'|'death'|'egg'|'beckon'|'transmute'|'explosion'|'land'|'impact'|'ricochet'|'pierce'|'eat'|'bounce'|'hatch'|'burrow'|'emerge';pos:Vec;amount?:number;enemy?:EnemyKind;enemyId?:number;level?:number;direction?:Vec;muzzles?:Vec[]};
 export type Input={forward:number;strafe:number;yaw:number;pitch:number;jump:boolean;fire:boolean;homing:boolean};
 export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});
-export type WorldOptions={legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
+export type WorldOptions={legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
@@ -101,6 +103,7 @@ export class World {
    for(let i=0;i<spec.gems;i++)e.segments.push({pos:v(pos.x+tail.x*(i+1)*1.3*size,-5,pos.z+tail.z*(i+1)*1.3*size),hp:spec.hp/spec.gems});
   }
   if(kind==='centipede'&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit&&!this.options.legacyCentipedeCycle)initializeCentipede(e);
+  if(kind==='gigapede'&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit&&!this.options.legacyGigapedeMotion)initializeGigapede(e);
   if(isSquid(kind)&&!this.options.legacySpawnFixes){e.towerEmission={born:this.time,burst:0,index:0};e.nextSpawn=184/60;}
   if(!this.options.legacyEnemyFloor)constrainEnemyFloor(e,this.time);
   this.enemies.push(e);if(announce)this.emit('spawn',e.pos,undefined,kind);return e;
@@ -128,7 +131,7 @@ export class World {
  die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
   // A dagger or transmutation ring can change/remove the killer later this tick.
   // Preserve its lethal presentation once, without retaining mutable AI history.
-  this.deathEnemy={...enemy,pos:{...enemy.pos},vel:{...enemy.vel},target:{...enemy.target},segments:enemy.segments.map(s=>({pos:{...s.pos},hp:s.hp})),weakpoints:enemy.weakpoints.map(p=>({local:{...p.local},hp:p.hp})),centipedeMotion:undefined,towerFlight:enemy.towerFlight?{...enemy.towerFlight}:undefined};
+  this.deathEnemy={...enemy,pos:{...enemy.pos},vel:{...enemy.vel},target:{...enemy.target},segments:enemy.segments.map(s=>({pos:{...s.pos},hp:s.hp})),weakpoints:enemy.weakpoints.map(p=>({local:{...p.local},hp:p.hp})),centipedeMotion:undefined,gigapedeMotion:undefined,towerFlight:enemy.towerFlight?{...enemy.towerFlight}:undefined};
  }this.emit('death',this.player.pos);}
  step(input:Input,dt=STEP){
   if(this.state!=='playing')return;this.playerStarts.clear();this.tick++;this.time+=dt;this.radius=arenaRadius(this.time);
@@ -267,7 +270,7 @@ export class World {
   const cells=new Map<string,Enemy[]>();for(const e of this.enemies){const key=`${Math.floor(e.pos.x/3)},${Math.floor(e.pos.z/3)}`;const cell=cells.get(key)||[];cell.push(e);cells.set(key,cell);}
   for(const e of [...this.enemies]){
    if(this.crew.length){const target=this.crew.filter(p=>p.alive).sort((a,b)=>distance(a.player.pos,e.pos)-distance(b.player.pos,e.pos))[0];if(!target)break;this.useCrew(target);}
-   if(e.hp<=0)continue;const wasActive=this.active(e),previous={...e.pos},segmentsBefore=e.segments.map(s=>({...s.pos}));e.age+=dt;
+   if(e.hp<=0)continue;const wasActive=this.active(e),previous={...e.pos},velocityBefore={...e.vel},segmentsBefore=e.segments.map(s=>({...s.pos}));e.age+=dt;
    if(isSquid(e.kind)){
     if(e.towerEntrance){
      const motion=e.towerEntrance,elapsed=Math.max(0,this.time-motion.born),before=towerEntrancePose(e.kind,motion.elapsed),after=towerEntrancePose(e.kind,elapsed);
@@ -309,6 +312,14 @@ export class World {
       const start=wasActive?previous:e.pos,from=base(start),to=base(e.pos);
       return touchesPlayer(from,to,playerBefore,player.pos,e.radius,Math.max(start.y-from.y,e.pos.y-to.y));
      }
+     if(isPede(e.kind)&&!this.options.legacyPedeContact){
+      const start=wasActive?previous:e.pos,forward=wasActive?velocityBefore:e.vel;
+      if(touchesPede(start,e.pos,forward,e.vel,playerBefore,player.pos,e.size,true))return true;
+      contactSegment=e.segments.findIndex((s,i)=>{
+       const from=wasActive?segmentsBefore[i]:s.pos,leadBefore=i===0?start:wasActive?segmentsBefore[i-1]:e.segments[i-1].pos,lead=i===0?e.pos:e.segments[i-1].pos;
+       return touchesPede(from,s.pos,v(leadBefore.x-from.x,leadBefore.y-from.y,leadBefore.z-from.z),v(lead.x-s.pos.x,lead.y-s.pos.y,lead.z-s.pos.z),playerBefore,player.pos,e.size);
+      });return contactSegment>=0;
+     }
      if(touchesPlayer(wasActive?previous:e.pos,e.pos,playerBefore,player.pos,e.radius*growing,e.kind==='thorn'?7:0))return true;
      contactSegment=e.segments.findIndex((s,i)=>touchesPlayer(wasActive?segmentsBefore[i]:s.pos,s.pos,playerBefore,player.pos,e.size*.8));return contactSegment>=0;
     };
@@ -333,6 +344,9 @@ export class World {
   }
  }
  private updatePede(e:Enemy,dt:number){
+  if(e.kind==='gigapede'&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit&&!this.options.legacyGigapedeMotion){
+   updateGigapede(e,dt,this.player.pos,floorHeight(e.pos.x,e.pos.z,this.time,0),(kind,pos)=>this.emit(kind==='dust'?'spawn':kind,pos,kind==='dust'?-1:undefined,e.kind));return;
+  }
   if(e.kind==='centipede'&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit&&!this.options.legacyCentipedeCycle){
    (this.options.legacyCentipedeArc?updateLegacyCentipede:updateCentipede)(e,dt,{radius:this.radius,players:this.crew.length?this.crew.filter(p=>p.alive).map(p=>p.player.pos):[this.player.pos],floor:(x,z)=>floorHeight(x,z,this.time,0),random:()=>this.random(),emit:(kind,pos)=>this.emit(kind==='dust'?'spawn':kind,pos,kind==='dust'?-1:undefined,e.kind)});return;
   }
