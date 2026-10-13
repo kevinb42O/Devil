@@ -89,33 +89,56 @@ export class MqttWsSignalingClient {
           ws.send(packet);
         };
 
+        let pending = new Uint8Array(0);
         ws.onmessage = (event) => {
           if (this.ws !== ws || this.closed) return;
-          const buffer = event.data instanceof ArrayBuffer
+          const incoming = event.data instanceof ArrayBuffer
             ? new Uint8Array(event.data)
             : new Uint8Array(event.data.buffer || event.data);
-          if (buffer.length === 0) return;
-
-          const packetType = buffer[0] >> 4;
-          if (packetType === 2) { // CONNACK
-            // A CONNACK also carries refusals (e.g. server unavailable).
-            // Only return code zero means subscriptions/publications can run.
-            // Treating a refusal as success discards queued lobby heartbeats.
-            if (buffer.length < 4 || buffer[3] !== 0) {
-              clearTimeout(timeout);
-              settle(false);
+          if (incoming.length === 0) return;
+          const combined = new Uint8Array(pending.length + incoming.length);
+          combined.set(pending);
+          combined.set(incoming, pending.length);
+          pending = combined;
+          // MQTT is a packet stream. A WebSocket message may contain multiple
+          // packets or only part of one; dispatch only complete packet slices.
+          while (pending.length > 1) {
+            let offset = 1, remaining = 0, multiplier = 1, completeLength = false;
+            while (offset < pending.length && offset <= 4) {
+              const byte = pending[offset++];
+              remaining += (byte & 127) * multiplier;
+              if (!(byte & 128)) { completeLength = true; break; }
+              multiplier *= 128;
+            }
+            if ((!completeLength && offset > 4) || remaining > 1024 * 1024) {
+              pending = new Uint8Array(0);
               ws.close();
               return;
             }
-            clearTimeout(timeout);
-            this.connected = true;
-            this.connecting = false;
-            this.startPing();
-            this.resubscribeAll();
-            this.flushQueue();
-            settle(true);
-          } else if (packetType === 3) { // PUBLISH
-            this.handlePublishPacket(buffer);
+            if (!completeLength || pending.length < offset + remaining) break;
+            const buffer = pending.subarray(0, offset + remaining);
+            pending = pending.slice(offset + remaining);
+            const packetType = buffer[0] >> 4;
+            if (packetType === 2) { // CONNACK
+              // A CONNACK also carries refusals (e.g. server unavailable).
+              // Only return code zero means subscriptions/publications can run.
+              // Treating a refusal as success discards queued lobby heartbeats.
+              if (buffer.length < 4 || buffer[3] !== 0) {
+                clearTimeout(timeout);
+                settle(false);
+                ws.close();
+                return;
+              }
+              clearTimeout(timeout);
+              this.connected = true;
+              this.connecting = false;
+              this.startPing();
+              this.resubscribeAll();
+              this.flushQueue();
+              settle(true);
+            } else if (packetType === 3) { // PUBLISH
+              this.handlePublishPacket(buffer);
+            }
           }
         };
 
