@@ -1,5 +1,6 @@
 import {ENTRANCE_SPAWN,ENTRANCE_SEAL,touchesEntranceSeal} from './entrance-layout';
 import {MobileControls} from './mobile-controls';
+import {fullscreenElement,fullscreenAvailable,enterFullscreen,exitFullscreen,fullscreenEvents,setupFullscreenMenu} from './fullscreen';
 import {gameViewport,gamePoint} from './game-viewport';
 import { keyboardMovement, controllerState, type ControlScheme } from './controls';
 import '@fontsource/pirata-one/latin-400.css';
@@ -302,7 +303,7 @@ function updateMobileLayout(){
 }
 async function enterMobileFullscreen(){
  try{
-  if(!document.fullscreenElement&&document.documentElement.requestFullscreen){await document.documentElement.requestFullscreen({navigationUI:'hide'});mobileFullscreen=true;}
+  if(!fullscreenElement()&&fullscreenAvailable()){await enterFullscreen();mobileFullscreen=true;}
   if(settings.controlScheme!=='mobile'||mode!=='playing'){leaveMobileFullscreen();return;}
   const orientation=screen.orientation as ScreenOrientation&{lock?:(orientation:string)=>Promise<void>};if(orientation?.lock){await orientation.lock('landscape');mobileOrientationLocked=true;}
  }catch{/* CSS landscape fallback also works without fullscreen/orientation APIs. */}
@@ -313,7 +314,7 @@ async function enterMobileFullscreen(){
 }
 function leaveMobileFullscreen(){
  if(mobileOrientationLocked){mobileOrientationLocked=false;try{screen.orientation?.unlock();}catch{/* Unsupported or restricted API. */}}
- if(mobileFullscreen){mobileFullscreen=false;if(document.fullscreenElement)void document.exitFullscreen().catch(()=>{});}
+ if(mobileFullscreen){mobileFullscreen=false;if(fullscreenElement())void exitFullscreen().catch(()=>{});}
 }
 function sampleMobileInput(){
  if(mode!=='playing'||controlMenuRoot())return;
@@ -342,7 +343,7 @@ function setupMobileControls(){
  const cancelled=(event:PointerEvent)=>{if(settings.controlScheme==='mobile'&&mobileControls.end(event.pointerId,performance.now(),true))paused();};
  canvas.addEventListener('pointercancel',cancelled);canvas.addEventListener('lostpointercapture',cancelled);
  window.addEventListener('resize',()=>{if(settings.controlScheme==='mobile'){if(mobileControls.active)paused();updateMobileLayout();}});
- document.addEventListener('fullscreenchange',()=>{if(settings.controlScheme==='mobile'){updateMobileLayout();if(mobileFullscreen&&!document.fullscreenElement){mobileFullscreen=false;paused();}}});
+ for(const event of fullscreenEvents)document.addEventListener(event,()=>{if(settings.controlScheme==='mobile'){updateMobileLayout();if(mobileFullscreen&&!fullscreenElement()){mobileFullscreen=false;paused();}}});
 }
 
 function updateControlHints(){
@@ -466,6 +467,7 @@ function setupFriends(){
  $('friends-start').onclick=()=>{if(friends?.role==='host'&&friends.allReady){friends.start();beginCrew(true);}};
 }
 function init() {
+  setupFullscreenMenu($<HTMLButtonElement>('fullscreen-toggle'),$('fullscreen-label'),$('fullscreen-status'));
   try {renderer=new GameRenderer($<HTMLCanvasElement>('game'),settings);}catch(error){$('error').hidden=false;$('error').textContent=`The arena could not initialize WebGL2. Enable hardware acceleration and use a current browser. ${error instanceof Error?error.message:''}`;return;}
   updateBest();showPanels();setupSettings();
   // Begin decoding on the first menu gesture, before a quick initial burst.

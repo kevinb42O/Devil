@@ -1,4 +1,11 @@
 /* ABYSS — black iron, bone, blood, and ritual fire. */
+.menu-tools{position:relative;display:flex;align-items:center;gap:24px}
+#fullscreen-toggle{display:flex;align-items:center;gap:10px;min-height:44px;padding:10px 14px;border:1px solid #89503977;background:#160e0bcc;color:#d5ac89;font:500 12px 'Barlow Condensed',sans-serif;letter-spacing:1.8px}
+#fullscreen-toggle:hover:not(:disabled),#fullscreen-toggle[aria-pressed="true"]{border-color:#e37248;color:#ffe2be;background:#482017}
+#fullscreen-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:square;flex:none}
+#fullscreen-status{position:absolute;right:0;top:calc(100% + 8px);width:min(320px,80vw);font-size:10px;line-height:1.5;color:#d5ac89;text-align:right}
+#fullscreen-status:empty{display:none}
+@media(max-width:600px){#menu header .brand b{display:none}.menu-tools{gap:10px}#fullscreen-toggle{font-size:10px;letter-spacing:1px;padding:10px;gap:8px}}
 :root{font-family:'DM Sans',sans-serif;color:#e9d9c0;background:#0b0706;font-synthesis:none;--muted:#aa9081;--lime:#ef7044;--red:#ff624c;--bone:#e9d9c0;--line:#79413266;--surface:#160e0b;--display:'Pirata One',Georgia,serif}
 *{box-sizing:border-box}body{margin:0;overflow:hidden}button,a,input,select{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer}button,a,input,select,summary{transition:color .18s,border-color .18s,background .18s,box-shadow .18s}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,.controller-focus{outline:2px solid #ffb16c!important;outline-offset:4px}[hidden]{display:none!important}button:disabled{opacity:.4;cursor:default}::selection{background:#a52d20;color:#fff0d8}*{scrollbar-width:thin;scrollbar-color:#713b2a #140c09}
 #game{position:fixed;inset:0;width:100%;height:100%;display:block}#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 58% 45%,transparent 25%,#10050260 75%,#070201a0 100%)}#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:#ff321925;transition:opacity .18s}
