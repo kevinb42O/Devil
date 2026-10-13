@@ -63,11 +63,23 @@ let movement={forward:0,strafe:0,jump:false},controllerDown=false,controllerFast
 let blockedPadJump=true,blockedPadFire=true,blockedPadHoming=true;
 const format=(time:number)=>time.toFixed(3);
 function updateBest() {$('best-menu').innerHTML=best?`${format(best)} <span>SECONDS</span>`:'— <span>SECONDS</span>';$('best-hud').textContent=format(best);}
-function showPanels() {music.setScene(analysisActive?'silent':entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('menu').hidden=mode!=='menu';$('hud').hidden=mode==='menu'||(entrance&&settings.controlScheme!=='mobile');$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
+function showPanels() {if(!friends||mode!=='playing')$('respawn-status').hidden=true;music.setScene(analysisActive?'silent':entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('menu').hidden=mode!=='menu';$('hud').hidden=mode==='menu'||(entrance&&settings.controlScheme!=='mobile');$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
+function crewRespawnStatus(player:World['crew'][number],time:number){
+  if(player.respawnAt===null)return player.cause||'DEAD';
+  const remaining=player.respawnAt-time;
+  return remaining>1e-7?`RESPAWNING IN ${Math.max(1,Math.ceil(remaining-1e-7))}s`:'Waiting for safe respawn…';
+}
+let spectatorLifeKey='';
 function syncSpectator(){
   const local=friends&&world?.crew.find(p=>p.id===friends!.localId);
   // A crew wipe freezes the free camera at its last position. Keep using it
   // behind the results panel so the view cannot snap to a corpse or show a hand.
+  const respawnStatus=$('respawn-status');
+  respawnStatus.hidden=!local||local.alive||world?.state!=='playing'||local.respawnAt===null;
+  respawnStatus.textContent=respawnStatus.hidden?'':crewRespawnStatus(local!,world!.time);
+  const lifeKey=local&&friends?`${friends.id}:${friends.epoch}:${local.life}`:'';
+  if(local?.alive&&lifeKey!==spectatorLifeKey&&local.life>0){yaw=local.input.yaw;pitch=local.input.pitch;clearInput();notice('RESPAWNED · 1s PROTECTION',1);}
+  spectatorLifeKey=lifeKey;
   if(local&&!local.alive){if(!spectator.position){spectator.start(local.player.pos);clearInput();}}else spectator.reset();
 }
 function clearInput() {mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
@@ -188,14 +200,14 @@ function frame(now:number) {
     while(accumulator>=STEP&&world.state==='playing'&&crewSteps++<12){
       if(active&&Date.now()>=friends.startAt){const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}}
       input.fire=active&&sampledFire;input.homing=active&&sampledHoming;input.jump=active&&sampledJump;
-      if(friends.role==='host')friends.step({...input});else if(active)friends.predict(world,{...input});accumulator-=STEP;
+      if(friends.role==='host')friends.step({...input});else if(active)friends.predict(world,{...input});syncSpectator();accumulator-=STEP;
     }
     if(friends.role==='host')world.selectCrew('host');
     for(const effect of world.effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}world.effects=[];
     syncSpectator();
     sound.listener(spectator.position??world.player.pos,yaw,pitch);if(cameraActive)sound.update(world);
     if(Date.now()<friends.startAt)notice(`CREW READY · STARTING IN ${Math.max(1,Math.ceil((friends.startAt-Date.now())/1000))}`,1);
-    $('crew-hud').textContent=`FRIENDS · ${world.crew.length}/4 · ${friends.role==='host'?'HOST':'GUEST'}\n`+world.crew.map((p,i)=>`${i+1}. ${p.id===friends!.localId?'YOU':friends!.members.find(m=>m.id===p.id)?.name??'FRIEND '+(i+1)} · ${p.alive?'ALIVE':p.cause||'DEAD'}`).join('\n');
+    $('crew-hud').textContent=`FRIENDS · ${world.crew.length}/4 · ${friends.role==='host'?'HOST':'GUEST'}\n`+world.crew.map((p,i)=>`${i+1}. ${p.id===friends!.localId?'YOU':friends!.members.find(m=>m.id===p.id)?.name??'FRIEND '+(i+1)} · ${p.alive?'ALIVE':p.cause==='DISCONNECTED'?'DISCONNECTED':world!.state==='playing'&&p.respawnAt!==null?crewRespawnStatus(p,world!.time):p.cause||'DEAD'}`).join('\n');
     const local=world.crew.find(p=>p.id===friends!.localId);if(local&&!local.alive&&world.state==='playing'){$('crew-hud').textContent+=settings.controlScheme==='mobile'?'\nSPECTATING':settings.controlScheme==='controller'?'\nSPECTATING · Left stick fly · Right stick look\nA / Cross up · LB / L1 down · L3 faster':`\nSPECTATING · ${settings.controlScheme==='azerty'?'ZQSD':'WASD'} fly · Mouse look\nSpace / E up · Ctrl down · Shift faster`;}
     if(friends.role==='guest'&&(now-lastSnapshotAt>1000||friends.diagnostics.predictionStalled)){$('crew-hud').textContent+='\nWaiting for host connection…';friends.releaseControls();clearInput();}
     if(world.state==='dead'&&mode!=='dead')death();
@@ -504,7 +516,7 @@ function init() {
   setupMobileControls();
   $('game').addEventListener('contextmenu',e=>e.preventDefault());
   // Read-only diagnostic surface for development smoke tests and frame profiling.
-  if(import.meta.env.DEV) Object.defineProperty(window,'abyss',{get:()=>({mode,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,position:p.player.pos})),running:friends.running}:null,audio:sound.diagnostics,music:music.diagnostics})});
+  if(import.meta.env.DEV) Object.defineProperty(window,'abyss',{get:()=>({mode,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,position:p.player.pos})),running:friends.running}:null,audio:sound.diagnostics,music:music.diagnostics})});
   updateControlHints();setupFriends();setupLeaderboard();
   requestAnimationFrame(frame);
 }

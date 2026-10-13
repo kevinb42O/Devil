@@ -2,7 +2,7 @@ import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{}),args:['--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
+const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{}),args:['--disable-features=WebRtcHideLocalIpsWithMdns','--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
 const url=process.env.GAME_URL||'http://127.0.0.1:5173';
 const errors=[];
 try{

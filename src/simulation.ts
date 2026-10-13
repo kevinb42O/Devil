@@ -17,6 +17,7 @@ import {HAND_MUZZLES,weaponMuzzle} from './weapon-origin';
 export {TIMELINE};export type {EnemyKind};
 /** Fixed-step combat. Reference counts/timers are separated from unmeasured movement/AI tuning. */
 export const STEP=1/120;
+export const CREW_RESPAWN_DELAY=15,CREW_RESPAWN_PROTECTION=1;
 export const TUNING={radius:arenaRadius(0),eyeHeight:1.7,speed:11,acceleration:100,airAcceleration:17,friction:8,gravity:26,jump:9,maxSpeed:18,projectileSpeed:70,gemLifetime:10,towerCrystalRadius:.63,towerDriftSpeed:.5};
 export type Vec={x:number;y:number;z:number};
 export type DeathSource={enemyId:number;kind:EnemyKind;segment:number;tick:number;time:number;player:Vec;contactBody:Vec};
@@ -34,10 +35,10 @@ export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,f
 export type WorldOptions={legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
-export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
+export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
 export class World {
  crew:CrewPlayer[]=[];private activeCrew:CrewPlayer|null=null;
- addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=4)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0},input:idleInput(),alive:true,cause:'',primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
+ addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=4)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0},input:idleInput(),alive:true,cause:'',respawnAt:null,life:0,protectedUntil:0,primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
  selectCrew(id:string){const p=this.crew.find(p=>p.id===id);if(p)this.useCrew(p);this.activeCrew=null;}
  private useCrew(p:CrewPlayer){this.activeCrew=p;this.player=p.player;this.primary=p.primary;this.secondary=p.secondary;this.wasJump=p.wasJump;this.lastShotTick=p.lastShotTick;this.level=p.level;this.reserve=p.reserve;}
  stepCrew(inputs:Map<string,Input>,dt=STEP,waiting=new Set<string>()){
@@ -45,7 +46,38 @@ export class World {
   for(const p of this.crew){if(!p.alive||waiting.has(p.id))continue;p.input=inputs.get(p.id)??idleInput();this.useCrew(p);this.move(p.input,dt);p.wasJump=this.wasJump;if(p.alive)this.weapon(p.input);p.lastShotTick=this.lastShotTick;p.level=this.level;p.reserve=this.reserve;}
   const alive=this.crew.filter(p=>p.alive);if(!alive.length){this.state='dead';this.cause='CREW LOST';return;}this.useCrew(alive[0]);
   this.advanceWorld(dt);this.updateGems(idleInput(),dt);this.selectCrew(this.crew[0].id);
-  if(!this.crew.some(p=>p.alive)){this.state='dead';this.cause='CREW LOST';}
+  if(!this.crew.some(p=>p.alive)){this.state='dead';this.cause='CREW LOST';return;}
+  this.respawnCrew();this.selectCrew(this.crew[0].id);
+ }
+
+ /** Resolve only after all damage: a team wipe always beats a pending revival. */
+ private respawnCrew(){
+  const survivors=this.crew.filter(p=>p.alive&&p.cause!=='DISCONNECTED');
+  for(const p of this.crew){
+   if(p.alive||p.cause==='DISCONNECTED'||p.respawnAt===null||this.time+1e-7<p.respawnAt)continue;
+   const targets=[...survivors].sort((a,b)=>distance(a.player.pos,p.player.pos)-distance(b.player.pos,p.player.pos));
+   for(const target of targets){
+    const anchor=target.player.pos,ground=floorHeight(anchor.x,anchor.z,this.time,0);
+    // A jumping teammate is valid; a body already below its floor is not.
+    if(anchor.y<Math.max(-8,ground+TUNING.eyeHeight-.25))continue;
+    let spawn:Vec|null=null;
+    for(const radius of [1.2,2.4,0]){
+     for(let i=0;i<(radius?8:1);i++){
+      const angle=target.input.yaw+i*Math.PI/4,x=anchor.x+Math.cos(angle)*radius,z=anchor.z+Math.sin(angle)*radius;
+      const heights=[[-.25,-.25],[-.25,.25],[.25,-.25],[.25,.25]].map(([dx,dz])=>floorHeight(x+dx,z+dz,this.time,0));
+      if(Math.min(...heights)<-8||Math.max(...heights)-Math.min(...heights)>.5)continue;
+      spawn=v(x,Math.max(...heights)+TUNING.eyeHeight,z);break;
+     }
+     if(spawn)break;
+    }
+    if(!spawn)continue;
+    p.player={pos:spawn,vel:v(),grounded:true,landedAt:-1000,hopPulse:0};
+    p.input={...idleInput(),yaw:target.input.yaw,pitch:target.input.pitch};
+    p.primary=channel();p.secondary=channel();p.wasJump=false;p.lastShotTick=-1;
+    p.alive=true;p.cause='';p.respawnAt=null;p.life++;p.protectedUntil=this.time+CREW_RESPAWN_PROTECTION;
+    break;
+   }
+  }
  }
 
  // Prediction runs only the local controller; shared enemies, pickups and damage
@@ -128,7 +160,7 @@ export class World {
   const y=kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?7:kind==='ghostpede'?9:isPede(kind)?3:1.5;
   return this.spawn(kind,v(Math.sin(angle)*r,y,Math.cos(angle)*r));
  }
- die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
+ die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(cause!=='FALLEN'&&this.time<this.activeCrew.protectedUntil)return;if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.activeCrew.respawnAt=this.time+CREW_RESPAWN_DELAY;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
   // A dagger or transmutation ring can change/remove the killer later this tick.
   // Preserve its lethal presentation once, without retaining mutable AI history.
   this.deathEnemy={...enemy,pos:{...enemy.pos},vel:{...enemy.vel},target:{...enemy.target},segments:enemy.segments.map(s=>({pos:{...s.pos},hp:s.hp})),weakpoints:enemy.weakpoints.map(p=>({local:{...p.local},hp:p.hp})),centipedeMotion:undefined,gigapedeMotion:undefined,towerFlight:enemy.towerFlight?{...enemy.towerFlight}:undefined};

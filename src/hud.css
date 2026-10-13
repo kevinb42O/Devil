@@ -1,5 +1,5 @@
-/* During a run, only elapsed time and the current hand remain visible. */
-#hud > :not(.hud-top):not(.hud-bottom),
+/* Minimal run HUD: time, current hand, collected gems and pending respawn. */
+#hud > :not(.hud-top):not(.hud-bottom):not(.economy):not(#respawn-status),
 #hud .hud-top > :not(#timer),
 #hud .hud-bottom > :not(.power),
 #hud .power small,
@@ -54,4 +54,40 @@
   margin: 0;
   font: 500 13px/1 'Barlow Condensed', sans-serif;
   letter-spacing: 1px;
+}
+
+#hud > .economy {
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#hud .economy > :not(.gem-icon):not(#gems) {
+  display: none;
+}
+
+#hud .economy .gem-icon {
+  width: 16px;
+  height: 22px;
+  flex: none;
+  filter: drop-shadow(0 0 4px #ed684d55);
+}
+
+#hud #gems {
+  font: 500 22px/1 'Barlow Condensed', sans-serif;
+  font-variant-numeric: tabular-nums;
+  color: #f3dbb8;
+}
+
+#hud #respawn-status {
+  position: absolute;
+  top: 46px;
+  left: 18px;
+  right: 18px;
+  text-align: center;
+  font: 500 14px/1.4 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+  color: #f3dbb8;
 }

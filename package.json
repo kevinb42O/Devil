@@ -49,7 +49,9 @@
     "test:death-analysis": "node tests/death-analysis-browser.mjs",
     "test:death-camera": "node tests/death-camera-browser.mjs",
     "test:death-controller": "node tests/death-analysis-controller.mjs",
-    "test:death-performance": "node tests/death-analysis-performance.mjs"
+    "test:death-performance": "node tests/death-analysis-performance.mjs",
+    "test:multiplayer-respawn": "tsx --test tests/multiplayer-respawn.test.ts && node tests/multiplayer-respawn-browser.mjs",
+    "test:gem-hud": "node tests/gem-hud-browser.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.3.0",

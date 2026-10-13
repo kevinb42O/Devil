@@ -36,6 +36,7 @@ try{
   if(scheme==='mobile'){await touch('touchStart',[left,right]);await touch('touchMove',[{...left,y:280},right]);}
   await page.waitForFunction(()=>window.abyss.stats.shots>0);await page.evaluate(()=>window.auditKill='host');
   await page.waitForFunction(()=>window.abyss.spectating&&document.querySelector('#phase').textContent==='SPECTATING');
+  assert.equal(await page.locator('#respawn-status').isVisible(),true);
   const dead=await page.evaluate(()=>({body:{...window.abyss.position},shots:window.abyss.stats.shots,camera:window.abyss.cameraPosition,time:window.abyss.time}));
   assert.equal(await page.evaluate(()=>window.auditHandHidden),true,scheme+' hides hand');
   assert.equal(await page.locator('#death-analysis').isVisible(),false);assert.equal(await page.locator('#death').isVisible(),false);
@@ -69,6 +70,30 @@ try{
   }
   assert.deepEqual(await page.evaluate(()=>window.abyss.position),dead.body,scheme+' keeps dead body frozen');
   assert.ok(await page.evaluate(()=>window.abyss.time)>dead.time,'survivor keeps the run alive');
+  // Advance the host clock to exercise revival with each real input scheme.
+  if(scheme==='azerty')await page.keyboard.down('KeyZ');
+  if(scheme==='controller')await page.evaluate(()=>{window.testPad.buttons[7].pressed=true;window.testPad.buttons[0].pressed=true;});
+  if(scheme==='mobile'){await touch('touchStart',[left,right]);await touch('touchMove',[{...left,y:280},right]);}
+  await page.evaluate(()=>{window.auditSession.world.time=window.auditSession.world.crew[0].respawnAt-.05;});
+  await page.waitForFunction(()=>window.abyss.friends.crew[0].life===1&&!window.abyss.spectating);
+  assert.equal(await page.locator('#respawn-status').isVisible(),false);
+  assert.equal(await page.evaluate(()=>window.auditHandHidden),false,scheme+' restores hand');
+  assert.equal(await page.evaluate(()=>window.abyss.input.fire),false,scheme+' clears held spectator firing');
+  assert.equal(await page.evaluate(()=>window.abyss.stats.shots),dead.shots);
+  if(scheme==='azerty')await page.keyboard.up('KeyZ');
+  if(scheme==='controller')await page.evaluate(()=>window.testPad.buttons.forEach(b=>b.pressed=false));
+  if(scheme==='mobile')await touch('touchEnd',[]);
+  await page.waitForTimeout(80);
+  const revivedPosition=await page.evaluate(()=>({...window.abyss.position}));
+  if(scheme==='azerty'){await page.keyboard.down('KeyZ');await page.mouse.down();}
+  if(scheme==='controller')await page.evaluate(()=>{window.testPad.axes[1]=-1;window.testPad.buttons[7].pressed=true;});
+  if(scheme==='mobile'){await touch('touchStart',[left,right]);await touch('touchMove',[{...left,y:280},right]);}
+  await page.waitForFunction(before=>Math.hypot(window.abyss.position.x-before.x,window.abyss.position.z-before.z)>.3&&window.abyss.stats.shots>0,revivedPosition);
+  if(scheme==='azerty'){await page.keyboard.up('KeyZ');await page.mouse.up();}
+  if(scheme==='controller')await page.evaluate(()=>{window.testPad.axes=[0,0,0,0];window.testPad.buttons.forEach(b=>b.pressed=false);});
+  if(scheme==='mobile')await touch('touchEnd',[]);
+  await page.evaluate(()=>{const w=window.auditSession.world;w.time=Math.max(w.time,w.crew[0].protectedUntil+.1);window.auditKill='host';});
+  await page.waitForFunction(()=>window.abyss.spectating);
   const beforeWipe=await page.evaluate(()=>window.abyss.cameraPosition);
   await page.evaluate(()=>window.auditKill='survivor');await page.waitForFunction(()=>window.abyss.mode==='dead');
   assert.deepEqual(await page.evaluate(()=>window.abyss.cameraPosition),beforeWipe,scheme+' keeps spectator view on wipe');
@@ -76,6 +101,6 @@ try{
   await page.click('#retry');await page.waitForFunction(()=>window.abyss.mode==='menu'&&!window.abyss.spectating);
   await page.click('#friends-ready');await page.click('#friends-start');await page.waitForFunction(()=>window.abyss.mode==='playing'&&window.abyss.time>.1);
   assert.equal(await page.evaluate(()=>window.abyss.spectating),false);assert.equal(await page.evaluate(()=>window.auditHandHidden),false);assert.equal(await page.evaluate(()=>window.auditRenderer.crewDeathPresentation.length),0);
-  assert.deepEqual(errors,[]);await context.close();console.log(`${scheme} spectator controls passed: death with held controls, flight, fixed body, no shooting/killcam, stable wipe and clean restart.`);
+  assert.deepEqual(errors,[]);await context.close();console.log(`${scheme} spectator controls passed: death with held controls, flight, fixed body, no shooting/killcam, revival, fresh movement/fire, stable wipe and clean restart.`);
  }
 }finally{await browser.close();}

@@ -3,8 +3,9 @@ import {STEP,TUNING,type Projectile,type Vec} from './simulation';
 import {encodePacket,decodePacket,presentationPrecision,NETWORK_PROTOCOL_VERSION} from './network-codec';
 import {packEnemy,unpackEnemy,sameEnemyState,type EnemyRow} from './network-enemies';
 type WorldEnemies=ArenaSnapshot['enemies'];
+type WireCrew=Omit<ArenaSnapshot['crew'][number],'life'|'respawnAt'|'protectedUntil'>&{life?:number;respawnAt?:number;protectedUntil?:number};
 export type StateBaseline={time:number;projectiles:Map<number,Projectile>;enemies:Map<number,EnemyRow>};
-export type WireState={version:typeof NETWORK_PROTOCOL_VERSION;frame:number;epoch:number;body:Omit<ArenaSnapshot,'projectiles'|'enemies'|'effects'>&{enemies:EnemyRow[]};creatures:{ids:number[];positions:Float32Array};flight:{base:number;ids:number[];updates:unknown[][]}};
+export type WireState={version:typeof NETWORK_PROTOCOL_VERSION;frame:number;epoch:number;body:Omit<ArenaSnapshot,'projectiles'|'enemies'|'effects'|'crew'>&{enemies:EnemyRow[];crew:WireCrew[]};creatures:{ids:number[];positions:Float32Array};flight:{base:number;ids:number[];updates:unknown[][]}};
 export function snapshotBaseline(s:ArenaSnapshot):StateBaseline{return {time:s.time,projectiles:new Map(s.projectiles.map(p=>[p.id,structuredClone(p)])),enemies:new Map(s.enemies.map(e=>[e.id,packEnemy(e)]))};}
 export function flightPosition(p:Projectile,dt:number):Vec{
  const gravity=p.floorBounces&&!p.homing?TUNING.gravity:0;
@@ -24,7 +25,7 @@ export function encodeState(s:ArenaSnapshot,frame:number,base:number,baseline?:S
   const gravity=old?.floorBounces&&!p.homing?TUNING.gravity:0;
   if(!old||elapsed>=.5||p.homing||p.floorBounces!==old.floorBounces||Math.abs(p.vel.x-old.vel.x)>.0001||Math.abs(p.vel.y-old.vel.y+gravity*elapsed)>.0001||Math.abs(p.vel.z-old.vel.z)>.0001||Math.abs(p.age-old.age-elapsed)>.02)updates.push(row(p,s.crew));
  }
- return encodePacket({version:NETWORK_PROTOCOL_VERSION,frame,epoch:s.epoch,body:{...body,enemies,gems:presentationPrecision(s.gems),rings:presentationPrecision(s.rings)},creatures:{ids:s.enemies.map((e,i)=>e.id-(i?s.enemies[i-1].id:0)),positions},flight:{base:baseline?base:0,ids:projectiles.map((p,i)=>p.id-(i?projectiles[i-1].id:0)),updates}} satisfies WireState);
+ return encodePacket({version:NETWORK_PROTOCOL_VERSION,frame,epoch:s.epoch,body:{...body,crew:s.crew.map(({life,respawnAt,protectedUntil,...p})=>({...p,life:life||undefined,respawnAt:respawnAt??undefined,protectedUntil:protectedUntil>s.time?protectedUntil:undefined})),enemies,gems:presentationPrecision(s.gems),rings:presentationPrecision(s.rings)},creatures:{ids:s.enemies.map((e,i)=>e.id-(i?s.enemies[i-1].id:0)),positions},flight:{base:baseline?base:0,ids:projectiles.map((p,i)=>p.id-(i?projectiles[i-1].id:0)),updates}} satisfies WireState);
 }
 export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>):{frame:number;snapshot:ArenaSnapshot}|null{
  const w=decodePacket(data) as WireState;
@@ -42,7 +43,7 @@ export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>)
   updates.set(id,{id,pos:{x,y,z},previous:{x,y,z},vel:{x:vx,y:vy,z:vz},age,homing:!!(flags&1),level:1+((flags>>1)&3),energy,floorBounces,shotKey:owner>=0&&w.body.crew[owner]?`${w.body.crew[owner].id}:${shot}:${index}`:undefined});
  }
  const projectiles:Projectile[]=[];const seen=new Set<number>();let id=0;for(const delta of w.flight.ids){if(!Number.isInteger(delta))throw Error('Invalid projectile delta');id+=delta;if(!Number.isInteger(id)||id<0||seen.has(id))throw Error('Invalid projectile identity');seen.add(id);let p=updates.get(id);if(!p){const old=baseline?.projectiles.get(id);if(!old)return null;const dt=w.body.time-baseline!.time;if(dt<0||dt>2)return null;p={...old,age:old.age+dt,pos:flightPosition(old,dt),vel:{...old.vel,y:old.vel.y-(old.floorBounces&&!old.homing?TUNING.gravity*dt:0)}};p.previous={...p.pos};}projectiles.push(p);}
- return {frame:w.frame,snapshot:{...w.body,effects:[],enemies,projectiles}};
+ return {frame:w.frame,snapshot:{...w.body,crew:w.body.crew.map(p=>({...p,life:p.life??0,respawnAt:p.respawnAt??null,protectedUntil:p.protectedUntil??0})),effects:[],enemies,projectiles}};
 }
 const MAGIC=0x41425933,CHUNK=1100,HEADER=20,GROUP=8,MAX_FRAMES=4;
 /** One XOR repair packet per eight chunks recovers isolated packet loss without

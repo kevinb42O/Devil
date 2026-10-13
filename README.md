@@ -53,7 +53,7 @@ Mobile mode uses invisible touch areas across the left and right halves of the a
 | Escape | Pause and release the mouse |
 | R after death | Retry immediately |
 
-Single-player deaths automatically replay the final five seconds with a smooth third-person camera following the killer, a ghost of your player, and a countdown to impact. The final view holds briefly before results appear. Falling deaths follow your descent. Press **R** or tap **Retry** at any point to start again; **Escape** / **Results** skips playback, and **Space** / **Pause** freezes it. **Watch death** on the results screen plays it again. Co-op retains its existing spectator and death flow.
+Single-player deaths automatically replay the final five seconds with a smooth third-person camera following the killer, a ghost of your player, and a countdown to impact. The final view holds briefly before results appear. Falling deaths follow your descent. Press **R** or tap **Retry** at any point to start again; **Escape** / **Results** skips playback, and **Space** / **Pause** freezes it. **Watch death** on the results screen plays it again. Co-op uses free-flight spectating and a 15-second teammate respawn countdown; a team wipe ends the run.
 
 One touch from an active enemy ends the run. Falling also ends it. Gems expire after ten seconds. Player attraction is automatic while both fire buttons are released, stops while either button is held, and also stays off on the tick a tap burst fires. Gems already moving retain their drift during firing; bursts push them away. Large spiders hover outside the arena, raise their heads (three seconds for I, nine for II), steal gems, and eject one egg per consumed gem onto the field. Each egg hatches five spiderlings after ten seconds. Continuous hits keep the head exposed; after a one-second gap it folds down. Travel, attraction strength, and animation curves remain prototype tuning.
 
@@ -111,9 +111,11 @@ See [ASSET_PREPARATION.md](ASSET_PREPARATION.md) and [ASSET_RESEARCH.md](ASSET_R
 
 Open **Public leaderboard** from the menu to see the top 100 shared solo Survival scores. Choose your nickname before the first run and enable automatic publication, or publish manually from the death screen. Every run shows its score status; failed saves remain queued for retry. Supabase stores each browser’s best published time; practice and multiplayer stay separate. See [LEADERBOARD.md](LEADERBOARD.md) for deployment, database access and score-verification limits.
 
+The bottom-right HUD shows a gem icon and the total gems collected in the current run, in both solo and co-op. Spending homing reserve does not reduce this total. Validate desktop and mobile placement with `npm run test:gem-hud`.
+
 ## Friends multiplayer
 
-The main menu includes browser-to-browser WebRTC cooperative survival for up to four players. Create a public lobby or join a visible lobby with one click. Every player presses READY, then the host starts the run. Every gem counts for every player. See [MULTIPLAYER.md](MULTIPLAYER.md) for online hosting and validation.
+The main menu includes browser-to-browser WebRTC cooperative survival for up to four players. Create a public lobby or join a visible lobby with one click. Every player presses READY, then the host starts the run. Every gem counts for every player. Dead players respawn after 15 seconds beside a living teammate, keeping weapon progression and gaining one second of protection from enemies. A full crew wipe ends the run. See [MULTIPLAYER.md](MULTIPLAYER.md) for online hosting and validation.
 
 Original music uses the bundled `menutheme.wav` in menus and `menuatmos.wav` in the entrance, with fades between screens. Arena play and replays are silent apart from game sounds. Music starts after a click, tap or key press, pauses while the tab is hidden, and has its own saved Music volume setting. Run `npm run test:music` against the development server to verify playback and transitions.
 
