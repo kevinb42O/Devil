@@ -22,6 +22,7 @@ export class OriginalEnemies {
  ready=false;error='';loaded:Promise<void>;templates=new Map<EnemyKind,THREE.Group>();segmentTemplate=new THREE.Group();gemGeometry!:THREE.BufferGeometry;gemMaterial!:THREE.Material;tileGeometry!:THREE.BufferGeometry;
  private geometry=new Map<string,THREE.BufferGeometry>();private materials=new Map<string,THREE.MeshBasicMaterial>();
  private segmentTemplates=new Map<EnemyKind,THREE.Group>();
+ private animationNodes=new WeakMap<THREE.Group,THREE.Object3D[]>();
  private orbMaterial!:THREE.ShaderMaterial;
  private armMaterial!:THREE.ShaderMaterial;private materialClock={value:0};
  constructor(){this.loaded=this.load().catch(error=>{this.error=String(error);console.error('Original enemy assets could not load:',error);});}
@@ -48,7 +49,13 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
   this.materials.get('crystal')!.color.setRGB(2.5,1.2,.8);
   for(const kind of ENEMY_KINDS)this.templates.set(kind,this.build(kind));
   for(const kind of ['centipede','gigapede','ghostpede'] as const)this.segmentTemplates.set(kind,this.buildSegment(kind));
-  this.segmentTemplate=this.buildSegment();this.gemGeometry=this.geometry.get('gib')!.clone().scale(.55,.55,.55);this.gemMaterial=this.materials.get('crystal')!;this.tileGeometry=this.geometry.get('tile2')!.clone().translate(0,-2.1,0).scale(CREATURE_SCALE,CREATURE_SCALE,CREATURE_SCALE);this.ready=true;
+  this.segmentTemplate=this.buildSegment();this.gemGeometry=this.geometry.get('gib')!.clone().scale(.55,.55,.55);this.gemMaterial=this.materials.get('crystal')!;this.tileGeometry=this.geometry.get('tile2')!.clone().translate(0,-2.1,0).scale(CREATURE_SCALE,CREATURE_SCALE,CREATURE_SCALE);
+  // Imported parts have fixed local transforms. Only the root and spider
+  // animation pivots need to compose their local matrices each frame.
+  for(const root of [...this.templates.values(),...this.segmentTemplates.values(),this.segmentTemplate])root.traverse(o=>{
+   o.updateMatrix();o.matrixAutoUpdate=o===root||o.name==='spider-head-pivot'||o.name==='spider-leg';
+  });
+  this.ready=true;
  }
  private part(name:string,texture=name):THREE.Mesh<THREE.BufferGeometry,THREE.Material>{const mapName=['minisquidgem','squidgem','ultrasquidgem','levigem','pedeweak'].includes(name)?'crystal':name==='spiderlingpalms'?'spiderlingpalm':['leviorb','immortalorb'].includes(name)?'leviwarp':name==='ultrasquidtent'?'squidarm':name==='ultrasquidteeth'?'squidteeth':texture;
   const material=this.materials.get(mapName);if(!material)throw Error(`Material ${mapName} missing`);const mesh=new THREE.Mesh(this.geometry.get(name)!,material);mesh.name=name;return mesh;}
@@ -133,6 +140,10 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
   return [...grouped].map(([material,geometries])=>{const geometry=mergeGeometries(geometries)!;geometries.forEach(g=>g.dispose());const mesh=new THREE.InstancedMesh(geometry,material,capacity);mesh.count=0;mesh.frustumCulled=false;return mesh;});
  }
  clone(kind:EnemyKind){const template=this.templates.get(kind);if(!template)throw Error(`Original ${kind} rig not loaded`);return template.clone();}
- animate(model:THREE.Group,enemy:Enemy,time:number){this.materialClock.value=time;model.traverse(o=>{if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055; if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.visible=(enemy.weakpoints?.[i]?.hp??1)>0;}});}
+ animate(model:THREE.Group,enemy:Enemy,time:number){
+  this.materialClock.value=time;let nodes=this.animationNodes.get(model);
+  if(!nodes){nodes=[];model.traverse(o=>{if(o.name==='spider-head-pivot'||o.name==='spider-leg'||o.name.startsWith('weak-point-'))nodes!.push(o);});this.animationNodes.set(model,nodes);}
+  for(const o of nodes){if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;else if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055;else{const i=Number(o.name.slice(11));o.visible=(enemy.weakpoints?.[i]?.hp??1)>0;}}
+ }
  segment(alive:boolean,kind:EnemyKind='centipede'){const node=(this.segmentTemplates.get(kind)??this.segmentTemplate).clone();node.traverse(o=>{if(o.name==='segment-weak-point')o.visible=alive;});return node;}
 }

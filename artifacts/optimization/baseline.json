@@ -1,0 +1,448 @@
+{
+  "hardware": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+    "timerQueries": true,
+    "width": 1600,
+    "height": 900
+  },
+  "profiles": {
+    "empty/full": {
+      "frameMs": {
+        "median": 0.6000000238418579,
+        "p95": 0.9000000059604645
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "enemyLighting": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "sceneSubmit": {
+          "median": 0.5,
+          "p95": 0.7000000178813934
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "cpuSubmit": {
+          "median": 0.6000000238418579,
+          "p95": 0.9000000059604645
+        }
+      },
+      "drawCalls": 17,
+      "triangles": 7506,
+      "gpuMs": {
+        "median": 5.668499,
+        "p95": 12.568916
+      }
+    },
+    "empty/noBloom": {
+      "frameMs": {
+        "median": 0.5,
+        "p95": 0.7999999821186066
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "enemyLighting": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "sceneSubmit": {
+          "median": 0.4000000059604645,
+          "p95": 0.6000000238418579
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "cpuSubmit": {
+          "median": 0.5,
+          "p95": 0.7000000178813934
+        }
+      },
+      "drawCalls": 4,
+      "triangles": 7493,
+      "gpuMs": {
+        "median": 2.420916,
+        "p95": 3.754208
+      }
+    },
+    "empty/noSky": {
+      "frameMs": {
+        "median": 0.5,
+        "p95": 0.800000011920929
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "enemyLighting": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "sceneSubmit": {
+          "median": 0.4000000059604645,
+          "p95": 0.5999999940395355
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "cpuSubmit": {
+          "median": 0.5,
+          "p95": 0.800000011920929
+        }
+      },
+      "drawCalls": 16,
+      "triangles": 6290,
+      "gpuMs": {
+        "median": 4.746416,
+        "p95": 8.630833
+      }
+    },
+    "swarm/full": {
+      "frameMs": {
+        "median": 2.9000000059604645,
+        "p95": 3.2999999821186066
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "glowSources": {
+          "median": 0.5999999940395355,
+          "p95": 0.800000011920929
+        },
+        "enemyLighting": {
+          "median": 2.199999988079071,
+          "p95": 2.4000000059604645
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "sceneSubmit": {
+          "median": 0.4000000059604645,
+          "p95": 0.6000000238418579
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "cpuSubmit": {
+          "median": 2.9000000059604645,
+          "p95": 3.2999999821186066
+        }
+      },
+      "drawCalls": 26,
+      "triangles": 913956,
+      "gpuMs": {
+        "median": 7.052958,
+        "p95": 11.764458
+      }
+    },
+    "swarm/noBloom": {
+      "frameMs": {
+        "median": 2.4000000059604645,
+        "p95": 2.800000011920929
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "glowSources": {
+          "median": 0.5,
+          "p95": 0.7000000178813934
+        },
+        "enemyLighting": {
+          "median": 1.7999999821186066,
+          "p95": 2
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "sceneSubmit": {
+          "median": 0.3999999761581421,
+          "p95": 0.6000000238418579
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0
+        },
+        "cpuSubmit": {
+          "median": 2.399999976158142,
+          "p95": 2.800000011920929
+        }
+      },
+      "drawCalls": 13,
+      "triangles": 913943,
+      "gpuMs": {
+        "median": 3.830624,
+        "p95": 5.231875
+      }
+    },
+    "swarm/noSky": {
+      "frameMs": {
+        "median": 2.5,
+        "p95": 2.9000000059604645
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "glowSources": {
+          "median": 0.5,
+          "p95": 0.9000000059604645
+        },
+        "enemyLighting": {
+          "median": 1.800000011920929,
+          "p95": 2.0999999940395355
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0
+        },
+        "sceneSubmit": {
+          "median": 0.3999999761581421,
+          "p95": 0.7000000178813934
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "cpuSubmit": {
+          "median": 2.4000000059604645,
+          "p95": 2.9000000059604645
+        }
+      },
+      "drawCalls": 25,
+      "triangles": 912740,
+      "gpuMs": {
+        "median": 5.835499,
+        "p95": 12.024124
+      }
+    },
+    "mixed/full": {
+      "frameMs": {
+        "median": 2.9000000059604645,
+        "p95": 3.300000011920929
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "glowSources": {
+          "median": 0.5,
+          "p95": 0.6000000238418579
+        },
+        "enemyLighting": {
+          "median": 1.2000000178813934,
+          "p95": 1.4000000059604645
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "sceneSubmit": {
+          "median": 1.2000000178813934,
+          "p95": 1.4000000059604645
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "cpuSubmit": {
+          "median": 2.9000000059604645,
+          "p95": 3.300000011920929
+        }
+      },
+      "drawCalls": 602,
+      "triangles": 896647,
+      "gpuMs": {
+        "median": 7.609208,
+        "p95": 11.166916
+      }
+    },
+    "mixed/noBloom": {
+      "frameMs": {
+        "median": 2.800000011920929,
+        "p95": 3.4000000059604645
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "glowSources": {
+          "median": 0.3999999761581421,
+          "p95": 0.699999988079071
+        },
+        "enemyLighting": {
+          "median": 1.2999999821186066,
+          "p95": 1.5
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "sceneSubmit": {
+          "median": 1.100000023841858,
+          "p95": 1.5
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "cpuSubmit": {
+          "median": 2.800000011920929,
+          "p95": 3.4000000059604645
+        }
+      },
+      "drawCalls": 589,
+      "triangles": 896634,
+      "gpuMs": {
+        "median": 4.125708,
+        "p95": 5.708666
+      }
+    },
+    "mixed/noSky": {
+      "frameMs": {
+        "median": 3,
+        "p95": 3.399999976158142
+      },
+      "cpuMs": {
+        "tiles": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "glowSources": {
+          "median": 0.5,
+          "p95": 0.6000000238418579
+        },
+        "enemyLighting": {
+          "median": 1.300000011920929,
+          "p95": 1.5
+        },
+        "gemLighting": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "weaponUpdate": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "projectileLighting": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "sceneSubmit": {
+          "median": 1.2000000178813934,
+          "p95": 1.5999999940395355
+        },
+        "weaponSubmit": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "cpuSubmit": {
+          "median": 3,
+          "p95": 3.399999976158142
+        }
+      },
+      "drawCalls": 601,
+      "triangles": 895431,
+      "gpuMs": {
+        "median": 7.720791,
+        "p95": 11.253041
+      }
+    }
+  }
+}

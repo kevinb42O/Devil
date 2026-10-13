@@ -3,6 +3,7 @@ import { OriginalWeapon } from './original-weapon';
 import {createCrewAvatar,updateCrewArm,disposeCrewAvatar} from './crew-avatar';
 import { OriginalEnemies } from './original-enemies';
 import { AbyssSky } from './sky';
+import {SegmentBatches} from './segment-batches';
 import {GemLighting} from './gem-lighting';
 import {EnemyLighting} from './enemy-lighting';
 import {EnemyGlowSources} from './enemy-glow-sources';
@@ -46,10 +47,13 @@ export class GameRenderer {
   private disposeCrew(model:THREE.Group){this.scene.remove(model);disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
 
   topDown=false;renderer:THREE.WebGLRenderer;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(95,1,.05,180);composer:EffectComposer; bloom:UnrealBloomPass;
+  private swarmBounds=new Map<EnemyKind,THREE.Sphere>();private swarmFrustum=new THREE.Frustum();private swarmProjection=new THREE.Matrix4();private swarmSphere=new THREE.Sphere();private swarmCopy=new THREE.Matrix4();
   private swarmBatches=new Map<EnemyKind,{meshes:THREE.InstancedMesh[];capacity:number}>();private originalFloor=false;private tileHeights:number[]=[];private beckons=new Map<number,THREE.Mesh>();private baseFov=90;private enemies=new Map<number,THREE.Group>();private tiles:THREE.InstancedMesh;private tilePositions:THREE.Vector3[]=[];
   originalWeapon:OriginalWeapon;originalEnemies:OriginalEnemies;private gemMesh:THREE.InstancedMesh;private dummy=new THREE.Object3D();
   private renderScale=1;private slowFrames=0;private fastFrames=0;private resizeCooldown=0;private quality='high';
   private preview=new THREE.Group();private altar:THREE.Group;private visualTime=0;
+  private segmentBatches=new SegmentBatches(this.scene);
+  private segmentNodes=new WeakMap<THREE.Group,{node:THREE.Object3D;weakPoints:THREE.Object3D[]}[]>();
   private sky=new AbyssSky();private gemLighting:GemLighting;
   private altarLight=new THREE.PointLight(0xcde98b,12,9);
   private playerLight=new THREE.PointLight(0xffb56b,24,11,2);
@@ -78,8 +82,12 @@ export class GameRenderer {
     this.originalWeapon=new OriginalWeapon(this.scene);
     this.altar=new THREE.Group();shape(this.altar,new THREE.CylinderGeometry(1.1,1.6,1.2,8),darkBone,[0,.6,0],[1,1,1]);shape(this.altar,new THREE.OctahedronGeometry(.38),greenCrystal,[0,2.7,0],[.55,2.2,.55]);this.altarLight.position.y=2;this.scene.add(this.altarLight);this.preview.add(this.altar);
     this.scene.add(this.preview);
-    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissive:0xff431a,emissiveIntensity:3,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
-    this.composer=new EffectComposer(this.renderer);this.composer.addPass(new RenderPass(this.scene,this.camera));this.bloom=new UnrealBloomPass(new THREE.Vector2(1,1),.34,.6,1.1);this.composer.addPass(this.bloom);this.composer.addPass(new OutputPass());
+    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});const bounds=new THREE.Box3();for(const mesh of meshes){mesh.geometry.computeBoundingBox();bounds.union(mesh.geometry.boundingBox!);}this.swarmBounds.set(kind,bounds.getBoundingSphere(new THREE.Sphere()));}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissive:0xff431a,emissiveIntensity:3,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
+    this.composer=new EffectComposer(this.renderer);this.composer.addPass(new RenderPass(this.scene,this.camera));this.bloom=new UnrealBloomPass(new THREE.Vector2(1,1),.34,.6,1.1);
+    // Bloom processes full-screen color textures. Its eleven intermediate
+    // targets never consume depth, so avoid allocating and clearing depth buffers.
+    for(const target of [this.bloom.renderTargetBright,...this.bloom.renderTargetsHorizontal,...this.bloom.renderTargetsVertical])target.depthBuffer=false;
+    this.composer.addPass(this.bloom);this.composer.addPass(new OutputPass());
     this.configure(settings);window.addEventListener('resize',()=>this.resize());this.resize();
   }
   configure(settings:VisualSettings) {this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.renderScale=1;this.slowFrames=this.fastFrames=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
@@ -125,27 +133,40 @@ export class GameRenderer {
       this.updateTiles(world.time);
       const fov=this.baseFov+world.player.hopPulse*3;if(this.camera.fov!==fov){this.camera.fov=fov;this.camera.updateProjectionMatrix();}
       const ringIds=new Set<number>();for(const ring of world.rings){ringIds.add(ring.id);let mesh=this.beckons.get(ring.id);if(!mesh){mesh=new THREE.Mesh(new THREE.TorusGeometry(1,.035,4,64),new THREE.MeshBasicMaterial({color:0xff4422,transparent:true,opacity:.65}));mesh.rotation.x=Math.PI/2;this.beckons.set(ring.id,mesh);this.scene.add(mesh);}mesh.position.set(ring.pos.x,1,ring.pos.z);mesh.scale.setScalar(Math.max(.01,ring.radius));}for(const [id,mesh] of this.beckons)if(!ringIds.has(id)){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();this.beckons.delete(id);}
+      this.camera.updateWorldMatrix(true,false);this.swarmProjection.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse);this.swarmFrustum.setFromProjectionMatrix(this.swarmProjection);
       const swarmCounts=new Map<EnemyKind,number>();
       const present=new Set<number>();
       for(const e of world.enemies) {
         if(isSkull(e.kind)||isEgg(e.kind)||e.kind==='spiderling'){
-          let batch=this.swarmBatches.get(e.kind);if(!batch)continue;const index=swarmCounts.get(e.kind)??0;
-          if(index>=batch.capacity){for(const mesh of batch.meshes){this.scene.remove(mesh);mesh.geometry.dispose();mesh.dispose();}const capacity=batch.capacity*2,meshes=this.originalEnemies.createSwarmBatch(e.kind,capacity);for(let i=0;i<batch.capacity;i++)for(let j=0;j<meshes.length;j++){batch.meshes[j].getMatrixAt(i,this.dummy.matrix);meshes[j].setMatrixAt(i,this.dummy.matrix);}batch={meshes,capacity};for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(e.kind,batch);}
-          this.dummy.position.set(e.pos.x,e.pos.y,e.pos.z);this.dummy.rotation.set(0,enemyYaw(e,world.player.pos),0);this.dummy.scale.setScalar(Math.min(1,e.age/1.1));this.dummy.updateMatrix();for(const mesh of batch.meshes)mesh.setMatrixAt(index,this.dummy.matrix);swarmCounts.set(e.kind,index+1);continue;
+          let batch=this.swarmBatches.get(e.kind);if(!batch)continue;
+          this.dummy.position.set(e.pos.x,e.pos.y,e.pos.z);this.dummy.rotation.set(0,enemyYaw(e,world.player.pos),0);this.dummy.scale.setScalar(Math.min(1,e.age/1.1));this.dummy.updateMatrix();
+          this.swarmSphere.copy(this.swarmBounds.get(e.kind)!).applyMatrix4(this.dummy.matrix);
+          // The native vertex shader snaps positions down to a 1/16 world grid.
+          // Pad for that displacement so culling cannot remove an edge pixel.
+          this.swarmSphere.radius+=Math.sqrt(3)/16;
+          if(!this.swarmFrustum.intersectsSphere(this.swarmSphere))continue;
+          const index=swarmCounts.get(e.kind)??0;
+          if(index>=batch.capacity){for(const mesh of batch.meshes){this.scene.remove(mesh);mesh.geometry.dispose();mesh.dispose();}const capacity=batch.capacity*2,meshes=this.originalEnemies.createSwarmBatch(e.kind,capacity);for(let i=0;i<batch.capacity;i++)for(let j=0;j<meshes.length;j++){batch.meshes[j].getMatrixAt(i,this.swarmCopy);meshes[j].setMatrixAt(i,this.swarmCopy);}batch={meshes,capacity};for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(e.kind,batch);}
+          for(const mesh of batch.meshes)mesh.setMatrixAt(index,this.dummy.matrix);swarmCounts.set(e.kind,index+1);continue;
         }
         present.add(e.id);let model=this.enemies.get(e.id);
         if(model&&model.name!==e.kind){this.scene.remove(model);this.enemies.delete(e.id);model=undefined;}
         if(!model) {
           if(!this.originalEnemies.ready)continue;
           model=this.originalEnemies.clone(e.kind);
-          if(isPede(e.kind))for(let i=0;i<e.segments.length;i++){const segment=this.originalEnemies.segment(e.segments[i].hp>0,e.kind);segment.name='segment';model.add(segment);}
+          if(isPede(e.kind)){
+            const segments:{node:THREE.Object3D;weakPoints:THREE.Object3D[]}[]=[];
+            for(let i=0;i<e.segments.length;i++){const node=this.originalEnemies.segment(e.segments[i].hp>0,e.kind);node.name='segment';model.add(node);const weakPoints:THREE.Object3D[]=[];node.traverse(child=>{if(child.name==='segment-weak-point')weakPoints.push(child);});segments.push({node,weakPoints});}
+            this.segmentNodes.set(model,segments);
+          }
           this.enemies.set(e.id,model);this.scene.add(model);
         }
         model.visible=true;model.position.set(e.pos.x,e.pos.y,e.pos.z);const emergence=isPede(e.kind)?1:Math.min(1,e.age/(e.kind==='spider2'?9:e.kind==='leviathan'?8.533333:1.1));model.scale.setScalar(emergence);
         model.rotation.y=enemyYaw(e,world.player.pos);
         this.originalEnemies.animate(model,e,world.time);
         if(isPede(e.kind)) {
-          model.rotation.set(0,0,0);let i=0;model.children.filter(c=>c.name==='segment').forEach(seg=>{const s=e.segments[i++];seg.position.set(s.pos.x-e.pos.x,s.pos.y-e.pos.y,s.pos.z-e.pos.z);const lead=i===1?e.pos:e.segments[i-2].pos;seg.rotation.y=Math.atan2(lead.x-s.pos.x,lead.z-s.pos.z);seg.traverse(child=>{if(child.name==='segment-weak-point')child.visible=s.hp>0;});});
+          model.rotation.set(0,0,0);const segments=this.segmentNodes.get(model)!;
+          for(let i=0;i<segments.length;i++){const {node,weakPoints}=segments[i],s=e.segments[i],lead=i===0?e.pos:e.segments[i-1].pos;node.position.set(s.pos.x-e.pos.x,s.pos.y-e.pos.y,s.pos.z-e.pos.z);node.rotation.y=Math.atan2(lead.x-s.pos.x,lead.z-s.pos.z);for(const point of weakPoints)point.visible=s.hp>0;}
         }
       }
       for(const [kind,batch] of this.swarmBatches)for(const mesh of batch.meshes){mesh.count=swarmCounts.get(kind)??0;if(mesh.count){mesh.instanceMatrix.clearUpdateRanges();mesh.instanceMatrix.addUpdateRange(0,mesh.count*16);mesh.instanceMatrix.needsUpdate=true;}}
@@ -157,8 +178,11 @@ export class GameRenderer {
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
     this.playerLight.intensity=!menu&&world?24:0;this.playerLight.position.copy(this.camera.position);this.playerLight.position.y-=.35;
     this.enemyLighting.update(world,this.camera,menu,e=>this.enemyGlowSources.sources(e,world!.player.pos,this.camera,this.enemies.get(e.id)));
+    this.segmentBatches.begin(this.camera);
+    if(world&&!menu)for(const e of world.enemies)if(isPede(e.kind)){const model=this.enemies.get(e.id);if(model)this.segmentBatches.add(model);}
+    this.segmentBatches.end();
     this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,t);this.originalWeapon.update(world,dt,menu,this.camera,projectileAlpha);
     this.projectileLighting.update(world,menu,projectileAlpha,this.renderer.domElement.height);this.composer.render();this.originalWeapon.render(this.renderer,menu);
   }
-  clear() {for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
+  clear() {this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

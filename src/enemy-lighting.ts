@@ -13,7 +13,6 @@ export function enemyGlowColor(kind:string):THREE.Color {
 }
 
 const FIELD_SIZE=128,FIELD_SPAN=160;
-type Emitter={pos:Vec;color:THREE.Color;radius:number;strength:number};
 /** One aura batch plus a fixed-size floor light field; never adds per-enemy lights. */
 export class EnemyLighting {
  aura:THREE.InstancedMesh;
@@ -22,6 +21,9 @@ export class EnemyLighting {
  private field=new THREE.DataTexture(this.pixels,FIELD_SIZE,FIELD_SIZE);
  private dummy=new THREE.Object3D();
  private tint=new THREE.Color();
+ private xDistances=new Float64Array(FIELD_SIZE);
+ private dotKeys=new Set<number|string>();
+ private dots:{pos:THREE.Vector3;color:THREE.Color;size:number;strength:number}[]=[];
  private palette=new Map<EnemyKind,THREE.Color>();
  constructor(private scene:THREE.Scene,floor:THREE.MeshBasicMaterial){
   this.field.minFilter=this.field.magFilter=THREE.LinearFilter;this.field.generateMipmaps=false;this.field.needsUpdate=true;
@@ -41,47 +43,64 @@ export class EnemyLighting {
  }
  update(world:World|null,camera:THREE.Camera,menu:boolean,sources:(e:Enemy)=>GlowSource[]){
   this.pixels.fill(0);
-  const emitters:Emitter[]=[];
   if(world&&!menu)for(const e of world.enemies){
    let color=this.palette.get(e.kind);if(!color){color=enemyGlowColor(e.kind);this.palette.set(e.kind,color);}
    const emergence=isPede(e.kind)?1:Math.min(1,e.age/(e.kind==='spider2'?9:e.kind==='leviathan'?8.533333:1.1));
-   emitters.push({pos:e.pos,color,radius:Math.min(6,2.5+e.radius*.7),strength:emergence});
-   if(isPede(e.kind))for(const segment of e.segments)emitters.push({pos:segment.pos,color,radius:2.5,strength:segment.hp>0?.55:.15});
+   this.spill(e.pos,color,Math.min(6,2.5+e.radius*.7),emergence,world.time);
+   if(isPede(e.kind))for(const segment of e.segments)this.spill(segment.pos,color,2.5,segment.hp>0?.55:.15,world.time);
   }
   // Preserve real source positions. Only virtually coincident source dots
   // share a sprite; never place a glow at a crowd's average location.
-  const dots=new Map<string,{pos:THREE.Vector3;color:THREE.Color;size:number;strength:number}>();
+  this.dotKeys.clear();let dotCount=0;
   if(world&&!menu)for(const e of world.enemies){
    const color=this.palette.get(e.kind)!;
    for(const source of sources(e)){
-    const key=`${Math.round(source.pos.x*20)},${Math.round(source.pos.y*20)},${Math.round(source.pos.z*20)}`;
-    if(!dots.has(key))dots.set(key,{...source,color,strength:Math.min(1,e.age/1.1)});
+    const x=Math.round(source.pos.x*20),y=Math.round(source.pos.y*20),z=Math.round(source.pos.z*20);
+    // Three signed 17-bit coordinates fit exactly into a JS number (51 bits).
+    // The fallback preserves the original key for positions beyond that range.
+    const key=x>=-65536&&x<65536&&y>=-65536&&y<65536&&z>=-65536&&z<65536
+     ?(x+65536)*17179869184+(y+65536)*131072+z+65536:`${x},${y},${z}`;
+    if(this.dotKeys.has(key))continue;this.dotKeys.add(key);
+    const dot=this.dots[dotCount]??(this.dots[dotCount]={pos:source.pos,color,size:0,strength:0});
+    dot.pos=source.pos;dot.color=color;dot.size=source.size;dot.strength=Math.min(1,e.age/1.1);dotCount++;
    }
   }
-  emitters.forEach(e=>{
-   const ground=floorHeight(e.pos.x,e.pos.z,world!.time),altitude=e.pos.y-ground;
-   const visible=altitude>=-.4?e.strength:0;
-   if(!visible||ground<-30)return;
-   const radius=e.radius*(1+Math.min(8,Math.max(0,altitude))*.08),strength=visible/(1+Math.max(0,altitude)*.22);
-   const cx=(e.pos.x/FIELD_SPAN+.5)*FIELD_SIZE-.5,cz=(e.pos.z/FIELD_SPAN+.5)*FIELD_SIZE-.5,r=radius/FIELD_SPAN*FIELD_SIZE;
-   for(let z=Math.max(0,Math.floor(cz-r));z<=Math.min(FIELD_SIZE-1,Math.ceil(cz+r));z++)for(let x=Math.max(0,Math.floor(cx-r));x<=Math.min(FIELD_SIZE-1,Math.ceil(cx+r));x++){
-    const falloff=Math.max(0,1-Math.hypot(x-cx,z-cz)/r)**2*strength*255,index=(z*FIELD_SIZE+x)*4;
-    // Maximum rather than sum: overlapping emitters cannot bleach the floor.
-    this.pixels[index]=Math.max(this.pixels[index],e.color.r*falloff);this.pixels[index+1]=Math.max(this.pixels[index+1],e.color.g*falloff);this.pixels[index+2]=Math.max(this.pixels[index+2],e.color.b*falloff);
-   }
-  });
-  const auras=[...dots.values()];
-  if(auras.length>this.capacity){
-   while(this.capacity<auras.length)this.capacity*=2;
+  if(dotCount>this.capacity){
+   while(this.capacity<dotCount)this.capacity*=2;
    const previous=this.aura;this.aura=new THREE.InstancedMesh(previous.geometry,previous.material,this.capacity);this.aura.setColorAt(0,new THREE.Color(0,0,0));this.aura.name=previous.name;this.aura.frustumCulled=false;this.scene.remove(previous);previous.dispose();this.scene.add(this.aura);
   }
-  this.aura.count=auras.length;
+  this.aura.count=dotCount;
+  this.dummy.quaternion.copy(camera.quaternion);this.dummy.updateMatrix();
+  const rotation=this.dummy.matrix.elements,matrices=this.aura.instanceMatrix.array;
   for(let i=0;i<this.aura.count;i++){
-   const g=auras[i];this.dummy.position.copy(g.pos);this.dummy.quaternion.copy(camera.quaternion);this.dummy.scale.setScalar(g.size);this.dummy.updateMatrix();this.aura.setMatrixAt(i,this.dummy.matrix);
+   const g=this.dots[i],offset=i*16;
+   // All billboards share the same camera rotation. Compose it once, then
+   // apply each scale and translation directly to the upload buffer.
+   for(let j=0;j<12;j++)matrices[offset+j]=rotation[j]*g.size;
+   matrices[offset+12]=g.pos.x;matrices[offset+13]=g.pos.y;matrices[offset+14]=g.pos.z;matrices[offset+15]=1;
    this.tint.copy(g.color).multiplyScalar(g.strength);this.aura.setColorAt(i,this.tint);
   }
   if(this.aura.count){this.aura.instanceMatrix.clearUpdateRanges();this.aura.instanceMatrix.addUpdateRange(0,this.aura.count*16);this.aura.instanceMatrix.needsUpdate=true;this.aura.instanceColor!.clearUpdateRanges();this.aura.instanceColor!.addUpdateRange(0,this.aura.count*3);this.aura.instanceColor!.needsUpdate=true;}
   this.field.needsUpdate=true;
  }
- clear(){this.aura.count=0;this.pixels.fill(0);this.field.needsUpdate=true;}
+ private spill(pos:Vec,color:THREE.Color,baseRadius:number,emergence:number,time:number){
+  const ground=floorHeight(pos.x,pos.z,time),altitude=pos.y-ground;
+  if(altitude<-.4||!emergence||ground<-30)return;
+  const radius=baseRadius*(1+Math.min(8,Math.max(0,altitude))*.08),strength=emergence/(1+Math.max(0,altitude)*.22);
+  const cx=(pos.x/FIELD_SPAN+.5)*FIELD_SIZE-.5,cz=(pos.z/FIELD_SPAN+.5)*FIELD_SIZE-.5,r=radius/FIELD_SPAN*FIELD_SIZE;
+  const minX=Math.max(0,Math.floor(cx-r)),maxX=Math.min(FIELD_SIZE-1,Math.ceil(cx+r));
+  const minZ=Math.max(0,Math.floor(cz-r)),maxZ=Math.min(FIELD_SIZE-1,Math.ceil(cz+r));
+  for(let x=minX;x<=maxX;x++)this.xDistances[x]=(x-cx)*(x-cx);
+  for(let z=minZ;z<=maxZ;z++){
+   const dz2=(z-cz)*(z-cz);let index=(z*FIELD_SIZE+minX)*4;
+   for(let x=minX;x<=maxX;x++,index+=4){
+    const falloff=Math.max(0,1-Math.sqrt(this.xDistances[x]+dz2)/r)**2*strength*255;
+    const red=color.r*falloff,green=color.g*falloff,blue=color.b*falloff;
+    if(red>this.pixels[index])this.pixels[index]=red;
+    if(green>this.pixels[index+1])this.pixels[index+1]=green;
+    if(blue>this.pixels[index+2])this.pixels[index+2]=blue;
+   }
+  }
+ }
+ clear(){this.dots.length=0;this.dotKeys.clear();this.aura.count=0;this.pixels.fill(0);this.field.needsUpdate=true;}
 }

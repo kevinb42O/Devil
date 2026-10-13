@@ -1,0 +1,430 @@
+{
+  "reference": "cae94e067cbe5a71ef76b5a0d42bcfd9adc24742",
+  "hardware": [
+    {
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+      "width": 1600,
+      "height": 900,
+      "timers": true
+    },
+    {
+      "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+      "width": 1600,
+      "height": 900,
+      "timers": true
+    }
+  ],
+  "comparisons": {
+    "empty": {
+      "before": {
+        "cpuMs": {
+          "median": 0.7000000178813934,
+          "p95": 1.100000023841858
+        },
+        "gpuMs": {
+          "median": 2.7945,
+          "p95": 7.240375
+        },
+        "lightingMs": {
+          "median": 0,
+          "p95": 0.09999999403953552
+        },
+        "sceneSubmitMs": {
+          "median": 0.5999999940395355,
+          "p95": 0.9000000059604645
+        },
+        "drawCalls": 17,
+        "triangles": 7506
+      },
+      "after": {
+        "cpuMs": {
+          "median": 0.7000000178813934,
+          "p95": 1.699999988079071
+        },
+        "gpuMs": {
+          "median": 2.948124,
+          "p95": 6.471416
+        },
+        "lightingMs": {
+          "median": 0,
+          "p95": 0.10000002384185791
+        },
+        "sceneSubmitMs": {
+          "median": 0.5999999940395355,
+          "p95": 1.2999999821186066
+        },
+        "drawCalls": 17,
+        "triangles": 7506
+      }
+    },
+    "swarm": {
+      "before": {
+        "cpuMs": {
+          "median": 3.0999999940395355,
+          "p95": 3.7999999821186066
+        },
+        "gpuMs": {
+          "median": 6.097083,
+          "p95": 7.754124
+        },
+        "lightingMs": {
+          "median": 2.100000023841858,
+          "p95": 2.7999999821186066
+        },
+        "sceneSubmitMs": {
+          "median": 0.5999999940395355,
+          "p95": 1
+        },
+        "drawCalls": 26,
+        "triangles": 913956
+      },
+      "after": {
+        "cpuMs": {
+          "median": 2,
+          "p95": 2.699999988079071
+        },
+        "gpuMs": {
+          "median": 5.715208,
+          "p95": 6.922125
+        },
+        "lightingMs": {
+          "median": 1,
+          "p95": 1.4000000059604645
+        },
+        "sceneSubmitMs": {
+          "median": 0.5999999940395355,
+          "p95": 0.9000000059604645
+        },
+        "drawCalls": 26,
+        "triangles": 713745
+      }
+    },
+    "mixed": {
+      "before": {
+        "cpuMs": {
+          "median": 3.699999988079071,
+          "p95": 4.0999999940395355
+        },
+        "gpuMs": {
+          "median": 5.051791,
+          "p95": 8.534124
+        },
+        "lightingMs": {
+          "median": 1.5,
+          "p95": 1.7000000178813934
+        },
+        "sceneSubmitMs": {
+          "median": 1.5999999940395355,
+          "p95": 1.9000000059604645
+        },
+        "drawCalls": 602,
+        "triangles": 896647
+      },
+      "after": {
+        "cpuMs": {
+          "median": 2.600000023841858,
+          "p95": 3.2000000178813934
+        },
+        "gpuMs": {
+          "median": 4.81475,
+          "p95": 7.830708
+        },
+        "lightingMs": {
+          "median": 0.8999999761581421,
+          "p95": 1.0999999940395355
+        },
+        "sceneSubmitMs": {
+          "median": 1.300000011920929,
+          "p95": 1.600000023841858
+        },
+        "drawCalls": 190,
+        "triangles": 801453
+      }
+    },
+    "simulation": {
+      "beforeMs": {
+        "median": 0.699999988079071,
+        "p95": 1.0999999940395355
+      },
+      "afterMs": {
+        "median": 0.699999988079071,
+        "p95": 1.2000000178813934
+      },
+      "identical": true
+    }
+  },
+  "visuals": [
+    {
+      "name": "empty/front",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "empty/turned",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "swarm/front",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "swarm/turned",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "mixed/front",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "mixed/turned",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "mixed/emergence-and-broken-crystals",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "mixed/moving-0",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "mixed/moving-5",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "mixed/moving-10",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "mixed/moving-15",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/skull",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/skull2",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/skull3",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/skull4",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/transmuted1",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/transmuted2",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/transmuted3",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/transmuted4",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/squid",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/squid2",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/squid3",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/spider",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/spider2",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/egg",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/egg2",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/spiderling",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/centipede",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/gigapede",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/ghostpede",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/leviathan",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/orb",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "kind/thorn",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "segments/capacity-growth",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "segments/top-down",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "segments/low-quality",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "segments/restored-high",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    },
+    {
+      "name": "lifecycle/menu-after-clear",
+      "changedChannels": 0,
+      "maxChannelDifference": 0,
+      "fieldChangedBytes": 0
+    }
+  ],
+  "gpuIsolation": {
+    "empty": {
+      "optimized": {
+        "median": 4.145874,
+        "p95": 7.313375
+      },
+      "originalSky": {
+        "median": 3.604249,
+        "p95": 7.421958
+      },
+      "unculledSwarm": {
+        "median": 4.505666,
+        "p95": 7.481875
+      }
+    },
+    "swarm": {
+      "optimized": {
+        "median": 5.512291,
+        "p95": 8.131208
+      },
+      "originalSky": {
+        "median": 4.851083,
+        "p95": 8.328666
+      },
+      "unculledSwarm": {
+        "median": 5.519124,
+        "p95": 7.730166
+      }
+    },
+    "mixed": {
+      "optimized": {
+        "median": 4.884041,
+        "p95": 8.070374
+      },
+      "originalSky": {
+        "median": 5.307249,
+        "p95": 8.018124
+      },
+      "unculledSwarm": {
+        "median": 6.028916,
+        "p95": 8.38675
+      }
+    }
+  }
+}

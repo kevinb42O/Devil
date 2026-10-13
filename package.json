@@ -19,6 +19,8 @@
     "assets:audio": "node tools/import-dd-audio.mjs",
     "test:swarm": "node tests/swarm-browser.mjs",
     "test:performance": "node tests/tower-performance-browser.mjs",
+    "test:optimization": "node tests/optimization-comparison-browser.mjs",
+    "profile:rendering": "node tests/optimization-browser.mjs baseline",
     "test:audio": "node tests/audio-browser.mjs",
     "test:projectiles": "node tests/projectile-browser.mjs",
     "test:projectile-muzzle": "node tests/projectile-muzzle-browser.mjs",

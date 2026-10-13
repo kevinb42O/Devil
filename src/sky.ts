@@ -7,7 +7,7 @@ export class AbyssSky {
   constructor(){
     const material=new THREE.ShaderMaterial({
       uniforms:{time:this.time},side:THREE.BackSide,depthWrite:false,fog:false,toneMapped:false,
-      vertexShader:`varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+      vertexShader:`varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_Position.z=gl_Position.w;}`,
       fragmentShader:`
         uniform float time;varying vec3 skyDirection;
         float hash(vec3 p){p=fract(p*.1031);p+=dot(p,p.yzx+33.33);return fract((p.x+p.y)*p.z);}
@@ -38,7 +38,9 @@ export class AbyssSky {
         }`
     });
     this.mesh=new THREE.Mesh(new THREE.SphereGeometry(120,32,20),material);
-    this.mesh.frustumCulled=false;this.mesh.renderOrder=-100;
+    // Keep the same sky at far-plane depth, after opaque geometry. Early depth
+    // rejection avoids running its procedural shader behind the arena/enemies.
+    this.mesh.frustumCulled=false;this.mesh.renderOrder=100000;
   }
   update(camera:THREE.Camera,time:number){this.mesh.position.copy(camera.position);this.time.value=time;}
 }
