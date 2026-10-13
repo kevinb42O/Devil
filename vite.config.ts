@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import { cp, mkdir, access } from 'node:fs/promises';
-// Keep provenance/source downloads out of the shipped game; copy only used CC0 assets.
+// Keep provenance/source downloads out of the shipped game; include runtime assets.
 export default defineConfig({
   server:{host:'127.0.0.1',port:5173},
   build:{target:'es2022',chunkSizeWarningLimit:700},
@@ -11,6 +11,7 @@ export default defineConfig({
     await cp('assets/licenses','dist/assets/licenses',{recursive:true});
     await cp('node_modules/@fontsource/barlow-condensed/LICENSE','dist/assets/licenses/barlow-condensed-OFL.txt');
     await cp('node_modules/@fontsource/dm-sans/LICENSE','dist/assets/licenses/dm-sans-OFL.txt');
-    try {await access('assets/original/devil-daggers/manifest.json');await cp('assets/original/devil-daggers','dist/assets/original/devil-daggers',{recursive:true});}catch(error){if(error.code!=='ENOENT')throw error;}
+    await access('assets/original/devil-daggers/manifest.json');
+    await cp('assets/original/devil-daggers','dist/assets/original/devil-daggers',{recursive:true});
   }}]
 });

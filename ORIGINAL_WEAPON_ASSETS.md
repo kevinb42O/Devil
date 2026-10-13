@@ -6,7 +6,7 @@ The procedural hand and generic glowing point particles were removed at the user
 
 A publicly accessible archived Linux game-data package supplied `game/res/dd` and `game/dd/particle`. The package was streamed and only those two rendering-data members were retained. No installer or game executable was run. The subsequent replica pass also extracted `game/res/audio` and imported 275 original WAV recordings; their source and file hashes are in the audio manifest and provenance record. `node tools/import-dd-audio.mjs /path/to/res/audio` recreates the sound import. The source URL, resource hashes, and four reference screenshot URLs/hashes are recorded in `assets/provenance/original-weapons.json`.
 
-The asset table, vertex layout, texture layout, and shader packaging were checked against [ddinfo-core at the research revision](https://github.com/NoahStolk/ddinfo-core/tree/1d64444d9f31632a3c932657ad13d5b4693df729/src/DevilDaggersInfo.Core.Mod). The source hand meshes have the catalogued 296 / 396 / 396 / 396 triangles. Original assets remain Sorath's assets; no reuse license was established. They are stored locally under the Git-ignored `assets/original/devil-daggers/` directory, separate from the project's CC0 asset set.
+The asset table, vertex layout, texture layout, and shader packaging were checked against [ddinfo-core at the research revision](https://github.com/NoahStolk/ddinfo-core/tree/1d64444d9f31632a3c932657ad13d5b4693df729/src/DevilDaggersInfo.Core.Mod). The source hand meshes have the catalogued 296 / 396 / 396 / 396 triangles. Original assets remain Sorath's assets; no reuse license was established. They are tracked as runtime files under `assets/original/devil-daggers/` directory, separate from the project's CC0 asset set.
 
 The initial weapon import contained 102 render asset files. The expanded import now contains 439 rendering files including enemy and arena assets, together with the raw particle definitions and a decoded emitter table. The runtime loads only the needed subset. Four unmodified hand reference screenshots from [ddinfo-web](https://github.com/NoahStolk/ddinfo-web/tree/e3e8768f12b5240d4eaf70a9421965b5a83b1e39/src/DevilDaggersInfo.Web.Client/wwwroot/images/wiki/upgrades) are stored in `assets/references/devil-daggers/hands/`.
 
@@ -42,6 +42,6 @@ npm test
 npm run test:weapon  # with the dev server running
 ```
 
-The local production build copies the imported original asset directory into `dist/assets/original/devil-daggers/`. These files are not labelled CC0. Reimport is necessary in a fresh checkout because original assets are ignored by Git.
+The local production build copies the imported original asset directory into `dist/assets/original/devil-daggers/`. These files are not labelled CC0. Fresh checkouts include these imported runtime files; raw source archives are not required to build.
 
 Development-only preview URLs `/?hand-preview=1` through `/?hand-preview=4` start a run with the chosen hand level. Production builds omit this override. The browser check verifies all four meshes load, fire, and compile their shaders without browser errors, and captures screenshots in `artifacts/`. Orientation was also checked visually against the reference screenshots.

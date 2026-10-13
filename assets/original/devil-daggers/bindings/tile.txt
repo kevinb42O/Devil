@@ -1,0 +1,2 @@
+shader = "tile"
+tex_diffuse = "tile"

@@ -1,0 +1,2 @@
+shader = "particle_decal"
+tex_diffuse = "emberflame"

@@ -1,0 +1,2 @@
+shader = "egg"
+tex_diffuse = "gigaegg"

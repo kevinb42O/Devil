@@ -1,0 +1,2 @@
+shader = "gib"
+tex_diffuse = "dagger0"

@@ -1,0 +1,2 @@
+shader = "thorn"
+tex_diffuse = "thornhit"

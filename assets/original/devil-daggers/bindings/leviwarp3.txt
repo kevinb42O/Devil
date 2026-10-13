@@ -1,0 +1,2 @@
+shader = "warp2"
+tex_diffuse = "pedehead"

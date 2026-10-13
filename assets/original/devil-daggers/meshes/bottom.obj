@@ -1,0 +1,15 @@
+# Original DD mesh: 4 vertices, 2 triangles
+v 2 -2 -2
+v 2 -2 2
+v -2 -2 2
+v -2 -2 -2
+vt 1 0
+vt 1 1
+vt 0 1
+vt 0 0
+vn 0 -1 0
+vn 0 -1 0
+vn 0 -1 0
+vn 0 -1 0
+f 1/1/1 2/2/2 3/3/3
+f 3/3/3 4/4/4 1/1/1

@@ -1,0 +1,1791 @@
+{
+  "ready": true,
+  "sourceHash": "d106b70bb06df9a0d2119929526eaec5810692cc213852cae39b80ed893810da",
+  "sourceFile": "/tmp/abyss-original-data/dd",
+  "importedAt": "2026-10-12T22:47:50.216Z",
+  "hands": [
+    {
+      "level": 1,
+      "mesh": "hand",
+      "texture": "hand",
+      "flash": "hand"
+    },
+    {
+      "level": 2,
+      "mesh": "hand2",
+      "texture": "hand2",
+      "flash": "hand2"
+    },
+    {
+      "level": 3,
+      "mesh": "hand3",
+      "texture": "hand3",
+      "flash": "hand4"
+    },
+    {
+      "level": 4,
+      "mesh": "hand4",
+      "texture": "hand5",
+      "flash": "hand6"
+    }
+  ],
+  "files": [
+    {
+      "path": "shaders/particle.vert",
+      "sha256": "f1442b1668fa0cbc38e2ab7c478a362da61c5fc52535cdc5f5c221c045bc1d3c"
+    },
+    {
+      "path": "shaders/particle.frag",
+      "sha256": "66aee3aa29abe48dd5bf7dcf1eebb2d0ea8ee1221cc91923aafc1c6eac4d2c80"
+    },
+    {
+      "path": "shaders/particle2.vert",
+      "sha256": "f0f0a68291040398f1138ba766047af528942a12e5f9c51e3dad0a7e76482d32"
+    },
+    {
+      "path": "shaders/particle2.frag",
+      "sha256": "fa95b6a448c0ec7f9d640abaa8d8ccd2cba9f1cc5c0dbe52a86da993f74531ea"
+    },
+    {
+      "path": "shaders/particle_decal.vert",
+      "sha256": "6c57c34ff31454232795aab425949d165c9fa615d5b8b2b8e79110943d099b21"
+    },
+    {
+      "path": "shaders/particle_decal.frag",
+      "sha256": "657772ea320e9d548f1d3ae880cd92d1845437fbe470fc7037865087f40a5f93"
+    },
+    {
+      "path": "shaders/particle_decal_batch.vert",
+      "sha256": "9acb56ca28c21e4b34986bb94b62eec09d8b2f578c0a2c8af85751b55f50b781"
+    },
+    {
+      "path": "shaders/particle_decal_batch.frag",
+      "sha256": "68f875704db22c5aa42e2bc46af51f6bc97b7ec4b46ce197ecfcc912b36e8fbf"
+    },
+    {
+      "path": "shaders/boid.vert",
+      "sha256": "11bcf1f35366a06c5d333b7c1727e3285ecdd8b7640621e093815a17c333bba2"
+    },
+    {
+      "path": "shaders/boid.frag",
+      "sha256": "dd4fe0a805500fd61562d4de5ea2074108289efdd72cc55e62d2dcc3992335e3"
+    },
+    {
+      "path": "shaders/boid_pop.vert",
+      "sha256": "964cd253a0c6930aac5af9e0362c699c963de1f6481635415ee229808b9806e5"
+    },
+    {
+      "path": "shaders/boid_pop.frag",
+      "sha256": "066d5ddefd462b8a33be3ee063e9237e1f2860fdccd764e91d92cea336c5a03b"
+    },
+    {
+      "path": "shaders/squidarm.vert",
+      "sha256": "902044964e26249f5aa30da310d4efb3dbb3c035fbfe4c256a776b1d1701b3e2"
+    },
+    {
+      "path": "shaders/squidarm.frag",
+      "sha256": "eac35f94525ee8a4829752cb7f8202616fe4ffb061d2b3252301e063a8bf5933"
+    },
+    {
+      "path": "shaders/thorn.vert",
+      "sha256": "362cfc47e2dd627ee024fd2854242b0974254d3f40bd9b1e7fa7bd44be34717b"
+    },
+    {
+      "path": "shaders/thorn.frag",
+      "sha256": "4417ca4553cfb9b893c3997471ef02d7ce513983fac337517558822d2f852235"
+    },
+    {
+      "path": "shaders/tile.vert",
+      "sha256": "ce0f6f7339fa09f5756062fb0cce16c42670a237f06ca7b3b1fb052f3de02d3d"
+    },
+    {
+      "path": "shaders/tile.frag",
+      "sha256": "75288b7ab3e341e8440f1d54661ea6e82580a5fc4b0f21d0638188e76d7fd43b"
+    },
+    {
+      "path": "shaders/tile2.vert",
+      "sha256": "513e60addec7dad391d350d1bc4b495b15531b55c4010bdcb0a5bda4806db76b"
+    },
+    {
+      "path": "shaders/tile2.frag",
+      "sha256": "add6aedeef5e1808c3dbb3a426f08bbedc9b7ca6686d0767e7f985230aa3b9fb"
+    },
+    {
+      "path": "shaders/gib.vert",
+      "sha256": "0163339f2908e650fd213bf23f64c255fa01683e615e117f2e80112e9d84e3cf"
+    },
+    {
+      "path": "shaders/gib.frag",
+      "sha256": "096d02bc596cb7fd83930d4853a1d0044c202521dcdb64b2658d15bd43c415af"
+    },
+    {
+      "path": "shaders/hand.vert",
+      "sha256": "74562c537f1ec13445ee2ca6466d5478fc05cdb0235c2173f92d7e55d3cf5a7d"
+    },
+    {
+      "path": "shaders/hand.frag",
+      "sha256": "0ae946c4036253b102459197989ce1de4c5166a93d5713d4177efe125186e1fc"
+    },
+    {
+      "path": "shaders/boid_batch.vert",
+      "sha256": "12e6afd3bd09f9a1c9a30d660a6d0aaf5dfdac7d09a7d674071b849ff68e66b4"
+    },
+    {
+      "path": "shaders/boid_batch.frag",
+      "sha256": "47cbcbcd5e7d07c9a9ec3d6cfe29662392f440ef3ee18d0b1b50483446908520"
+    },
+    {
+      "path": "shaders/boid_pop_batch.vert",
+      "sha256": "7f4db5ef03407af1d5a362eb48b5d92c73ba39fd83f739a7b2c501c32b744a09"
+    },
+    {
+      "path": "shaders/boid_pop_batch.frag",
+      "sha256": "1557af7c7bf0ca634887eb977bacfbc26d72b01e79cd36db2e191d1b32ca958f"
+    },
+    {
+      "path": "shaders/hand_batch.vert",
+      "sha256": "7903b14751c0e9983b32389a6f4ba5b66b5149808a72a8f0d65089eeb891af8d"
+    },
+    {
+      "path": "shaders/hand_batch.frag",
+      "sha256": "b508964872aba60df39fe69aa8d556259a1dffcd024a262f9053eea9ea14f014"
+    },
+    {
+      "path": "shaders/squidarm_batch.vert",
+      "sha256": "0fe9b9635946989ffe2f0df075ab469dd7b6438d88fb1535770658c69757372b"
+    },
+    {
+      "path": "shaders/squidarm_batch.frag",
+      "sha256": "fb8a60ea22474ae7a5d30c7e57a4d2da0b90d71dc868220ec75f3908423d0198"
+    },
+    {
+      "path": "bindings/dagger.txt",
+      "sha256": "d947b498e087224416f7cb406bf8d94f0f11296716398451b87239a89c44eca0"
+    },
+    {
+      "path": "meshes/dagger.obj",
+      "sha256": "f77ca5e4265f10ef24073b7b682cbc71f73a3b4b435cd46f10ff2eae9476c350"
+    },
+    {
+      "path": "textures/dagger.png",
+      "sha256": "f032ce0d1e4207908bb99ef5fe0617c4171b3fdadc33fa6cde2ffc4f773e4698"
+    },
+    {
+      "path": "textures/dagger0.png",
+      "sha256": "1d8ac65b059c25de09a61ae654162b13bec9ba9c30712c50fa43d9ef0f03046d"
+    },
+    {
+      "path": "bindings/dagger1.txt",
+      "sha256": "5d5efc3b93ccf2e5a8f2ae0bd44af29063f8fd52709ba8e895c06dbe06550af4"
+    },
+    {
+      "path": "bindings/dagger2.txt",
+      "sha256": "e499d1581283afb52ba1c293a7b435bf67b178666df7b9c49f3e686a6d26f8b5"
+    },
+    {
+      "path": "textures/dagger2.png",
+      "sha256": "6b76733e3aff99db1891f761a2bafb08960c301d18f48780509b78ba12c065f7"
+    },
+    {
+      "path": "bindings/dagger3.txt",
+      "sha256": "66439c91552c1f1cdeaa1a4bc18137e56ce02e32dfcc1e3af4657c04ed90bf63"
+    },
+    {
+      "path": "textures/dagger3.png",
+      "sha256": "2915f74327cd6f556118a0d92d06bf8a78e963ba80832315fc6a57b9fe9850f7"
+    },
+    {
+      "path": "bindings/dagger4.txt",
+      "sha256": "0882ec7de6f83425de74f08f74225fc842318bead1864216a7b49a92bf4839c1"
+    },
+    {
+      "path": "textures/dagger4.png",
+      "sha256": "cdf3babcfe3fa199e953d574ff64523af19a39682f18ef2b83e10623fafb82d8"
+    },
+    {
+      "path": "bindings/dagger5.txt",
+      "sha256": "a7fa0ffbb3b19477e8b2c05133154dc9220ed55a73042e2b40233e64066c2e20"
+    },
+    {
+      "path": "textures/dagger5.png",
+      "sha256": "fe816516f0f84fafb88c07c66564f4bd64af35bb8ba2f5a7962ee26ea5b26da8"
+    },
+    {
+      "path": "bindings/dagger6.txt",
+      "sha256": "3097fba70501f81c8c28069b1c6945a59affe6ee0d8d2fe6bb39ed517d3194cb"
+    },
+    {
+      "path": "textures/dagger6.png",
+      "sha256": "b67fe0c6ccd6160343130966f81762593609e724bc751adbf8148b3457dc1ea9"
+    },
+    {
+      "path": "bindings/hand.txt",
+      "sha256": "33b23fcb1087c8f9496610d246fea02811899933ad751b5a36fe83e55c98535c"
+    },
+    {
+      "path": "meshes/hand.obj",
+      "sha256": "e94aa5c2b39f6d106762850a38913b6265790cd75de051c9c7cb701a9677784d"
+    },
+    {
+      "path": "textures/hand.png",
+      "sha256": "b692ac441e6f2a7da9efc0ff8834c01e738141003f20fb8aa760234303289f02"
+    },
+    {
+      "path": "bindings/hand0.txt",
+      "sha256": "806f254878833c19972e84e8c9786ca5712b6bdaa2d318320f572ffa72a2607c"
+    },
+    {
+      "path": "textures/hand0.png",
+      "sha256": "e297aa95c50f393c33221fc5b60e127fa3f1f480da72dcebcf4eb93b0abc856f"
+    },
+    {
+      "path": "bindings/hand2.txt",
+      "sha256": "8b36ca05078a0022f0300a501f162fa7cf11681cac2d2ee3f0a03ac2407e8e78"
+    },
+    {
+      "path": "meshes/hand2.obj",
+      "sha256": "d0ba72e79c9eeeab0a28b7bb8851771a621780852e0655e1ae125a67ec9415cc"
+    },
+    {
+      "path": "textures/hand2.png",
+      "sha256": "6e62e35ce82d94bcee8123bbb062f6cd24914066eb57dcbca748dcfc21afa46c"
+    },
+    {
+      "path": "meshes/hand2left.obj",
+      "sha256": "b08849d2bfbdb36432de0794a149e15873de13c7883c458fa43a1fe3e21ae72d"
+    },
+    {
+      "path": "bindings/hand3.txt",
+      "sha256": "5c0abece3d0e3d791764fdb80a83682f92bd069814c08115d70b6f7e8b3d3ad4"
+    },
+    {
+      "path": "meshes/hand3.obj",
+      "sha256": "0cc21f24eeb7f6d8de081d67b743b668f5123f0eec6b4571ce7154e8a630ff48"
+    },
+    {
+      "path": "textures/hand3.png",
+      "sha256": "b1e54de936c02a5f5ade911ef24e40feaf3e459972fb5a5cb60313e5d341b682"
+    },
+    {
+      "path": "meshes/hand3left.obj",
+      "sha256": "8bedabae3c1311720293ce310e034758e5c8c72e4065fc1c16552778a5aa83bf"
+    },
+    {
+      "path": "bindings/hand4.txt",
+      "sha256": "43bac61702f310f3413e917445cf50062b93703ae567dd355140c79b2f1c42d5"
+    },
+    {
+      "path": "meshes/hand4.obj",
+      "sha256": "1a96d11f232ddad96540bb7fcb23109068934c32fee18c404c34e00922dd07a7"
+    },
+    {
+      "path": "textures/hand4.png",
+      "sha256": "b82552200f3fe39a475a6830ef404974bc04b557188447e6222e57db680e37ff"
+    },
+    {
+      "path": "meshes/hand4left.obj",
+      "sha256": "f949807aaa456553559b7b19b9886c860fc7fb5c372222163eaa960997c912b7"
+    },
+    {
+      "path": "bindings/hand5.txt",
+      "sha256": "e303a1443e75a7a0d9f0eca8046cce2cf17a497e46dea7383e53d2262fa464df"
+    },
+    {
+      "path": "textures/hand5.png",
+      "sha256": "016195b84d390b0baab3d4805aef6ad3e89a3e11e390ac273d4f777ea3879d6f"
+    },
+    {
+      "path": "bindings/hand6.txt",
+      "sha256": "b7d9454bde4f0fc9aeb2dc2de3eb442e928c452c3dfec6adc271358e2e114b99"
+    },
+    {
+      "path": "textures/hand6.png",
+      "sha256": "1b9922cb3a843c6e3a845b4c18291119df68724fd0df9b155133aaf02e29031e"
+    },
+    {
+      "path": "meshes/handleft.obj",
+      "sha256": "9410d2214a3e9281d16bdbbade152d0a509c93eac5dff1bdea18c7d859cafaef"
+    },
+    {
+      "path": "bindings/boid.txt",
+      "sha256": "02e37fff2ac371d35547f00209c14b555a42619cad6cfd369a32d3a73bf390f8"
+    },
+    {
+      "path": "meshes/boid.obj",
+      "sha256": "947df3e0c87314ebbf5fd96473a0841cd1c6941910900398177390d2dc84377c"
+    },
+    {
+      "path": "textures/boid.png",
+      "sha256": "6cddbf94b15b58dff1b609bcbc34c4dd02b12c73e5d3c93f229df67f6a309ed6"
+    },
+    {
+      "path": "meshes/boid2.obj",
+      "sha256": "7e516037bd001557957b36a1e3065315adfbb380f82e2aa17c7d54f9f355c14a"
+    },
+    {
+      "path": "textures/boid2.png",
+      "sha256": "5958f4a8e885c2c04d6f43306caba9419e37a04fb866a7499d11ab74e0af80d5"
+    },
+    {
+      "path": "textures/boid2gib.png",
+      "sha256": "fca2c8187b3f3ce9a32b0d3c6874565cd0ed86859108eb716585a62bb4a6581a"
+    },
+    {
+      "path": "textures/boid2hit.png",
+      "sha256": "216207057db375fcee2b1936bb0ec4c2ac27946dd4ba27022a9457e2764dfe79"
+    },
+    {
+      "path": "meshes/boid2horns.obj",
+      "sha256": "e98d0c37a24ae48da84c723d781232e54630dd4de38032a4bd037442f3b9dc6d"
+    },
+    {
+      "path": "textures/boid2horns.png",
+      "sha256": "d855f75aebda217427685b7858f4ab6209e0197641b973b6bc7b089672df0355"
+    },
+    {
+      "path": "textures/boid2hornsgib.png",
+      "sha256": "aeff29d3fd277ce7f28dd5255df7be662cf6d4162e38a8a6bf19bfb7630c8603"
+    },
+    {
+      "path": "textures/boid2hornshit.png",
+      "sha256": "52c8163c48223f71f86adefba796f3990763eda31e732607abcb1a6dc7bda699"
+    },
+    {
+      "path": "textures/boid2hornslev.png",
+      "sha256": "d12d19a1fd3396222e2c587e12a13dd2456aad9a71a68811c4c446fed9ee9743"
+    },
+    {
+      "path": "textures/boid2lev.png",
+      "sha256": "fac622b45ca8ff161ac8f3e9401659a20cdb51603d33f8780eed155844616fdd"
+    },
+    {
+      "path": "textures/boid2levgib.png",
+      "sha256": "55a912d1c09443de97f98551ead9e16171cc5d160081db2b53c3bc576480dc83"
+    },
+    {
+      "path": "meshes/boid3.obj",
+      "sha256": "b5b8efcc355928a045b50e6de1563dc55fb714dc9ce0ae123029c5f5985a7b51"
+    },
+    {
+      "path": "textures/boid3.png",
+      "sha256": "600b7fb6f27abba31170cfc620e6412a86390455652d6b7128b9289378bfae88"
+    },
+    {
+      "path": "textures/boid3gib.png",
+      "sha256": "fca2c8187b3f3ce9a32b0d3c6874565cd0ed86859108eb716585a62bb4a6581a"
+    },
+    {
+      "path": "textures/boid3hit.png",
+      "sha256": "216207057db375fcee2b1936bb0ec4c2ac27946dd4ba27022a9457e2764dfe79"
+    },
+    {
+      "path": "meshes/boid3horns.obj",
+      "sha256": "c1c394327a5a506089fa83720015095ec3a9f1593d19feab31275c71a6175de3"
+    },
+    {
+      "path": "textures/boid3horns.png",
+      "sha256": "5bdcaa888c0dac90b7046993cd9fda2300bd29de4ac4ea95d1daecc617b2edd4"
+    },
+    {
+      "path": "textures/boid3hornsgib.png",
+      "sha256": "fd1efd654b1fb39e0cec1378419403522e48addafed98e5b290fb9e360ddd40f"
+    },
+    {
+      "path": "textures/boid3hornshit.png",
+      "sha256": "3d02f8c1dcf6be0390238674250afa2d9225fa7e7d190b082b901296745e93ad"
+    },
+    {
+      "path": "textures/boid3hornslev.png",
+      "sha256": "424c1f4ca10b80d7b9caa688de4ae00064c32f1bd6db3f465e5280ede8f29d83"
+    },
+    {
+      "path": "meshes/boid3jaw.obj",
+      "sha256": "dd46bda0952f1c4ccd18897d11ee6a9c6cf4136eb0e34fd57aea47944d0e603e"
+    },
+    {
+      "path": "textures/boid3jaw.png",
+      "sha256": "4b71a83a1ac09884a9a79dcc3cf287a3f5d75dee58b19ee14b4401194d998afc"
+    },
+    {
+      "path": "textures/boid3jawgib.png",
+      "sha256": "fd8591757e83885dc911fe5fb4dba1a8096734e5202d2e50be12ac7b89b66be7"
+    },
+    {
+      "path": "textures/boid3jawhit.png",
+      "sha256": "c9a61e7245cc9fd7fbed6558123459c8a75063b1ae3143d444d92801adc846fa"
+    },
+    {
+      "path": "textures/boid3jawlev.png",
+      "sha256": "e4a82d878c673e3975d402b7a934aa0ae7990ca3d08d8248f317396fcda96497"
+    },
+    {
+      "path": "textures/boid3lev.png",
+      "sha256": "78962dbdf75c03fe36d53de58aa01be6c302fb3d9afc1bcb405900de500a2f57"
+    },
+    {
+      "path": "meshes/boid4.obj",
+      "sha256": "2882e7ad6db35d02beb4588d3327b57cc85ef2ab341938de45458549f7a68670"
+    },
+    {
+      "path": "textures/boid4.png",
+      "sha256": "ecb56bc1e8a54995293235df533cd97b8702757e688d8bbabf3308fe08d1e5d4"
+    },
+    {
+      "path": "textures/boid4gib.png",
+      "sha256": "61b54054a8eb5b7448adc3569b3b4de15797cffa6dda63cfe3239500aa0939e5"
+    },
+    {
+      "path": "textures/boid4hit.png",
+      "sha256": "10c0d298b17d33bc14c8a03e0c6846594a7647d49698a5d19e299e4274a85362"
+    },
+    {
+      "path": "meshes/boid4jaw.obj",
+      "sha256": "e46888b3d9597ed3a80f9d8b6ef6c7d43e6d55447e5047c01d8708c50d80b22f"
+    },
+    {
+      "path": "textures/boid4jaw.png",
+      "sha256": "3c9ad30dbfb66d308312360ca806e4b61915894552cf532fff6a6a6de2884309"
+    },
+    {
+      "path": "textures/boid4jawgib.png",
+      "sha256": "01fb8436bc0c6e1721322450ceda59f47f5dba46807b5965d77495a5a789b292"
+    },
+    {
+      "path": "textures/boid4jawhit.png",
+      "sha256": "bb1e9bc992e5091bfb60391091ea04e5882c1423ed78d80fbf32dcabfdf8e9fb"
+    },
+    {
+      "path": "textures/boid4jawlev.png",
+      "sha256": "5107b1fceebc04b34afdc27738cb6ea2ffbf05d5361006ff0167607499e94396"
+    },
+    {
+      "path": "textures/boid4lev.png",
+      "sha256": "d7afedaafcca2152ac1d12c59e1a77cd94c9f85664364e184bbdfd0d1cecd29d"
+    },
+    {
+      "path": "textures/boidgib.png",
+      "sha256": "0a7cd8f419e524fa2c666d1b478c14143fa4c6392f9fecc099db805f310aec48"
+    },
+    {
+      "path": "textures/boidhit.png",
+      "sha256": "9c73255fe6d406a9f0156e3534c919ea22f6b62cc1f27c379bcce3c3bc429371"
+    },
+    {
+      "path": "textures/boidlev.png",
+      "sha256": "5adc8d8decda43d34a59985f962ea1955437d07b74f02345bf94c84599364a3e"
+    },
+    {
+      "path": "bindings/boid_pop.txt",
+      "sha256": "0a07589976b40d1f9667bb6a03e99f07711db889a4da32a997a9fe330f2b6720"
+    },
+    {
+      "path": "textures/crystal.png",
+      "sha256": "0d7a2477ed142a0b76df173dd8b94b50d9a53510d045ef07b8c343c35f484fa6"
+    },
+    {
+      "path": "bindings/gib.txt",
+      "sha256": "0d1721558d421121f063f44cd60addd360f25bd7a58b92b7f9114be2d272a735"
+    },
+    {
+      "path": "meshes/gib.obj",
+      "sha256": "5c5e0454c4dd478ee89e8854e570ccf2fe214bf3f951920912dffe4be9369f4d"
+    },
+    {
+      "path": "textures/gib.png",
+      "sha256": "10cd1f244f805b984726e60eb853bc8b0a2b1256182dec8a0accaf056ce18cf1"
+    },
+    {
+      "path": "textures/gib2.png",
+      "sha256": "095ba0c776ab064ed547bad23df098e5839c7963a08701938b5d4672e24538df"
+    },
+    {
+      "path": "bindings/gigaegg.txt",
+      "sha256": "daa8f49aebc75f2665897886e155851ea99111d40943d4ab90193f00b1c90197"
+    },
+    {
+      "path": "meshes/gigaegg.obj",
+      "sha256": "22c80c86bf9583a8277c2f25c3276d5f88f60a969cf1cc6e967c51e19f3e1f06"
+    },
+    {
+      "path": "textures/gigaegg.png",
+      "sha256": "03a16ee1c4d66777d21d0a64fe3fc824f25c8415a94f3a6e5fea660aba48d951"
+    },
+    {
+      "path": "meshes/gigaspiderbody.obj",
+      "sha256": "8d0af862bdad0d7bbfda4fa63c0f35e1f8e665e5a933dcdf9b2279aba6942410"
+    },
+    {
+      "path": "textures/gigaspiderbody.png",
+      "sha256": "94743db604d79d191b0cbb53b5ef3603efd9ee172b6750e40312861f49be0355"
+    },
+    {
+      "path": "meshes/gigaspidercrest.obj",
+      "sha256": "81f95959092a23287ccf37c66b0958c1355b4a346c0bc4b0b93ee357d5ec9dde"
+    },
+    {
+      "path": "textures/gigaspidercrest.png",
+      "sha256": "764d5ce604e76923352f0eb6210f789265b575a0c696d66776fc35840f99d6d2"
+    },
+    {
+      "path": "textures/gigaspidercrestgib.png",
+      "sha256": "dd3f72dfbcc7bcfb9c3923835e38ceff21b7a5619456019b204194c00e33e7a3"
+    },
+    {
+      "path": "textures/gigaspidercresthit.png",
+      "sha256": "89ab61634397b7e6c6b9e2f13d9fdafc2891407985cc212edd91fdb71802598e"
+    },
+    {
+      "path": "meshes/gigaspiderfangs.obj",
+      "sha256": "8e358000ff83356c7a03ec8725bbfe3c1e87226eeed880187f4f892c6b6687bc"
+    },
+    {
+      "path": "textures/gigaspiderfangs.png",
+      "sha256": "e5cb32b75a493911b4407da64c53b8053ab3f12240c8a5cb43060dba9daccb84"
+    },
+    {
+      "path": "meshes/gigaspiderfangs2.obj",
+      "sha256": "f5e1aec298a872ffcdc878cd9c41de01b2db80591f941eba5f833776a7a9be2b"
+    },
+    {
+      "path": "textures/gigaspiderfangs2.png",
+      "sha256": "a8a3783b4d811e9c88b590396ea4bd3710dedc5e0db4ec59f3880c2107004a5d"
+    },
+    {
+      "path": "textures/gigaspiderfangs2gib.png",
+      "sha256": "faeff60e078eb8ac38a73ecaf05f33b994d282ad14426bf954de57797ff2274d"
+    },
+    {
+      "path": "textures/gigaspiderfangs2hit.png",
+      "sha256": "d8e4ffb8f9c422624e7bfcd6f43ed1c946760fd5034c28c8e81d4153dc45eb1c"
+    },
+    {
+      "path": "meshes/gigaspiderhead.obj",
+      "sha256": "93c96b5b5951855e03d026cd4e26116f7f27ffd0b54fe590ee28e94a2bf7b769"
+    },
+    {
+      "path": "textures/gigaspiderhead.png",
+      "sha256": "8c227fa956a286ba2441d831f4b2c2792da70680a64cef96adf5f9341ffbf441"
+    },
+    {
+      "path": "meshes/gigaspiderhorns.obj",
+      "sha256": "577564f71eb770c973a33f929a6ae9ba2e8626d8320c9a2a3d6dc9dc42b31921"
+    },
+    {
+      "path": "textures/gigaspiderhorns.png",
+      "sha256": "b55ef6508cb8b2f772df9387f3ebccf3e488cc78e09da449f78177be1c482c77"
+    },
+    {
+      "path": "textures/gigaspiderhornsgib.png",
+      "sha256": "51025242060e048dee109fd66cf7b06606d148a45bd1646a953a5632e6d2c0f4"
+    },
+    {
+      "path": "textures/gigaspiderhornshit.png",
+      "sha256": "09b7a1ddc4379e90d82c6703dd8239198a1c22e18b06ad0614b920405b89ab98"
+    },
+    {
+      "path": "meshes/gigaspiderjaw.obj",
+      "sha256": "ff825d0e63663280d725f91c02e7c4a2c20caf869d69879e4c64b61ea4f9da49"
+    },
+    {
+      "path": "textures/gigaspiderjaw.png",
+      "sha256": "4476f14ae498ac4dff291ea741d602b54107ea9f278fda7459c0353fb095160f"
+    },
+    {
+      "path": "textures/gigaspiderleg1.png",
+      "sha256": "08ddc1e192ed3b88dfa7a640018e896e5b01dc4e886c45124e72c04cdd8440aa"
+    },
+    {
+      "path": "textures/gigaspiderleg2.png",
+      "sha256": "a3a422dad97dfeafb89d9d3f7df5559f1bdd4f7f486708cf5a7a109fb90e0acc"
+    },
+    {
+      "path": "textures/gigaspiderleg3.png",
+      "sha256": "7b0f0f7171bda84460b44ebb1d7109bbde3475bb31215b5c2aeb49e77e0e6ab0"
+    },
+    {
+      "path": "meshes/gigaspiderpalm.obj",
+      "sha256": "7c6afd16be996531bed960f1263f8436150a0ec55b8025d12c2dfcb9d44a9dc1"
+    },
+    {
+      "path": "textures/gigaspiderpalm.png",
+      "sha256": "d6c54baba340142347d92fa4d48f4dbb0a15808877d93e5c7dafab54a1df12e5"
+    },
+    {
+      "path": "bindings/immortaleye.txt",
+      "sha256": "321208edf8c6e59c7befe0c785e2832a4bd4a9a3a0d1d0ec40c995d59e9e304b"
+    },
+    {
+      "path": "bindings/immortaleyehit.txt",
+      "sha256": "054f943b4b8e66bbc1944d7e7113ce38be769d14434321aa60c5df3535d71617"
+    },
+    {
+      "path": "meshes/immortalorb.obj",
+      "sha256": "f9d91dd80d98747f0ab007badb64145e2dec6fcd55d24f2abff022f27384551f"
+    },
+    {
+      "path": "meshes/levicrown.obj",
+      "sha256": "eec545d5c3fe8bb29ee886fea0bbb36e95e5f5b1a12369cccbb8be16e9f23853"
+    },
+    {
+      "path": "textures/levicrown.png",
+      "sha256": "7b6aefab843718374af11c1acd551ebf8e9c48f735c3f2019b2512652682454c"
+    },
+    {
+      "path": "meshes/levicrown2.obj",
+      "sha256": "a61361082c9bc8b9cab08a02ad1ba68c602c12fee9824f4a36dbf9df6bd9133a"
+    },
+    {
+      "path": "textures/levicrown2.png",
+      "sha256": "baae8e573ff97a5f4a73c92f74bc2729584154000380d6a707e0396e40094525"
+    },
+    {
+      "path": "meshes/levicrown2jaw.obj",
+      "sha256": "9cdeffef1044e3a82d87f30f02cb66dc03066ef7818201797b1b3b49a4d5238b"
+    },
+    {
+      "path": "textures/levicrown2jaw.png",
+      "sha256": "23b343517c32cfa2c6da4b1126569e36b66f93727978d24de598d26c21bf1538"
+    },
+    {
+      "path": "meshes/levicrownjaw.obj",
+      "sha256": "3a362ef2215eb58c80836b502f756e9c14f77fe40615df9522e68cfb1626e329"
+    },
+    {
+      "path": "textures/levicrownjaw.png",
+      "sha256": "23b343517c32cfa2c6da4b1126569e36b66f93727978d24de598d26c21bf1538"
+    },
+    {
+      "path": "meshes/levidividerskull.obj",
+      "sha256": "65c3908219634d4df3e1edfb0e962c85c3bcc3a40ca62b8ecd00cf956f59fd42"
+    },
+    {
+      "path": "textures/levidividerskull.png",
+      "sha256": "041b11a32f844ea3a3542f63d935768f06380a48e6ac7ebd19ce288f6b73aeb9"
+    },
+    {
+      "path": "meshes/levigem.obj",
+      "sha256": "0558aadefc3c0d6efd348c53f51a35320ad11d6f4a5a48b145115b95addad82a"
+    },
+    {
+      "path": "meshes/levigem2.obj",
+      "sha256": "72fcdcc1918cc12f2fc659bf737fa2e869d92aa22595f8c95bd347723bf344a4"
+    },
+    {
+      "path": "textures/levileg1.png",
+      "sha256": "66311ac274cbd6861d45a1e1448239816cc0a72bd94af8a70ee20d81d19842f5"
+    },
+    {
+      "path": "textures/levileg2.png",
+      "sha256": "667541e46caf33b7ae5599540c6f5531f07907f1d5da903d5f5b2accd2648254"
+    },
+    {
+      "path": "textures/levileg3.png",
+      "sha256": "5cf13f49a4abe01bcea14afc33a06a1930f9a79e0b16e17395646c15570750ad"
+    },
+    {
+      "path": "meshes/leviorb.obj",
+      "sha256": "70b33eb2429e60bbc0b725675c1bbcc29d1831f13568f194ab2f337f47a3ff2a"
+    },
+    {
+      "path": "meshes/leviskull.obj",
+      "sha256": "c3a09d58d182b49c01f432b60d9b1ae03d1d074a0d45821f913178302be7c14e"
+    },
+    {
+      "path": "textures/leviskull.png",
+      "sha256": "08d65fb3569a84df4d5d601616b3774650c3fa445e5eaf8f1a5adbc1a8f02c87"
+    },
+    {
+      "path": "meshes/leviskull2.obj",
+      "sha256": "054ba0c962a6f5a8c0f5f379093c5eb231efbeff76ab4500c8ff474b6c508cb9"
+    },
+    {
+      "path": "textures/leviskull2.png",
+      "sha256": "c0859c4820a11002750eb766afbb26de09509cfac92031daed88ec470d13731b"
+    },
+    {
+      "path": "meshes/leviskulljaw.obj",
+      "sha256": "4cddccb1b1984a8941c3fa35e5173628f2337d254a612f1d97cd6ae73f2b6ae3"
+    },
+    {
+      "path": "textures/leviskulljaw.png",
+      "sha256": "46065a5fbbd7d212ab9757f51d292f71c5717056a22c5f0f83bc77c0318d89bc"
+    },
+    {
+      "path": "bindings/levitent.txt",
+      "sha256": "ee663f252923bfe09a439118c05207aabfefe53b83995cf840b3ad7841ea2ef9"
+    },
+    {
+      "path": "meshes/levitent.obj",
+      "sha256": "abc3a88abc3ccd23cd42291557a5ca028ed6db4c0a23b871b2d8af970e1ff279"
+    },
+    {
+      "path": "textures/levitent.png",
+      "sha256": "de185b4d13668f6348a3ec4ad49dadc185db56b140507a943fbb6c7b23af61e9"
+    },
+    {
+      "path": "meshes/levitent2.obj",
+      "sha256": "d097fc32765f14de87f8e1a53bb68984991b1dce5ee7594d75a2966613e51fc2"
+    },
+    {
+      "path": "textures/levitent2.png",
+      "sha256": "80ad66100df90c674ced6ac854ae52c588120cc15c5ec927316988406856618a"
+    },
+    {
+      "path": "bindings/levitentgib.txt",
+      "sha256": "8e4eaee629a88bc0325b50486db6bc4270f09036d06d2361d214c131af2c1902"
+    },
+    {
+      "path": "textures/levitentgib.png",
+      "sha256": "ede16b3c9a34efc997316769f29a913bfbacc04a4fd2383db62cc97cdebb51f8"
+    },
+    {
+      "path": "bindings/levitenthit.txt",
+      "sha256": "b008bc5df26b795a9da965232f776f2ac7a3a88c522522bd40169ddd233cb6bc"
+    },
+    {
+      "path": "textures/levitenthit.png",
+      "sha256": "f53187b0c124d6e2a7f423f6346c7a15d2fecde56739efadce63314f29fb157f"
+    },
+    {
+      "path": "bindings/leviwarp.txt",
+      "sha256": "75505eece811af25d563ad774d633efda0adf9ea2563efe3512499959cd32e21"
+    },
+    {
+      "path": "textures/leviwarp.png",
+      "sha256": "c940c861be3ec6e465297081f98f466c673202d146b9498352870ea0bbe99990"
+    },
+    {
+      "path": "bindings/leviwarp2.txt",
+      "sha256": "44b1881823cce5b6858dad4acdf1ac519dceb7448ebce0e7292d399039a066ef"
+    },
+    {
+      "path": "bindings/leviwarp3.txt",
+      "sha256": "09007b3eee643deca0306f5411f8aaac12a2900f50a0ad2fe6a7d1d8b2b98f07"
+    },
+    {
+      "path": "bindings/minisquidarm.txt",
+      "sha256": "d877d1c559f1d396e0896f67847d160865d659d81829c6d9dcc9fc494e83b3b9"
+    },
+    {
+      "path": "textures/minisquidarm.png",
+      "sha256": "a312d2b6a23f76d437b5592ffeb41c3ce460f83afac883b0160827697158bebe"
+    },
+    {
+      "path": "meshes/minisquidcrest.obj",
+      "sha256": "6eb7e0ad413523d3dfe47272e740bfd9c083bd2ff485fd58356a3f4e19e476b3"
+    },
+    {
+      "path": "textures/minisquidcrest.png",
+      "sha256": "bf6ff28e9626183427c6b90b97b552c037c71a82b3148bd8e9cd859e4f3796ae"
+    },
+    {
+      "path": "meshes/minisquidcrestskull.obj",
+      "sha256": "68c08ae66db9fddc7bc80a95d08b9e213025c725674b1eec587ed1a03f1ac00a"
+    },
+    {
+      "path": "textures/minisquidcrestskull.png",
+      "sha256": "bd8e06d49d9588b12c7caffc9d8395ae86f695eda9fe1ecf9bde08e7bba56052"
+    },
+    {
+      "path": "meshes/minisquidgem.obj",
+      "sha256": "e6eb7f68c731d627bdce1abab1d050392903664b2f14154969bdfe3f76c3e626"
+    },
+    {
+      "path": "meshes/minisquidhorns.obj",
+      "sha256": "6e5c2aa1c4364d278282de960f3d84fcf60d1b79282b56c84765402c998c0182"
+    },
+    {
+      "path": "textures/minisquidhorns.png",
+      "sha256": "aa06c19ed16ebcf792d8b23ed9249e64f6a6cbe0d5353cb9dc073e3dc32fbaef"
+    },
+    {
+      "path": "meshes/minisquidjaw.obj",
+      "sha256": "e3ab0b42b3d9d42ecdaf255cbbefd9f0f4ead094e0f201a2a5e7259669f7d220"
+    },
+    {
+      "path": "textures/minisquidjaw.png",
+      "sha256": "c3d0c8c049185a84cb8af91f141b3c6bd2388c0d85b3c5f92daf1b5ecab481fa"
+    },
+    {
+      "path": "meshes/minisquidjawskull.obj",
+      "sha256": "dbe421fc51567d8874c15fdd7fe1898cbd0bb67b87bb5c4e2ecbf097ca2e0b6a"
+    },
+    {
+      "path": "textures/minisquidjawskull.png",
+      "sha256": "f9b1d15c6de1bfd6fb6c2a67b63771f1a4b35fcf4c5126258724e24bfe23c132"
+    },
+    {
+      "path": "textures/pedeblackbody.png",
+      "sha256": "f3bc3d7a51865c2163390714912195338d7718a9306ca48c58e097a9e36ba75d"
+    },
+    {
+      "path": "textures/pedeblackbodyfragged.png",
+      "sha256": "2a2af3b9677cdadcff7753778d053564b5cbd3d976249117ead04b4bed55594b"
+    },
+    {
+      "path": "textures/pedeblackhead.png",
+      "sha256": "66f98f01289bca61a928dc97161830387e02780ce8b08d47bfa585415463d94e"
+    },
+    {
+      "path": "textures/pedeblackjaw.png",
+      "sha256": "5ee4fc210131911c905c7bbfe224996c8b0df127cd5185ef936e08049688bad9"
+    },
+    {
+      "path": "textures/pedeblackleg1.png",
+      "sha256": "fca8022a32bba68a893750396f73a6049107e0524ff726749fa86d97de82ba4a"
+    },
+    {
+      "path": "textures/pedeblackleg1fragged.png",
+      "sha256": "f98db95f6e17fd2e2702184d3b3659362a34b00ab99a54198a8fee723e1b5253"
+    },
+    {
+      "path": "textures/pedeblackleg2.png",
+      "sha256": "e09dc34e214199d0f79603cb1fada798eb4a3c79e6e383d74a4b2b8bb9e1aed8"
+    },
+    {
+      "path": "textures/pedeblackleg2fragged.png",
+      "sha256": "a98ef42f1652defce59f21d39d3434d2d6f23bad242a304e18ca79757f387f2b"
+    },
+    {
+      "path": "textures/pedeblackleg3.png",
+      "sha256": "67b6a391aad65c91eae057b4ac887933e10b32aa60ed16c4488e5d457d774a00"
+    },
+    {
+      "path": "textures/pedeblackleg3fragged.png",
+      "sha256": "03bb2c35439e8495851543c7bd86d7bcc37d79ec5ee437168826bb2bc2c0181c"
+    },
+    {
+      "path": "textures/pedeblacktail.png",
+      "sha256": "0973f3f1c5f67ea7463c23ec18607ecca98c3f8affbdba870a0c25db79003f6c"
+    },
+    {
+      "path": "textures/pedeblacktaillegs.png",
+      "sha256": "f3c7e64945284711256bfec42a58192f688bac4cf54b75ffbe32975aee2c12f3"
+    },
+    {
+      "path": "bindings/pedebody.txt",
+      "sha256": "f11dd5fb3ccb149ded329f6d8dfdcba3961ad4372fdf25625f01bda6ee5ccb41"
+    },
+    {
+      "path": "meshes/pedebody.obj",
+      "sha256": "d9a79b59e556d2b883e30c4f11769242cf1b0cdd819c071718ccd20ca0ccd94b"
+    },
+    {
+      "path": "textures/pedebody.png",
+      "sha256": "81d72e4051b41a409c1762560f63e915c58ee8a845e6c4622caa7cdba8d3c26c"
+    },
+    {
+      "path": "textures/pedebodyfragged.png",
+      "sha256": "04750eecfb53f6d7d43c0d711c0225a97817344df8f83cfb999a0f433bdc3240"
+    },
+    {
+      "path": "textures/pedebodygib.png",
+      "sha256": "df0d4a1a95f93e2238ae041ab7162a86e13892117d81e78750623c6f5917cf05"
+    },
+    {
+      "path": "textures/pedebodyhit.png",
+      "sha256": "256e7ff3c780d7384860ab3c4ceadd88df9a8ebab668f325dc5fbba18e6bffc8"
+    },
+    {
+      "path": "bindings/pedehead.txt",
+      "sha256": "4c46e8ab6561bf80989a9563a212a32881be9f6e105973513cf961f2cfca04d9"
+    },
+    {
+      "path": "meshes/pedehead.obj",
+      "sha256": "b697544bd77003c541f35ae4622fe7699a196264a6b8df64768745e9eb6b4587"
+    },
+    {
+      "path": "textures/pedehead.png",
+      "sha256": "df7d93ecc3e0e7d51fcc92df0568db4307bfc04095d946bfe4f1c8731500afde"
+    },
+    {
+      "path": "textures/pedeheadgib.png",
+      "sha256": "589dc315093f2445f8584af2d8f9e55dfac653ecc16eacfa24090d88d40790fd"
+    },
+    {
+      "path": "textures/pedeheadhit.png",
+      "sha256": "bb94582392d095e81218c88e9f741fd342110f20bd5ac31ec18d23be56c91548"
+    },
+    {
+      "path": "bindings/pedejaw.txt",
+      "sha256": "524940ecffa94297af1201829c1a20dbeaf13e1d63ecced638285f1d52e86267"
+    },
+    {
+      "path": "meshes/pedejaw.obj",
+      "sha256": "e4cdf094764e811a3b6f576d23f58e9df0140f5bc3fcea99ab01b93fa7eed407"
+    },
+    {
+      "path": "textures/pedejaw.png",
+      "sha256": "5a017ac6c51856ad87fbe07860339a48f98276894b2e048bd25c68d59f6b0f3e"
+    },
+    {
+      "path": "textures/pedejawgib.png",
+      "sha256": "5d9112fb79268834a51344879228f2f0c515efedb7e2ec6560c41611fc15d7c9"
+    },
+    {
+      "path": "textures/pedejawhit.png",
+      "sha256": "2c191e304ab200fd63effbc0a9520bda70a18bb44588cb5562ac4172d1b6098d"
+    },
+    {
+      "path": "bindings/pedeleg1.txt",
+      "sha256": "ab5daa4a92eb4b7cba208a81a385a7e7db4f12a04758dd04abc0d5421f3164cc"
+    },
+    {
+      "path": "meshes/pedeleg1.obj",
+      "sha256": "d6dd9ea2f4f3aa556ebc28135dffe247f913d19d05e724ce7098e7e872d38c30"
+    },
+    {
+      "path": "textures/pedeleg1.png",
+      "sha256": "f557fee016f0bc2d492d0653df1dfbb5bd889b6f4abf43c0d823f8cc8e16efde"
+    },
+    {
+      "path": "textures/pedeleg1gib.png",
+      "sha256": "cfdf1a93ab1255dacc210cbcd01f83bbd022b54d0fa4edb7e34305a337afc673"
+    },
+    {
+      "path": "textures/pedeleg1hit.png",
+      "sha256": "763090b03f18d042368c75088b6a2ec047b4f8eece7c147dc2ee194999fab57d"
+    },
+    {
+      "path": "bindings/pedeleg2.txt",
+      "sha256": "fe03941620e7f4889d9f454d0560ae6d6de1097f0b52f479335dd8ff481c229a"
+    },
+    {
+      "path": "meshes/pedeleg2.obj",
+      "sha256": "7b579a4d0a7a338f5ea0641b861d132c2f00b5bc5fcc84c45f6990210616cfcc"
+    },
+    {
+      "path": "textures/pedeleg2.png",
+      "sha256": "bf88c59d6869f723d062cda4d3fd9b0a877360e36957a122f2405d351a2b39a5"
+    },
+    {
+      "path": "textures/pedeleg2gib.png",
+      "sha256": "7be81bfec7e38bdb902c6ae27d9d6e98bcb97e538d4733c16a4afa7685f19c67"
+    },
+    {
+      "path": "textures/pedeleg2hit.png",
+      "sha256": "0a952997ba2d277901a0d5cdf1043c27d330f96dc9ed5c3874c8ff2400d5f304"
+    },
+    {
+      "path": "bindings/pedeleg3.txt",
+      "sha256": "dd3ae3a88c861ae52c7bf841d96d7990773de455366002374463b7f7aa3a504b"
+    },
+    {
+      "path": "meshes/pedeleg3.obj",
+      "sha256": "753aba41f1276649826852906b02be1061ca39d87421872c263486500840fee5"
+    },
+    {
+      "path": "textures/pedeleg3.png",
+      "sha256": "46457876288e74f338021de67784cfd5a501d9cb45b067256edac151b45f8242"
+    },
+    {
+      "path": "textures/pedeleg3gib.png",
+      "sha256": "8ce33bc7381c00c631eea5a3a0fa11d20d6fa24091b5e0d634652fdc46abb3a9"
+    },
+    {
+      "path": "textures/pedeleg3hit.png",
+      "sha256": "61d4826a563bfe061f77430c6fa5f7c1a4b08e9476142ad6cac736aafb0ff608"
+    },
+    {
+      "path": "bindings/pedetail.txt",
+      "sha256": "c18ee4f63d3f0aff3d0445b3525e35ecdfdd43ac094214e8fb286702d405da71"
+    },
+    {
+      "path": "meshes/pedetail.obj",
+      "sha256": "a41c53695ae1e579a3b2dcf79eb8afced7bdcc7f6538771ed9628c5144040a47"
+    },
+    {
+      "path": "textures/pedetail.png",
+      "sha256": "1c20edd5c8c07af902754e47d84594f36cd17720450d2a6cf48cf06ebeb64d0a"
+    },
+    {
+      "path": "textures/pedetailgib.png",
+      "sha256": "6669dd456df36264429af230443040a4cdd74b5ca363feef9497f1930bed4248"
+    },
+    {
+      "path": "textures/pedetailhit.png",
+      "sha256": "d60e82fdac498adbdf55ed4d873a9a2f36990beb9e8622d6bd948941d399eb43"
+    },
+    {
+      "path": "meshes/pedetaillegs.obj",
+      "sha256": "99601a5a51916ead4682a526377644ad7fabf1c0f24f132c4d0cc35995f1613e"
+    },
+    {
+      "path": "textures/pedetaillegs.png",
+      "sha256": "f3c7e64945284711256bfec42a58192f688bac4cf54b75ffbe32975aee2c12f3"
+    },
+    {
+      "path": "textures/pedetaillegsgib.png",
+      "sha256": "9c9e453e98b65e1bdabf968c1b7b6596e4f3d1e805a028b91688f7eaa5d58251"
+    },
+    {
+      "path": "textures/pedetaillegshit.png",
+      "sha256": "d8397013972dc681f8940e335f43a63606aa37cbe4993e7b85ada3afda02e899"
+    },
+    {
+      "path": "meshes/pedeweak.obj",
+      "sha256": "bc76491a20193ba0cff5f7b80dc588786a762a796033ceaf1bebec9ee617330d"
+    },
+    {
+      "path": "meshes/spiderbody.obj",
+      "sha256": "684c914bcc3212d0994394c6355549f87ac1a629b142e88759c06ee8be119042"
+    },
+    {
+      "path": "textures/spiderbody.png",
+      "sha256": "5f660b854e154cff6c28481397a0baa6f06ca875f49860962507efdfb1ac73a0"
+    },
+    {
+      "path": "textures/spiderbodygib.png",
+      "sha256": "9ed19ddf3186495d44248efa02b8309814ad13ab3aea19cf44c3105a3c0193b1"
+    },
+    {
+      "path": "textures/spiderbodyhit.png",
+      "sha256": "ac2deb5b6547441a94f703fa6de1391e6ee1c1bedf2b97609cef726f83d39f05"
+    },
+    {
+      "path": "bindings/spideregg1.txt",
+      "sha256": "8c9e541172f644fd650e5a07229b5d9bc5c4b8b1ab1c545291b01f7aa561fd80"
+    },
+    {
+      "path": "meshes/spideregg1.obj",
+      "sha256": "43a25bdeb4251a0e8bea22e908ddb37fe9cfba6eaeee849e13c5a02ea5d97690"
+    },
+    {
+      "path": "textures/spideregg1.png",
+      "sha256": "35db7fb66c6a2055c7dd99374a0246d2ff8f575d85a6f8bca7dad1400b1cdce1"
+    },
+    {
+      "path": "bindings/spideregg2.txt",
+      "sha256": "bb19b9eeeae4dec184fba9f537d5895a963d122f2f9d7bc6f29876258861559e"
+    },
+    {
+      "path": "meshes/spideregg2.obj",
+      "sha256": "5c5e0454c4dd478ee89e8854e570ccf2fe214bf3f951920912dffe4be9369f4d"
+    },
+    {
+      "path": "textures/spideregg2.png",
+      "sha256": "592bac17dae449d5ee81ec127ce3b23901892a433043992a9d2bb07b21b7051b"
+    },
+    {
+      "path": "bindings/spidereggflash.txt",
+      "sha256": "03e1ba166a801939901aa88eaa00bc97b89d8b389843e8ff33c2b18b6458b497"
+    },
+    {
+      "path": "textures/spidereggflash.png",
+      "sha256": "306dff47c2e968e86cfe3206d824511a60bde55a7cf11cb9806d6f31c9cf2c31"
+    },
+    {
+      "path": "meshes/spiderfangs.obj",
+      "sha256": "70fac08ffe276d93ad4e6ceb8d2c5be8f0de108b3335fabcccbb61d0c2ad0aba"
+    },
+    {
+      "path": "textures/spiderfangs.png",
+      "sha256": "ecdb2e75db8b8ad04c4b84a37ba5d9111062ffb328d86bec20d247dfce6b6893"
+    },
+    {
+      "path": "textures/spiderfangsgib.png",
+      "sha256": "1caffe63a478d3822240f156b26b808f2c7d6ca2342f3b1fa736ccae053ff549"
+    },
+    {
+      "path": "textures/spiderfangshit.png",
+      "sha256": "96279ce5b4434369dcea984d0d6743ca38bbfc84bf13a19aa7db6099bb2b6d64"
+    },
+    {
+      "path": "meshes/spidergib.obj",
+      "sha256": "312848ba6406d44f5079f97016b3c5ca6546514aba784a22a477bcac7214ba25"
+    },
+    {
+      "path": "meshes/spiderhead.obj",
+      "sha256": "3c05f39f791fad417550f7464ad448cb5df5f72449bda0ec2cb854af51f535aa"
+    },
+    {
+      "path": "textures/spiderhead.png",
+      "sha256": "8dc0ce97bb4191d574602170885c3ae99ae0ecc2365de26dda08f18508626f82"
+    },
+    {
+      "path": "textures/spiderheadgib.png",
+      "sha256": "7cdc6e7b672d0e7de34188732b2213b3a35620ff81956e7350ee706086dc0f03"
+    },
+    {
+      "path": "textures/spiderheadhit.png",
+      "sha256": "6e62837d9256652f25670d89fb44ea80cb688167039f3d9c80513b569d3ff89f"
+    },
+    {
+      "path": "meshes/spiderjaw.obj",
+      "sha256": "d0e17278202f02dea45027ff19093980278fa7979ab7de549ebb7de3485af257"
+    },
+    {
+      "path": "textures/spiderjaw.png",
+      "sha256": "e5c6369b6027dc1351d8fc5ddde26929e67bbdc4b144661de54b9bbce8b0c1d2"
+    },
+    {
+      "path": "textures/spiderjawgib.png",
+      "sha256": "38d8b2a4e4b38a302c11aa678da5161ea1bcc6a8ec2783a56de6287ebe113a4b"
+    },
+    {
+      "path": "textures/spiderjawhit.png",
+      "sha256": "19b946773b6edc9d2806c1979e7142925f77e172e73b2154bc0b3b79ff983eaf"
+    },
+    {
+      "path": "meshes/spiderleg1.obj",
+      "sha256": "c07fba5027d9d886c699ad88c45d222c9a2f21291bf5eecc7182f5b5af95222c"
+    },
+    {
+      "path": "textures/spiderleg1.png",
+      "sha256": "06e7653434612060b5c34449b0257f7d0914541099f31cae15f68765c0765624"
+    },
+    {
+      "path": "meshes/spiderleg1f.obj",
+      "sha256": "c9fefbaff0226b0b205707ba1cdd5784547cc7fa352d07a8606ba9c81f21835e"
+    },
+    {
+      "path": "textures/spiderleg1gib.png",
+      "sha256": "cd74b527118db856f785bf98999816b74b6fc066284e2a65636ec5694ba5a183"
+    },
+    {
+      "path": "textures/spiderleg1hit.png",
+      "sha256": "a158d0b3a580dd09ce455066ba19184264a9d9d4e359778879d1d73637522acc"
+    },
+    {
+      "path": "meshes/spiderleg2.obj",
+      "sha256": "92a5f0d0189d70e1d8c9b3b26f601a9de55401dce52f1fe4a632522fa4770ba0"
+    },
+    {
+      "path": "textures/spiderleg2.png",
+      "sha256": "45359dd7cb2e0e3bccd546b7d87907fe5544ebdf2612367876dfa7c50d64d690"
+    },
+    {
+      "path": "meshes/spiderleg2f.obj",
+      "sha256": "a7a68db68070058dafd6a340710e84194c375bc0651511f97fead24e72fc47ad"
+    },
+    {
+      "path": "textures/spiderleg2gib.png",
+      "sha256": "c0bf9c8fb216f7e3c6bc9f5c4fb65f4690413b3c8246b6c79aea50d06f757897"
+    },
+    {
+      "path": "textures/spiderleg2hit.png",
+      "sha256": "0ae8673feada9378046cfa7a2291cb314f0b706d908e411b510f6e48fce39e3a"
+    },
+    {
+      "path": "meshes/spiderleg3.obj",
+      "sha256": "ab3c610b8be0edbcb568d9c9c67ac3d5fb11c2762326e10ff6e2b3d0a94e5a09"
+    },
+    {
+      "path": "textures/spiderleg3.png",
+      "sha256": "16d3cffb59e3cf2e915f405ae72ccf915a3e0014cd86c02d66c107bfc1966f51"
+    },
+    {
+      "path": "meshes/spiderleg3f.obj",
+      "sha256": "99e4176d992a6a345f4de0e26d9650acc153ba0b2769077a6ed90552173be23e"
+    },
+    {
+      "path": "textures/spiderleg3gib.png",
+      "sha256": "bc82e9490912a761cd9f01acc0b2ef8815da2402a45563288538d0738bf30de4"
+    },
+    {
+      "path": "textures/spiderleg3hit.png",
+      "sha256": "ee961871c9b052f0840ecad2468af5155c8c384b56f041194cb0f4bf7e9fe3a2"
+    },
+    {
+      "path": "meshes/spiderling.obj",
+      "sha256": "2cf855b55fc8a998e3c12c903fb50989b44eaeeef454a56e1af18ffe3847bed5"
+    },
+    {
+      "path": "textures/spiderling.png",
+      "sha256": "7f8693d8da795ad9651022b3ffbb1d1f02d9333f4196893771c0a259d13605cf"
+    },
+    {
+      "path": "textures/spiderlinggib.png",
+      "sha256": "865e78e9c1f42dd4497750f0931a30eee98258b3c73cf63e9397f3639e4a032c"
+    },
+    {
+      "path": "textures/spiderlinghit.png",
+      "sha256": "7d4c884c351279a66802de5c7570eb1630880bd2d9f7f3f4516c26fa7cf935e1"
+    },
+    {
+      "path": "meshes/spiderlingleg1.obj",
+      "sha256": "fd2d10fdd873128f42ea90b8696d4745cca63783789ca664c3d090682d4e5afa"
+    },
+    {
+      "path": "textures/spiderlingleg1.png",
+      "sha256": "ff64fadc0d929c5ac9fc209bdb573804bed7ccfc783d0b2d6e3fbf8d850dcba5"
+    },
+    {
+      "path": "textures/spiderlingleg1gib.png",
+      "sha256": "4c9a7aac28089d593f1e793188549eaaac85fde2ceef694ba34e549573f7b813"
+    },
+    {
+      "path": "textures/spiderlingleg1hit.png",
+      "sha256": "6fe1f639e0d7866304a7894b7643875603f893802b37eb816043f678e5e075a6"
+    },
+    {
+      "path": "meshes/spiderlingleg2.obj",
+      "sha256": "2d0b1e9a6d4172e7815479ae37e7c119aac91e80d96e71df4f122e3401c7202e"
+    },
+    {
+      "path": "textures/spiderlingleg2.png",
+      "sha256": "170a5666dbb5757440d0e9aaf5d8534281c3594439300aa6de0a87f94273a1d4"
+    },
+    {
+      "path": "textures/spiderlingleg2gib.png",
+      "sha256": "a512613f8a0fa7f3a4b9bb088d9e2dc1721871fb32aec72197405bbb552d70a4"
+    },
+    {
+      "path": "textures/spiderlingleg2hit.png",
+      "sha256": "0ff705c3c797ded18ec13afca6226f366980c308b0eaeb74de871105cef5cb75"
+    },
+    {
+      "path": "meshes/spiderlingleg3.obj",
+      "sha256": "88066819710621fde08bc15aefa4c06330927f10ade01d4cf47983817a3b80de"
+    },
+    {
+      "path": "textures/spiderlingleg3.png",
+      "sha256": "e287d4770d529337fd669d7f6d9a2249b5d9346c565e6b1794a22f4ecae7a7f1"
+    },
+    {
+      "path": "textures/spiderlingleg3gib.png",
+      "sha256": "d20767dc511e748f81a872ec5522f8408a2ea83833bfbaf12094d9959f61e9da"
+    },
+    {
+      "path": "textures/spiderlingleg3hit.png",
+      "sha256": "5acb968422e3699973bd46d9f10279fe39079589525f91036a68b75762baf508"
+    },
+    {
+      "path": "textures/spiderlingpalm.png",
+      "sha256": "661c9071d01d847dd554a316f7ff215736d6487addf2c279a08ea7d45090dec6"
+    },
+    {
+      "path": "textures/spiderlingpalmgib.png",
+      "sha256": "31f4f91a2ca9b544e5ab17938d60708500c64b9c23da02d86528acb3b4a55dfa"
+    },
+    {
+      "path": "textures/spiderlingpalmhit.png",
+      "sha256": "477d34daa2e9663bc9bacb6f2b11ef75861c249ab79c70cdc37494d50c8a10c8"
+    },
+    {
+      "path": "meshes/spiderlingpalms.obj",
+      "sha256": "31f6e72718b85e989863acd9c40f230b70f980842057560bc93097bfa96ff734"
+    },
+    {
+      "path": "meshes/spiderpalm.obj",
+      "sha256": "7112247a18f56f537f52a0160004e3f9df04cfdb41d4befced94deb1598c5cd4"
+    },
+    {
+      "path": "textures/spiderpalm.png",
+      "sha256": "ce5eac1d6a87db2f0af26e5fd52c3f4a129056227dd4d22c7dc92dbd2950815d"
+    },
+    {
+      "path": "meshes/spiderpalmf.obj",
+      "sha256": "f509a30d0f0b745b5a5ee355a3bb3d28ad30d0bfe0068b2075579495a9f19f07"
+    },
+    {
+      "path": "textures/spiderpalmgib.png",
+      "sha256": "31f4f91a2ca9b544e5ab17938d60708500c64b9c23da02d86528acb3b4a55dfa"
+    },
+    {
+      "path": "textures/spiderpalmhit.png",
+      "sha256": "477d34daa2e9663bc9bacb6f2b11ef75861c249ab79c70cdc37494d50c8a10c8"
+    },
+    {
+      "path": "bindings/squidarm.txt",
+      "sha256": "de533ac1cc69656cfbb90ded41ef861657edee801f6900c9384840ff29fd4bf8"
+    },
+    {
+      "path": "meshes/squidarm.obj",
+      "sha256": "91f65dcb04c899578165717808c505983c9a6b73a66983920cde84136dc8cc38"
+    },
+    {
+      "path": "textures/squidarm.png",
+      "sha256": "fbee7a97bf3fe88843f30852c2642d85cc427fdb509df4a035afe2e0b1a32ed0"
+    },
+    {
+      "path": "bindings/squidarmgib.txt",
+      "sha256": "a96815537b0aa3c7697ca0f03292178ae8b14f4e6e70d1d61a1bf0b7d41805ab"
+    },
+    {
+      "path": "textures/squidarmgib.png",
+      "sha256": "aa2239edb59b2ef1100307c8527f02551c8bcdc8f46c1005dee60f98b7bad934"
+    },
+    {
+      "path": "bindings/squidarmhit.txt",
+      "sha256": "6ece55e88285e40a257767a134e2038b79dd039ec2fd6d590c9a1c9b9c27c403"
+    },
+    {
+      "path": "textures/squidarmhit.png",
+      "sha256": "3e21b3798bd90aa04b201a1270bc5c6683897a2382fd694a48bdf2120d08a4d0"
+    },
+    {
+      "path": "meshes/squidcrest.obj",
+      "sha256": "7af72a46da257cef771d873d62ccf75962c3d0900dcc6e6e6a4816d80075c769"
+    },
+    {
+      "path": "textures/squidcrest.png",
+      "sha256": "9ae55c880ec105d711975389aa440fd7791a9d5aef040267899a63727052b859"
+    },
+    {
+      "path": "textures/squidcrestgib.png",
+      "sha256": "c925674397691a705dc835d438d8542d232313a1e9f937df597737e782451acb"
+    },
+    {
+      "path": "textures/squidcresthit.png",
+      "sha256": "5732d20db63ecfada3ea1343a06423bdbe7ff32519b8410155272ded9de3d54f"
+    },
+    {
+      "path": "meshes/squidcrestskull.obj",
+      "sha256": "ff99484b8d5d8853252206dbd9eb0b6080eacc84fef426815d79ed9846c35621"
+    },
+    {
+      "path": "textures/squidcrestskull.png",
+      "sha256": "1e2d99b5ecdfa53d77a0f9f87ca8ae951fecd84309d9f0a0fd4cf01b988bb40a"
+    },
+    {
+      "path": "textures/squidcrestskullgib.png",
+      "sha256": "4a055a23e29c98deb47951eeb025e68ed5a1de2121ad589203ee93e5c54d4354"
+    },
+    {
+      "path": "textures/squidcrestskullhit.png",
+      "sha256": "86185ddd1d4d4af0890a9dc702296944ecedb55d6cc85e0467bddc10193964b2"
+    },
+    {
+      "path": "meshes/squidgem.obj",
+      "sha256": "30f000a937362ad1192fe2a4cb23da6ce5cef37c424231d11ebf6d71ce3fa0d2"
+    },
+    {
+      "path": "meshes/squidhorns.obj",
+      "sha256": "8ef21883919a74e1f1f2ebf199ec38d2d9ae537f5d9efd59779ff3f81f23fe19"
+    },
+    {
+      "path": "textures/squidhorns.png",
+      "sha256": "14417499d3b835b64d03456887cace0b95aac6dfd10568c6e29bf2ad19804575"
+    },
+    {
+      "path": "meshes/squidjaws.obj",
+      "sha256": "540abe730ba015ec4938753e2deb310c6f03762c31f6e53f3ea16ffec61313f9"
+    },
+    {
+      "path": "textures/squidjaws.png",
+      "sha256": "5b4993903b13f5672ec361fa9a31665da7f87d1cb53f5f1b998c8d609f81f2e6"
+    },
+    {
+      "path": "textures/squidjawsgib.png",
+      "sha256": "49aed135d139a25866e33c5bfd0c6fe31fc59df7c23b958dd78fed351fe21458"
+    },
+    {
+      "path": "textures/squidjawshit.png",
+      "sha256": "ba99a650f249d5150aa49c6e4065109d54217a7e6f5e35b1db97d091d969454b"
+    },
+    {
+      "path": "meshes/squidjawskull.obj",
+      "sha256": "c1ddbd4975106981bb003b676f77291bb809e7edd8eea981eee0cc18f47d6cd9"
+    },
+    {
+      "path": "textures/squidjawskull.png",
+      "sha256": "5ffc473e278188ff36ebf9d099eab68470187ebf93a5c78cf62ed65769ae1e86"
+    },
+    {
+      "path": "textures/squidjawskullfragged.png",
+      "sha256": "bc605d29e866ca96b48a29557a9dda1cb9d534e0eb514928b3f8db167f58be06"
+    },
+    {
+      "path": "textures/squidjawskullgib.png",
+      "sha256": "c14d417d5c12160c6ed66d044da87324603531fa27eb2fa53548df8239ae0595"
+    },
+    {
+      "path": "textures/squidjawskullhit.png",
+      "sha256": "da50e392dc90f1c52681694e86d4dd7355ad8db297543dffd3e5f2bc9ad92611"
+    },
+    {
+      "path": "bindings/squidteeth.txt",
+      "sha256": "d7d5b465a0b5d6d068c731675b2503e791a0209100158d8b3796075de15c3db0"
+    },
+    {
+      "path": "meshes/squidteeth.obj",
+      "sha256": "4b455bdde97d2f9e6fb09c63deb5c28df6b8c3adef29584646e9ae091982ec04"
+    },
+    {
+      "path": "textures/squidteeth.png",
+      "sha256": "6489308927fe7358b7a4f0c9aa0dbc6aa1903939d17ed14c46cf25ba60ca9a87"
+    },
+    {
+      "path": "bindings/squidteethgib.txt",
+      "sha256": "b3c73fb763bb673382d28256a2e47f5a56a6f23b54d6119e988ee82819f2b9ea"
+    },
+    {
+      "path": "textures/squidteethgib.png",
+      "sha256": "b969d738ae67195a2ce451a8d20b799cddd6ce017fc49015d602cbb7db8c833e"
+    },
+    {
+      "path": "bindings/squidteethhit.txt",
+      "sha256": "5bc7067a1c534af7fc52c46af52d9664d3fd9b81cffe1c9dfab16628496ce5ec"
+    },
+    {
+      "path": "textures/squidteethhit.png",
+      "sha256": "03e4d67ae2047b12c6035cf05a9223a6319d91211e50893946ff31440529f487"
+    },
+    {
+      "path": "bindings/thorn.txt",
+      "sha256": "59721028d6c1d81c5c7f96b94f5f6536738d73ba8b056d7d1c6f2f26e1eaf1f3"
+    },
+    {
+      "path": "meshes/thorn.obj",
+      "sha256": "f6619d9c8512587f39494997cbcf82110c9eca45b2d49da85c984a85296438b2"
+    },
+    {
+      "path": "textures/thorn.png",
+      "sha256": "9eb88f84e61af1b5937502cf33986ee0f89536e099662c30e709df1f337bc081"
+    },
+    {
+      "path": "textures/thorngib.png",
+      "sha256": "dda58e466fe3648c8bd64b06f54b66351b1196477125595ad51c9ec34513a2c8"
+    },
+    {
+      "path": "meshes/thorngib1.obj",
+      "sha256": "dcf0c6a4266dace05eb70a758459a4ea37735a2ceb22a234dec87ef14bec47bc"
+    },
+    {
+      "path": "meshes/thorngib2.obj",
+      "sha256": "2ccb83eb3a263db98bfe98f0321fad84bb0938060cdfb49c231352dd55703adb"
+    },
+    {
+      "path": "meshes/thorngib3.obj",
+      "sha256": "3084683b2f896549065f3331c8b732b7020ad8d0932fa99aa44a569ecf35e2eb"
+    },
+    {
+      "path": "bindings/thornhit.txt",
+      "sha256": "34a2dcf3ff16e041df5f08182b61c8e8b5de41f8345492cdde7b8d8287599b47"
+    },
+    {
+      "path": "textures/thornhit.png",
+      "sha256": "9ce83c4a1f025ed6f788148608c231ce1dd2275cfce11d8aa589aee68dd5b6de"
+    },
+    {
+      "path": "textures/ultrapedebody.png",
+      "sha256": "1136655171a65696b205b66b5a75f128f0acc7fbaf6378ec658626320effb87d"
+    },
+    {
+      "path": "textures/ultrapedebodyfragged.png",
+      "sha256": "83632e6c659a52a809e77d48ea93c3e078cb65aa37a0dc6425372b89c5dd19c6"
+    },
+    {
+      "path": "meshes/ultrapedecrown.obj",
+      "sha256": "324799cd6fad035bd77cc731ec8c8ce3740f78595260df1e23c89ce6acce66eb"
+    },
+    {
+      "path": "textures/ultrapedecrown.png",
+      "sha256": "cc922fff1f03c7ecff4a8ec297581b81b05afa05aaa9efb03f267dbce7dd1c96"
+    },
+    {
+      "path": "textures/ultrapedecrowngib.png",
+      "sha256": "f7257e6aead9f25a6e6b3bc9e53214fb4ed1984dd4dad982a485e6e9d643568c"
+    },
+    {
+      "path": "textures/ultrapedecrownhit.png",
+      "sha256": "0dfeca49f1e6f6bde8eb371134c49898759e022c0ff2a36705421956dadbbb90"
+    },
+    {
+      "path": "textures/ultrapedehead.png",
+      "sha256": "1c2e88b6f3657d7b638b8f2a242c5fb362428667f94181747be73f1ad7ad3ae5"
+    },
+    {
+      "path": "textures/ultrapedejaw.png",
+      "sha256": "4ac04464ba83a450083fc04ba3364796ac49d49445ecf6c116e9dc6e1bfa2de7"
+    },
+    {
+      "path": "textures/ultrapedeleg1.png",
+      "sha256": "e80eb4baa364a03ebf290dbd1613d1f79eac794a09c6eb57660d691ca6a0d171"
+    },
+    {
+      "path": "textures/ultrapedeleg2.png",
+      "sha256": "a760052b5dea6fcef9a3ceba9e9477cc5013b3912606b320350773d9930e7d29"
+    },
+    {
+      "path": "textures/ultrapedeleg3.png",
+      "sha256": "059611ec2de7946d9986ac781c638dbbc0570c1704e8536ec308437da70a22c7"
+    },
+    {
+      "path": "textures/ultrapedetail.png",
+      "sha256": "6572d3c7bddfb3ef6a99861606b5d2f519f23dc18a3b6c1d07cb0ab76d7cdaec"
+    },
+    {
+      "path": "meshes/ultrasquidcrest.obj",
+      "sha256": "e1075345288b19f1ed8ce27c4d271cd359802842743a71dff7eb7bbf4e55a15a"
+    },
+    {
+      "path": "textures/ultrasquidcrest.png",
+      "sha256": "e864fee4f36d182f85dca15b4d78bd2d0b4a245aacac04f957c6bdee6993c312"
+    },
+    {
+      "path": "meshes/ultrasquidcrestskull.obj",
+      "sha256": "a44018aa79ef140e702eb8b26124e74f58f88eec831413d8208fce93b1401c94"
+    },
+    {
+      "path": "textures/ultrasquidcrestskull.png",
+      "sha256": "23baa236c2f6bbcf886bde0b115106b22d027f2fe28316f873f562fd4876895b"
+    },
+    {
+      "path": "meshes/ultrasquidgem.obj",
+      "sha256": "8a09278954fbfd8b38a90ed4d21ef07ea154e3375647d705b4867d319bb7de6a"
+    },
+    {
+      "path": "meshes/ultrasquidhorns.obj",
+      "sha256": "173ec578102a4c9ba8981ed8784f230bba4fcffa3f2da446843e405e04812887"
+    },
+    {
+      "path": "textures/ultrasquidhorns.png",
+      "sha256": "a14d11e005bf5834c7380d9ce824b6b67e65653b38be35c13e1d759641d3b8ce"
+    },
+    {
+      "path": "meshes/ultrasquidjaw.obj",
+      "sha256": "c18b0ba9b1bd2b0bd1de4110996d6519b6c1b2f49241f4747c6539dfd282b647"
+    },
+    {
+      "path": "textures/ultrasquidjaw.png",
+      "sha256": "dff4c15a21cccc4b7711028426332bae0b2bd010b13c4ad69d01635140c87421"
+    },
+    {
+      "path": "meshes/ultrasquidjawskull.obj",
+      "sha256": "69cf8f1ea1c16bc72dd44ec01738c6e7b7ac5831c33b8a7cfbc415115f626d59"
+    },
+    {
+      "path": "textures/ultrasquidjawskull.png",
+      "sha256": "372f33a739e9adccc6c86d1b2e36be908bce157c6abf8cdb93c87b9f88ad8ed4"
+    },
+    {
+      "path": "meshes/ultrasquidteeth.obj",
+      "sha256": "1b5c5cf08716db70b364a7e6f0a3d6916e3b25fc1d80e1ea6e51f6566a143264"
+    },
+    {
+      "path": "meshes/ultrasquidtent.obj",
+      "sha256": "413203764a3776ec2a56a05e42a73280f835d90647efac2869cb59f2d6907af3"
+    },
+    {
+      "path": "meshes/bottom.obj",
+      "sha256": "ad5d34284ff96ecd2051ae22298ef4d3b20b03c2b3b0849809cfc7145b059fc3"
+    },
+    {
+      "path": "textures/bottom.png",
+      "sha256": "894905e0869677879f668889edaee4c728a2ed6410169c2f61bcc0b95ee35b24"
+    },
+    {
+      "path": "textures/leviwarpover.png",
+      "sha256": "d945a83367b84780fd87655ea2249d2c79cf650aa5599eeed0ee65402e9b2e81"
+    },
+    {
+      "path": "bindings/tile.txt",
+      "sha256": "b825901de733e02ad5fe19ae81712d44a1867c3e13bfc71ca7aa61ba5ef3967f"
+    },
+    {
+      "path": "meshes/tile.obj",
+      "sha256": "b730f8a8fcb2e2c8029a8dbbc475fec6484c1848a6632544bee7b73b9f0e736c"
+    },
+    {
+      "path": "textures/tile.png",
+      "sha256": "48b085fb7fa8f0bed56d5e21ad26da2cf706e8fbd3f4f901e6787a290fa1e9c6"
+    },
+    {
+      "path": "bindings/tile2.txt",
+      "sha256": "a0790a8ca93c5e0657de3049805dcdb65c40d20033198add898a127c1f77225f"
+    },
+    {
+      "path": "meshes/tile2.obj",
+      "sha256": "b5d17e038a091f104ee75549a9c38f21c4be25699e56aa4496cd2c9b6413ee3a"
+    },
+    {
+      "path": "textures/blood.png",
+      "sha256": "3f6f3c166b43d49b69f30ed2898e2545edfa1361025611de2110584696ffda0d"
+    },
+    {
+      "path": "meshes/blood1.obj",
+      "sha256": "884af34c122e3d91b0223e5dcbe93ffbfa202e0dbef74181cedbb7d9944cdb73"
+    },
+    {
+      "path": "meshes/blood10.obj",
+      "sha256": "7986d2392e9586ed41122efeac7a8f2a4af7aa27718e80592d83c207d8827732"
+    },
+    {
+      "path": "meshes/blood11.obj",
+      "sha256": "38fc53526d4561f1842ce931e67767b367faa893a001522be969c4a76000a323"
+    },
+    {
+      "path": "meshes/blood2.obj",
+      "sha256": "8b301443d792f7df76ffc803daca8ae950af47630b17b6a79eb4fa757bdc2f9b"
+    },
+    {
+      "path": "meshes/blood3.obj",
+      "sha256": "609771c889c39327d4e34a3471a877417121dfd9720f59289ed3be8ae6cae51b"
+    },
+    {
+      "path": "meshes/blood4.obj",
+      "sha256": "833c5cc45b8f5349988897ab909c41625597e577f5ffa6fe61305d559ba17dce"
+    },
+    {
+      "path": "meshes/blood5.obj",
+      "sha256": "e51671d8bcf7f186cedd844aff03b3604eff4df796b6b9281ffe229ca7963199"
+    },
+    {
+      "path": "meshes/blood6.obj",
+      "sha256": "a08706fa168064290db69c9655b5c5b68d54e1cebca2e2b70fc63bc1ab5b7815"
+    },
+    {
+      "path": "meshes/blood7.obj",
+      "sha256": "fd815bf7a903b0514e2c836e6e727c8df7ec334d16c235f33d93713310edd89e"
+    },
+    {
+      "path": "meshes/blood8.obj",
+      "sha256": "a9e2f80cce360ea202fc13941aceed3944e2ead5610b70ae25060041d2bc4fa4"
+    },
+    {
+      "path": "meshes/blood9.obj",
+      "sha256": "e7dc51bc73a46d64de49faaa91a87785daba69ae03e2e8d508127f8c1a21f937"
+    },
+    {
+      "path": "meshes/ember1.obj",
+      "sha256": "497d80351edfc9327935d17125dafa96fea1341d5a63c38ffc91eb2846d10eb5"
+    },
+    {
+      "path": "meshes/ember2.obj",
+      "sha256": "293b2b287522b89330dbe21bbbab450ff7f665988e4c7e29c29dd371257f5d7f"
+    },
+    {
+      "path": "meshes/ember3.obj",
+      "sha256": "a5aec90a3f25c803d20dcb85bcc855d719803e739c8303787a409644ac741e8a"
+    },
+    {
+      "path": "textures/emberflame.png",
+      "sha256": "7e0d6d77c67d1278a90de94b1d9e5578acdb6633f02292ebdefb2e56ffc927d6"
+    },
+    {
+      "path": "meshes/flame1.obj",
+      "sha256": "798f5dd8f7bdeab41f43e33357f747073e40caaeca20ee35cb52ade05a8f5fbb"
+    },
+    {
+      "path": "meshes/flame2.obj",
+      "sha256": "ca78dfb01f290bc3cec1aea0de2d6e426748abb6ab5aab46f3e08fa14eac3a82"
+    },
+    {
+      "path": "meshes/flame3.obj",
+      "sha256": "1aceced45316d602f740daca02fa3ec3e6a692562e3c5d7ea2bbf5595353b74b"
+    },
+    {
+      "path": "meshes/flame4.obj",
+      "sha256": "2065b59d135abebec6ae2d7f829a45a24b40d3d8eabdeb0d1d45c2a9180f4871"
+    },
+    {
+      "path": "meshes/flame5.obj",
+      "sha256": "057566e251609eb761fbe87617e011287ac8ca42e77c6b747f6f8b6169bf2925"
+    },
+    {
+      "path": "meshes/flame6.obj",
+      "sha256": "64c0bff8fbac558ec34ced3108105f7943a0d59a09ae4a218a4b27c2358fa312"
+    },
+    {
+      "path": "meshes/flame7.obj",
+      "sha256": "a403c393c47dd1b003e33e4c8dc1664e70dd0fbf3f73cf6509c3d51ccdd02a35"
+    },
+    {
+      "path": "meshes/flame8.obj",
+      "sha256": "128665fe000cbefe9316b593f636e6235df06f0941a5940152c7f916c6a6fa32"
+    },
+    {
+      "path": "meshes/gib1.obj",
+      "sha256": "64f32e6e5ad10dd57622d7385397d03571a15b19bfdefeb11f93caf66c68512f"
+    },
+    {
+      "path": "textures/gib1a.png",
+      "sha256": "f41aa76c4023141cab1485e01d701c134c570882b4f60d44ac5d697f2ab89366"
+    },
+    {
+      "path": "textures/gib1b.png",
+      "sha256": "72fab3bf64731e6200af7cc18c97295cc00d55291667ff8c137da28196e5dcc3"
+    },
+    {
+      "path": "textures/gib1c.png",
+      "sha256": "9f77f9495b5c5ab1caaa6e15329a48bbb93b9fba2da0acd26715fc811ff50d7b"
+    },
+    {
+      "path": "textures/gib1d.png",
+      "sha256": "ea8c8073b0da1f6e40cc957167c841adcad6e861260219b2d0f5ffed5c87df9d"
+    },
+    {
+      "path": "meshes/gib2.obj",
+      "sha256": "871904b43fb9792b0aff72196787068caa32a38452d83f120a97a678fbe14802"
+    },
+    {
+      "path": "textures/gib2a.png",
+      "sha256": "b2c84b7ef1839faf239ab6f2748e984260ff3ca25e130b88686175a46ace0744"
+    },
+    {
+      "path": "textures/gib2b.png",
+      "sha256": "c4b1fa31774bab9408cc00d434d58d9c0e52cf89dc6d66af236d23d000c57d43"
+    },
+    {
+      "path": "textures/gib2c.png",
+      "sha256": "76f82e58a9229b86f8c92056baeb89291f532fd96596372086df569e57882f9f"
+    },
+    {
+      "path": "textures/gib2d.png",
+      "sha256": "df27d3c3e43daa019c4646690895afa2fcacfe467bf6055c6c4974b3bb4a14cc"
+    },
+    {
+      "path": "meshes/gib3.obj",
+      "sha256": "f14b7b969c63aff4479831473ba212b77d5416bf96191229391232d35c02274f"
+    },
+    {
+      "path": "textures/gib3a.png",
+      "sha256": "9925c10f42e4d6d7fbdf9c00708873f8b4bc70739935694bb8216b117c8f6b5a"
+    },
+    {
+      "path": "textures/gib3b.png",
+      "sha256": "055c372a7bcc27bef3f572c0a3db251932d3ad9f6133d72a10c01b07f5a27392"
+    },
+    {
+      "path": "textures/gib3c.png",
+      "sha256": "cfbf33680da94c61447030e94f418111b648e3caa22130f17bf7a64ea3cd5468"
+    },
+    {
+      "path": "textures/gib3d.png",
+      "sha256": "159dfc216c892d9629b144f319b8a187c3952b8da466401f37af1886fe0d05cc"
+    },
+    {
+      "path": "meshes/levideath.obj",
+      "sha256": "fc1db7917e7d2ddddde557d1b3ccacc2f8139f7a5ce10c6a4d2b8bfe22bfa66b"
+    },
+    {
+      "path": "textures/levideath.png",
+      "sha256": "64589d9523014570500738fd7fa7c9249854264aa34666b5d676dbc31dbf595e"
+    },
+    {
+      "path": "bindings/particle.txt",
+      "sha256": "95083f00707e484e4b23e2449f651649fd855d9243d5d28b213bbc7e41a93c72"
+    },
+    {
+      "path": "bindings/particle2.txt",
+      "sha256": "e95f66adf57a81936edca0956f2a56c93334b5430651e568d7e090cc2d739156"
+    },
+    {
+      "path": "bindings/particle_decal.txt",
+      "sha256": "83d1a80fb5e97dfaae98ada639564dbf821f42f0de9008eb9fe1cdf7455ecd90"
+    },
+    {
+      "path": "textures/smokeblob.png",
+      "sha256": "2f03bf84c757f5a60aee2c05320abffe39b8ceb8ac7cf2a40ccc682b2756d593"
+    },
+    {
+      "path": "meshes/smokeblob1.obj",
+      "sha256": "305774c2348e1d41451cbed93bb25ba3d113df897d9775fdde7192cd949ec2dd"
+    },
+    {
+      "path": "meshes/smokeblob2.obj",
+      "sha256": "1c7d0e683f1bb3f92d0e40f52121bef176eb6640134e9908dd81649d1eeeb668"
+    },
+    {
+      "path": "meshes/smokeblob3.obj",
+      "sha256": "1e9d4e99b3bb34f7459b35b8e18985d8fc24600191e858040a392bc4f026b88f"
+    },
+    {
+      "path": "meshes/smokeblob4.obj",
+      "sha256": "888914face28f21b08d168d55845973554533f10ffc58459994965a407058019"
+    }
+  ],
+  "particleDefinition": "particle.bin"
+}

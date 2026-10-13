@@ -4,5 +4,8 @@ dist/
 test-results/
 .DS_Store
 
-# Local original game assets; keep source archives and extracted data out of Git.
-assets/original/
+# Imported runtime assets are required for fresh clones and deployments.
+# Keep local environment credentials out of Git.
+.env
+.env.local
+.env.*.local

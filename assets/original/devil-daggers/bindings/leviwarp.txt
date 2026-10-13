@@ -1,0 +1,2 @@
+shader = "warp"
+tex_diffuse = "leviwarp"

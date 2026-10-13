@@ -1,0 +1,2 @@
+shader = "tile2"
+tex_diffuse = "leviwarp"

@@ -1,0 +1,2 @@
+shader = "hand"
+tex_diffuse = "hand"

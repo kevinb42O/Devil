@@ -1,0 +1,2 @@
+shader = "squidarm"
+tex_diffuse = "squidteeth"

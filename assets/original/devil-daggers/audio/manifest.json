@@ -1,0 +1,1381 @@
+{
+  "sourceHash": "dbbfac20d9e6db1c4ba1626748e9b3bec92776513bc5270396d48c1d62d07845",
+  "sourceFile": "/tmp/abyss-original-data/audio",
+  "files": [
+    {
+      "name": "andrasimpact",
+      "bytes": 632092,
+      "sha256": "a892383937202e5e9844f00d1f2df21eefa8b3d2761a6dbff2111cde71334f1d"
+    },
+    {
+      "name": "andrasrise",
+      "bytes": 540976,
+      "sha256": "1a5e14e5c60c8aecdf47eaf1eee846047c9b8312b395540e859e66f096b9c6e6"
+    },
+    {
+      "name": "burrowcentipede",
+      "bytes": 490972,
+      "sha256": "6a3129710b71be3c0051e6f6bb8e0e6abeb989dece58f49053f5baf34d94c2ea"
+    },
+    {
+      "name": "chatterandras",
+      "bytes": 2822524,
+      "sha256": "936531cca252d2dcfec5d909184e2d45f0077fee792034621ebd7b0336e225e6"
+    },
+    {
+      "name": "chattercentipede",
+      "bytes": 3528124,
+      "sha256": "795ca4a76a17f19b280180c61614e6c156d12620c215a4a8b242718cd080d694"
+    },
+    {
+      "name": "chattercentipede2",
+      "bytes": 3528124,
+      "sha256": "1a35562179a6e9a477d35373c72fa69c3a9c90f866e7473d25a16a69712c2e45"
+    },
+    {
+      "name": "chattergigaspider",
+      "bytes": 2822524,
+      "sha256": "4d0a75d6d25e694e25db01d95dd6081ad18775e93198c50234d84454ea1c2e3e"
+    },
+    {
+      "name": "chatterleviathan",
+      "bytes": 2822524,
+      "sha256": "42bdd7f599dbe251092c6e444d4b1b28c7dac9988004574a6d7ee6f12ee62f63"
+    },
+    {
+      "name": "chatterminisquid",
+      "bytes": 4939324,
+      "sha256": "8ce90d6d7c82c1f67304e4b34e8359d053092eff9c0bf9c72b2ae4776106a85c"
+    },
+    {
+      "name": "chatterskull",
+      "bytes": 2822524,
+      "sha256": "9537d8eda03ee34cf62527b8f8c78830b1f4981a40eeca41503e085500934bca"
+    },
+    {
+      "name": "chatterskull2",
+      "bytes": 2822524,
+      "sha256": "e81c14739f20f535d356e12236b3585d015201c7d9c849f40616b5c3fb745e3a"
+    },
+    {
+      "name": "chatterskull2black",
+      "bytes": 5644924,
+      "sha256": "8bb96fbe949471cfcc90a896380936f68ecfe511a21cc33317a17aaf05bf877d"
+    },
+    {
+      "name": "chatterskull3",
+      "bytes": 1764124,
+      "sha256": "222dfb50f51a07ac7709ec867bf687e731bbc767bbcd924cc65ff431fed9a129"
+    },
+    {
+      "name": "chatterskull3black",
+      "bytes": 4963112,
+      "sha256": "608f870087cd24d9389bf2d71e5370880f8094cc578ebab8cccb4959f1204596"
+    },
+    {
+      "name": "chatterskull4",
+      "bytes": 5644924,
+      "sha256": "6e0f821306fa6073d0db817669314e2d8386bbec530c37e6393c014cfe86adfd"
+    },
+    {
+      "name": "chatterskull4black",
+      "bytes": 2822524,
+      "sha256": "a6ed188880c020f949a59ed62537d4cbfe71dd276215201d94bcefb0fe86ce1a"
+    },
+    {
+      "name": "chatterskullblack",
+      "bytes": 2734324,
+      "sha256": "13f5c7b8572c48ae9723a084f2b53e592204a44a3bc37ae854c1a9e68d656883"
+    },
+    {
+      "name": "chatterspider",
+      "bytes": 3351724,
+      "sha256": "a534f12ee3f2d0e472e985843ddff63dd1c199556c90c8a709d3455b62704175"
+    },
+    {
+      "name": "chatterspiderling",
+      "bytes": 2618848,
+      "sha256": "58d3d98db4f2d9e04171b135f84b6e12c56a69be4afe316fbc80ff70b73e9f22"
+    },
+    {
+      "name": "chattersquid",
+      "bytes": 4933192,
+      "sha256": "23309fcbfddda5e31d3ff2a3ba6b749444dcef559aada6256883eba79194de32"
+    },
+    {
+      "name": "chattersquidsmall",
+      "bytes": 4586524,
+      "sha256": "5f9b9412c3001fb9653b424c1cca787df6b9c2875bda2152cce3bccd82f00601"
+    },
+    {
+      "name": "chattersquidultra",
+      "bytes": 2822524,
+      "sha256": "0cc7a9d53101e87417e1d21036bbf6505d9f9fbd0ca958cda08a58699ac764d6"
+    },
+    {
+      "name": "chatterthorn",
+      "bytes": 1411324,
+      "sha256": "8104c5ba38b1f7adda7c3d23b955bcd7242ce635943a25581852edc34435d94d"
+    },
+    {
+      "name": "chatterultrapede",
+      "bytes": 2557924,
+      "sha256": "ee05272fab66ed7b0d017a684f86121d83d4454d3f31533ea9bc74e8b8f43f55"
+    },
+    {
+      "name": "collectgib1",
+      "bytes": 242676,
+      "sha256": "c25f70d76899d35d54712d821729877ee1cf6ad79e8a7c1ee3c4b932b2efe04e"
+    },
+    {
+      "name": "collectgib2",
+      "bytes": 132424,
+      "sha256": "2dbeac42a93ffe86691346ea7395681c08ffdc3e3189f89c7df48e157ecd851f"
+    },
+    {
+      "name": "collectgib3",
+      "bytes": 100924,
+      "sha256": "6ae08d85540f70f04ba0fe683eb627898204bf33f892c2f3adaf38e9bb25a4b4"
+    },
+    {
+      "name": "collectgibbase1",
+      "bytes": 352924,
+      "sha256": "040bb959239d29b76818ac1d3ed049a9882d9fa10b7a63da434f30560ffe2dd7"
+    },
+    {
+      "name": "collectgibbase2",
+      "bytes": 352924,
+      "sha256": "1f5d7ab2eb39b3a67bb2de2fdbfb746da6b6b6e8b32e901478288dd3c08af3d3"
+    },
+    {
+      "name": "collectgibbase3",
+      "bytes": 352924,
+      "sha256": "433a1e8a456a7a77ad3f7e6f2813b7434562f9470c841288cb314171079cf258"
+    },
+    {
+      "name": "daggercall",
+      "bytes": 16945482,
+      "sha256": "129e1367a72c568378c376271e8a75ab678a3f8d98b6febe0e3b52c34c0deb2b"
+    },
+    {
+      "name": "daggercall1bronze",
+      "bytes": 5556724,
+      "sha256": "2f9ce0a1fab334c726d2888a7e96c020fa5b7c86b7f14d51c00ed496291d0481"
+    },
+    {
+      "name": "daggercall2silver",
+      "bytes": 5556724,
+      "sha256": "e509f6688bd6cb48deb6e683324d9e293302f7f4facc161924ec22fbb4dc0340"
+    },
+    {
+      "name": "daggercall3gold",
+      "bytes": 5556724,
+      "sha256": "c925a97f21b79c852e9d9882f31b829d12c37224f085a66c027cc5ad48e466c6"
+    },
+    {
+      "name": "daggercall4devil",
+      "bytes": 5556724,
+      "sha256": "15995355debf0c0846a96bb8ec9c502046eb5538fc15da0941528241f450a67e"
+    },
+    {
+      "name": "daggercollect",
+      "bytes": 618136,
+      "sha256": "9c4da85f7fc723af3c6b99db43242917a96cd380da41ee2ffd9857747933eff4"
+    },
+    {
+      "name": "daggercollect1bronze",
+      "bytes": 1925736,
+      "sha256": "4ea808b38c70f4851da10c55e35dc534b6c16a788610b789d4d6299f45fd476b"
+    },
+    {
+      "name": "daggercollect2silver",
+      "bytes": 1925736,
+      "sha256": "a7546bf9ae3a9557746d8e163335c6ce94bc5be7cc13187dbb60d3cf4358d4ff"
+    },
+    {
+      "name": "daggercollect3gold",
+      "bytes": 1925736,
+      "sha256": "9d793b54571c8f56700f442159690dab73f0572446bd039780eb398fcaf7ab83"
+    },
+    {
+      "name": "daggercollect4devil",
+      "bytes": 5615284,
+      "sha256": "1154b1f6f933ec50995e51a90911bc7fc3ed821bebef647f371c5b22b7912360"
+    },
+    {
+      "name": "daggerdivert",
+      "bytes": 3528124,
+      "sha256": "b2b97c689c21b2d1c11df6088352ed8b186bede4dbcfff6f102ac1b7366fcb03"
+    },
+    {
+      "name": "daggerdrone",
+      "bytes": 1415732,
+      "sha256": "5c6754bbbf2d82ea99a04c988c630d0baaa5f8bffe6ab2ce50440c64bd84e421"
+    },
+    {
+      "name": "daggerhit1",
+      "bytes": 88324,
+      "sha256": "1bb30c4eb29871bcc71e2a05805309b2aa77231fc5ba314d8fca5b9d89c8e06d"
+    },
+    {
+      "name": "daggerseek",
+      "bytes": 617524,
+      "sha256": "2068216eed3d1a1582beb3b7f237499b92fc0d21d6a905d280c11afb3276cf8c"
+    },
+    {
+      "name": "daggersteal1",
+      "bytes": 413660,
+      "sha256": "9372984aca93d20dd1c6cd98679164b36309097b65fe523a81a1681486d37de7"
+    },
+    {
+      "name": "daggersteal2",
+      "bytes": 548780,
+      "sha256": "6f8aa77acd307bef15ada552b163c3115c99847ce8be957b64ab5a3a8dc579fa"
+    },
+    {
+      "name": "daggersteal3",
+      "bytes": 548780,
+      "sha256": "60bb10cb1e6a64a9ccf3017fbe6f31aed7b5bc09418f87c51f81545e07a364f0"
+    },
+    {
+      "name": "daggersteal4",
+      "bytes": 548780,
+      "sha256": "c531265ae6242ebfc1150a25e8320afa70618846635af0e4786fb67d708749f6"
+    },
+    {
+      "name": "daggersteal5",
+      "bytes": 548780,
+      "sha256": "b8f531985808d51dcad7efb63a93dbc337de185c69a7de7fb50dfd5080e327eb"
+    },
+    {
+      "name": "damageandras",
+      "bytes": 231744,
+      "sha256": "296128278cf1cdf4671ca85640d8768eeda523f895bfbc0a6e6d2a2a76f45085"
+    },
+    {
+      "name": "damagecentipede",
+      "bytes": 441736,
+      "sha256": "b7ec4155ca3aa688baa6ab1924c162b2370c1f7e2fcdd0448748aa07e4ebd04a"
+    },
+    {
+      "name": "damagecentipede2",
+      "bytes": 555120,
+      "sha256": "77662d797ae53db1a0c614db78c3ad102d0d75ac559576323f68053773be1e52"
+    },
+    {
+      "name": "damagegigaspider",
+      "bytes": 310680,
+      "sha256": "c9a4b2a7b840da8b6fede948fba349108fd91cd2ca30bcab582c59dd0d181dc5"
+    },
+    {
+      "name": "damageleviathan",
+      "bytes": 760944,
+      "sha256": "607913a6a02185fbcfdf82eff70f0790833226daef4ac84105d176dde4e7a50f"
+    },
+    {
+      "name": "damagespider",
+      "bytes": 432312,
+      "sha256": "e1df9eff696c49c1b7463b0d39ffaaf20ffd822cfa18cb7174a68b69f58f3279"
+    },
+    {
+      "name": "damagesquid",
+      "bytes": 527260,
+      "sha256": "6b32eb0ba17aae7bb9748f09bbdc5610ec0b0954375847822ff769bff42547fe"
+    },
+    {
+      "name": "damagesquid2",
+      "bytes": 527260,
+      "sha256": "bf89360d1f869d7a6a0347e029b696a068caf0807b094e60dadb52ba51c8251a"
+    },
+    {
+      "name": "damagesquid3",
+      "bytes": 911192,
+      "sha256": "3490cd5818775909cae2acc84c2f8a814faadbdde088929ecd4165a562d976a3"
+    },
+    {
+      "name": "damagesquid4",
+      "bytes": 911192,
+      "sha256": "32abb4b81779a6c262ce9d20f096a5d0a68b3db89a33019f09403a9137cbdc33"
+    },
+    {
+      "name": "damagethorn",
+      "bytes": 181612,
+      "sha256": "117b7957e23623d7b53cd3dce4536a572ff139703b6eb7e760b9188842dd7512"
+    },
+    {
+      "name": "damageultrapede",
+      "bytes": 483508,
+      "sha256": "2d875eb64bebc674ab7cbc5c64c945123ef8243e0932fc9bebada604ef30ac39"
+    },
+    {
+      "name": "death",
+      "bytes": 1896424,
+      "sha256": "861539b73d4f4d000cbcd104345231e86fa232017a9192ccb91a0ce5fb794ccf"
+    },
+    {
+      "name": "eggbounce",
+      "bytes": 41540,
+      "sha256": "d22cfe6d044046ee9b2f23d40a9e73ea021c878b73fedd6d2f47a10d77c7d3bd"
+    },
+    {
+      "name": "eggburst",
+      "bytes": 352924,
+      "sha256": "368d7eb7d8ea39ce4ffbcf16f2f2fbfe67d3773ed4bc843ffcab539a1715c4aa"
+    },
+    {
+      "name": "eggburst2",
+      "bytes": 629068,
+      "sha256": "348c5c41eb5d38b6a208011cf5cdf56fb1f8edb0861666b0616c4e94c2d5d806"
+    },
+    {
+      "name": "eggdrone",
+      "bytes": 1415366,
+      "sha256": "124e6f6abcb3c5536a54744b6520df5037cb9c08ec0006279cd01aef9b59b960"
+    },
+    {
+      "name": "eggdrone2",
+      "bytes": 2822524,
+      "sha256": "7e3b6b0a3bb02ee03b95f5d8e9ba9bdf326b5b939c3e21ee4bb72b2bd38fa9f4"
+    },
+    {
+      "name": "eyearouse",
+      "bytes": 1053948,
+      "sha256": "ec3bf6a2660111fca03ef5d97c3ad531e9a5f096ba151ae8d6acbb59391dc4df"
+    },
+    {
+      "name": "eyearousedrone",
+      "bytes": 2646124,
+      "sha256": "63277603e4a3fe25ec4ed5e9774ddc9e00ba4875febb4fc07b7e624a0d9a1ae1"
+    },
+    {
+      "name": "eyehit",
+      "bytes": 860968,
+      "sha256": "aa67faf8eceaa81cf8f0ffa307409688633d2021a2c49b7e391698aca134eab4"
+    },
+    {
+      "name": "eyepacifydrone",
+      "bytes": 1411324,
+      "sha256": "30119c68b25dce46eb65fc294f638ad81fb407dd1e65cccd164d4c0b39eaf692"
+    },
+    {
+      "name": "fall",
+      "bytes": 2138396,
+      "sha256": "1f319cdf506767997d622b2307c8b0600abfb869312616f90997d4c0d0fdbbb0"
+    },
+    {
+      "name": "gibcollect",
+      "bytes": 352924,
+      "sha256": "129b25bd936a1bf2821d8e6c733dcc9d1fc6f9a96cb177277f7d946e909bc5c8"
+    },
+    {
+      "name": "gibcollectmagic",
+      "bytes": 219020,
+      "sha256": "82deab2b8dc5d75205044351fb30786f3d0ded9228527b61a9bb73b5041c6dc3"
+    },
+    {
+      "name": "gibdrone1",
+      "bytes": 4233724,
+      "sha256": "ba698ff7717a829be75df884da6b20042db63e8e6c0187c5ab0f608b124dabb8"
+    },
+    {
+      "name": "gibdrone2",
+      "bytes": 4233724,
+      "sha256": "232748d82268b87e26ba4069ca228c71a62a21dded682775d625426e8f08cc4d"
+    },
+    {
+      "name": "gibdrone3",
+      "bytes": 4233724,
+      "sha256": "4d1a774d59df0cbe3950ea08786377c296a49e2b9e341409b0b385ef6e7ef27b"
+    },
+    {
+      "name": "gigaricochet1",
+      "bytes": 176524,
+      "sha256": "e2d124a1927aa074a7aae63813ec5e58b85914e2d21b279b5c089d7f306948cc"
+    },
+    {
+      "name": "gigaricochet2",
+      "bytes": 176524,
+      "sha256": "4f034448704e61719668b8cae84efc808aa57447c3e9e447b96e26fe7aa43580"
+    },
+    {
+      "name": "gigaricochet3",
+      "bytes": 176524,
+      "sha256": "103ce041e0d3e0631bf0ac8578b0b61100e410808f8845dd4cde2ded1656f899"
+    },
+    {
+      "name": "gigaricochet4",
+      "bytes": 176524,
+      "sha256": "51f1f27762a1ce866ad0a16a5e16529f1ec59d3d8b5bc60ccf1020cfdaeb9ab2"
+    },
+    {
+      "name": "gigaricochet5",
+      "bytes": 176524,
+      "sha256": "0859cf425a0c008be66b93f7cec1f65d62e93b9aa042bd8b1037a80db0a1f775"
+    },
+    {
+      "name": "highscore1",
+      "bytes": 1062372,
+      "sha256": "cf5c6fec277364818e6bcb1dc841e139454c43a5e9a4b0eb805da5503cfb04ac"
+    },
+    {
+      "name": "highscore2",
+      "bytes": 3528124,
+      "sha256": "ca41dec71b1cf83fe91a339d89dd544d44fc07a5bf6a2f5794ceb7f8e166580d"
+    },
+    {
+      "name": "jump1",
+      "bytes": 191088,
+      "sha256": "59728fe72cbf60128b0155b050507d74eb9c44add77b3189bd6fce75a09e6c61"
+    },
+    {
+      "name": "jump2",
+      "bytes": 222916,
+      "sha256": "3561201200f22da459ecc91cb032fec246214d292196f46ab2c9aff0a70ddc82"
+    },
+    {
+      "name": "jump3",
+      "bytes": 306468,
+      "sha256": "55067c1a0f00735a1c1044a4e2156b92d400a98dcca7c3a9e7ff8482f44a46b9"
+    },
+    {
+      "name": "killandras",
+      "bytes": 595476,
+      "sha256": "db5096341dcc4a5e80478fcbbeba78346a3368969a69f7c3a3eec5819ed870e2"
+    },
+    {
+      "name": "killcentipede",
+      "bytes": 1047488,
+      "sha256": "b465bd11f103362328c4ce775e3ceeaf970f4fdea658ff179feb7f3052d43904"
+    },
+    {
+      "name": "killcentipede2",
+      "bytes": 1256976,
+      "sha256": "83d40966353bed4c314cde274396f2a9e02910014b141a85a1d99c2813baeffc"
+    },
+    {
+      "name": "killeye",
+      "bytes": 1234924,
+      "sha256": "8626eba6df7dcedb273cc6f93b4de7cd626a4e744b2289c6b78a1bb8ad25f660"
+    },
+    {
+      "name": "killgigaspider",
+      "bytes": 1672864,
+      "sha256": "5514e1e8a422962a388196bcc762829a943d0457a95deee662a9fa3671bce3b7"
+    },
+    {
+      "name": "killleviathan",
+      "bytes": 2716656,
+      "sha256": "530a384fae40e0d69c089c6085efc967db9abb32a5c6249800b1b0e10ccaafec"
+    },
+    {
+      "name": "killminisquid",
+      "bytes": 882124,
+      "sha256": "708c8597379409ad8f3b4974739fe624353e85be4ea06f010beb391b7547c9c0"
+    },
+    {
+      "name": "killskull1",
+      "bytes": 176152,
+      "sha256": "8b2d00751a69a2c05a459c9317e899ea457e9c7e331d900718575c3b01cbf7c9"
+    },
+    {
+      "name": "killskull2",
+      "bytes": 176152,
+      "sha256": "6524c6ea14110d030c2df6b07e7921fdc91dbe8960719638334d848693cccbc3"
+    },
+    {
+      "name": "killskull3",
+      "bytes": 176152,
+      "sha256": "d9e26639320fd0ea45f7b19b669d4095cb53c1e24877aa5372fc85e8a08b82ed"
+    },
+    {
+      "name": "killskull4",
+      "bytes": 176524,
+      "sha256": "90084053b8e879a3a8a1f9b84919e8df71d30b9525e3ee5c8e851571dc7d05c0"
+    },
+    {
+      "name": "killskull5",
+      "bytes": 176524,
+      "sha256": "fe19bcbae20728bd774dc83d459d5f2fafe45cc3c0615854b7583ac08c7aee07"
+    },
+    {
+      "name": "killskullblack1",
+      "bytes": 313040,
+      "sha256": "d4a6709645262c6f126e8cb9237402e73d364e589fd455b467bd78f473723510"
+    },
+    {
+      "name": "killskullblack2",
+      "bytes": 308824,
+      "sha256": "2518e505f40a635d7a820e06c26c58b716756ffc652d383e2831099125506f33"
+    },
+    {
+      "name": "killskullblack3",
+      "bytes": 308824,
+      "sha256": "610c33f2bb9780bca8e6e73b386199b514ebbd868462016f699bf2a2c5cfff36"
+    },
+    {
+      "name": "killskullblack4",
+      "bytes": 286776,
+      "sha256": "35f542dc52a94b1d59f08fe93c18946791ad61c020c3c08bba6c5f15632e5212"
+    },
+    {
+      "name": "killspider",
+      "bytes": 1116808,
+      "sha256": "34ea562b433b7b0c0f4438dc1a98fe9f731119405357e392594eaf656d119897"
+    },
+    {
+      "name": "killspiderling1",
+      "bytes": 181124,
+      "sha256": "b01e58faef03f6ba148602ea355636565d252727dc6c68af29297af3295378dd"
+    },
+    {
+      "name": "killspiderling2",
+      "bytes": 220624,
+      "sha256": "d918f4e66b5f15e5a3faf055c7c58bc130bfe6ab751dd9134c1444b3f4622988"
+    },
+    {
+      "name": "killspiderling3",
+      "bytes": 220624,
+      "sha256": "e0c3c36a8ee4b593d62afa7c5c670cb46d7a805482da0edf667e679016cba10d"
+    },
+    {
+      "name": "killspiderling4",
+      "bytes": 176524,
+      "sha256": "ea25f2b1572c55695427d32c2a14d5e449ce44aa138afc6656e6b6370cafbf62"
+    },
+    {
+      "name": "killspiderling5",
+      "bytes": 220624,
+      "sha256": "0cf8e039ad34a9c8c0bec045ee5780a7b8d7f7a3488619fe3e0ae22bba6a982b"
+    },
+    {
+      "name": "killsquid",
+      "bytes": 1364580,
+      "sha256": "3ebb85bf69ac71ab0bc26ffeabf90d42a8f84b4b4242bc9d861a97b773db388a"
+    },
+    {
+      "name": "killsuperskull",
+      "bytes": 326924,
+      "sha256": "5a2eefbd0f0004a4126ec3940a23fcd3b6489f65d7d323ac32078120af35bc4e"
+    },
+    {
+      "name": "killsuperskull2",
+      "bytes": 603436,
+      "sha256": "0bef3e739eecbefd879637c31360d8cabc9cf382df856d064f95b50d576fcded"
+    },
+    {
+      "name": "killsuperskull2black",
+      "bytes": 705724,
+      "sha256": "352f7164e19636bdb55b0c16850d5aeb8ae23531ac061059008f3f1c953d3fc9"
+    },
+    {
+      "name": "killsuperskull3",
+      "bytes": 939044,
+      "sha256": "f8e7ebbd6ae0b7139957b4d02f4ebdeb26fb230f0e97f40c203b2252811b99f4"
+    },
+    {
+      "name": "killsuperskullblack",
+      "bytes": 368264,
+      "sha256": "59bb087be50191a3707b0b4630687700b1388ec467acb58804f5c69af2ad88a1"
+    },
+    {
+      "name": "killthorn",
+      "bytes": 683728,
+      "sha256": "270be59bc4c8a37bb3ea2aff75ba1b4c1cfd870f3f270f0938cdf0da3cb11428"
+    },
+    {
+      "name": "killultraskull",
+      "bytes": 453724,
+      "sha256": "3fb9d78b8b2b8c6dbb77bb4ef8b7155f9cc49e1fe26637ca74bebd7019787418"
+    },
+    {
+      "name": "killultrasquid",
+      "bytes": 1168776,
+      "sha256": "2f29cae143b890eeb2acf460dd0515b5577f0b932e6518122a7cd058cf2450c9"
+    },
+    {
+      "name": "land",
+      "bytes": 127308,
+      "sha256": "54c65ca91ce8eee4fde30d01464e58dddd94d90fbb380ba48a2e268fc7eef7e7"
+    },
+    {
+      "name": "land2",
+      "bytes": 124368,
+      "sha256": "9c065a0e6efe3353996c27e6e07c22f675d33e65b7278d1973270d6294876860"
+    },
+    {
+      "name": "legends",
+      "bytes": 26989324,
+      "sha256": "7db2245643fcdd14b48c74a237834df991062b87c4e28d93f7a5f46abd8e1f92"
+    },
+    {
+      "name": "leveldown",
+      "bytes": 445166,
+      "sha256": "ce8dfe58758a120f36b4ad5b194fadfaa1bd6a24bc7c895fa80f285b7863a74c"
+    },
+    {
+      "name": "levelup2",
+      "bytes": 926224,
+      "sha256": "98934fbfa6360c7bce9a8a18532b7c130b8dfc3e838906377aa30bb64d9866de"
+    },
+    {
+      "name": "levelup3",
+      "bytes": 1323124,
+      "sha256": "3d068a07f526a712ce800e53b4cb1d6ad0f4c831e2425c43c37eee8a66437215"
+    },
+    {
+      "name": "levelup4",
+      "bytes": 2161024,
+      "sha256": "4e85f38beec029303898dc65a11ec730ede5feb384192924a76aa9620b4c42c5"
+    },
+    {
+      "name": "leviathanbeckon",
+      "bytes": 1322620,
+      "sha256": "bec7c4201b30d950c57f7949fd3f6ef3da201ff2e11318a7407293d6f5ec2c19"
+    },
+    {
+      "name": "leviathanbeckon2",
+      "bytes": 760944,
+      "sha256": "8218a360dd0396850d869d74fe1f7d9d445376e4209f6763f4776e87706b6f6b"
+    },
+    {
+      "name": "leviathantransmute",
+      "bytes": 2066476,
+      "sha256": "493a4c9c9d6cc88c7c6f4e3b6a5807427aef450ee7ddb908fdfa39eb66d2096e"
+    },
+    {
+      "name": "magentadetonate1",
+      "bytes": 705724,
+      "sha256": "bef86e4dde7619cebb48895f78cd89b3fb182be951a12fe159858a1e2d329b38"
+    },
+    {
+      "name": "magentadetonate2",
+      "bytes": 705724,
+      "sha256": "8249f6698e45e2e1384748d14ce056152ebad2dda225fd7feb4f545343f3c734"
+    },
+    {
+      "name": "magentadetonate3",
+      "bytes": 705724,
+      "sha256": "6789633684f45ed639648c0b246ea01a5c8032cfe45ab67f9c8760852030b484"
+    },
+    {
+      "name": "magentadetonate4",
+      "bytes": 705724,
+      "sha256": "8867bbb5506245dbadee14b6104af445bb5fd7ba4a79738e5627e354877748c4"
+    },
+    {
+      "name": "magentadetonate5",
+      "bytes": 705724,
+      "sha256": "628f7a42304524d66a14b48b7399ad8d2737d94f33690c7a00edf7a8bcf548f4"
+    },
+    {
+      "name": "magentadrone",
+      "bytes": 2249224,
+      "sha256": "391d2cb7a867d807ed819d66a95cec5ba96436cce138c4b1cbb292a851a93e48"
+    },
+    {
+      "name": "magentashot",
+      "bytes": 420580,
+      "sha256": "aa815bcb6f805341a095253e74417044d460ca78bcc3a22d04b1983698326eea"
+    },
+    {
+      "name": "magentastuckenemy1",
+      "bytes": 530020,
+      "sha256": "5cb4c0c5f096435d9d7b2bfb7cf86d37c2af22a017a8c04fb5f93848cd26eea3"
+    },
+    {
+      "name": "magentastuckenemy2",
+      "bytes": 617524,
+      "sha256": "8b9c2478b210929702a6e4f92f1f64b41dcc9ea0ff9ffbbf01e4766ae31cf53f"
+    },
+    {
+      "name": "magentastuckenemy3",
+      "bytes": 661624,
+      "sha256": "95654213afb887b3121ac1afe4300c7303f899da8e0670a3e6ad4064dc07bb5c"
+    },
+    {
+      "name": "magentastuckenemy4",
+      "bytes": 617524,
+      "sha256": "a12b3d8241f0610fbd1dd68b734db357ac55976df34f7d5a9185ec385015fbe2"
+    },
+    {
+      "name": "magentastuckenemy5",
+      "bytes": 661624,
+      "sha256": "274895fabfadb98eec927f98ef8ec3078cde16f507fe146e6f9b98aded6d425b"
+    },
+    {
+      "name": "magicpierce1",
+      "bytes": 705724,
+      "sha256": "9a2fa8449c8fcf87a2f2150dd38549f1b88d24f78da98bb363261c7421a840bf"
+    },
+    {
+      "name": "magicpierce2",
+      "bytes": 705724,
+      "sha256": "18054f5e9f3713192750ed2a448383d8aa5aae04d9bac0ee9e853fe8005eeb97"
+    },
+    {
+      "name": "magicpierce3",
+      "bytes": 705724,
+      "sha256": "cb5a9e65d2d9e3b6343073a73c2c76aae82db97ac4f8f20bad5d1aa0eab38172"
+    },
+    {
+      "name": "magicpierce4",
+      "bytes": 705724,
+      "sha256": "65561c8a2db357c84f2e12098b2b3cf907d4afc0aa5177f5c31b479e441d43a2"
+    },
+    {
+      "name": "magicpierce5",
+      "bytes": 705724,
+      "sha256": "5ac6f255cf61531040ef0b55dd9aaeb64298afa62ca01db4bf5bf2b72f6a5ac5"
+    },
+    {
+      "name": "magicpulse",
+      "bytes": 264724,
+      "sha256": "fcd10f56ed43594d1c2272573c17e3090715dfac00ea5536d8614adc2edc09da"
+    },
+    {
+      "name": "meat1",
+      "bytes": 176524,
+      "sha256": "8bf2482e1f652e545fc7566c1d740c36e2db3e7b5e24b718f90c7a3f1cbc378e"
+    },
+    {
+      "name": "meat10",
+      "bytes": 132424,
+      "sha256": "aea1025613924ea80e69f5560f46431879f4db448ea3a2dcccc2a68295e169d9"
+    },
+    {
+      "name": "meat11",
+      "bytes": 132424,
+      "sha256": "5e6808928f4ce990cc7f0b2712f2b9c4655bbeff2e5298746a21ddcf0c631cc9"
+    },
+    {
+      "name": "meat12",
+      "bytes": 132424,
+      "sha256": "531bf8e87ffbd08cd5546681b0e4860a7b2e029c4277e80b3bdcc04936c6c72f"
+    },
+    {
+      "name": "meat13",
+      "bytes": 176524,
+      "sha256": "0908f41db9ac3c0a1c1d93714b92befb7ced69274977acf52aae83802dbf2116"
+    },
+    {
+      "name": "meat2",
+      "bytes": 176524,
+      "sha256": "0b07ab8485bc8bf5f71d21e4423f75ed66e279c52ebb8a702fd0c935a2ab65e3"
+    },
+    {
+      "name": "meat3",
+      "bytes": 176524,
+      "sha256": "46ef3ec1451224516812f83a20ac9753d35ade43b5e76fab468ea53c45297eb4"
+    },
+    {
+      "name": "meat4",
+      "bytes": 176524,
+      "sha256": "dde026495404014cefbbb9e6904adb7e63145f359ce63099ff61b8c9311cdf84"
+    },
+    {
+      "name": "meat5",
+      "bytes": 176524,
+      "sha256": "4c93c08b2a305ab629ca549f53b673419a7d4d126c48b4cd774857d38f26e769"
+    },
+    {
+      "name": "meat6",
+      "bytes": 176524,
+      "sha256": "d71f095976dd03e25e4f53fd7785daf792bd8d8bef0f4ca165a2480308a2d1db"
+    },
+    {
+      "name": "meat7",
+      "bytes": 125904,
+      "sha256": "abd616846865790c9c56d89fd457d5b8d934d215ccc832e20e7396842c50fa0e"
+    },
+    {
+      "name": "meat8",
+      "bytes": 132424,
+      "sha256": "d62e0c5acd905bdd48c392440e72d6d45b96352a0474fc2b98642c0fe70bc70d"
+    },
+    {
+      "name": "meat9",
+      "bytes": 132424,
+      "sha256": "7f4a5b52851fe4aa40d689cdb7e3faef44cd3c70168c7fb07138fc8fdb92b2a2"
+    },
+    {
+      "name": "meatbig1",
+      "bytes": 176524,
+      "sha256": "a61c60b6ea1b04cd7f1b1eadef6fee293fe081a6245648770cedc8f8ee9c1199"
+    },
+    {
+      "name": "meatbig2",
+      "bytes": 176524,
+      "sha256": "d7c0c6b6fc82cf2c0cb913a387da4416c609c25ccfb7c3562a966893699a25c1"
+    },
+    {
+      "name": "meatbig3",
+      "bytes": 176524,
+      "sha256": "27f47d09652ebf37d0a6bd536a11cb9ac0ab65ed5ff18572c7a4bc029dccc033"
+    },
+    {
+      "name": "meatbig4",
+      "bytes": 176524,
+      "sha256": "dd1f22073add903bdbb7e91806e670281afde856ce128186575af9a06db65904"
+    },
+    {
+      "name": "meatbig5",
+      "bytes": 176524,
+      "sha256": "d2753aa186af614d3471c19182d2a5549585c5f7a2c288e87785e68e9c8c3fe0"
+    },
+    {
+      "name": "meatbig6",
+      "bytes": 176524,
+      "sha256": "3a312a9610facb856894a18c78b4acd22f1df53f9d9b6f5b785a0211d7c0ca32"
+    },
+    {
+      "name": "meatmed1",
+      "bytes": 176524,
+      "sha256": "69dee53aec4fdc1194b9842ebe6c746fa4640bafd53e82a6e11a991fcc77ec06"
+    },
+    {
+      "name": "meatmed2",
+      "bytes": 176524,
+      "sha256": "5235a7a2c6c9907c079b3e711c6ebd8207e016be9a5ae1938ee6ec93dfd276a8"
+    },
+    {
+      "name": "meatmed3",
+      "bytes": 176524,
+      "sha256": "836d493331fc997060385ae547f61ce90a7228c0e3b5330f9c0828d66207806b"
+    },
+    {
+      "name": "meatmed4",
+      "bytes": 176524,
+      "sha256": "4b45afe6f8022f4ffa2e2860fd300345e30d89146d491b1cb5dfdb2871c723c2"
+    },
+    {
+      "name": "meatmed5",
+      "bytes": 176524,
+      "sha256": "bd13cc733b0125b68b476937c44791f443bae89d3636d099ceb769387744218f"
+    },
+    {
+      "name": "meatmed6",
+      "bytes": 176524,
+      "sha256": "76aed4cc88b11676b491e8982eee0fa506ae8e9ad3c4c7eb9e1987570ff0499d"
+    },
+    {
+      "name": "menuatmos",
+      "bytes": 36814040,
+      "sha256": "77dd6ec59640ba6d7840950a606ec4e323b68df5a0e1a38edd867d23927f40b6"
+    },
+    {
+      "name": "menutheme",
+      "bytes": 19055446,
+      "sha256": "e0d11088c8d032f1a0022478ef2149ccd802adaec88829e2922c4179c50f2d28"
+    },
+    {
+      "name": "polarity1e",
+      "bytes": 8864224,
+      "sha256": "71128aceb280c95d07d2fc11a9db0708feb7fbb23e74a2fdb03c0d751dc64664"
+    },
+    {
+      "name": "polarity2w",
+      "bytes": 12039424,
+      "sha256": "42897d1160ad59acdff754bac0fbe24a215bb6b6af3be1fb43014a0a6d30d002"
+    },
+    {
+      "name": "polarity3n",
+      "bytes": 9095752,
+      "sha256": "cf2f82c8b1a363e9919f88d23f44e05aeea8fb31001642e44d25f18f54a6db6a"
+    },
+    {
+      "name": "polarity4s",
+      "bytes": 13759324,
+      "sha256": "434c348abaf1490c9e76fe47d0a82f40531af95b6572b2a31b7dfd89bd4df67c"
+    },
+    {
+      "name": "rapid1",
+      "bytes": 1419432,
+      "sha256": "1bafbd596543363bcd7906054d269aab1db533ae08abc7149a98b1e6412e4117"
+    },
+    {
+      "name": "rapid2",
+      "bytes": 1410032,
+      "sha256": "1aaff3f57045247cdf155b4c594c240cbccd1fd2898577bc1243c8d0f7512c24"
+    },
+    {
+      "name": "rapid3",
+      "bytes": 1415366,
+      "sha256": "f80347073c785f472300e816f83d6b67d90af20b41858647ec74da25b0f223eb"
+    },
+    {
+      "name": "rapid4",
+      "bytes": 11289724,
+      "sha256": "fb93cf93fb4ecde38d3b447d622c9417ed5155bf236042497c0bc8a1080f70ba"
+    },
+    {
+      "name": "ricochet1",
+      "bytes": 176524,
+      "sha256": "6fda57b45c0366bc95845f28f6ebb0f13a188316c3d82831c5b2af2916a78971"
+    },
+    {
+      "name": "ricochet2",
+      "bytes": 176524,
+      "sha256": "e74466939fbce45719c2395cd8996b553e8768a786aa0ac4175fe1eff0ab88d4"
+    },
+    {
+      "name": "ricochet3",
+      "bytes": 176524,
+      "sha256": "94f69d16dd97dd6b924b0fe6b32c61cacee1eb7bcf2e70043cf6e6aeb6dd3804"
+    },
+    {
+      "name": "ricochet4",
+      "bytes": 176524,
+      "sha256": "73a05d24285e67aa8672096da9202089806548280127de51783444e8fbc4db32"
+    },
+    {
+      "name": "ricochet5",
+      "bytes": 176524,
+      "sha256": "73bf7b20400c1d446439dead4e7af1c867b8874de17c4b70da749c364db96d98"
+    },
+    {
+      "name": "ricochetmagenta1",
+      "bytes": 176524,
+      "sha256": "a058b428ded0c6908ffaada194f0fe2af0240f1162ccf63c3f419b3a4d7bab84"
+    },
+    {
+      "name": "ricochetmagenta2",
+      "bytes": 176524,
+      "sha256": "5f52cf3fd4a919cc886e366c9faae38f1c98bdfd009fe8e310ac5f8d81b12c43"
+    },
+    {
+      "name": "ricochetmagenta3",
+      "bytes": 176524,
+      "sha256": "db6e9c0e16820846462a898a3233ca8fb65f597f4580aabd1a9fcbe672bac302"
+    },
+    {
+      "name": "ricochetmagenta4",
+      "bytes": 176524,
+      "sha256": "3b0445063fd29b01f2af51dbb8d77c36eb1ad7f39bd87f75a17ee9fe3f0bf773"
+    },
+    {
+      "name": "ricochetmagenta5",
+      "bytes": 176524,
+      "sha256": "0f2634bf663eb026b96b34052ef7c7dd8c6ba3c2d18d472bd71ac66471013805"
+    },
+    {
+      "name": "ricochetmagic1",
+      "bytes": 441124,
+      "sha256": "0d45abf543669320ccc63f32cfea39fdd2c942ff1693b9413ccf64514360e395"
+    },
+    {
+      "name": "ricochetmagic2",
+      "bytes": 441124,
+      "sha256": "6767d61385fd4a3830a389e131d7d0f76bc1c81f833a6390d09e454a38dd7407"
+    },
+    {
+      "name": "ricochetmagic3",
+      "bytes": 441124,
+      "sha256": "d1872b0f7e8a60850def9bdaba82b62a07c6d53fd3bc3c9d9c2985500e63485f"
+    },
+    {
+      "name": "ricochetmagic4",
+      "bytes": 441124,
+      "sha256": "0f52c1b72b6ace6a0cd30d590c4661fb746df3b8c0dad76be83635d44a000282"
+    },
+    {
+      "name": "ricochetmed1",
+      "bytes": 176524,
+      "sha256": "e4c87d9cec01f4148c52464663033d180eab71e44e8d29a6a9516205f96ce7d4"
+    },
+    {
+      "name": "ricochetmed2",
+      "bytes": 176524,
+      "sha256": "aa5688caeb8651938ff1e42f2eaae7e404ba795589b6b5d84cb5032a4e1410b7"
+    },
+    {
+      "name": "ricochetmed3",
+      "bytes": 176524,
+      "sha256": "8e4faf82caca6a190ebda8319b6e6ad33a69c8f45badb948914fd391a0e66fe1"
+    },
+    {
+      "name": "ricochetmed4",
+      "bytes": 176524,
+      "sha256": "88cb90dbec16705f445a2316c85efd32dd0e58544ff0e076e8c6d6d1ff5834b8"
+    },
+    {
+      "name": "ricochetmed5",
+      "bytes": 176524,
+      "sha256": "7c71be6be28199ea9b7ba8008debfe50e1ba4021aaf1a71e503c97c88217ff08"
+    },
+    {
+      "name": "secretsnake",
+      "bytes": 1718196,
+      "sha256": "7a06c44ca9a9911d5d321865b99e4268a0d78737a6357428881de7c6af4d6ab5"
+    },
+    {
+      "name": "secretsnake2",
+      "bytes": 1405188,
+      "sha256": "0e909aaf0dc0cd4215fe12737f0adeb08c3717ae6a5cb5194d2dd7c3dfd4826a"
+    },
+    {
+      "name": "shard1",
+      "bytes": 617524,
+      "sha256": "5f531e278f9c552cae61c174821b058cc5d772a73ada1fa582cc5f6fe4dfee90"
+    },
+    {
+      "name": "shard2",
+      "bytes": 617524,
+      "sha256": "48af3a9190277e52c8808689ea089a244aedd64825a7a90e93900ab0e2256338"
+    },
+    {
+      "name": "shard3",
+      "bytes": 617524,
+      "sha256": "58f720e50b6a217f9a54325095a714cdb6f74a1063331f8e5c77a50330b73ff3"
+    },
+    {
+      "name": "shard4",
+      "bytes": 688816,
+      "sha256": "97da01a5e7e2113910611f4ac9663b4841ced2ff28e7d68e169d9937ee6d19e7"
+    },
+    {
+      "name": "shard5",
+      "bytes": 705724,
+      "sha256": "f6b19c8d2d04e8d3ab0906a5d5f54111f5e081899767e9c77ca340cee3b55efa"
+    },
+    {
+      "name": "shot1",
+      "bytes": 709766,
+      "sha256": "492ff81e24ad68c38fe2ba5d7cd3c3af113ab61da910cefbe9e6f0c9c80d0af8"
+    },
+    {
+      "name": "shot2",
+      "bytes": 709760,
+      "sha256": "54bb61be6283b5cd72038a2cf8de8d11d18f02582cb4753c7b0ae925553dc201"
+    },
+    {
+      "name": "shot3",
+      "bytes": 705724,
+      "sha256": "212e942099f9c8b3ae66b375fba6314b3cf5b0f8acebb19ca92ab86321d0e80f"
+    },
+    {
+      "name": "shot3alt1",
+      "bytes": 705724,
+      "sha256": "4bd96074f8bdf3546ce5fb9fcf13c112851ce56bec5d7c143c847fc5ef5404c7"
+    },
+    {
+      "name": "shot3alt2",
+      "bytes": 705724,
+      "sha256": "733bdd09726e88445ec9f30a8e42b207c522aa4b15be7e69840146e74ea529ef"
+    },
+    {
+      "name": "shot3alt3",
+      "bytes": 705724,
+      "sha256": "d2b109e21910698af439c91621356f89d3687c6ba48cba1b04ea649e0d1016e4"
+    },
+    {
+      "name": "shot3alt4",
+      "bytes": 705724,
+      "sha256": "69a503614b48a1d8f8ea80a8afe191f7eaed494e1411b058a86e1fe991a8a753"
+    },
+    {
+      "name": "shot4alt1",
+      "bytes": 705724,
+      "sha256": "f6eac4d2b08396e2a37365c22ec2dd7ad3e8f78d17d94179aef6b9e42c77d19c"
+    },
+    {
+      "name": "shot4alt2",
+      "bytes": 705724,
+      "sha256": "9e596e37bee777ebc0f35e95149625b7d2e300d36bb26d8b4d1afc10bea87972"
+    },
+    {
+      "name": "shot4alt3",
+      "bytes": 705724,
+      "sha256": "062ed55247d7cb0d70c164629dcaa0cf832578db29bfd5b90ed8dec99756f78b"
+    },
+    {
+      "name": "shot4alt4",
+      "bytes": 705724,
+      "sha256": "2b8d94309391ee1aecd822c7c74282c60152b566a76f41517a108e05d304c97c"
+    },
+    {
+      "name": "shot4alt5",
+      "bytes": 705724,
+      "sha256": "f26cdd565669d2c427e5600ab2a683eca482cac5add56e13b06f6aec77d3f16d"
+    },
+    {
+      "name": "skullaggro",
+      "bytes": 352924,
+      "sha256": "0a68bfeb55bf6a32385870f317f696c4e81eb4cefba9f5296a75ba195a17d1f9"
+    },
+    {
+      "name": "skullclop1",
+      "bytes": 352924,
+      "sha256": "7cd7e4c879944f0c67d10c08e00e946996be8aaa8caf81555de6a42ee19143f3"
+    },
+    {
+      "name": "skullclop2",
+      "bytes": 352924,
+      "sha256": "085e5e3a17369f5c03ef9ee15680a934428344ec653a2c097edceeb721dc5f83"
+    },
+    {
+      "name": "skullclop3",
+      "bytes": 352924,
+      "sha256": "037fb967afab75396da8509f5fd1fcc8f01098e6887fc89bac5a86a61ec2c63f"
+    },
+    {
+      "name": "skullclop4",
+      "bytes": 352924,
+      "sha256": "36cc8f24cd6f44d7e24d62b62315535ce85fb4015051530491cd929a2dfe06f7"
+    },
+    {
+      "name": "skullclop5",
+      "bytes": 352924,
+      "sha256": "40dc57cc06a3801f44639f9f67eb79ad22be39d7cb19a7df074e0c234f04b85e"
+    },
+    {
+      "name": "skullclop6",
+      "bytes": 352924,
+      "sha256": "00040a246588a74c5b5e3e1f7c97ad8fc0933a4214b9fb0d1b975a4107a298c9"
+    },
+    {
+      "name": "sorathstone",
+      "bytes": 51407456,
+      "sha256": "04c49ac78332c1786a2ff1b5499e1487fb8b9175262bd4d7410526a010f14ca1"
+    },
+    {
+      "name": "spawnandras",
+      "bytes": 1512284,
+      "sha256": "d6fc255e727c97de191c0915376b0facaee55b0f5870aa41152de1ed2ddeadd7"
+    },
+    {
+      "name": "spawncentipede",
+      "bytes": 1234924,
+      "sha256": "42ebfc9da2468a2a8683a84d092105c807a688593816caf5fd060c4c5b8db57f"
+    },
+    {
+      "name": "spawncentipede2",
+      "bytes": 1866904,
+      "sha256": "8a698d71f5a5b64a924cc329adc6289e5a28057d759a208f0a071d0ca414df50"
+    },
+    {
+      "name": "spawnegg",
+      "bytes": 341168,
+      "sha256": "3b4ecfa38854b014e7f317d10ddc2dc2f3d103b9a2aa9d58f47bf9c35c1e9ed8"
+    },
+    {
+      "name": "spawngigaspider",
+      "bytes": 2822524,
+      "sha256": "6a2cf3f1ad5acdf598c902635fbebd21aa9d5ca066177d567d5f81618ffc1a5c"
+    },
+    {
+      "name": "spawnleviathan",
+      "bytes": 3655706,
+      "sha256": "7d091979d2ed0db34133d4434f96fa999d961f548d6c97a0073f5f86d7a365ab"
+    },
+    {
+      "name": "spawnminisquid",
+      "bytes": 1058524,
+      "sha256": "7d266dd779fad9d19db044ab56e21778820b3cafde16d339c76eac802b530b7d"
+    },
+    {
+      "name": "spawnplayer",
+      "bytes": 764548,
+      "sha256": "528ca958fe288b955a2de99fc93c5b0d69b690fdf9491a5dbe4f6af7cae3c5f0"
+    },
+    {
+      "name": "spawnskulls",
+      "bytes": 920472,
+      "sha256": "03e25c2aa8b2c2f42213f09241814605ea4f3139a708acfda53734f0b98bf758"
+    },
+    {
+      "name": "spawnskulls2",
+      "bytes": 838024,
+      "sha256": "182dede25b9e273c1051754c134320b793fd4f43ccbfac47ea4ab5c3ba9a09e8"
+    },
+    {
+      "name": "spawnskulls3",
+      "bytes": 583660,
+      "sha256": "fed5846a940e2765362996a5ee796d9422ff474583009f3fb421dbdbe7568047"
+    },
+    {
+      "name": "spawnspider",
+      "bytes": 2509604,
+      "sha256": "9e6990a0a765446352b3e89a8501577264b08fa171ea0bab95eda591c2b01226"
+    },
+    {
+      "name": "spawnsquid",
+      "bytes": 1764124,
+      "sha256": "62a1d4877fe011c88cdbbab7a5bc959989be6cc8556b18f41bf8c3cad9e23c22"
+    },
+    {
+      "name": "spawnultrapede",
+      "bytes": 2150484,
+      "sha256": "0e6168e61da53be372004c95d152027364b69682af495fa1e7d39ff00f9c0cab"
+    },
+    {
+      "name": "spawnultrasquid",
+      "bytes": 1786176,
+      "sha256": "907d9de1706d1028f5ca2c6c0f75b8dc84fb33a8b1046266222855bc7badd99d"
+    },
+    {
+      "name": "spidereat1",
+      "bytes": 352924,
+      "sha256": "ed6386b849339bb5809ce6b684d50802e9a6a1000081899777ae031a259c23e8"
+    },
+    {
+      "name": "spidereat2",
+      "bytes": 352924,
+      "sha256": "c3685c1568fef7cb692f3dedc50505bb173d2b4a2c2e80fa87ecd547bbbe5cd3"
+    },
+    {
+      "name": "spidereat3",
+      "bytes": 352924,
+      "sha256": "8c8f1342b61d41faf39d41fb00c1627b7dbebb78415030b6f81fc2251528551f"
+    },
+    {
+      "name": "spidereat4",
+      "bytes": 352924,
+      "sha256": "b23514533a6f3c04418d76000f9a672fbcf7f4c0ec859c20067bbb563731b2ac"
+    },
+    {
+      "name": "spidereat5",
+      "bytes": 352924,
+      "sha256": "e94788c2c28e738d120b611e14eefae822a66eccddad8b085f5dfbbb4f63996e"
+    },
+    {
+      "name": "spidereat6",
+      "bytes": 352924,
+      "sha256": "c0d1cf2136cdc6e2837b71b9c7a0f86059923715436f22d7113a4e5270a95e73"
+    },
+    {
+      "name": "splashgiga",
+      "bytes": 1049320,
+      "sha256": "eba995b2a36ad4cbd97dd6d8451ca3d61d121a5335bf3a0761da33e6b3f7fc41"
+    },
+    {
+      "name": "splashgiga2",
+      "bytes": 963420,
+      "sha256": "b88c7655b4515f8822cce3ecd652abd80492a057dfcd0de222489df6366d816d"
+    },
+    {
+      "name": "splashgiga3",
+      "bytes": 945016,
+      "sha256": "46bc6a4bd90a5c2a559d5a2de37648ed310f732c21931d3ac87b72a77e501fd8"
+    },
+    {
+      "name": "splashgiga4",
+      "bytes": 1491120,
+      "sha256": "3c4bfc854410e95f4ad9e3d52bb7734394800e82df46388dbe91768052a6f0c3"
+    },
+    {
+      "name": "splashgiga5",
+      "bytes": 1067724,
+      "sha256": "5b1a55cffc2a105484e17a978b9373fd37a573be65eb76d0bd1e0e94faaf0e77"
+    },
+    {
+      "name": "splashgiga6",
+      "bytes": 1126012,
+      "sha256": "0a85342e9610432e5c1b3f9405f292da6887376cc6fbceba5a04406747bd84f9"
+    },
+    {
+      "name": "stealgib",
+      "bytes": 4762924,
+      "sha256": "8a31b163aa9fde7f3a3e792e9f90a0862b1f3d5da87b393537eacb7d71511040"
+    },
+    {
+      "name": "stealgib2",
+      "bytes": 4762924,
+      "sha256": "a0b76408545729af10b9c6dd91f7f99548b13e85f3ecec629f9f56f467403e61"
+    },
+    {
+      "name": "subchattercentipede",
+      "bytes": 2822524,
+      "sha256": "e78a8284c1eebf77220fd44853f92aca98108ca4b55bb03c3c1531e0ca920420"
+    },
+    {
+      "name": "thornemerge",
+      "bytes": 1080576,
+      "sha256": "8c2039e9eea9438a0363f2f11e6c5280bceaf49bf97bbdeba887d2de20e0aec4"
+    },
+    {
+      "name": "thorngib1",
+      "bytes": 264724,
+      "sha256": "2c4908770eddf67bc8280aba31545c8cfc831210d291f8f2ae9ff107eb678bf1"
+    },
+    {
+      "name": "thorngib2",
+      "bytes": 176524,
+      "sha256": "9799478754d758d4b8d625dafcb3c1e8b6395946c34d93101de29702c93a3699"
+    },
+    {
+      "name": "thorngib3",
+      "bytes": 264724,
+      "sha256": "8d441d732800488b95ddbdc528ce7b1bd4edd8eefb03c216c5b92a5a75360bc5"
+    },
+    {
+      "name": "thorngib4",
+      "bytes": 264724,
+      "sha256": "a66ba27510127f21e658725dd637a0164222628059e66fff1bc83f9672f8c697"
+    },
+    {
+      "name": "thorngib5",
+      "bytes": 220624,
+      "sha256": "72158e36069162eb71cf59868f31dc81619c4b4b5d234d1ec9331e0a5154ab48"
+    },
+    {
+      "name": "thorngib6",
+      "bytes": 220624,
+      "sha256": "95f83c663dac7ac5668b9c2606a9d59cf9390519a64918fd6c33c4cdb95288f2"
+    },
+    {
+      "name": "uiclick",
+      "bytes": 67612,
+      "sha256": "7a5e42e603f127de0ff9bf5f965346689d30331fcef4a85f190b5c49c109c5e8"
+    },
+    {
+      "name": "uihover",
+      "bytes": 23128,
+      "sha256": "d4646816d7d75ffa897300d01f1867d159dbf3b0f076f2ef361a6dc2d6ed3e55"
+    },
+    {
+      "name": "uislider",
+      "bytes": 22176,
+      "sha256": "20b821efee3e2841eb2596dd1419128d9590d6e75bfa6a2c734df2be4b8c3c01"
+    },
+    {
+      "name": "ultrapedecrash",
+      "bytes": 1014424,
+      "sha256": "018a51d045b909a4106d3afd1922a5ce763f78e4c2c7a00fa99161618f4edfd0"
+    },
+    {
+      "name": "ultrapedeeat",
+      "bytes": 334316,
+      "sha256": "54047997d3a21227eda36c4784abbca6b88d1150570e96cfb402a3eca0bf8895"
+    },
+    {
+      "name": "ultrapedefall",
+      "bytes": 860076,
+      "sha256": "67c625b3a60148f05d5adcf39ab12ebbcf6edb3d3897a8cc00f1f06a21bc8c0d"
+    },
+    {
+      "name": "unburrowcentipede",
+      "bytes": 1234924,
+      "sha256": "69b0b667885086bb69e9c5585e359ecd4f5726b5ee95c60e7b0a6aed02a5611a"
+    },
+    {
+      "name": "sorathlogo",
+      "bytes": 1767192,
+      "sha256": "e7bcd4fa27531e8fd738d538ddf036c6317be9dfaba3fe889c55e51fac259a49"
+    },
+    {
+      "name": "sorathlogo2",
+      "bytes": 1767192,
+      "sha256": "d236cb31b30e753aa258837f4620fa2a29fc1c6058b048305941e8f54cd7ac98"
+    },
+    {
+      "name": "daggercall5",
+      "bytes": 7894024,
+      "sha256": "1af293862206133599df69139e6ff4d167d374a524247fecd07a926cb81885fc"
+    },
+    {
+      "name": "daggercollect5",
+      "bytes": 2880540,
+      "sha256": "97e7ddf6be94ae6f6b0ff5101053e8317c5c6cedd0d3bd221b5db37546fb7d1e"
+    }
+  ]
+}

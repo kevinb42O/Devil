@@ -2,7 +2,7 @@
 
 The initial asset pass covered eight kinds; the subsequent replica pass covers all 22 enemy entries, including native higher-tier, transmuted, boss and obstacle rigs. See [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) for current behavior. All implemented enemy kinds now use original Devil Daggers mesh and texture data. The former constructed enemy meshes have been removed. The first summoner uses the original `minisquid` crest, skull, horns, jaw, gem, and squid arms. Squid II uses its own original parts. The large spider uses the original body, head, jaw, fangs, palms, and three leg segments; its held gem uses the original crystal texture and `gib` mesh. Skulls, eggs, spiderlings, and centipedes likewise use their original component data. Arena tiles and loose gems now use original geometry and textures.
 
-Acquisition, hashes, and the importer are documented in [ORIGINAL_WEAPON_ASSETS.md](ORIGINAL_WEAPON_ASSETS.md). The combined local import contains 439 rendering files under the Git-ignored `assets/original/devil-daggers/` directory. A fresh checkout requires reimporting the resource data.
+Acquisition, hashes, and the importer are documented in [ORIGINAL_WEAPON_ASSETS.md](ORIGINAL_WEAPON_ASSETS.md). The combined local import contains 439 rendering files under `assets/original/devil-daggers/`. Imported runtime assets are tracked in Git so fresh checkouts can run and deploy without reimporting the resource data.
 
 ## Large spider behavior
 
