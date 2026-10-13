@@ -95,6 +95,10 @@ The local runtime now uses original Devil Daggers sound recordings. Selected Ken
 
 See [ASSET_PREPARATION.md](ASSET_PREPARATION.md) and [ASSET_RESEARCH.md](ASSET_RESEARCH.md) for the asset provenance and provisional sound-role mapping.
 
+## Public leaderboard
+
+Open **Public leaderboard** from the menu to see the top 100 shared solo Survival scores. After a standard solo run, enter a name and choose **Publish this run**. Supabase stores each browser’s best published time; practice and multiplayer stay separate. See [LEADERBOARD.md](LEADERBOARD.md) for deployment, database access and score-verification limits.
+
 ## Friends multiplayer
 
 The main menu includes browser-to-browser WebRTC cooperative survival for up to four players. Create a public lobby or join a visible lobby with one click. Every player presses READY, then the host starts the run. Every gem counts for every player. See [MULTIPLAYER.md](MULTIPLAYER.md) for online hosting and validation.
