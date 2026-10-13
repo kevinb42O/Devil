@@ -1,0 +1,119 @@
+index,enemyType,enemy,delay,firstPassTime,section
+0,0,Squid I,3.0,3.0,preloop
+1,-1,Wait,6.0,9.0,preloop
+2,0,Squid I,5.0,14.0,preloop
+3,0,Squid I,5.0,19.0,preloop
+4,0,Squid I,5.0,24.0,preloop
+5,1,Squid II,15.0,39.0,preloop
+6,3,Spider I,0.0,39.0,preloop
+7,-1,Wait,10.0,49.0,preloop
+8,1,Squid II,0.0,49.0,preloop
+9,0,Squid I,0.0,49.0,preloop
+10,1,Squid II,15.0,64.0,preloop
+11,0,Squid I,0.0,64.0,preloop
+12,1,Squid II,15.0,79.0,preloop
+13,0,Squid I,0.0,79.0,preloop
+14,1,Squid II,15.0,94.0,preloop
+15,0,Squid I,0.0,94.0,preloop
+16,1,Squid II,15.0,109.0,preloop
+17,2,Centipede,5.0,114.0,preloop
+18,3,Spider I,5.0,119.0,preloop
+19,-1,Wait,5.0,124.0,preloop
+20,1,Squid II,10.0,134.0,preloop
+21,0,Squid I,0.0,134.0,preloop
+22,1,Squid II,10.0,144.0,preloop
+23,0,Squid I,0.0,144.0,preloop
+24,1,Squid II,10.0,154.0,preloop
+25,0,Squid I,0.0,154.0,preloop
+26,1,Squid II,10.0,164.0,preloop
+27,0,Squid I,0.0,164.0,preloop
+28,2,Centipede,10.0,174.0,preloop
+29,3,Spider I,0.0,174.0,preloop
+30,3,Spider I,0.0,174.0,preloop
+31,3,Spider I,0.0,174.0,preloop
+32,-1,Wait,5.0,179.0,preloop
+33,1,Squid II,5.0,184.0,preloop
+34,0,Squid I,0.0,184.0,preloop
+35,1,Squid II,5.0,189.0,preloop
+36,0,Squid I,0.0,189.0,preloop
+37,1,Squid II,5.0,194.0,preloop
+38,0,Squid I,0.0,194.0,preloop
+39,3,Spider I,5.0,199.0,preloop
+40,3,Spider I,0.0,199.0,preloop
+41,3,Spider I,0.0,199.0,preloop
+42,-1,Wait,5.0,204.0,preloop
+43,0,Squid I,25.0,229.0,preloop
+44,0,Squid I,0.0,229.0,preloop
+45,0,Squid I,0.0,229.0,preloop
+46,0,Squid I,0.0,229.0,preloop
+47,0,Squid I,0.0,229.0,preloop
+48,0,Squid I,0.0,229.0,preloop
+49,1,Squid II,10.0,239.0,preloop
+50,1,Squid II,0.0,239.0,preloop
+51,1,Squid II,0.0,239.0,preloop
+52,6,Squid III,5.0,244.0,preloop
+53,-1,Wait,15.0,259.0,preloop
+54,5,Gigapede,0.0,259.0,preloop
+55,5,Gigapede,0.0,259.0,preloop
+56,5,Gigapede,0.0,259.0,preloop
+57,8,Spider II,15.0,274.0,preloop
+58,3,Spider I,0.0,274.0,preloop
+59,3,Spider I,0.0,274.0,preloop
+60,8,Spider II,15.0,289.0,preloop
+61,3,Spider I,0.0,289.0,preloop
+62,3,Spider I,0.0,289.0,preloop
+63,6,Squid III,15.0,304.0,preloop
+64,6,Squid III,0.0,304.0,preloop
+65,6,Squid III,0.0,304.0,preloop
+66,1,Squid II,26.0,330.0,preloop
+67,1,Squid II,0.0,330.0,preloop
+68,1,Squid II,0.0,330.0,preloop
+69,-1,Wait,20.0,350.0,preloop
+70,4,Leviathan,0.0,350.0,preloop
+71,-1,Wait,15.0,365.0,preloop
+72,0,Squid I,0.0,365.0,preloop
+73,0,Squid I,0.0,365.0,preloop
+74,0,Squid I,0.0,365.0,preloop
+75,1,Squid II,5.0,370.0,preloop
+76,1,Squid II,0.0,370.0,preloop
+77,1,Squid II,0.0,370.0,preloop
+78,6,Squid III,5.0,375.0,preloop
+79,-1,Wait,10.0,385.0,preloop
+80,6,Squid III,12.0,397.0,preloop
+81,1,Squid II,3.0,400.0,preloop
+82,0,Squid I,0.0,400.0,preloop
+83,0,Squid I,6.0,406.0,preloop
+84,1,Squid II,0.0,406.0,preloop
+85,5,Gigapede,6.0,412.0,preloop
+86,3,Spider I,5.0,417.0,preloop
+87,3,Spider I,1.0,418.0,preloop
+88,8,Spider II,1.0,419.0,preloop
+89,0,Squid I,5.0,424.0,preloop
+90,0,Squid I,0.0,424.0,preloop
+91,1,Squid II,3.0,427.0,preloop
+92,6,Squid III,3.0,430.0,preloop
+93,-1,Wait,10.0,440.0,preloop
+94,0,Squid I,0.0,440.0,preloop
+95,1,Squid II,1.0,441.0,preloop
+96,9,Ghostpede,1.0,442.0,preloop
+97,7,Thorn,5.0,447.0,preloop
+98,7,Thorn,2.0,449.0,preloop
+99,7,Thorn,2.0,451.0,preloop
+100,-1,Wait,5.0,456.0,loop
+101,0,Squid I,0.0,456.0,loop
+102,0,Squid I,0.0,456.0,loop
+103,1,Squid II,3.0,459.0,loop
+104,0,Squid I,0.0,459.0,loop
+105,6,Squid III,3.0,462.0,loop
+106,5,Gigapede,5.0,467.0,loop
+107,8,Spider II,5.0,472.0,loop
+108,3,Spider I,1.0,473.0,loop
+109,3,Spider I,1.0,474.0,loop
+110,7,Thorn,10.0,484.0,loop
+111,7,Thorn,1.0,485.0,loop
+112,7,Thorn,1.0,486.0,loop
+113,3,Spider I,5.0,491.0,loop
+114,3,Spider I,1.0,492.0,loop
+115,0,Squid I,5.0,497.0,loop
+116,0,Squid I,5.0,502.0,loop
+117,1,Squid II,5.0,507.0,loop

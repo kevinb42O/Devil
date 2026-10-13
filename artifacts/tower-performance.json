@@ -1,0 +1,12 @@
+{
+  "rotationRadiansInFiveSeconds": [
+    -1.4000000000000399,
+    -1.4000000000000394,
+    -1.4000000000000394
+  ],
+  "simulationTickMs": 3.419999999801318,
+  "renderMedianMs": 5,
+  "renderP95Ms": 6.5999999940395355,
+  "pixelRatio": 1.25,
+  "emptyUploadFree": true
+}

@@ -1,0 +1,9 @@
+import {chromium} from '@playwright/test';import {existsSync} from 'node:fs';import assert from 'node:assert/strict';
+const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+try{const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});await page.goto('http://127.0.0.1:5173');
+ const results=await page.evaluate(async()=>{
+  const [{World,v},{GameRenderer}]=await Promise.all([import('/src/simulation.ts'),import('/src/renderer.ts')]);const canvas=document.createElement('canvas');document.body.append(canvas);const renderer=new GameRenderer(canvas,{quality:'low',fov:90});await Promise.all([renderer.originalEnemies.loaded,renderer.originalWeapon.loaded]);const world=new World(1,{schedule:false});
+  for(let i=0;i<500;i++){const e=world.spawn('skull',v(i%20-10,2,Math.floor(i/20)-12));e.age=2;}renderer.render(world,0,0,.008,false);const many=renderer.renderer.info.render.calls;const batch=renderer.swarmBatches.get('skull');const count=batch.meshes[0].count,capacity=batch.capacity;const first=Array.from(batch.meshes[0].instanceMatrix.array.slice(12,15)),last=Array.from(batch.meshes[0].instanceMatrix.array.slice(499*16+12,499*16+15));
+  world.enemies=world.enemies.slice(0,1);renderer.render(world,0,0,.008,false);const one=renderer.renderer.info.render.calls;return{many,one,count,capacity,first,last};
+ });assert.equal(results.count,500);assert.ok(results.capacity>=500);assert.deepEqual(results.first,[-10,2,-12]);assert.deepEqual(results.last,[9,2,12]);assert.equal(results.many,results.one,'static skull draw calls remain bounded as population grows');assert.deepEqual(errors,[]);console.log('Swarm browser passed:',JSON.stringify(results));
+}finally{await browser.close();}

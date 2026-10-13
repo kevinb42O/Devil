@@ -1,0 +1,10 @@
+{
+  "towerContacts": 3,
+  "allImpactsRemoveDaggerAndGlow": true,
+  "floorBounce": true,
+  "maxAlignmentError": 0,
+  "denseImpacts": 1000,
+  "collisionMedianMs": 19.80000001192093,
+  "collisionP95Ms": 35.099999994039536,
+  "glowDrawCalls": 0
+}

@@ -1,0 +1,1222 @@
+{
+  "target": "Devil Daggers v3.2 / Survival V3",
+  "retrievedDate": "2026-10-13",
+  "spawnsetSource": "https://devildaggers.info/api/spawnsets/default?gameVersion=V3_0",
+  "spawnsetSha256": "507b806debe1019464899ce5422c42e78c1b03749d0880089d3a0464bc441767",
+  "spawnsetLength": 13784,
+  "header": {
+    "spawnVersion": 4,
+    "worldVersion": 9,
+    "shrinkEnd": 20.0,
+    "shrinkStart": 50.000003814697266,
+    "shrinkRate": 0.02500000037252903,
+    "brightness": 60,
+    "gameMode": 0,
+    "arenaDimension": 51
+  },
+  "loopStartRecord": 100,
+  "preloopSeconds": 451.0,
+  "loopBaseSeconds": 56.0,
+  "spawns": [
+    {
+      "index": 0,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 3.0,
+      "firstPassTime": 3.0,
+      "section": "preloop"
+    },
+    {
+      "index": 1,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 6.0,
+      "firstPassTime": 9.0,
+      "section": "preloop"
+    },
+    {
+      "index": 2,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 5.0,
+      "firstPassTime": 14.0,
+      "section": "preloop"
+    },
+    {
+      "index": 3,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 5.0,
+      "firstPassTime": 19.0,
+      "section": "preloop"
+    },
+    {
+      "index": 4,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 5.0,
+      "firstPassTime": 24.0,
+      "section": "preloop"
+    },
+    {
+      "index": 5,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 15.0,
+      "firstPassTime": 39.0,
+      "section": "preloop"
+    },
+    {
+      "index": 6,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 39.0,
+      "section": "preloop"
+    },
+    {
+      "index": 7,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 10.0,
+      "firstPassTime": 49.0,
+      "section": "preloop"
+    },
+    {
+      "index": 8,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 49.0,
+      "section": "preloop"
+    },
+    {
+      "index": 9,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 49.0,
+      "section": "preloop"
+    },
+    {
+      "index": 10,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 15.0,
+      "firstPassTime": 64.0,
+      "section": "preloop"
+    },
+    {
+      "index": 11,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 64.0,
+      "section": "preloop"
+    },
+    {
+      "index": 12,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 15.0,
+      "firstPassTime": 79.0,
+      "section": "preloop"
+    },
+    {
+      "index": 13,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 79.0,
+      "section": "preloop"
+    },
+    {
+      "index": 14,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 15.0,
+      "firstPassTime": 94.0,
+      "section": "preloop"
+    },
+    {
+      "index": 15,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 94.0,
+      "section": "preloop"
+    },
+    {
+      "index": 16,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 15.0,
+      "firstPassTime": 109.0,
+      "section": "preloop"
+    },
+    {
+      "index": 17,
+      "enemyType": 2,
+      "enemy": "Centipede",
+      "delay": 5.0,
+      "firstPassTime": 114.0,
+      "section": "preloop"
+    },
+    {
+      "index": 18,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 5.0,
+      "firstPassTime": 119.0,
+      "section": "preloop"
+    },
+    {
+      "index": 19,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 5.0,
+      "firstPassTime": 124.0,
+      "section": "preloop"
+    },
+    {
+      "index": 20,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 10.0,
+      "firstPassTime": 134.0,
+      "section": "preloop"
+    },
+    {
+      "index": 21,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 134.0,
+      "section": "preloop"
+    },
+    {
+      "index": 22,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 10.0,
+      "firstPassTime": 144.0,
+      "section": "preloop"
+    },
+    {
+      "index": 23,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 144.0,
+      "section": "preloop"
+    },
+    {
+      "index": 24,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 10.0,
+      "firstPassTime": 154.0,
+      "section": "preloop"
+    },
+    {
+      "index": 25,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 154.0,
+      "section": "preloop"
+    },
+    {
+      "index": 26,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 10.0,
+      "firstPassTime": 164.0,
+      "section": "preloop"
+    },
+    {
+      "index": 27,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 164.0,
+      "section": "preloop"
+    },
+    {
+      "index": 28,
+      "enemyType": 2,
+      "enemy": "Centipede",
+      "delay": 10.0,
+      "firstPassTime": 174.0,
+      "section": "preloop"
+    },
+    {
+      "index": 29,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 174.0,
+      "section": "preloop"
+    },
+    {
+      "index": 30,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 174.0,
+      "section": "preloop"
+    },
+    {
+      "index": 31,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 174.0,
+      "section": "preloop"
+    },
+    {
+      "index": 32,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 5.0,
+      "firstPassTime": 179.0,
+      "section": "preloop"
+    },
+    {
+      "index": 33,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 5.0,
+      "firstPassTime": 184.0,
+      "section": "preloop"
+    },
+    {
+      "index": 34,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 184.0,
+      "section": "preloop"
+    },
+    {
+      "index": 35,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 5.0,
+      "firstPassTime": 189.0,
+      "section": "preloop"
+    },
+    {
+      "index": 36,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 189.0,
+      "section": "preloop"
+    },
+    {
+      "index": 37,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 5.0,
+      "firstPassTime": 194.0,
+      "section": "preloop"
+    },
+    {
+      "index": 38,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 194.0,
+      "section": "preloop"
+    },
+    {
+      "index": 39,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 5.0,
+      "firstPassTime": 199.0,
+      "section": "preloop"
+    },
+    {
+      "index": 40,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 199.0,
+      "section": "preloop"
+    },
+    {
+      "index": 41,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 199.0,
+      "section": "preloop"
+    },
+    {
+      "index": 42,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 5.0,
+      "firstPassTime": 204.0,
+      "section": "preloop"
+    },
+    {
+      "index": 43,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 25.0,
+      "firstPassTime": 229.0,
+      "section": "preloop"
+    },
+    {
+      "index": 44,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 229.0,
+      "section": "preloop"
+    },
+    {
+      "index": 45,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 229.0,
+      "section": "preloop"
+    },
+    {
+      "index": 46,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 229.0,
+      "section": "preloop"
+    },
+    {
+      "index": 47,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 229.0,
+      "section": "preloop"
+    },
+    {
+      "index": 48,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 229.0,
+      "section": "preloop"
+    },
+    {
+      "index": 49,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 10.0,
+      "firstPassTime": 239.0,
+      "section": "preloop"
+    },
+    {
+      "index": 50,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 239.0,
+      "section": "preloop"
+    },
+    {
+      "index": 51,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 239.0,
+      "section": "preloop"
+    },
+    {
+      "index": 52,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 5.0,
+      "firstPassTime": 244.0,
+      "section": "preloop"
+    },
+    {
+      "index": 53,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 15.0,
+      "firstPassTime": 259.0,
+      "section": "preloop"
+    },
+    {
+      "index": 54,
+      "enemyType": 5,
+      "enemy": "Gigapede",
+      "delay": 0.0,
+      "firstPassTime": 259.0,
+      "section": "preloop"
+    },
+    {
+      "index": 55,
+      "enemyType": 5,
+      "enemy": "Gigapede",
+      "delay": 0.0,
+      "firstPassTime": 259.0,
+      "section": "preloop"
+    },
+    {
+      "index": 56,
+      "enemyType": 5,
+      "enemy": "Gigapede",
+      "delay": 0.0,
+      "firstPassTime": 259.0,
+      "section": "preloop"
+    },
+    {
+      "index": 57,
+      "enemyType": 8,
+      "enemy": "Spider II",
+      "delay": 15.0,
+      "firstPassTime": 274.0,
+      "section": "preloop"
+    },
+    {
+      "index": 58,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 274.0,
+      "section": "preloop"
+    },
+    {
+      "index": 59,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 274.0,
+      "section": "preloop"
+    },
+    {
+      "index": 60,
+      "enemyType": 8,
+      "enemy": "Spider II",
+      "delay": 15.0,
+      "firstPassTime": 289.0,
+      "section": "preloop"
+    },
+    {
+      "index": 61,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 289.0,
+      "section": "preloop"
+    },
+    {
+      "index": 62,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 0.0,
+      "firstPassTime": 289.0,
+      "section": "preloop"
+    },
+    {
+      "index": 63,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 15.0,
+      "firstPassTime": 304.0,
+      "section": "preloop"
+    },
+    {
+      "index": 64,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 0.0,
+      "firstPassTime": 304.0,
+      "section": "preloop"
+    },
+    {
+      "index": 65,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 0.0,
+      "firstPassTime": 304.0,
+      "section": "preloop"
+    },
+    {
+      "index": 66,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 26.0,
+      "firstPassTime": 330.0,
+      "section": "preloop"
+    },
+    {
+      "index": 67,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 330.0,
+      "section": "preloop"
+    },
+    {
+      "index": 68,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 330.0,
+      "section": "preloop"
+    },
+    {
+      "index": 69,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 20.0,
+      "firstPassTime": 350.0,
+      "section": "preloop"
+    },
+    {
+      "index": 70,
+      "enemyType": 4,
+      "enemy": "Leviathan",
+      "delay": 0.0,
+      "firstPassTime": 350.0,
+      "section": "preloop"
+    },
+    {
+      "index": 71,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 15.0,
+      "firstPassTime": 365.0,
+      "section": "preloop"
+    },
+    {
+      "index": 72,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 365.0,
+      "section": "preloop"
+    },
+    {
+      "index": 73,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 365.0,
+      "section": "preloop"
+    },
+    {
+      "index": 74,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 365.0,
+      "section": "preloop"
+    },
+    {
+      "index": 75,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 5.0,
+      "firstPassTime": 370.0,
+      "section": "preloop"
+    },
+    {
+      "index": 76,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 370.0,
+      "section": "preloop"
+    },
+    {
+      "index": 77,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 370.0,
+      "section": "preloop"
+    },
+    {
+      "index": 78,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 5.0,
+      "firstPassTime": 375.0,
+      "section": "preloop"
+    },
+    {
+      "index": 79,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 10.0,
+      "firstPassTime": 385.0,
+      "section": "preloop"
+    },
+    {
+      "index": 80,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 12.0,
+      "firstPassTime": 397.0,
+      "section": "preloop"
+    },
+    {
+      "index": 81,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 3.0,
+      "firstPassTime": 400.0,
+      "section": "preloop"
+    },
+    {
+      "index": 82,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 400.0,
+      "section": "preloop"
+    },
+    {
+      "index": 83,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 6.0,
+      "firstPassTime": 406.0,
+      "section": "preloop"
+    },
+    {
+      "index": 84,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 0.0,
+      "firstPassTime": 406.0,
+      "section": "preloop"
+    },
+    {
+      "index": 85,
+      "enemyType": 5,
+      "enemy": "Gigapede",
+      "delay": 6.0,
+      "firstPassTime": 412.0,
+      "section": "preloop"
+    },
+    {
+      "index": 86,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 5.0,
+      "firstPassTime": 417.0,
+      "section": "preloop"
+    },
+    {
+      "index": 87,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 1.0,
+      "firstPassTime": 418.0,
+      "section": "preloop"
+    },
+    {
+      "index": 88,
+      "enemyType": 8,
+      "enemy": "Spider II",
+      "delay": 1.0,
+      "firstPassTime": 419.0,
+      "section": "preloop"
+    },
+    {
+      "index": 89,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 5.0,
+      "firstPassTime": 424.0,
+      "section": "preloop"
+    },
+    {
+      "index": 90,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 424.0,
+      "section": "preloop"
+    },
+    {
+      "index": 91,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 3.0,
+      "firstPassTime": 427.0,
+      "section": "preloop"
+    },
+    {
+      "index": 92,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 3.0,
+      "firstPassTime": 430.0,
+      "section": "preloop"
+    },
+    {
+      "index": 93,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 10.0,
+      "firstPassTime": 440.0,
+      "section": "preloop"
+    },
+    {
+      "index": 94,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 440.0,
+      "section": "preloop"
+    },
+    {
+      "index": 95,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 1.0,
+      "firstPassTime": 441.0,
+      "section": "preloop"
+    },
+    {
+      "index": 96,
+      "enemyType": 9,
+      "enemy": "Ghostpede",
+      "delay": 1.0,
+      "firstPassTime": 442.0,
+      "section": "preloop"
+    },
+    {
+      "index": 97,
+      "enemyType": 7,
+      "enemy": "Thorn",
+      "delay": 5.0,
+      "firstPassTime": 447.0,
+      "section": "preloop"
+    },
+    {
+      "index": 98,
+      "enemyType": 7,
+      "enemy": "Thorn",
+      "delay": 2.0,
+      "firstPassTime": 449.0,
+      "section": "preloop"
+    },
+    {
+      "index": 99,
+      "enemyType": 7,
+      "enemy": "Thorn",
+      "delay": 2.0,
+      "firstPassTime": 451.0,
+      "section": "preloop"
+    },
+    {
+      "index": 100,
+      "enemyType": -1,
+      "enemy": "Wait",
+      "delay": 5.0,
+      "firstPassTime": 456.0,
+      "section": "loop"
+    },
+    {
+      "index": 101,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 456.0,
+      "section": "loop"
+    },
+    {
+      "index": 102,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 456.0,
+      "section": "loop"
+    },
+    {
+      "index": 103,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 3.0,
+      "firstPassTime": 459.0,
+      "section": "loop"
+    },
+    {
+      "index": 104,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 0.0,
+      "firstPassTime": 459.0,
+      "section": "loop"
+    },
+    {
+      "index": 105,
+      "enemyType": 6,
+      "enemy": "Squid III",
+      "delay": 3.0,
+      "firstPassTime": 462.0,
+      "section": "loop"
+    },
+    {
+      "index": 106,
+      "enemyType": 5,
+      "enemy": "Gigapede",
+      "delay": 5.0,
+      "firstPassTime": 467.0,
+      "section": "loop"
+    },
+    {
+      "index": 107,
+      "enemyType": 8,
+      "enemy": "Spider II",
+      "delay": 5.0,
+      "firstPassTime": 472.0,
+      "section": "loop"
+    },
+    {
+      "index": 108,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 1.0,
+      "firstPassTime": 473.0,
+      "section": "loop"
+    },
+    {
+      "index": 109,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 1.0,
+      "firstPassTime": 474.0,
+      "section": "loop"
+    },
+    {
+      "index": 110,
+      "enemyType": 7,
+      "enemy": "Thorn",
+      "delay": 10.0,
+      "firstPassTime": 484.0,
+      "section": "loop"
+    },
+    {
+      "index": 111,
+      "enemyType": 7,
+      "enemy": "Thorn",
+      "delay": 1.0,
+      "firstPassTime": 485.0,
+      "section": "loop"
+    },
+    {
+      "index": 112,
+      "enemyType": 7,
+      "enemy": "Thorn",
+      "delay": 1.0,
+      "firstPassTime": 486.0,
+      "section": "loop"
+    },
+    {
+      "index": 113,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 5.0,
+      "firstPassTime": 491.0,
+      "section": "loop"
+    },
+    {
+      "index": 114,
+      "enemyType": 3,
+      "enemy": "Spider I",
+      "delay": 1.0,
+      "firstPassTime": 492.0,
+      "section": "loop"
+    },
+    {
+      "index": 115,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 5.0,
+      "firstPassTime": 497.0,
+      "section": "loop"
+    },
+    {
+      "index": 116,
+      "enemyType": 0,
+      "enemy": "Squid I",
+      "delay": 5.0,
+      "firstPassTime": 502.0,
+      "section": "loop"
+    },
+    {
+      "index": 117,
+      "enemyType": 1,
+      "enemy": "Squid II",
+      "delay": 5.0,
+      "firstPassTime": 507.0,
+      "section": "loop"
+    }
+  ],
+  "enemies": [
+    {
+      "id": "Squid1",
+      "name": "Squid I",
+      "hp": 10,
+      "ownGems": 1,
+      "noFarmGemsIncludingFirstOffspring": 2,
+      "level3HomingEquivalent": 1.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": 3
+    },
+    {
+      "id": "Squid2",
+      "name": "Squid II",
+      "hp": 20,
+      "ownGems": 2,
+      "noFarmGemsIncludingFirstOffspring": 3,
+      "level3HomingEquivalent": 2.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": 39
+    },
+    {
+      "id": "Squid3",
+      "name": "Squid III",
+      "hp": 90,
+      "ownGems": 3,
+      "noFarmGemsIncludingFirstOffspring": 3,
+      "level3HomingEquivalent": 3.0,
+      "level4HomingEquivalent": 9.0,
+      "firstScheduledSpawn": 244
+    },
+    {
+      "id": "Centipede",
+      "name": "Centipede",
+      "hp": 75,
+      "ownGems": 25,
+      "noFarmGemsIncludingFirstOffspring": 25,
+      "level3HomingEquivalent": 25.0,
+      "level4HomingEquivalent": 25.0,
+      "firstScheduledSpawn": 114
+    },
+    {
+      "id": "Gigapede",
+      "name": "Gigapede",
+      "hp": 250,
+      "ownGems": 50,
+      "noFarmGemsIncludingFirstOffspring": 50,
+      "level3HomingEquivalent": 50.0,
+      "level4HomingEquivalent": 50.0,
+      "firstScheduledSpawn": 259
+    },
+    {
+      "id": "Ghostpede",
+      "name": "Ghostpede",
+      "hp": 500,
+      "ownGems": 10,
+      "noFarmGemsIncludingFirstOffspring": 10,
+      "level3HomingEquivalent": null,
+      "level4HomingEquivalent": null,
+      "firstScheduledSpawn": 442
+    },
+    {
+      "id": "Leviathan",
+      "name": "Leviathan",
+      "hp": 1500,
+      "ownGems": 6,
+      "noFarmGemsIncludingFirstOffspring": 6,
+      "level3HomingEquivalent": 1500.0,
+      "level4HomingEquivalent": 1500.0,
+      "firstScheduledSpawn": 350
+    },
+    {
+      "id": "Spider1",
+      "name": "Spider I",
+      "hp": 25,
+      "ownGems": 1,
+      "noFarmGemsIncludingFirstOffspring": 1,
+      "level3HomingEquivalent": 3.0,
+      "level4HomingEquivalent": 3.0,
+      "firstScheduledSpawn": 39
+    },
+    {
+      "id": "Spider2",
+      "name": "Spider II",
+      "hp": 200,
+      "ownGems": 1,
+      "noFarmGemsIncludingFirstOffspring": 1,
+      "level3HomingEquivalent": 20.0,
+      "level4HomingEquivalent": 20.0,
+      "firstScheduledSpawn": 274
+    },
+    {
+      "id": "Thorn",
+      "name": "Thorn",
+      "hp": 120,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 12.0,
+      "level4HomingEquivalent": 12.0,
+      "firstScheduledSpawn": 447
+    },
+    {
+      "id": "TheOrb",
+      "name": "The Orb",
+      "hp": 2400,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 2400.0,
+      "level4HomingEquivalent": 2400.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "Skull1",
+      "name": "Skull I",
+      "hp": 1,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 0.25,
+      "level4HomingEquivalent": 0.25,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "Skull2",
+      "name": "Skull II",
+      "hp": 5,
+      "ownGems": 1,
+      "noFarmGemsIncludingFirstOffspring": 1,
+      "level3HomingEquivalent": 1.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "Skull3",
+      "name": "Skull III",
+      "hp": 10,
+      "ownGems": 1,
+      "noFarmGemsIncludingFirstOffspring": 1,
+      "level3HomingEquivalent": 1.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "Skull4",
+      "name": "Skull IV",
+      "hp": 100,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 10.0,
+      "level4HomingEquivalent": 10.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "TransmutedSkull1",
+      "name": "Transmuted Skull I",
+      "hp": 10,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 1.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "TransmutedSkull2",
+      "name": "Transmuted Skull II",
+      "hp": 20,
+      "ownGems": 1,
+      "noFarmGemsIncludingFirstOffspring": 1,
+      "level3HomingEquivalent": 2.0,
+      "level4HomingEquivalent": 2.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "TransmutedSkull3",
+      "name": "Transmuted Skull III",
+      "hp": 100,
+      "ownGems": 1,
+      "noFarmGemsIncludingFirstOffspring": 1,
+      "level3HomingEquivalent": 10.0,
+      "level4HomingEquivalent": 10.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "TransmutedSkull4",
+      "name": "Transmuted Skull IV",
+      "hp": 300,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 30.0,
+      "level4HomingEquivalent": 30.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "SpiderEgg1",
+      "name": "Spider Egg I",
+      "hp": 3,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 1.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "SpiderEgg2",
+      "name": "Spider Egg II",
+      "hp": 3,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 1.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": null
+    },
+    {
+      "id": "Spiderling",
+      "name": "Spiderling",
+      "hp": 3,
+      "ownGems": 0,
+      "noFarmGemsIncludingFirstOffspring": 0,
+      "level3HomingEquivalent": 1.0,
+      "level4HomingEquivalent": 1.0,
+      "firstScheduledSpawn": null
+    }
+  ],
+  "upgrades": [
+    {
+      "level": 1,
+      "regularBurst": 10,
+      "regularStreamPerSecond": 20,
+      "homingBurst": null,
+      "homingStreamPerSecond": null,
+      "unlock": "start"
+    },
+    {
+      "level": 2,
+      "regularBurst": 20,
+      "regularStreamPerSecond": 40,
+      "homingBurst": null,
+      "homingStreamPerSecond": null,
+      "unlock": "10 collected gems"
+    },
+    {
+      "level": 3,
+      "regularBurst": 40,
+      "regularStreamPerSecond": 80,
+      "homingBurst": 20,
+      "homingStreamPerSecond": 40,
+      "unlock": "70 collected gems"
+    },
+    {
+      "level": 4,
+      "regularBurst": 60,
+      "regularStreamPerSecond": 106.666,
+      "homingBurst": 30,
+      "homingStreamPerSecond": 40,
+      "unlock": "150 stored homing"
+    }
+  ]
+}

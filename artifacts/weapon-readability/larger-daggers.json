@@ -1,0 +1,44 @@
+[
+  {
+    "level": 3,
+    "range": 4,
+    "shots": 232,
+    "visibleDaggers": 4,
+    "peakFragments": 185
+  },
+  {
+    "level": 3,
+    "range": 12,
+    "shots": 232,
+    "visibleDaggers": 72,
+    "peakFragments": 97
+  },
+  {
+    "level": 3,
+    "range": 30,
+    "shots": 232,
+    "visibleDaggers": 107,
+    "peakFragments": 37
+  },
+  {
+    "level": 4,
+    "range": 4,
+    "shots": 312,
+    "visibleDaggers": 8,
+    "peakFragments": 249
+  },
+  {
+    "level": 4,
+    "range": 12,
+    "shots": 312,
+    "visibleDaggers": 138,
+    "peakFragments": 61
+  },
+  {
+    "level": 4,
+    "range": 30,
+    "shots": 312,
+    "visibleDaggers": 153,
+    "peakFragments": 37
+  }
+]

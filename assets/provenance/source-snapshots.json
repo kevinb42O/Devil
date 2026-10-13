@@ -1,0 +1,110 @@
+[
+  {
+    "id": "kenney-impact-sounds",
+    "url": "https://kenney.nl/assets/impact-sounds",
+    "snapshot": "assets/provenance/kenney-impact-sounds.html",
+    "status": "saved"
+  },
+  {
+    "id": "kenney-digital-audio",
+    "url": "https://kenney.nl/assets/digital-audio",
+    "snapshot": "assets/provenance/kenney-digital-audio.html",
+    "status": "saved"
+  },
+  {
+    "id": "quaternius-pack",
+    "url": "https://quaternius.com/packs/animatedmonster.html",
+    "snapshot": "assets/provenance/quaternius-pack.html",
+    "status": "saved"
+  },
+  {
+    "id": "polyhaven-license",
+    "url": "https://polyhaven.com/license",
+    "snapshot": "assets/provenance/polyhaven-license.html",
+    "status": "saved"
+  },
+  {
+    "id": "cc0",
+    "url": "https://creativecommons.org/publicdomain/zero/1.0/legalcode.en",
+    "snapshot": "assets/provenance/cc0.html",
+    "status": "saved"
+  },
+  {
+    "id": "cc-by-4",
+    "url": "https://creativecommons.org/licenses/by/4.0/legalcode.en",
+    "snapshot": "assets/provenance/cc-by-4.html",
+    "status": "saved"
+  },
+  {
+    "id": "cc-by-3",
+    "url": "https://creativecommons.org/licenses/by/3.0/legalcode",
+    "snapshot": "assets/provenance/cc-by-3.html",
+    "status": "saved"
+  },
+  {
+    "id": "M01-skull",
+    "url": "https://sketchfab.com/3d-models/skull-downloadable-1a9db900738d44298b0bc59f68123393",
+    "snapshot": "assets/provenance/M01-skull.html",
+    "status": "saved"
+  },
+  {
+    "id": "M02-skull",
+    "url": "https://sketchfab.com/3d-models/simple-skull-cba160e50086468cba3b44e04f5a5c8b",
+    "snapshot": "assets/provenance/M02-skull.html",
+    "status": "saved"
+  },
+  {
+    "id": "M03-hands",
+    "url": "https://sketchfab.com/3d-models/first-person-hands-rigged-547a45535f0c4fe787948f7a7a6a88db",
+    "snapshot": "assets/provenance/M03-hands.html",
+    "status": "saved"
+  },
+  {
+    "id": "S05-freesound",
+    "url": "https://freesound.org/people/GreatNate98/sounds/355052/",
+    "snapshot": "assets/provenance/S05-freesound.html",
+    "status": "saved"
+  },
+  {
+    "id": "S06-freesound",
+    "url": "https://freesound.org/people/Ezcah/sounds/188026/",
+    "snapshot": "assets/provenance/S06-freesound.html",
+    "status": "saved"
+  },
+  {
+    "id": "S07-freesound",
+    "url": "https://freesound.org/people/DylanTheFish/sounds/449820/",
+    "snapshot": "assets/provenance/S07-freesound.html",
+    "status": "saved"
+  },
+  {
+    "id": "S08-freesound",
+    "url": "https://freesound.org/people/qubodup/sounds/743336/",
+    "snapshot": "assets/provenance/S08-freesound.html",
+    "status": "saved"
+  },
+  {
+    "id": "S09-freesound",
+    "url": "https://freesound.org/people/Clearwavsound/sounds/524609/",
+    "snapshot": "assets/provenance/S09-freesound.html",
+    "status": "saved"
+  },
+  {
+    "id": "S10-freesound",
+    "url": "https://freesound.org/people/bolkmar/sounds/417496/",
+    "snapshot": "assets/provenance/S10-freesound.html",
+    "status": "saved"
+  },
+  {
+    "id": "S11-freesound",
+    "url": "https://freesound.org/people/qubodup/sounds/211641/",
+    "snapshot": "assets/provenance/S11-freesound.html",
+    "status": "saved"
+  },
+  {
+    "id": "sonniss-license",
+    "url": "https://sonniss.com/gdc-bundle-license/",
+    "status": "failed",
+    "error": "HTTP Error 403: Forbidden"
+  }
+]

@@ -1,0 +1,12 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {resolve} from 'node:path';
+import {readToc} from './dd-archive.mjs';
+const path=process.argv[2];if(!path)throw Error('Usage: node tools/import-dd-audio.mjs /path/to/res/audio');
+const data=await readFile(path),entries=readToc(data),dest=resolve('assets/original/devil-daggers/audio');
+const waves=entries.filter(e=>e.type===0x20&&e.name!=='loudness');
+for(const e of waves)if(e.data.toString('ascii',0,4)!=='RIFF'||e.data.toString('ascii',8,12)!=='WAVE')throw Error('Invalid original WAV '+e.name);
+await mkdir(dest,{recursive:true});for(const e of waves)await writeFile(`${dest}/${e.name}.wav`,e.data);
+const loudness=entries.find(e=>e.name==='loudness')?.data.toString()??'';await writeFile(`${dest}/loudness.ini`,loudness);
+const catalog={sourceHash:createHash('sha256').update(data).digest('hex'),sourceFile:resolve(path),files:waves.map(e=>({name:e.name,bytes:e.size,sha256:createHash('sha256').update(e.data).digest('hex')}))};
+await writeFile(`${dest}/manifest.json`,JSON.stringify(catalog,null,2)+'\n');console.log(`Imported ${waves.length} original WAV files`);

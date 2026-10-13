@@ -1,0 +1,189 @@
+[
+  {
+    "role": "stone_impact_01",
+    "path": "assets/audio/selected/stone_impact_01.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactMining_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 12035,
+    "sha256": "36b4ea107222d073c67ca64dde26944975609202d5090b2f2021213c1a7e35cd",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "stone_impact_02",
+    "path": "assets/audio/selected/stone_impact_02.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactMining_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 11481,
+    "sha256": "61235a18de3f3d92118235398222dbf51d448f1be70b1c8bc962b10b86f2d9c6",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "stone_impact_03",
+    "path": "assets/audio/selected/stone_impact_03.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactMining_002.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 11235,
+    "sha256": "059558ec751115ca6b1441e00f0adc837c1a3eeb0a066b109e0fd879fc5d0b0c",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "crystal_hit_01",
+    "path": "assets/audio/selected/crystal_hit_01.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactGlass_light_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 6526,
+    "sha256": "d750cf88097d0c3e69920e6e14496e1444e1a9da01aa4cca8f5ec8cb44c57b4f",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "crystal_hit_02",
+    "path": "assets/audio/selected/crystal_hit_02.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactGlass_light_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 6544,
+    "sha256": "05e513fbd42829060eb37855f8c3866722ec5c39a8937c9bfde518cc609effa2",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "flesh_hit_01",
+    "path": "assets/audio/selected/flesh_hit_01.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactSoft_medium_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 5351,
+    "sha256": "7d3ba0bb5e60a11b5d3e558c141303dcf494256675fbf753c0d252d2cf0481e3",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "flesh_hit_02",
+    "path": "assets/audio/selected/flesh_hit_02.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactSoft_medium_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 5506,
+    "sha256": "7642a4fd43e547afe4f7adfadb3dabb681c0ff512f52c1674bae30a726841faf",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "break_death_01",
+    "path": "assets/audio/selected/break_death_01.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactGlass_heavy_000.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 7403,
+    "sha256": "b44b39a940e8948e74b9bd3776bff980df43cf220abdaf0d467dc4c43c0244a5",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "break_death_02",
+    "path": "assets/audio/selected/break_death_02.ogg",
+    "original_path": "assets/_sources/kenney/impact-sounds/files/Audio/impactGlass_heavy_001.ogg",
+    "source": "https://kenney.nl/assets/impact-sounds",
+    "license": "CC0-1.0",
+    "bytes": 8946,
+    "sha256": "58686e0e562612cc566791844a10e269f8d1921f4766c14ba43976fd0a429f4e",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "dagger_stream_candidate",
+    "path": "assets/audio/selected/dagger_stream_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/laser1.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 9315,
+    "sha256": "0bf468769b48a834dc1c6e38e457f2c71159b010225a9aedf84316795e8cc3e5",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "dagger_burst_candidate",
+    "path": "assets/audio/selected/dagger_burst_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/laser2.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 8524,
+    "sha256": "50470d64f9397855e5d9a334484da9c5232b3e0524c52f088b8a73822bd89f45",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "homing_candidate",
+    "path": "assets/audio/selected/homing_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/zap1.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 8126,
+    "sha256": "4e4bf11c671a4be0723022a7177f8e122329fa32a0c59555581f4193ed111585",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "gem_pickup_candidate",
+    "path": "assets/audio/selected/gem_pickup_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/highUp.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 6135,
+    "sha256": "cbc1c3c7ccf5d7903818144a4c3f5b2ed2385095792f29d8d7c76360ba4fa559",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "upgrade_candidate",
+    "path": "assets/audio/selected/upgrade_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/powerUp1.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 9011,
+    "sha256": "8c361b624b560c0bc30ea3063b71212bc30caebf425c9df2481c13b25561485c",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "player_death_candidate",
+    "path": "assets/audio/selected/player_death_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/lowDown.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 5956,
+    "sha256": "e0215fcfd8b9d7877f74d5c46b239a13d7db0d25998da97b80404931ef9eef5d",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "menu_confirm_candidate",
+    "path": "assets/audio/selected/menu_confirm_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/pepSound1.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 6019,
+    "sha256": "f2f44effce087e47683f0fea05a71002bd8dca78fb10bf93d9f0b38d49f9590e",
+    "status": "prepared_candidate",
+    "auditioned": false
+  },
+  {
+    "role": "jump_boost_candidate",
+    "path": "assets/audio/selected/jump_boost_candidate.ogg",
+    "original_path": "assets/_sources/kenney/digital-audio/files/Audio/phaseJump1.ogg",
+    "source": "https://kenney.nl/assets/digital-audio",
+    "license": "CC0-1.0",
+    "bytes": 6733,
+    "sha256": "c60069ed7108678dd6a1306404d168a93cc2575cda37b06add9dd6c4d46352a3",
+    "status": "prepared_candidate",
+    "auditioned": false
+  }
+]

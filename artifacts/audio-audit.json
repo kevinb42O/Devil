@@ -1,0 +1,417 @@
+{
+  "totalDecoded": 275,
+  "used": 152,
+  "enemies": [
+    {
+      "kind": "skull",
+      "loops": [
+        "chatterskull",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killskull4"
+      ]
+    },
+    {
+      "kind": "skull2",
+      "loops": [
+        "chatterskull2",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killsuperskull"
+      ]
+    },
+    {
+      "kind": "skull3",
+      "loops": [
+        "chatterskull3",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killsuperskull2"
+      ]
+    },
+    {
+      "kind": "skull4",
+      "loops": [
+        "chatterskull4",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killsuperskull3"
+      ]
+    },
+    {
+      "kind": "transmuted1",
+      "loops": [
+        "chatterskullblack",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killskullblack1"
+      ]
+    },
+    {
+      "kind": "transmuted2",
+      "loops": [
+        "chatterskull2black",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killsuperskullblack"
+      ]
+    },
+    {
+      "kind": "transmuted3",
+      "loops": [
+        "chatterskull3black",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killsuperskull2black"
+      ]
+    },
+    {
+      "kind": "transmuted4",
+      "loops": [
+        "chatterskull4black",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killsuperskull3"
+      ]
+    },
+    {
+      "kind": "squid",
+      "loops": [
+        "chatterminisquid",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnminisquid",
+        "damagesquid",
+        "killminisquid"
+      ]
+    },
+    {
+      "kind": "squid2",
+      "loops": [
+        "chattersquid",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnsquid",
+        "damagesquid2",
+        "killsquid"
+      ]
+    },
+    {
+      "kind": "squid3",
+      "loops": [
+        "chattersquidultra",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnultrasquid",
+        "damagesquid3",
+        "killultrasquid"
+      ]
+    },
+    {
+      "kind": "spider",
+      "loops": [
+        "chatterspider",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnspider",
+        "damagespider",
+        "killspider"
+      ]
+    },
+    {
+      "kind": "spider2",
+      "loops": [
+        "chattergigaspider",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawngigaspider",
+        "damagegigaspider",
+        "killgigaspider"
+      ]
+    },
+    {
+      "kind": "egg",
+      "loops": [
+        "eggdrone",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnegg",
+        "daggerhit1",
+        "eggburst"
+      ]
+    },
+    {
+      "kind": "egg2",
+      "loops": [
+        "eggdrone2",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnegg",
+        "daggerhit1",
+        "eggburst2"
+      ]
+    },
+    {
+      "kind": "spiderling",
+      "loops": [
+        "chatterspiderling",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "daggerhit1",
+        "killspiderling1"
+      ]
+    },
+    {
+      "kind": "centipede",
+      "loops": [
+        "chattercentipede",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawncentipede",
+        "damagecentipede",
+        "killcentipede"
+      ]
+    },
+    {
+      "kind": "gigapede",
+      "loops": [
+        "chattercentipede2",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawncentipede2",
+        "damagecentipede2",
+        "killcentipede2"
+      ]
+    },
+    {
+      "kind": "ghostpede",
+      "loops": [
+        "chatterultrapede",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnultrapede",
+        "damageultrapede",
+        "ultrapedecrash"
+      ]
+    },
+    {
+      "kind": "leviathan",
+      "loops": [
+        "chatterleviathan",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "spawnleviathan",
+        "damageleviathan",
+        "killleviathan"
+      ]
+    },
+    {
+      "kind": "orb",
+      "loops": [
+        "eyearousedrone",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "eyearouse",
+        "eyehit",
+        "killeye"
+      ]
+    },
+    {
+      "kind": "thorn",
+      "loops": [
+        "chatterthorn",
+        "polarity1e",
+        "polarity2w",
+        "polarity3n",
+        "polarity4s"
+      ],
+      "cues": [
+        "thornemerge",
+        "damagethorn",
+        "killthorn"
+      ]
+    }
+  ],
+  "enemyRegressions": {
+    "damageCues": [
+      "daggerhit1",
+      "damagesquid2",
+      "damagesquid2",
+      "damagesquid3"
+    ],
+    "armorImpact": true,
+    "perEnemyCooldown": true,
+    "killStopsChatter": true,
+    "burrowAndTransmute": true
+  },
+  "levels": [
+    {
+      "level": 1,
+      "loaded": 152,
+      "failed": [],
+      "oneShots": 1,
+      "loops": []
+    },
+    {
+      "level": 2,
+      "loaded": 152,
+      "failed": [],
+      "oneShots": 1,
+      "loops": []
+    },
+    {
+      "level": 3,
+      "loaded": 152,
+      "failed": [],
+      "oneShots": 1,
+      "loops": []
+    },
+    {
+      "level": 4,
+      "loaded": 152,
+      "failed": [],
+      "oneShots": 1,
+      "loops": []
+    }
+  ],
+  "rendered": [
+    {
+      "name": "rapid1",
+      "rms": 0.010938704725253372,
+      "tail": 0
+    },
+    {
+      "name": "rapid2",
+      "rms": 0.01149678027022732,
+      "tail": 0
+    },
+    {
+      "name": "rapid3",
+      "rms": 0.020058248808847667,
+      "tail": 0
+    },
+    {
+      "name": "rapid4",
+      "rms": 0.01833284998450846,
+      "tail": 0
+    },
+    {
+      "name": "shot1",
+      "rms": 0.03565645197139228,
+      "tail": 0.03223828971385956
+    },
+    {
+      "name": "shot2",
+      "rms": 0.036647905586434486,
+      "tail": 0.018938720226287842
+    },
+    {
+      "name": "shot3alt1",
+      "rms": 0.038856993713854523,
+      "tail": 0.039036959409713745
+    },
+    {
+      "name": "shot4alt1",
+      "rms": 0.037920972199010756,
+      "tail": 0.0496547557413578
+    }
+  ],
+  "final": {
+    "loaded": 152,
+    "failed": [],
+    "oneShots": 0,
+    "loops": []
+  }
+}

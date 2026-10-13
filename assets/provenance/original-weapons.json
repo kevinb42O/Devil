@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-13",
+  "archiveSource": "https://archive.org/download/devil-daggers-linux-gog-phoenix-games-lab/game-Devil_Daggers_%28v3.2%29_%5BLinux%2C_GOG%2C_Fixed_Libs%5D.tar.xz",
+  "extractedArchiveMembers": [
+    "game/res/dd",
+    "game/dd/particle",
+    "game/res/audio"
+  ],
+  "resourceSHA256": "d106b70bb06df9a0d2119929526eaec5810692cc213852cae39b80ed893810da",
+  "particleSHA256": "b69d31c34f2e8537bec1b0766ab93b6d382b58294809bfe5a926a87bcaa2090f",
+  "originalAssetsOwner": "Sorath",
+  "reuseLicenseFound": false,
+  "referenceCatalog": "https://github.com/NoahStolk/ddinfo-core/tree/1d64444d9f31632a3c932657ad13d5b4693df729/src/DevilDaggersInfo.Core.Asset",
+  "handReferenceImages": [
+    {
+      "level": 1,
+      "url": "https://raw.githubusercontent.com/NoahStolk/ddinfo-web/e3e8768f12b5240d4eaf70a9421965b5a83b1e39/src/DevilDaggersInfo.Web.Client/wwwroot/images/wiki/upgrades/level-1.png",
+      "sha256": "7f9cb13da302717f82898665909518c6cc717e98d839263ad591073cef82a708"
+    },
+    {
+      "level": 2,
+      "url": "https://raw.githubusercontent.com/NoahStolk/ddinfo-web/e3e8768f12b5240d4eaf70a9421965b5a83b1e39/src/DevilDaggersInfo.Web.Client/wwwroot/images/wiki/upgrades/level-2.png",
+      "sha256": "4febd81d8be8b7e237dee2318aeac93b4dd9eb290b2aca13d4a895301afdb000"
+    },
+    {
+      "level": 3,
+      "url": "https://raw.githubusercontent.com/NoahStolk/ddinfo-web/e3e8768f12b5240d4eaf70a9421965b5a83b1e39/src/DevilDaggersInfo.Web.Client/wwwroot/images/wiki/upgrades/level-3.png",
+      "sha256": "54ca9c68158bc12ef4977a5a08a4a8a848f1bedd051a0d6241f7c4f81dc0665c"
+    },
+    {
+      "level": 4,
+      "url": "https://raw.githubusercontent.com/NoahStolk/ddinfo-web/e3e8768f12b5240d4eaf70a9421965b5a83b1e39/src/DevilDaggersInfo.Web.Client/wwwroot/images/wiki/upgrades/level-4.png",
+      "sha256": "1ce90ece5675891439ded89dd3202ce3f9c505267e6c33aab4677e1ccdecb474"
+    }
+  ],
+  "note": "Original rendering and audio data were retained. No executable was run. Local imports are ignored by Git and copied into local builds.",
+  "renderAssetCount": 439,
+  "scope": "Weapons, effects, enemies, gems, and arena rendering data",
+  "enemyBehaviorReference": "https://github.com/NoahStolk/ddinfo-core/blob/1d64444d9f31632a3c932657ad13d5b4693df729/src/DevilDaggersInfo.Core.Wiki/EnemyDescriptions.cs",
+  "audioSourceSHA256": "dbbfac20d9e6db1c4ba1626748e9b3bec92776513bc5270396d48c1d62d07845",
+  "originalWavCount": 275
+}

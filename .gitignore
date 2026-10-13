@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.playwright/
+test-results/
+.DS_Store
+
+# Local original game assets; keep source archives and extracted data out of Git.
+assets/original/

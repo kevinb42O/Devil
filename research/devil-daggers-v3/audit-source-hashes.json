@@ -1,0 +1,12 @@
+{
+  "src/original-weapon.ts": "c30e49a78f856fa41aa9d499c772710184de1957498a54c787bd4d31d574f81a",
+  "src/main.ts": "dc4917c0dcc1035de9f7c11b112fb7155943854de67b2ff8cd6e82cc530d4b34",
+  "src/original-enemies.ts": "5681011925d87e2b8b9eaa02ab405d06e055fe387e473b6623c2cfe6f1e3fdb1",
+  "src/audio.ts": "63527bc3eb5410dbb1eb8518686566aa8e38848b0c60d7ae5bbb1ef0f936cb8f",
+  "src/enemy-presentation.ts": "edcf4bf7577bace721945442036e713f772cb7d3b62f51490bd4cff39caaa021",
+  "src/sky.ts": "d77dbd822d9aefdbb3e20f4b484038032e15429ad729396e1f9d05c6b51c8bcf",
+  "src/vite-env.d.ts": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5",
+  "src/style.css": "7ca60737fa6ad9312eb772695be9c6e0ab2d84559af86d659c8b89a595dc0b1e",
+  "src/renderer.ts": "11f94b1288bc7b879923b0be49c93813b4e81cbd6ccd59db7ee6c137da04ee68",
+  "src/simulation.ts": "e56f91b2991f885e61b347a1fe76d6a5ccb7d38a0dc7f6e2f376f160e388321e"
+}

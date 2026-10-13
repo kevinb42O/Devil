@@ -1,0 +1,28 @@
+{
+  "socketProjectionChecks": 396,
+  "maxScreenError": 4.526457016295325e-15,
+  "maxMatrixError": 2.7957056258579563e-8,
+  "dense": {
+    "count": 6000,
+    "batches": 1,
+    "capacities": [
+      256,
+      256,
+      256,
+      256,
+      8192,
+      256
+    ]
+  },
+  "transformBenchmarkMs": {
+    "optimized": {
+      "median": 0.800000011920929,
+      "p95": 1.4000000059604645
+    },
+    "legacy": {
+      "median": 0.800000011920929,
+      "p95": 1.2999999821186066
+    }
+  },
+  "emptyUploadFree": true
+}

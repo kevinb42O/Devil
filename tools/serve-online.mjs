@@ -1,0 +1,8 @@
+import {createServer} from 'node:http';
+import {createReadStream} from 'node:fs';
+import {stat} from 'node:fs/promises';
+import {resolve,extname,sep} from 'node:path';
+import {createGzip} from 'node:zlib';
+const root=resolve(process.env.GAME_DIST||'dist'),port=Number(process.env.PORT)||5180;
+const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.obj':'text/plain','.ini':'text/plain','.txt':'text/plain','.wav':'audio/wav','.ogg':'audio/ogg','.png':'image/png','.jpg':'image/jpeg','.svg':'image/svg+xml','.woff':'font/woff','.woff2':'font/woff2'};
+createServer(async(req,res)=>{try{if(!['GET','HEAD'].includes(req.method)){res.writeHead(405).end();return;}const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);const file=resolve(root,'.'+(name==='/'?'/index.html':name));if(!file.startsWith(root+sep)){res.writeHead(403).end();return;}const info=await stat(file);if(!info.isFile()){res.writeHead(404).end();return;}const extension=extname(file);const gzip=/gzip/.test(req.headers['accept-encoding']||'')&&['.html','.js','.css','.json','.obj','.ini','.svg'].includes(extension);res.writeHead(200,{'Content-Type':mime[extension]||'application/octet-stream','Cache-Control':extension==='.html'?'no-cache':'public, max-age=3600','X-Content-Type-Options':'nosniff',...(gzip?{'Content-Encoding':'gzip','Vary':'Accept-Encoding'}:{'Content-Length':info.size})});if(req.method==='HEAD'){res.end();return;}const stream=createReadStream(file);stream.on('error',()=>res.destroy());if(gzip)stream.pipe(createGzip()).pipe(res);else stream.pipe(res);}catch{res.writeHead(404).end('Not found');}}).listen(port,'127.0.0.1',()=>console.log(`Game files served at http://127.0.0.1:${port}`));

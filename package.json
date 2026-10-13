@@ -1,0 +1,46 @@
+{
+  "name": "abyss-daggers",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "tsx --test tests/*.test.ts tests/*.test.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "assets:import": "node tools/import-dd-assets.mjs",
+    "test:weapon": "node tests/weapon-browser.mjs",
+    "test:weapon-readability": "node tests/weapon-readability-browser.mjs",
+    "test:enemies": "node tests/enemy-browser.mjs",
+    "test:replica": "node tests/replica-browser.mjs",
+    "assets:audio": "node tools/import-dd-audio.mjs",
+    "test:swarm": "node tests/swarm-browser.mjs",
+    "test:performance": "node tests/tower-performance-browser.mjs",
+    "test:audio": "node tests/audio-browser.mjs",
+    "test:projectiles": "node tests/projectile-browser.mjs",
+    "test:projectile-impacts": "node tests/projectile-impact-browser.mjs",
+    "assets:colliders": "node tools/build-projectile-colliders.mjs",
+    "test:projectile-lighting": "node tests/projectile-lighting-browser.mjs",
+    "test:gems": "node tests/gem-browser.mjs",
+    "test:enemy-lighting": "node tests/enemy-lighting-browser.mjs",
+    "test:multiplayer": "node tests/multiplayer-browser.mjs",
+    "test:multiplayer-rooms": "node tests/multiplayer-auto-browser.mjs",
+    "test:multiplayer-transport": "node tests/multiplayer-transport-browser.mjs",
+    "serve:online": "node tools/serve-online.mjs",
+    "test:multiplayer-presentation": "node tests/multiplayer-presentation-browser.mjs"
+  },
+  "dependencies": {
+    "@fontsource/barlow-condensed": "^5.3.0",
+    "@fontsource/dm-sans": "^5.3.0",
+    "three": "^0.180.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/node": "^26.6.5",
+    "@types/three": "^0.180.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9"
+  }
+}
