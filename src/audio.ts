@@ -139,7 +139,7 @@ export class Sound{
   // upgrade cue are ready without loading the entire sound library at startup.
   for(const level of [world.level,Math.min(4,world.level+1)]){
    if(this.preparedHands.has(level)||!this.context)continue;this.preparedHands.add(level);
-   const names=[`rapid${level}`,level<=2?`shot${level}`:variants(`shot${level}alt`,level===3?4:5),level===1?'leveldown':`levelup${level}`,...(level>=3?['gibcollectmagic',level===4?'magentashot':'daggerseek',level===4?'magentadrone':'daggerdrone']:[])].flat();
+   const names=[`rapid${level}`,level<=2?`shot${level}`:variants(`shot${level}alt`,level===3?4:5),level===1?'leveldown':`levelup${level}`,...(level>=2?['gibcollectmagic',level===4?'magentashot':'daggerseek',level===4?'magentadrone':'daggerdrone']:[])].flat();
    void Promise.all(names.map(name=>this.load(name)));
   }
   const ids=new Set<number>();

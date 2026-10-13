@@ -8,7 +8,7 @@ export const PROJECTILE_COLORS = [
  [.22,1,.015], [.025,.12,1], [.025,.65,1], [.045,1,.58], [.5,.085,1], [1,.12,.55],
 ] as const;
 export function projectileStyleIndex(level:number,homing:boolean){
- return level===1?0:level===2?1:level===3?(homing?3:2):(homing?5:4);
+ return level===1?0:level===2?(homing?3:1):level===3?(homing?3:2):(homing?5:4);
 }
 /** Stable launch roll, independent of combat RNG and shared by prediction/host.
  * Roll only around the blade's +Z flight axis; it never changes its trajectory.

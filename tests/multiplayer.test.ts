@@ -24,7 +24,7 @@ test('host restart resets clock and deaths and guest snapshot chooses its own ca
 });
 test('one gem credits every player and homing spending stays personal',()=>{
  const w=new World(1,{schedule:false});for(const id of ['host','a','b','c'])w.addCrew(id);w.collect();assert.equal(w.stats.collected,1);for(const p of w.crew){w.selectCrew(p.id);assert.equal(w.stats.collected,1);}
- for(let i=1;i<100;i++)w.collect();assert.ok(w.crew.every(p=>p.level===3&&p.reserve===30));const inputs=new Map([['a',{...idleInput(),homing:true}]]);for(let i=0;i<20;i++)w.stepCrew(inputs);assert.ok(w.crew[1].reserve<30);assert.equal(w.crew[0].reserve,30);assert.equal(w.crew[2].reserve,30);assert.equal(w.stats.collected,100);
+ for(let i=1;i<100;i++)w.collect();assert.ok(w.crew.every(p=>p.level===3&&p.reserve===90));const inputs=new Map([['a',{...idleInput(),homing:true}]]);for(let i=0;i<20;i++)w.stepCrew(inputs);assert.ok(w.crew[1].reserve<90);assert.equal(w.crew[0].reserve,90);assert.equal(w.crew[2].reserve,90);assert.equal(w.stats.collected,100);
 });
 
 test('reliable input queues a complete tap before a simulation tick and preserves latest movement',async()=>{

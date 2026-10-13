@@ -65,7 +65,7 @@ try{
  await startRound();
  // Shared collection drives both visible counters; spending reserve is separate.
  await host.evaluate(()=>{for(let i=0;i<80;i++)window.auditWorld.collect();});
- for(const page of pages){await page.waitForFunction(()=>document.querySelector('#gems').textContent==='80');assert.equal(await page.locator('.economy').isVisible(),true);assert.equal(await page.locator('.economy').innerText(),'80');}
+ for(const page of pages){await page.waitForFunction(()=>document.querySelector('#gems').textContent==='80');assert.equal(await page.locator('.economy').isVisible(),true);assert.equal(await page.locator('.economy').innerText(),'80\n70');}
  await guest.bringToFront();await guest.locator('#game').click();await guest.waitForFunction(()=>!!document.pointerLockElement);
  await guest.keyboard.down('KeyW');await guest.mouse.down();await host.waitForFunction(()=>window.abyss.stats.shots>0);
  await kill(localId);await guest.waitForFunction(()=>window.abyss.spectating);

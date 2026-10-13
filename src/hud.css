@@ -1,4 +1,4 @@
-/* Minimal run HUD: time, current hand, collected gems and pending respawn. */
+/* Minimal run HUD: time, current hand, collected gems, homing ammo and pending respawn. */
 #hud > :not(.hud-top):not(.hud-bottom):not(.economy):not(#respawn-status),
 #hud .hud-top > :not(#timer),
 #hud .hud-bottom > :not(.power),
@@ -64,7 +64,7 @@
   gap: 8px;
 }
 
-#hud .economy > :not(.gem-icon):not(#gems) {
+#hud .economy > :not(.gem-icon):not(#gems):not(#homing-ammo) {
   display: none;
 }
 
@@ -75,7 +75,22 @@
   filter: drop-shadow(0 0 4px #ed684d55);
 }
 
-#hud #gems {
+#hud #homing-ammo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+#hud .sword-icon {
+  width: 20px;
+  height: 24px;
+  flex: none;
+  filter: drop-shadow(0 0 4px #c9dfa044);
+}
+
+#hud #gems,
+#hud #homing {
   font: 500 22px/1 'Barlow Condensed', sans-serif;
   font-variant-numeric: tabular-nums;
   color: #f3dbb8;

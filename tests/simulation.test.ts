@@ -46,9 +46,9 @@ test('gems are attracted only in collection windows and expire after ten seconds
   firing.enemies=[];for(let i=0;i<1200;i++){firing.enemies=[];firing.step({...idleInput(),fire:true});}assert.equal(firing.stats.expired,1);assert.equal(firing.gems.length,0);
 });
 test('progression distinguishes total collection from unspent homing reserve',()=>{
-  const w=new World();for(let i=0;i<10;i++)w.collect();assert.equal(w.level,2);for(let i=10;i<70;i++)w.collect();assert.equal(w.level,3);assert.equal(w.reserve,0);
-  for(let i=0;i<30;i++)w.collect();w.shoot(idleInput(),true,true);assert.equal(w.reserve,10);
-  for(let i=0;i<139;i++)w.collect();assert.equal(w.level,3);w.collect();assert.equal(w.level,4);
+  const w=new World();for(let i=0;i<10;i++)w.collect();assert.equal(w.level,2);for(let i=10;i<70;i++)w.collect();assert.equal(w.level,3);assert.equal(w.reserve,60);
+  for(let i=0;i<30;i++)w.collect();w.shoot(idleInput(),true,true);assert.equal(w.reserve,70);
+  for(let i=0;i<99;i++)w.collect();assert.equal(w.level,3);w.collect();assert.equal(w.level,4);assert.equal(w.stats.collected,200);
 });
 test('gem steering switches off for either fire button and resumes on release',()=>{
   for(const button of ['fire','homing'] as const){

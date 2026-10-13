@@ -12,7 +12,7 @@ There are no room-code fields, copied connection offers, or LAN setup in the gam
 
 ## Shared gems
 
-Any player collecting one gem gives **every player +1 gem**. Gem progression is identical across the lobby. Each player has their own weapon cooldowns and homing reserve; spending homing ammunition does not spend another player's reserve. The same gem cannot be collected twice.
+Any player collecting one gem gives **every player +1 gem**. Gem progression is identical across the lobby. Hands unlock at 10, 70 and 200 total shared gems; spending homing ammunition cannot delay the final hand. Homing unlocks with hand II at 10 collected gems; each subsequent gem adds one homing dagger to every player’s individual reserve. Right mouse button or controller LT/L2 fires homing. The sword counter beside collected gems shows the local player’s remaining ammo. Each player has their own weapon cooldowns and homing reserve; spending homing ammunition does not spend another player's reserve. The same gem cannot be collected twice.
 
 Living teammates use simple colored bodies with subtle names above their heads. Their daggers and muzzle particles are visible to the crew; teammate firing never recoils your own hand. The in-game roster uses player names. Local movement, jumping, firing and dagger jumps are predicted immediately using the shared controller. Host snapshots acknowledge numbered input commands, restore authoritative controller state and replay outstanding commands. Damage, collection, progression, death and respawning remain authoritative on the host.
 

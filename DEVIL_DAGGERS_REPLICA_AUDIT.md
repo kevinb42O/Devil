@@ -165,7 +165,7 @@ The community arena account identifies concentric brightness rings and distinct 
 | III | 70 collected gems | 40 | 80 | 20 | 40 |
 | IV | 150 stored homing | 60 | 106.666 | 30 | 40 |
 
-Our burst counts and unlock thresholds match this reference. After 70 total collected gems, subsequent gems add homing reserve. Spending reserve can delay IV; “220 total gems” is only valid with no prior spending. Ordinary ammunition is unlimited. Hand progression persists within the run. Exact upgrade presentation/timing remains unmeasured. [Upgrade data](https://github.com/NoahStolk/ddinfo-core/blob/1d64444d9f31632a3c932657ad13d5b4693df729/src/DevilDaggersInfo.Core.Wiki/UpgradesV3_2.cs).
+Our burst counts match this reference. Current gameplay intentionally unlocks IV at 200 total collected gems in solo and multiplayer, regardless of homing expenditure. Homing intentionally unlocks at hand II (10 total collected gems), and subsequent gems add homing reserve. Saved replays before combat revision 15 retain the hand III homing unlock. Saved replays before combat revision 14 retain the original 150-reserve unlock rule (220 total gems with no prior spending). Ordinary ammunition is unlimited. Hand progression persists within the run. Exact upgrade presentation/timing remains unmeasured. [Upgrade data](https://github.com/NoahStolk/ddinfo-core/blob/1d64444d9f31632a3c932657ad13d5b4693df729/src/DevilDaggersInfo.Core.Wiki/UpgradesV3_2.cs).
 
 ### Our measured stream throughput is wrong
 

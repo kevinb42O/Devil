@@ -46,7 +46,7 @@ test('saved combat retains old low-enemy contact and snake escape behavior',()=>
   snake.step(idleInput());assert.equal(e.status,revision===0?'burrowing':'hunting');assert.equal(snake.state,revision===0?'playing':'dead');
  }
  const world=createRun(9),recorder=new RunRecorder(9);recorder.record(idleInput());world.step(idleInput());
- assert.equal(recorder.finish(world).combatRevision,13);
+ assert.equal(recorder.finish(world).combatRevision,15);
 });
 
 test('saved eye-seeking pede revisions preserve their trajectories',()=>{
@@ -55,5 +55,24 @@ test('saved eye-seeking pede revisions preserve their trajectories',()=>{
   for(let i=0;i<480&&world.state==='playing';i++){const input={...idleInput(),strafe:1,jump:i%120===0};recorder.record(input);world.step(input);world.effects=[];}
   const run={...recorder.finish(world),combatRevision:revision},replay=new ReplayPlayer(run);replay.seek(run.ticks);replay.world.effects=[];assert.deepEqual(replay.world,world);
   replay.seek(20);replay.seek(run.ticks);replay.world.effects=[];assert.deepEqual(replay.world,world);
+ }
+});
+
+test('saved replays retain reserve-based final hand unlocking',()=>{
+ for(const revision of [13,14]){
+  const world=createRun(1,undefined,6,true,revision);
+  for(let i=0;i<200;i++)world.collect();
+  assert.equal(world.level,revision===13?3:4);
+  for(let i=0;i<20;i++)world.collect();assert.equal(world.level,4);
+ }
+});
+
+test('saved replays preserve hand III homing while current runs unlock it at hand II',()=>{
+ for(const revision of [14,15]){
+  const w=createRun(1,undefined,6,true,revision);
+  for(let i=0;i<50;i++)w.collect();assert.equal(w.level,2);
+  w.shoot(idleInput(),true,true);
+  assert.equal(w.stats.collected,50);assert.equal(w.stats.homingFired,revision===14?0:20);
+  assert.equal(w.reserve,revision===14?0:20);
  }
 });

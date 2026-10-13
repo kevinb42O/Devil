@@ -28,7 +28,7 @@ test('audio stream state follows release, primary/homing priority and death at e
   const w=new World(7,{schedule:false});w.level=level;w.reserve=100;
   for(let i=0;i<30;i++)w.step({...idleInput(),fire:true});assert.equal(w.weaponAudio.primary,true);
   w.step(idleInput());assert.equal(w.weaponAudio.primary,false);
-  if(level>=3){for(let i=0;i<30;i++)w.step({...idleInput(),fire:true});w.step({...idleInput(),fire:true,homing:true});assert.equal(w.weaponAudio.primary,false);assert.equal(w.weaponAudio.homing,true);}
+  if(level>=2){for(let i=0;i<30;i++)w.step({...idleInput(),fire:true});w.step({...idleInput(),fire:true,homing:true});assert.equal(w.weaponAudio.primary,false);assert.equal(w.weaponAudio.homing,true);}
   w.die('skull');assert.deepEqual(w.weaponAudio,{primary:false,homing:false});
  }
 });

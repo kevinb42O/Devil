@@ -32,7 +32,7 @@ export type Ring={id:number;owner:number;pos:Vec;radius:number;previous:number;a
 export type Effect={bloodId?:number;bloodTime?:number;bloodSources?:Vec[];bloodSegment?:boolean;shotKey?:string;networkId?:number;shooterId?:string;deathCause?:string;kind:'shot'|'burst'|'hit'|'kill'|'pickup'|'upgrade'|'spawn'|'jump'|'death'|'egg'|'beckon'|'transmute'|'explosion'|'land'|'impact'|'ricochet'|'pierce'|'eat'|'bounce'|'hatch'|'burrow'|'emerge';pos:Vec;amount?:number;enemy?:EnemyKind;enemyId?:number;level?:number;direction?:Vec;muzzles?:Vec[]};
 export type Input={forward:number;strafe:number;yaw:number;pitch:number;jump:boolean;fire:boolean;homing:boolean};
 export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});
-export type WorldOptions={legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
+export type WorldOptions={legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
@@ -187,8 +187,8 @@ export class World {
   this.stats.maxEnemies=Math.max(this.stats.maxEnemies,this.enemies.length);
  }
  startAt(time:number,level=1,reserve=0){
-  this.time=Math.max(0,time);this.tick=Math.round(this.time/STEP);this.level=clamp(Math.round(level),1,4);this.reserve=this.level>=3?Math.max(0,Math.round(reserve)):0;
-  this.stats.collected=this.level===1?0:this.level===2?10:70+this.reserve;this.stats.maxReserve=this.reserve;
+  this.time=Math.max(0,time);this.tick=Math.round(this.time/STEP);this.level=clamp(Math.round(level),1,4);this.reserve=this.homingUnlocked?Math.max(0,Math.round(reserve)):0;
+  this.stats.collected=this.options.legacyHomingUnlock?(this.level===1?0:this.level===2?10:70+this.reserve):Math.max(this.level===1?0:this.level===2?10:this.level===3?70:200,this.homingUnlocked?10+this.reserve:0);this.stats.maxReserve=this.reserve;
   this.radius=arenaRadius(this.time);this.player.pos=v(0,floorHeight(0,0,this.time)+TUNING.eyeHeight,0);
   while(!this.nextEvent.done&&this.nextEvent.value.time<this.time-1e-7){if(!this.options.legacySpawnPlacement)this.scheduledPlacement(this.nextEvent.value.kind);this.nextEvent=this.schedule.next();}
  }
@@ -211,14 +211,16 @@ export class World {
   }p.pos.y=floor;p.vel.y=0;p.grounded=true;}else p.grounded=false;
   if(p.pos.y<-8)this.die('FALLEN');
  }
+ get homingUnlockGems(){return this.options.legacyHomingUnlock?70:10;}
+ get homingUnlocked(){return this.level>=(this.options.legacyHomingUnlock?3:2);}
  get weaponAudio(){
   if(this.crew.length&&!this.crew.find(p=>p.player===this.player)?.alive)return {primary:false,homing:false};
-  const homing=this.secondary.wasHeld&&this.level>=3&&this.reserve>0;
+  const homing=this.secondary.wasHeld&&this.homingUnlocked&&this.reserve>0;
   return {primary:this.state==='playing'&&this.primary.wasHeld&&this.primary.streaming&&!homing&&this.tick>=this.primary.recoverUntil,
    homing:this.state==='playing'&&homing&&this.secondary.streaming&&this.tick>=this.secondary.recoverUntil};
  }
  private weapon(input:Input){
-  const homingAvailable=this.level>=3&&this.reserve>0;
+  const homingAvailable=this.homingUnlocked&&this.reserve>0;
   // Homing has input priority. Entering it while streaming inherits stream mode.
   if(input.homing&&!this.secondary.wasHeld&&(this.primary.streaming||this.primary.held>16)){this.secondary.held=17;this.secondary.streaming=true;}
   this.fireChannel(this.secondary,input.homing,homingAvailable,input,true);
@@ -236,7 +238,7 @@ export class World {
  }
  shoot(input:Input,burst:boolean,homing:boolean){
   let count=burst?[10,20,40,60][this.level-1]:[1,2,4,8][this.level-1];
-  if(homing){if(this.level<3)return;count=Math.min(this.reserve,burst?(this.level===4?30:20):4);this.reserve-=count;this.stats.homingFired+=count;}
+  if(homing){if(!this.homingUnlocked)return;count=Math.min(this.reserve,burst?(this.level===4?30:20):4);this.reserve-=count;this.stats.homingFired+=count;}
   if(!count)return;this.lastShotTick=this.tick;
   const legacyStream=this.options.cameraProjectiles||this.options.legacyWeaponOrigin||this.options.legacyStreamRadius;
   const tuning=WEAPON_PRESENTATION[this.level-1],spread=burst?tuning.burstSpread:legacyStream||this.options.legacyWideStream?LEGACY_STREAM_SPREAD[this.level-1]:tuning.streamSpread;
@@ -630,10 +632,12 @@ export class World {
   }
   this.gems=this.gems.filter(g=>g.age<TUNING.gemLifetime);
  }
+ get finalHandProgress(){return this.options.legacyFinalHandUnlock?this.reserve/150:(this.stats.collected-70)/130;}
+ private collectedHandLevel(level:number,reserve:number){return (this.options.legacyFinalHandUnlock?level>=3&&reserve>=150:this.stats.collected>=200)?4:this.stats.collected>=70?3:this.stats.collected>=10?2:1;}
  collect(){if(this.crew.length){
-  this.stats.collected++;for(const p of this.crew){if(this.stats.collected>70)p.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,p.reserve);const next=p.level>=3&&p.reserve>=150?4:this.stats.collected>=70?3:this.stats.collected>=10?2:1;if(next>p.level){p.level=next;this.stats.upgradeTimes[next-1]=this.time;this.effects.push({kind:'upgrade',pos:{...p.player.pos},amount:next,level:next,shooterId:p.id});}}
+  this.stats.collected++;for(const p of this.crew){if(this.stats.collected>this.homingUnlockGems)p.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,p.reserve);const next=this.collectedHandLevel(p.level,p.reserve);if(next>p.level){p.level=next;this.stats.upgradeTimes[next-1]=this.time;this.effects.push({kind:'upgrade',pos:{...p.player.pos},amount:next,level:next,shooterId:p.id});}}
   const local=this.crew.find(p=>p.player===this.player);if(local){this.level=local.level;this.reserve=local.reserve;}return;
- }this.stats.collected++;if(this.stats.collected>70)this.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,this.reserve);
-  const next=this.level>=3&&this.reserve>=150?4:this.stats.collected>=70?3:this.stats.collected>=10?2:1;if(next>this.level){this.level=next;this.stats.upgradeTimes[next-1]=this.time;this.emit('upgrade',this.player.pos,next);}}
+ }this.stats.collected++;if(this.stats.collected>this.homingUnlockGems)this.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,this.reserve);
+  const next=this.collectedHandLevel(this.level,this.reserve);if(next>this.level){this.level=next;this.stats.upgradeTimes[next-1]=this.time;this.emit('upgrade',this.player.pos,next);}}
 }
 export function segmentSphere(a:Vec,b:Vec,c:Vec,r:number):number|null{const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z,ox=a.x-c.x,oy=a.y-c.y,oz=a.z-c.z,aa=dx*dx+dy*dy+dz*dz,bb=2*(ox*dx+oy*dy+oz*dz),cc=ox*ox+oy*oy+oz*oz-r*r;if(cc<=0)return 0;if(aa<1e-10)return null;const disc=bb*bb-4*aa*cc;if(disc<0)return null;const t=(-bb-Math.sqrt(disc))/(2*aa);return t>=0&&t<=1?t:null;}
