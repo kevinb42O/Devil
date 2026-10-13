@@ -53,6 +53,8 @@ Mobile mode uses invisible touch areas across the left and right halves of the a
 | Escape | Pause and release the mouse |
 | R after death | Retry immediately |
 
+Single-player deaths automatically replay the final five seconds with a smooth third-person camera following the killer, a ghost of your player, and a countdown to impact. The final view holds briefly before results appear. Falling deaths follow your descent. Press **R** or tap **Retry** at any point to start again; **Escape** / **Results** skips playback, and **Space** / **Pause** freezes it. **Watch death** on the results screen plays it again. Co-op retains its existing spectator and death flow.
+
 One touch from an active enemy ends the run. Falling also ends it. Gems expire after ten seconds. Player attraction is automatic while both fire buttons are released, stops while either button is held, and also stays off on the tick a tap burst fires. Gems already moving retain their drift during firing; bursts push them away. Large spiders hover outside the arena, raise their heads (three seconds for I, nine for II), steal gems, and eject one egg per consumed gem onto the field. Each egg hatches five spiderlings after ten seconds. Continuous hits keep the head exposed; after a one-second gap it folds down. Travel, attraction strength, and animation curves remain prototype tuning.
 
 Attunement II unlocks at 10 collected gems, III at 70. Gems collected after III become homing reserve. IV requires 150 unspent homing. An earned hand level remains unlocked for the rest of a run. Permanent best time does not change combat power.

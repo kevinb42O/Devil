@@ -41,7 +41,11 @@
     "test:preferences": "node tests/preferences-browser.mjs",
     "test:multiplayer-latency": "node tests/multiplayer-latency-browser.mjs",
     "test:multiplayer-responsiveness": "node tests/multiplayer-responsiveness-browser.mjs",
-    "test:mobile": "node tests/mobile-browser.mjs"
+    "test:mobile": "node tests/mobile-browser.mjs && node tests/mobile-death-browser.mjs",
+    "test:death-analysis": "node tests/death-analysis-browser.mjs",
+    "test:death-camera": "node tests/death-camera-browser.mjs",
+    "test:death-controller": "node tests/death-analysis-controller.mjs",
+    "test:death-performance": "node tests/death-analysis-performance.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.3.0",

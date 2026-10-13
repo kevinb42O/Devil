@@ -1,0 +1,23 @@
+{
+  "viewport": "1280×720",
+  "quality": "low",
+  "method": "headless Chrome, warmed assets, two simulation ticks plus one render with GPU finish per frame; alternating capture off/on",
+  "scenes": [
+    {
+      "count": 300,
+      "baselineMedianMs": 2.199999988079071,
+      "recordingMedianMs": 2.199999988079071,
+      "medianChangePercent": 0,
+      "baselineP95Ms": 2.899999976158142,
+      "recordingP95Ms": 2.7000000178813934
+    },
+    {
+      "count": 1000,
+      "baselineMedianMs": 8.100000023841858,
+      "recordingMedianMs": 8.100000023841858,
+      "medianChangePercent": 0,
+      "baselineP95Ms": 8.900000005960464,
+      "recordingP95Ms": 8.799999982118607
+    }
+  ]
+}

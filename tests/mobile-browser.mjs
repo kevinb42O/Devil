@@ -7,7 +7,7 @@ try{
  const context=await browser.newContext({viewport:{width:844,height:390},isMobile:true,hasTouch:true,deviceScaleFactor:1});
  await context.addInitScript(()=>{
   localStorage.setItem('abyss-player-profile',JSON.stringify({name:'Mobile audit',automatic:false,configured:true}));
-  localStorage.setItem('abyss-settings',JSON.stringify({quality:'low',volume:0}));
+  if(!localStorage.getItem('abyss-settings'))localStorage.setItem('abyss-settings',JSON.stringify({quality:'low',volume:0}));
   // Exercise the fallback used by browsers without fullscreen/orientation lock.
   Element.prototype.requestFullscreen=undefined;
  });
@@ -17,6 +17,12 @@ try{
  await page.locator('#settings-open').tap();assert.equal(await page.locator('#control-scheme').inputValue(),'mobile');
  assert.equal(await page.locator('#control-scheme option').count(),4);assert.equal(await page.locator('#control-bindings').isVisible(),false,'no mobile control instructions or extra controls');
  assert.equal(await page.locator('#mouse-sensitivity-setting').isVisible(),false);
+ assert.equal(await page.locator('#mobile-sensitivity-setting').isVisible(),true);
+ assert.equal(await page.locator('#mobileSensitivity').inputValue(),'1','existing preferences default touch sensitivity to 1');
+ await page.locator('#mobileSensitivity').fill('1.8');
+ assert.equal(await page.locator('#mobileSensitivity-value').textContent(),'1.8');
+ await page.selectOption('#control-scheme','qwerty');assert.equal(await page.locator('#mobile-sensitivity-setting').isVisible(),false);
+ await page.selectOption('#control-scheme','mobile');
  await page.locator('#settings-close').tap();await page.locator('#start').tap();await page.waitForFunction(()=>window.abyss.mode==='playing');
  assert.equal(await page.evaluate(()=>!!document.pointerLockElement),false);assert.equal(await page.locator('#game').evaluate(el=>getComputedStyle(el).touchAction),'none');
  const cdp=await context.newCDPSession(page);
@@ -32,7 +38,8 @@ try{
  await touch('touchMove',[[1,150,190],[2,715,235]]);await page.waitForTimeout(350);
  assert.ok(await page.evaluate(()=>window.abyss.position.z)<before.z-1,'left hold/drag moves with right aiming active');
  assert.ok(await page.evaluate(()=>window.abyss.position.y)<1.8,'left hold does not jump');
- assert.ok(await page.evaluate(()=>window.abyss.yaw)<-.1);assert.ok(await page.evaluate(()=>window.abyss.pitch)>.1);
+ assert.ok(Math.abs(await page.evaluate(()=>window.abyss.yaw)-(-35*.006*1.8))<.001,'touch sensitivity scales horizontal aim');
+ assert.ok(Math.abs(await page.evaluate(()=>window.abyss.pitch)-(25*.006*1.8))<.001,'touch sensitivity scales vertical aim');
  assert.ok(await page.evaluate(()=>window.abyss.stats.shots)>0,'right hold fires stream');
  const aim=await page.evaluate(()=>window.abyss.yaw);await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>window.abyss.yaw),aim,'stationary right hold keeps aim steady');
  await touch('touchEnd',[]);await page.waitForTimeout(80);assert.equal(await page.evaluate(()=>window.abyss.input.fire),false);assert.equal(await page.evaluate(()=>window.abyss.input.forward),0);
@@ -71,6 +78,9 @@ try{
  await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await page.waitForFunction(()=>window.abyss.mode==='paused');
  await page.locator('#pause-settings').tap();await page.selectOption('#control-scheme','mobile');await page.reload();
  await page.waitForFunction(()=>window.abyss?.controls==='mobile'&&window.abyss.viewport.rotated);
+ await page.locator('#settings-open').tap();
+ assert.equal(await page.locator('#mobileSensitivity').inputValue(),'1.8','touch sensitivity survives reload');
+ await page.locator('#settings-close').tap();
  // Resolve an orientation lock only after leaving the run.
  await page.evaluate(()=>{
   window.orientationUnlocks=0;window.fullscreenExits=0;

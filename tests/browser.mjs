@@ -33,7 +33,8 @@ try {
   const time=await page.evaluate(()=>window.abyss.time);await page.waitForTimeout(250);assert.equal(await page.evaluate(()=>window.abyss.time),time,'pause freezes simulation');
   await page.click('#pause-settings');await page.locator('#fov').fill('105');await page.click('#settings-close');await page.click('#resume');await page.waitForFunction(()=>window.abyss.mode==='playing');
   await page.keyboard.down('KeyW');await page.waitForFunction(()=>window.abyss.mode==='dead',{},{timeout:15000});await page.keyboard.up('KeyW');
-  assert.equal(await page.locator('#death').isVisible(),true,'death summary appears');
+  assert.equal(await page.locator('#death-analysis').isVisible(),true,'automatic death replay appears');
+  await page.click('#analysis-skip');assert.equal(await page.locator('#death').isVisible(),true,'death summary appears after replay');
   await page.keyboard.press('KeyR');try{await page.waitForFunction(()=>window.abyss.mode==='playing'&&window.abyss.time<1,{},{timeout:5000});}catch(error){console.log('Retry diagnostic',await page.evaluate(()=>({state:window.abyss,pointerLock:!!document.pointerLockElement,notice:document.querySelector('#notice')?.textContent})));throw error;}
   assert.equal(await page.evaluate(()=>window.abyss.entrance),true,'retry returns to the ritual platform');
   assert.equal(await page.evaluate(()=>window.abyss.stats.shots),0,'retry resets the run');

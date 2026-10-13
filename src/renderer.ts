@@ -33,6 +33,21 @@ function shape(parent:THREE.Object3D,geometry:THREE.BufferGeometry,material:THRE
 }
 export type VisualSettings={quality:string;fov:number};
 export class GameRenderer {
+  private deathGhost:THREE.Group|null=null;
+  private deathProjection=new THREE.Vector3();
+  readonly deathMarker={x:0,y:0,visible:false};
+  setDeathGhost(position:Vec|null,yaw=0,impact=false){
+    if(!position){if(this.deathGhost)this.deathGhost.visible=false;return;}
+    if(!this.deathGhost){this.deathGhost=createCrewAvatar(0);this.deathGhost.name='death-analysis-victim';this.deathGhost.traverse(o=>{if(o instanceof THREE.Mesh){const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.48;material.depthWrite=false;if('emissive' in material){material.color.setHex(0xe9c99a);material.emissive.setHex(0xc47f3c);material.emissiveIntensity=.65;}}});this.scene.add(this.deathGhost);}
+    this.deathGhost.visible=true;this.deathGhost.position.set(position.x,position.y,position.z);this.deathGhost.rotation.y=yaw;
+    for(const material of this.deathGhost.userData.avatarMaterials as THREE.Material[])material.opacity=impact?.7:.48;
+  }
+  projectDeathMarker(position:Vec,visible:boolean){
+    this.deathProjection.set(position.x,position.y+.8,position.z).project(this.camera);
+    this.deathMarker.x=(this.deathProjection.x+1)*50;this.deathMarker.y=(1-this.deathProjection.y)*50;
+    this.deathMarker.visible=visible&&this.deathProjection.z>=-1&&this.deathProjection.z<=1&&Math.abs(this.deathProjection.x)<.94&&Math.abs(this.deathProjection.y)<.85;
+    return this.deathMarker;
+  }
   private dyingTowers=new Map<number,{model:THREE.Group;started:number;y:number;yaw:number;direction:number;depth:number}>();
   private crewModels=new Map<string,THREE.Group>();
   private crewNames=new Map<string,string>();

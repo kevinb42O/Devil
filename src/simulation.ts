@@ -13,6 +13,7 @@ export {TIMELINE};export type {EnemyKind};
 export const STEP=1/120;
 export const TUNING={radius:arenaRadius(0),eyeHeight:1.7,speed:11,acceleration:100,airAcceleration:17,friction:8,gravity:26,jump:9,maxSpeed:18,projectileSpeed:70,gemLifetime:10,towerCrystalRadius:.63,towerDriftSpeed:.5};
 export type Vec={x:number;y:number;z:number};
+export type DeathSource={enemyId:number;kind:EnemyKind;segment:number;tick:number;time:number;player:Vec;contactBody:Vec};
 export const v=(x=0,y=0,z=0):Vec=>({x,y,z});
 export const distance=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 export function direction(a:Vec,b:Vec):Vec{const d=Math.max(distance(a,b),.001);return v((b.x-a.x)/d,(b.y-a.y)/d,(b.z-a.z)/d);}
@@ -57,7 +58,7 @@ export class World {
  private playerStarts=new Map<World['player'],Vec>();
  /** Start of the last movement tick, shared with projectile render interpolation. */
  get previousPlayerPosition():Vec{return this.playerStarts.get(this.player)??this.player.pos;}
- time=0;tick=0;state:'playing'|'dead'='playing';cause='';radius=TUNING.radius;
+ time=0;tick=0;state:'playing'|'dead'='playing';cause='';radius=TUNING.radius;deathSource:DeathSource|null=null;deathEnemy:Enemy|null=null;
  player={pos:v(0,TUNING.eyeHeight,10),vel:v(),grounded:true,landedAt:-1000,hopPulse:0};
  enemies:Enemy[]=[];projectiles:Projectile[]=[];gems:Gem[]=[];effects:Effect[]=[];rings:Ring[]=[];
  stats={kills:0,shots:0,hits:0,collected:0,expired:0,eaten:0,released:0,homingFired:0,homingEaten:0,transmuted:0,maxReserve:0,maxEnemies:0,upgradeTimes:[0,0,0,0],leviathanDown:0,orbDown:0,killed:{} as Partial<Record<EnemyKind,number>>};
@@ -92,7 +93,11 @@ export class World {
   const y=kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?7:kind==='ghostpede'?9:isPede(kind)?3:1.5;
   return this.spawn(kind,v(Math.sin(angle)*r,y,Math.cos(angle)*r));
  }
- die(cause:string){if(this.options.invulnerable)return;if(this.activeCrew){if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.emit('death',this.player.pos);}return;}if(this.state==='dead'||this.options.invulnerable)return;this.state='dead';this.cause=cause;this.emit('death',this.player.pos);}
+ die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
+  // A dagger or transmutation ring can change/remove the killer later this tick.
+  // Preserve its lethal presentation once, without retaining mutable AI history.
+  this.deathEnemy={...enemy,pos:{...enemy.pos},vel:{...enemy.vel},target:{...enemy.target},segments:enemy.segments.map(s=>({pos:{...s.pos},hp:s.hp})),weakpoints:enemy.weakpoints.map(p=>({local:{...p.local},hp:p.hp})),centipedeMotion:undefined,towerFlight:enemy.towerFlight?{...enemy.towerFlight}:undefined};
+ }this.emit('death',this.player.pos);}
  step(input:Input,dt=STEP){
   if(this.state!=='playing')return;this.playerStarts.clear();this.tick++;this.time+=dt;this.radius=arenaRadius(this.time);
   this.move(input,dt);if(this.state!=='playing')return;this.weapon(input);
@@ -250,8 +255,10 @@ export class World {
    else this.updateSwarm(e,dt,cells);
    if((e.hp>0||this.options.legacyEnemyBehavior)&&this.active(e)){
     const growing=isSpider(e.kind)?Math.min(1,e.age/(e.kind==='spider2'?9:3)):1;
+    let contactSegment=-1;
     const collides=(player:World['player'])=>{
-     if(this.options.legacyEnemyBehavior){const body=e.kind==='thorn'?v(e.pos.x,Math.max(e.pos.y,Math.min(7,this.player.pos.y)),e.pos.z):e.pos;return distance(body,player.pos)<e.radius*growing+.35||e.segments.some(s=>distance(s.pos,player.pos)<e.size*.8);}
+     contactSegment=-1;
+     if(this.options.legacyEnemyBehavior){const body=e.kind==='thorn'?v(e.pos.x,Math.max(e.pos.y,Math.min(7,this.player.pos.y)),e.pos.z):e.pos;if(distance(body,player.pos)<e.radius*growing+.35)return true;contactSegment=e.segments.findIndex(s=>distance(s.pos,player.pos)<e.size*.8);return contactSegment>=0;}
      const playerBefore=this.playerStarts.get(player)??player.pos;
      // Tower origins sit at the crown. Their lethal body reaches down to the
      // arena, rather than leaving standing players below the contact sphere.
@@ -261,10 +268,10 @@ export class World {
       return touchesPlayer(from,to,playerBefore,player.pos,e.radius,Math.max(start.y-from.y,e.pos.y-to.y));
      }
      if(touchesPlayer(wasActive?previous:e.pos,e.pos,playerBefore,player.pos,e.radius*growing,e.kind==='thorn'?7:0))return true;
-     return e.segments.some((s,i)=>touchesPlayer(wasActive?segmentsBefore[i]:s.pos,s.pos,playerBefore,player.pos,e.size*.8));
+     contactSegment=e.segments.findIndex((s,i)=>touchesPlayer(wasActive?segmentsBefore[i]:s.pos,s.pos,playerBefore,player.pos,e.size*.8));return contactSegment>=0;
     };
     if(this.crew.length){for(const p of this.crew)if(p.alive&&collides(p.player)){this.useCrew(p);this.die(ENEMY_STATS[e.kind].death);}}
-    else if(collides(this.player))this.die(ENEMY_STATS[e.kind].death);
+    else if(collides(this.player))this.die(ENEMY_STATS[e.kind].death,e,contactSegment);
    }
   }
   this.enemies=this.enemies.filter(e=>e.hp>0);
