@@ -1,0 +1,1604 @@
+{
+  "ready": true,
+  "error": "",
+  "enemies": [
+    {
+      "kind": "skull",
+      "stats": {
+        "hp": 1,
+        "gems": 0,
+        "radius": 0.65,
+        "death": "SWARMED"
+      },
+      "meshes": [
+        {
+          "name": "boid",
+          "vertices": 2082,
+          "textures": [
+            "boid.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "skull2",
+      "stats": {
+        "hp": 5,
+        "gems": 1,
+        "radius": 0.8,
+        "death": "IMPALED"
+      },
+      "meshes": [
+        {
+          "name": "boid2",
+          "vertices": 1782,
+          "textures": [
+            "boid2.png"
+          ]
+        },
+        {
+          "name": "boid2horns",
+          "vertices": 1470,
+          "textures": [
+            "boid2horns.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "skull3",
+      "stats": {
+        "hp": 10,
+        "gems": 1,
+        "radius": 0.7,
+        "death": "GORED"
+      },
+      "meshes": [
+        {
+          "name": "boid3",
+          "vertices": 1782,
+          "textures": [
+            "boid3.png"
+          ]
+        },
+        {
+          "name": "boid3horns",
+          "vertices": 1860,
+          "textures": [
+            "boid3horns.png"
+          ]
+        },
+        {
+          "name": "boid3jaw",
+          "vertices": 966,
+          "textures": [
+            "boid3jaw.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "skull4",
+      "stats": {
+        "hp": 100,
+        "gems": 0,
+        "radius": 1.3,
+        "death": "OPENED"
+      },
+      "meshes": [
+        {
+          "name": "boid4",
+          "vertices": 6897,
+          "textures": [
+            "boid4.png"
+          ]
+        },
+        {
+          "name": "boid4jaw",
+          "vertices": 1242,
+          "textures": [
+            "boid4jaw.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted1",
+      "stats": {
+        "hp": 10,
+        "gems": 0,
+        "radius": 0.65,
+        "death": "SWARMED"
+      },
+      "meshes": [
+        {
+          "name": "boid",
+          "vertices": 2082,
+          "textures": [
+            "boidlev.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted2",
+      "stats": {
+        "hp": 20,
+        "gems": 1,
+        "radius": 0.8,
+        "death": "IMPALED"
+      },
+      "meshes": [
+        {
+          "name": "boid2",
+          "vertices": 1782,
+          "textures": [
+            "boid2lev.png"
+          ]
+        },
+        {
+          "name": "boid2horns",
+          "vertices": 1470,
+          "textures": [
+            "boid2hornslev.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted3",
+      "stats": {
+        "hp": 100,
+        "gems": 1,
+        "radius": 0.7,
+        "death": "GORED"
+      },
+      "meshes": [
+        {
+          "name": "boid3",
+          "vertices": 1782,
+          "textures": [
+            "boid3lev.png"
+          ]
+        },
+        {
+          "name": "boid3horns",
+          "vertices": 1860,
+          "textures": [
+            "boid3hornslev.png"
+          ]
+        },
+        {
+          "name": "boid3jaw",
+          "vertices": 966,
+          "textures": [
+            "boid3jawlev.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted4",
+      "stats": {
+        "hp": 300,
+        "gems": 0,
+        "radius": 1.3,
+        "death": "OPENED"
+      },
+      "meshes": [
+        {
+          "name": "boid4",
+          "vertices": 6897,
+          "textures": [
+            "boid4lev.png"
+          ]
+        },
+        {
+          "name": "boid4jaw",
+          "vertices": 1242,
+          "textures": [
+            "boid4jawlev.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "squid",
+      "stats": {
+        "hp": 10,
+        "gems": 1,
+        "radius": 1.3,
+        "death": "PURGED"
+      },
+      "meshes": [
+        {
+          "name": "minisquidcrest",
+          "vertices": 3084,
+          "textures": [
+            "minisquidcrest.png"
+          ]
+        },
+        {
+          "name": "minisquidcrestskull",
+          "vertices": 3588,
+          "textures": [
+            "minisquidcrestskull.png"
+          ]
+        },
+        {
+          "name": "minisquidhorns",
+          "vertices": 1470,
+          "textures": [
+            "minisquidhorns.png"
+          ]
+        },
+        {
+          "name": "minisquidjaw",
+          "vertices": 3162,
+          "textures": [
+            "minisquidjaw.png"
+          ]
+        },
+        {
+          "name": "minisquidjawskull",
+          "vertices": 4260,
+          "textures": [
+            "minisquidjawskull.png"
+          ]
+        },
+        {
+          "name": "weak-point-0",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "squid2",
+      "stats": {
+        "hp": 20,
+        "gems": 2,
+        "radius": 1.7,
+        "death": "DESECRATED"
+      },
+      "meshes": [
+        {
+          "name": "squidcrest",
+          "vertices": 6132,
+          "textures": [
+            "squidcrest.png"
+          ]
+        },
+        {
+          "name": "squidcrestskull",
+          "vertices": 7176,
+          "textures": [
+            "squidcrestskull.png"
+          ]
+        },
+        {
+          "name": "squidhorns",
+          "vertices": 3720,
+          "textures": [
+            "squidhorns.png"
+          ]
+        },
+        {
+          "name": "squidjaws",
+          "vertices": 6108,
+          "textures": [
+            "squidjaws.png"
+          ]
+        },
+        {
+          "name": "squidjawskull",
+          "vertices": 4266,
+          "textures": [
+            "squidjawskull.png"
+          ]
+        },
+        {
+          "name": "weak-point-0",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "squidjawskull",
+          "vertices": 4266,
+          "textures": [
+            "squidjawskull.png"
+          ]
+        },
+        {
+          "name": "weak-point-1",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squidteeth",
+          "vertices": 16749,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squidteeth",
+          "vertices": 16749,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squidteeth",
+          "vertices": 16749,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squidteeth",
+          "vertices": 16749,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squidteeth",
+          "vertices": 16749,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "squid-arm",
+          "vertices": 1788,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "squidteeth",
+          "vertices": 16749,
+          "textures": [
+            "squidteeth.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "squid3",
+      "stats": {
+        "hp": 90,
+        "gems": 3,
+        "radius": 2,
+        "death": "SACRIFICED"
+      },
+      "meshes": [
+        {
+          "name": "ultrasquidcrest",
+          "vertices": 9216,
+          "textures": [
+            "ultrasquidcrest.png"
+          ]
+        },
+        {
+          "name": "ultrasquidcrestskull",
+          "vertices": 10764,
+          "textures": [
+            "ultrasquidcrestskull.png"
+          ]
+        },
+        {
+          "name": "ultrasquidhorns",
+          "vertices": 11727,
+          "textures": [
+            "ultrasquidhorns.png"
+          ]
+        },
+        {
+          "name": "ultrasquidjaw",
+          "vertices": 8964,
+          "textures": [
+            "ultrasquidjaw.png"
+          ]
+        },
+        {
+          "name": "ultrasquidjawskull",
+          "vertices": 4254,
+          "textures": [
+            "ultrasquidjawskull.png"
+          ]
+        },
+        {
+          "name": "ultrasquidteeth",
+          "vertices": 16701,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "ultrasquidtent",
+          "vertices": 1710,
+          "textures": [
+            "squidarm.png"
+          ]
+        },
+        {
+          "name": "weak-point-0",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "ultrasquidjaw",
+          "vertices": 8964,
+          "textures": [
+            "ultrasquidjaw.png"
+          ]
+        },
+        {
+          "name": "ultrasquidjawskull",
+          "vertices": 4254,
+          "textures": [
+            "ultrasquidjawskull.png"
+          ]
+        },
+        {
+          "name": "ultrasquidteeth",
+          "vertices": 16701,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "ultrasquidtent",
+          "vertices": 1710,
+          "textures": [
+            "squidarm.png"
+          ]
+        },
+        {
+          "name": "weak-point-1",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "ultrasquidjaw",
+          "vertices": 8964,
+          "textures": [
+            "ultrasquidjaw.png"
+          ]
+        },
+        {
+          "name": "ultrasquidjawskull",
+          "vertices": 4254,
+          "textures": [
+            "ultrasquidjawskull.png"
+          ]
+        },
+        {
+          "name": "ultrasquidteeth",
+          "vertices": 16701,
+          "textures": [
+            "squidteeth.png"
+          ]
+        },
+        {
+          "name": "ultrasquidtent",
+          "vertices": 1710,
+          "textures": [
+            "squidarm.png"
+          ]
+        },
+        {
+          "name": "weak-point-2",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "spider",
+      "stats": {
+        "hp": 25,
+        "gems": 1,
+        "radius": 1.4,
+        "death": "INTOXICATED"
+      },
+      "meshes": [
+        {
+          "name": "spiderbody",
+          "vertices": 3588,
+          "textures": [
+            "spiderbody.png"
+          ]
+        },
+        {
+          "name": "spiderpalm",
+          "vertices": 876,
+          "textures": [
+            "spiderpalm.png"
+          ]
+        },
+        {
+          "name": "spiderhead",
+          "vertices": 2166,
+          "textures": [
+            "spiderhead.png"
+          ]
+        },
+        {
+          "name": "spiderjaw",
+          "vertices": 1272,
+          "textures": [
+            "spiderjaw.png"
+          ]
+        },
+        {
+          "name": "spiderfangs",
+          "vertices": 1176,
+          "textures": [
+            "spiderfangs.png"
+          ]
+        },
+        {
+          "name": "spider-held-gem",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "spiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "spiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "spiderleg3.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "spider2",
+      "stats": {
+        "hp": 200,
+        "gems": 1,
+        "radius": 2.8,
+        "death": "ENVENOMATED"
+      },
+      "meshes": [
+        {
+          "name": "spiderbody",
+          "vertices": 3588,
+          "textures": [
+            "gigaspiderbody.png"
+          ]
+        },
+        {
+          "name": "spiderpalm",
+          "vertices": 876,
+          "textures": [
+            "gigaspiderpalm.png"
+          ]
+        },
+        {
+          "name": "spiderhead",
+          "vertices": 2166,
+          "textures": [
+            "gigaspiderhead.png"
+          ]
+        },
+        {
+          "name": "spiderjaw",
+          "vertices": 1272,
+          "textures": [
+            "gigaspiderjaw.png"
+          ]
+        },
+        {
+          "name": "spiderfangs",
+          "vertices": 1176,
+          "textures": [
+            "gigaspiderfangs.png"
+          ]
+        },
+        {
+          "name": "spider-held-gem",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "spiderleg1",
+          "vertices": 438,
+          "textures": [
+            "gigaspiderleg1.png"
+          ]
+        },
+        {
+          "name": "spiderleg2",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg2.png"
+          ]
+        },
+        {
+          "name": "spiderleg3",
+          "vertices": 354,
+          "textures": [
+            "gigaspiderleg3.png"
+          ]
+        },
+        {
+          "name": "gigaspidercrest",
+          "vertices": 1770,
+          "textures": [
+            "gigaspidercrest.png"
+          ]
+        },
+        {
+          "name": "gigaspiderhorns",
+          "vertices": 1137,
+          "textures": [
+            "gigaspiderhorns.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "egg",
+      "stats": {
+        "hp": 3,
+        "gems": 0,
+        "radius": 0.6,
+        "death": "INTOXICATED"
+      },
+      "meshes": [
+        {
+          "name": "spideregg1",
+          "vertices": 2112,
+          "textures": [
+            "spideregg1.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "egg2",
+      "stats": {
+        "hp": 3,
+        "gems": 0,
+        "radius": 0.7,
+        "death": "ENVENOMATED"
+      },
+      "meshes": [
+        {
+          "name": "spideregg2",
+          "vertices": 24,
+          "textures": [
+            "spideregg2.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "spiderling",
+      "stats": {
+        "hp": 3,
+        "gems": 0,
+        "radius": 0.4,
+        "death": "INFESTED"
+      },
+      "meshes": [
+        {
+          "name": "spiderling",
+          "vertices": 1572,
+          "textures": [
+            "spiderling.png"
+          ]
+        },
+        {
+          "name": "spiderlingpalms",
+          "vertices": 414,
+          "textures": [
+            "spiderlingpalm.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg1",
+          "vertices": 114,
+          "textures": [
+            "spiderlingleg1.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg2",
+          "vertices": 108,
+          "textures": [
+            "spiderlingleg2.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg3",
+          "vertices": 54,
+          "textures": [
+            "spiderlingleg3.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg1",
+          "vertices": 114,
+          "textures": [
+            "spiderlingleg1.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg1",
+          "vertices": 114,
+          "textures": [
+            "spiderlingleg1.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg2",
+          "vertices": 108,
+          "textures": [
+            "spiderlingleg2.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg3",
+          "vertices": 54,
+          "textures": [
+            "spiderlingleg3.png"
+          ]
+        },
+        {
+          "name": "spiderlingleg1",
+          "vertices": 114,
+          "textures": [
+            "spiderlingleg1.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "centipede",
+      "stats": {
+        "hp": 75,
+        "gems": 25,
+        "radius": 1,
+        "death": "EVISCERATED"
+      },
+      "meshes": [
+        {
+          "name": "pedehead",
+          "vertices": 11247,
+          "textures": [
+            "pedehead.png"
+          ]
+        },
+        {
+          "name": "pedejaw",
+          "vertices": 1788,
+          "textures": [
+            "pedejaw.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "gigapede",
+      "stats": {
+        "hp": 250,
+        "gems": 50,
+        "radius": 1.5,
+        "death": "ANNIHILATED"
+      },
+      "meshes": [
+        {
+          "name": "pedehead",
+          "vertices": 11247,
+          "textures": [
+            "pedeblackhead.png"
+          ]
+        },
+        {
+          "name": "pedejaw",
+          "vertices": 1788,
+          "textures": [
+            "pedeblackjaw.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "ghostpede",
+      "stats": {
+        "hp": 500,
+        "gems": 10,
+        "radius": 1.6,
+        "death": "HAUNTED"
+      },
+      "meshes": [
+        {
+          "name": "pedehead",
+          "vertices": 11247,
+          "textures": [
+            "ultrapedehead.png"
+          ]
+        },
+        {
+          "name": "pedejaw",
+          "vertices": 1788,
+          "textures": [
+            "ultrapedejaw.png"
+          ]
+        },
+        {
+          "name": "ultrapedecrown",
+          "vertices": 11892,
+          "textures": [
+            "ultrapedecrown.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "leviathan",
+      "stats": {
+        "hp": 1500,
+        "gems": 6,
+        "radius": 4,
+        "death": "INCARNATED"
+      },
+      "meshes": [
+        {
+          "name": "leviorb",
+          "vertices": 576,
+          "textures": [
+            "shader"
+          ]
+        },
+        {
+          "name": "leviskull",
+          "vertices": 1782,
+          "textures": [
+            "leviskull.png"
+          ]
+        },
+        {
+          "name": "leviskulljaw",
+          "vertices": 966,
+          "textures": [
+            "leviskulljaw.png"
+          ]
+        },
+        {
+          "name": "levicrown",
+          "vertices": 6897,
+          "textures": [
+            "levicrown.png"
+          ]
+        },
+        {
+          "name": "levicrownjaw",
+          "vertices": 1242,
+          "textures": [
+            "levicrownjaw.png"
+          ]
+        },
+        {
+          "name": "levicrown2",
+          "vertices": 6897,
+          "textures": [
+            "levicrown2.png"
+          ]
+        },
+        {
+          "name": "levicrown2jaw",
+          "vertices": 1266,
+          "textures": [
+            "levicrown2jaw.png"
+          ]
+        },
+        {
+          "name": "levitent",
+          "vertices": 4488,
+          "textures": [
+            "levitent.png"
+          ]
+        },
+        {
+          "name": "levitent2",
+          "vertices": 1200,
+          "textures": [
+            "levitent2.png"
+          ]
+        },
+        {
+          "name": "levidividerskull",
+          "vertices": 1782,
+          "textures": [
+            "levidividerskull.png"
+          ]
+        },
+        {
+          "name": "levicrown",
+          "vertices": 6897,
+          "textures": [
+            "levicrown.png"
+          ]
+        },
+        {
+          "name": "levicrownjaw",
+          "vertices": 1242,
+          "textures": [
+            "levicrownjaw.png"
+          ]
+        },
+        {
+          "name": "levicrown2",
+          "vertices": 6897,
+          "textures": [
+            "levicrown2.png"
+          ]
+        },
+        {
+          "name": "levicrown2jaw",
+          "vertices": 1266,
+          "textures": [
+            "levicrown2jaw.png"
+          ]
+        },
+        {
+          "name": "levitent",
+          "vertices": 4488,
+          "textures": [
+            "levitent.png"
+          ]
+        },
+        {
+          "name": "levitent2",
+          "vertices": 1200,
+          "textures": [
+            "levitent2.png"
+          ]
+        },
+        {
+          "name": "levidividerskull",
+          "vertices": 1782,
+          "textures": [
+            "levidividerskull.png"
+          ]
+        },
+        {
+          "name": "levicrown",
+          "vertices": 6897,
+          "textures": [
+            "levicrown.png"
+          ]
+        },
+        {
+          "name": "levicrownjaw",
+          "vertices": 1242,
+          "textures": [
+            "levicrownjaw.png"
+          ]
+        },
+        {
+          "name": "levicrown2",
+          "vertices": 6897,
+          "textures": [
+            "levicrown2.png"
+          ]
+        },
+        {
+          "name": "levicrown2jaw",
+          "vertices": 1266,
+          "textures": [
+            "levicrown2jaw.png"
+          ]
+        },
+        {
+          "name": "levitent",
+          "vertices": 4488,
+          "textures": [
+            "levitent.png"
+          ]
+        },
+        {
+          "name": "levitent2",
+          "vertices": 1200,
+          "textures": [
+            "levitent2.png"
+          ]
+        },
+        {
+          "name": "levidividerskull",
+          "vertices": 1782,
+          "textures": [
+            "levidividerskull.png"
+          ]
+        },
+        {
+          "name": "weak-point-0",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "weak-point-1",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "weak-point-2",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "weak-point-3",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "weak-point-4",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "weak-point-5",
+          "vertices": 24,
+          "textures": [
+            "crystal.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "orb",
+      "stats": {
+        "hp": 2400,
+        "gems": 0,
+        "radius": 2.4,
+        "death": "DISCARNATED"
+      },
+      "meshes": [
+        {
+          "name": "immortalorb",
+          "vertices": 672,
+          "textures": [
+            "shader"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "thorn",
+      "stats": {
+        "hp": 120,
+        "gems": 0,
+        "radius": 1.5,
+        "death": "ENTANGLED"
+      },
+      "meshes": [
+        {
+          "name": "thorn",
+          "vertices": 8784,
+          "textures": [
+            "thorn.png"
+          ]
+        }
+      ]
+    }
+  ],
+  "segments": [
+    {
+      "kind": "centipede",
+      "meshes": [
+        {
+          "name": "pedebody",
+          "vertices": 2094,
+          "textures": [
+            "pedebody.png"
+          ]
+        },
+        {
+          "name": "segment-weak-point",
+          "vertices": 12,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 2952,
+          "textures": [
+            "pedeleg1.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 1752,
+          "textures": [
+            "pedeleg2.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 2352,
+          "textures": [
+            "pedeleg3.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "gigapede",
+      "meshes": [
+        {
+          "name": "pedebody",
+          "vertices": 2094,
+          "textures": [
+            "pedeblackbody.png"
+          ]
+        },
+        {
+          "name": "segment-weak-point",
+          "vertices": 12,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 2952,
+          "textures": [
+            "pedeblackleg1.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 1752,
+          "textures": [
+            "pedeblackleg2.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 2352,
+          "textures": [
+            "pedeblackleg3.png"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "ghostpede",
+      "meshes": [
+        {
+          "name": "pedebody",
+          "vertices": 2094,
+          "textures": [
+            "ultrapedebody.png"
+          ]
+        },
+        {
+          "name": "segment-weak-point",
+          "vertices": 12,
+          "textures": [
+            "crystal.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 2952,
+          "textures": [
+            "ultrapedeleg1.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 1752,
+          "textures": [
+            "ultrapedeleg2.png"
+          ]
+        },
+        {
+          "name": "",
+          "vertices": 2352,
+          "textures": [
+            "ultrapedeleg3.png"
+          ]
+        }
+      ]
+    }
+  ],
+  "browserErrors": [],
+  "statsVerifiedRevision": 11
+}

@@ -1,0 +1,1 @@
+Startup/performance regression passed: {"readyMs":782,"clickToFrameMs":28.099999994039536,"openingAudioRequests":16,"stallSimulationSeconds":0,"initial":1598328,"reduced":1294001,"recovered":1443402,"afterStall":0.8784104611578831,"drawCalls":17}

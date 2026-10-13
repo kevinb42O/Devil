@@ -1,9 +1,10 @@
 import {BloodRenderer} from './blood-renderer';
+import {PlayerDeathBurst} from './player-death-burst';
 import {SinglePlayerEntrance} from './entrance';
 import {gameViewport} from './game-viewport';
 import * as THREE from 'three';
 import { OriginalWeapon } from './original-weapon';
-import {createCrewAvatar,updateCrewArm,disposeCrewAvatar} from './crew-avatar';
+import {createCrewAvatar,loadCrewAvatar,crewMuzzle,updateCrewAvatar,disposeCrewAvatar} from './crew-avatar';
 import { OriginalEnemies } from './original-enemies';
 import { AbyssSky } from './sky';
 import {SegmentBatches} from './segment-batches';
@@ -19,7 +20,7 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import { World, type Enemy, type EnemyKind, type Effect, type Vec, TIMELINE } from './simulation';
+import { World, type Enemy, type EnemyKind, type Effect, type Vec, type Input, TIMELINE } from './simulation';
 const TAU = Math.PI*2;
 const bone = new THREE.MeshStandardMaterial({color:0xaaa58a,roughness:.74,metalness:.12});
 const darkBone = new THREE.MeshStandardMaterial({color:0x383d30,roughness:.8,metalness:.22});
@@ -33,14 +34,55 @@ function shape(parent:THREE.Object3D,geometry:THREE.BufferGeometry,material:THRE
 }
 export type VisualSettings={quality:string;fov:number};
 export class GameRenderer {
+  readonly crewAvatarReady=loadCrewAvatar();
   private deathGhost:THREE.Group|null=null;
+  private replayBody:THREE.Group|null=null;
+  private deathBurst:PlayerDeathBurst|null=null;
+  private deathBurstActive=false;
+  private deathBloodTime=0;
+  private crewDeathBursts:{burst:PlayerDeathBurst;id:string|null;position:Vec;started:number}[]=[];
+  private crewAlive=new Map<string,boolean>();
+  private crewExploded=new Set<string>();
+  private crewDeathTime=0;
+  get crewDeathPresentation(){return this.crewDeathBursts.filter(s=>s.id!==null).map(s=>({id:s.id,position:{...s.position},age:Math.max(0,this.crewDeathTime-s.started),visible:s.burst.mesh.visible,...s.burst.diagnostics}));}
+  private startCrewDeath(id:string,position:Vec,time:number){
+    if(this.crewExploded.has(id))return;
+    const slot=this.crewDeathBursts.find(s=>s.id===null);if(!slot)return;
+    this.crewExploded.add(id);slot.id=id;slot.position={...position};slot.started=time;slot.burst.begin(slot.position,time);
+  }
+  private updateCrewDeaths(world:World|null,menu:boolean,dt:number){
+    if(!world||menu||!world.crew.length)return;
+    // Keep the last crew explosions moving after a team wipe freezes simulation.
+    this.crewDeathTime=world.state==='dead'?Math.max(world.time,this.crewDeathTime+Math.min(.1,Math.max(0,dt))):world.time;
+    for(const p of world.crew){
+      const alive=this.crewAlive.get(p.id);
+      if(p.alive&&alive===false)this.crewExploded.delete(p.id);
+      if(!p.alive&&alive===true&&p.cause!=='DISCONNECTED')this.startCrewDeath(p.id,p.player.pos,world.time);
+      this.crewAlive.set(p.id,p.alive);
+    }
+    for(const slot of this.crewDeathBursts){
+      if(slot.id===null)continue;
+      const age=Math.max(0,this.crewDeathTime-slot.started);
+      if(age>2.5){slot.burst.clear();slot.id=null;continue;}
+      slot.burst.update(slot.position,age,this.camera);
+    }
+  }
   private deathProjection=new THREE.Vector3();
   readonly deathMarker={x:0,y:0,visible:false};
-  setDeathGhost(position:Vec|null,yaw=0,impact=false){
-    if(!position){if(this.deathGhost)this.deathGhost.visible=false;return;}
-    if(!this.deathGhost){this.deathGhost=createCrewAvatar(0);this.deathGhost.name='death-analysis-victim';this.deathGhost.traverse(o=>{if(o instanceof THREE.Mesh){const material=o.material as THREE.MeshStandardMaterial;material.transparent=true;material.opacity=.48;material.depthWrite=false;if('emissive' in material){material.color.setHex(0xe9c99a);material.emissive.setHex(0xc47f3c);material.emissiveIntensity=.65;}}});this.scene.add(this.deathGhost);}
+  setDeathGhost(position:Vec|null,yaw=0,impact=false,impactAge=0,impactTime=0){
+    if(!position){if(this.deathGhost)this.deathGhost.visible=false;this.deathBurst?.clear();this.deathBurstActive=false;return;}
+    if(impact){
+      if(!this.deathBurst)this.deathBurst=new PlayerDeathBurst(this.scene,this.blood.field);
+      if(!this.deathBurstActive)this.deathBurst.begin(position,impactTime);
+      this.deathBloodTime=impactTime+impactAge;
+      this.deathBurstActive=true;this.deathBurst.update(position,impactAge,this.camera);
+      if(this.deathGhost)this.deathGhost.visible=false;
+      return;
+    }
+    this.deathBurst?.clear();this.deathBurstActive=false;
+    if(!this.deathGhost){this.deathGhost=createCrewAvatar(0,true);this.deathGhost.name='death-analysis-victim';this.scene.add(this.deathGhost);}
     this.deathGhost.visible=true;this.deathGhost.position.set(position.x,position.y,position.z);this.deathGhost.rotation.y=yaw;
-    for(const material of this.deathGhost.userData.avatarMaterials as THREE.Material[])material.opacity=impact?.7:.48;
+    for(const material of this.deathGhost.userData.avatarMaterials as THREE.Material[])material.opacity=.48;
   }
   projectDeathMarker(position:Vec,visible:boolean){
     this.deathProjection.set(position.x,position.y+.8,position.z).project(this.camera);
@@ -51,6 +93,7 @@ export class GameRenderer {
   private dyingTowers=new Map<number,{model:THREE.Group;started:number;y:number;yaw:number;direction:number;depth:number}>();
   private crewModels=new Map<string,THREE.Group>();
   private crewNames=new Map<string,string>();
+  private crewMuzzlePosition=new THREE.Vector3();
   setCrewNames(members:{id:string;name:string}[]){this.crewNames=new Map(members.map(p=>[p.id,p.name]));}
   get crewPresentation(){return [...this.crewModels].map(([id,model])=>({id,name:model.userData.playerName,position:model.position.toArray(),label:model.children.some(c=>c.name==='crew-name')}));}
   private updateCrewName(model:THREE.Group,name:string){
@@ -99,6 +142,8 @@ export class GameRenderer {
     this.enemyLighting=new EnemyLighting(this.scene,stone);
     this.projectileLighting=new ProjectileLighting(this.scene,stone);
     this.blood=new BloodRenderer(this.scene,stone);
+    this.deathBurst=new PlayerDeathBurst(this.scene,this.blood.field);
+    for(let i=0;i<4;i++)this.crewDeathBursts.push({burst:new PlayerDeathBurst(this.scene,this.blood.field,this.deathBurst),id:null,position:{x:0,y:0,z:0},started:0});
     this.tiles=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE_SIZE,.1,TILE_SIZE),stone,this.tilePositions.length);this.scene.add(this.tiles);
     this.updateTiles(0);
     this.gemMesh=new THREE.InstancedMesh(gemGeo,crystal,1200);this.gemMesh.count=0;this.gemMesh.frustumCulled=false;this.scene.add(this.gemMesh);
@@ -134,20 +179,31 @@ export class GameRenderer {
     this.slowFrames=this.fastFrames=0;this.resizeCooldown=3;this.resize();
   }
   async prepare() {
-    await Promise.all([this.originalEnemies.loaded,this.originalWeapon.loaded,this.entrance.ready,this.blood.ready]);
+    await Promise.all([this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
     if(!this.originalEnemies.ready||!this.originalWeapon.ready)return;
     // Compile the gameplay and hand materials while the menu is still visible.
-    await this.renderer.compileAsync(this.scene,this.camera);
+    const body=createCrewAvatar(0),ghost=createCrewAvatar(0,true);
+    body.position.set(1000,0,0);ghost.position.set(1000,0,0);this.scene.add(body,ghost);
+    try{await this.renderer.compileAsync(this.scene,this.camera);}finally{this.scene.remove(body,ghost);disposeCrewAvatar(body);disposeCrewAvatar(ghost);}
     await this.renderer.compileAsync(this.originalWeapon.handScene,this.originalWeapon.handCamera);
   }
   updateTiles(time:number) {let changed=false;this.tiles.instanceMatrix.clearUpdateRanges();for(let i=0;i<this.tilePositions.length;i++){const tile=ARENA_TILES[i],height=tileHeight(tile.x,tile.z,time)-(this.originalFloor?0:.05);if(this.tileHeights[i]===height)continue;this.tileHeights[i]=height;changed=true;this.dummy.position.copy(this.tilePositions[i]);this.dummy.position.y=height;this.dummy.rotation.set(0,0,0);this.dummy.scale.setScalar(1);this.dummy.updateMatrix();this.tiles.setMatrixAt(i,this.dummy.matrix);this.tiles.instanceMatrix.addUpdateRange(i*16,16);}if(changed)this.tiles.instanceMatrix.needsUpdate=true;}
   effect(effect:Effect,world:World,yaw:number,pitch:number) {
+    if(effect.kind==='death'&&effect.shooterId&&world.crew.some(p=>p.id===effect.shooterId))this.startCrewDeath(effect.shooterId,effect.pos,world.time);
     const localId=world.crew.find(p=>p.player===world.player)?.id;
     const local=!world.crew.length||effect.shooterId===localId;
-    this.originalWeapon.effect(effect,world,yaw,pitch,local);
+    let weaponEffect=effect;
+    if(!local&&(effect.kind==='shot'||effect.kind==='burst')&&effect.shooterId){
+      const model=this.crewModels.get(effect.shooterId),shooter=world.crew.find(p=>p.id===effect.shooterId);
+      if(model&&shooter){
+        updateCrewAvatar(model,shooter.input,shooter.player.vel,shooter.player.grounded,world.time,true);
+        if(crewMuzzle(model,this.crewMuzzlePosition))weaponEffect={...effect,muzzles:[{x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z}]};
+      }
+    }
+    this.originalWeapon.effect(weaponEffect,world,yaw,pitch,local);
     this.blood.effect(effect,world);
   }
-  render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false) {
+  render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
     this.renderer.info.reset();this.visualTime+=dt;const t=this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
     if(entrance&&world){
       samplePlayerPosition(world,projectileAlpha,this.camera.position);this.camera.rotation.set(pitch,yaw,0,'YXZ');
@@ -198,7 +254,7 @@ export class GameRenderer {
         model.visible=true;model.position.set(e.pos.x,e.pos.y,e.pos.z);const emergence=isPede(e.kind)?1:Math.min(1,e.age/(e.kind==='spider2'?9:e.kind==='leviathan'?8.533333:1.1));model.scale.setScalar(emergence);
         model.rotation.y=enemyYaw(e,world.player.pos);
         if(e.kind.startsWith('squid'))model.userData.towerSpinDirection=e.towerSpinDirection??-1;
-        this.originalEnemies.animate(model,e,world.time);
+        this.originalEnemies.animate(model,e,world.time,world.spawnFixesEnabled);
         if(isPede(e.kind)) {
           model.rotation.set(0,0,0);model.children[0].rotation.set(-Math.atan2(e.vel.y,Math.hypot(e.vel.x,e.vel.z)),enemyYaw(e,world.player.pos),0,'YXZ');const segments=this.segmentNodes.get(model)!;
           for(let i=0;i<segments.length;i++){const {node,weakPoints}=segments[i],s=e.segments[i],lead=i===0?e.pos:e.segments[i-1].pos;node.position.set(s.pos.x-e.pos.x,s.pos.y-e.pos.y,s.pos.z-e.pos.z);node.rotation.set(-Math.atan2(lead.y-s.pos.y,Math.hypot(lead.x-s.pos.x,lead.z-s.pos.z)),Math.atan2(lead.x-s.pos.x,lead.z-s.pos.z),0,'YXZ');for(const point of weakPoints)point.visible=s.hp>0;}
@@ -222,8 +278,15 @@ export class GameRenderer {
       }
       this.gemMesh.count=Math.min(1200,world.gems.length);for(let i=0;i<this.gemMesh.count;i++){const gem=world.gems[i];this.dummy.position.set(gem.pos.x,gem.pos.y,gem.pos.z);this.dummy.rotation.set(t,t*2,0);this.dummy.scale.setScalar(1.4*(gem.age>8?Math.sin(t*18)*.2+.8:1));this.dummy.updateMatrix();this.gemMesh.setMatrixAt(i,this.dummy.matrix);}if(this.gemMesh.count){this.gemMesh.instanceMatrix.clearUpdateRanges();this.gemMesh.instanceMatrix.addUpdateRange(0,this.gemMesh.count*16);this.gemMesh.instanceMatrix.needsUpdate=true;}
     }
+    if(this.deathGhost?.visible&&world&&!menu)updateCrewAvatar(this.deathGhost,bodyInput??{forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false},world.player.vel,Math.abs(world.player.vel.y)<.2,world.time);
+    if(world&&!menu&&this.topDown&&bodyInput&&!spectatorPosition&&!world.crew.length){
+      if(!this.replayBody){this.replayBody=createCrewAvatar(0);this.replayBody.name='replay-player';this.scene.add(this.replayBody);}
+      this.replayBody.visible=true;this.replayBody.position.set(world.player.pos.x,world.player.pos.y,world.player.pos.z);this.replayBody.rotation.y=bodyInput.yaw;
+      updateCrewAvatar(this.replayBody,bodyInput,world.player.vel,world.player.grounded,world.time);
+    }else if(this.replayBody)this.replayBody.visible=false;
+    this.updateCrewDeaths(world,menu,dt);
     const crewIds=new Set<string>();
-    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if(p.player===world.player||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);this.scene.add(model);}if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;updateCrewArm(model,this.originalWeapon,p.level);this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
+    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if(p.player===world.player||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);this.scene.add(model);}if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18);this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
     this.playerLight.intensity=!menu&&world&&!spectatorPosition?24:0;this.playerLight.position.copy(this.camera.position);this.playerLight.position.y-=.35;
     this.enemyLighting.update(world,this.camera,menu,e=>this.enemyGlowSources.sources(e,world!.player.pos,this.camera,this.enemies.get(e.id)));
@@ -231,7 +294,7 @@ export class GameRenderer {
     if(world&&!menu)for(const e of world.enemies)if(isPede(e.kind)){const model=this.enemies.get(e.id);if(model)this.segmentBatches.add(model);}
     this.segmentBatches.end();
     this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,t);this.originalWeapon.update(world,dt,menu,this.camera,projectileAlpha);
-    this.blood.update(world,menu);this.projectileLighting.update(world,menu,projectileAlpha,this.renderer.domElement.height);this.composer.render();this.originalWeapon.render(this.renderer,menu||!!spectatorPosition);
+    this.blood.update(world,menu,this.deathBurstActive?this.deathBloodTime:world?.crew.length?this.crewDeathTime:undefined,this.camera);this.projectileLighting.update(world,menu,projectileAlpha,this.renderer.domElement.height);this.composer.render();this.originalWeapon.render(this.renderer,menu||!!spectatorPosition||this.topDown);
   }
-  clear() {for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
+  clear() {this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

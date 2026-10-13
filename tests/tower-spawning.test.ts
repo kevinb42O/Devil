@@ -4,9 +4,9 @@ import {World,v,STEP,idleInput} from '../src/simulation';
 import {towerOutletHeight,towerSpitPulse,swarmEmergenceScale} from '../src/enemy-presentation';
 import {packEnemy,unpackEnemy} from '../src/network-enemies';
 const advance=(w:World,n:number)=>{for(let i=0;i<n;i++)w.step(idleInput(),STEP);};
-test('every tower tier ejects its batch through the crown before skulls hunt',()=>{
+test('legacy tower batches retain crown ejection and flight before skulls hunt',()=>{
  for(const kind of ['squid','squid2','squid3'] as const){
-  const w=new World(3,{schedule:false,invulnerable:true}),tower=w.spawn(kind,v(10,kind==='squid'?3.3:kind==='squid2'?5.2:7,0));
+  const w=new World(3,{schedule:false,invulnerable:true,legacySpawnFixes:true}),tower=w.spawn(kind,v(10,kind==='squid'?3.3:kind==='squid2'?5.2:7,0));
   advance(w,360);
   const children=w.enemies.filter(e=>e!==tower),first=children[0],last=children.at(-1)!;
   assert.equal(children.length,kind==='squid3'?16:11);
@@ -28,7 +28,7 @@ test('tower anticipation opens before ejection and closes after the stream',()=>
 
 test('seeded flight keeps varied arcs and heights without diving into the floor',()=>{
  for(const seed of [1,3,17,81,300])for(const kind of ['squid','squid2','squid3'] as const){
-  const w=new World(seed,{schedule:false,invulnerable:true});w.spawn(kind,v(20,kind==='squid'?3.3:kind==='squid2'?5.2:7,0));advance(w,360);
+  const w=new World(seed,{schedule:false,invulnerable:true,legacySpawnFixes:true});w.spawn(kind,v(20,kind==='squid'?3.3:kind==='squid2'?5.2:7,0));advance(w,360);
   const children=w.enemies.slice(1),apex=new Map<number,number>();
   for(let tick=0;tick<420;tick++){
    const previous=children.map(e=>e.vel.y);advance(w,1);

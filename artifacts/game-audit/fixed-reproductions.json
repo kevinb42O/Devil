@@ -1,0 +1,22 @@
+{
+  "crewWipe": {
+    "state": "dead",
+    "alive": false
+  },
+  "remoteDeathAudio": {
+    "clearsAllAudio": false,
+    "localAlive": true
+  },
+  "floorSweep": {
+    "pair": {
+      "x": 20,
+      "z": 23,
+      "high": 0.03444370791316032,
+      "low": 0.020361589044332506
+    },
+    "floorContactX": -11.64,
+    "boundaryX": -11.16,
+    "endpointFloor": 0.03444370791316032,
+    "missedRicochet": false
+  }
+}

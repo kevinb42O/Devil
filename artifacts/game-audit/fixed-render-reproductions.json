@@ -1,0 +1,30 @@
+{
+  "tower": {
+    "before": 0,
+    "propertyY": 0.4,
+    "matrixY": 0.4,
+    "worldY": 0.248
+  },
+  "skins": [
+    {
+      "kind": "gigapede",
+      "textures": [
+        "pedeblackbody.png",
+        "crystal.png",
+        "pedeblackleg1.png",
+        "pedeblackleg2.png",
+        "pedeblackleg3.png"
+      ]
+    },
+    {
+      "kind": "ghostpede",
+      "textures": [
+        "ultrapedebody.png",
+        "crystal.png",
+        "ultrapedeleg1.png",
+        "ultrapedeleg2.png",
+        "ultrapedeleg3.png"
+      ]
+    }
+  ]
+}

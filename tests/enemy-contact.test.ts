@@ -69,11 +69,11 @@ test('capsule sweep keeps jumps above short enemies safe and thorns bounded',()=
  assert.equal(touchesPlayer(v(),v(),v(5,6,0),v(5,6,0),1.5,7),false);
 });
 
-test('centipede burrows beneath its head only after the hunting grace period',()=>{
+test('centipede commits to an overhead pass beneath its head after the grace period',()=>{
  for(const age of [7,10]){
   const w=new World(1,{schedule:false,invulnerable:true});w.player.pos=v(0,TUNING.eyeHeight,0);
   const e=w.spawn('centipede',v(0,3,0));e.age=age;e.status='hunting';e.statusUntil=20;e.nextMove=6;e.pos=v(0,4,0);
-  w.step(idleInput());assert.equal(e.status,age===7?'hunting':'burrowing');
+  w.step(idleInput());assert.equal(e.centipedeMotion?.stage,age===7?'flying':'overpass');
  }
 });
 

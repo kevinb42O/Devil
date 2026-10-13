@@ -65,3 +65,13 @@ test('memory pressure reduces sampling density while retaining all entities and 
  for(let n=0;n<400;n++){w.tick=n*4;w.time=n/30;h.capture(w,0,0);}h.capture(w,0,0,true);const c=h.clip(null)!;
  assert.ok(c);assert.equal(c.duration,5);assert.equal(h.diagnostics.sampleHz,15);assert.ok(h.diagnostics.bytes<=DEATH_HISTORY_BUDGET);c.sample(c.duration);assert.equal(c.view.enemies.length,1003);assert.equal(c.view.projectiles.length,280);
 });
+
+
+test('killcam retains firing and aim pitch across pause and backward seek',()=>{
+ const h=new DeathHistory(),w=new World(1,{schedule:false});w.level=4;h.capture(w,0,-.5,true,false);
+ w.tick=4;w.time=4*STEP;h.capture(w,.3,.5,false,true);
+ w.tick=8;w.time=8*STEP;h.capture(w,.6,1,false,false);
+ const clip=h.clip(null)!;clip.sample(4*STEP);assert.equal(clip.victimFiring,true);assert.equal(clip.victimPitch,.5);assert.equal(clip.view.level,4);
+ clip.sample(4*STEP);assert.equal(clip.victimFiring,true);clip.sample(8*STEP);assert.equal(clip.victimFiring,false);
+ clip.sample(2*STEP);assert.equal(clip.victimFiring,false);assert.equal(clip.victimPitch,0);
+});

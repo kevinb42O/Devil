@@ -11,6 +11,7 @@ export class BloodRenderer {
  private uploaded=-1;
  private uploadBytes=0;
  private dummy=new THREE.Object3D();
+ private cameraForward=new THREE.Vector3();
  private mesh:THREE.InstancedMesh;
  constructor(scene:THREE.Scene,floor:THREE.MeshBasicMaterial){
   this.texture.generateMipmaps=false;this.texture.minFilter=this.texture.magFilter=THREE.NearestFilter;
@@ -45,13 +46,20 @@ export class BloodRenderer {
  }
  effect(effect:Effect,world:World){this.field.emit(effect,world.time);}
  advance(time:number){this.field.advance(time);this.time.value=time;}
- update(world:World|null,menu:boolean){
-  if(world&&!menu)this.advance(world.time);
+ update(world:World|null,menu:boolean,presentationTime=world?.time,camera?:THREE.Camera){
+  if(world&&!menu)this.advance(presentationTime??world.time);
   this.mesh.count=menu||!world?0:this.field.drops.length;
+  if(camera)camera.getWorldDirection(this.cameraForward);
   for(let i=0;i<this.mesh.count;i++){
    const drop=this.field.drops[i];this.dummy.position.set(drop.pos.x,drop.pos.y,drop.pos.z);
    this.dummy.rotation.set(drop.age*5,drop.angle,drop.age*3);
-   this.dummy.scale.set(drop.size*.23,drop.size*.65,drop.size*.23);this.dummy.updateMatrix();this.mesh.setMatrixAt(i,this.dummy.matrix);
+   // Near-camera droplets otherwise become huge opaque tetrahedra during a
+   // nearby player explosion. Shrink only their render geometry; keep the
+   // trajectories and floor splatter intact. Smaller airborne beads let the
+   // textured gore and cloud remain readable without a transparent pass.
+   const depth=camera?(drop.pos.x-camera.position.x)*this.cameraForward.x+(drop.pos.y-camera.position.y)*this.cameraForward.y+(drop.pos.z-camera.position.z)*this.cameraForward.z:2;
+   const size=drop.size*.35*THREE.MathUtils.smoothstep(depth,.35,2);
+   this.dummy.scale.set(size*.23,size*.65,size*.23);this.dummy.updateMatrix();this.mesh.setMatrixAt(i,this.dummy.matrix);
   }
   if(this.mesh.count){this.mesh.instanceMatrix.clearUpdateRanges();this.mesh.instanceMatrix.addUpdateRange(0,this.mesh.count*16);this.mesh.instanceMatrix.needsUpdate=true;}
   this.uploadBytes=0;

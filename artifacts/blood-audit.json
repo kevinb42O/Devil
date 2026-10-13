@@ -13,9 +13,9 @@
   "uploadBytes": 4194304,
   "stainDrawCalls": 0,
   "dropletDrawCalls": 0,
-  "activeAdvanceP95Ms": 0.7000000178813934,
+  "activeAdvanceP95Ms": 0.7999999821186066,
   "advanceMedianMs": 0,
-  "advanceP95Ms": 0.30000001192092896,
+  "advanceP95Ms": 0.4000000059604645,
   "unchangedFrameUploads": 0,
   "duplicateSuppressed": true,
   "reset": {

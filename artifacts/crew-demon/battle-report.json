@@ -1,0 +1,597 @@
+{
+  "fps": 30,
+  "frames": 300,
+  "report": {
+    "death": {
+      "time": 6.8083333333334615,
+      "position": {
+        "x": 0.2876686265167237,
+        "y": 1.7370887418836354,
+        "z": 2.901974118084277
+      },
+      "cause": "SWARMED"
+    },
+    "samples": [
+      {
+        "frame": 0,
+        "time": 0.03333333333333333,
+        "alive": true,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 0,
+          "discarded": 0,
+          "revision": 0,
+          "textureBytes": 4194304,
+          "uploadBytes": 4194304,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 22
+      },
+      {
+        "frame": 15,
+        "time": 0.5333333333333339,
+        "alive": true,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 0,
+          "discarded": 0,
+          "revision": 0,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 22
+      },
+      {
+        "frame": 30,
+        "time": 1.033333333333332,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 0,
+          "discarded": 0,
+          "revision": 0,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 22
+      },
+      {
+        "frame": 45,
+        "time": 1.5333333333333303,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 27,
+          "capacity": 768,
+          "landings": 0,
+          "discarded": 0,
+          "revision": 0,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 31
+      },
+      {
+        "frame": 60,
+        "time": 2.0333333333333288,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 19,
+          "capacity": 768,
+          "landings": 8,
+          "discarded": 0,
+          "revision": 8,
+          "textureBytes": 4194304,
+          "uploadBytes": 2044,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 30
+      },
+      {
+        "frame": 75,
+        "time": 2.533333333333327,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 30
+      },
+      {
+        "frame": 90,
+        "time": 3.033333333333325,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 30
+      },
+      {
+        "frame": 105,
+        "time": 3.5333333333333234,
+        "alive": true,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 31
+      },
+      {
+        "frame": 120,
+        "time": 4.0333333333333234,
+        "alive": true,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 26
+      },
+      {
+        "frame": 135,
+        "time": 4.533333333333348,
+        "alive": true,
+        "pitch": 0.35,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 29
+      },
+      {
+        "frame": 150,
+        "time": 5.033333333333373,
+        "alive": true,
+        "pitch": 0.35,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 30
+      },
+      {
+        "frame": 165,
+        "time": 5.533333333333398,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 27,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 32
+      },
+      {
+        "frame": 180,
+        "time": 6.033333333333423,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 81,
+          "capacity": 768,
+          "landings": 27,
+          "discarded": 0,
+          "revision": 27,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 31
+      },
+      {
+        "frame": 195,
+        "time": 6.533333333333448,
+        "alive": true,
+        "pitch": 0,
+        "fire": true,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 48,
+          "capacity": 768,
+          "landings": 87,
+          "discarded": 0,
+          "revision": 87,
+          "textureBytes": 4194304,
+          "uploadBytes": 700,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 34
+      },
+      {
+        "frame": 202,
+        "time": 6.766666666666793,
+        "alive": true,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 33,
+          "capacity": 768,
+          "landings": 102,
+          "discarded": 0,
+          "revision": 102,
+          "textureBytes": 4194304,
+          "uploadBytes": 380,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 29
+      },
+      {
+        "frame": 203,
+        "time": 6.800000000000128,
+        "alive": true,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": true,
+        "bursts": [],
+        "blood": {
+          "active": 28,
+          "capacity": 768,
+          "landings": 107,
+          "discarded": 0,
+          "revision": 107,
+          "textureBytes": 4194304,
+          "uploadBytes": 4194304,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 28
+      },
+      {
+        "frame": 204,
+        "time": 6.833333333333463,
+        "alive": false,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": false,
+        "bursts": [
+          {
+            "id": "friend",
+            "position": {
+              "x": 0.2876686265167237,
+              "y": 1.7370887418836354,
+              "z": 2.901974118084277
+            },
+            "age": 0,
+            "visible": true,
+            "assetsReady": true,
+            "goreVariants": 11,
+            "goreFragments": 176,
+            "sprayVisible": true
+          }
+        ],
+        "blood": {
+          "active": 507,
+          "capacity": 768,
+          "landings": 108,
+          "discarded": 0,
+          "revision": 108,
+          "textureBytes": 4194304,
+          "uploadBytes": 548,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 36
+      },
+      {
+        "frame": 210,
+        "time": 7.033333333333473,
+        "alive": false,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": false,
+        "bursts": [
+          {
+            "id": "friend",
+            "position": {
+              "x": 0.2876686265167237,
+              "y": 1.7370887418836354,
+              "z": 2.901974118084277
+            },
+            "age": 0.20000000000000995,
+            "visible": true,
+            "assetsReady": true,
+            "goreVariants": 11,
+            "goreFragments": 176,
+            "sprayVisible": true
+          }
+        ],
+        "blood": {
+          "active": 490,
+          "capacity": 768,
+          "landings": 125,
+          "discarded": 0,
+          "revision": 125,
+          "textureBytes": 4194304,
+          "uploadBytes": 2364,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 35
+      },
+      {
+        "frame": 225,
+        "time": 7.5333333333334975,
+        "alive": false,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": false,
+        "bursts": [
+          {
+            "id": "friend",
+            "position": {
+              "x": 0.2876686265167237,
+              "y": 1.7370887418836354,
+              "z": 2.901974118084277
+            },
+            "age": 0.7000000000000348,
+            "visible": true,
+            "assetsReady": true,
+            "goreVariants": 11,
+            "goreFragments": 176,
+            "sprayVisible": false
+          }
+        ],
+        "blood": {
+          "active": 130,
+          "capacity": 768,
+          "landings": 485,
+          "discarded": 0,
+          "revision": 485,
+          "textureBytes": 4194304,
+          "uploadBytes": 4194304,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 1
+        },
+        "drawCalls": 31
+      },
+      {
+        "frame": 240,
+        "time": 8.033333333333518,
+        "alive": false,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": false,
+        "bursts": [
+          {
+            "id": "friend",
+            "position": {
+              "x": 0.2876686265167237,
+              "y": 1.7370887418836354,
+              "z": 2.901974118084277
+            },
+            "age": 1.2000000000000552,
+            "visible": true,
+            "assetsReady": true,
+            "goreVariants": 11,
+            "goreFragments": 176,
+            "sprayVisible": false
+          }
+        ],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 615,
+          "discarded": 0,
+          "revision": 615,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 28
+      },
+      {
+        "frame": 255,
+        "time": 8.53333333333349,
+        "alive": false,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": false,
+        "bursts": [
+          {
+            "id": "friend",
+            "position": {
+              "x": 0.2876686265167237,
+              "y": 1.7370887418836354,
+              "z": 2.901974118084277
+            },
+            "age": 1.700000000000026,
+            "visible": true,
+            "assetsReady": true,
+            "goreVariants": 11,
+            "goreFragments": 176,
+            "sprayVisible": false
+          }
+        ],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 615,
+          "discarded": 0,
+          "revision": 615,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 28
+      },
+      {
+        "frame": 270,
+        "time": 9.033333333333461,
+        "alive": false,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": false,
+        "bursts": [
+          {
+            "id": "friend",
+            "position": {
+              "x": 0.2876686265167237,
+              "y": 1.7370887418836354,
+              "z": 2.901974118084277
+            },
+            "age": 2.1999999999999975,
+            "visible": true,
+            "assetsReady": true,
+            "goreVariants": 11,
+            "goreFragments": 176,
+            "sprayVisible": false
+          }
+        ],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 615,
+          "discarded": 0,
+          "revision": 615,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 28
+      },
+      {
+        "frame": 285,
+        "time": 9.533333333333433,
+        "alive": false,
+        "pitch": 0,
+        "fire": false,
+        "modelVisible": false,
+        "bursts": [],
+        "blood": {
+          "active": 0,
+          "capacity": 768,
+          "landings": 615,
+          "discarded": 0,
+          "revision": 615,
+          "textureBytes": 4194304,
+          "uploadBytes": 0,
+          "stainDrawCalls": 0,
+          "dropletDrawCalls": 0
+        },
+        "drawCalls": 17
+      }
+    ],
+    "shots": 196,
+    "kills": 5,
+    "friendAlive": false,
+    "hostAlive": true,
+    "crew": [],
+    "bursts": []
+  },
+  "errors": []
+}

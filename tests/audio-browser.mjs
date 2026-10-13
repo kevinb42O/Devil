@@ -2,13 +2,14 @@ import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {existsSync,mkdirSync,writeFileSync} from 'node:fs';
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const url=process.env.GAME_URL||'http://127.0.0.1:5173';
 const browser=await chromium.launch({headless:true,args:['--autoplay-policy=no-user-gesture-required'],...(existsSync(chrome)?{executablePath:chrome}:{})});
 try{
  const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
  // Import the audio system into an isolated page so game startup and hot
  // reloads cannot interrupt decoding or change the voices under test.
- await page.route('http://127.0.0.1:5173/',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Audio regression tests</title>'}));
- await page.goto('http://127.0.0.1:5173');
+ await page.route(url+'/',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Audio regression tests</title>'}));
+ await page.goto(url);
  const result=await page.evaluate(async()=>{
   const {Sound,SOUND_NAMES}=await import('/src/audio.ts'),{World,idleInput,v}=await import('/src/simulation.ts'),{ENEMY_KINDS}=await import('/src/enemy-kinds.ts');
   const sound=new Sound();await sound.start();const check=(value,message)=>{if(!value)throw Error(message);};
@@ -50,6 +51,17 @@ try{
   // Low-priority saturation cannot swallow the weapon or upgrade/death cues.
   for(let i=0;i<60;i++)sound.play({kind:'kill',pos:v(),enemy:'skull'},w);
   check(sound.diagnostics.oneShots===48,'bounded transient pool');sound.play({kind:'burst',pos:v(),amount:0,level:4},w);check(sound.diagnostics.oneShots===48,'weapon takes lower priority slot');sound.play({kind:'upgrade',pos:v(),amount:4},w);check(sound.diagnostics.oneShots===48,'upgrade takes lower priority slot');sound.clear();
+  // Remote deaths must not cut surviving players' weapon or one-shot voices.
+  sound.clear();const crew=new World(4,{schedule:false});crew.addCrew('host');crew.addCrew('guest');crew.selectCrew('host');
+  for(let i=0;i<30;i++)crew.stepCrew(new Map([['host',{...idleInput(),fire:true}]]));sound.update(crew);
+  sound.play({kind:'jump',shooterId:'host',pos:crew.player.pos,amount:1},crew);
+  const stream=sound.loops.get(-10),jump=[...sound.shots].find(v=>v.name==='jump1');
+  check(!!stream&&!!jump,'crew fixture has local stream and jump audio');
+  crew.crew[1].alive=false;crew.crew[1].cause='FALLEN';
+  sound.play({kind:'death',shooterId:'guest',deathCause:'FALLEN',pos:v(20,1.7,0)},crew);
+  check(sound.loops.get(-10)===stream&&!stream.ended,'remote death preserves local weapon loop');
+  check(sound.shots.has(jump)&&!jump.ended,'remote death preserves local one-shot');
+  const remote=[...sound.shots].find(v=>v.name==='fall');check(!!remote?.panner&&remote.panner.positionX.value===20,'remote fall cue is positional');sound.clear();
   const enemies=[];
   for(const kind of ENEMY_KINDS){sound.clear();const fixture=new World(5,{schedule:false}),enemy=fixture.spawn(kind,v(4,3,0));enemy.age=20;enemy.status='idle';for(const event of fixture.effects)sound.play(event,fixture);sound.update(fixture);check(sound.diagnostics.loops.length===5,kind+' chatter and four ambient loops');sound.play({kind:'hit',enemy:kind,pos:enemy.pos},fixture);sound.play({kind:'kill',enemy:kind,pos:enemy.pos},fixture);enemies.push({kind,loops:sound.diagnostics.loops,cues:[...sound.shots].map(v=>v.name)});}
   // Enemy damage must not be synthesized by armor contacts or suppressed by
@@ -67,8 +79,8 @@ try{
   combat.effects=[];combat.damageEnemy(a,100);for(const event of combat.effects)sound.play(event,combat);
   check(!sound.loops.has(a.id)&&sound.loops.has(b.id),'kill immediately stops only its enemy chatter');
   sound.update(combat);check(!sound.loops.has(a.id),'dead enemy cannot restart chatter before removal');
-  b.status='burrowing';sound.update(combat);check(!sound.loops.has(b.id),'burrowing stops surface chatter');
-  b.status='idle';sound.update(combat);check(sound.loops.has(b.id),'emergence restores chatter');
+  b.status='burrowing';b.pos.y=-100;sound.update(combat);check(!sound.loops.has(b.id),'burrowing stops surface chatter');
+  b.status='idle';b.pos.y=5;sound.update(combat);check(sound.loops.has(b.id),'emergence restores chatter');
   c.kind='transmuted3';sound.update(combat);check(sound.loops.get(c.id)?.name==='chatterskull3black','transmutation replaces chatter');
   sound.clear();
   for(const kind of ['squid','squid2','squid3'])sound.play({kind:'hit',enemy:kind,pos:v()},combat);

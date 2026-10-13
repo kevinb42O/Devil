@@ -1,0 +1,11 @@
+Demon by Quaternius — CC0 1.0 Universal (public domain dedication)
+Author: https://quaternius.com/
+Model: https://poly.pizza/m/LnfIziKv4o
+Original pack: https://quaternius.com/packs/ultimatemonsters.html
+License: https://creativecommons.org/publicdomain/zero/1.0/
+Source GLB: https://static.poly.pizza/46b52ba4-5d2a-4fc8-85cc-3e980f199141.glb
+
+Runtime file: public/assets/models/crew-demon.glb
+Changes: removed trident and unused animations; retained Idle, Run and Jump_Idle.
+Original character geometry and four solid-color materials retained; no textures.
+Rebuild with tools/prepare-crew-demon.py using the source GLB.

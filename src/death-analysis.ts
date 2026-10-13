@@ -2,8 +2,8 @@ import {World,v,type Enemy,type Vec,type DeathSource} from './simulation';
 import {ENEMY_KINDS,isPede,isSpider,isSquid,type EnemyKind} from './enemy-kinds';
 import {floorHeight} from './arena';
 
-export const DEATH_WINDOW=5,DEATH_SAMPLE_TICKS=4,DEATH_HISTORY_BUDGET=16*1024*1024;
-const SLOTS=154,HEADER=10,ENEMY_HEADER=23;
+export const DEATH_WINDOW=5,DEATH_SAMPLE_TICKS=4,DEATH_HISTORY_BUDGET=16*1024*1024,DEATH_IMPACT_HOLD=1.8;
+const SLOTS=154,HEADER=11,ENEMY_HEADER=23;
 const statuses=['emerging','idle','hunting','burrowing'] as const;
 const kinds=new Map(ENEMY_KINDS.map((kind,index)=>[kind,index]));
 type Sample={time:number;tick:number;data:Float32Array;used:number;enemies:number;projectiles:number;gems:number;rings:number};
@@ -21,7 +21,7 @@ export class DeathHistory {
  reset(){this.cursor=0;this.count=0;this.lastTick=-1;this.disabled=false;this.stride=DEATH_SAMPLE_TICKS;}
  release(){this.reset();for(const s of this.slots)s.data=new Float32Array(0);this.bytes=0;}
  get diagnostics(){return {samples:this.count,bytes:this.bytes,budget:DEATH_HISTORY_BUDGET,sampleHz:120/this.stride,disabled:this.disabled};}
- capture(w:World,yaw:number,pitch:number,force=false){
+ capture(w:World,yaw:number,pitch:number,force=false,firing=false){
   if(this.disabled||w.crew.length||w.tick===this.lastTick)return;
   if(!force&&w.state!=='dead'&&w.tick%this.stride!==0)return;
   const enemies=w.state==='dead'&&w.deathEnemy?[...w.enemies.filter(e=>e.id!==w.deathEnemy!.id),w.deathEnemy]:w.enemies;
@@ -34,7 +34,7 @@ export class DeathHistory {
    const bytes=this.bytes-s.data.byteLength+capacity*4;if(bytes>DEATH_HISTORY_BUDGET){this.disabled=true;this.count=0;return;}s.data=new Float32Array(capacity);this.bytes=bytes;
   }
   const d=s.data;let i=0;
-  d[i++]=w.player.pos.x;d[i++]=w.player.pos.y;d[i++]=w.player.pos.z;d[i++]=w.player.vel.x;d[i++]=w.player.vel.y;d[i++]=w.player.vel.z;d[i++]=yaw;d[i++]=pitch;d[i++]=w.level;d[i++]=w.radius;
+  d[i++]=w.player.pos.x;d[i++]=w.player.pos.y;d[i++]=w.player.pos.z;d[i++]=w.player.vel.x;d[i++]=w.player.vel.y;d[i++]=w.player.vel.z;d[i++]=yaw;d[i++]=pitch;d[i++]=w.level;d[i++]=w.radius;d[i++]=firing?1:0;
   for(const e of enemies){
    d[i++]=e.id;d[i++]=kinds.get(e.kind)!;d[i++]=e.pos.x;d[i++]=e.pos.y;d[i++]=e.pos.z;d[i++]=e.vel.x;d[i++]=e.vel.y;d[i++]=e.vel.z;
    d[i++]=e.hp;d[i++]=e.age;d[i++]=e.phase;d[i++]=e.radius;d[i++]=e.headExposure;d[i++]=e.lastHit;d[i++]=e.activeAt;d[i++]=e.size;d[i++]=e.facingYaw;d[i++]=statuses.indexOf(e.status);d[i++]=e.statusUntil;d[i++]=e.towerSpinDirection??-1;
@@ -68,19 +68,19 @@ function visualEnemy(id:number,kind:EnemyKind):Enemy{
 /** Scratch World is a renderer adapter only: never stepped, never used for scoring. */
 export class DeathAnalysis {
  readonly view=new World(1,{schedule:false});readonly camera={position:v(),yaw:0,pitch:0};readonly target=v();readonly killerPosition=v();
- readonly start:number;readonly end:number;readonly duration:number;elapsed=0;victimYaw=0;killerVisible=false;
+ readonly start:number;readonly end:number;readonly duration:number;elapsed=0;victimYaw=0;victimPitch=0;victimFiring=false;killerVisible=false;
  private index=0;private offsets=new Map<number,number>();private enemyCache=new Map<number,Enemy>();private activeIds=new Set<number>();private heading=0;private initialized=false;private aim=v();
  constructor(private samples:Sample[],readonly source:DeathSource|null){this.end=samples.at(-1)!.time;this.start=Math.max(samples[0].time,this.end-DEATH_WINDOW);this.duration=this.end-this.start;this.sample(0);}
  get remaining(){return Math.max(0,this.duration-this.elapsed);}
  get impact(){return this.elapsed>=this.duration;}
- get done(){return this.elapsed>=this.duration+1.25;}
- advance(dt:number){this.elapsed=Math.min(this.duration+1.25,this.elapsed+Math.max(0,Math.min(.05,dt)));this.sample(this.elapsed);}
+ get done(){return this.elapsed>=this.duration+DEATH_IMPACT_HOLD;}
+ advance(dt:number){this.elapsed=Math.min(this.duration+DEATH_IMPACT_HOLD,this.elapsed+Math.max(0,Math.min(.05,dt)));this.sample(this.elapsed);}
  sample(elapsed:number){
   const time=Math.min(this.end,this.start+Math.max(0,elapsed));
   if(time<this.samples[this.index].time)this.index=0;
   while(this.index+1<this.samples.length&&this.samples[this.index+1].time<=time+1e-8)this.index++;
   const a=this.samples[this.index],b=this.samples[Math.min(this.index+1,this.samples.length-1)],d=a.data,q=b.data,t=b.time>a.time?Math.max(0,Math.min(1,(time-a.time)/(b.time-a.time))):0;
-  const w=this.view;w.time=time;w.tick=a.tick;w.level=d[8];w.radius=mix(d[9],q[9],t);blend(w.player.pos,d,0,q,0,t);blend(w.player.vel,d,3,q,3,t);w.player.hopPulse=0;this.victimYaw=angle(d[6],q[6],t);
+  const w=this.view;w.time=time;w.tick=a.tick;w.level=d[8];this.victimFiring=!!d[10];this.victimPitch=mix(d[7],q[7],t);w.radius=mix(d[9],q[9],t);blend(w.player.pos,d,0,q,0,t);blend(w.player.vel,d,3,q,3,t);w.player.hopPulse=0;this.victimYaw=angle(d[6],q[6],t);
   this.offsets.clear();let j=HEADER;for(let n=0;n<b.enemies;n++){this.offsets.set(q[j],j);j+=q[j+22];}
   let i=HEADER;w.enemies.length=0;this.activeIds.clear();
   for(let n=0;n<a.enemies;n++){

@@ -1,0 +1,78 @@
+{
+  "report": {
+    "facing": [
+      0.0004464750319388422,
+      0.11183711215389747,
+      0.37861614122923637
+    ],
+    "size": [
+      2.193928410764196,
+      2.0499999999999994,
+      1.1414999411224622
+    ],
+    "models": 3,
+    "triangles": 6200,
+    "drawCalls": 4,
+    "geometryShared": true,
+    "rigIndependent": true,
+    "aimResults": [
+      {
+        "yaw": 0,
+        "pitch": 0,
+        "upperDot": 0.9999999999999922,
+        "lowerDot": 0.9999999999999263
+      },
+      {
+        "yaw": 1,
+        "pitch": 0.65,
+        "upperDot": 0.9999999999999944,
+        "lowerDot": 0.9999999999999908
+      },
+      {
+        "yaw": -2,
+        "pitch": -0.65,
+        "upperDot": 0.9999999999999631,
+        "lowerDot": 0.9999999999999536
+      }
+    ],
+    "pausedStable": true,
+    "oldArm": false,
+    "source": [
+      "quaternius-demon",
+      "quaternius-demon",
+      "quaternius-demon"
+    ]
+  },
+  "muzzle": {
+    "error": 0,
+    "remote": false,
+    "localUntouched": true,
+    "sourceIntact": true
+  },
+  "views": {
+    "recovers": true,
+    "fpBody": false,
+    "replayVisible": true,
+    "source": "quaternius-demon",
+    "hiddenAgain": true,
+    "ghostSource": "quaternius-demon",
+    "opacity": [
+      0.48,
+      0.48,
+      0.48,
+      0.48
+    ],
+    "hiddenOnImpact": true,
+    "cleaned": true,
+    "hand": [
+      false,
+      true,
+      false,
+      true
+    ]
+  },
+  "errors": [],
+  "warnings": [
+    "WARNING: Multiple instances of Three.js being imported."
+  ]
+}

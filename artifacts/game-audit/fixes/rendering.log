@@ -1,0 +1,5 @@
+
+> abyss-daggers@0.1.0 test:audit-rendering
+> node tests/game-audit-browser.mjs
+
+Game audit rendering regressions passed: all tower tiers open/close in world transforms; every pede uses its species leg textures.

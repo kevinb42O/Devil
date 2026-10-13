@@ -1,52 +1,97 @@
 import * as THREE from 'three';
-import type {OriginalWeapon} from './original-weapon';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
+import type {Input,Vec} from './simulation';
 
-const bodyGeometry=new THREE.CapsuleGeometry(.38,1.05,6,16);
-const palmGeometry=new THREE.SphereGeometry(1,12,8);
+const fallbackGeometry=new THREE.CapsuleGeometry(.38,1.05,4,8);
 const colors=[0xcde98b,0x62cfff,0xffbd66,0xd994ff];
+const pending=new Set<THREE.Group>();
+let template:THREE.Group|null=null,clips:THREE.AnimationClip[]=[],loading:Promise<void>|null=null,failed=false;
+let modelScale=1,floorOffset=0;
+type AvatarState={root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;muzzle:THREE.Object3D};
+const states=new WeakMap<THREE.Group,AvatarState>();
+const aim=new THREE.Vector3(),up=new THREE.Vector3(0,1,0),direction=new THREE.Vector3(),parentRotation=new THREE.Quaternion(),aimRotation=new THREE.Quaternion();
 
-// Curved, tapering horns, shared by every teammate.
-const hornGeometry=(()=>{
- const positions:number[]=[],indices:number[]=[];
- const rings=[[0,0,.13],[.035,.14,.105],[.095,.29,.075],[.12,.43,.04],[.09,.56,0]];
- for(const [x,y,r] of rings)for(let j=0;j<8;j++){const a=j*Math.PI/4;positions.push(x+Math.cos(a)*r,y,Math.sin(a)*r);}
- for(let i=0;i<rings.length-1;i++)for(let j=0;j<8;j++){const a=i*8+j,b=i*8+(j+1)%8;indices.push(a,b,a+8,b,b+8,a+8);}
- const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));geometry.setIndex(indices);geometry.computeVertexNormals();return geometry;
-})();
-
-function mesh(parent:THREE.Object3D,name:string,geometry:THREE.BufferGeometry,material:THREE.Material,position:number[],scale:number[]){
- const part=new THREE.Mesh(geometry,material);part.name=name;part.position.set(position[0],position[1],position[2]);part.scale.set(scale[0],scale[1],scale[2]);parent.add(part);return part;
+/** One small, texture-free GLB shared by every third-person player body. */
+export function loadCrewAvatar():Promise<void>{
+ if(loading)return loading;
+ loading=new GLTFLoader().loadAsync('/assets/models/crew-demon.glb').then(gltf=>{
+  const candidate=gltf.scene;clips=['Idle','Run','Jump_Idle'].map(name=>gltf.animations.find(clip=>clip.name.endsWith('|'+name))!);
+  if(clips.some(clip=>!clip)||!candidate.getObjectByName('UpperArmR')||!candidate.getObjectByName('LowerArmR'))throw Error('Demon rig or locomotion clips missing');
+  const mixer=new THREE.AnimationMixer(candidate);mixer.clipAction(clips[0]).play();mixer.setTime(0);candidate.updateMatrixWorld(true);
+  const bounds=new THREE.Box3().setFromObject(candidate);modelScale=2.05/(bounds.max.y-bounds.min.y);floorOffset=-1.7-bounds.min.y*modelScale;
+  mixer.stopAllAction();mixer.uncacheRoot(candidate);template=candidate;
+  for(const model of pending)attachDemon(model);pending.clear();
+ }).catch(error=>{failed=true;console.warn('Teammate demon could not load; using simple body.',error);pending.clear();});
+ return loading;
 }
-
-export function createCrewAvatar(index:number){
- const model=new THREE.Group();model.name='crew-devil';
- const color=colors[index%colors.length];
- const body=new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.1,roughness:.8});
- const horns=new THREE.MeshStandardMaterial({color:0x39251e,roughness:.7});
- const sockets=new THREE.MeshStandardMaterial({color:0x170d09,roughness:1});
- const eyes=new THREE.MeshBasicMaterial({color:0xff6a32,toneMapped:false});
- model.userData.avatarMaterials=[body,horns,sockets,eyes];
- // Positions are relative to the player's eye height; the capsule reaches the floor.
- mesh(model,'pill-body',bodyGeometry,body,[0,-.7,0],[1,1,.88]);
- for(const side of [-1,1]){
-  const horn=mesh(model,side<0?'left-horn':'right-horn',hornGeometry,horns,[side*.25,.04,0],[side,1,1]);
-  horn.rotation.x=-.12;
-  const socket=mesh(model,'eye-socket',palmGeometry,sockets,[side*.15,-.12,-.30],[.13,.08,.075]);socket.rotation.z=side*-.22;
-  const eye=mesh(model,side<0?'left-eye':'right-eye',palmGeometry,eyes,[side*.15,-.12,-.357],[.082,.038,.025]);eye.rotation.z=side*-.22;
-
- }
+function styleMaterial(material:THREE.MeshStandardMaterial,ghost:boolean){
+ material.metalness=0;material.roughness=.85;
+ if(ghost){material.transparent=true;material.opacity=.48;material.depthWrite=false;material.color.setHex(0xe9c99a);material.emissive.setHex(0xc47f3c);material.emissiveIntensity=.65;}
+ else{material.emissive.copy(material.color);material.emissiveIntensity=.12;}
+}
+function attachDemon(model:THREE.Group){
+ const fallback=model.getObjectByName('crew-fallback');if(fallback)model.remove(fallback);
+ for(const material of model.userData.avatarMaterials as THREE.Material[])material.dispose();
+ const root=cloneSkeleton(template!) as THREE.Group;
+ const materials=new Map<THREE.Material,THREE.MeshStandardMaterial>();
+ root.traverse(node=>{
+  if(!(node instanceof THREE.Mesh))return;
+  const source=node.material as THREE.MeshStandardMaterial;
+  let material=materials.get(source);if(!material){material=source.clone();styleMaterial(material,model.userData.ghost===true);materials.set(source,material);}
+  node.material=material;node.castShadow=false;node.receiveShadow=false;
+  // Fixed conservative bounds cover locomotion and arm aiming without per-frame
+  // CPU skinning of every vertex to recompute animated bounds.
+  if(node instanceof THREE.SkinnedMesh)node.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,0,0),.06);
+ });
+ model.userData.avatarMaterials=[...materials.values()];
+ root.name='quaternius-demon';root.rotation.y=Math.PI;
+ // Normalize from the cached idle bounds; cloning never skins every vertex.
+ const mixer=new THREE.AnimationMixer(root),actions=clips.map(clip=>mixer.clipAction(clip).play());
+ actions.forEach((action,i)=>action.setEffectiveWeight(i===0?1:0));mixer.setTime(0);root.updateMatrixWorld(true);
+ root.scale.setScalar(modelScale);root.position.y=floorOffset;
+ model.add(root);
+ const upper=root.getObjectByName('UpperArmR') as THREE.Bone,lower=root.getObjectByName('LowerArmR') as THREE.Bone;
+ states.set(model,{root,mixer,actions,upper,lower,lastTime:NaN,aim:0,baseUpper:upper.quaternion.clone(),baseLower:lower.quaternion.clone(),muzzle:root.getObjectByName('Middle3R_end')!});
+ model.userData.avatarSource='quaternius-demon';
+}
+export function createCrewAvatar(index:number,ghost=false){
+ const model=new THREE.Group();model.name='crew-devil';model.userData.ghost=ghost;
+ const material=new THREE.MeshStandardMaterial({color:colors[index%colors.length],roughness:.85});styleMaterial(material,ghost);
+ model.userData.avatarMaterials=[material];
+ const body=new THREE.Mesh(fallbackGeometry,material);body.name='crew-fallback';body.position.y=-.7;model.add(body);
+ if(template)attachDemon(model);else if(!failed){pending.add(model);void loadCrewAvatar();}
  return model;
 }
-
-export function updateCrewArm(model:THREE.Group,weapon:OriginalWeapon,level:number){
- const previous=model.getObjectByName('crew-arm');
- if(previous?.userData.level===level)return;
- const arm=weapon.createCrewArm(level);if(!arm)return;
- if(previous){model.remove(previous);(previous.userData.material as THREE.Material).dispose();}
- model.add(arm);
+function pointBone(bone:THREE.Bone,aim:THREE.Vector3,weight:number){
+ bone.parent!.getWorldQuaternion(parentRotation);direction.copy(aim).applyQuaternion(parentRotation.invert());
+ aimRotation.setFromUnitVectors(up,direction.normalize());bone.quaternion.slerp(aimRotation,weight);bone.updateWorldMatrix(false,true);
+}
+/** Presentation only: sample simulation time so pause/seek never advance animation. */
+export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false){
+ const state=states.get(model);if(!state)return;
+ const speed=Math.hypot(velocity.x,velocity.z),run=grounded?Math.min(1,speed/5):0;
+ state.actions[0].setEffectiveWeight(grounded?1-run:0);state.actions[1].setEffectiveWeight(run);state.actions[2].setEffectiveWeight(grounded?0:1);
+ state.upper.quaternion.copy(state.baseUpper);state.lower.quaternion.copy(state.baseLower);
+ state.mixer.setTime(time);
+ state.baseUpper.copy(state.upper.quaternion);state.baseLower.copy(state.lower.quaternion);
+ const firing=input.fire||input.homing||recentShot,delta=time-state.lastTime;
+ state.aim=firing?1:!Number.isFinite(delta)||delta<0||delta>.2?0:state.aim*Math.exp(-delta*14);state.lastTime=time;
+ if(state.aim>.001&&state.upper&&state.lower){
+  model.updateWorldMatrix(true,true);
+  const pitch=THREE.MathUtils.clamp(input.pitch,-1.35,1.35);
+  aim.set(0,Math.sin(pitch),-Math.cos(pitch)).applyQuaternion(model.quaternion);
+  pointBone(state.upper,aim,state.aim);pointBone(state.lower,aim,state.aim);
+ }
+}
+export function disposeCrewAvatar(model:THREE.Group){
+ pending.delete(model);
+ const state=states.get(model);if(state){state.mixer.stopAllAction();state.mixer.uncacheRoot(state.root);state.root.traverse(node=>{if(node instanceof THREE.SkinnedMesh)node.skeleton.dispose();});states.delete(model);}
+ for(const material of model.userData.avatarMaterials as THREE.Material[])material.dispose();
 }
 
-export function disposeCrewAvatar(model:THREE.Group){
- const arm=model.getObjectByName('crew-arm');if(arm)(arm.userData.material as THREE.Material).dispose();
- for(const material of model.userData.avatarMaterials as THREE.Material[])material.dispose();
+/** Cosmetic emission point only; projectile origins and ballistics stay in World. */
+export function crewMuzzle(model:THREE.Group,out:THREE.Vector3):boolean{
+ const state=states.get(model);if(!state)return false;
+ state.muzzle.getWorldPosition(out);return true;
 }

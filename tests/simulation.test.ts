@@ -8,8 +8,8 @@ test('identical seeds and inputs produce identical simulation results',()=>{
   const a=new World(123),b=new World(123);const input={...idleInput(),forward:1,strafe:.5,fire:true};
   run(a,1000,input);run(b,1000,input);assert.deepEqual(a,b);
 });
-test('opening summoner spawns at 3s, offspring arrive 3s later',()=>{
-  const w=new World();run(w,359);assert.equal(w.enemies.length,0);w.step(idleInput());assert.equal(w.enemies[0].kind,'squid');run(w,362);assert.equal(w.enemies.filter(e=>e.kind==='skull').length,10);assert.equal(w.enemies.filter(e=>e.kind==='skull2').length,1);
+test('opening summoner spawns at 3s and releases the complete reference-timed batch',()=>{
+  const w=new World();run(w,359);assert.equal(w.enemies.length,0);w.step(idleInput());assert.equal(w.enemies[0].kind,'squid');run(w,405);assert.equal(w.enemies.filter(e=>e.kind==='skull').length,10);assert.equal(w.enemies.filter(e=>e.kind==='skull2').length,1);
 });
 test('tap releases ten physical daggers; holding uses stream without a release burst',()=>{
   const tap=new World();run(tap,5,{...idleInput(),fire:true});tap.step(idleInput());assert.equal(tap.stats.shots,10);assert.equal(tap.projectiles.length,10);
@@ -110,18 +110,18 @@ test('each gem consumed by an exposed spider ejects one egg that hatches five sp
   const egg=w.enemies.find(e=>e.kind==='egg')!;assert.ok(egg.vel.z<0);run(w,120,{...idleInput(),fire:true});assert.ok(Math.hypot(egg.pos.x,egg.pos.z)<w.radius,'eggs land on the field');
   egg.age=10;w.step(idleInput());assert.equal(w.enemies.filter(e=>e.kind==='spiderling').length,5);
 });
-test('both spider spawners release exactly five normal gems from their held crystal on death',()=>{
+test('both spider spawners release exactly one normal gem from their held crystal on death',()=>{
  for(const kind of ['spider','spider2'] as const){
   const w=new World(1,{schedule:false}),e=w.spawn(kind,v(0,0,20));e.age=12;e.headExposure=.7;
   const crystal=spiderLocalPoint(e,w.player.pos,SPIDER_GEM);
   w.damageEnemy(e,e.hp-1);assert.equal(w.gems.length,0,'nonlethal hits keep the crystal attached');
-  w.damageEnemy(e,1);assert.equal(w.gems.length,5);assert.equal(w.stats.released,5);
+  w.damageEnemy(e,1);assert.equal(w.gems.length,1);assert.equal(w.stats.released,1);
   for(const gem of w.gems){
    assert.deepEqual(gem.pos,crystal);
    assert.equal(gem.age,0);
   }
-  assert.equal(new Set(w.gems.map(g=>g.id)).size,5);
-  w.damageEnemy(e,100);assert.equal(w.gems.length,5,'death reward cannot repeat');
+  assert.equal(new Set(w.gems.map(g=>g.id)).size,1);
+  w.damageEnemy(e,100);assert.equal(w.gems.length,1,'death reward cannot repeat');
  }
 });
 test('large spider stays outside the arena and does not chase the player or walk to gems',()=>{

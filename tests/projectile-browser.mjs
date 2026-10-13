@@ -3,12 +3,13 @@ import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
 import {mkdir,writeFile} from 'node:fs/promises';
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const url=process.env.GAME_URL||'http://127.0.0.1:5173';
 const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
 await mkdir('artifacts',{recursive:true});
 try{
  const page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
- await page.goto('http://127.0.0.1:5173');
+ await page.route(url+'/',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html><body></body></html>'}));await page.goto(url);
  const result=await page.evaluate(async()=>{
   const [THREE,{World,v,idleInput,STEP},{GameRenderer},{weaponMuzzle,HAND_SOCKETS,HAND_MUZZLES},{projectileRoll}]=await Promise.all([import('/node_modules/.vite/deps/three.js'),import('/src/simulation.ts'),import('/src/renderer.ts'),import('/src/weapon-origin.ts'),import('/src/projectile-presentation.ts')]);
   const canvas=document.createElement('canvas');canvas.id='projectile-test';canvas.style.cssText='position:fixed;inset:0;z-index:99999;width:100vw;height:100vh';document.body.append(canvas);

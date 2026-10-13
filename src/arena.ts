@@ -19,5 +19,27 @@ export function floorHeight(x:number,z:number,time:number,footprint=.18):number 
   }
   return height;
 }
+/** Earliest downward contact with the tiled floor, including height changes
+ * along the path. Sample each tile interval, never the endpoint's height alone. */
+export function sweepFloor(a:{x:number;y:number;z:number},b:{x:number;y:number;z:number},time:number,clearance=.08):{t:number;y:number}|null {
+  if(b.y>=a.y)return null;
+  const cuts=[0,1];
+  for(const axis of ['x','z'] as const){
+    const from=a[axis]/TILE_SIZE+25.5,to=b[axis]/TILE_SIZE+25.5;
+    if(from===to)continue;
+    for(let boundary=Math.floor(Math.min(from,to))+1;boundary<Math.max(from,to);boundary++)cuts.push((boundary-from)/(to-from));
+  }
+  cuts.sort((a,b)=>a-b);
+  for(let i=1;i<cuts.length;i++){
+    const lo=cuts[i-1],hi=cuts[i];if(hi<=lo)continue;
+    const mid=(lo+hi)/2,ground=floorHeight(a.x+(b.x-a.x)*mid,a.z+(b.z-a.z)*mid,time,0);
+    if(ground<=-1000)continue;
+    const floor=ground+clearance,fromY=a.y+(b.y-a.y)*lo,toY=a.y+(b.y-a.y)*hi;
+    if(toY>=floor)continue;
+    const t=fromY<=floor?lo:(floor-a.y)/(b.y-a.y);
+    return {t:Math.max(lo,Math.min(hi,t)),y:floor};
+  }
+  return null;
+}
 export const ARENA_TILES = Array.from({length:ARENA_DIMENSION**2},(_,index)=>({x:Math.floor(index/ARENA_DIMENSION),z:index%ARENA_DIMENSION}))
   .filter(({x,z})=>tileHeight(x,z,0)>-20);

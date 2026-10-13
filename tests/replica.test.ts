@@ -7,7 +7,7 @@ import {SURVIVAL_HEIGHTS} from '../src/survival-data.ts';
 import {tileHeight,floorHeight,arenaRadius,TILE_SIZE} from '../src/arena.ts';
 const step=(w:World,count:number,input=idleInput())=>{for(let i=0;i<count;i++){w.step(input);w.effects=[];}};
 test('Survival preserves simultaneous groups, boss milestones, and accelerating third-wave Ghostpede',()=>{
- assert.deepEqual(TIMELINE.filter(e=>e.time<=24).map(e=>[e.time,e.kind]),[[3,'squid'],[14,'squid'],[19,'squid'],[24,'squid']]);
+ assert.deepEqual(TIMELINE.filter(e=>e.time<=24).map(e=>[e.tick,e.kind]),[[180,'squid'],[839,'squid'],[1139,'squid'],[1439,'squid']]);
  assert.equal(TIMELINE.filter(e=>e.time===174&&e.kind==='spider').length,3);
  assert.equal(TIMELINE.filter(e=>e.time===259&&e.kind==='gigapede').length,3);
  assert.equal(TIMELINE.find(e=>e.kind==='leviathan')?.time,350);
@@ -29,8 +29,8 @@ test('all 22 reference enemy entries have the right aggregate HP and own rewards
  for(const kind of ENEMY_KINDS){const e=w.spawn(kind,v(20,3,20));assert.equal(e.hp,ENEMY_STATS[kind].hp);if(e.weakpoints.length)assert.equal(e.weakpoints.reduce((n,s)=>n+s.hp,0),e.hp);if(e.segments.length)assert.equal(e.segments.reduce((n,s)=>n+s.hp,0),e.hp);}
  assert.equal(w.enemies.find(e=>e.kind==='gigapede')?.segments.length,50);assert.equal(w.enemies.find(e=>e.kind==='ghostpede')?.segments.length,10);
 });
-test('squid tiers generate their own distinct offspring after three seconds',()=>{
- for(const [kind,count,skull] of [['squid',10,'skull2'],['squid2',10,'skull3'],['squid3',15,'skull4']] as const){const w=new World(1,{schedule:false});w.spawn(kind,v(20,5,20));step(w,360);assert.equal(w.enemies.filter(e=>e.kind==='skull').length,count);assert.equal(w.enemies.filter(e=>e.kind===skull).length,1);}
+test('squid tiers emit their own distinct offspring in the recorded opening burst',()=>{
+ for(const [kind,count,skull] of [['squid',10,'skull2'],['squid2',10,'skull3'],['squid3',15,'skull4']] as const){const w=new World(1,{schedule:false});w.spawn(kind,v(20,5,20));step(w,423);assert.equal(w.enemies.filter(e=>e.kind==='skull').length,count);assert.equal(w.enemies.filter(e=>e.kind===skull).length,1);}
 });
 test('regular stream throughput remains exact over sustained firing at every hand',()=>{
  for(const [level,ticks,expected] of [[1,240,40],[2,240,80],[3,240,160],[4,270,240]]){

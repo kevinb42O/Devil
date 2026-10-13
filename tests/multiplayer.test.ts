@@ -43,3 +43,16 @@ test('multiple quick primary and homing transitions retain their order',async()=
  for(const state of states)buffer.push({...idleInput(),...state});
  for(const state of states){const input=buffer.next();assert.deepEqual({fire:input.fire,homing:input.homing},state);}
 });
+
+test('remote demon aim and firing survive encoded snapshots and presentation interpolation',async()=>{
+ const {encodeState,decodeState}=await import('../src/network-state');const {SnapshotTimeline}=await import('../src/network-presentation');
+ const host=new FriendsSession('host');try{
+  host.start();host.world!.addCrew('friend');host.world!.crew[1].input={...idleInput(),yaw:.4,pitch:-.6,fire:true};
+  host.world!.stepCrew(new Map([['friend',host.world!.crew[1].input]]));host.world!.time=0;const first=structuredClone(host.snapshot()!);const decoded=decodeState(encodeState(first,1,0),new Map())!.snapshot;
+  const guest=new World(1,{schedule:false});applySnapshot(guest,decoded,'host');assert.equal(guest.crew[1].input.pitch,-.6);assert.equal(guest.crew[1].input.fire,true);
+  host.world!.time=.1;host.world!.crew[1].input.pitch=.6;host.world!.crew[1].input.homing=true;
+  host.world!.stepCrew(new Map([['friend',host.world!.crew[1].input]]));host.world!.time=.1;const second=structuredClone(host.snapshot()!);applySnapshot(guest,second,'host');const timeline=new SnapshotTimeline();timeline.push(first,0);timeline.push(second,100);
+  const view=timeline.view(guest,'host',100,v());assert.ok(view.crew[1].input.pitch>-.6&&view.crew[1].input.pitch<.6);assert.equal(view.crew[1].input.fire,true);assert.equal(view.crew[1].input.homing,true);
+  const legacy=structuredClone(first);delete legacy.crew[1].pitch;applySnapshot(guest,legacy,'host');assert.equal(guest.crew[1].input.pitch,0);assert.equal(guest.crew[1].input.fire,true);
+ }finally{host.close();}
+});

@@ -23,6 +23,7 @@ try{
  await page.locator('#controllerSensitivity').fill('1.4');await page.locator('#controllerDeadzone').fill('0.2');
  await page.waitForFunction(()=>document.querySelector('#controller-status').textContent.includes('Connected'));await page.click('#settings-close');await page.click('#quit');
  await page.click('#start');await page.waitForFunction(()=>window.abyss.mode==='playing');assert.equal(await page.evaluate(()=>!!document.pointerLockElement),false);
+ await page.evaluate(()=>window.testPad.axes=[0,-1,0,0]);await page.waitForFunction(()=>!window.abyss.entrance);await page.evaluate(()=>window.testPad.axes=[0,0,0,0]);await page.waitForTimeout(100);
  const controllerBefore=await page.evaluate(()=>window.abyss.position.z);
  await page.evaluate(()=>{window.testPad.axes=[0,-1,.5,-.5];});await page.waitForTimeout(350);
  assert.ok(await page.evaluate(()=>window.abyss.position.z)<controllerBefore-1,'controller stick moves');

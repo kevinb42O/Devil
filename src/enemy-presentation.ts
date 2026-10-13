@@ -1,5 +1,6 @@
 import {type Enemy, type Vec} from './simulation';
 import {isSpider,isSkull,isPede} from './enemy-kinds';
+import {towerEmissionTick} from './tower-spawn';
 const v=(x:number,y:number,z:number):Vec=>({x,y,z});
 /** Coordinate mapping shared by the mesh rig and damage targets. Placement is prototype tuning. */
 export const CREATURE_SCALE=.62;
@@ -19,7 +20,15 @@ export const TOWER_EJECTION_DURATION=.5;
 /** Crown outlets measured against the imported rigs, in world units. */
 export function towerOutletHeight(kind:Enemy['kind']){return kind==='squid3'?5:kind==='squid2'?2.5:1.1;}
 /** Anticipation, held opening through the stream, then a soft closing motion. */
-export function towerSpitPulse(age:number){
+export function towerSpitPulse(age:number,kind:Enemy['kind']='squid',originalCadence=false){
+ if(originalCadence){
+  const start=towerEmissionTick(kind,0,0)/60,period=(towerEmissionTick(kind,1,0)-towerEmissionTick(kind,0,0))/60;
+  const cycle=((age-start)%period+period)%period,held=(kind==='squid3'?27:18)/60+.05;
+  if(cycle>period-.35)return (cycle-period+.35)/.35;
+  if(cycle<=held)return 1;
+  if(cycle<held+.4)return 1-(cycle-held)/.4;
+  return 0;
+ }
  const cycle=((age-3)%20+20)%20;
  if(cycle>19.65)return (cycle-19.65)/.35;
  if(cycle<.7)return 1;

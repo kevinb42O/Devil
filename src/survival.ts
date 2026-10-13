@@ -4,7 +4,7 @@ const TYPES:EnemyKind[]=['squid','squid2','centipede','spider','leviathan','giga
 export type ScheduledSpawn={tick:number;time:number;kind:EnemyKind;wave:number};
 const LOOP_START=SURVIVAL_SPAWNS.map(([type])=>type).lastIndexOf(-1);
 /** 60 Hz float stepping follows the pinned community SpawnsView loop calculation. */
-export function* survivalSchedule():Generator<ScheduledSpawn>{
+export function* legacySurvivalSchedule():Generator<ScheduledSpawn>{
  let time=0;
  for(const [type,delay] of SURVIVAL_SPAWNS.slice(0,LOOP_START)){
   time+=delay;if(type!==-1)yield {tick:Math.round(time*60),time,kind:TYPES[type],wave:-1};
@@ -16,6 +16,24 @@ export function* survivalSchedule():Generator<ScheduledSpawn>{
    delay=Math.fround(delay+wait);
    while(enemyTime<delay){tick++;enemyTime=Math.fround(enemyTime+Math.fround(1/60+1/60/8*wave));}
    if(type!==-1)yield {tick,time:tick/60,kind:type===5&&wave%3===2?'ghostpede':TYPES[type],wave};
+  }
+ }
+}
+/** Original replay ticks use a float32 countdown with overshoot carried into
+ * the next delay and wave. Resetting a timer each wave gradually delays spawns. */
+export function* survivalSchedule():Generator<ScheduledSpawn>{
+ let index=0,wave=-1,remaining=Math.fround(SURVIVAL_SPAWNS[0][1]);
+ const step=Math.fround(1/60);
+ for(let tick=0;;tick++){
+  const rate=Math.fround(step+Math.fround(Math.fround(step/8)*Math.max(0,wave)));
+  remaining=Math.fround(remaining-rate);
+  while(remaining<=0){
+   const type=SURVIVAL_SPAWNS[index][0];
+   if(type!==-1)yield {tick,time:tick/60,kind:type===5&&wave%3===2?'ghostpede':TYPES[type],wave};
+   index++;
+   if(index===SURVIVAL_SPAWNS.length){index=LOOP_START;wave++;}
+   if(index===LOOP_START&&wave<0)wave=0;
+   remaining=Math.fround(remaining+SURVIVAL_SPAWNS[index][1]);
   }
  }
 }

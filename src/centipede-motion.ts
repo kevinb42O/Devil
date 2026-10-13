@@ -2,8 +2,8 @@ import type {Enemy,Vec} from './simulation';
 
 /** Lifecycle is observed in original gameplay; steering values remain replica tuning.
  * See CENTIPEDE_RESEARCH.md for evidence and the original-parity limitations. */
-export const CENTIPEDE_TUNING={speed:14*.62,turnRate:3,riseSpeed:14*.62,roamTime:3,surfaceTime:15,graceTime:3,undergroundTime:10,spacing:1.3,depth:5};
-export type CentipedeMotion={stage:'rising'|'flying'|'diving'|'underground';started:number;surfaceAt:number;path:Vec[];divePoint:Vec;cue:boolean;nextDust:number};
+export const CENTIPEDE_TUNING={speed:14*.62,turnRate:1.2,turnAcceleration:3,riseSpeed:14*.62,roamTime:3,surfaceTime:15,graceTime:3,undergroundTime:10,spacing:1.3,depth:5};
+export type CentipedeMotion={stage:'rising'|'flying'|'overpass'|'diving'|'underground';started:number;surfaceAt:number;path:Vec[];divePoint:Vec;cue:boolean;nextDust:number;arc?:FlightArc;yawRate?:number;pitchRate?:number};
 const dist=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 const unit=(a:Vec):Vec=>{const d=Math.hypot(a.x,a.y,a.z)||1;return {x:a.x/d,y:a.y/d,z:a.z/d};};
 const copy=(p:Vec)=>({...p});
@@ -27,15 +27,63 @@ function followPath(e:Enemy,m:CentipedeMotion){
  }
  m.path.length=Math.min(m.path.length,edge+3);
 }
-function steer(current:Vec,goal:Vec,amount:number):Vec{
- const from=unit(current),to=unit(goal),dot=Math.max(-1,Math.min(1,from.x*to.x+from.y*to.y+from.z*to.z)),angle=Math.acos(dot);
- if(angle<=amount)return to;
- // Spherical turn limiting avoids the point-seeking slowdown at a turn.
- if(dot<-.9999){const axis=unit(Math.abs(from.y)<.9?{x:-from.z,y:0,z:from.x}:{x:0,y:-from.z,z:from.y});return unit({x:from.x*Math.cos(amount)+axis.x*Math.sin(amount),y:from.y*Math.cos(amount)+axis.y*Math.sin(amount),z:from.z*Math.cos(amount)+axis.z*Math.sin(amount)});}
- const t=amount/angle,sin=Math.sin(angle),a=Math.sin((1-t)*angle)/sin,b=Math.sin(t*angle)/sin;
- return {x:from.x*a+to.x*b,y:from.y*a+to.y*b,z:from.z*a+to.z*b};
+type ArcPoint={pos:Vec;dir:Vec;s:number};
+type FlightArc={points:ArcPoint[];distance:number;crestDistance:number;kind:'emerge'|'pass';burrowCue:boolean};
+const add=(p:Vec,d:Vec,n:number):Vec=>({x:p.x+d.x*n,y:p.y+d.y*n,z:p.z+d.z*n});
+/** Quintic Hermite spans have continuous position/tangent and zero endpoint
+ * curvature. The two pass spans meet flat at the crest, without a pitch snap. */
+function appendSpan(points:ArcPoint[],a:Vec,b:Vec,da:Vec,db:Vec){
+ for(let i=points.length?1:0;i<=256;i++){
+  const u=i/256,u2=u*u,u3=u2*u,u4=u3*u,u5=u4*u;
+  const h=[1-10*u3+15*u4-6*u5,u-6*u3+8*u4-3*u5,10*u3-15*u4+6*u5,-4*u3+7*u4-3*u5];
+  const dh=[-30*u2+60*u3-30*u4,1-18*u2+32*u3-15*u4,30*u2-60*u3+30*u4,-12*u2+28*u3-15*u4];
+  const pos={x:0,y:0,z:0},dir={x:0,y:0,z:0};
+  for(const axis of ['x','y','z'] as const){pos[axis]=a[axis]*h[0]+da[axis]*h[1]+b[axis]*h[2]+db[axis]*h[3];dir[axis]=a[axis]*dh[0]+da[axis]*dh[1]+b[axis]*dh[2]+db[axis]*dh[3];}
+  const previous=points.at(-1);points.push({pos,dir:unit(dir),s:previous?previous.s+dist(previous.pos,pos):0});
+ }
+}
+function emergenceArc(e:Enemy,floor:number):FlightArc{
+ const forward={x:Math.sin(e.facingYaw),y:0,z:Math.cos(e.facingYaw)},end=add(e.pos,forward,8);end.y=floor+7;
+ const points:ArcPoint[]=[];appendSpan(points,e.pos,end,{x:0,y:8,z:0},add({x:0,y:0,z:0},forward,8));
+ return {points,distance:0,crestDistance:Infinity,kind:'emerge',burrowCue:false};
+}
+function overpassArc(e:Enemy,player:Vec,floor:number):FlightArc{
+ let forward=unit({x:e.vel.x,y:0,z:e.vel.z});
+ if(Math.hypot(forward.x,forward.z)<.1)forward={x:Math.sin(e.facingYaw),y:0,z:Math.cos(e.facingYaw)};
+ const toPlayer={x:player.x-e.pos.x,y:0,z:player.z-e.pos.z},ahead=toPlayer.x*forward.x+toPlayer.z*forward.z;
+ // Commit beyond the player. The head does not turn back as the player gets underneath.
+ const run=Math.max(8,ahead+4),crest=ahead>2?add(player,forward,4):add(e.pos,forward,run);crest.y=Math.max(floor+7,e.pos.y+2);
+ const end=add(crest,forward,19);end.y=-CENTIPEDE_TUNING.depth-e.segments.length*CENTIPEDE_TUNING.spacing-3;
+ const entry=unit(e.vel),entryLength=entry.y<0?Math.min(5,Math.max(1,(e.pos.y-floor)*2)):8;
+ const flat=add({x:0,y:0,z:0},forward,10),points:ArcPoint[]=[];
+ appendSpan(points,e.pos,crest,add({x:0,y:0,z:0},entry,entryLength),flat);
+ const crestDistance=points.at(-1)!.s;
+ appendSpan(points,crest,end,flat,{x:0,y:-24,z:0});
+ return {points,distance:0,crestDistance,kind:'pass',burrowCue:false};
+}
+function advanceArc(e:Enemy,arc:FlightArc,dt:number){
+ arc.distance=Math.min(arc.points.at(-1)!.s,arc.distance+CENTIPEDE_TUNING.speed*dt);
+ let lo=0,hi=arc.points.length-1;
+ while(hi-lo>1){const mid=(lo+hi)>>1;if(arc.points[mid].s<arc.distance)lo=mid;else hi=mid;}
+ const a=arc.points[lo],b=arc.points[hi],t=(arc.distance-a.s)/(b.s-a.s||1);
+ e.pos={x:a.pos.x+(b.pos.x-a.pos.x)*t,y:a.pos.y+(b.pos.y-a.pos.y)*t,z:a.pos.z+(b.pos.z-a.pos.z)*t};
+ const heading=unit({x:a.dir.x+(b.dir.x-a.dir.x)*t,y:a.dir.y+(b.dir.y-a.dir.y)*t,z:a.dir.z+(b.dir.z-a.dir.z)*t});
+ e.vel=add({x:0,y:0,z:0},heading,CENTIPEDE_TUNING.speed);
+ return arc.distance>=arc.points.at(-1)!.s-1e-7;
+}
+function cruise(e:Enemy,m:CentipedeMotion,goal:Vec,dt:number){
+ const yaw=Math.atan2(e.vel.x,e.vel.z),pitch=Math.atan2(e.vel.y,Math.hypot(e.vel.x,e.vel.z));
+ const desiredYaw=Math.atan2(goal.x-e.pos.x,goal.z-e.pos.z),desiredPitch=Math.atan2(goal.y-e.pos.y,Math.hypot(goal.x-e.pos.x,goal.z-e.pos.z));
+ const deltaYaw=Math.atan2(Math.sin(desiredYaw-yaw),Math.cos(desiredYaw-yaw));
+ const rate=(old:number,target:number)=>old+Math.max(-dt*CENTIPEDE_TUNING.turnAcceleration,Math.min(dt*CENTIPEDE_TUNING.turnAcceleration,target-old));
+ m.yawRate=rate(m.yawRate??0,Math.max(-CENTIPEDE_TUNING.turnRate,Math.min(CENTIPEDE_TUNING.turnRate,deltaYaw*1.8)));
+ m.pitchRate=rate(m.pitchRate??0,Math.max(-CENTIPEDE_TUNING.turnRate,Math.min(CENTIPEDE_TUNING.turnRate,(desiredPitch-pitch)*1.8)));
+ const y=yaw+m.yawRate*dt,p=pitch+m.pitchRate*dt;
+ e.vel={x:Math.sin(y)*Math.cos(p)*CENTIPEDE_TUNING.speed,y:Math.sin(p)*CENTIPEDE_TUNING.speed,z:Math.cos(y)*Math.cos(p)*CENTIPEDE_TUNING.speed};
+ e.pos=add(e.pos,e.vel,dt);
 }
 export function updateCentipede(e:Enemy,dt:number,context:{radius:number;players:Vec[];floor:(x:number,z:number)=>number;random:()=>number;emit:(kind:'burrow'|'emerge'|'dust',pos:Vec)=>void}){
+ if(!context.players.length)return;
  const t=CENTIPEDE_TUNING;
  let m=e.centipedeMotion;
  if(!m){
@@ -44,7 +92,10 @@ export function updateCentipede(e:Enemy,dt:number,context:{radius:number;players
   if(!flying){e.vel={x:0,y:t.riseSpeed,z:0};e.status='emerging';}
  }
  if(e.age+1e-7<e.activeAt){
-  const remaining=Math.max(0,e.activeAt-e.age);e.pos.y=-4*.62*Math.min(1,remaining/3);e.vel={x:0,y:4*.62/3,z:0};
+  const u=Math.max(0,Math.min(1,1-(e.activeAt-e.age)/3)),u2=u*u,u3=u2*u,u4=u3*u,u5=u4*u;
+  // Accelerate beneath the floor and reach the surface at full flight speed.
+  e.pos.y=-4*.62*(1-10*u3+15*u4-6*u5)+t.speed*3*(-4*u3+7*u4-3*u5);
+  e.vel={x:0,y:(-4*.62*(-30*u2+60*u3-30*u4)+t.speed*3*(-12*u2+28*u3-15*u4))/3,z:0};
   if(e.age>=m.nextDust){context.emit('dust',{x:e.pos.x,y:Math.max(0,context.floor(e.pos.x,e.pos.z)),z:e.pos.z});m.nextDust=e.age+.15;}
   followPath(e,m);return;
  }
@@ -58,40 +109,33 @@ export function updateCentipede(e:Enemy,dt:number,context:{radius:number;players
   m.stage='rising';m.started=e.age;m.path=pathFromBody(e);m.cue=false;m.nextDust=e.age;m.surfaceAt=Infinity;e.status='emerging';e.activeAt=e.statusUntil;
   return;
  }
- if(m.stage==='rising'){
-  const old=copy(e.pos);
-  if(e.age>=m.nextDust&&e.pos.y<1){context.emit('dust',{x:e.pos.x,y:floor,z:e.pos.z});m.nextDust=e.age+.15;}
-  e.pos.y+=t.riseSpeed*dt;e.vel={x:0,y:t.riseSpeed,z:0};
-  if(!m.cue&&e.pos.y>=floor){m.cue=true;m.surfaceAt=e.age;context.emit('emerge',{x:e.pos.x,y:floor,z:e.pos.z});}
-  if(e.pos.y>=7){e.pos.y=7;m.stage='flying';e.status='idle';e.nextMove=m.surfaceAt+t.roamTime;e.statusUntil=m.surfaceAt+t.surfaceTime;e.vel={x:Math.sin(e.facingYaw)*t.speed,y:0,z:Math.cos(e.facingYaw)*t.speed};}
-  // Derive pitch from actual travel even on the final rising tick.
-  if(m.stage==='rising')e.vel.y=(e.pos.y-old.y)/dt;
-  followPath(e,m);return;
+ if(m.stage==='rising'&&!m.arc){
+  if(!m.cue){m.cue=true;m.surfaceAt=e.age;context.emit('emerge',{x:e.pos.x,y:floor,z:e.pos.z});}
+  m.arc=emergenceArc(e,floor);
  }
- if(m.stage==='diving'){
-  const desired={x:m.divePoint.x-e.pos.x,y:-12,z:m.divePoint.z-e.pos.z},heading=steer(e.vel,desired,t.turnRate*2*dt);
-  e.vel={x:heading.x*t.speed,y:heading.y*t.speed,z:heading.z*t.speed};
-  e.pos.x+=e.vel.x*dt;e.pos.y+=e.vel.y*dt;e.pos.z+=e.vel.z*dt;followPath(e,m);
-  if(e.pos.y<-t.depth&&e.segments.every(s=>s.pos.y<-t.depth)){
-   m.stage='underground';m.started=e.age;e.statusUntil=e.age+t.undergroundTime;e.vel={x:0,y:0,z:0};
+ if(m.arc){
+  const arc=m.arc,done=advanceArc(e,arc,dt);followPath(e,m);
+  if(arc.kind==='emerge'&&done){m.arc=undefined;m.stage='flying';m.yawRate=m.pitchRate=0;e.status='idle';e.nextMove=m.surfaceAt+t.roamTime;e.statusUntil=m.surfaceAt+t.surfaceTime;}
+  if(arc.kind==='pass'){
+   if(arc.distance>=arc.crestDistance){m.stage='diving';e.status='burrowing';}
+   if(!arc.burrowCue&&e.pos.y<floor){arc.burrowCue=true;context.emit('burrow',{x:e.pos.x,y:floor,z:e.pos.z});}
+   if(e.pos.y<-t.depth&&e.segments.every(s=>s.pos.y<-t.depth)){
+    m.arc=undefined;m.stage='underground';m.started=e.age;e.statusUntil=e.age+t.undergroundTime;e.vel={x:0,y:0,z:0};
+   }
   }
   return;
  }
  if(e.status==='idle'&&e.age+1e-7>=e.nextMove)e.status='hunting';
  const nearest=context.players.reduce((a,b)=>dist(e.pos,a)<dist(e.pos,b)?a:b,context.players[0]);
  const horizontal=Math.hypot(nearest.x-e.pos.x,nearest.z-e.pos.z),underneath=nearest.y<e.pos.y&&horizontal<2.5;
- if(e.age+1e-7>=e.statusUntil||(e.status==='hunting'&&e.age+1e-7>=e.nextMove+t.graceTime&&underneath)){
-  m.stage='diving';m.started=e.age;m.divePoint={x:e.pos.x+e.vel.x*.5,y:floor,z:e.pos.z+e.vel.z*.5};e.status='burrowing';context.emit('burrow',{x:e.pos.x,y:floor,z:e.pos.z});
-  // Start the dive without changing any segment's world position.
-  return;
+ const approach=unit({x:e.vel.x,y:0,z:e.vel.z}),toward=(nearest.x-e.pos.x)*approach.x+(nearest.z-e.pos.z)*approach.z;
+ const liningUp=e.status==='hunting'&&horizontal<14&&toward>0;
+ if(e.age+1e-7>=e.statusUntil||liningUp||(e.status==='hunting'&&e.age+1e-7>=e.nextMove+t.graceTime&&underneath)){
+  m.stage='overpass';m.started=e.age;m.arc=overpassArc(e,nearest,floor);advanceArc(e,m.arc,dt);followPath(e,m);return;
  }
- const goal=e.status==='idle'?{x:-e.pos.z*.55,y:6,z:e.pos.x*.55}:{x:nearest.x,y:floor+.8,z:nearest.z};
- // During the initial grace interval a low head turns back upward instead of
- // burrowing/stalling; its trail can fold over itself, as seen in current gameplay.
- if(e.pos.y<floor+1.3)goal.y=floor+8;
- // Avoid a stationary vertical chase at the arena edge.
+ const goal=e.status==='idle'?{x:-e.pos.z*.55,y:6,z:e.pos.x*.55}:{x:nearest.x,y:floor+4,z:nearest.z};
+ // Continuous altitude target replaces the old low-height on/off switch.
+ goal.y+=Math.max(0,3-e.pos.y)*2;
  if(Math.hypot(e.pos.x,e.pos.z)>context.radius*.9){goal.x*=.3;goal.z*=.3;}
- const heading=steer(e.vel,{x:goal.x-e.pos.x,y:goal.y-e.pos.y,z:goal.z-e.pos.z},t.turnRate*dt);
- e.vel={x:heading.x*t.speed,y:heading.y*t.speed,z:heading.z*t.speed};
- e.pos.x+=e.vel.x*dt;e.pos.y+=e.vel.y*dt;e.pos.z+=e.vel.z*dt;followPath(e,m);
+ cruise(e,m,goal,dt);followPath(e,m);
 }

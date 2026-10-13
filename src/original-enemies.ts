@@ -150,10 +150,10 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
    const a=new THREE.Vector3(side*.85,.2,z),b=new THREE.Vector3(side*1.55,-.1,z*1.3),c=new THREE.Vector3(side*2,-.55,z*1.6),d=new THREE.Vector3(side*2.6,-.75,z*2);
    const axis=new THREE.Vector3(1,0,0);this.bone(legs,'pedeleg1',a,b,.95,axis);this.bone(legs,'pedeleg2',b,c,.63,axis);this.bone(legs,'pedeleg3',c,d,.88,axis);
   }
+  if(kind!=='centipede')legs.traverse(o=>{if(o instanceof THREE.Mesh)o.material=this.materials.get(o.name.replace('pede',kind==='gigapede'?'pedeblack':'ultrapede'))!;});
   // Merge reused leg geometry by material without losing the weak-point node.
   const grouped=new Map<THREE.Material,THREE.BufferGeometry[]>();for(const o of legs.children){const mesh=o as THREE.Mesh;mesh.updateMatrix();const geo=mesh.geometry.index?mesh.geometry.toNonIndexed():mesh.geometry.clone();geo.applyMatrix4(mesh.matrix);const arr=grouped.get(mesh.material as THREE.Material)||[];arr.push(geo);grouped.set(mesh.material as THREE.Material,arr);}
   for(const [mat,geos] of grouped){const merged=mergeGeometries(geos);geos.forEach(g=>g.dispose());if(merged)rig.add(new THREE.Mesh(merged,mat));}
-  if(kind!=='centipede')rig.traverse(o=>{if(o instanceof THREE.Mesh&&o.name.startsWith('pedeleg'))o.material=this.materials.get(o.name.replace('pede',kind==='gigapede'?'pedeblack':'ultrapede'))!;});
   return root;
  }
  createSwarmBatch(kind:EnemyKind,capacity:number):THREE.InstancedMesh[]{
@@ -162,14 +162,14 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
   return [...grouped].map(([material,geometries])=>{const geometry=mergeGeometries(geometries)!;geometries.forEach(g=>g.dispose());const mesh=new THREE.InstancedMesh(geometry,material,capacity);mesh.count=0;mesh.frustumCulled=false;return mesh;});
  }
  clone(kind:EnemyKind){const template=this.templates.get(kind);if(!template)throw Error(`Original ${kind} rig not loaded`);return template.clone();}
- animate(model:THREE.Group,enemy:Enemy,time:number){
+ animate(model:THREE.Group,enemy:Enemy,time:number,originalCadence=false){
   this.materialClock.value=time;let nodes=this.animationNodes.get(model);
   if(!nodes){nodes=[];model.traverse(o=>{if(o.name==='spider-held-gem'||o.name==='spider-head-pivot'||o.name==='spider-leg'||o.name.startsWith('weak-point-')||(enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(o.name)))nodes!.push(o);});this.animationNodes.set(model,nodes);}
-  const spit=enemy.kind.startsWith('squid')?towerSpitPulse(enemy.age):0;
+  const spit=enemy.kind.startsWith('squid')?towerSpitPulse(enemy.age,enemy.kind,originalCadence):0;
   for(const o of nodes){if(o.name==='spider-held-gem'){
    const sinceHit=time-enemy.lastHit;
    (o as THREE.Mesh).material=sinceHit>=0&&sinceHit<SPIDER_HIT_FLASH_DURATION?this.spiderHitMaterial:this.spiderCrystalMaterial;
-  }else if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;else if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055;else if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.visible=(enemy.weakpoints?.[i]?.hp??1)>0;}else o.position.y=spit*(o.name.includes('crest')?.4:-.18);}
+  }else if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;else if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055;else if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.visible=(enemy.weakpoints?.[i]?.hp??1)>0;}else {o.position.y=spit*(o.name.includes('crest')?.4:-.18);o.updateMatrix();}}
  }
  segment(alive:boolean,kind:EnemyKind='centipede'){const node=(this.segmentTemplates.get(kind)??this.segmentTemplate).clone();node.traverse(o=>{if(o.name==='segment-weak-point')o.visible=alive;});return node;}
 }

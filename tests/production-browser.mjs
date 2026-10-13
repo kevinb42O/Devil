@@ -13,7 +13,8 @@ try {
   await page.waitForFunction(()=>document.querySelector('#start')?.disabled===false);
   assert.equal(await page.locator('#error').isVisible(),false,'production assets must load');
   await page.click('#start');if(await page.locator('#player-profile').isVisible())await page.click('#profile-local');
-  await page.waitForFunction(()=>document.querySelector('#menu')?.hidden&&document.querySelector('#hud')?.hidden===false);
+  await page.waitForFunction(()=>document.querySelector('#menu')?.hidden&&!!document.pointerLockElement);
+  await page.keyboard.down('KeyW');await page.waitForFunction(()=>document.querySelector('#hud')?.hidden===false);await page.keyboard.up('KeyW');
   assert.equal(await page.evaluate(()=>!!document.pointerLockElement),true,'production game must start');
   await page.waitForTimeout(1000);
   assert.deepEqual(errors,[],'production startup must have no asset or browser errors');

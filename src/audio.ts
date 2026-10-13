@@ -114,9 +114,13 @@ export class Sound{
   if(e.kind==='ricochet'){this.oneShot(this.choose(variants(e.amount===4?'ricochetmagenta':e.amount===3?'ricochetmagic':'ricochet',e.amount===3?4:5)),e.pos,.65,0,.04);return;}
   if(e.kind==='pierce'){this.oneShot(this.choose(variants('magicpierce',5)),e.pos,.7,1,.05);return;}
   if(e.kind==='eat'){this.oneShot(e.enemy==='ghostpede'?'ultrapedeeat':this.choose(variants('spidereat',6)),e.pos,.8,1,.12);return;}
-  const name=e.kind==='pickup'?level>=3?'gibcollectmagic':'gibcollect':e.kind==='upgrade'?e.amount===1?'leveldown':`levelup${e.amount}`:e.kind==='jump'?e.amount===3?'jump3':e.amount===2?'jump2':'jump1':e.kind==='land'?e.amount===2?'land2':'land':e.kind==='death'?world.cause==='FALLEN'?'fall':'death':e.kind==='beckon'?e.enemy==='orb'?'leviathanbeckon2':'leviathanbeckon':e.kind==='transmute'?'leviathantransmute':e.kind==='explosion'?this.choose(variants('magentadetonate',5)):e.kind==='bounce'?'eggbounce':e.kind==='hatch'?e.enemy==='egg2'?'eggburst2':'eggburst':e.kind==='burrow'?'burrowcentipede':e.kind==='emerge'?'unburrowcentipede':undefined;
-  if(e.kind==='death')this.clear();
-  if(name)this.oneShot(name,['beckon','transmute','explosion','bounce','hatch','burrow','emerge'].includes(e.kind)?e.pos:undefined,1,e.kind==='death'||e.kind==='upgrade'?4:1,e.kind==='pickup'?.025:e.kind==='explosion'?.035:0);
+  if(e.kind==='death'){
+   const victim=world.crew.find(p=>p.id===e.shooterId),local=!world.crew.length||victim?.player===world.player;
+   if(local||world.state==='dead'||(world.crew.length&&!world.crew.some(p=>p.alive)))this.clear();
+   this.oneShot((e.deathCause??victim?.cause??world.cause)==='FALLEN'?'fall':'death',local?undefined:e.pos,1,4);return;
+  }
+  const name=e.kind==='pickup'?level>=3?'gibcollectmagic':'gibcollect':e.kind==='upgrade'?e.amount===1?'leveldown':`levelup${e.amount}`:e.kind==='jump'?e.amount===3?'jump3':e.amount===2?'jump2':'jump1':e.kind==='land'?e.amount===2?'land2':'land':e.kind==='beckon'?e.enemy==='orb'?'leviathanbeckon2':'leviathanbeckon':e.kind==='transmute'?'leviathantransmute':e.kind==='explosion'?this.choose(variants('magentadetonate',5)):e.kind==='bounce'?'eggbounce':e.kind==='hatch'?e.enemy==='egg2'?'eggburst2':'eggburst':e.kind==='burrow'?'burrowcentipede':e.kind==='emerge'?'unburrowcentipede':undefined;
+  if(name)this.oneShot(name,['beckon','transmute','explosion','bounce','hatch','burrow','emerge'].includes(e.kind)?e.pos:undefined,1,e.kind==='upgrade'?4:1,e.kind==='pickup'?.025:e.kind==='explosion'?.035:0);
  }
  private loop(id:number,name:string,pos?:Vec,scale=1,randomPhase=true){
   const c=this.context;if(!c||!this.master||c.state!=='running')return;let voice=this.loops.get(id);

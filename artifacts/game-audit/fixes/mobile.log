@@ -1,0 +1,6 @@
+
+> abyss-daggers@0.1.0 test:mobile
+> node tests/mobile-browser.mjs && node tests/mobile-death-browser.mjs
+
+Mobile browser passed: invisible controls, two-thumb movement/aim/stream, jump tap, shotgun tap, coalesced drag, timer pause, cancellation/resume, rotated landscape, persistence and late orientation cleanup.
+Mobile death passed: missing Pointer Lock API, landscape and rotated portrait, held-touch cleanup, death menu, retry, home, pause/resume and blur.

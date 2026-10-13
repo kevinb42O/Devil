@@ -21,6 +21,7 @@ try{
  assert.equal(await page.evaluate(()=>window.abyss.input.jump),false,'confirm button cannot become an automatic jump');
  assert.ok(await page.evaluate(()=>window.abyss.position.y)<1.8);await button(0,false);await button(0,true);
  assert.equal(await page.evaluate(()=>window.abyss.input.jump),true);assert.ok(await page.evaluate(()=>window.abyss.position.y)>1.8);await button(0,false);
+ await page.evaluate(()=>window.testPad.axes=[0,-1,0,0]);await page.waitForFunction(()=>!window.abyss.entrance);await page.evaluate(()=>window.testPad.axes=[0,0,0,0]);await page.waitForTimeout(100);
  await button(7,true);await page.waitForTimeout(250);assert.equal(await page.evaluate(()=>window.abyss.input.fire),true);
  await tap(9);assert.equal(await page.evaluate(()=>window.abyss.mode),'paused');await tap(9);assert.equal(await page.evaluate(()=>window.abyss.mode),'playing');
  await page.waitForTimeout(120);assert.equal(await page.evaluate(()=>window.abyss.input.fire),false,'held trigger requires release after resume');

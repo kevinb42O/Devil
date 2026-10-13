@@ -1,0 +1,1 @@
+Projectile browser passed: {"socketProjectionChecks":396,"maxScreenError":5.152753653467478e-15,"maxMatrixError":4.4196781789906936e-8,"dense":{"count":6000,"batches":1,"capacities":[256,256,256,256,8192,256]},"transformBenchmarkMs":{"optimized":{"median":0.4000000059604645,"p95":0.5},"legacy":{"median":0.5999999940395355,"p95":0.7000000178813934}},"emptyUploadFree":true}

@@ -1,0 +1,6 @@
+
+> abyss-daggers@0.1.0 test:controls
+> node tests/controls-browser.mjs && node tests/controls-edge-browser.mjs
+
+Controls browser passed: AZERTY, controller move/look/jump/fire, pause/resume/disconnect, menu navigation, persistence.
+Controls edge audit passed: layout switching, modal Escape, confirm/trigger carryover, homing, controller replacement, blur, key release, missing controller, responsive options.
