@@ -21,6 +21,7 @@
     "test:performance": "node tests/tower-performance-browser.mjs",
     "test:audio": "node tests/audio-browser.mjs",
     "test:projectiles": "node tests/projectile-browser.mjs",
+    "test:projectile-muzzle": "node tests/projectile-muzzle-browser.mjs",
     "test:projectile-impacts": "node tests/projectile-impact-browser.mjs",
     "assets:colliders": "node tools/build-projectile-colliders.mjs",
     "test:projectile-lighting": "node tests/projectile-lighting-browser.mjs",

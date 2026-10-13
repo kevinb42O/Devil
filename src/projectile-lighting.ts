@@ -1,4 +1,5 @@
 import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex} from './projectile-presentation';
+import {PROJECTILE_HAND_CLEARANCE} from './weapon-tuning';
 import * as THREE from 'three';
 import {type World} from './simulation';
 
@@ -33,10 +34,10 @@ export class ProjectileLighting {
   const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false,
    uniforms:{viewportHeight:{value:720}},
    vertexShader:`attribute vec3 shotCenter;attribute vec3 shotVelocity;attribute vec3 shotColor;
-    uniform float viewportHeight;varying vec2 glowUV;varying vec3 glowColor;
+    uniform float viewportHeight;varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;
     void main(){
      glowUV=uv;glowColor=shotColor;
-     vec4 center=modelViewMatrix*vec4(shotCenter,1.);
+     vec4 center=modelViewMatrix*vec4(shotCenter,1.);glowDistance=length(center.xyz);
      vec3 velocity=mat3(modelViewMatrix)*shotVelocity;
      // Project the flight direction relative to the perspective ray. Looking
      // straight down a shot still leaves a readable hot dot.
@@ -49,8 +50,8 @@ export class ProjectileLighting {
      center.xy+=across*position.x*width+along*(position.y*(width+trail)-trail*.35);
      gl_Position=projectionMatrix*center;
     }`,
-   fragmentShader:`varying vec2 glowUV;varying vec3 glowColor;
-    void main(){vec2 p=(glowUV-.5)*2.;float edge=max(0.,1.-dot(p,p));
+   fragmentShader:`varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;
+    void main(){if(glowDistance<${(PROJECTILE_HAND_CLEARANCE+.25).toFixed(2)})discard;vec2 p=(glowUV-.5)*2.;float edge=max(0.,1.-dot(p,p));
      float halo=edge*edge*.22;
      float core=pow(max(0.,1.-abs(p.x)*4.),2.)*pow(max(0.,1.-abs(p.y)),2.);
      float brightness=max(glowColor.r,max(glowColor.g,glowColor.b));

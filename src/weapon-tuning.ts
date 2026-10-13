@@ -6,6 +6,8 @@ export const WEAPON_PRESENTATION = [
   {streamSpread:.13,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
 ] as const;
 
+/** Camera-local clearance keeps launch meshes and bloom away from the hand. */
+export const PROJECTILE_HAND_CLEARANCE=1.15;
 /** Visible flying daggers: broader silhouettes and short, separated streaks. */
 export const DAGGER_PRESENTATION={width:2.2,length:1.8} as const;
 

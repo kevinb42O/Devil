@@ -2,7 +2,7 @@ import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex} from './project
 import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { type World, type Effect } from './simulation';
-import {WEAPON_PRESENTATION,STREAM_PRESENTATION,DAGGER_PRESENTATION} from './weapon-tuning';
+import {WEAPON_PRESENTATION,STREAM_PRESENTATION,DAGGER_PRESENTATION,PROJECTILE_HAND_CLEARANCE} from './weapon-tuning';
 import {HAND_POSE,HAND_SOCKETS} from './weapon-origin';
 const ROOT='/assets/original/devil-daggers/';
 type Emitter={start:number[];end:number[];rim:number[];alpha:number;rimStrength:number;clip:number;lifetimeCandidate:number[];speedCandidate:number[];sizeCandidate:number};
@@ -26,7 +26,7 @@ export class OriginalWeapon {
   get effectDiagnostics(){return {flashTime:this.flashTime,recoil:this.recoil,particles:this.fragments.length};}
   ready=false;error='';loaded:Promise<void>;handScene=new THREE.Scene();handCamera=new THREE.PerspectiveCamera(60,1,.01,3);
   private handModels:THREE.Group[]=[];private handMaterials:THREE.ShaderMaterial[]=[];private handTextures:THREE.Texture[]=[];private flashTextures:THREE.Texture[]=[];private projection=new THREE.Group();private pose=new THREE.Group();private flashTime=0;private recoil=0;
-  private daggers:THREE.InstancedMesh[]=[];private batches=new Map<string,Batch>();private fragments:Fragment[]=[];private definitions:Record<string,Emitter>={};private dummy=new THREE.Object3D();private projectileVelocity=new THREE.Vector3();private lastLevel=1;private tipFlames:Batch|null=null;private daggerCounts=new Uint32Array(6);private daggerCursors=new Uint32Array(6);
+  private daggers:THREE.InstancedMesh[]=[];private batches=new Map<string,Batch>();private fragments:Fragment[]=[];private definitions:Record<string,Emitter>={};private dummy=new THREE.Object3D();private projectileVelocity=new THREE.Vector3();private lastLevel=1;private daggerCounts=new Uint32Array(6);private daggerCursors=new Uint32Array(6);
   constructor(private scene:THREE.Scene){this.handScene.add(this.projection);this.projection.add(this.pose);this.projection.scale.set(HAND_POSE.screenScale,HAND_POSE.screenScale,1);this.loaded=this.load().catch(e=>{this.error=String(e);console.error('Original weapon assets could not load:',e);});}
   createCrewArm(level:number){
     if(!this.ready)return null;
@@ -77,10 +77,15 @@ export class OriginalWeapon {
       const color=PROJECTILE_COLORS[this.daggers.length];
       // HDR emission keeps the physical dagger readable inside its glow and
       // feeds the existing bloom pass without introducing a lighting pass.
-      material.onBeforeCompile=shader=>{shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',
-        `float detail=dot(outgoingLight,vec3(.2126,.7152,.0722));
+      material.onBeforeCompile=shader=>{
+        shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 daggerWorld;')
+          .replace('#include <project_vertex>','#include <project_vertex>\ndaggerWorld=(modelMatrix*instanceMatrix*vec4(transformed,1.)).xyz;');
+        shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 daggerWorld;')
+          .replace('#include <opaque_fragment>',
+        `if(length(daggerWorld-cameraPosition)<${PROJECTILE_HAND_CLEARANCE.toFixed(2)})discard;
+         float detail=dot(outgoingLight,vec3(.2126,.7152,.0722));
          outgoingLight=vec3(${color.join(',')})*(detail*2.4+.65);\n#include <opaque_fragment>`);};
-      material.customProgramCacheKey=()=>`dagger-emission-v2-${name}`;
+      material.customProgramCacheKey=()=>`dagger-emission-v3-clearance-${name}`;
       const batch=new THREE.InstancedMesh(daggerGeometry,material,256);batch.count=0;batch.instanceMatrix.setUsage(THREE.DynamicDrawUsage);batch.frustumCulled=false;this.scene.add(batch);this.daggers.push(batch);
     }
     for(const [index,name] of effectNames.entries()) {
@@ -90,14 +95,6 @@ export class OriginalWeapon {
       const material=new THREE.ShaderMaterial({uniforms:{originalTexture:{value:emberTexture}},vertexShader:vert,fragmentShader:frag,transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,forceSinglePass:true});
       const batch=new THREE.InstancedMesh(geometry,material,capacity);batch.count=0;batch.frustumCulled=false;this.scene.add(batch);this.batches.set(name,{mesh:batch,tint,rim,params});
     }
-    // One tiny viewmodel batch keeps the launch points readable between fast
-    // projectile samples. It uses the original flame geometry and emitter colors.
-    const flame=this.batches.get('flame1')!;
-    const geometry=flame.mesh.geometry.clone(),capacity=5;
-    const tint=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),rim=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),params=new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4);
-    geometry.setAttribute('effectColor',tint);geometry.setAttribute('effectRim',rim);geometry.setAttribute('effectParams',params);
-    const material=(flame.mesh.material as THREE.ShaderMaterial).clone();material.uniforms.originalTexture.value=emberTexture;material.depthTest=false;
-    const tipMesh=new THREE.InstancedMesh(geometry,material,capacity);tipMesh.name='fingertip-flames';tipMesh.count=0;tipMesh.frustumCulled=false;tipMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);this.pose.add(tipMesh);this.tipFlames={mesh:tipMesh,tint,rim,params};
     this.ready=true;
   }
   resize(w:number,h:number){this.handCamera.aspect=w/h;this.handCamera.updateProjectionMatrix();}
@@ -117,6 +114,16 @@ export class OriginalWeapon {
       for(let i=0;i<count;i++) {
         const socket=muzzles[i%muzzles.length],muzzle=new THREE.Vector3(socket.x,socket.y,socket.z);
         const dir=forward.clone().addScaledVector(right,(Math.random()-.5)*spread*2).addScaledVector(up,(Math.random()-.5)*spread*2).normalize();
+        if(local){
+          // Use separated, short sparks past the hand, not opaque flames sitting
+          // on each socket. Physical projectiles still originate at the fingers.
+          if(i<muzzles.length){
+            muzzle.addScaledVector(forward,.75);
+            const velocity=dir.clone().multiplyScalar(28).addScaledVector(right,(Math.random()-.5)*3);
+            this.add(ember,muzzle,velocity,`ember${1+i%3}`,.025,.045,.45);
+          }
+          continue;
+        }
         // Keep stream flames within roughly one metre of the fingertips instead
         // of projecting overlapping, opaque flames into the target's silhouette.
         const flameVelocity=dir.clone().multiplyScalar(burst?25+Math.random()*25:9+Math.random()*6);
@@ -160,18 +167,8 @@ export class OriginalWeapon {
     if(!this.ready)return;this.pose.visible=!menu;const level=world?.level||this.lastLevel;
     if(camera&&(this.handCamera.fov!==camera.fov||this.handCamera.aspect!==camera.aspect)){this.handCamera.fov=camera.fov;this.handCamera.aspect=camera.aspect;this.handCamera.updateProjectionMatrix();}
     this.flashTime=Math.max(0,this.flashTime-dt);this.recoil*=Math.exp(-dt*23);this.pose.position.z=HAND_POSE.z+this.recoil;
-    this.handModels.forEach((hand,i)=>{hand.visible=i===level-1;this.handMaterials[i].uniforms.originalTexture.value=this.flashTime>0?this.flashTextures[i]:this.handTextures[i];});
-    const tips=this.tipFlames!;
-    const sockets=HAND_SOCKETS[level-1],firing=world&&(world.weaponAudio.primary||world.weaponAudio.homing||this.flashTime>0)&&!menu;
-    tips.mesh.count=firing?sockets.length:0;
-    if(firing){
-      const emitter=this.definitions[`rapid${level}${world.weaponAudio.homing?'alt':''}`]??this.definitions[`rapid${level}`];
-      for(let i=0;i<sockets.length;i++){
-        const socket=sockets[i];this.dummy.position.set(socket.x,socket.y,socket.z);this.dummy.rotation.set(HAND_POSE.rotationX,0,0);this.dummy.scale.setScalar((.035+level*.012)*(1+Math.sin(world.time*70+i)*.12));this.dummy.updateMatrix();tips.mesh.setMatrixAt(i,this.dummy.matrix);
-        tips.tint.setXYZ(i,...emitter.start as [number,number,number]);tips.rim.setXYZ(i,...emitter.rim as [number,number,number]);tips.params.setXYZW(i,emitter.alpha,emitter.rimStrength,emitter.clip,0);
-      }
-      for(const attribute of [tips.mesh.instanceMatrix,tips.tint,tips.rim,tips.params]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,tips.mesh.count*attribute.itemSize);attribute.needsUpdate=true;}
-    }
+    // Flash brightness briefly without replacing the hand with the cyan flash map.
+    this.handModels.forEach((hand,i)=>{hand.visible=i===level-1;this.handMaterials[i].uniforms.originalTexture.value=this.handTextures[i];this.handMaterials[i].uniforms.brightness.value=1+this.flashTime/.045*.15;});
     const counts=this.daggerCounts,cursors=this.daggerCursors;counts.fill(0);cursors.fill(0);
     if(world&&!menu){
       for(const p of world.projectiles)counts[this.daggerIndex(p.level??level,p.homing)]++;
@@ -208,6 +205,6 @@ export class OriginalWeapon {
     for(const [name,batch] of this.batches){batch.mesh.count=batchCounts.get(name)||0;if(!batch.mesh.count)continue;for(const attribute of [batch.mesh.instanceMatrix,batch.tint,batch.rim,batch.params]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,batch.mesh.count*attribute.itemSize);attribute.needsUpdate=true;}}
   }
   render(renderer:THREE.WebGLRenderer,menu:boolean){if(!this.ready||menu)return;renderer.autoClear=false;renderer.clearDepth();renderer.render(this.handScene,this.handCamera);renderer.autoClear=true;}
-  clear(){if(this.tipFlames)this.tipFlames.mesh.count=0;this.fragments.length=0;for(const batch of this.daggers)batch.count=0;this.flashTime=0;this.recoil=0;}
+  clear(){this.fragments.length=0;for(const batch of this.daggers)batch.count=0;this.flashTime=0;this.recoil=0;}
   preview(level:number){this.lastLevel=level;}
 }

@@ -23,9 +23,8 @@ try{
     const error=Math.hypot(worldScreen.x-handScreen.x,worldScreen.y-handScreen.y);maxScreenError=Math.max(maxScreenError,error);check(error<1e-6,'world projectile and rendered fingertip align');checks++;
    }
   }
-  // Short mounted flames identify every active socket, even between shots.
-  weapon.clear();world.level=4;world.projectiles=[];world.effects=[];world.shoot(idleInput(),true,false);for(const event of world.effects)weapon.effect(event,world,0,0);weapon.update(world,0,false,renderer.camera);check(weapon.tipFlames.mesh.count===5,'five fingertip flames on hand IV burst');
-  const tipMatrix=new THREE.Matrix4();weapon.tipFlames.mesh.getMatrixAt(4,tipMatrix);check(Math.abs(tipMatrix.elements[12]-HAND_SOCKETS[3][4].x)<1e-6,'flame attached to measured fingertip');weapon.clear();weapon.update(world,0,false,renderer.camera);check(weapon.tipFlames.mesh.count===0,'inactive fingertip flames disappear');
+  // Firing does not attach permanent flame geometry to the hand.
+  check(!weapon.handScene.getObjectByName('fingertip-flames'),'no mounted flame cluster');
   // Interpolation retains the birth position and blends the actual swept path.
   weapon.clear();world.level=1;world.projectiles=[];world.shoot(idleInput(),false,false);const p=world.projectiles[0];world.updateProjectiles(STEP);
   weapon.update(world,0,false,renderer.camera,0);const matrix=new THREE.Matrix4();weapon.daggers[0].getMatrixAt(0,matrix);check(Math.abs(matrix.elements[12]-p.previous.x)<1e-6,'birth interpolation begins at hand');
