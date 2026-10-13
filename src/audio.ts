@@ -26,6 +26,7 @@ export class Sound{
  private choices=new Map<string,number>();
  private failures=new Set<string>();
  private generation=0;
+ private preparedHands=new Set<number>();
  get diagnostics(){return {loaded:this.buffers.size,failed:[...this.failures],oneShots:this.shots.size,oneShotNames:[...this.shots].map(v=>v.name),loops:[...this.loops.values()].map(v=>v.name)};}
  async start(){
   if(this.context){await this.context.resume();return this.loading;}
@@ -87,7 +88,7 @@ export class Sound{
  private oneShot(name:string,pos?:Vec,scale=1,priority=1,throttle=0,throttleKey=name.replace(/\d+$/,'')){
   const c=this.context;if(!c||!this.master||c.state!=='running')return;
   const buffer=this.buffers.get(name);if(!buffer){
-   const generation=this.generation,expiresAt=performance.now()+100,position=pos?{...pos}:undefined;
+   const generation=this.generation,expiresAt=performance.now()+(priority>=4?2000:100),position=pos?{...pos}:undefined;
    void this.load(name).then(loaded=>{if(loaded&&generation===this.generation&&performance.now()<expiresAt)this.oneShot(name,position,scale,priority,throttle,throttleKey);});
    return; // Only a fresh cue may survive loading; never carry it into a new run.
   }
@@ -120,7 +121,8 @@ export class Sound{
    this.oneShot((e.deathCause??victim?.cause??world.cause)==='FALLEN'?'fall':'death',local?undefined:e.pos,1,4);return;
   }
   const name=e.kind==='pickup'?level>=3?'gibcollectmagic':'gibcollect':e.kind==='upgrade'?e.amount===1?'leveldown':`levelup${e.amount}`:e.kind==='jump'?e.amount===3?'jump3':e.amount===2?'jump2':'jump1':e.kind==='land'?e.amount===2?'land2':'land':e.kind==='beckon'?e.enemy==='orb'?'leviathanbeckon2':'leviathanbeckon':e.kind==='transmute'?'leviathantransmute':e.kind==='explosion'?this.choose(variants('magentadetonate',5)):e.kind==='bounce'?'eggbounce':e.kind==='hatch'?e.enemy==='egg2'?'eggburst2':'eggburst':e.kind==='burrow'?'burrowcentipede':e.kind==='emerge'?'unburrowcentipede':undefined;
-  if(name)this.oneShot(name,['beckon','transmute','explosion','bounce','hatch','burrow','emerge'].includes(e.kind)?e.pos:undefined,1,e.kind==='upgrade'?4:1,e.kind==='pickup'?.025:e.kind==='explosion'?.035:0);
+  const remotePlayer=e.shooterId&&world.crew.find(p=>p.id===e.shooterId&&p.player!==world.player);
+  if(name)this.oneShot(name,remotePlayer||['beckon','transmute','explosion','bounce','hatch','burrow','emerge'].includes(e.kind)?e.pos:undefined,1,e.kind==='upgrade'?4:1,e.kind==='pickup'?.025:e.kind==='explosion'?.035:0);
  }
  private loop(id:number,name:string,pos?:Vec,scale=1,randomPhase=true){
   const c=this.context;if(!c||!this.master||c.state!=='running')return;let voice=this.loops.get(id);
@@ -133,6 +135,13 @@ export class Sound{
  }
  update(world:World){
   if(world.state!=='playing'){for(const id of this.loops.keys())this.stop(id);return;}
+  // Decode the next hand before its gem threshold, so its first attack and
+  // upgrade cue are ready without loading the entire sound library at startup.
+  for(const level of [world.level,Math.min(4,world.level+1)]){
+   if(this.preparedHands.has(level)||!this.context)continue;this.preparedHands.add(level);
+   const names=[`rapid${level}`,level<=2?`shot${level}`:variants(`shot${level}alt`,level===3?4:5),level===1?'leveldown':`levelup${level}`,...(level>=3?['gibcollectmagic',level===4?'magentashot':'daggerseek',level===4?'magentadrone':'daggerdrone']:[])].flat();
+   void Promise.all(names.map(name=>this.load(name)));
+  }
   const ids=new Set<number>();
   if(world.weaponAudio.primary){ids.add(-10);this.loop(-10,`rapid${world.level}`,undefined,1,false);}
   // Homing drone follows surviving projectiles, instead of stacking an eight-second drone per launch.

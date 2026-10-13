@@ -15,6 +15,7 @@
     "test:startup-performance": "node tests/startup-performance-browser.mjs",
     "assets:import": "node tools/import-dd-assets.mjs",
     "test:weapon": "node tests/weapon-browser.mjs",
+    "test:hand-upgrades": "tsx --test tests/hand-upgrades.test.ts && node tests/hand-upgrades-browser.mjs",
     "test:weapon-readability": "node tests/weapon-readability-browser.mjs",
     "test:enemies": "node tests/enemy-browser.mjs",
     "test:replica": "node tests/replica-browser.mjs",

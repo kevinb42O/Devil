@@ -23,9 +23,9 @@ const handVert=`varying vec2 vUV; void main(){vUV=uv;vec4 p=modelViewMatrix*vec4
 // Hand pass runs after postprocessing, preserving the original texture's pixel values.
 const handFrag=`uniform sampler2D originalTexture;uniform float brightness;varying vec2 vUV;void main(){vec3 diffuse=texture2D(originalTexture,vUV).rgb;diffuse*=diffuse;gl_FragColor=vec4(sqrt(diffuse*brightness),1.);}`;
 export class OriginalWeapon {
-  get effectDiagnostics(){return {flashTime:this.flashTime,recoil:this.recoil,particles:this.fragments.length};}
+  get effectDiagnostics(){return {flashTime:this.flashTime,recoil:this.recoil,particles:this.fragments.length,upgradeTime:this.upgradeTime,visibleLevel:this.handModels.findIndex(hand=>hand.visible)+1};}
   ready=false;error='';loaded:Promise<void>;handScene=new THREE.Scene();handCamera=new THREE.PerspectiveCamera(60,1,.01,3);
-  private handModels:THREE.Group[]=[];private handMaterials:THREE.ShaderMaterial[]=[];private handTextures:THREE.Texture[]=[];private flashTextures:THREE.Texture[]=[];private projection=new THREE.Group();private pose=new THREE.Group();private flashTime=0;private recoil=0;
+  private handModels:THREE.Group[]=[];private handMaterials:THREE.ShaderMaterial[]=[];private handTextures:THREE.Texture[]=[];private flashTextures:THREE.Texture[]=[];private projection=new THREE.Group();private pose=new THREE.Group();private flashTime=0;private flashLevel=1;private freshFlash=false;private upgradeTime=0;private freshUpgrade=false;private recoil=0;
   private daggers:THREE.InstancedMesh[]=[];private batches=new Map<string,Batch>();private fragments:Fragment[]=[];private definitions:Record<string,Emitter>={};private dummy=new THREE.Object3D();private projectileVelocity=new THREE.Vector3();private lastLevel=1;private daggerCounts=new Uint32Array(6);private daggerCursors=new Uint32Array(6);
   constructor(private scene:THREE.Scene){this.handScene.add(this.projection);this.projection.add(this.pose);this.projection.scale.set(HAND_POSE.screenScale,HAND_POSE.screenScale,1);this.loaded=this.load().catch(e=>{this.error=String(e);console.error('Original weapon assets could not load:',e);});}
   createCrewArm(level:number){
@@ -104,7 +104,7 @@ export class OriginalWeapon {
       const name=e.kind==='burrow'?'centipedeburrow':'centipedeemerge',count=e.kind==='spawn'?4:18;
       for(let i=0;i<count;i++)this.add(name,new THREE.Vector3(e.pos.x+(Math.random()-.5)*2,e.pos.y+.08,e.pos.z+(Math.random()-.5)*2),new THREE.Vector3((Math.random()-.5)*2,.6+Math.random()*1.3,(Math.random()-.5)*2),`smokeblob${1+i%4}`,.7+Math.random()*.7,1.2+Math.random(),.6);
     } else if(e.kind==='shot'||e.kind==='burst') {
-      if(local){this.flashTime=.045;this.recoil=e.kind==='burst'?.025:.007;}
+      if(local){this.flashTime=.045;this.flashLevel=level;this.freshFlash=true;this.recoil=e.kind==='burst'?.025:.007;}
       const name=`rapid${level}${e.amount===1?'alt':''}`;const ember=`${name}ember`;
       const muzzles=e.muzzles??[e.pos];
       const tuning=WEAPON_PRESENTATION[level-1];
@@ -143,6 +143,7 @@ export class OriginalWeapon {
       // Flesh spray and deposition are handled by the independent blood pool.
       for(let i=0;i<3;i++)this.add('hit1',new THREE.Vector3(e.pos.x,e.pos.y,e.pos.z),new THREE.Vector3((Math.random()-.5)*4,Math.random()*3,(Math.random()-.5)*4),'ember1',.12);
     } else if(e.kind==='pickup'||e.kind==='upgrade') {
+      if(local&&e.kind==='upgrade'){this.upgradeTime=.3;this.freshUpgrade=true;}
       for(let i=0;i<(e.kind==='upgrade'?[24,48,90,150][level-1]:3);i++)this.add('magic',new THREE.Vector3(e.pos.x,e.pos.y,e.pos.z),new THREE.Vector3((Math.random()-.5)*3,Math.random()*3,(Math.random()-.5)*3),`ember${1+Math.floor(Math.random()*3)}`,.12);
     }
   }
@@ -165,9 +166,12 @@ export class OriginalWeapon {
   update(world:World|null,dt:number,menu:boolean,camera?:THREE.PerspectiveCamera,projectileAlpha=1) {
     if(!this.ready)return;this.pose.visible=!menu;const level=world?.level||this.lastLevel;
     if(camera&&(this.handCamera.fov!==camera.fov||this.handCamera.aspect!==camera.aspect)){this.handCamera.fov=camera.fov;this.handCamera.aspect=camera.aspect;this.handCamera.updateProjectionMatrix();}
-    this.flashTime=Math.max(0,this.flashTime-dt);this.recoil*=Math.exp(-dt*23);this.pose.position.z=HAND_POSE.z+this.recoil;
+    // An event arrived during this frame: show it once before advancing its
+    // render clock, even if the frame took longer than the entire flash.
+    if(!this.freshFlash){this.flashTime=Math.max(0,this.flashTime-dt);this.recoil*=Math.exp(-dt*23);}this.freshFlash=false;
+    if(!this.freshUpgrade)this.upgradeTime=Math.max(0,this.upgradeTime-dt);this.freshUpgrade=false;this.pose.position.z=HAND_POSE.z+this.recoil;
     // Use each level's original firing skin for the shot, then return to idle.
-    this.handModels.forEach((hand,i)=>{hand.visible=i===level-1;this.handMaterials[i].uniforms.originalTexture.value=this.flashTime>0?this.flashTextures[i]:this.handTextures[i];this.handMaterials[i].uniforms.brightness.value=1+this.flashTime/.045*.15;});
+    this.handModels.forEach((hand,i)=>{hand.visible=i===level-1;this.handMaterials[i].uniforms.originalTexture.value=this.flashTime>0&&this.flashLevel===level?this.flashTextures[i]:this.handTextures[i];this.handMaterials[i].uniforms.brightness.value=1+(this.flashLevel===level?this.flashTime/.045*.15:0)+this.upgradeTime/.3*.3;});
     const counts=this.daggerCounts,cursors=this.daggerCursors;counts.fill(0);cursors.fill(0);
     if(world&&!menu){
       for(const p of world.projectiles)counts[this.daggerIndex(p.level??level,p.homing)]++;
@@ -210,6 +214,6 @@ export class OriginalWeapon {
     for(const [name,batch] of this.batches){batch.mesh.count=batchCounts.get(name)||0;if(!batch.mesh.count)continue;for(const attribute of [batch.mesh.instanceMatrix,batch.tint,batch.rim,batch.params]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,batch.mesh.count*attribute.itemSize);attribute.needsUpdate=true;}}
   }
   render(renderer:THREE.WebGLRenderer,menu:boolean){if(!this.ready||menu)return;renderer.autoClear=false;renderer.clearDepth();renderer.render(this.handScene,this.handCamera);renderer.autoClear=true;}
-  clear(){this.fragments.length=0;for(const batch of this.daggers)batch.count=0;this.flashTime=0;this.recoil=0;}
+  clear(){this.fragments.length=0;for(const batch of this.daggers)batch.count=0;this.flashTime=0;this.freshFlash=false;this.upgradeTime=0;this.freshUpgrade=false;this.recoil=0;this.lastLevel=1;}
   preview(level:number){this.lastLevel=level;}
 }
