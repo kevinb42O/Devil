@@ -1,0 +1,57 @@
+/* During a run, only elapsed time and the current hand remain visible. */
+#hud > :not(.hud-top):not(.hud-bottom),
+#hud .hud-top > :not(#timer),
+#hud .hud-bottom > :not(.power),
+#hud .power small,
+#hud .power .progress,
+#crew-hud {
+  display: none !important;
+}
+
+#hud .hud-top {
+  top: 12px;
+  left: 0;
+  right: 0;
+  height: 24px;
+}
+
+#hud #timer {
+  font: 500 22px/1 'Barlow Condensed', sans-serif;
+  letter-spacing: .5px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #f3dbb8;
+}
+
+#hud #timer::before,
+#hud #timer::after {
+  display: none;
+  content: none;
+}
+
+#hud .hud-bottom {
+  left: max(18px, env(safe-area-inset-left));
+  right: auto;
+  bottom: max(18px, env(safe-area-inset-bottom));
+}
+
+#hud .power {
+  gap: 8px;
+}
+
+#hud .power > span {
+  width: auto;
+  height: auto;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  clip-path: none;
+  font: 500 22px/1 'Barlow Condensed', sans-serif;
+}
+
+#hud .power #power-name {
+  margin: 0;
+  font: 500 13px/1 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+}

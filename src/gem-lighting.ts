@@ -42,6 +42,8 @@ export class GemLighting {
   });
   this.halo=new THREE.InstancedMesh(new THREE.PlaneGeometry(1.7,1.7),material,1200);this.halo.frustumCulled=false;this.halo.count=0;scene.add(this.halo);
  }
+ /** Reuse the player's floor illumination around a fixed world object. */
+ setPlayerLight(position:THREE.Vector3,enabled=true){this.playerPosition.value.copy(position);this.playerStrength.value=enabled?1:0;}
  update(world:World|null,camera:THREE.Camera,menu:boolean){
   this.playerPosition.value.copy(camera.position);this.playerPosition.value.y-=.35;
   this.playerStrength.value=!menu&&world?1:0;

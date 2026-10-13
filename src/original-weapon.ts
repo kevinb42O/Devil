@@ -1,4 +1,4 @@
-import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex} from './projectile-presentation';
+import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex,projectileRoll} from './projectile-presentation';
 import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { type World, type Effect } from './simulation';
@@ -53,7 +53,7 @@ export class OriginalWeapon {
     const loader=new OBJLoader(),textures=new THREE.TextureLoader();
     const texture=async(name:string)=>{const t=await textures.loadAsync(ROOT+`textures/${name}.png`);t.minFilter=t.magFilter=THREE.NearestFilter;t.generateMipmaps=false;t.colorSpace=THREE.NoColorSpace;return t;};
     const mesh=async(name:string)=>{const r=await fetch(ROOT+`meshes/${name}.obj`);if(!r.ok)throw Error(`Original mesh ${name} missing`);return loader.parse(await r.text());};
-    const effectNames=[...Array.from({length:8},(_,i)=>`flame${i+1}`),...Array.from({length:3},(_,i)=>`ember${i+1}`),...Array.from({length:4},(_,i)=>`blood${i+1}`)];
+    const effectNames=[...Array.from({length:8},(_,i)=>`flame${i+1}`),...Array.from({length:3},(_,i)=>`ember${i+1}`),...Array.from({length:4},(_,i)=>`blood${i+1}`),...Array.from({length:4},(_,i)=>`smokeblob${i+1}`)];
     // Fetch independent assets together instead of paying a round trip per effect.
     const [hands,daggerModel,daggerMaps,emberTexture,effectModels]=await Promise.all([
       Promise.all((manifest.hands as {mesh:string;texture:string;flash:string}[]).map(async hand=>Promise.all([mesh(hand.mesh),texture(hand.texture),texture(hand.flash)]))),
@@ -68,8 +68,7 @@ export class OriginalWeapon {
     this.pose.rotation.set(HAND_POSE.rotationX,HAND_POSE.rotationY,0);
     this.pose.position.set(HAND_POSE.x,HAND_POSE.y,HAND_POSE.z);
     let daggerGeometry:THREE.BufferGeometry|undefined;daggerModel.traverse(o=>{if(o instanceof THREE.Mesh)daggerGeometry=o.geometry;});if(!daggerGeometry)throw Error('No dagger geometry');
-    // Enlarge the actual flying mesh, rather than filling its path with flame.
-    // Local +Z is the flight direction; keep the length short enough for gaps.
+    // Local +Z is the flight direction; keep individual blades compact.
     daggerGeometry.scale(DAGGER_PRESENTATION.width,DAGGER_PRESENTATION.width,DAGGER_PRESENTATION.length);
     for(const name of ['dagger','dagger2','dagger3','dagger4','dagger5','dagger6']) {
       const map=daggerMaps[this.daggers.length];map.colorSpace=THREE.SRGBColorSpace;
@@ -101,7 +100,10 @@ export class OriginalWeapon {
   effect(e:Effect,world:World,yaw:number,pitch:number,local=true) {
     if(!this.ready)return;const level=e.level??world.level;if(local)this.lastLevel=level;
     const forward=e.direction?new THREE.Vector3(e.direction.x,e.direction.y,e.direction.z):new THREE.Vector3(-Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(yaw)*Math.cos(pitch));
-    if(e.kind==='shot'||e.kind==='burst') {
+    if(e.enemy==='centipede'&&(e.kind==='emerge'||e.kind==='burrow'||e.kind==='spawn'&&e.amount===-1)){
+      const name=e.kind==='burrow'?'centipedeburrow':'centipedeemerge',count=e.kind==='spawn'?4:18;
+      for(let i=0;i<count;i++)this.add(name,new THREE.Vector3(e.pos.x+(Math.random()-.5)*2,e.pos.y+.08,e.pos.z+(Math.random()-.5)*2),new THREE.Vector3((Math.random()-.5)*2,.6+Math.random()*1.3,(Math.random()-.5)*2),`smokeblob${1+i%4}`,.7+Math.random()*.7,1.2+Math.random(),.6);
+    } else if(e.kind==='shot'||e.kind==='burst') {
       if(local){this.flashTime=.045;this.recoil=e.kind==='burst'?.025:.007;}
       const name=`rapid${level}${e.amount===1?'alt':''}`;const ember=`${name}ember`;
       const muzzles=e.muzzles??[e.pos];
@@ -115,10 +117,7 @@ export class OriginalWeapon {
         const socket=muzzles[i%muzzles.length],muzzle=new THREE.Vector3(socket.x,socket.y,socket.z);
         const dir=forward.clone().addScaledVector(right,(Math.random()-.5)*spread*2).addScaledVector(up,(Math.random()-.5)*spread*2).normalize();
         if(local){
-          // Use separated, short sparks past the hand, not opaque flames sitting
-          // on each socket. Physical projectiles still originate at the fingers.
           if(i<muzzles.length){
-            muzzle.addScaledVector(forward,.75);
             const velocity=dir.clone().multiplyScalar(28).addScaledVector(right,(Math.random()-.5)*3);
             this.add(ember,muzzle,velocity,`ember${1+i%3}`,.025,.045,.45);
           }
@@ -140,9 +139,9 @@ export class OriginalWeapon {
       // fragment cap and emitter batches instead of adding lights or meshes.
       const n=e.direction??{x:0,y:1,z:0};
       for(let i=0,count=Math.min(3,1600-this.fragments.length);i<count;i++)this.add('hit1',new THREE.Vector3(e.pos.x,e.pos.y,e.pos.z),new THREE.Vector3(n.x*3+(Math.random()-.5)*2,n.y*3+(Math.random()-.5)*2,n.z*3+(Math.random()-.5)*2),'ember1',.13,.1+Math.random()*.06,.8);
-    } else if(e.kind==='hit'||e.kind==='kill') {
-      const count=e.kind==='kill'?24:5;const name=e.kind==='kill'?'blood':'hit1';
-      for(let i=0;i<count;i++)this.add(name,new THREE.Vector3(e.pos.x,e.pos.y,e.pos.z),new THREE.Vector3((Math.random()-.5)*8,Math.random()*6,(Math.random()-.5)*8),`blood${1+Math.floor(Math.random()*4)}`,.22+Math.random()*.18);
+    } else if(e.kind==='hit') {
+      // Flesh spray and deposition are handled by the independent blood pool.
+      for(let i=0;i<3;i++)this.add('hit1',new THREE.Vector3(e.pos.x,e.pos.y,e.pos.z),new THREE.Vector3((Math.random()-.5)*4,Math.random()*3,(Math.random()-.5)*4),'ember1',.12);
     } else if(e.kind==='pickup'||e.kind==='upgrade') {
       for(let i=0;i<(e.kind==='upgrade'?[24,48,90,150][level-1]:3);i++)this.add('magic',new THREE.Vector3(e.pos.x,e.pos.y,e.pos.z),new THREE.Vector3((Math.random()-.5)*3,Math.random()*3,(Math.random()-.5)*3),`ember${1+Math.floor(Math.random()*3)}`,.12);
     }
@@ -167,8 +166,8 @@ export class OriginalWeapon {
     if(!this.ready)return;this.pose.visible=!menu;const level=world?.level||this.lastLevel;
     if(camera&&(this.handCamera.fov!==camera.fov||this.handCamera.aspect!==camera.aspect)){this.handCamera.fov=camera.fov;this.handCamera.aspect=camera.aspect;this.handCamera.updateProjectionMatrix();}
     this.flashTime=Math.max(0,this.flashTime-dt);this.recoil*=Math.exp(-dt*23);this.pose.position.z=HAND_POSE.z+this.recoil;
-    // Flash brightness briefly without replacing the hand with the cyan flash map.
-    this.handModels.forEach((hand,i)=>{hand.visible=i===level-1;this.handMaterials[i].uniforms.originalTexture.value=this.handTextures[i];this.handMaterials[i].uniforms.brightness.value=1+this.flashTime/.045*.15;});
+    // Use each level's original firing skin for the shot, then return to idle.
+    this.handModels.forEach((hand,i)=>{hand.visible=i===level-1;this.handMaterials[i].uniforms.originalTexture.value=this.flashTime>0?this.flashTextures[i]:this.handTextures[i];this.handMaterials[i].uniforms.brightness.value=1+this.flashTime/.045*.15;});
     const counts=this.daggerCounts,cursors=this.daggerCursors;counts.fill(0);cursors.fill(0);
     if(world&&!menu){
       for(const p of world.projectiles)counts[this.daggerIndex(p.level??level,p.homing)]++;
@@ -189,6 +188,12 @@ export class OriginalWeapon {
         array[offset]=(1-y2)*scale;array[offset+1]=xy*scale;array[offset+2]=-yw*scale;array[offset+3]=0;
         array[offset+4]=xy*scale;array[offset+5]=(1-x2)*scale;array[offset+6]=xw*scale;array[offset+7]=0;
         array[offset+8]=yw*scale;array[offset+9]=-xw*scale;array[offset+10]=(1-x2-y2)*scale;array[offset+11]=0;
+        // Postmultiply by a local Z roll: the forward column stays untouched.
+        const roll=projectileRoll(p),cos=Math.cos(roll),sin=Math.sin(roll);
+        for(let axis=0;axis<3;axis++){
+          const right=array[offset+axis],up=array[offset+4+axis];
+          array[offset+axis]=right*cos+up*sin;array[offset+4+axis]=up*cos-right*sin;
+        }
         array[offset+12]=position.x;array[offset+13]=position.y;array[offset+14]=position.z;array[offset+15]=1;
       }
     }
@@ -200,7 +205,7 @@ export class OriginalWeapon {
       if(f.pos.y<.025){f.pos.y=.025;f.vel.y=Math.abs(f.vel.y)*.18;f.vel.x*=.88;f.vel.z*=.88;}
       const batch=this.batches.get(f.family)!;const index=batchCounts.get(f.family)||0;batchCounts.set(f.family,index+1);
       const age=Math.min(1,f.age/f.life),scale=f.size*(1-age*.5);this.dummy.position.copy(f.pos);this.dummy.quaternion.copy(f.rotation);this.dummy.rotateX(f.spin.x*f.age*3);this.dummy.rotateY(f.spin.y*f.age*3);this.dummy.scale.setScalar(scale);this.dummy.updateMatrix();batch.mesh.setMatrixAt(index,this.dummy.matrix);
-      const e=f.emitter;batch.tint.setXYZ(index,e.start[0]+(e.end[0]-e.start[0])*age,e.start[1]+(e.end[1]-e.start[1])*age,e.start[2]+(e.end[2]-e.start[2])*age);batch.rim.setXYZ(index,e.rim[0],e.rim[1],e.rim[2]);batch.params.setXYZW(index,e.alpha*f.opacity*Math.max(0,1-age*age),e.rimStrength,e.clip,age*.04);
+      const e=f.emitter;batch.tint.setXYZ(index,e.start[0]+(e.end[0]-e.start[0])*age,e.start[1]+(e.end[1]-e.start[1])*age,e.start[2]+(e.end[2]-e.start[2])*age);batch.rim.setXYZ(index,e.rim[0],e.rim[1],e.rim[2]);batch.params.setXYZW(index,(f.family.startsWith('smokeblob')?1:e.alpha)*f.opacity*Math.max(0,1-age*age),e.rimStrength,e.clip,age*.04);
     }
     for(const [name,batch] of this.batches){batch.mesh.count=batchCounts.get(name)||0;if(!batch.mesh.count)continue;for(const attribute of [batch.mesh.instanceMatrix,batch.tint,batch.rim,batch.params]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,batch.mesh.count*attribute.itemSize);attribute.needsUpdate=true;}}
   }

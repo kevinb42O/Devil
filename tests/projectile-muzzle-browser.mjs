@@ -9,16 +9,18 @@ try{
  const result=await page.evaluate(async()=>{
   const [T,{World,v,idleInput},{OriginalWeapon},{ProjectileLighting}]=await Promise.all([import('/node_modules/.vite/deps/three.js'),import('/src/simulation.ts'),import('/src/original-weapon.ts'),import('/src/projectile-lighting.ts')]);
   const scene=new T.Scene(),weapon=new OriginalWeapon(scene);await weapon.loaded;if(!weapon.ready)throw Error(weapon.error);
-  const camera=new T.PerspectiveCamera(90,640/480,.05,100),world=new World(71,{schedule:false});world.player.pos=v(0,0,0);
+  const camera=new T.PerspectiveCamera(90,640/480,.05,100),world=new World(71,{schedule:false});world.player.pos=v(0,5,0);
   const check=(value,label)=>{if(!value)throw Error(label);};let handChecks=0;
   for(let level=1;level<=4;level++)for(const burst of [false,true])for(const homing of [false,true]){
    if(homing&&level<3)continue;weapon.clear();world.level=level;world.reserve=1000;world.projectiles=[];world.effects=[];
    world.shoot(idleInput(),burst,homing);const before=world.projectiles.map(p=>({...p.pos}));for(const e of world.effects)weapon.effect(e,world,0,0);
    weapon.update(world,0,false,camera,0);
    check(!weapon.handScene.getObjectByName('fingertip-flames'),'no attached flames');
-   check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.handTextures[level-1],'firing retains normal hand texture');
+   check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.flashTextures[level-1],'firing uses the original hand flash skin');
    check(weapon.fragments.length<=world.effects[0].muzzles.length,'at most one launch spark per socket');
-   check(weapon.fragments.every(f=>f.family.startsWith('ember')&&f.life<=.045&&f.pos.length()>1.1),'short sparks start clear of hand');
+   check(weapon.fragments.every(f=>f.family.startsWith('ember')&&f.size===.025&&f.life<=.045&&world.effects[0].muzzles.some(m=>f.pos.distanceTo(new T.Vector3(m.x,m.y,m.z))<1e-9)),'small sparks share the physical emitters beneath the hand');
+   const kick=weapon.effectDiagnostics.recoil;check(kick>0,'firing kicks the hand');
+   weapon.update(world,.5,false,camera,0);check(weapon.effectDiagnostics.recoil<kick*.001,'hand kick recovers promptly');
    check(world.projectiles.every((p,i)=>p.pos.x===before[i].x&&p.pos.y===before[i].y&&p.pos.z===before[i].z),'visual clearance never moves physical shots');handChecks++;
   }
   weapon.clear();world.projectiles=[];weapon.update(world,0,false,camera);

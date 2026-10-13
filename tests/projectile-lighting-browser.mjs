@@ -26,13 +26,13 @@ try{
    const gl=renderer.renderer.getContext(),pixels=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
    renderer.projectileLighting.glow.visible=false;renderer.composer.render();renderer.originalWeapon.render(renderer.renderer,false);
    const callsWithoutGlow=renderer.renderer.info.render.calls-calls;const floorLit=sample(.7,0,-8);
-   const without=new Uint8Array(pixels.length);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,without);let glowPixelGain=0;for(let i=0;i<pixels.length;i+=4)glowPixelGain+=Math.max(0,pixels[i]-without[i]);
+   const without=new Uint8Array(pixels.length);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,without);let glowPixelGain=0;for(let i=0;i<pixels.length;i+=4)glowPixelGain+=Math.max(0,pixels[i+1]-without[i+1]);
    renderer.render(world,0,0,0,false);
    return {quality,dark,lit,floorLit,extraGlowDraws:calls-callsWithoutGlow,glowPixelGain,...renderer.projectileLighting.diagnostics};
   },quality));
   await page.locator('#light-test').screenshot({path:`artifacts/projectile-light-${quality}.png`});
  }
- for(const r of results){assert.ok(r.floorLit[0]>r.dark[0]+3&&r.floorLit[0]<r.dark[0]+35,JSON.stringify(r));assert.ok(r.glowPixelGain>1000,JSON.stringify(r));assert.equal(r.count,12);assert.equal(r.extraGlowDraws,1);}
+ for(const r of results){assert.ok(r.floorLit[1]>r.dark[1]+3&&r.floorLit[1]<r.dark[1]+35,JSON.stringify(r));assert.ok(r.floorLit[1]-r.dark[1]>r.floorLit[0]-r.dark[0],JSON.stringify(r));assert.ok(r.glowPixelGain>1000,JSON.stringify(r));assert.equal(r.count,12);assert.equal(r.extraGlowDraws,1);}
  await page.evaluate(async()=>{
   const {renderer,world,v}=window.lightFixture;const {idleInput,STEP}=await import('/src/simulation.ts');
   renderer.clear();world.projectiles=[];world.effects=[];world.level=1;world.player.pos=v(0,1.7,0);
@@ -51,7 +51,30 @@ try{
   world.projectiles=[];lighting.update(world,false,1,720);const version=center.version,textureVersion=lighting.field.version;lighting.update(world,false,1,720);
   return {dense,interpolated,menuCount,emptyUploadFree:center.version===version&&lighting.field.version===textureVersion,updateMedianMs:times[20],updateP95Ms:times[38]};
  });
+ const strafe=await page.evaluate(()=>{
+  const {THREE,v}=window.lightFixture,scene=new THREE.Scene();
+  const Lighting=window.lightFixture.renderer.projectileLighting.constructor;
+  const lighting=new Lighting(scene,new THREE.MeshBasicMaterial()),renderer=new THREE.WebGLRenderer({antialias:false});
+  renderer.setSize(512,512);renderer.setClearColor(0);
+  const camera=new THREE.PerspectiveCamera(90,1,.05,100),p={id:1,pos:v(0,0,-4),vel:v(0,0,-70),age:.1,homing:false,level:1};
+  const world={projectiles:[p],level:1},pixels=new Uint8Array(512*512*4);let maxCenterError=0,maxAnisotropy=0,checks=0;
+  const draw=()=>{lighting.update(world,false,1,512);renderer.render(scene,camera);const gl=renderer.getContext();gl.readPixels(0,0,512,512,gl.RGBA,gl.UNSIGNED_BYTE,pixels);};
+  for(const x of [-1,0,1]){
+   camera.position.set(x,0,0);camera.updateMatrixWorld(true);draw();const reference=pixels.slice();
+   p.vel=v(18,9,-70);draw();if(!pixels.every((value,i)=>value===reference[i]))throw Error('glow shape changes with lateral shot velocity');p.vel=v(0,0,-70);
+   let weight=0,sx=0,sy=0;
+   for(let i=0;i<pixels.length;i+=4){const w=pixels[i]+pixels[i+1]+pixels[i+2];weight+=w;sx+=w*((i/4)%512+.5);sy+=w*(Math.floor(i/4/512)+.5);}
+   if(!weight)throw Error('missing glow');const cx=sx/weight,cy=sy/weight;let xx=0,yy=0;
+   for(let i=0;i<pixels.length;i+=4){const w=pixels[i]+pixels[i+1]+pixels[i+2];xx+=w*((i/4)%512+.5-cx)**2;yy+=w*(Math.floor(i/4/512)+.5-cy)**2;}
+   const projected=new THREE.Vector3(0,0,-4).project(camera);
+   maxCenterError=Math.max(maxCenterError,Math.hypot(cx-(projected.x+1)*256,cy-(projected.y+1)*256));
+   maxAnisotropy=Math.max(maxAnisotropy,Math.abs(xx/yy-1));checks++;
+  }
+  renderer.dispose();lighting.clear();
+  if(maxCenterError>.1||maxAnisotropy>.01)throw Error('strafe produces a shifted or elongated light');
+  return {checks,maxCenterError,maxAnisotropy,velocityIndependent:true};
+ });
  assert.equal(dense.dense.count,6000);assert.ok(dense.dense.maxGpuInstances>=6000);assert.deepEqual(dense.interpolated,[3,-4]);assert.equal(dense.menuCount,0);assert.ok(dense.emptyUploadFree);assert.deepEqual(errors,[]);
- await writeFile('artifacts/projectile-lighting-audit.json',JSON.stringify({results,...dense},null,2)+'\n');
- console.log('Projectile lighting passed',JSON.stringify({results,...dense}));
+ await writeFile('artifacts/projectile-lighting-audit.json',JSON.stringify({results,...dense,strafe},null,2)+'\n');
+ console.log('Projectile lighting passed',JSON.stringify({results,...dense,strafe}));
 }finally{await browser.close();}

@@ -1,13 +1,23 @@
 import type {Projectile,Vec} from './simulation';
 /** Linear RGB shared by dagger meshes, halos, floor spill and launch effects.
- * Hand I: ember, II: gold, III: ice, IV: arcane violet.
+ * Hand I: electric lime (distinct from orange gems), II: electric blue,
+ * III: ice cyan, IV: arcane violet.
  * Homing accents stay in their hand's family, with a greener/pinker hue.
  */
 export const PROJECTILE_COLORS = [
- [1,.18,.025], [1,.68,.045], [.025,.65,1], [.045,1,.58], [.5,.085,1], [1,.12,.55],
+ [.22,1,.015], [.025,.12,1], [.025,.65,1], [.045,1,.58], [.5,.085,1], [1,.12,.55],
 ] as const;
 export function projectileStyleIndex(level:number,homing:boolean){
  return level===1?0:level===2?1:level===3?(homing?3:2):(homing?5:4);
+}
+/** Stable launch roll, independent of combat RNG and shared by prediction/host.
+ * Roll only around the blade's +Z flight axis; it never changes its trajectory.
+ */
+export function projectileRoll(p:Pick<Projectile,'id'|'shotKey'>):number{
+ let hash=Math.abs(p.id)>>>0;
+ if(p.shotKey){hash=2166136261;for(let i=0;i<p.shotKey.length;i++)hash=Math.imul(hash^p.shotKey.charCodeAt(i),16777619);}
+ hash=Math.imul(hash^(hash>>>16),0x7feb352d);hash=Math.imul(hash^(hash>>>15),0x846ca68b);hash^=hash>>>16;
+ return (hash>>>0)/4294967296*Math.PI*2;
 }
 /** Sample the same bent flight path for the physical dagger and its glow. */
 export function sampleProjectile(p:Projectile,alpha:number,out:Vec,velocity?:Vec){

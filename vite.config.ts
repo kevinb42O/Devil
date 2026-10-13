@@ -2,7 +2,8 @@ import { defineConfig } from 'vite';
 import { cp, mkdir, access } from 'node:fs/promises';
 // Keep provenance/source downloads out of the shipped game; include runtime assets.
 export default defineConfig({
-  server:{host:'127.0.0.1',port:5173},
+  server:{host:'127.0.0.1',port:5173,strictPort:true},
+  preview:{host:'127.0.0.1',port:4173,strictPort:true},
   build:{target:'es2022',chunkSizeWarningLimit:700},
   plugins:[{name:'game-assets',async closeBundle(){
     await mkdir('dist/assets/audio',{recursive:true});await mkdir('dist/assets/materials/rock_tile_floor/2k/textures',{recursive:true});

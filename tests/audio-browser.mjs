@@ -20,6 +20,14 @@ try{
   const manifest=await (await fetch('/assets/original/devil-daggers/audio/manifest.json')).json();
   for(const entry of manifest.files){if(SOUND_NAMES.includes(entry.name))continue;const buffer=await sound.context.decodeAudioData(await (await fetch('/assets/original/devil-daggers/audio/'+entry.name+'.wav')).arrayBuffer());check(buffer.duration>0&&buffer.numberOfChannels>0,'decode '+entry.name);unusedDecoded.push(entry.name);}
   const summary=[];
+  // Walking over the original uneven tiles must not sound like repeated landings.
+  sound.clear();const walking=new World(1,{schedule:false});
+  for(let i=0;i<300;i++){walking.step({...idleInput(),forward:1,yaw:.8});for(const event of walking.effects)sound.play(event,walking);walking.effects=[];}
+  check(sound.diagnostics.oneShots===0,'uneven-floor walking produces no false landing voices');
+  const jumping=new World(1,{schedule:false});jumping.step({...idleInput(),jump:true});
+  for(let i=0;i<120;i++)jumping.step(idleInput());
+  for(const event of jumping.effects)sound.play(event,jumping);
+  check(sound.diagnostics.oneShotNames.includes('jump1')&&sound.diagnostics.oneShotNames.includes('land'),'jump and genuine landing retain movement audio');sound.clear();
   for(let level=1;level<=4;level++){
    sound.clear();const w=new World(1,{schedule:false});w.level=level;w.reserve=100;
    for(let i=0;i<360;i++){w.step({...idleInput(),fire:true});for(const e of w.effects)sound.play(e,w);w.effects=[];sound.update(w);}
@@ -83,12 +91,12 @@ try{
   for(const name of ['rapid1','rapid2','rapid3','rapid4','shot1','shot2','shot3alt1','shot4alt1']){
    const offline=new OfflineAudioContext(2,44100,44100),source=offline.createBufferSource(),gain=offline.createGain();source.buffer=sound.buffers.get(name);gain.gain.value=sound.volumeFor(name)*.55;source.connect(gain);gain.connect(offline.destination);source.start();if(name.startsWith('rapid'))source.stop(.7);
    const output=await offline.startRendering(),samples=output.getChannelData(0),rms=Math.sqrt(samples.slice(0,22050).reduce((s,x)=>s+x*x,0)/22050),tail=Math.max(...samples.slice(33075).map(Math.abs));
-   check(rms>.01,name+' must be audible');if(name.startsWith('rapid'))check(tail===0,name+' stops after release');rendered.push({name,rms,tail});
+   check(rms>.005,name+' must be audible in the quieter weapon mix');if(name.startsWith('rapid'))check(tail===0,name+' stops after release');rendered.push({name,rms,tail});
   }
   const streamRms=rendered.filter(r=>r.name.startsWith('rapid')).map(r=>r.rms),burstRms=rendered.filter(r=>r.name.startsWith('shot')).map(r=>r.rms);
-  check(Math.max(...streamRms)<.025,'stream leaves room for enemy chatter and impacts');
+  check(Math.max(...streamRms)<.0125,'stream leaves room for louder enemy chatter and jumps');
   check(Math.max(...burstRms)/Math.min(...burstRms)<1.2,'shotgun hands have consistent perceived attack levels');
-  check(Math.max(...burstRms)<.045,'shotgun attack stays below the former overpowering mix');
+  check(Math.max(...burstRms)<.0225,'shotgun attack stays below the former overpowering mix');
   return {totalDecoded:SOUND_NAMES.length+unusedDecoded.length,used:SOUND_NAMES.length,enemies,enemyRegressions:{damageCues,armorImpact:true,perEnemyCooldown:true,killStopsChatter:true,burrowAndTransmute:true},levels:summary,rendered,final:sound.diagnostics};
  });
  assert.deepEqual(errors,[]);mkdirSync('artifacts',{recursive:true});writeFileSync('artifacts/audio-audit.json',JSON.stringify(result,null,2)+'\n');console.log('Audio browser passed: all 275 WAVs decoded, every hand stream/burst, release/upgrade/homing, pause/restart/death, saturated voice priority and rendered audibility.',result.used);

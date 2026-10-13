@@ -1,7 +1,7 @@
 {
   "socketProjectionChecks": 396,
-  "maxScreenError": 4.526457016295325e-15,
-  "maxMatrixError": 2.6081493187390947e-8,
+  "maxScreenError": 5.152753653467478e-15,
+  "maxMatrixError": 4.4196781789906936e-8,
   "dense": {
     "count": 6000,
     "batches": 1,
@@ -16,11 +16,11 @@
   },
   "transformBenchmarkMs": {
     "optimized": {
-      "median": 0.30000001192092896,
-      "p95": 0.4000000059604645
+      "median": 0.5999999940395355,
+      "p95": 0.800000011920929
     },
     "legacy": {
-      "median": 0.5,
+      "median": 0.7000000178813934,
       "p95": 1.0999999940395355
     }
   },

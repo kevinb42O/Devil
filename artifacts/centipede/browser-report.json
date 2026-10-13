@@ -1,0 +1,77 @@
+[
+  {
+    "phase": "emergence",
+    "age": 3.708333333333323,
+    "stage": "rising",
+    "head": {
+      "x": 0,
+      "y": 6.21377777777776,
+      "z": -12
+    },
+    "above": 4,
+    "below": 21,
+    "active": true,
+    "maxDirectionError": 2.220446049250313e-16,
+    "finite": true
+  },
+  {
+    "phase": "flight",
+    "age": 8.000000000000187,
+    "stage": "flying",
+    "head": {
+      "x": -14.739617295131985,
+      "y": 1.2620022298316325,
+      "z": -14.719691166818642
+    },
+    "above": 25,
+    "below": 0,
+    "active": true,
+    "maxDirectionError": 3.5110048918071237e-16,
+    "finite": true
+  },
+  {
+    "phase": "dive",
+    "age": 8.391666666666831,
+    "stage": "diving",
+    "head": {
+      "x": -16.001331397507098,
+      "y": -1.0054183357122148,
+      "z": -16.077959597221902
+    },
+    "above": 25,
+    "below": 0,
+    "active": true,
+    "maxDirectionError": 3.682193206295148e-16,
+    "finite": true
+  },
+  {
+    "phase": "underground",
+    "age": 12.608333333333258,
+    "stage": "underground",
+    "head": {
+      "x": -17.57650870942328,
+      "y": -37.48364110454326,
+      "z": -17.77367942078229
+    },
+    "above": 0,
+    "below": 25,
+    "active": false,
+    "maxDirectionError": 4.2866979228637884e-16,
+    "finite": true
+  },
+  {
+    "phase": "reemergence",
+    "age": 22.71666666666602,
+    "stage": "rising",
+    "head": {
+      "x": 12.955031135404642,
+      "y": 1.0057777777773114,
+      "z": 12.837232948692145
+    },
+    "above": 0,
+    "below": 25,
+    "active": true,
+    "maxDirectionError": 2.220446049250313e-16,
+    "finite": true
+  }
+]

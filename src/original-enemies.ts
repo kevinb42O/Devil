@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {type Enemy, type EnemyKind} from './simulation';
-import {CREATURE_SCALE} from './enemy-presentation';
+import {CREATURE_SCALE,SPIDER_SIZE,SPIDER_CRYSTAL_SCALE,SPIDER_HIT_FLASH_DURATION,towerSpitPulse} from './enemy-presentation';
 import {ENEMY_KINDS,isPede} from './enemy-kinds';
 const ROOT='/assets/original/devil-daggers/';
 const parts={
@@ -24,6 +24,8 @@ export class OriginalEnemies {
  private segmentTemplates=new Map<EnemyKind,THREE.Group>();
  private animationNodes=new WeakMap<THREE.Group,THREE.Object3D[]>();
  private orbMaterial!:THREE.ShaderMaterial;
+ private spiderCrystalMaterial!:THREE.MeshBasicMaterial;
+ private spiderHitMaterial!:THREE.MeshBasicMaterial;
  private armMaterial!:THREE.ShaderMaterial;private materialClock={value:0};
  constructor(){this.loaded=this.load().catch(error=>{this.error=String(error);console.error('Original enemy assets could not load:',error);});}
  private async load(){
@@ -47,6 +49,19 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
   this.orbMaterial=new THREE.ShaderMaterial({uniforms:{map:{value:warpMap},time:this.materialClock},transparent:true,side:THREE.DoubleSide,toneMapped:false,vertexShader:`varying vec2 u;varying vec3 viewDir;uniform float time;void main(){u=position.yy*.03+vec2(time*.08,0.);vec4 w=modelMatrix*vec4(position,1.);w.xyz=floor(w.xyz*16.)/16.;viewDir=w.xyz-cameraPosition;gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`uniform sampler2D map;uniform float time;varying vec2 u;varying vec3 viewDir;void main(){vec3 d=normalize(viewDir);vec2 hackuv=vec2(d.y/max(.001,length(d.xz))*.5+time,atan(d.z,d.x)/3.14159*3.);vec3 c=texture2D(map,hackuv).rgb;gl_FragColor=vec4(c,.65);}`});
   // Keep attached weak-point crystals luminous even with the native unlit materials.
   this.materials.get('crystal')!.color.setRGB(2.5,1.2,.8);
+  // Recolor the texture's brightness so its red channels cannot suppress the green tint.
+  const spiderMaterial=(hit:boolean)=>{
+   const material=this.materials.get('crystal')!.clone();material.color.setRGB(1,1,1);
+   material.onBeforeCompile=(shader,renderer)=>{
+    this.materials.get('crystal')!.onBeforeCompile(shader,renderer);
+    const tint=hit?'vec3(.7,3.,.45)':'vec3(.03,1.2,.012)',minimum=hit?'.45':'.25';
+    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',
+     `outgoingLight=${tint}*max(${minimum},dot(outgoingLight,vec3(.299,.587,.114)));\n#include <opaque_fragment>`);
+   };
+   material.customProgramCacheKey=()=>hit?'spider-crystal-green-hit':'spider-crystal-green';
+   return material;
+  };
+  this.spiderCrystalMaterial=spiderMaterial(false);this.spiderHitMaterial=spiderMaterial(true);
   for(const kind of ENEMY_KINDS)this.templates.set(kind,this.build(kind));
   for(const kind of ['centipede','gigapede','ghostpede'] as const)this.segmentTemplates.set(kind,this.buildSegment(kind));
   this.segmentTemplate=this.buildSegment();this.gemGeometry=this.geometry.get('gib')!.clone().scale(.55,.55,.55);this.gemMaterial=this.materials.get('crystal')!;this.tileGeometry=this.geometry.get('tile2')!.clone().translate(0,-2.1,0).scale(CREATURE_SCALE,CREATURE_SCALE,CREATURE_SCALE);
@@ -58,13 +73,20 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
   this.ready=true;
  }
  private part(name:string,texture=name):THREE.Mesh<THREE.BufferGeometry,THREE.Material>{const mapName=['minisquidgem','squidgem','ultrasquidgem','levigem','pedeweak'].includes(name)?'crystal':name==='spiderlingpalms'?'spiderlingpalm':['leviorb','immortalorb'].includes(name)?'leviwarp':name==='ultrasquidtent'?'squidarm':name==='ultrasquidteeth'?'squidteeth':texture;
-  const material=this.materials.get(mapName);if(!material)throw Error(`Material ${mapName} missing`);const mesh=new THREE.Mesh(this.geometry.get(name)!,material);mesh.name=name;return mesh;}
+  const material=this.materials.get(mapName);if(!material)throw Error(`Material ${mapName} missing`);
+  let geometry=this.geometry.get(name)!;
+  if(['minisquidgem','squidgem','ultrasquidgem'].includes(name)){
+   // Enlarge each tower crystal around its own center, preserving its socket and rotation.
+   geometry=geometry.clone();geometry.computeBoundingBox();const center=geometry.boundingBox!.getCenter(new THREE.Vector3());
+   geometry.translate(-center.x,-center.y,-center.z).scale(1.4,1.4,1.4).translate(center.x,center.y,center.z);
+  }
+  const mesh=new THREE.Mesh(geometry,material);mesh.name=name;return mesh;}
  private build(kind:EnemyKind):THREE.Group{
   if(kind.startsWith('transmuted')){const tier=Number(kind.slice(-1));const root=this.build(tier===1?'skull':`skull${tier}` as EnemyKind);root.name=kind;root.traverse(o=>{if(o instanceof THREE.Mesh){const material=this.materials.get(o.name+'lev');if(material)o.material=material;}});return root;}
-  if(kind==='spider2'){const root=this.build('spider');root.name=kind;(root.children[0] as THREE.Group).scale.setScalar(CREATURE_SCALE*2);root.traverse(o=>{if(o instanceof THREE.Mesh&&o.name.startsWith('spider')){const name=o.name.replace('spider','gigaspider');if(this.geometry.has(name))o.geometry=this.geometry.get(name)!;if(this.materials.has(name))o.material=this.materials.get(name)!;}});root.children[0].add(this.part('gigaspidercrest'),this.part('gigaspiderhorns'));return root;}
+  if(kind==='spider2'){const root=this.build('spider');root.name=kind;(root.children[0] as THREE.Group).scale.setScalar(CREATURE_SCALE*SPIDER_SIZE*2);root.traverse(o=>{if(o instanceof THREE.Mesh&&o.name.startsWith('spider')){const name=o.name.replace('spider','gigaspider');if(this.geometry.has(name))o.geometry=this.geometry.get(name)!;if(this.materials.has(name))o.material=this.materials.get(name)!;}});root.children[0].add(this.part('gigaspidercrest'),this.part('gigaspiderhorns'));return root;}
   if(kind==='gigapede'||kind==='ghostpede'){const root=this.build('centipede');root.name=kind;const size=kind==='gigapede'?1.5:2;root.children[0].scale.setScalar(CREATURE_SCALE*size);root.traverse(o=>{if(o instanceof THREE.Mesh){const material=this.materials.get(o.name.replace('pede',kind==='gigapede'?'pedeblack':'ultrapede'));if(material)o.material=material;}});if(kind==='ghostpede')root.children[0].add(this.part('ultrapedecrown'));return root;}
   const root=new THREE.Group(),rig=new THREE.Group();root.name=kind;root.userData.original=true;root.add(rig);
-  const scale=kind==='skull'||kind==='skull2'?1:kind==='spiderling'?.065:kind==='egg'?1:CREATURE_SCALE;rig.scale.setScalar(scale);
+  const scale=kind==='skull'||kind==='skull2'?1:kind==='spiderling'?.065:kind==='egg'?1:kind==='spider'?CREATURE_SCALE*SPIDER_SIZE:CREATURE_SCALE;rig.scale.setScalar(scale);
   if(kind==='skull')rig.add(this.part('boid'));
   if(kind==='skull2')rig.add(this.part('boid2'),this.part('boid2horns'));
   if(kind==='skull3'){rig.scale.setScalar(1);rig.add(this.part('boid3'),this.part('boid3horns'),this.part('boid3jaw'));}
@@ -96,7 +118,7 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
    rig.add(this.part('spiderbody'),this.part('spiderpalm'));
    const head=new THREE.Group();head.name='spider-head-pivot';head.position.set(0,.2,1);
    for(const n of ['spiderhead','spiderjaw','spiderfangs']){const part=this.part(n);part.position.set(0,-.2,-1);head.add(part);}
-   const gem=this.part('gib','crystal');gem.name='spider-held-gem';gem.scale.setScalar(.6);gem.position.set(0,.05,1.45);head.add(gem);
+   const gem=this.part('gib','crystal');gem.name='spider-held-gem';gem.material=this.spiderCrystalMaterial;gem.scale.setScalar(SPIDER_CRYSTAL_SCALE);gem.position.set(0,.05,1.45);head.add(gem);
    rig.add(head);
    for(const side of [-1,1])for(let i=0;i<4;i++){
     const z=(i-1.5)*.95;const hip=new THREE.Vector3(side*1.25,-.15,z);
@@ -142,8 +164,12 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
  clone(kind:EnemyKind){const template=this.templates.get(kind);if(!template)throw Error(`Original ${kind} rig not loaded`);return template.clone();}
  animate(model:THREE.Group,enemy:Enemy,time:number){
   this.materialClock.value=time;let nodes=this.animationNodes.get(model);
-  if(!nodes){nodes=[];model.traverse(o=>{if(o.name==='spider-head-pivot'||o.name==='spider-leg'||o.name.startsWith('weak-point-'))nodes!.push(o);});this.animationNodes.set(model,nodes);}
-  for(const o of nodes){if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;else if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055;else{const i=Number(o.name.slice(11));o.visible=(enemy.weakpoints?.[i]?.hp??1)>0;}}
+  if(!nodes){nodes=[];model.traverse(o=>{if(o.name==='spider-held-gem'||o.name==='spider-head-pivot'||o.name==='spider-leg'||o.name.startsWith('weak-point-')||(enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(o.name)))nodes!.push(o);});this.animationNodes.set(model,nodes);}
+  const spit=enemy.kind.startsWith('squid')?towerSpitPulse(enemy.age):0;
+  for(const o of nodes){if(o.name==='spider-held-gem'){
+   const sinceHit=time-enemy.lastHit;
+   (o as THREE.Mesh).material=sinceHit>=0&&sinceHit<SPIDER_HIT_FLASH_DURATION?this.spiderHitMaterial:this.spiderCrystalMaterial;
+  }else if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;else if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055;else if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.visible=(enemy.weakpoints?.[i]?.hp??1)>0;}else o.position.y=spit*(o.name.includes('crest')?.4:-.18);}
  }
  segment(alive:boolean,kind:EnemyKind='centipede'){const node=(this.segmentTemplates.get(kind)??this.segmentTemplate).clone();node.traverse(o=>{if(o.name==='segment-weak-point')o.visible=alive;});return node;}
 }

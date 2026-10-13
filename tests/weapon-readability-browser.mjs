@@ -22,7 +22,7 @@ try{
   window.readabilityFixture={renderer,World,v,idleInput,STEP};
  });
  const captures=[];
- for(const level of [3,4])for(const range of [4,12,30]){
+ for(const level of [1,2,3,4])for(const range of [4,12,30]){
   const result=await page.evaluate(({level,range})=>{
    const {renderer,World,v,idleInput,STEP}=window.readabilityFixture;
    renderer.clear();let random=73;const originalRandom=Math.random;Math.random=()=>{random=(Math.imul(random,1664525)+1013904223)>>>0;return random/4294967296;};
@@ -41,7 +41,7 @@ try{
     return {level,range,shots:world.stats.shots,visibleDaggers:count,peakFragments};
    }finally{Math.random=originalRandom;}
   },{level,range});
-  assert.ok(result.visibleDaggers>0);assert.ok(result.shots>100);
+  assert.ok(result.visibleDaggers>0);assert.ok(result.shots>50);
   await page.locator('#readability-test').screenshot({path:`artifacts/weapon-readability/hand-${level}-${range}m-${label}.png`});captures.push(result);
  }
  assert.deepEqual(errors,[]);

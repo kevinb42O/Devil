@@ -1,0 +1,27 @@
+{
+  "baselineCalls": 4,
+  "airborneCalls": 5,
+  "settledCalls": 4,
+  "partialUploadBytes": 248,
+  "kills": 70,
+  "active": 0,
+  "capacity": 768,
+  "landings": 768,
+  "discarded": 1122,
+  "revision": 768,
+  "textureBytes": 4194304,
+  "uploadBytes": 4194304,
+  "stainDrawCalls": 0,
+  "dropletDrawCalls": 0,
+  "activeAdvanceP95Ms": 0.7000000178813934,
+  "advanceMedianMs": 0,
+  "advanceP95Ms": 0.30000001192092896,
+  "unchangedFrameUploads": 0,
+  "duplicateSuppressed": true,
+  "reset": {
+    "active": 0,
+    "landings": 0,
+    "empty": true
+  },
+  "errors": []
+}

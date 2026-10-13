@@ -9,14 +9,23 @@ export const HAND_SOCKETS=[
 type Point={x:number;y:number;z:number};
 const sin=Math.sin(HAND_POSE.rotationX),cos=Math.cos(HAND_POSE.rotationX);
 // Rx(1.8) * Ry(pi), followed by the shared camera-local hand projection scale.
-export const HAND_MUZZLES=HAND_SOCKETS.map(sockets=>sockets.map(p=>({
+export const HAND_TIP_MUZZLES=HAND_SOCKETS.map(sockets=>sockets.map(p=>({
  x:(HAND_POSE.x-p.x)*HAND_POSE.screenScale,
  y:(HAND_POSE.y+cos*p.y+sin*p.z)*HAND_POSE.screenScale,
  z:HAND_POSE.z+sin*p.y-cos*p.z,
 })));
+/** Pull the launch sockets beneath the palm, preserving a small socket fan.
+ * Camera-local metres: down 7 cm, back 10 cm, with 15% of fingertip spacing.
+ */
+export const HAND_EMITTER_PLACEMENT={drop:.07,retract:.1,socketWidth:.15} as const;
+const palmX=HAND_POSE.x*HAND_POSE.screenScale;
+export const HAND_MUZZLES=HAND_TIP_MUZZLES.map(sockets=>sockets.map(p=>({
+ x:palmX+(p.x-palmX)*HAND_EMITTER_PLACEMENT.socketWidth,
+ y:p.y-HAND_EMITTER_PLACEMENT.drop,z:p.z+HAND_EMITTER_PLACEMENT.retract,
+})));
 /** Camera basis agrees with the Three YXZ camera, including vertical aim. */
-export function weaponMuzzle(eye:Point,yaw:number,pitch:number,level:number,socket=0):Point{
- const sockets=HAND_MUZZLES[Math.max(0,Math.min(3,level-1))],p=sockets[socket%sockets.length];
+export function weaponMuzzle(eye:Point,yaw:number,pitch:number,level:number,socket=0,legacy=false):Point{
+ const sockets=(legacy?HAND_TIP_MUZZLES:HAND_MUZZLES)[Math.max(0,Math.min(3,level-1))],p=sockets[socket%sockets.length];
  const sy=Math.sin(yaw),cy=Math.cos(yaw),sp=Math.sin(pitch),cp=Math.cos(pitch);
  return {x:eye.x+cy*p.x+sy*sp*p.y+sy*cp*p.z,
   y:eye.y+cp*p.y-sp*p.z,z:eye.z-sy*p.x+cy*sp*p.y+cy*cp*p.z};

@@ -1,21 +1,80 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {World,idleInput,v,STEP,TUNING} from '../src/simulation.ts';
-import {HAND_MUZZLES,weaponMuzzle} from '../src/weapon-origin.ts';
-test('every hand fires physical primary and homing daggers from its fingertip sockets',()=>{
+import {HAND_MUZZLES,HAND_TIP_MUZZLES,weaponMuzzle} from '../src/weapon-origin.ts';
+import {STREAM_RADIUS} from '../src/weapon-tuning.ts';
+test('stream radius fills multiple lanes at every hand without adding bullets',()=>{
+ let previousWidth=0;
+ for(let level=1;level<=4;level++){
+  const world=new World(71,{schedule:false});world.level=level;world.player.pos=v(0,5,0);
+  const lanes=new Set<string>();let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
+  for(let salvo=0;salvo<100;salvo++){
+   world.projectiles=[];world.effects=[];world.shoot(idleInput(),false,false);
+   assert.equal(world.projectiles.length,[1,2,4,8][level-1],'damage-bearing shot count stays unchanged');
+   for(let i=0;i<world.projectiles.length;i++){
+    const p=world.projectiles[i],socket=weaponMuzzle(world.player.pos,0,0,level,i);
+    const x=p.pos.x-socket.x,y=p.pos.y-socket.y;
+    minX=Math.min(minX,x);maxX=Math.max(maxX,x);minY=Math.min(minY,y);maxY=Math.max(maxY,y);
+    lanes.add(`${Math.floor(x/STREAM_RADIUS[level-1]*3)},${Math.floor(y/STREAM_RADIUS[level-1]*3)}`);
+   }
+  }
+  assert.ok(lanes.size>20,'even hand I fills a disc instead of a single fixed firing lane');
+  assert.ok(maxX-minX>STREAM_RADIUS[level-1]*1.7&&maxY-minY>STREAM_RADIUS[level-1]*1.7,'bullets fill both dimensions of the beam radius');
+  assert.ok(maxX-minX>previousWidth,'each upgrade has a wider physical stream');previousWidth=maxX-minX;
+ }
+});
+test('wider stream preserves damage per bullet and close-target effectiveness',()=>{
+ for(let level=1;level<=4;level++){
+  const worlds=[new World(71,{schedule:false,legacyStreamRadius:true}),new World(71,{schedule:false})];
+  const targets=worlds.map(world=>{world.level=level;world.player.pos=v(0,5,0);const target=world.spawn('skull3',v(0,5,-4));target.age=2;target.hp=10000;return target;});
+  for(const world of worlds){for(let salvo=0;salvo<30;salvo++)world.shoot(idleInput(),false,false);for(let tick=0;tick<60;tick++)(world as any).updateProjectiles(STEP);}
+  const damage=10000-targets[1].hp;
+  assert.equal(damage,worlds[1].stats.hits,'every primary bullet still deals exactly one damage');
+  assert.ok(damage>=worlds[1].stats.shots*.95,'close crosshair targets retain at least 95% of the shot damage');
+  assert.ok(Math.abs(targets[0].hp-targets[1].hp)<=[1,2,4,8][level-1],'close-target damage differs by at most one stream salvo');
+ }
+});
+test('physical stream expands toward aim as a cone rather than parallel or inward lanes',()=>{
+ for(let level=1;level<=4;level++){
+  const world=new World(71,{schedule:false});world.level=level;world.player.pos=v(0,5,0);
+  for(let salvo=0;salvo<100;salvo++){
+   world.projectiles=[];world.shoot(idleInput(),false,false);
+   for(let i=0;i<world.projectiles.length;i++){
+    const p=world.projectiles[i],socket=weaponMuzzle(world.player.pos,0,0,level,i);
+    const x=p.pos.x-socket.x,y=p.pos.y-socket.y;
+    // Measure about the central muzzle-to-crosshair ray, which includes the
+    // hand's vertical parallax, rather than about a world-horizontal line.
+    const centerX=(world.player.pos.x-socket.x)/(80+socket.z-world.player.pos.z);
+    const centerY=(world.player.pos.y-socket.y)/(80+socket.z-world.player.pos.z);
+    const slopeX=p.vel.x/-p.vel.z-centerX,slopeY=p.vel.y/-p.vel.z-centerY;
+    assert.ok(x*slopeX+y*slopeY>0,'outward radial velocity');
+    const atDistance=(distance:number)=>Math.hypot(x+slopeX*distance,y+slopeY*distance);
+    assert.ok(atDistance(10)>atDistance(2)*4,'cone is over four times wider at 10m than at 2m');
+   }
+  }
+ }
+});
+test('every hand launches bursts from its sockets and streams throughout its circular firing area',()=>{
  for(let level=1;level<=4;level++)for(const burst of [false,true])for(const homing of [false,true]){
   if(homing&&level<3)continue;
   const world=new World(71,{schedule:false});world.level=level;world.reserve=200;world.player.pos=v(11,4,-7);
   const input={...idleInput(),yaw:1.3,pitch:.8};world.shoot(input,burst,homing);
   for(let i=0;i<world.projectiles.length;i++){
    const p=world.projectiles[i],origin=weaponMuzzle(world.player.pos,input.yaw,input.pitch,level,i%HAND_MUZZLES[level-1].length);
-   assert.deepEqual(p.pos,origin);assert.deepEqual(p.previous,origin);assert.notDeepEqual(p.pos,world.player.pos);
+   if(burst)assert.deepEqual(p.pos,origin);
+   else{
+    const dx=p.pos.x-origin.x,dy=p.pos.y-origin.y,dz=p.pos.z-origin.z;
+    assert.ok(Math.hypot(dx,dy,dz)<=STREAM_RADIUS[level-1]+1e-9,'stream launch stays inside its radius');
+    const forward=v(-Math.sin(input.yaw)*Math.cos(input.pitch),Math.sin(input.pitch),-Math.cos(input.yaw)*Math.cos(input.pitch));
+    assert.ok(Math.abs(dx*forward.x+dy*forward.y+dz*forward.z)<1e-9,'stream area is perpendicular to aim');
+   }
+   assert.deepEqual(p.previous,p.pos);assert.notDeepEqual(p.pos,world.player.pos);
    assert.ok(Math.abs(Math.hypot(p.vel.x,p.vel.y,p.vel.z)-(homing?42:TUNING.projectileSpeed))<1e-9);
   }
   const effect=world.effects.at(-1)!;assert.deepEqual(effect.pos,world.projectiles[0].pos);assert.equal(effect.muzzles?.length,Math.min(world.projectiles.length,HAND_MUZZLES[level-1].length));
  }
 });
-test('fingertip origin follows horizontal and vertical aim using the camera basis',()=>{
+test('under-hand origin follows horizontal and vertical aim using the camera basis',()=>{
  const eye=v(2,4,-3),local=HAND_MUZZLES[0][0];
  const forward=weaponMuzzle(eye,0,0,1),right=weaponMuzzle(eye,Math.PI/2,0,1),up=weaponMuzzle(eye,0,Math.PI/2,1);
  assert.deepEqual(forward,v(eye.x+local.x,eye.y+local.y,eye.z+local.z));
@@ -38,7 +97,62 @@ test('projectile interpolation keeps the actual prior swept position without ali
 
 import {sweepArmor} from '../src/projectile-collision.ts';
 import {localToEnemy} from '../src/enemy-presentation.ts';
-import {sampleProjectile} from '../src/projectile-presentation.ts';
+import {sampleProjectile,projectileRoll} from '../src/projectile-presentation.ts';
+import {samplePlayerPosition} from '../src/player-presentation.ts';
+test('each projectile has a distinct stable axial roll, including predicted and host shots',()=>{
+ const rolls=Array.from({length:1000},(_,i)=>projectileRoll({id:i+1}));assert.equal(new Set(rolls).size,1000);
+ for(const roll of rolls)assert.ok(roll>=0&&roll<Math.PI*2);
+ for(let i=0;i<60;i++){
+  const shotKey=`guest:17:${i}`;
+  assert.equal(projectileRoll({id:-i-1,shotKey}),projectileRoll({id:1000+i,shotKey}),'roll survives host confirmation');
+ }
+ const p={id:91};assert.equal(projectileRoll(p),projectileRoll(p),'roll is fixed through flight');
+});
+test('new emitters sit below and behind the original fingertips at every hand',()=>{
+ for(let level=0;level<4;level++)for(let socket=0;socket<HAND_MUZZLES[level].length;socket++){
+  const origin=HAND_MUZZLES[level][socket],tip=HAND_TIP_MUZZLES[level][socket];
+  assert.ok(origin.y<tip.y);assert.ok(origin.z>tip.z,'emitter is closer to the palm and camera');
+  assert.deepEqual(weaponMuzzle(v(),0,0,level+1,socket,true),tip,'historical origins stay available for saved replays');
+ }
+});
+test('moving the shooter never adds strafe, forward or jump momentum to a fired dagger',()=>{
+ for(let level=1;level<=4;level++)for(const burst of [false,true])for(const velocity of [v(18,0,0),v(-18,0,0),v(0,0,-18),v(12,9,-12)]){
+  const still=new World(31,{schedule:false}),moving=new World(31,{schedule:false});
+  for(const w of [still,moving]){w.level=level;w.player.pos=v(0,8,0);}
+  moving.player.vel={...velocity};const input={...idleInput(),yaw:.7,pitch:.2};
+  still.shoot(input,burst,false);moving.shoot(input,burst,false);
+  assert.deepEqual(moving.projectiles,still.projectiles,'launch direction is independent of player momentum');
+  const velocities=moving.projectiles.map(p=>({...p.vel}));
+  for(let tick=0;tick<20;tick++){
+   still.step(idleInput());moving.step({...input,strafe:1});
+   assert.deepEqual(moving.projectiles,still.projectiles,'flight stays fixed in world space after launch');
+   assert.deepEqual(moving.projectiles.map(p=>p.vel),velocities,'primary shots remain straight');
+  }
+ }
+});
+test('camera and projectiles share one render time through fast strafing, jumping and reversal',()=>{
+ const w=new World(31,{schedule:false});w.player.pos=v(0,8,0);w.player.vel=v(18,9,0);w.shoot(idleInput(),false,false);
+ for(let tick=0;tick<30;tick++){
+  const before={...w.player.pos};w.step({...idleInput(),strafe:tick<15?1:-1});
+  assert.deepEqual(w.previousPlayerPosition,before);assert.notEqual(w.previousPlayerPosition,w.player.pos);
+  const p=w.projectiles[0];
+  for(const alpha of [0,.1,.25,.5,.9,1]){
+   const eye=samplePlayerPosition(w,alpha,v()),bullet=sampleProjectile(p,alpha,v());
+   for(const axis of ['x','y','z'] as const){
+    const start=p.previous![axis]-before[axis],end=p.pos[axis]-w.player.pos[axis];
+    assert.ok(Math.abs(bullet[axis]-eye[axis]-(start+(end-start)*alpha))<1e-9,'relative position uses the same interpolation fraction');
+   }
+  }
+ }
+ assert.deepEqual(samplePlayerPosition(w,1,v()),w.player.pos);
+ assert.deepEqual(samplePlayerPosition(new World(1),0,v()),new World(1).player.pos);
+});
+test('crew camera history follows the selected player and does not reuse another player position',()=>{
+ const w=new World(7,{schedule:false});w.addCrew('host');w.addCrew('guest');
+ const starts=w.crew.map(p=>({...p.player.pos}));
+ w.stepCrew(new Map([['host',{...idleInput(),strafe:1}],['guest',{...idleInput(),forward:1}]]));
+ for(let i=0;i<w.crew.length;i++){w.selectCrew(w.crew[i].id);assert.deepEqual(samplePlayerPosition(w,0,v()),starts[i]);assert.deepEqual(samplePlayerPosition(w,1,v()),w.player.pos);}
+});
 const tickProjectiles=(world:World)=>(world as any).updateProjectiles(STEP);
 test('all tower tiers stop swept primary and homing shots on armor at the exact contact',()=>{
  for(const kind of ['squid','squid2','squid3'] as const)for(const age of [2,6,12])for(const homing of [false,true]){
@@ -63,8 +177,8 @@ test('empty space near a tower remains traversable, with no giant invisible hit 
  assert.deepEqual(p.pos,b);assert.equal(w.effects.filter(e=>e.kind==='ricochet').length,0);
 });
 test('destroyed pede segments absorb shots without damage or ricochets',()=>{
- const w=new World(1,{schedule:false});const e=w.spawn('centipede',v(0,5,0));e.age=4;e.segments[0].hp=0;
- w.projectiles.push({id:900,pos:v(0,5,2),vel:v(0,0,-400),age:0,homing:false});tickProjectiles(w);
+ const w=new World(1,{schedule:false});const e=w.spawn('centipede',v(0,5,0));e.age=4;e.status='hunting';e.statusUntil=20;e.nextMove=6;e.pos=v(0,5,0);e.vel=v(0,0,-8);for(let i=0;i<e.segments.length;i++)e.segments[i].pos=v(0,5,(i+1)*1.3);w.step(idleInput());e.segments[0].hp=0;
+ const point=e.segments[0].pos;w.projectiles.push({id:900,pos:v(point.x+2,point.y,point.z),vel:v(-400,0,0),age:0,homing:false});tickProjectiles(w);
  assert.equal(w.projectiles.length,0);assert.equal(w.stats.hits,0);assert.ok(w.effects.some(e=>e.kind==='impact'));assert.equal(w.effects.filter(e=>e.kind==='ricochet').length,0);
 });
 test('floor impacts retain a damped reflection and a bent interpolated flight path',()=>{

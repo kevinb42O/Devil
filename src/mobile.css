@@ -1,0 +1,13 @@
+/* Controls are the arena itself; there are no joystick/button overlays. */
+body[data-controls=mobile] #game{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+body[data-controls=mobile]{overscroll-behavior:none}
+body[data-controls=mobile] .panel{max-height:calc(var(--game-height) - 32px);max-width:calc(var(--game-width) - 32px)}
+body[data-controls=mobile] .menu-content{max-height:calc(var(--game-height) - 110px)}
+body[data-controls=mobile][data-mobile-rotated=true]{position:fixed;left:100%;top:0;width:var(--game-width);height:var(--game-height);transform-origin:0 0;transform:rotate(90deg)}
+body[data-controls=mobile][data-mobile-rotated=true] #game{width:100%;height:100%}
+
+/* The survival timer doubles as the mobile pause target. */
+#timer{border:0;cursor:default}
+#timer:disabled{opacity:1;pointer-events:none}
+body[data-controls=mobile] #hud #timer{min-width:88px;min-height:44px;top:-10px;pointer-events:auto;touch-action:manipulation;cursor:pointer}
+body[data-controls=mobile] #hud #timer:disabled{pointer-events:none;cursor:default}

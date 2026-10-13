@@ -1,0 +1,86 @@
+[
+  {
+    "level": 1,
+    "range": 4,
+    "shots": 58,
+    "visibleDaggers": 1,
+    "peakFragments": 47
+  },
+  {
+    "level": 1,
+    "range": 12,
+    "shots": 58,
+    "visibleDaggers": 3,
+    "peakFragments": 48
+  },
+  {
+    "level": 1,
+    "range": 30,
+    "shots": 58,
+    "visibleDaggers": 22,
+    "peakFragments": 23
+  },
+  {
+    "level": 2,
+    "range": 4,
+    "shots": 116,
+    "visibleDaggers": 2,
+    "peakFragments": 92
+  },
+  {
+    "level": 2,
+    "range": 12,
+    "shots": 116,
+    "visibleDaggers": 24,
+    "peakFragments": 66
+  },
+  {
+    "level": 2,
+    "range": 30,
+    "shots": 116,
+    "visibleDaggers": 54,
+    "peakFragments": 23
+  },
+  {
+    "level": 3,
+    "range": 4,
+    "shots": 232,
+    "visibleDaggers": 4,
+    "peakFragments": 181
+  },
+  {
+    "level": 3,
+    "range": 12,
+    "shots": 232,
+    "visibleDaggers": 81,
+    "peakFragments": 84
+  },
+  {
+    "level": 3,
+    "range": 30,
+    "shots": 232,
+    "visibleDaggers": 114,
+    "peakFragments": 8
+  },
+  {
+    "level": 4,
+    "range": 4,
+    "shots": 312,
+    "visibleDaggers": 8,
+    "peakFragments": 244
+  },
+  {
+    "level": 4,
+    "range": 12,
+    "shots": 312,
+    "visibleDaggers": 133,
+    "peakFragments": 59
+  },
+  {
+    "level": 4,
+    "range": 30,
+    "shots": 312,
+    "visibleDaggers": 157,
+    "peakFragments": 9
+  }
+]

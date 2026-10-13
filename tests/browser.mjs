@@ -9,7 +9,20 @@ try {
   const url=process.env.GAME_URL||'http://127.0.0.1:5173';await page.goto(url);await page.locator('#start').waitFor();
   await page.waitForFunction(()=>window.abyss?.mode==='menu');
   await page.click('#settings-open');await page.locator('#volume').fill('0');await page.click('#settings-close');
-  await page.click('#start');if(await page.locator('#player-profile').isVisible())await page.click('#profile-local');await page.waitForFunction(()=>window.abyss?.time>.3);
+  await page.click('#start');if(await page.locator('#player-profile').isVisible())await page.click('#profile-local');await page.waitForFunction(()=>window.abyss?.entrance);
+  await page.waitForTimeout(400);assert.equal(await page.evaluate(()=>window.abyss.time),0,'entrance freezes survival');
+  assert.equal(await page.locator('#hud').isVisible(),false);
+  assert.equal(await page.evaluate(()=>Math.hypot(window.abyss.position.x-window.abyss.entranceSeal.x,window.abyss.position.z-window.abyss.entranceSeal.z)),7);
+  await page.evaluate(()=>document.exitPointerLock());await page.waitForFunction(()=>window.abyss.mode==='paused');
+  await page.click('#resume');await page.waitForFunction(()=>window.abyss.mode==='playing'&&!!document.pointerLockElement);
+  const entranceBefore=await page.evaluate(()=>window.abyss.position.x);
+  await page.keyboard.down('KeyD');await page.waitForTimeout(200);await page.keyboard.up('KeyD');
+  assert.ok(await page.evaluate(()=>window.abyss.position.x)>entranceBefore+.5,'entrance movement works after resume');
+  await page.keyboard.down('KeyA');await page.waitForTimeout(200);await page.keyboard.up('KeyA');await page.waitForTimeout(250);
+  await page.mouse.down();await page.waitForTimeout(250);await page.mouse.up();assert.equal(await page.evaluate(()=>window.abyss.stats.shots),0,'entrance disables weapons');
+  await page.screenshot({path:'artifacts/single-player-entrance.png'});
+  await page.keyboard.down('KeyW');await page.waitForFunction(()=>!window.abyss.entrance);await page.keyboard.up('KeyW');
+  await page.waitForFunction(()=>window.abyss?.time>.3);
   assert.equal(await page.evaluate(()=>!!document.pointerLockElement),true,'mouse must be captured');
   const before=await page.evaluate(()=>window.abyss.position.z);
   await page.keyboard.down('KeyW');await page.waitForTimeout(550);await page.keyboard.up('KeyW');
@@ -22,6 +35,7 @@ try {
   await page.keyboard.down('KeyW');await page.waitForFunction(()=>window.abyss.mode==='dead',{},{timeout:15000});await page.keyboard.up('KeyW');
   assert.equal(await page.locator('#death').isVisible(),true,'death summary appears');
   await page.keyboard.press('KeyR');try{await page.waitForFunction(()=>window.abyss.mode==='playing'&&window.abyss.time<1,{},{timeout:5000});}catch(error){console.log('Retry diagnostic',await page.evaluate(()=>({state:window.abyss,pointerLock:!!document.pointerLockElement,notice:document.querySelector('#notice')?.textContent})));throw error;}
+  assert.equal(await page.evaluate(()=>window.abyss.entrance),true,'retry returns to the ritual platform');
   assert.equal(await page.evaluate(()=>window.abyss.stats.shots),0,'retry resets the run');
   await page.evaluate(()=>document.exitPointerLock());await page.waitForFunction(()=>window.abyss.mode==='paused');await page.click('#quit');
   await page.reload();await page.click('#settings-open');assert.equal(await page.locator('#fov').inputValue(),'105','settings survive reload');assert.equal(await page.locator('#volume').inputValue(),'0');

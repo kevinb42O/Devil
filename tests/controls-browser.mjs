@@ -1,0 +1,43 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
+const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.addInitScript(()=>{
+  localStorage.setItem('abyss-player-profile',JSON.stringify({name:'Controls test',automatic:false,configured:true}));
+  window.testPad={id:'Simulated standard controller',index:0,connected:true,mapping:'standard',axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false,value:0,touched:false}))};
+  Object.defineProperty(navigator,'getGamepads',{value:()=>[window.testPad]});
+ });
+ await page.goto(process.env.GAME_URL||'http://127.0.0.1:5173');await page.waitForFunction(()=>window.abyss?.originalAssets&&window.abyss?.originalEnemies);
+ await page.click('#settings-open');await page.selectOption('#control-scheme','azerty');
+ assert.match(await page.locator('#control-bindings').textContent(),/Z Q S D/);
+ await page.locator('#volume').fill('0');await page.click('#settings-close');await page.click('#start');await page.waitForFunction(()=>window.abyss.mode==='playing');
+ const before=await page.evaluate(()=>window.abyss.position.z);
+ await page.evaluate(()=>window.dispatchEvent(new KeyboardEvent('keydown',{key:'z',code:'KeyW'})));await page.waitForTimeout(350);
+ await page.evaluate(()=>window.dispatchEvent(new KeyboardEvent('keyup',{key:'z',code:'KeyW'})));
+ assert.ok(await page.evaluate(()=>window.abyss.position.z)<before-1,'AZERTY letter Z on physical KeyW moves');
+ await page.evaluate(()=>document.exitPointerLock());await page.waitForFunction(()=>window.abyss.mode==='paused');
+ await page.click('#pause-settings');await page.selectOption('#control-scheme','controller');
+ await page.locator('#controllerSensitivity').fill('1.4');await page.locator('#controllerDeadzone').fill('0.2');
+ await page.waitForFunction(()=>document.querySelector('#controller-status').textContent.includes('Connected'));await page.click('#settings-close');await page.click('#quit');
+ await page.click('#start');await page.waitForFunction(()=>window.abyss.mode==='playing');assert.equal(await page.evaluate(()=>!!document.pointerLockElement),false);
+ const controllerBefore=await page.evaluate(()=>window.abyss.position.z);
+ await page.evaluate(()=>{window.testPad.axes=[0,-1,.5,-.5];});await page.waitForTimeout(350);
+ assert.ok(await page.evaluate(()=>window.abyss.position.z)<controllerBefore-1,'controller stick moves');
+ assert.ok(await page.evaluate(()=>window.abyss.yaw)<0,'right stick turns');assert.ok(await page.evaluate(()=>window.abyss.pitch)>0,'right stick looks up');
+ await page.evaluate(()=>{window.testPad.axes=[0,0,0,0];window.testPad.buttons[0].pressed=true;window.testPad.buttons[7].pressed=true;});await page.waitForTimeout(120);
+ assert.ok(await page.evaluate(()=>window.abyss.position.y)>1.8,'controller jumps');await page.waitForTimeout(250);assert.ok(await page.evaluate(()=>window.abyss.stats.shots)>0,'controller fires');
+ const button=async(i,pressed)=>{await page.evaluate(([i,pressed])=>window.testPad.buttons[i].pressed=pressed,[i,pressed]);await page.waitForTimeout(80);};
+ await button(0,false);await button(7,false);await button(9,true);assert.equal(await page.evaluate(()=>window.abyss.mode),'paused');await button(9,false);
+ const time=await page.evaluate(()=>window.abyss.time);await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>window.abyss.time),time);
+ await button(9,true);await button(9,false);assert.equal(await page.evaluate(()=>window.abyss.mode),'playing');
+ await page.evaluate(()=>window.testPad.connected=false);await page.waitForFunction(()=>window.abyss.mode==='paused');
+ await page.evaluate(()=>window.testPad.connected=true);await page.waitForTimeout(100);await button(9,true);await button(9,false);assert.equal(await page.evaluate(()=>window.abyss.mode),'playing');
+ await button(9,true);await button(9,false);await page.click('#pause-settings');
+ await page.locator('#controllerSensitivity').focus();await button(15,true);await button(15,false);assert.equal(await page.locator('#controllerSensitivity').inputValue(),'1.5');
+ await button(1,true);await button(1,false);assert.equal(await page.locator('#settings').isVisible(),false,'B closes options');
+ await page.reload();await page.click('#settings-open');assert.equal(await page.locator('#control-scheme').inputValue(),'controller');assert.equal(await page.locator('#controllerSensitivity').inputValue(),'1.5');assert.equal(await page.locator('#controllerDeadzone').inputValue(),'0.2');
+ await page.screenshot({path:'artifacts/control-options.png'});assert.deepEqual(errors,[]);console.log('Controls browser passed: AZERTY, controller move/look/jump/fire, pause/resume/disconnect, menu navigation, persistence.');
+}finally{await browser.close();}

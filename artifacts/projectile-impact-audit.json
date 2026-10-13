@@ -4,7 +4,7 @@
   "floorBounce": true,
   "maxAlignmentError": 0,
   "denseImpacts": 1000,
-  "collisionMedianMs": 19.80000001192093,
-  "collisionP95Ms": 35.099999994039536,
+  "collisionMedianMs": 4.9000000059604645,
+  "collisionP95Ms": 6.699999988079071,
   "glowDrawCalls": 0
 }

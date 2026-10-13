@@ -9,19 +9,19 @@
         255
       ],
       "lit": [
-        62,
-        42,
-        35,
+        47,
+        61,
+        36,
         255
       ],
       "floorLit": [
-        62,
-        42,
-        35,
+        47,
+        61,
+        36,
         255
       ],
       "extraGlowDraws": 1,
-      "glowPixelGain": 394883,
+      "glowPixelGain": 103753,
       "count": 12,
       "drawCalls": 1,
       "capacity": 256,
@@ -36,19 +36,19 @@
         255
       ],
       "lit": [
-        62,
-        42,
-        35,
+        47,
+        61,
+        36,
         255
       ],
       "floorLit": [
-        62,
-        42,
-        35,
+        47,
+        61,
+        36,
         255
       ],
       "extraGlowDraws": 1,
-      "glowPixelGain": 394883,
+      "glowPixelGain": 103753,
       "count": 12,
       "drawCalls": 1,
       "capacity": 256,
@@ -68,6 +68,12 @@
   ],
   "menuCount": 0,
   "emptyUploadFree": true,
-  "updateMedianMs": 0.5,
-  "updateP95Ms": 0.699999988079071
+  "updateMedianMs": 1.199999988079071,
+  "updateP95Ms": 2.699999988079071,
+  "strafe": {
+    "checks": 3,
+    "maxCenterError": 0,
+    "maxAnisotropy": 0,
+    "velocityIndependent": true
+  }
 }

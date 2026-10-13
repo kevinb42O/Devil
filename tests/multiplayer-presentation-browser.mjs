@@ -28,6 +28,19 @@ try{
  await page.screenshot({path:'artifacts/multiplayer-names-and-shots.png'});
  await page.evaluate(()=>{const {renderer,world}=window.presentation;world.crew[1].alive=false;renderer.render(world,0,0,1/60,false,1);});
  assert.deepEqual(await page.evaluate(()=>window.presentation.renderer.crewPresentation.map(p=>p.id)),['bob']);
+ const spectatorView=await page.evaluate(async()=>{
+  const {renderer,world}=window.presentation;const {SpectatorCamera}=await import('/src/spectator.ts');
+  world.crew[0].alive=false;world.crew[2].alive=true;const camera=new SpectatorCamera();camera.start(world.player.pos);
+  camera.move(.05,.5,.3,1,1,1);const position={...camera.position},body={...world.player.pos};
+  let handHidden=false;const originalRender=renderer.originalWeapon.render.bind(renderer.originalWeapon);
+  renderer.originalWeapon.render=(gpu,hidden)=>{handHidden=hidden;originalRender(gpu,hidden);};
+  renderer.render(world,.5,.3,1/60,false,1,camera.position);
+  const first=renderer.camera.position.toArray();world.crew[2].player.pos.x+=5;
+  renderer.render(world,.5,.3,1/60,false,1,camera.position);
+  return {first,second:renderer.camera.position.toArray(),expected:[position.x,position.y,position.z],body,afterBody:world.player.pos,handHidden,crew:renderer.crewPresentation.map(p=>p.id)};
+ });
+ assert.deepEqual(spectatorView.first,spectatorView.expected);assert.deepEqual(spectatorView.second,spectatorView.expected);
+ assert.deepEqual(spectatorView.body,spectatorView.afterBody);assert.equal(spectatorView.handHidden,true);assert.deepEqual(spectatorView.crew,['bob']);
  await page.evaluate(()=>window.presentation.renderer.clear());assert.deepEqual(await page.evaluate(()=>window.presentation.renderer.crewPresentation),[]);assert.deepEqual(errors,[]);
- console.log('Multiplayer presentation passed: named teammates, near/distant remote firing without local recoil, local recoil, death and cleanup.');
+ console.log('Multiplayer presentation passed: named teammates, near/distant remote firing without local recoil, local recoil, death, independent spectator camera with hidden weapon, and cleanup.');
 }finally{await browser.close();}

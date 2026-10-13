@@ -1,0 +1,91 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
+const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+try{
+ const context=await browser.newContext({viewport:{width:844,height:390},isMobile:true,hasTouch:true,deviceScaleFactor:1});
+ await context.addInitScript(()=>{
+  localStorage.setItem('abyss-player-profile',JSON.stringify({name:'Mobile audit',automatic:false,configured:true}));
+  localStorage.setItem('abyss-settings',JSON.stringify({quality:'low',volume:0}));
+  // Exercise the fallback used by browsers without fullscreen/orientation lock.
+  Element.prototype.requestFullscreen=undefined;
+ });
+ const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto(process.env.GAME_URL||'http://127.0.0.1:5173');await page.waitForFunction(()=>window.abyss?.originalAssets&&window.abyss?.originalEnemies);
+ assert.equal(await page.evaluate(()=>window.abyss.controls),'mobile','touch devices default to Mobile');
+ await page.locator('#settings-open').tap();assert.equal(await page.locator('#control-scheme').inputValue(),'mobile');
+ assert.equal(await page.locator('#control-scheme option').count(),4);assert.equal(await page.locator('#control-bindings').isVisible(),false,'no mobile control instructions or extra controls');
+ assert.equal(await page.locator('#mouse-sensitivity-setting').isVisible(),false);
+ await page.locator('#settings-close').tap();await page.locator('#start').tap();await page.waitForFunction(()=>window.abyss.mode==='playing');
+ assert.equal(await page.evaluate(()=>!!document.pointerLockElement),false);assert.equal(await page.locator('#game').evaluate(el=>getComputedStyle(el).touchAction),'none');
+ const cdp=await context.newCDPSession(page);
+ const touch=async(type,points)=>{await cdp.send('Input.dispatchTouchEvent',{type,touchPoints:points.map(([id,x,y])=>({id,x,y,radiusX:2,radiusY:2,force:1}))});};
+ // Standard runs begin on the entrance platform; walk into its seal first.
+ await touch('touchStart',[[1,150,270]]);await touch('touchMove',[[1,150,180]]);
+ await page.waitForFunction(()=>window.abyss.entrance===false);await touch('touchEnd',[]);
+ await touch('touchStart',[[1,150,260]]);await page.waitForTimeout(35);await touch('touchEnd',[]);await page.waitForTimeout(90);
+ assert.ok(await page.evaluate(()=>window.abyss.position.y)>1.8,'left tap jumps');
+ await page.waitForTimeout(700);
+ const before=await page.evaluate(()=>({...window.abyss.position}));
+ await touch('touchStart',[[1,150,270],[2,680,260]]);
+ await touch('touchMove',[[1,150,190],[2,715,235]]);await page.waitForTimeout(350);
+ assert.ok(await page.evaluate(()=>window.abyss.position.z)<before.z-1,'left hold/drag moves with right aiming active');
+ assert.ok(await page.evaluate(()=>window.abyss.position.y)<1.8,'left hold does not jump');
+ assert.ok(await page.evaluate(()=>window.abyss.yaw)<-.1);assert.ok(await page.evaluate(()=>window.abyss.pitch)>.1);
+ assert.ok(await page.evaluate(()=>window.abyss.stats.shots)>0,'right hold fires stream');
+ const aim=await page.evaluate(()=>window.abyss.yaw);await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>window.abyss.yaw),aim,'stationary right hold keeps aim steady');
+ await touch('touchEnd',[]);await page.waitForTimeout(80);assert.equal(await page.evaluate(()=>window.abyss.input.fire),false);assert.equal(await page.evaluate(()=>window.abyss.input.forward),0);
+ await page.evaluate(()=>document.querySelector('#game').addEventListener('pointerdown',event=>{window.dragPointerId=event.pointerId;},{once:true}));
+ await touch('touchStart',[[1,150,270]]);
+ await page.evaluate(()=>{
+  const event=(x)=>new PointerEvent('pointermove',{pointerId:window.dragPointerId,pointerType:'touch',clientX:x,clientY:270,bubbles:true});
+  const move=event(150);
+  Object.defineProperty(move,'getCoalescedEvents',{value:()=>[event(210),event(150)]});
+  document.querySelector('#game').dispatchEvent(move);
+ });
+ await touch('touchEnd',[]);await page.waitForTimeout(90);
+ assert.ok(await page.evaluate(()=>window.abyss.position.y)<1.8,'coalesced out-and-back drag never becomes a jump');
+ const shots=await page.evaluate(()=>window.abyss.stats.shots);
+ await touch('touchStart',[[2,680,260]]);await page.waitForTimeout(35);await touch('touchEnd',[]);await page.waitForTimeout(90);
+ assert.equal(await page.evaluate(()=>window.abyss.stats.shots),shots+10,'right tap produces exactly one shotgun burst');
+ await touch('touchStart',[[1,150,270],[2,680,260]]);await touch('touchMove',[[1,150,190],[2,715,235]]);await page.waitForTimeout(170);
+ await touch('touchCancel',[]);await page.waitForFunction(()=>window.abyss.mode==='paused');assert.equal(await page.evaluate(()=>window.abyss.input.fire),false,'cancellation releases both hands');
+ await page.locator('#resume').tap();await page.waitForFunction(()=>window.abyss.mode==='playing');assert.equal(await page.evaluate(()=>window.abyss.input.forward),0);
+ await page.setViewportSize({width:390,height:844});await page.waitForFunction(()=>window.abyss.viewport.rotated);
+ const viewport=await page.evaluate(()=>window.abyss.viewport);assert.deepEqual(viewport,{width:844,height:390,rotated:true});
+ await page.waitForFunction(()=>{const rect=document.querySelector('#game').getBoundingClientRect();return Math.abs(rect.width-390)<1&&Math.abs(rect.height-844)<1;});
+ const rect=await page.locator('#game').boundingBox();assert.ok(Math.abs(rect.width-390)<1&&Math.abs(rect.height-844)<1,JSON.stringify({rect,...await page.evaluate(()=>({body:document.body.getBoundingClientRect().toJSON(),style:getComputedStyle(document.body).transform,inner:[innerWidth,innerHeight],canvasStyle:document.querySelector('#game').getAttribute('style')}))}));
+ const beforeRotated=await page.evaluate(()=>window.abyss.position.z);
+ // In the clockwise fallback, logical (x,y) becomes screen (390-y,x).
+ await touch('touchStart',[[1,120,150],[2,130,680]]);await touch('touchMove',[[1,200,150],[2,150,710]]);await page.waitForTimeout(250);
+ assert.ok(await page.evaluate(()=>window.abyss.position.z)<beforeRotated-.5,'rotated movement preserves forward');
+ await touch('touchEnd',[]);
+ const timer=await page.locator('#timer').boundingBox();assert.ok(timer.width>=44&&timer.height>=44,'pause has a usable touch target');
+ await touch('touchStart',[[1,120,150],[2,130,680]]);await touch('touchMove',[[1,200,150],[2,150,710]]);
+ await page.locator('#timer').tap();await page.waitForFunction(()=>window.abyss.mode==='paused');
+ assert.equal(await page.evaluate(()=>window.abyss.input.fire),false,'timer pause releases fire');
+ assert.equal(await page.evaluate(()=>window.abyss.input.forward),0,'timer pause releases movement');
+ await touch('touchEnd',[]);await page.locator('#resume').tap();await page.waitForFunction(()=>window.abyss.mode==='playing');
+ await page.screenshot({path:'artifacts/mobile-invisible-controls-portrait.png'});
+ await page.evaluate(()=>window.dispatchEvent(new Event('blur')));await page.waitForFunction(()=>window.abyss.mode==='paused');
+ await page.locator('#pause-settings').tap();await page.selectOption('#control-scheme','mobile');await page.reload();
+ await page.waitForFunction(()=>window.abyss?.controls==='mobile'&&window.abyss.viewport.rotated);
+ // Resolve an orientation lock only after leaving the run.
+ await page.evaluate(()=>{
+  window.orientationUnlocks=0;window.fullscreenExits=0;
+  let fullscreen=null;
+  Object.defineProperty(document,'fullscreenElement',{configurable:true,get:()=>fullscreen});
+  document.documentElement.requestFullscreen=async()=>{fullscreen=document.documentElement;};
+  document.exitFullscreen=async()=>{fullscreen=null;window.fullscreenExits++;};
+  screen.orientation.lock=()=>new Promise(resolve=>{window.finishOrientationLock=resolve;});
+  screen.orientation.unlock=()=>{window.orientationUnlocks++;};
+ });
+ await page.locator('#start').tap();await page.waitForFunction(()=>typeof window.finishOrientationLock==='function');
+ await page.locator('#timer').tap();await page.locator('#quit').tap();await page.waitForFunction(()=>window.abyss.mode==='menu');
+ await page.evaluate(()=>window.finishOrientationLock());
+ await page.waitForFunction(()=>window.orientationUnlocks===1);
+ assert.equal(await page.evaluate(()=>document.fullscreenElement),null,'late lock cleanup exits owned fullscreen');
+ assert.equal(await page.evaluate(()=>window.fullscreenExits),1);
+ assert.deepEqual(errors,[]);console.log('Mobile browser passed: invisible controls, two-thumb movement/aim/stream, jump tap, shotgun tap, coalesced drag, timer pause, cancellation/resume, rotated landscape, persistence and late orientation cleanup.');
+}finally{await browser.close();}

@@ -1,0 +1,23 @@
+{
+  "checked": 12791,
+  "tip": [
+    -0.0003000000142492354,
+    0,
+    0.232900008559227
+  ],
+  "tail": [
+    -0.0003000000142492354,
+    0,
+    -0.11050000041723251
+  ],
+  "localBladeAxis": [
+    0,
+    0,
+    1
+  ],
+  "maxFlightErrorDegrees": 0.0000025400216971019274,
+  "maxRollErrorDegrees": 0.000004298436275635199,
+  "straightCameraErrorDegrees": 0.0000015372020176140465,
+  "minForwardDot": 0.9999999999999989,
+  "maxCameraErrorDegrees": 25.414990435105185
+}

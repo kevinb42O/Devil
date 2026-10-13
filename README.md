@@ -32,9 +32,17 @@ The browser smoke uses installed Chrome on macOS, `CHROME_PATH` if supplied, or 
 
 ## Controls
 
+Choose **QWERTY**, **AZERTY**, **Controller**, or **Mobile** in Options. The choice and sensitivity settings are saved on this device. Keyboard movement follows the letters printed on the selected layout.
+
+Options and your nickname are saved automatically in this browser for the current game address and restored after closing and reopening it. A nickname entered with **Play without publishing** is saved too, and editing your co-op name updates the saved nickname. Use the same browser and address each time; a new temporary playtest hostname has separate browser storage. The development server keeps port 5173 fixed instead of silently switching ports.
+
+Controller mode supports controllers with a browser standard mapping (Xbox / PlayStation style). Connect the controller and press a button to detect it; Options shows its connection status. Left stick moves, right stick looks, A / Cross jumps, RT / R2 fires, LT / L2 fires homing daggers, and Start / Options pauses or resumes. Use the D-pad to move through menus, left / right to change selected sliders or choices, A / Cross to select, and B / Circle to go back. In crew spectator flight, A / Cross ascends, LB / L1 descends, and pressing the left stick speeds up flight. Controller mode does not require mouse capture. Disconnecting pauses local controls; reconnect, then press Start / Options to resume. Release jump and fire buttons after starting or resuming before pressing them again. Controller menu navigation remains available when a keyboard layout is selected. Controller sensitivity and stick dead zone are adjustable in Options.
+
+Mobile mode uses invisible touch areas across the left and right halves of the arena, with no joystick graphics or extra buttons. Hold and drag on the left to move; a short stationary left tap jumps. Hold and drag on the right to aim and fire the stream; a right tap fires the shotgun burst. Releasing the right thumb stops firing and lets gems approach. Tap the survival timer to pause and open the run options. Each thumb keeps its original side until release, so movement and aiming work simultaneously. Touch devices default to Mobile and low visual quality unless saved preferences override them. Gameplay requests fullscreen landscape where supported; a rotated landscape layout handles browsers without orientation lock. Interrupted touches pause and release both controls. Mobile mode uses the same simulation, replays, and crew input as the other control choices.
+
 | Input | Action |
 | --- | --- |
-| WASD | Move and air-strafe |
+| WASD (QWERTY) / ZQSD (AZERTY) | Move and air-strafe |
 | Mouse | Look |
 | Space | Jump; release and press again to hop |
 | Left mouse, tap | Release a spread of daggers |
@@ -102,3 +110,7 @@ Open **Public leaderboard** from the menu to see the top 100 shared solo Surviva
 ## Friends multiplayer
 
 The main menu includes browser-to-browser WebRTC cooperative survival for up to four players. Create a public lobby or join a visible lobby with one click. Every player presses READY, then the host starts the run. Every gem counts for every player. See [MULTIPLAYER.md](MULTIPLAYER.md) for online hosting and validation.
+
+Original music uses the bundled `menutheme.wav` in menus and `menuatmos.wav` in the entrance, with fades between screens. Arena play and replays are silent apart from game sounds. Music starts after a click, tap or key press, pauses while the tab is hidden, and has its own saved Music volume setting. Run `npm run test:music` against the development server to verify playback and transitions.
+
+The solo entrance also plays the original positional dagger call at the seal and the original dagger pickup cue exactly when crossing into the arena. Both select the normal, bronze, silver, gold, devil, or 1,000-second recordings from the locally saved best time. Entrance cues are prepared before crossing and use Sound volume independently of Music volume.
