@@ -4,6 +4,7 @@ import {armorBounds,sweepArmor} from './projectile-collision';
 import {touchesPlayer} from './player-contact';
 import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,localToEnemy,towerOutletHeight,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
 import {arenaRadius,floorHeight,sweepFloor} from './arena';
+import {constrainEnemyFloor,enemyFloorHeight} from './enemy-floor';
 import {originalSpawnRadius,originalTowerSpawnHeight,nextPerimeterSpawnAngle,pedeSpawnPosition,thornSpawnPosition,THORN_SPAWN_DEPTH} from './spawn-placement';
 import {towerEntrancePose,towerEmissionTick} from './tower-spawn';
 import {entranceFloor,ENTRANCE_SPAWN} from './entrance-layout';
@@ -28,7 +29,7 @@ export type Ring={id:number;owner:number;pos:Vec;radius:number;previous:number;a
 export type Effect={bloodId?:number;bloodTime?:number;bloodSources?:Vec[];bloodSegment?:boolean;shotKey?:string;networkId?:number;shooterId?:string;deathCause?:string;kind:'shot'|'burst'|'hit'|'kill'|'pickup'|'upgrade'|'spawn'|'jump'|'death'|'egg'|'beckon'|'transmute'|'explosion'|'land'|'impact'|'ricochet'|'pierce'|'eat'|'bounce'|'hatch'|'burrow'|'emerge';pos:Vec;amount?:number;enemy?:EnemyKind;enemyId?:number;level?:number;direction?:Vec;muzzles?:Vec[]};
 export type Input={forward:number;strafe:number;yaw:number;pitch:number;jump:boolean;fire:boolean;homing:boolean};
 export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});
-export type WorldOptions={schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
+export type WorldOptions={legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
@@ -83,6 +84,7 @@ export class World {
  private detonations:{tick:number;pos:Vec;exclude?:{entity:number;segment:number}}[]=[];
  constructor(seed=80421,options:WorldOptions={}){this.rng=this.shotRngSeed=seed>>>0||1;this.options=options;this.schedule=options.legacySpawnRules?legacySurvivalSchedule():survivalSchedule();if(!options.legacySpawnRules){this.spawnRng=seed>>>0||1;this.spawnAngle=this.spawnRandom()*Math.PI*2;}this.nextEvent=this.schedule.next();}
  get spawnFixesEnabled(){return !this.options.legacySpawnFixes;}
+ get enemyFloorEnabled(){return !this.options.legacyEnemyFloor;}
  random(){this.rng^=this.rng<<13;this.rng^=this.rng>>>17;this.rng^=this.rng<<5;return(this.rng>>>0)/4294967296;}
  emit(kind:Effect['kind'],pos:Vec,amount?:number,enemy?:EnemyKind,enemyId?:number){this.effects.push({kind,pos:{...pos},amount,enemy,enemyId,level:this.level,shooterId:kind==='jump'||kind==='land'||kind==='death'||kind==='pickup'?this.activeCrew?.id:undefined});if(kind==='death')this.effects[this.effects.length-1].deathCause=this.activeCrew?.cause??this.cause;}
  spawn(kind:EnemyKind,pos:Vec,announce=true):Enemy{
@@ -100,6 +102,7 @@ export class World {
   }
   if(kind==='centipede'&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit&&!this.options.legacyCentipedeCycle)initializeCentipede(e);
   if(isSquid(kind)&&!this.options.legacySpawnFixes){e.towerEmission={born:this.time,burst:0,index:0};e.nextSpawn=184/60;}
+  if(!this.options.legacyEnemyFloor)constrainEnemyFloor(e,this.time);
   this.enemies.push(e);if(announce)this.emit('spawn',e.pos,undefined,kind);return e;
  }
  spawnAt(kind:EnemyKind,angle:number,radialSample?:number){
@@ -291,6 +294,7 @@ export class World {
      this.rings.push({id:this.nextId++,owner:e.id,pos:{...e.pos},radius:0,previous:0,age:0});this.emit('beckon',e.pos,undefined,e.kind);e.nextBeckon=e.age+(e.kind==='leviathan'?20:2.533333333);}
    }else if(e.kind==='thorn')e.pos.y=this.active(e)?0:(this.options.legacySpawnRules?-8:THORN_SPAWN_DEPTH)*(1-Math.min(1,e.age/3));
    else this.updateSwarm(e,dt,cells);
+   if(!this.options.legacyEnemyFloor)constrainEnemyFloor(e,this.time);
    if((e.hp>0||this.options.legacyEnemyBehavior)&&this.active(e)){
     const growing=isSpider(e.kind)?Math.min(1,e.age/(e.kind==='spider2'?9:3)):1;
     let contactSegment=-1;
@@ -447,7 +451,7 @@ export class World {
    // Velocity steering brakes gently instead of snapping onto a height plane.
    const away=clamp((Math.hypot(goal.x-e.pos.x,goal.z-e.pos.z)-2)/8,0,1),lane=away*away*(3-2*away);
    const wave=Math.sin(e.age*(.9+flight.agility*.2)+e.phase);
-   const floor=floorHeight(e.pos.x,e.pos.z,this.time,0);
+   const floor=this.options.legacyEnemyFloor?floorHeight(e.pos.x,e.pos.z,this.time,0):enemyFloorHeight(e,this.time);
    const height=goal.y+(Math.max(floor+.9,floor+flight.height+wave*.35)-goal.y)*lane;
    aimY=clamp((height-e.pos.y)*1.4,-flight.descentSpeed,3);
    const curl=flight.curl*wave*lane;
@@ -455,7 +459,7 @@ export class World {
   }
   const blend=Math.min(1,dt*(flight?flight.agility:tier===2?3:tier>=3?5:4));
   e.vel.x+=(aimX-e.vel.x)*blend;e.vel.y+=(aimY-e.vel.y)*(flight?Math.min(1,dt*(4+flight.agility)):blend);e.vel.z+=(aimZ-e.vel.z)*blend;
-  e.pos.x+=e.vel.x*dt;e.pos.z+=e.vel.z*dt;e.pos.y=e.kind==='spiderling'?floorHeight(e.pos.x,e.pos.z,this.time,0)+.55:e.pos.y+e.vel.y*dt;
+  e.pos.x+=e.vel.x*dt;e.pos.z+=e.vel.z*dt;e.pos.y=e.kind==='spiderling'?(this.options.legacyEnemyFloor?floorHeight(e.pos.x,e.pos.z,this.time,0):enemyFloorHeight(e,this.time))+.55:e.pos.y+e.vel.y*dt;
   const cx=Math.floor(e.pos.x/3),cz=Math.floor(e.pos.z/3);
   for(let x=cx-1;x<=cx+1;x++)for(let z=cz-1;z<=cz+1;z++)for(const other of cells.get(`${x},${z}`)||[]){if(other.id===e.id)continue;const dist=distance(e.pos,other.pos);if(dist<1.5&&dist>.01){const sep=direction(other.pos,e.pos);e.pos.x+=sep.x*(1.5-dist)*dt*3;e.pos.z+=sep.z*(1.5-dist)*dt*3;}}
  }

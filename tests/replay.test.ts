@@ -46,7 +46,7 @@ test('saved combat retains old low-enemy contact and snake escape behavior',()=>
   snake.step(idleInput());assert.equal(e.status,revision===0?'burrowing':'hunting');assert.equal(snake.state,revision===0?'playing':'dead');
  }
  const world=createRun(9),recorder=new RunRecorder(9);recorder.record(idleInput());world.step(idleInput());
- assert.equal(recorder.finish(world).combatRevision,11);
+ assert.equal(recorder.finish(world).combatRevision,12);
 });
 
 test('saved eye-seeking pede revisions preserve their trajectories',()=>{

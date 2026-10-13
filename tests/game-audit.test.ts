@@ -46,6 +46,8 @@ test('real projectile ricochets at an earlier tile contact; older replay revisio
 test('enemy contact before a floor contact still receives the projectile first',()=>{
  const {x,z,high}=pair,start=(x-25+.5)*TILE_SIZE-.55,zz=(z-25)*TILE_SIZE;
  const w=new World(1,{schedule:false}),target=w.spawn('skull3',v(start+.03,high+.08007,zz));target.age=2;target.radius=.005;
+ // Synthetic tiny collider, positioned after changing its normal skull radius.
+ target.pos=v(start+.03,high+.08007,zz);
  w.projectiles=[{id:999,pos:v(start,high+.0801,zz),vel:v(70,-.1,0),age:0,homing:false,level:1}];
  (w as any).updateProjectiles(STEP);assert.equal(target.hp,9);assert.equal(w.stats.hits,1);assert.ok(!w.effects.some(e=>e.kind==='ricochet'));
 });

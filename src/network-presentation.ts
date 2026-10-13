@@ -1,6 +1,7 @@
 import {type ArenaSnapshot} from './multiplayer';
 import {World,type Vec} from './simulation';
 import {mixPosition,flightPosition} from './network-state';
+import {constrainEnemyFloor} from './enemy-floor';
 const angle=(a:number,b:number,t:number)=>a+Math.atan2(Math.sin(b-a),Math.cos(b-a))*t;
 /** Render a small adaptive distance behind the host; never delay the local
  * predicted controller. Samples are immutable and bounded by count and time. */
@@ -15,6 +16,7 @@ export class SnapshotTimeline{
  const fraction=b.time>a.time?Math.max(0,Math.min(1,(target-a.time)/(b.time-a.time))):1;
  const view=Object.create(world) as World;view.time=Math.max(a.time,Math.min(target,b.time));
  const olderEnemies=new Map(a.enemies.map(e=>[e.id,e]));view.enemies=b.enemies.map(e=>{const old=olderEnemies.get(e.id);return old?{...e,pos:mixPosition(old.pos,e.pos,fraction),age:old.age+(e.age-old.age)*fraction,segments:e.segments.map((part,i)=>({...part,pos:old.segments[i]?mixPosition(old.segments[i].pos,part.pos,fraction):part.pos}))}:e;});
+ if(world.enemyFloorEnabled)view.enemies=view.enemies.map(e=>{const safe={...e,pos:{...e.pos},vel:{...e.vel}};constrainEnemyFloor(safe,view.time);return safe;});
  const olderGems=new Map(a.gems.map(g=>[g.id,g]));view.gems=b.gems.map(g=>({...g,pos:olderGems.has(g.id)?mixPosition(olderGems.get(g.id)!.pos,g.pos,fraction):g.pos}));
  const olderCrew=new Map(a.crew.map(p=>[p.id,p]));view.crew=world.crew.map(p=>{if(p.id===localId)return {...p,player:{...p.player,pos:{x:p.player.pos.x+offset.x,y:p.player.pos.y+offset.y,z:p.player.pos.z+offset.z}}};const old=olderCrew.get(p.id),next=b.crew.find(c=>c.id===p.id);return next&&old?{...p,player:{...p.player,pos:mixPosition(old.player.pos,next.player.pos,fraction)},input:{...p.input,yaw:angle(old.yaw,next.yaw,fraction),pitch:(old.pitch??0)+((next.pitch??0)-(old.pitch??0))*fraction,fire:next.primary.wasHeld,homing:next.secondary.wasHeld}}:p;});
  view.player=view.crew.find(p=>p.id===localId)?.player??world.player;
