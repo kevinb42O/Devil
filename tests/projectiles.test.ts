@@ -85,13 +85,3 @@ test('bent interpolation follows the contact instead of cutting through the obst
  assert.deepEqual(sampleProjectile(p,.25,v()),v(-.5,.25,0));
  assert.deepEqual(sampleProjectile(p,.75,v()),v(-.5,.75,0));
 });
-
-import {projectileLaunchScale} from '../src/projectile-presentation.ts';
-test('launch presentation clears fingertip clusters without moving physical shots',()=>{
- const p={id:1,pos:v(0,3,-1),previous:v(0,3,-1),vel:v(0,0,-70),age:STEP,homing:false};
- assert.equal(projectileLaunchScale(p,0),0);
- const mid=projectileLaunchScale(p,.5),end=projectileLaunchScale(p,1);
- assert.ok(mid>0&&mid<end&&end<1);
- p.age=.03;assert.equal(projectileLaunchScale(p,0),1);
- assert.deepEqual(p.pos,v(0,3,-1));assert.deepEqual(p.vel,v(0,0,-70));
-});

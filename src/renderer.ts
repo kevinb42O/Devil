@@ -48,8 +48,10 @@ export class GameRenderer {
   topDown=false;renderer:THREE.WebGLRenderer;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(95,1,.05,180);composer:EffectComposer; bloom:UnrealBloomPass;
   private swarmBatches=new Map<EnemyKind,{meshes:THREE.InstancedMesh[];capacity:number}>();private originalFloor=false;private tileHeights:number[]=[];private beckons=new Map<number,THREE.Mesh>();private baseFov=90;private enemies=new Map<number,THREE.Group>();private tiles:THREE.InstancedMesh;private tilePositions:THREE.Vector3[]=[];
   originalWeapon:OriginalWeapon;originalEnemies:OriginalEnemies;private gemMesh:THREE.InstancedMesh;private dummy=new THREE.Object3D();
+  private renderScale=1;private slowFrames=0;private fastFrames=0;private resizeCooldown=0;private quality='high';
   private preview=new THREE.Group();private altar:THREE.Group;private visualTime=0;
   private sky=new AbyssSky();private gemLighting:GemLighting;
+  private altarLight=new THREE.PointLight(0xcde98b,12,9);
   private playerLight=new THREE.PointLight(0xffb56b,24,11,2);
   private enemyLighting:EnemyLighting;private enemyGlowSources:EnemyGlowSources;
   projectileLighting:ProjectileLighting;
@@ -61,7 +63,7 @@ export class GameRenderer {
     const rim=new THREE.DirectionalLight(0x729786,1.8);rim.position.set(20,10,-20);this.scene.add(rim);
     const red=new THREE.PointLight(0xe44920,90,45,2);red.position.set(0,6,0);this.scene.add(red);
     this.scene.add(this.camera);this.camera.rotation.order='YXZ';
-    this.playerLight.name='player-warm-light';this.playerLight.visible=false;this.scene.add(this.playerLight);
+    this.playerLight.name='player-warm-light';this.playerLight.intensity=0;this.scene.add(this.playerLight);
     const loader=new THREE.TextureLoader();
     const diffuse=loader.load('/assets/original/devil-daggers/textures/tile.png');diffuse.colorSpace=THREE.SRGBColorSpace;diffuse.minFilter=diffuse.magFilter=THREE.NearestFilter;diffuse.generateMipmaps=false;
     const stone=new THREE.MeshBasicMaterial({map:diffuse,toneMapped:false});
@@ -74,14 +76,38 @@ export class GameRenderer {
     this.gemMesh=new THREE.InstancedMesh(gemGeo,crystal,1200);this.gemMesh.count=0;this.gemMesh.frustumCulled=false;this.scene.add(this.gemMesh);
     this.originalEnemies=new OriginalEnemies();this.enemyGlowSources=new EnemyGlowSources(this.originalEnemies);
     this.originalWeapon=new OriginalWeapon(this.scene);
-    this.altar=new THREE.Group();shape(this.altar,new THREE.CylinderGeometry(1.1,1.6,1.2,8),darkBone,[0,.6,0],[1,1,1]);shape(this.altar,new THREE.OctahedronGeometry(.38),greenCrystal,[0,2.7,0],[.55,2.2,.55]);const altarLight=new THREE.PointLight(0xcde98b,12,9);altarLight.position.y=2;this.altar.add(altarLight);this.preview.add(this.altar);
+    this.altar=new THREE.Group();shape(this.altar,new THREE.CylinderGeometry(1.1,1.6,1.2,8),darkBone,[0,.6,0],[1,1,1]);shape(this.altar,new THREE.OctahedronGeometry(.38),greenCrystal,[0,2.7,0],[.55,2.2,.55]);this.altarLight.position.y=2;this.scene.add(this.altarLight);this.preview.add(this.altar);
     this.scene.add(this.preview);
     void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissive:0xff431a,emissiveIntensity:3,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
     this.composer=new EffectComposer(this.renderer);this.composer.addPass(new RenderPass(this.scene,this.camera));this.bloom=new UnrealBloomPass(new THREE.Vector2(1,1),.34,.6,1.1);this.composer.addPass(this.bloom);this.composer.addPass(new OutputPass());
     this.configure(settings);window.addEventListener('resize',()=>this.resize());this.resize();
   }
-  configure(settings:VisualSettings) {this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.renderer.setPixelRatio(Math.min(devicePixelRatio,settings.quality==='high'?1.25:1));if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
-  resize() {const w=innerWidth,h=innerHeight;this.renderer.setSize(w,h);this.composer?.setSize(w,h);this.originalWeapon?.resize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();}
+  configure(settings:VisualSettings) {this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.renderScale=1;this.slowFrames=this.fastFrames=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
+  resize() {
+    const w=innerWidth,h=innerHeight;
+    // Bound fill cost on Retina/4K displays; UI and the canvas keep their CSS size.
+    const density=Math.min(devicePixelRatio,this.quality==='high'?1.25:1,Math.sqrt(1600000/(w*h)))*this.renderScale;
+    this.renderer.setPixelRatio(density);this.renderer.setSize(w,h);this.composer?.setPixelRatio(density);this.composer?.setSize(w,h);
+    this.bloom?.setSize(Math.ceil(w*density*.5),Math.ceil(h*density*.5));
+    this.originalWeapon?.resize(w,h);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();
+  }
+  trackFrame(seconds:number) {
+    if(seconds<=0||seconds>.25)return;
+    if(this.resizeCooldown>0){this.resizeCooldown-=seconds;return;}
+    this.slowFrames=seconds>1/45?this.slowFrames+1:Math.max(0,this.slowFrames-1);
+    this.fastFrames=seconds<1/58?this.fastFrames+1:0;
+    if(this.slowFrames>=30&&this.renderScale>.5){this.renderScale=Math.max(.5,this.renderScale-.1);}
+    else if(this.fastFrames>=300&&this.renderScale<1){this.renderScale=Math.min(1,this.renderScale+.05);}
+    else return;
+    this.slowFrames=this.fastFrames=0;this.resizeCooldown=3;this.resize();
+  }
+  async prepare() {
+    await Promise.all([this.originalEnemies.loaded,this.originalWeapon.loaded]);
+    if(!this.originalEnemies.ready||!this.originalWeapon.ready)return;
+    // Compile the gameplay and hand materials while the menu is still visible.
+    await this.renderer.compileAsync(this.scene,this.camera);
+    await this.renderer.compileAsync(this.originalWeapon.handScene,this.originalWeapon.handCamera);
+  }
   updateTiles(time:number) {let changed=false;this.tiles.instanceMatrix.clearUpdateRanges();for(let i=0;i<this.tilePositions.length;i++){const tile=ARENA_TILES[i],height=tileHeight(tile.x,tile.z,time)-(this.originalFloor?0:.05);if(this.tileHeights[i]===height)continue;this.tileHeights[i]=height;changed=true;this.dummy.position.copy(this.tilePositions[i]);this.dummy.position.y=height;this.dummy.rotation.set(0,0,0);this.dummy.scale.setScalar(1);this.dummy.updateMatrix();this.tiles.setMatrixAt(i,this.dummy.matrix);this.tiles.instanceMatrix.addUpdateRange(i*16,16);}if(changed)this.tiles.instanceMatrix.needsUpdate=true;}
   effect(effect:Effect,world:World,yaw:number,pitch:number) {
     const localId=world.crew.find(p=>p.player===world.player)?.id;
@@ -89,7 +115,7 @@ export class GameRenderer {
     this.originalWeapon.effect(effect,world,yaw,pitch,local);
   }
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1) {
-    this.renderer.info.reset();this.visualTime+=dt;const t=this.visualTime;this.preview.visible=menu;
+    this.renderer.info.reset();this.visualTime+=dt;const t=this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
     if(menu) {
       this.camera.position.set(29+Math.sin(t*.04)*2,13,30);this.camera.lookAt(-10,2,0);this.altar.rotation.y=t*.2;
       this.preview.children.forEach((o,i)=>{if(i>0){o.rotation.y+=dt*(o.name.startsWith('squid')?-TOWER_SPIN_SPEED:.045);}});
@@ -129,10 +155,10 @@ export class GameRenderer {
     const crewIds=new Set<string>();
     if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if(p.player===world.player||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);this.scene.add(model);}model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;updateCrewArm(model,this.originalWeapon,p.level);this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
-    this.playerLight.visible=!menu&&!!world;this.playerLight.position.copy(this.camera.position);this.playerLight.position.y-=.35;
+    this.playerLight.intensity=!menu&&world?24:0;this.playerLight.position.copy(this.camera.position);this.playerLight.position.y-=.35;
     this.enemyLighting.update(world,this.camera,menu,e=>this.enemyGlowSources.sources(e,world!.player.pos,this.camera,this.enemies.get(e.id)));
     this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,t);this.originalWeapon.update(world,dt,menu,this.camera,projectileAlpha);
     this.projectileLighting.update(world,menu,projectileAlpha,this.renderer.domElement.height);this.composer.render();this.originalWeapon.render(this.renderer,menu);
   }
-  clear() {for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.visible=false;this.originalWeapon.clear();}
+  clear() {for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

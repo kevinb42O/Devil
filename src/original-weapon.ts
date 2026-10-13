@@ -1,4 +1,4 @@
-import {sampleProjectile,projectileLaunchScale,PROJECTILE_COLORS,projectileStyleIndex} from './projectile-presentation';
+import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex} from './projectile-presentation';
 import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { type World, type Effect } from './simulation';
@@ -53,20 +53,26 @@ export class OriginalWeapon {
     const loader=new OBJLoader(),textures=new THREE.TextureLoader();
     const texture=async(name:string)=>{const t=await textures.loadAsync(ROOT+`textures/${name}.png`);t.minFilter=t.magFilter=THREE.NearestFilter;t.generateMipmaps=false;t.colorSpace=THREE.NoColorSpace;return t;};
     const mesh=async(name:string)=>{const r=await fetch(ROOT+`meshes/${name}.obj`);if(!r.ok)throw Error(`Original mesh ${name} missing`);return loader.parse(await r.text());};
-    for(const hand of manifest.hands) {
-      const [model,map,flash]=await Promise.all([mesh(hand.mesh),texture(hand.texture),texture(hand.flash)]);
+    const effectNames=[...Array.from({length:8},(_,i)=>`flame${i+1}`),...Array.from({length:3},(_,i)=>`ember${i+1}`),...Array.from({length:4},(_,i)=>`blood${i+1}`)];
+    // Fetch independent assets together instead of paying a round trip per effect.
+    const [hands,daggerModel,daggerMaps,emberTexture,effectModels]=await Promise.all([
+      Promise.all((manifest.hands as {mesh:string;texture:string;flash:string}[]).map(async hand=>Promise.all([mesh(hand.mesh),texture(hand.texture),texture(hand.flash)]))),
+      mesh('dagger'),Promise.all(['dagger','dagger2','dagger3','dagger4','dagger5','dagger6'].map(texture)),
+      texture('emberflame'),Promise.all(effectNames.map(mesh)),
+    ]);
+    for(const [model,map,flash] of hands) {
       const material=new THREE.ShaderMaterial({uniforms:{originalTexture:{value:map},brightness:{value:1}},vertexShader:handVert,fragmentShader:handFrag,depthTest:false,depthWrite:false,toneMapped:false});
       model.traverse(o=>{if(o instanceof THREE.Mesh)o.material=material;});model.visible=false;this.pose.add(model);this.handModels.push(model);this.handMaterials.push(material);this.handTextures.push(map);this.flashTextures.push(flash);
     }
     // Original pose is centered, viewed from the back of the hand; no fabricated knuckle crystals.
     this.pose.rotation.set(HAND_POSE.rotationX,HAND_POSE.rotationY,0);
     this.pose.position.set(HAND_POSE.x,HAND_POSE.y,HAND_POSE.z);
-    const daggerModel=await mesh('dagger');let daggerGeometry:THREE.BufferGeometry|undefined;daggerModel.traverse(o=>{if(o instanceof THREE.Mesh)daggerGeometry=o.geometry;});if(!daggerGeometry)throw Error('No dagger geometry');
+    let daggerGeometry:THREE.BufferGeometry|undefined;daggerModel.traverse(o=>{if(o instanceof THREE.Mesh)daggerGeometry=o.geometry;});if(!daggerGeometry)throw Error('No dagger geometry');
     // Enlarge the actual flying mesh, rather than filling its path with flame.
     // Local +Z is the flight direction; keep the length short enough for gaps.
     daggerGeometry.scale(DAGGER_PRESENTATION.width,DAGGER_PRESENTATION.width,DAGGER_PRESENTATION.length);
     for(const name of ['dagger','dagger2','dagger3','dagger4','dagger5','dagger6']) {
-      const map=await texture(name);map.colorSpace=THREE.SRGBColorSpace;
+      const map=daggerMaps[this.daggers.length];map.colorSpace=THREE.SRGBColorSpace;
       const material=new THREE.MeshBasicMaterial({map,toneMapped:false});
       const color=PROJECTILE_COLORS[this.daggers.length];
       // HDR emission keeps the physical dagger readable inside its glow and
@@ -77,16 +83,15 @@ export class OriginalWeapon {
       material.customProgramCacheKey=()=>`dagger-emission-v2-${name}`;
       const batch=new THREE.InstancedMesh(daggerGeometry,material,256);batch.count=0;batch.instanceMatrix.setUsage(THREE.DynamicDrawUsage);batch.frustumCulled=false;this.scene.add(batch);this.daggers.push(batch);
     }
-    const emberTexture=await texture('emberflame');
-    for(const name of [...Array.from({length:8},(_,i)=>`flame${i+1}`),...Array.from({length:3},(_,i)=>`ember${i+1}`),...Array.from({length:4},(_,i)=>`blood${i+1}`)]) {
-      const model=await mesh(name);let geometry:THREE.BufferGeometry|undefined;model.traverse(o=>{if(o instanceof THREE.Mesh)geometry=o.geometry.clone();});if(!geometry)continue;
+    for(const [index,name] of effectNames.entries()) {
+      const model=effectModels[index];let geometry:THREE.BufferGeometry|undefined;model.traverse(o=>{if(o instanceof THREE.Mesh)geometry=o.geometry.clone();});if(!geometry)continue;
       const capacity=1600,tint=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),rim=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),params=new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4);
       geometry.setAttribute('effectColor',tint);geometry.setAttribute('effectRim',rim);geometry.setAttribute('effectParams',params);
       const material=new THREE.ShaderMaterial({uniforms:{originalTexture:{value:emberTexture}},vertexShader:vert,fragmentShader:frag,transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,forceSinglePass:true});
       const batch=new THREE.InstancedMesh(geometry,material,capacity);batch.count=0;batch.frustumCulled=false;this.scene.add(batch);this.batches.set(name,{mesh:batch,tint,rim,params});
     }
-    // Brief socket flashes mark launches without leaving a permanent cluster
-    // attached to the hand. Use the original flame geometry and emitter colors.
+    // One tiny viewmodel batch keeps the launch points readable between fast
+    // projectile samples. It uses the original flame geometry and emitter colors.
     const flame=this.batches.get('flame1')!;
     const geometry=flame.mesh.geometry.clone(),capacity=5;
     const tint=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),rim=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),params=new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4);
@@ -112,9 +117,10 @@ export class OriginalWeapon {
       for(let i=0;i<count;i++) {
         const socket=muzzles[i%muzzles.length],muzzle=new THREE.Vector3(socket.x,socket.y,socket.z);
         const dir=forward.clone().addScaledVector(right,(Math.random()-.5)*spread*2).addScaledVector(up,(Math.random()-.5)*spread*2).normalize();
-        // Fast, short-lived stream particles clear the fingers between shots.
-        const flameVelocity=dir.clone().multiplyScalar(burst?25+Math.random()*25:24+Math.random()*12);
-        this.add(name,muzzle,flameVelocity,`flame${1+Math.floor(Math.random()*8)}`,burst?tuning.flameSize*1.2:stream.flameSize,burst?.07+Math.random()*.04:.025+Math.random()*.015,burst?1:.6);
+        // Keep stream flames within roughly one metre of the fingertips instead
+        // of projecting overlapping, opaque flames into the target's silhouette.
+        const flameVelocity=dir.clone().multiplyScalar(burst?25+Math.random()*25:9+Math.random()*6);
+        this.add(name,muzzle,flameVelocity,`flame${1+Math.floor(Math.random()*8)}`,burst?tuning.flameSize*1.2:stream.flameSize,burst?.12+Math.random()*.1:.055+Math.random()*.03,burst?1:.6);
         // A few sparks peel sideways off the muzzle, leaving the aiming line open.
         if(burst||i%2===0){
           const emberVelocity=dir.clone().multiplyScalar(burst?6+Math.random()*9:2+Math.random()*3);
@@ -156,12 +162,12 @@ export class OriginalWeapon {
     this.flashTime=Math.max(0,this.flashTime-dt);this.recoil*=Math.exp(-dt*23);this.pose.position.z=HAND_POSE.z+this.recoil;
     this.handModels.forEach((hand,i)=>{hand.visible=i===level-1;this.handMaterials[i].uniforms.originalTexture.value=this.flashTime>0?this.flashTextures[i]:this.handTextures[i];});
     const tips=this.tipFlames!;
-    const sockets=HAND_SOCKETS[level-1],firing=world&&this.flashTime>0&&!menu;
+    const sockets=HAND_SOCKETS[level-1],firing=world&&(world.weaponAudio.primary||world.weaponAudio.homing||this.flashTime>0)&&!menu;
     tips.mesh.count=firing?sockets.length:0;
     if(firing){
       const emitter=this.definitions[`rapid${level}${world.weaponAudio.homing?'alt':''}`]??this.definitions[`rapid${level}`];
       for(let i=0;i<sockets.length;i++){
-        const socket=sockets[i];this.dummy.position.set(socket.x,socket.y,socket.z);this.dummy.rotation.set(HAND_POSE.rotationX,0,0);this.dummy.scale.setScalar((.018+level*.004)*(this.flashTime/.045));this.dummy.updateMatrix();tips.mesh.setMatrixAt(i,this.dummy.matrix);
+        const socket=sockets[i];this.dummy.position.set(socket.x,socket.y,socket.z);this.dummy.rotation.set(HAND_POSE.rotationX,0,0);this.dummy.scale.setScalar((.035+level*.012)*(1+Math.sin(world.time*70+i)*.12));this.dummy.updateMatrix();tips.mesh.setMatrixAt(i,this.dummy.matrix);
         tips.tint.setXYZ(i,...emitter.start as [number,number,number]);tips.rim.setXYZ(i,...emitter.rim as [number,number,number]);tips.params.setXYZW(i,emitter.alpha,emitter.rimStrength,emitter.clip,0);
       }
       for(const attribute of [tips.mesh.instanceMatrix,tips.tint,tips.rim,tips.params]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,tips.mesh.count*attribute.itemSize);attribute.needsUpdate=true;}
@@ -173,19 +179,19 @@ export class OriginalWeapon {
       const alpha=Math.max(0,Math.min(1,projectileAlpha));
       for(const p of world.projectiles){
         const index=this.daggerIndex(p.level??level,p.homing),position=sampleProjectile(p,alpha,this.dummy.position,this.projectileVelocity),velocity=this.projectileVelocity;
-        // Keep local +Z on the sampled flight direction and local +Y upright.
-        // A shortest-arc quaternion leaves roll unstable around reverse Z.
-        const speed=Math.hypot(velocity.x,velocity.y,velocity.z),inverse=speed>0?1/speed:0;
-        const nx=velocity.x*inverse,ny=velocity.y*inverse,nz=speed>0?velocity.z*inverse:1;
-        const horizontal=Math.hypot(nx,nz);
-        // Vertical flight has no unique world-up projection: use a fixed right.
-        const rx=horizontal>1e-6?nz/horizontal:1,rz=horizontal>1e-6?-nx/horizontal:0;
-        const ux=ny*rz,uy=nz*rx-nx*rz,uz=-ny*rx;
-        const scale=(p.homing?1.15:1)*projectileLaunchScale(p,alpha);
+        // Write the rigid transform directly into the instance buffer. The
+        // original dagger's +Z tip faces the normalized velocity; no temporary
+        // vectors, Object3D matrix updates, or Matrix4 copies per projectile.
+        const speed=Math.sqrt(velocity.x*velocity.x+velocity.y*velocity.y+velocity.z*velocity.z),inverse=speed>0?1/speed:0;
+        const nx=velocity.x*inverse,ny=velocity.y*inverse,nz=velocity.z*inverse;
+        let qx=-ny,qy=nx,qw=1+nz;
+        if(qw<Number.EPSILON){qx=0;qy=-1;qw=0;}
+        else{const inv=1/Math.sqrt(qx*qx+qy*qy+qw*qw);qx*=inv;qy*=inv;qw*=inv;}
+        const scale=p.homing?1.15:1,x2=2*qx*qx,y2=2*qy*qy,xy=2*qx*qy,xw=2*qx*qw,yw=2*qy*qw;
         const array=this.daggers[index].instanceMatrix.array,offset=cursors[index]++*16;
-        array[offset]=rx*scale;array[offset+1]=0;array[offset+2]=rz*scale;array[offset+3]=0;
-        array[offset+4]=ux*scale;array[offset+5]=uy*scale;array[offset+6]=uz*scale;array[offset+7]=0;
-        array[offset+8]=nx*scale;array[offset+9]=ny*scale;array[offset+10]=nz*scale;array[offset+11]=0;
+        array[offset]=(1-y2)*scale;array[offset+1]=xy*scale;array[offset+2]=-yw*scale;array[offset+3]=0;
+        array[offset+4]=xy*scale;array[offset+5]=(1-x2)*scale;array[offset+6]=xw*scale;array[offset+7]=0;
+        array[offset+8]=yw*scale;array[offset+9]=-xw*scale;array[offset+10]=(1-x2-y2)*scale;array[offset+11]=0;
         array[offset+12]=position.x;array[offset+13]=position.y;array[offset+14]=position.z;array[offset+15]=1;
       }
     }

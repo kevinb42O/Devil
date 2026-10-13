@@ -20,10 +20,3 @@ export function sampleProjectile(p:Projectile,alpha:number,out:Vec,velocity?:Vec
  const t=end>start?Math.max(0,Math.min(1,(alpha-start)/(end-start))):1;
  out.x=a.x+(b.x-a.x)*t;out.y=a.y+(b.y-a.y)*t;out.z=a.z+(b.z-a.z)*t;return out;
 }
-
-/** Let a shot clear the fingertips before its full mesh and halo appear. */
-export function projectileLaunchScale(p:Projectile,alpha:number){
- const age=Math.max(0,p.age-(p.previous?(1-alpha)/120:0));
- const t=Math.min(1,age/.02);
- return t*t*(3-2*t);
-}

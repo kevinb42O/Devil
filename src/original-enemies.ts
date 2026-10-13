@@ -28,7 +28,7 @@ export class OriginalEnemies {
  private async load(){
   const names=[...new Set(Object.values(parts).flat().concat(['gib','tile2']))];const loader=new OBJLoader(),textureLoader=new THREE.TextureLoader();
   const textureNames=[...new Set(names.filter(n=>!['minisquidgem','squidgem','ultrasquidgem','levigem','pedeweak','spiderlingpalms','tile2','leviorb','immortalorb','ultrasquidtent','ultrasquidteeth'].includes(n)).concat(['crystal','minisquidarm','squidarm','spiderlingpalm','boidlev','boid2lev','boid2hornslev','boid3lev','boid3hornslev','boid3jawlev','boid4lev','boid4jawlev','leviwarp','pedeblackhead','pedeblackjaw','pedeblackbody','pedeblackleg1','pedeblackleg2','pedeblackleg3','pedeblackbodyfragged','pedeblackleg1fragged','pedeblackleg2fragged','pedeblackleg3fragged','ultrapedehead','ultrapedejaw','ultrapedebody','ultrapedeleg1','ultrapedeleg2','ultrapedeleg3','gigaspiderleg1','gigaspiderleg2','gigaspiderleg3']))];
-  await Promise.all(textureNames.map(async name=>{
+  await Promise.all([Promise.all(textureNames.map(async name=>{
    const map=await textureLoader.loadAsync(ROOT+`textures/${name}.png`);map.magFilter=map.minFilter=THREE.NearestFilter;map.generateMipmaps=false;map.colorSpace=THREE.SRGBColorSpace;
    const material=new THREE.MeshBasicMaterial({map,toneMapped:false});
    // Original boid shader snaps world vertices to a 1/16 grid.
@@ -38,8 +38,7 @@ localPosition=instanceMatrix*localPosition;
 #endif
 vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWorld.xyz*16.)/16.;vec4 mvPosition=viewMatrix*originalWorld;gl_Position=projectionMatrix*mvPosition;`);};
    this.materials.set(name,material);
-  }));
-  await Promise.all(names.map(async name=>{const response=await fetch(ROOT+`meshes/${name}.obj`);if(!response.ok)throw Error(`Original ${name} mesh missing`);const object=loader.parse(await response.text());object.traverse(o=>{if(o instanceof THREE.Mesh)this.geometry.set(name,o.geometry);});if(!this.geometry.has(name))throw Error(`No geometry in ${name}`);}));
+  })),Promise.all(names.map(async name=>{const response=await fetch(ROOT+`meshes/${name}.obj`);if(!response.ok)throw Error(`Original ${name} mesh missing`);const object=loader.parse(await response.text());object.traverse(o=>{if(o instanceof THREE.Mesh)this.geometry.set(name,o.geometry);});if(!this.geometry.has(name))throw Error(`No geometry in ${name}`);}))]);
   const armMap=this.materials.get('minisquidarm')!.map!;
   this.armMaterial=new THREE.ShaderMaterial({uniforms:{map:{value:armMap},time:this.materialClock},vertexShader:`varying vec2 u;uniform float time;void main(){u=uv;vec3 p=position;float wave=clamp((-p.y-1.5)*.5,0.,1.)*.5;float curve=pow(max(0.,-p.y),2.1)*.07;vec3 off=wave*vec3(0.,0.,sin(curve-time*.7)*.6);p+=off;float angle=atan(p.z,p.x)-wave*curve*.35;float len=length(p.xz);p.x=sin(angle)*len;p.z=-cos(angle)*len;vec4 w=modelMatrix*vec4(p,1.);w.xyz=floor(w.xyz*16.)/16.;gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`uniform sampler2D map;varying vec2 u;void main(){vec4 c=texture2D(map,u);gl_FragColor=c;}`,side:THREE.DoubleSide,toneMapped:false});
   const warpMap=this.materials.get('leviwarp')!.map!;warpMap.wrapS=warpMap.wrapT=THREE.RepeatWrapping;

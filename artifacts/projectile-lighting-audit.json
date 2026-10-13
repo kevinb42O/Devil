@@ -68,6 +68,6 @@
   ],
   "menuCount": 0,
   "emptyUploadFree": true,
-  "updateMedianMs": 2.0999999940395355,
-  "updateP95Ms": 8.799999982118607
+  "updateMedianMs": 0.5,
+  "updateP95Ms": 0.699999988079071
 }

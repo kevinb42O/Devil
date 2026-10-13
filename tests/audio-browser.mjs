@@ -12,7 +12,10 @@ try{
  const result=await page.evaluate(async()=>{
   const {Sound,SOUND_NAMES}=await import('/src/audio.ts'),{World,idleInput,v}=await import('/src/simulation.ts'),{ENEMY_KINDS}=await import('/src/enemy-kinds.ts');
   const sound=new Sound();await sound.start();const check=(value,message)=>{if(!value)throw Error(message);};
-  check(sound.diagnostics.failed.length===0,JSON.stringify(sound.diagnostics.failed));check(sound.diagnostics.loaded===SOUND_NAMES.length,'all used recordings decoded');
+  check(sound.diagnostics.failed.length===0,JSON.stringify(sound.diagnostics.failed));check(sound.diagnostics.loaded===11,'startup decodes only opening cues');
+  // Exhaustive audio fixture explicitly warms later cues; normal gameplay loads them on demand.
+  for(const name of SOUND_NAMES)await sound.load(name);
+  check(sound.diagnostics.loaded===SOUND_NAMES.length,'all used recordings decoded');
   const unusedDecoded=[];
   const manifest=await (await fetch('/assets/original/devil-daggers/audio/manifest.json')).json();
   for(const entry of manifest.files){if(SOUND_NAMES.includes(entry.name))continue;const buffer=await sound.context.decodeAudioData(await (await fetch('/assets/original/devil-daggers/audio/'+entry.name+'.wav')).arrayBuffer());check(buffer.duration>0&&buffer.numberOfChannels>0,'decode '+entry.name);unusedDecoded.push(entry.name);}

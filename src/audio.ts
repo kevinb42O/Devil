@@ -32,8 +32,10 @@ export class Sound{
   this.master.connect(limiter);limiter.connect(this.context.destination);await this.context.resume();
   this.loading=(async()=>{
    try{const response=await fetch(ROOT+'loudness.ini');if(response.ok)for(const match of (await response.text()).matchAll(/([\w]+)\s*=\s*([\d.]+)/g)){const value=parseFloat(match[2]);if(Number.isFinite(value))this.loudness.set(match[1],value);}}catch{/* Recordings still work with the fallback mix. */}
-   // Large stereo recordings: bound concurrent fetch/decode work and warm the weapon first.
-   for(const group of [CORE,SOUND_NAMES.filter(n=>!CORE.includes(n))]){let index=0;await Promise.all(Array.from({length:4},async()=>{while(index<group.length)await this.load(group[index++]);}));}
+   // Warm only the opening weapon/movement cues. Enemy and later-hand sounds
+   // load on demand; decoding the entire library on Start competes with gameplay.
+   const opening=['rapid1','shot1','gibcollect','jump1','jump2','jump3','land','land2','death','fall','spawnminisquid'];
+   let index=0;await Promise.all(Array.from({length:2},async()=>{while(index<opening.length)await this.load(opening[index++]);}));
   })();return this.loading;
  }
  private load(name:string):Promise<AudioBuffer|undefined>{

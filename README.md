@@ -77,7 +77,7 @@ Attunement II unlocks at 10 collected gems, III at 70. Gems collected after III 
 - `tests/simulation.test.ts`: behavioral tests, including collisions, resource tradeoffs, progression, and reproducibility.
 - `tests/browser.mjs`: real-browser end-to-end smoke.
 
-High quality uses bloom and up to 2× pixel density; low uses native density and disables bloom. The 120 Hz simulation is an implementation choice, **not a verified 120 FPS performance claim**. Hardware benchmarking and dense endgame profiling remain to be done. The frame loop retains elapsed simulation time and processes up to 240 steps per frame to catch up after stalls; visual effects use a separately bounded delta. Native replay compatibility and external score verification remain separate work.
+High quality uses half-resolution bloom and up to 1.25× pixel density; low disables bloom. Both cap the drawing buffer at 1.6 million pixels and reduce rendering resolution when frames stay slow. The 120 Hz simulation is an implementation choice, **not a verified 120 FPS performance claim**. Hardware benchmarking and dense endgame profiling remain to be done. The frame loop admits at most 100 ms of elapsed time and processes at most 12 simulation steps per frame after stalls; visual effects use a separately bounded delta. Long stalls therefore slow the run clock instead of creating a prolonged catch-up freeze. Weapon and enemy assets load concurrently, and gameplay shaders compile before Start becomes available. Audio warms opening cues on the first gesture and loads later recordings on demand. Native replay compatibility and external score verification remain separate work.
 
 ## Practice and replays
 

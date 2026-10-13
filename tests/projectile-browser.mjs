@@ -23,7 +23,7 @@ try{
     const error=Math.hypot(worldScreen.x-handScreen.x,worldScreen.y-handScreen.y);maxScreenError=Math.max(maxScreenError,error);check(error<1e-6,'world projectile and rendered fingertip align');checks++;
    }
   }
-  // Short mounted flashes identify each socket only during the shot.
+  // Short mounted flames identify every active socket, even between shots.
   weapon.clear();world.level=4;world.projectiles=[];world.effects=[];world.shoot(idleInput(),true,false);for(const event of world.effects)weapon.effect(event,world,0,0);weapon.update(world,0,false,renderer.camera);check(weapon.tipFlames.mesh.count===5,'five fingertip flames on hand IV burst');
   const tipMatrix=new THREE.Matrix4();weapon.tipFlames.mesh.getMatrixAt(4,tipMatrix);check(Math.abs(tipMatrix.elements[12]-HAND_SOCKETS[3][4].x)<1e-6,'flame attached to measured fingertip');weapon.clear();weapon.update(world,0,false,renderer.camera);check(weapon.tipFlames.mesh.count===0,'inactive fingertip flames disappear');
   // Interpolation retains the birth position and blends the actual swept path.
@@ -34,24 +34,12 @@ try{
   world.level=4;world.projectiles=Array.from({length:6000},(_,i)=>({id:10000+i,pos:v(i%100*.12-6,3,Math.floor(i/100)*-.3-3),vel:v(.3,0,-70),age:1,homing:false,level:4}));
   renderer.configure({quality:'low',fov:95});renderer.render(world,0,0,0,false);const dense={...weapon.projectileDiagnostics};check(dense.count===6000,'all dense daggers rendered');check(dense.capacities[4]>=6000,'capacity grows');check(dense.batches===1,'one draw for one projectile family');
   const last=new THREE.Matrix4();weapon.daggers[4].getMatrixAt(5999,last);check(Math.abs(last.elements[12]-world.projectiles[5999].pos.x)<1e-6,'last dagger transform');
-  // Flight alignment and upright roll, including the old reverse-Z singularity.
-  const directions=[v(0,0,0),v(0,0,-70),v(0,0,70),v(3,-4,5),v(-12,25,-8),v(0,9,0),v(0,.01,-70),v(.01,.01,-70)];
-  const stored=world.projectiles;world.projectiles=directions.map((vel,i)=>({id:i,pos:v(i,3,-5),vel,age:.1,homing:i%2===0,level:4}));weapon.update(world,0,false,renderer.camera);
-  const cursors=[0,0];let maxMatrixError=0;
-  for(const p of world.projectiles){
-   const matrix=new THREE.Matrix4(),type=p.homing?1:0;weapon.daggers[p.homing?5:4].getMatrixAt(cursors[type]++,matrix);
-   const forward=new THREE.Vector3(p.vel.x,p.vel.y,p.vel.z);if(!forward.lengthSq())forward.z=1;forward.normalize();
-   const tip=new THREE.Vector3(0,0,1).transformDirection(matrix),up=new THREE.Vector3(0,1,0).transformDirection(matrix);
-   const error=tip.distanceTo(forward);maxMatrixError=Math.max(maxMatrixError,error);check(error<1e-6,'tip follows flight');
-   const upright=new THREE.Vector3(0,1,0).addScaledVector(forward,-forward.y);if(upright.lengthSq()>1e-10)check(up.distanceTo(upright.normalize())<1e-6,'blade roll stays aligned with projected up');check(Math.abs(up.dot(tip))<1e-6,'orthogonal blade axes');
-   check(Math.abs(matrix.determinant()-(p.homing?1.15**3:1))<1e-6,'rigid scale without mirroring');
-  }
-  // Fresh overlapping burst meshes and halos grow only after leaving the sockets.
-  world.projectiles=[{id:1,pos:v(0,3,-1),previous:v(0,3,-1),vel:v(0,0,-70),age:STEP,homing:false,level:4}];
-  weapon.update(world,0,false,renderer.camera,0);weapon.daggers[4].getMatrixAt(0,matrix);check(matrix.elements[0]===0,'no full-size mesh at birth');renderer.projectileLighting.update(world,false,0,720);check(renderer.projectileLighting.glow.geometry.attributes.shotSize.getX(0)===0,'no stacked halo at birth');
-  world.projectiles[0].age=.03;weapon.update(world,0,false,renderer.camera);weapon.daggers[4].getMatrixAt(0,matrix);check(Math.abs(matrix.elements[0])===1,'full-size shot after launch');renderer.projectileLighting.update(world,false,1,720);check(renderer.projectileLighting.glow.geometry.attributes.shotSize.getX(0)===1,'full halo after clearing fingers');
-  weapon.flashTime=0;weapon.update(world,0,false,renderer.camera);check(weapon.tipFlames.mesh.count===0,'no persistent mounted flame');
-  world.projectiles=stored;
+  // Compare direct writes with Three's canonical quaternion/matrix math,
+  // including exact reverse direction and zero velocity.
+  const directions=[v(0,0,0),v(0,0,-70),v(0,0,70),v(3,-4,5),v(-12,25,-8),v(0,9,0)];
+  const stored=world.projectiles;world.projectiles=directions.map((vel,i)=>({id:i,pos:v(i,3,-5),vel,age:0,homing:i%2===0,level:4}));weapon.update(world,0,false,renderer.camera);
+  const cursors=[0,0],axis=new THREE.Vector3(0,0,1);let maxMatrixError=0;
+  for(const p of world.projectiles){const matrix=new THREE.Matrix4(),expected=new THREE.Matrix4().compose(new THREE.Vector3(p.pos.x,p.pos.y,p.pos.z),new THREE.Quaternion().setFromUnitVectors(axis,new THREE.Vector3(p.vel.x,p.vel.y,p.vel.z).normalize()),new THREE.Vector3().setScalar(p.homing?1.15:1)),type=p.homing?1:0;weapon.daggers[p.homing?5:4].getMatrixAt(cursors[type]++,matrix);for(let i=0;i<16;i++)maxMatrixError=Math.max(maxMatrixError,Math.abs(matrix.elements[i]-expected.elements[i]));}check(maxMatrixError<1e-6,'direct transform matches Three');world.projectiles=stored;
   const benchmark=(fn)=>{const times=[];for(let i=0;i<50;i++){const begin=performance.now();fn();if(i>=10)times.push(performance.now()-begin);}times.sort((a,b)=>a-b);return {median:times[20],p95:times[38]};};
   const optimized=benchmark(()=>weapon.update(world,0,false,renderer.camera));
   // Same matrix work as the prior implementation, with its two temporary

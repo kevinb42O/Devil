@@ -10,6 +10,7 @@
     "test": "tsx --test tests/*.test.ts tests/*.test.mjs",
     "test:browser": "node tests/browser.mjs",
     "test:production": "node tests/production-browser.mjs",
+    "test:startup-performance": "node tests/startup-performance-browser.mjs",
     "assets:import": "node tools/import-dd-assets.mjs",
     "test:weapon": "node tests/weapon-browser.mjs",
     "test:weapon-readability": "node tests/weapon-readability-browser.mjs",

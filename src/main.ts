@@ -79,10 +79,11 @@ function updateHud() {
 }
 function frame(now:number) {
   const elapsed=Math.max(0,(now-last)/1000),dt=Math.min(.05,elapsed);last=now;
+  if(mode==='playing'&&!settingsOpen)renderer.trackFrame(elapsed);
   if(!friends&&mode==='playing'&&world&&!settingsOpen) {
     input.forward=(keys.has('KeyW')?1:0)-(keys.has('KeyS')?1:0);input.strafe=(keys.has('KeyD')?1:0)-(keys.has('KeyA')?1:0);input.jump=keys.has('Space');input.yaw=yaw;input.pitch=pitch;
-    accumulator+=elapsed;let steps=0;
-    while(accumulator>=STEP&&world.state==='playing'&&steps++<240) {const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else sampledHoming=edge.held;}input.fire=sampledFire;input.homing=sampledHoming;recorder?.record(input);world.step(input);accumulator-=STEP;}
+    accumulator+=Math.min(.1,elapsed);let steps=0;
+    while(accumulator>=STEP&&world.state==='playing'&&steps++<12) {const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else sampledHoming=edge.held;}input.fire=sampledFire;input.homing=sampledHoming;recorder?.record(input);world.step(input);accumulator-=STEP;}
     sound.listener(world.player.pos,yaw,pitch);
     for(const effect of world.effects) {renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);if(effect.kind==='hit')hitUntil=now+90;if(effect.kind==='upgrade')notice(`ATTUNEMENT ${['','I','II','III','IV'][effect.amount||1]} · ${effect.amount===3?'HOMING UNLOCKED':'POWER RISES'}`,3);if(effect.kind==='death'){$('flash').style.opacity='1';setTimeout(()=>$('flash').style.opacity='0',170);}}
     world.effects=[];
@@ -101,7 +102,7 @@ function frame(now:number) {
     if(friends.role==='guest'&&now-lastSnapshotAt>3000){$('crew-hud').textContent+='\nWaiting for host connection…';clearInput();}
     if(world.state==='dead'&&mode!=='dead')death();
   }
-  if(mode==='replay'&&replay){if(!replayPaused){accumulator+=elapsed;let steps=0;while(accumulator>=STEP&&!replay.done&&steps++<240){const view=replay.input;if(view){yaw=view.yaw;pitch=view.pitch;input={...view};}replay.step();accumulator-=STEP;}if(replay.done){replayPaused=true;sound.stopLoops();$('replay-pause').textContent='PLAY';}}world=replay.world;yaw=replay.lastInput.yaw;pitch=replay.lastInput.pitch;sound.listener(world.player.pos,yaw,pitch);if(!replayPaused)sound.update(world);for(const effect of world.effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}world.effects=[];$<HTMLInputElement>('replay-seek').value=String(replay.tick);$('replay-time').textContent=`${format(world.time)} / ${format(replay.run.time)}`;}
+  if(mode==='replay'&&replay){if(!replayPaused){accumulator+=Math.min(.1,elapsed);let steps=0;while(accumulator>=STEP&&!replay.done&&steps++<12){const view=replay.input;if(view){yaw=view.yaw;pitch=view.pitch;input={...view};}replay.step();accumulator-=STEP;}if(replay.done){replayPaused=true;sound.stopLoops();$('replay-pause').textContent='PLAY';}}world=replay.world;yaw=replay.lastInput.yaw;pitch=replay.lastInput.pitch;sound.listener(world.player.pos,yaw,pitch);if(!replayPaused)sound.update(world);for(const effect of world.effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}world.effects=[];$<HTMLInputElement>('replay-seek').value=String(replay.tick);$('replay-time').textContent=`${format(world.time)} / ${format(replay.run.time)}`;}
   hudTime+=dt;if(hudTime>.05&&world){updateHud();hudTime=0;}
   renderer.setCrewNames(friends?.members??[]);
   renderer.render(world,yaw,pitch,friends?dt:(mode==='paused'||settingsOpen)?0:dt,mode==='menu',Math.min(1,accumulator/STEP));
@@ -167,7 +168,7 @@ function init() {
   updateBest();showPanels();setupSettings();
   // Begin decoding on the first menu gesture, before a quick initial burst.
   document.addEventListener('pointerdown',()=>void sound.start(),{once:true});
-  const start=$<HTMLButtonElement>('start');start.disabled=true;void Promise.all([renderer.originalWeapon.loaded,renderer.originalEnemies.loaded]).then(()=>{start.disabled=!(renderer.originalEnemies.ready&&renderer.originalWeapon.ready);if(start.disabled){$('error').hidden=false;$('error').textContent='The original game assets could not load. '+renderer.originalEnemies.error+' '+renderer.originalWeapon.error;}});
+  const start=$<HTMLButtonElement>('start');start.disabled=true;void renderer.prepare().then(()=>{start.disabled=!(renderer.originalEnemies.ready&&renderer.originalWeapon.ready);if(start.disabled){$('error').hidden=false;$('error').textContent='The original game assets could not load. '+renderer.originalEnemies.error+' '+renderer.originalWeapon.error;}}).catch(error=>{$('error').hidden=false;$('error').textContent='The arena could not prepare its graphics. '+String(error);});
   $('start').onclick=()=>{if(friends){friendsOpen=true;showPanels();return;}startRun();};$('retry').onclick=()=>{if(friends){if(friends.role==='host')returnCrewLobby();return;}startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);};$('resume').onclick=resume;$('quit').onclick=home;$('home').onclick=home;
   $('settings-open').onclick=openSettings;$('pause-settings').onclick=openSettings;$('settings-close').onclick=()=>{settingsOpen=false;showPanels();};
   $('practice-start').onclick=()=>{if(friends){friendsOpen=true;showPanels();return;}startRun({time:Math.max(0,Math.min(1200,Number($<HTMLInputElement>('practice-time').value)||0)),level:Number($<HTMLSelectElement>('practice-level').value),reserve:Math.max(0,Math.min(1000,Number($<HTMLInputElement>('practice-homing').value)||0))});};
