@@ -97,7 +97,7 @@ See [ASSET_PREPARATION.md](ASSET_PREPARATION.md) and [ASSET_RESEARCH.md](ASSET_R
 
 ## Public leaderboard
 
-Open **Public leaderboard** from the menu to see the top 100 shared solo Survival scores. After a standard solo run, enter a name and choose **Publish this run**. Supabase stores each browser’s best published time; practice and multiplayer stay separate. See [LEADERBOARD.md](LEADERBOARD.md) for deployment, database access and score-verification limits.
+Open **Public leaderboard** from the menu to see the top 100 shared solo Survival scores. Choose your nickname before the first run and enable automatic publication, or publish manually from the death screen. Every run shows its score status; failed saves remain queued for retry. Supabase stores each browser’s best published time; practice and multiplayer stay separate. See [LEADERBOARD.md](LEADERBOARD.md) for deployment, database access and score-verification limits.
 
 ## Friends multiplayer
 

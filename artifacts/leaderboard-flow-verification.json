@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-13T05:38:22.744Z",
+  "firstRealRunMs": 3567,
+  "secondHigherRealRunMs": 4550,
+  "shorterThirdRunMs": 3567,
+  "consecutiveHigherScoresSaved": true,
+  "nicknameAndPreferencePersisted": true,
+  "manualPublicationPromptVerified": true,
+  "weaponTestExplicitlyUnranked": true,
+  "ownRankAndHighlightVerified": true,
+  "nicknameSearchVerified": true,
+  "serverOwnershipChecksPassed": true,
+  "anonymousOwnScoreLookupDenied": true,
+  "directTableReadDenied": true,
+  "testScoresRemoved": true,
+  "existingAlphaQBestMs": 16633
+}

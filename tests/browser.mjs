@@ -9,7 +9,7 @@ try {
   const url=process.env.GAME_URL||'http://127.0.0.1:5173';await page.goto(url);await page.locator('#start').waitFor();
   await page.waitForFunction(()=>window.abyss?.mode==='menu');
   await page.click('#settings-open');await page.locator('#volume').fill('0');await page.click('#settings-close');
-  await page.click('#start');await page.waitForFunction(()=>window.abyss?.time>.3);
+  await page.click('#start');if(await page.locator('#player-profile').isVisible())await page.click('#profile-local');await page.waitForFunction(()=>window.abyss?.time>.3);
   assert.equal(await page.evaluate(()=>!!document.pointerLockElement),true,'mouse must be captured');
   const before=await page.evaluate(()=>window.abyss.position.z);
   await page.keyboard.down('KeyW');await page.waitForTimeout(550);await page.keyboard.up('KeyW');

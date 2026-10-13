@@ -5,7 +5,8 @@ import '@fontsource/dm-sans/latin-500.css';
 import '@fontsource/dm-sans/latin-600.css';
 import '@fontsource/dm-sans/latin-700.css';
 import './style.css';
-import {leaderboardConfigured,loadLeaderboard,publishScore,eligibleForLeaderboard} from './leaderboard';
+import {leaderboardConfigured,loadLeaderboard,loadOwnScore,publishCandidate,scoreCandidate,eligibleForLeaderboard} from './leaderboard';
+import {ScoreQueue,cleanNickname,type PendingScore,type OwnScore} from './score-queue';
 import { LobbyBrowser, type PublicLobby } from './lobbies';
 import { FriendsSession, applySnapshot, type ArenaSnapshot } from './multiplayer';
 import { GameRenderer } from './renderer';
@@ -23,13 +24,18 @@ settings.sensitivity=Math.max(.3,Math.min(3,Number(settings.sensitivity)||1));se
 let best=Math.max(0,Number(readStore('abyss-survival-v3-best',0))||0);
 let renderer:GameRenderer;const sound=new Sound();sound.setVolume(settings.volume/100);
 let mode:'menu'|'playing'|'paused'|'dead'|'replay'='menu';let world:World|null=null;let yaw=0,pitch=0;let input:Input=idleInput();let accumulator=0,last=performance.now(),hudTime=0;let settingsOpen=false;let noticeUntil=0,noticeText='',hitUntil=0;const keys=new Set<string>();
-let leaderboardOpen=false;
+type PlayerProfile={name:string;automatic:boolean;configured:boolean};
+const savedProfile=readStore<Partial<PlayerProfile>|null>('abyss-player-profile',{})??{};
+let profile:PlayerProfile={name:typeof savedProfile.name==='string'?savedProfile.name:readStore<string>('abyss-player-name',''),automatic:savedProfile.automatic===true,configured:savedProfile.configured===true};
+let runNickname='',runAutomatic=false,profileOpen=false,profileAction:'start'|'edit'|'publish'='edit';
+let leaderboardOpen=false,leaderboardScores:Awaited<ReturnType<typeof loadLeaderboard>>=[],ownScore:OwnScore|null=null;
+const scoreQueue=new ScoreQueue(pending=>saveStore('abyss-pending-score',pending),publishCandidate,readStore<PendingScore|null>('abyss-pending-score',null));
 let recorder:RunRecorder|null=null,replay:ReplayPlayer|null=null,lastRun:RecordedRun|null=null;let practice=false,historyOpen=false,replayPaused=false;
 let friends:FriendsSession|null=null;let friendsOpen=false;let netTime=0;const lobbyBrowser=new LobbyBrowser();let lobbyStarted=false;let lobbyCrewCount=1;let receivedEpoch=-1;let lastSnapshotAt=0;
 const buttonEdges:{button:'fire'|'homing';held:boolean}[]=[];let sampledFire=false,sampledHoming=false;let capturingMouse=false,captureTicket=0;
 const format=(time:number)=>time.toFixed(3);
 function updateBest() {$('best-menu').innerHTML=best?`${format(best)} <span>SECONDS</span>`:'— <span>SECONDS</span>';$('best-hud').textContent=format(best);}
-function showPanels() {$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('menu').hidden=mode!=='menu';$('hud').hidden=mode==='menu';$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen;$('death').hidden=mode!=='dead'||settingsOpen;$('settings').hidden=!settingsOpen;}
+function showPanels() {$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('menu').hidden=mode!=='menu';$('hud').hidden=mode==='menu';$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen;$('death').hidden=mode!=='dead'||settingsOpen;$('settings').hidden=!settingsOpen;}
 function clearInput() {buttonEdges.length=0;sampledFire=false;sampledHoming=false;keys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
 function notice(text:string,seconds=2.5) {noticeText=text;noticeUntil=performance.now()+seconds*1000;}
 async function captureMouse() {
@@ -40,6 +46,9 @@ async function captureMouse() {
 }
 function startRun(setup:RunSetup=DEFAULT_SETUP) {
   if(!renderer.originalEnemies.ready||!renderer.originalWeapon.ready)return;
+  const previewParams=new URLSearchParams(location.search),previewHand=Number(previewParams.get('hand-preview'));const devPreview=import.meta.env.DEV&&((previewHand>=1&&previewHand<=4)||ENEMY_KINDS.includes(previewParams.get('enemy-preview') as typeof ENEMY_KINDS[number]));
+  if(!devPreview&&setup.time===0&&setup.level===1&&setup.reserve===0&&!profile.configured){openProfile('start');return;}
+  runNickname=profile.name;runAutomatic=profile.automatic;lastRun=null;
   renderer.clear();sound.clear();renderer.topDown=false;replay=null;const seed=crypto.getRandomValues(new Uint32Array(1))[0];world=createRun(seed,setup);recorder=new RunRecorder(seed,setup);practice=setup.time!==0||setup.level!==1||setup.reserve!==0;historyOpen=false;leaderboardOpen=false;
   if(import.meta.env.DEV){const preview=Number(new URLSearchParams(location.search).get('hand-preview'));if(preview>=1&&preview<=4){practice=true;world.level=preview;world.stats.collected=preview===1?0:preview===2?10:70;world.reserve=preview===4?150:preview===3?50:0;}}
   if(import.meta.env.DEV){const preview=new URLSearchParams(location.search).get('enemy-preview');const kinds=ENEMY_KINDS;if(kinds.includes(preview as typeof kinds[number])){practice=true;const kind=preview as typeof kinds[number];const y=kind==='leviathan'?15:kind==='orb'?5:kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?7:kind==='spider'?1.65:kind==='centipede'?3:1;world.player.pos.z=-14;const e=world.spawn(kind,{x:0,y,z:-26});e.age=kind==='spider2'?9.5:kind==='leviathan'?9:kind==='orb'?7:isSpider(kind)||isPede(kind)||kind==='thorn'?3.5:1.2;if(isSpider(kind))e.headExposure=1;if(kind.startsWith('squid')){e.phase=Math.PI;}}}
@@ -53,7 +62,7 @@ function death() {
   const record=!friends&&!practice&&world.time>best;if(record){best=world.time;saveStore('abyss-survival-v3-best',best);}
   $('death-time').textContent=format(world.time);$('retry').hidden=!!friends&&friends.role==='guest';$('retry').innerHTML=friends?'RETURN TO LOBBY <span>↗</span>':'DEFY IT AGAIN <span>↗</span>';$('death-cause').textContent=friends?'The crew fell. '+(friends.role==='host'?'Return to the lobby to ready up again.':'Waiting for the host to restart.'):`Taken by ${world.cause.toLowerCase()}.`;$('death-title').textContent=world.cause==='FALLEN'?'LOST BELOW.':'CONSUMED.';
   $('new-best').hidden=!record;$('stat-kills').textContent=String(world.stats.kills);$('stat-gems').textContent=String(world.stats.collected);$('stat-accuracy').textContent=`${Math.round(world.stats.hits/Math.max(1,world.stats.shots)*100)}%`;
-  saveStore('abyss-last-run',{time:world.time,cause:world.cause,...world.stats});lastRun=friends?null:recorder?.finish(world)??null;$('watch-last').hidden=!!friends;$('retry').hidden=!!friends&&friends.role==='guest';if(lastRun)void saveRun(lastRun).catch(()=>notice('REPLAY STORAGE UNAVAILABLE'));recorder=null;$('publish-score').hidden=!leaderboardConfigured()||!eligibleForLeaderboard(lastRun,practice,!!friends);$<HTMLButtonElement>('publish-run').disabled=false;$('publish-status').textContent='';updateBest();showPanels();
+  saveStore('abyss-last-run',{time:world.time,cause:world.cause,...world.stats});lastRun=friends?null:recorder?.finish(world)??null;$('watch-last').hidden=!lastRun;$('retry').hidden=!!friends&&friends.role==='guest';if(lastRun)void saveRun(lastRun).catch(()=>notice('REPLAY STORAGE UNAVAILABLE'));recorder=null;updateBest();showPanels();handleRunScore();
 }
 function updateHud() {
   if(!world)return;const w=world;
@@ -119,19 +128,79 @@ async function openHistory(){
  for(const run of runs){const row=document.createElement('div');row.className='history-row';const title=document.createElement('span');title.textContent=`${format(run.time)} s · ${run.practice?'PRACTICE':run.cause} · ${run.stats.collected} gems`;const watch=document.createElement('button');watch.textContent='WATCH';watch.onclick=()=>watchRun(run);const keep=document.createElement('button');keep.textContent=run.saved?'KEPT':'KEEP';keep.onclick=()=>{run.saved=!run.saved;void saveRun(run).then(()=>openHistory());};const download=document.createElement('button');download.textContent='EXPORT';download.onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(run)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download=`abyss-${run.id}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};row.append(title,watch,keep,download);list.append(row);}
  }catch{list.textContent='Replay storage is unavailable in this browser.';}
 }
+function updatePlayerCard(){
+ $('player-name').textContent=profile.name||'Unlisted player';$('player-sharing').textContent=scoreQueue.pending?(scoreQueue.busy?'Saving your best…':'Best saved here · waiting to publish'):profile.automatic?'New bests publish automatically':'Scores stay local until you publish';
+ $<HTMLInputElement>('friends-name').value=profile.name||'Wanderer';
+}
+function openProfile(action:'start'|'edit'|'publish'){
+ profileAction=action;profileOpen=true;$<HTMLInputElement>('profile-name').value=profile.name;$<HTMLInputElement>('profile-auto').checked=profile.configured?profile.automatic:true;$('profile-error').textContent='';
+ $('profile-save').innerHTML=action==='start'?'SAVE & PLAY <span>↗</span>':action==='publish'?'SAVE & PUBLISH <span>↗</span>':'SAVE PROFILE <span>✓</span>';
+ $('profile-local').hidden=action!=='start';showPanels();$<HTMLInputElement>('profile-name').focus();
+}
+function saveProfile(name:string,automatic:boolean){profile={name,automatic,configured:true};saveStore('abyss-player-profile',profile);saveStore('abyss-player-name',name);updatePlayerCard();}
+function renderRunScore(){
+ if(mode!=='dead'||!world)return;
+ const title=$('score-result-title'),status=$('publish-status'),button=$<HTMLButtonElement>('publish-run');button.hidden=true;button.disabled=scoreQueue.busy;$('score-profile').hidden=true;
+ if(friends){title.textContent='CREW RUN';status.textContent='Co-op runs are separate from the solo Survival leaderboard.';return;}
+ if(practice||!lastRun){title.textContent='UNRANKED RUN';status.textContent='Practice starts and weapon testing are not ranked. Start standard Survival and avoid the 1–4 test keys to set a public best.';return;}
+ if(!leaderboardConfigured()){title.textContent='SAVED ON THIS DEVICE';status.textContent='The public leaderboard is not connected.';return;}
+ const timeMs=Math.round(lastRun.time*1000),confirmed=scoreQueue.confirmed;
+ if(scoreQueue.pending){const pending=scoreQueue.pending;
+  if(timeMs>pending.score.timeMs&&!runAutomatic&&runNickname){title.textContent='NEW BEST READY TO PUBLISH';status.textContent=`Publish ${format(lastRun.time)} seconds as ${runNickname}. It will replace the lower best waiting to save.`;button.hidden=false;button.disabled=false;button.textContent='PUBLISH NEW BEST';return;}
+  title.textContent=scoreQueue.busy?'PUBLISHING YOUR BEST…':scoreQueue.error?'BEST SAVED · CONNECTION PENDING':'BEST READY TO PUBLISH';
+  status.textContent=scoreQueue.error||`${pending.name} · ${format(pending.score.timeMs/1000)} seconds. You can retry the arena while it saves.`;
+  if(pending.score.timeMs>timeMs)status.textContent+=` Your ${format(lastRun.time)}-second run did not beat that best.`;
+  button.hidden=scoreQueue.busy;button.textContent='RETRY SAVE';return;
+ }
+ if(confirmed&&timeMs<=confirmed.survival_ms){title.textContent=timeMs===confirmed.survival_ms?'PUBLIC BEST SAVED ✓':'PUBLIC BEST UNCHANGED';status.textContent=`${confirmed.player_name} · ${format(confirmed.survival_ms/1000)} seconds · rank #${confirmed.rank}.`;
+  if(timeMs<confirmed.survival_ms)status.textContent+=` ${format((confirmed.survival_ms-timeMs)/1000)} seconds behind your public best.`;return;
+ }
+ title.textContent='PUBLISH YOUR SURVIVAL BEST';status.textContent=runNickname?`Publish ${format(lastRun.time)} seconds as ${runNickname}.`:'Choose your nickname to put this run on the public leaderboard.';
+ button.hidden=!runNickname;button.textContent='PUBLISH THIS RUN';$('score-profile').hidden=!!runNickname;
+}
+function handleRunScore(){
+ const run=lastRun;if(eligibleForLeaderboard(run,practice,!!friends)&&run&&runAutomatic&&runNickname&&leaderboardConfigured()){scoreQueue.enqueue(scoreCandidate(run),runNickname);void scoreQueue.flush();}
+ renderRunScore();
+}
+function publishCurrentRun(){
+ const run=lastRun;if(eligibleForLeaderboard(run,practice,!!friends)&&run){
+  if(!runNickname){openProfile('publish');return;}scoreQueue.enqueue(scoreCandidate(run),runNickname);
+ }
+ if(scoreQueue.pending)void scoreQueue.flush();
+}
+function renderRankings(){
+ const list=$('leaderboard-rows'),search=$<HTMLInputElement>('leaderboard-search').value.trim().toLocaleLowerCase();list.replaceChildren();
+ const scores=leaderboardScores.map((score,index)=>({score,rank:index+1})).filter(({score})=>score.player_name.toLocaleLowerCase().includes(search));
+ for(const {score,rank} of scores){const row=document.createElement('tr');const isOwn=ownScore?.rank===rank&&ownScore.player_name===score.player_name&&ownScore.survival_ms===score.survival_ms&&ownScore.achieved_at===score.achieved_at;if(isOwn){row.className='your-score';row.setAttribute('aria-label','Your public best');}
+ for(const value of [rank,score.player_name+(isOwn?' · YOU':''),format(score.survival_ms/1000),score.kills,score.gems]){const cell=document.createElement('td');cell.textContent=String(value);row.append(cell);}list.append(row);}
+ $('leaderboard-status').textContent=search?`${scores.length} matching ${scores.length===1?'player':'players'} in the top 100`:leaderboardScores.length?`${leaderboardScores.length} ranked ${leaderboardScores.length===1?'player':'players'} · top 100`:'The arena is waiting for its first published score.';
+ if(search&&!scores.length){const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=5;cell.textContent='No matching players. Try another nickname.';row.append(cell);list.append(row);}
+}
+function renderPersonalRanking(){
+ const card=$('leaderboard-personal');card.replaceChildren();const name=document.createElement('strong');name.textContent=ownScore?`${ownScore.player_name} · YOUR PUBLIC BEST`:profile.name||'YOUR PLAYER PROFILE';const detail=document.createElement('span');detail.textContent=ownScore?`${format(ownScore.survival_ms/1000)} s · rank #${ownScore.rank}`:scoreQueue.pending?'Your best is saved here and waiting to publish.':'Complete standard Survival to set your first public best.';card.append(name,detail);
+ if(scoreQueue.pending){const retry=document.createElement('button');retry.className='lobby-back';retry.textContent=scoreQueue.busy?'SAVING…':'RETRY SAVE';retry.disabled=scoreQueue.busy;retry.onclick=()=>void scoreQueue.flush();card.append(retry);}
+}
+async function syncPublicBest(){
+ try{ownScore=await loadOwnScore();scoreQueue.remember(ownScore);renderPersonalRanking();}catch{/* Reading rankings still works if a player session cannot load. */}
+}
 async function openLeaderboard(){
- leaderboardOpen=true;showPanels();const button=$<HTMLButtonElement>('leaderboard-refresh');if(button.disabled)return;button.disabled=true;
- const rows=$('leaderboard-rows');rows.replaceChildren();$('leaderboard-status').textContent='Loading public scores…';
- try{const scores=await loadLeaderboard();$('leaderboard-status').textContent=scores.length?`${scores.length} ranked ${scores.length===1?'player':'players'}`:'No scores yet. Finish a Survival run and publish yours.';
- for(const [index,score] of scores.entries()){const row=document.createElement('tr');for(const value of [index+1,score.player_name,format(score.survival_ms/1000),score.kills,score.gems]){const cell=document.createElement('td');cell.textContent=String(value);row.append(cell);}rows.append(row);}
- }catch(error){$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable.';}finally{button.disabled=false;}
+ leaderboardOpen=true;showPanels();renderPersonalRanking();const button=$<HTMLButtonElement>('leaderboard-refresh');if(button.disabled)return;button.disabled=true;$('leaderboard-status').textContent='Connecting to the public leaderboard…';
+ try{const [scores]=await Promise.all([loadLeaderboard(),syncPublicBest()]);leaderboardScores=scores;renderRankings();$('leaderboard-updated').textContent=`Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+ }catch(error){$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable. Your runs still work.';}finally{button.disabled=false;}
 }
 function setupLeaderboard(){
- $<HTMLInputElement>('leaderboard-name').value=readStore<string>('abyss-player-name','');
- $('leaderboard-open').onclick=()=>void openLeaderboard();$('death-leaderboard').onclick=()=>void openLeaderboard();$('leaderboard-refresh').onclick=()=>void openLeaderboard();$('leaderboard-close').onclick=()=>{leaderboardOpen=false;showPanels();};
- $('publish-score').onsubmit=event=>{event.preventDefault();const run=lastRun;if(!eligibleForLeaderboard(run,practice,!!friends)||!run)return;const button=$<HTMLButtonElement>('publish-run');if(button.disabled)return;button.disabled=true;const name=$<HTMLInputElement>('leaderboard-name').value.trim();$('publish-status').textContent='Publishing your run…';
- void publishScore(run,name).then(()=>{saveStore('abyss-player-name',name);if(lastRun===run){$('publish-status').textContent='Published. Your best time is on the public leaderboard.';$('publish-score').hidden=true;}}).catch(error=>{if(lastRun===run){$('publish-status').textContent=error instanceof Error?error.message:'Publishing failed. Try again.';button.disabled=false;}});
- };
+ updatePlayerCard();scoreQueue.onChange=()=>{updatePlayerCard();renderRunScore();ownScore=scoreQueue.confirmed;renderPersonalRanking();if(leaderboardOpen&&!scoreQueue.pending&&!scoreQueue.busy)void openLeaderboard();};
+ $('profile-edit').onclick=()=>openProfile('edit');$('leaderboard-profile').onclick=()=>openProfile('edit');$('score-profile').onclick=()=>openProfile('publish');
+ $('profile-cancel').onclick=()=>{profileOpen=false;showPanels();};$('profile-local').onclick=()=>{saveProfile(profile.name,false);profileOpen=false;showPanels();startRun();};
+ $('profile-form').onsubmit=event=>{event.preventDefault();try{const name=cleanNickname($<HTMLInputElement>('profile-name').value);saveProfile(name,$<HTMLInputElement>('profile-auto').checked);profileOpen=false;showPanels();
+ if(profileAction==='start')startRun();else if(profileAction==='publish'){runNickname=name;publishCurrentRun();}else if(mode==='dead'){runNickname=name;renderRunScore();}
+ if(profile.automatic&&scoreQueue.pending)void scoreQueue.flush();
+ }catch(error){$('profile-error').textContent=error instanceof Error?error.message:'Choose a nickname.';}};
+ $('publish-run').onclick=publishCurrentRun;
+ $('leaderboard-open').onclick=()=>void openLeaderboard();$('death-leaderboard').onclick=()=>void openLeaderboard();$('leaderboard-refresh').onclick=()=>void openLeaderboard();$('leaderboard-search').oninput=renderRankings;$('leaderboard-close').onclick=()=>{leaderboardOpen=false;showPanels();};
+ if(leaderboardConfigured())void syncPublicBest();
+ const retryPending=()=>{if(profile.automatic&&scoreQueue.pending&&!scoreQueue.busy&&leaderboardConfigured())void scoreQueue.flush();};
+ window.addEventListener('online',retryPending);setInterval(retryPending,15000);retryPending();
 }
 function setupSettings() {
   for(const name of ['sensitivity','fov','volume'] as const) {
@@ -193,7 +262,7 @@ function init() {
   document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==$('game')&&!capturingMouse)paused();});
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&mode==='playing'){document.exitPointerLock();paused();}});
   window.addEventListener('blur',()=>{if(mode==='playing'){document.exitPointerLock();paused();}});
-  window.addEventListener('keydown',e=>{if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLSelectElement)return;if(mode==='replay'&&e.code==='KeyM'){renderer.topDown=!renderer.topDown;return;}if(mode==='replay'&&(e.code==='ArrowLeft'||e.code==='ArrowRight')&&replay){sound.clear();world=replay.seek(replay.tick+(e.code==='ArrowLeft'?-1:1)*(e.ctrlKey?10:3)/STEP);accumulator=0;return;}if(!friends&&['Digit1','Digit2','Digit3','Digit4','Numpad1','Numpad2','Numpad3','Numpad4'].includes(e.code)&&(mode==='playing'||mode==='paused')&&world&&!settingsOpen){e.preventDefault();if(e.repeat)return;const level=Number(e.code.slice(-1));world.level=level;world.stats.collected=level===1?0:level===2?10:level===3?70:220;world.reserve=level===3?50:level===4?150:0;practice=true;recorder=null;world.emit('upgrade',world.player.pos,level);notice(`WEAPON ${level} · TEST MODE`,2);updateHud();return;}if(e.code==='Space'&&mode!=='menu')e.preventDefault();if(e.code==='KeyR'&&mode==='dead'&&!settingsOpen&&!leaderboardOpen&&!(e.target instanceof HTMLInputElement)){if(friends){if(friends.role==='host')returnCrewLobby();}else startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);return;}if(e.code==='Escape'&&leaderboardOpen){leaderboardOpen=false;showPanels();return;}if(e.code==='Escape'&&settingsOpen){settingsOpen=false;showPanels();return;}if(mode==='playing')keys.add(e.code);});
+  window.addEventListener('keydown',e=>{if(e.code==='Escape'&&profileOpen){profileOpen=false;showPanels();return;}if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLSelectElement)return;if(mode==='replay'&&e.code==='KeyM'){renderer.topDown=!renderer.topDown;return;}if(mode==='replay'&&(e.code==='ArrowLeft'||e.code==='ArrowRight')&&replay){sound.clear();world=replay.seek(replay.tick+(e.code==='ArrowLeft'?-1:1)*(e.ctrlKey?10:3)/STEP);accumulator=0;return;}if(!friends&&['Digit1','Digit2','Digit3','Digit4','Numpad1','Numpad2','Numpad3','Numpad4'].includes(e.code)&&(mode==='playing'||mode==='paused')&&world&&!settingsOpen){e.preventDefault();if(e.repeat)return;const level=Number(e.code.slice(-1));world.level=level;world.stats.collected=level===1?0:level===2?10:level===3?70:220;world.reserve=level===3?50:level===4?150:0;practice=true;recorder=null;world.emit('upgrade',world.player.pos,level);notice(`WEAPON ${level} · UNRANKED TEST RUN`,4);updateHud();return;}if(e.code==='Space'&&mode!=='menu')e.preventDefault();if(e.code==='KeyR'&&mode==='dead'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!(e.target instanceof HTMLInputElement)){if(friends){if(friends.role==='host')returnCrewLobby();}else startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);return;}if(e.code==='Escape'&&leaderboardOpen){leaderboardOpen=false;showPanels();return;}if(e.code==='Escape'&&settingsOpen){settingsOpen=false;showPanels();return;}if(mode==='playing')keys.add(e.code);});
   window.addEventListener('keyup',e=>keys.delete(e.code));
   document.addEventListener('mousemove',e=>{if(mode!=='playing'||document.pointerLockElement!==$('game'))return;yaw-=e.movementX*.002*settings.sensitivity;pitch=Math.max(-1.5,Math.min(1.5,pitch-e.movementY*.002*settings.sensitivity));});
   document.addEventListener('mousedown',e=>{if(mode!=='playing'||document.pointerLockElement!==$('game'))return;if(e.button===0)buttonEdges.push({button:'fire',held:true});if(e.button===2){buttonEdges.push({button:'homing',held:true});if(world&&world.level<3)notice('HOMING AWAKENS AT 70 GEMS',1.5);}});

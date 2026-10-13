@@ -15,7 +15,7 @@ try{
  const readyMs=Date.now()-began;
  assert.ok(readyMs<8000,'cold assets should load without a long serial request chain');
  await page.evaluate(()=>{window.firstPlayFrame=new Promise(resolve=>{document.querySelector('#start').addEventListener('click',()=>{const begin=performance.now();requestAnimationFrame(()=>resolve(performance.now()-begin));},{once:true});});});
- await page.click('#start');const clickToFrameMs=await page.evaluate(()=>window.firstPlayFrame);
+ await page.click('#start');if(await page.locator('#player-profile').isVisible())await page.click('#profile-local');const clickToFrameMs=await page.evaluate(()=>window.firstPlayFrame);
  assert.ok(clickToFrameMs<500,'Start should reach a frame without expensive shader compilation');
  await page.waitForTimeout(1500);
  assert.ok(!audioRequests.some(u=>/leviathan|gigaspider|rapid4|ultrapede/.test(u)),'opening gameplay must not download late-game recordings');

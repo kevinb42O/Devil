@@ -12,7 +12,7 @@ try {
   await page.goto(process.env.GAME_URL||'http://127.0.0.1:5180');
   await page.waitForFunction(()=>document.querySelector('#start')?.disabled===false);
   assert.equal(await page.locator('#error').isVisible(),false,'production assets must load');
-  await page.click('#start');
+  await page.click('#start');if(await page.locator('#player-profile').isVisible())await page.click('#profile-local');
   await page.waitForFunction(()=>document.querySelector('#menu')?.hidden&&document.querySelector('#hud')?.hidden===false);
   assert.equal(await page.evaluate(()=>!!document.pointerLockElement),true,'production game must start');
   await page.waitForTimeout(1000);
