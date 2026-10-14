@@ -26,6 +26,8 @@ import './mobile.css';
 import './hud.css';
 import './death-analysis.css';
 import './champion.css';
+import './lobby-honors.css';
+import {decorateLobbyRank} from './lobby-honors';
 import './menu-polish.css';
 import {setupWindowCloseButtons} from './window-close';
 import {CrownOfTheAbyss, crownBadge} from './champion';
@@ -459,7 +461,7 @@ async function refreshRankings(){
   try{
    const [scores]=await Promise.all([loadLeaderboard(),syncPublicBest()]);leaderboardScores=scores;crown.setScores(scores,ownScore,profile.name);renderRankings();renderPersonalRanking();roster();
    $('leaderboard-updated').textContent=`Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;showPanels();
-  }catch(error){crown.unavailable();if(crewBoard?.active)return;$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable. Your runs still work.';}
+  }catch(error){leaderboardScores=[];crown.unavailable();roster();if(crewBoard?.active)return;$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable. Your runs still work.';}
  })().finally(()=>{rankingRequest=null;});return rankingRequest;
 }
 async function openLeaderboard(){
@@ -654,7 +656,7 @@ function roster(){
  const joined=!!friends;$('friends-browser').hidden=joined;$('friends-waiting').hidden=!joined;if(!friends)return;
  $('friends-room-name').textContent=friends.lobbyName;$('friends-player-count').textContent=friends.role==='guest'&&!friends.members.length?'CONNECTING…':`${friends.members.length} / 4 PLAYERS`;
  const list=$('friends-roster');list.replaceChildren();const local=friends.members.find(p=>p.id===friends!.localId);
- for(let i=0;i<4;i++){const member=friends.members[i];const card=document.createElement('div');card.className='crew-slot'+(member?.ready?' is-ready':'')+(!member?' empty':'');card.style.setProperty('--crew-color',['#cfdfa0','#8ed4dd','#e1bc8d','#c4a7df'][i]);const mark=document.createElement('div');mark.className='crew-avatar';mark.textContent=member?'◇':'+';const name=document.createElement('strong');name.textContent=member?member.name+(member.id===friends.localId?' · YOU':''):'OPEN SLOT';const role=document.createElement('small');role.textContent=member?(member.host?'HOST':'CREW'):'WAITING FOR A PLAYER';const badge=document.createElement('span');badge.className='crew-ready';badge.textContent=member?(friends.prelobby?'IN COURTYARD':member.ready?'✓ READY':'NOT READY'):'—';if(member&&crown.matchesName(member.name)){card.classList.add('is-sovereign');name.prepend(crownBadge());role.textContent='REIGNING CHAMPION · '+role.textContent;}card.append(mark,name,role,badge);list.append(card);}
+ for(let i=0;i<4;i++){const member=friends.members[i];const card=document.createElement('div');card.className='crew-slot'+(member?.ready?' is-ready':'')+(!member?' empty':'');card.style.setProperty('--crew-color',['#cfdfa0','#8ed4dd','#e1bc8d','#c4a7df'][i]);const mark=document.createElement('div');mark.className='crew-avatar';mark.textContent=member?'◇':'+';const name=document.createElement('strong');name.textContent=member?member.name+(member.id===friends.localId?' · YOU':''):'OPEN SLOT';const role=document.createElement('small');role.textContent=member?(member.host?'HOST':'CREW'):'WAITING FOR A PLAYER';const badge=document.createElement('span');badge.className='crew-ready';badge.textContent=member?(friends.prelobby?'IN COURTYARD':member.ready?'✓ READY':'NOT READY'):'—';if(member&&crown.matchesName(member.name)){card.classList.add('is-sovereign');name.prepend(crownBadge());role.textContent='REIGNING CHAMPION · '+role.textContent;}card.append(mark,name,role,badge);if(member)decorateLobbyRank(card,member.name,leaderboardScores);list.append(card);}
  if(friends.prelobby){$('friends-ready-count').textContent=`${friends.members.length} / 4 IN THE COURTYARD`;$('friends-launch-hint').textContent='Any player can walk into the seal to start the run for everyone.';const ready=$<HTMLButtonElement>('friends-ready');ready.disabled=false;ready.classList.remove('is-ready');ready.textContent='RETURN TO COURTYARD →';$('friends-start').hidden=true;return;}
  const count=friends.members.filter(p=>p.ready).length;$('friends-ready-count').textContent=`${count} / ${friends.members.length} READY`;$('friends-launch-hint').textContent=friends.role==='host'?(friends.allReady?'The crew is ready. Start to enter the courtyard together.':'Waiting for every player to mark ready.'):'The host will send everyone to the courtyard when the crew is ready.';
  const ready=$<HTMLButtonElement>('friends-ready');ready.disabled=!local||friends.running;ready.classList.toggle('is-ready',!!local?.ready);ready.textContent=!local?'CONNECTING TO HOST…':local.ready?'READY ✓ · CLICK TO UNREADY':"I'M READY ✓";if(!local)$('friends-launch-hint').textContent='Establishing the host connection. Ready unlocks when your crew appears.';
@@ -680,7 +682,7 @@ async function joinLobby(room:PublicLobby){$('friends-status').textContent=`Join
 function returnCrewLobby(){crewReplayRequest++;crewReplayDownloading=false;crewViewer.dispose();stopHostClock();spectator.reset();if(friends?.role!=='host')return;friends.returnToLobby();entrance=false;world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;settingsOpen=false;showPanels();roster();}
 function setupFriends(){
  lobbyBrowser.onChange=renderLobbies;lobbyBrowser.onStatus=text=>$('friends-service').textContent=text;
- $('friends-open').onclick=()=>{friendsOpen=true;showPanels();roster();renderLobbies();if(!lobbyStarted){lobbyStarted=true;void lobbyBrowser.start();}};
+ $('friends-open').onclick=()=>{if(leaderboardConfigured())void refreshRankings();friendsOpen=true;showPanels();roster();renderLobbies();if(!lobbyStarted){lobbyStarted=true;void lobbyBrowser.start();}};
  $('friends-refresh').onclick=()=>lobbyBrowser.refresh();$('friends-close').onclick=()=>{friendsOpen=false;if(friends&&world&&!friends.running)resume();else showPanels();};
  $('crew-lobby-room').onclick=()=>{paused();friendsOpen=true;showPanels();roster();};
  $('crew-lobby-leave').onclick=()=>home();

@@ -1,0 +1,25 @@
+/* Global podium honors. Fire is decorative and leaves all lobby controls usable. */
+.crew-slot[data-podium]{position:relative;isolation:isolate;--honor:#e8b767;--honor-glow:#e979253b;border:1px solid var(--honor);background:radial-gradient(ellipse at 50% 0,var(--honor-glow),transparent 72%),var(--iron-grain),var(--iron-face);box-shadow:inset 0 0 24px var(--honor-glow),0 0 18px var(--honor-glow)}
+.crew-slot[data-podium]>:not(.crew-crown-fire){position:relative;z-index:1}
+.crew-slot[data-podium="1"]{border-color:#ffca69;box-shadow:inset 0 0 30px #ff7b2529,0 0 8px #ffd06e99,0 0 30px #ff6b284d;background:radial-gradient(ellipse at 50% 100%,#a1361855,transparent 70%),radial-gradient(ellipse at 50% 0,#d79c3b30,transparent 70%),var(--iron-face)}
+.crew-slot[data-podium="2"]{--honor:#c4dae9;--honor-glow:#9dc8e52b}
+.crew-slot[data-podium="3"]{--honor:#cf9467;--honor-glow:#b7753626}
+.crew-rank-honor{display:flex;align-items:center;gap:7px;min-height:25px;margin:-10px 0 8px;color:var(--honor);font:700 10px/1.3 'Barlow Condensed',sans-serif;letter-spacing:1.3px}
+.crew-rank-honor b{display:grid;place-items:center;width:27px;height:27px;border:1px solid currentColor;font-size:17px;letter-spacing:0;background:#110c08aa;box-shadow:0 0 12px var(--honor-glow)}
+.crew-slot[data-podium="1"] .crew-rank-honor{color:#ffdb8c;text-shadow:0 0 12px #ffad4966}
+.crew-slot[data-podium="1"] strong{color:#ffe1a7;background:#171008b3;box-shadow:0 0 14px 5px #171008b3;text-shadow:0 2px 3px #000,0 0 8px #000;max-width:100%;border-radius:3px}
+.crew-slot[data-podium] .crew-avatar{margin-bottom:12px}
+.crew-crown-fire{position:absolute;inset:0;pointer-events:none;z-index:0;border:1px solid #ffe2a877;box-shadow:inset 0 -5px 18px #ff712955}
+.crew-crown-fire:before,.crew-crown-fire:after{content:'';position:absolute;inset:-2px;border:1px solid #ffad4e88;box-shadow:0 0 12px #ff8b3644;pointer-events:none}
+.crew-crown-fire:after{inset:5px;border-color:#e9b65b44;box-shadow:none}
+.crew-crown-fire>i{position:absolute;left:var(--flame-x);top:var(--flame-y);width:var(--flame-width);height:var(--flame-size);background:url('/ui/champion-flame.svg') center bottom/100% 100% no-repeat;transform-origin:50% 100%;opacity:.9;filter:drop-shadow(0 0 3px #ff681b88);animation:crew-flame-dance var(--flame-speed) var(--flame-delay) ease-in-out infinite alternate}
+@keyframes crew-flame-dance{0%{transform:translate(-50%,-82%) scale(.8,.72) skewX(-9deg);opacity:.65}35%{transform:translate(-50%,-88%) scale(1.12,1.08) skewX(6deg);opacity:1}70%{transform:translate(-50%,-86%) scale(.9,.88) skewX(-4deg);opacity:.8}100%{transform:translate(-50%,-90%) scale(1,1.18) skewX(8deg);opacity:.9}}
+.crew-fire-embers{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.crew-fire-embers i{position:absolute;left:var(--ember-x);bottom:0;width:3px;height:5px;border-radius:50%;background:#ffd17a;box-shadow:0 0 5px #ff771e;opacity:0;animation:crew-ember-rise 3.6s var(--flame-delay) linear infinite}
+@keyframes crew-ember-rise{0%{transform:translate(0,0);opacity:0}12%{opacity:.9}75%{opacity:.5}100%{transform:translate(12px,-180px) scale(.3);opacity:0}}
+@media(max-width:600px){.crew-rank-honor{font-size:9px;letter-spacing:.6px;gap:5px}.crew-rank-honor b{width:23px;height:23px;font-size:15px}.crew-crown-fire>i{width:calc(var(--flame-width)*.75)}}
+@media(prefers-reduced-motion:reduce){.crew-crown-fire>i{animation:none;transform:translate(-50%,-85%) scale(.7,.65);opacity:.6}}
+body[data-sky-motion=reduced] .crew-crown-fire>i{animation:none;transform:translate(-50%,-85%) scale(.7,.65);opacity:.6}
+
+@media(prefers-reduced-motion:reduce){.crew-fire-embers{display:none}}
+body[data-sky-motion=reduced] .crew-fire-embers{display:none}
