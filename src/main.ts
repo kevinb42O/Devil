@@ -1,3 +1,10 @@
+import {CrewLeaderboardUI} from './crew-leaderboard-ui';
+import {LEVIATHAN_HOVER_HEIGHT} from './enemy-presentation';
+import {towerGameplayEntrancePose} from './tower-spawn';
+import {downloadCrewReplay} from './crew-replay-sharing';
+import {CrewReplayViewer} from './crew-replay-viewer';
+import {ReplayControlsVisibility} from './replay-controls-visibility';
+import {validateCrewReplay,type RecordedCrewRun} from './crew-replay';
 import {setupPwa} from './pwa';
 import {version as gameVersion} from '../package.json';
 import {ENTRANCE_SPAWN,ENTRANCE_SEAL,touchesEntranceSeal} from './entrance-layout';
@@ -20,6 +27,7 @@ import './hud.css';
 import './death-analysis.css';
 import './champion.css';
 import './menu-polish.css';
+import {setupWindowCloseButtons} from './window-close';
 import {CrownOfTheAbyss, crownBadge} from './champion';
 import {encodeReplay,decodeReplay,MAX_DECODED_BYTES} from './replay-file';
 import {shareReplay,ownReplays,removeSharedReplay,replayLink,linkedReplay,downloadReplay,retainPendingReplay,pendingReplay,clearPendingReplay} from './replay-sharing';
@@ -59,12 +67,14 @@ let best=Math.max(0,Number(readStore('abyss-survival-v3-best',0))||0);
 let renderer:GameRenderer;const sound=new Sound();sound.setVolume(settings.volume/100);const music=new Music();music.setVolume(settings.musicVolume/100);const menuAudio=new MenuAudio();menuAudio.setVolume(settings.volume/100);
 let entrance=false;let entranceRun:{seed:number;setup:RunSetup}|null=null;
 const deathHistory=new DeathHistory();let deathAnalysis:DeathAnalysis|null=null;let analysisActive=false;let analysisSuspended=false;
-let mode:'menu'|'playing'|'paused'|'dead'|'replay'='menu';let world:World|null=null;let yaw=0,pitch=0;let input:Input=idleInput();let accumulator=0,last=performance.now(),hudTime=0;let settingsOpen=false;let noticeUntil=0,noticeText='';const keys=new Set<string>();const pressedKeys=new Map<string,string>();
+let crewViewer:CrewReplayViewer;let crewReplayRequest=0;let crewReplayDownloading=false;
+let mode:'menu'|'playing'|'paused'|'dead'|'replay'|'crew-replay'='menu';let world:World|null=null;let yaw=0,pitch=0;let input:Input=idleInput();let accumulator=0,last=performance.now(),hudTime=0;let settingsOpen=false;let noticeUntil=0,noticeText='';const keys=new Set<string>();const pressedKeys=new Map<string,string>();
 type PlayerProfile={name:string;automatic:boolean;configured:boolean};
 const savedProfile=readStore<Partial<PlayerProfile>|null>('abyss-player-profile',{})??{};
 const savedName=typeof savedProfile.name==='string'?savedProfile.name:readStore<unknown>('abyss-player-name','');
 let profile:PlayerProfile={name:typeof savedName==='string'?savedName:'',automatic:savedProfile.automatic===true,configured:savedProfile.configured===true||(typeof savedName==='string'&&savedName.trim().length>0)};
 let runNickname='',runAutomatic=false,profileOpen=false,profileAction:'start'|'edit'|'publish'='edit';
+let crewBoard:CrewLeaderboardUI;
 let leaderboardOpen=false,leaderboardScores:Awaited<ReturnType<typeof loadLeaderboard>>=[],ownScore:OwnScore|null=null;
 const crown=new CrownOfTheAbyss();
 let rankingRequest:Promise<void>|null=null;
@@ -78,8 +88,9 @@ let waitingForController=false;
 let movement={forward:0,strafe:0,jump:false},controllerDown=false,controllerFast=false;
 let blockedPadJump=true,blockedPadFire=true,blockedPadHoming=true;
 const format=(time:number)=>time.toFixed(3);
+const replayControlsVisibility=new ReplayControlsVisibility(()=>mode,()=>settings.controlScheme==='mobile');
 function updateBest() {$('best-menu').innerHTML=best?`${format(best)} <span>SECONDS</span>`:'— <span>SECONDS</span>';$('best-hud').textContent=format(best);}
-function showPanels() {document.body.dataset.crewCourtyard=String(!!friends?.prelobby);const previousMode=document.body.dataset.gameMode;document.body.dataset.gameMode=mode;if(previousMode==='menu'&&mode==='playing'&&entrance){const threshold=$('menu-threshold');threshold.classList.remove('is-crossing');void threshold.offsetWidth;threshold.classList.add('is-crossing');}updateConnectionMeter();if(!friends||mode!=='playing')$('respawn-status').hidden=true;music.setScene(analysisActive?'silent':entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('crew-lobby-controls').hidden=!friends||friends.running||mode==='menu';$('menu').hidden=mode!=='menu';crown.showCoronation(mode==='menu'&&!profileOpen&&!leaderboardOpen&&!friendsOpen&&!settingsOpen&&!historyOpen);$('hud').hidden=mode==='menu'||(entrance&&settings.controlScheme!=='mobile');$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen||friendsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
+function showPanels() {document.body.dataset.crewCourtyard=String(!!friends?.prelobby);const previousMode=document.body.dataset.gameMode;document.body.dataset.gameMode=mode;if(previousMode==='menu'&&mode==='playing'&&entrance){const threshold=$('menu-threshold');threshold.classList.remove('is-crossing');void threshold.offsetWidth;threshold.classList.add('is-crossing');}updateConnectionMeter();if(!friends||mode!=='playing')$('respawn-status').hidden=true;music.setScene(analysisActive?'silent':entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('crew-lobby-controls').hidden=!friends||friends.running||mode==='menu';$('menu').hidden=mode!=='menu';crown.showCoronation(mode==='menu'&&!profileOpen&&!leaderboardOpen&&!friendsOpen&&!settingsOpen&&!historyOpen);$('hud').hidden=mode==='menu'||(entrance&&settings.controlScheme!=='mobile');$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen||friendsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;if(mode==='crew-replay'){$('hud').hidden=true;$('crew-hud').hidden=true;$('connection-meter').hidden=true;}replayControlsVisibility.sync();updateCrewReplayActions();document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
 function crewRespawnStatus(player:World['crew'][number],time:number){
   if(player.respawnAt===null)return player.cause||'DEAD';
   const remaining=player.respawnAt-time;
@@ -118,7 +129,7 @@ function startRun(setup:RunSetup=DEFAULT_SETUP) {music.unlock();
   waitingForController=false;runNickname=profile.name;runAutomatic=profile.automatic;lastRun=null;resetDeathAnalysis();
   renderer.clear();sound.clear();renderer.topDown=false;replay=null;const seed=crypto.getRandomValues(new Uint32Array(1))[0];world=createRun(seed,setup);recorder=new RunRecorder(seed,setup);practice=setup.time!==0||setup.level!==1||setup.reserve!==0;historyOpen=false;leaderboardOpen=false;
   if(import.meta.env.DEV){const preview=Number(new URLSearchParams(location.search).get('hand-preview'));if(preview>=1&&preview<=4){practice=true;world.level=preview;world.stats.collected=preview===1?0:preview===2?10:preview===3?70:200;world.reserve=preview===4?190:preview>=2?50:0;}}
-  if(import.meta.env.DEV){const preview=new URLSearchParams(location.search).get('enemy-preview');const kinds=ENEMY_KINDS;if(kinds.includes(preview as typeof kinds[number])){practice=true;const kind=preview as typeof kinds[number];const y=kind==='leviathan'?15:kind==='orb'?5:kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?7:kind==='spider'?1.65:kind==='centipede'?3:1;world.player.pos.z=-14;const e=world.spawn(kind,{x:0,y,z:-26});e.age=kind==='spider2'?9.5:kind==='leviathan'?9:kind==='orb'?7:isSpider(kind)||isPede(kind)||kind==='thorn'?3.5:1.2;if(isSpider(kind))e.headExposure=1;if(kind.startsWith('squid')){e.phase=Math.PI;}}}
+  if(import.meta.env.DEV){const preview=new URLSearchParams(location.search).get('enemy-preview');const kinds=ENEMY_KINDS;if(kinds.includes(preview as typeof kinds[number])){practice=true;const kind=preview as typeof kinds[number];const y=kind==='leviathan'?LEVIATHAN_HOVER_HEIGHT:kind==='orb'?5:kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?towerGameplayEntrancePose(kind,0).height:kind==='spider'?1.65:kind==='centipede'?3:1;world.player.pos.z=-14;const e=world.spawn(kind,{x:0,y,z:-26});e.age=kind==='spider2'?9.5:kind==='leviathan'?9:kind==='orb'?7:isSpider(kind)||isPede(kind)||kind==='thorn'?3.5:1.2;if(isSpider(kind))e.headExposure=1;if(kind.startsWith('squid')){e.phase=Math.PI;}}}
   entrance=!devPreview;entranceRun=entrance?{seed,setup:{...setup}}:null;
   if(entrance){world=new World(seed,{schedule:false});world.player.pos={...ENTRANCE_SPAWN};recorder=null;void sound.prepareEntrance(best);}
   yaw=0;pitch=import.meta.env.DEV&&new URLSearchParams(location.search).get('enemy-preview')==='leviathan'?.6:0;clearInput();(document.activeElement as HTMLElement|null)?.blur();mode='playing';accumulator=0;last=performance.now();settingsOpen=false;showPanels();if(!entrance)void sound.start();void captureMouse();if(!entrance){deathHistory.capture(world,yaw,pitch,true,input.fire||input.homing);notice('KEEP MOVING. RELEASE FIRE TO COLLECT.',4);}
@@ -131,7 +142,7 @@ function enterArena(){
 function resume() {music.unlock();if(!world||profileOpen||leaderboardOpen||historyOpen||friendsOpen)return;
   if(settings.controlScheme==='controller'&&!readControllers().pad){waitingForController=true;clearInput();return;}
   waitingForController=false;clearInput();(document.activeElement as HTMLElement|null)?.blur();mode='playing';settingsOpen=false;accumulator=0;last=performance.now();showPanels();if(entrance)void sound.prepareEntrance(best);else void sound.start();void captureMouse();}
-function home() {watchRequest++;stopHostClock();waitingForController=false;resetDeathAnalysis(true);entrance=false;entranceRun=null;leaveMobileFullscreen();spectator.reset();leaderboardOpen=false;friends?.close();friends=null;friendsOpen=false;replay=null;recorder=null;renderer.topDown=false;historyOpen=false;mode='menu';world=null;settingsOpen=false;clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();sound.pause();updateBest();showPanels();}
+function home() {crewReplayRequest++;crewReplayDownloading=false;crewViewer?.dispose();watchRequest++;stopHostClock();waitingForController=false;resetDeathAnalysis(true);entrance=false;entranceRun=null;leaveMobileFullscreen();spectator.reset();leaderboardOpen=false;friends?.close();friends=null;friendsOpen=false;replay=null;recorder=null;renderer.topDown=false;historyOpen=false;mode='menu';world=null;settingsOpen=false;clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();sound.pause();updateBest();showPanels();}
 function paused() {
   if(mode!=='playing')return;
   // Browser interruptions release held controls, but multiplayer never pauses.
@@ -262,6 +273,7 @@ function frame(now:number) {
   const elapsed=Math.max(0,(now-last)/1000),dt=Math.min(.05,elapsed);last=now;
   music.update(dt);
   pollController(dt);
+  if(mode==='crew-replay'){crewViewer.frame(elapsed);requestAnimationFrame(frame);return;}
   if(settings.controlScheme==='mobile')sampleMobileInput();
   else if(settings.controlScheme!=='controller')movement=keyboardMovement(keys,settings.controlScheme);
   if(mode==='playing'&&!settingsOpen)renderer.trackFrame(elapsed);
@@ -316,6 +328,27 @@ function frame(now:number) {
   if(analysis){const marker=renderer.projectDeathMarker(analysis.killerPosition,analysis.killerVisible);$('analysis-marker').hidden=!marker.visible;$('analysis-marker').style.left=`${marker.x}%`;$('analysis-marker').style.top=`${marker.y}%`;}
   requestAnimationFrame(frame);
 }
+function setupCrewReplayActions(){
+ const actions=document.createElement('div');actions.id='crew-replay-results';actions.className='death-secondary';actions.hidden=true;
+ for(const [id,label,seconds]of [['watch-team-replay','WATCH TEAM REPLAY',0],['watch-team-final','WATCH FINAL MOMENTS · 10s',10]] as const){const button=document.createElement('button');button.id=id;button.className='secondary';button.textContent=label;button.onclick=()=>void watchTeamReplay(seconds);actions.append(button);}
+ const status=document.createElement('p');status.id='crew-replay-download-status';status.setAttribute('role','status');actions.append(status);$('death').querySelector('.death-secondary')!.before(actions);
+}
+function updateCrewReplayActions(){
+ const actions=document.getElementById('crew-replay-results');if(!actions)return;actions.hidden=!friends||mode!=='dead';
+ if(friends?.role==='guest'&&mode==='dead'){for(const id of ['watch-team-replay','watch-team-final'])$<HTMLButtonElement>(id).disabled=crewReplayDownloading||(!friends.connected&&!friends.completedReplay);}
+ if(friends?.role==='host'&&mode==='dead'){const available=!!friends.completedReplay;for(const id of ['watch-team-replay','watch-team-final'])$<HTMLButtonElement>(id).disabled=!available;$('crew-replay-download-status').textContent=available?'Full authoritative crew replay · each player watches independently.':friends.replayError||'Team replay unavailable.';}
+}
+async function watchTeamReplay(seconds=0){
+ const session=friends;if(!session||mode!=='dead')return;const request=++crewReplayRequest;crewReplayDownloading=true;
+ for(const id of ['watch-team-replay','watch-team-final'])$<HTMLButtonElement>(id).disabled=true;$('crew-replay-download-status').textContent='Preparing team replay…';
+ try{const run=await session.requestReplay();if(request!==crewReplayRequest||friends!==session||mode!=='dead')return;crewReplayDownloading=false;watchCrewRun(run,seconds?Math.max(0,run.ticks-seconds/STEP):0);}catch(error){if(request===crewReplayRequest&&friends===session&&mode==='dead')$('crew-replay-download-status').textContent=error instanceof Error?error.message:'Could not load team replay. Try again.';}finally{if(request===crewReplayRequest&&friends===session){crewReplayDownloading=false;for(const id of ['watch-team-replay','watch-team-final'])$<HTMLButtonElement>(id).disabled=false;}}
+}
+/** Shared entry point for post-wipe and leaderboard playback. Completion does not publish a score. */
+export function watchCrewRun(run:RecordedCrewRun,startTick=0,onExit?:()=>void){
+ if(friends&&world?.state==='playing')throw Error('Finish the crew run before watching a replay.');
+ validateCrewReplay(run);const previousMode=mode,previousLeaderboard=leaderboardOpen;crewReplayRequest++;stopHostClock();resetDeathAnalysis(true);clearInput();document.exitPointerLock?.();settingsOpen=false;historyOpen=false;leaderboardOpen=false;friendsOpen=false;
+ crewViewer.open(run,friends?.localId??'',startTick,()=>{clearInput();renderer.clear();sound.clear();mode=previousMode==='dead'?'dead':'menu';leaderboardOpen=previousLeaderboard;showPanels();if(friends?.role==='guest'&&!friends.connected&&mode==='dead')$('death-cause').textContent='The host left. Your run has ended. Return to the altar to join another crew.';onExit?.();});mode='crew-replay';showPanels();
+}
 function watchRun(run:RecordedRun){
  if(friends){notice('Leave the crew before watching a replay.');return;}
  watchRequest++;leaderboardOpen=false;friendsOpen=false;clearInput();
@@ -327,7 +360,7 @@ let watchRequest=0,replayUploadBusy=false,replayUploadError='',replayRetryAt=0;
 async function watchShared(id:string,button:HTMLButtonElement){
  if(friends){notice('Leave the crew before watching a replay.');return;}
  const request=++watchRequest;button.disabled=true;const label=button.textContent;button.textContent='LOADING…';
- try{const run=await downloadReplay(id);if(request===watchRequest&&!friends)watchRun(run);}catch(error){notice(error instanceof Error?error.message:'REPLAY UNAVAILABLE',6);}finally{button.disabled=false;button.textContent=label;}
+ try{try{const run=await downloadReplay(id);if(request===watchRequest&&!friends)watchRun(run);}catch(soloError){try{const run=await downloadCrewReplay(id);if(request===watchRequest&&!friends){watchCrewRun(run);$('crew-replay-exit').textContent='BACK TO MENU';}}catch{throw soloError;}}}catch(error){notice(error instanceof Error?error.message:'REPLAY UNAVAILABLE',6);}finally{button.disabled=false;button.textContent=label;}
 }
 function showShareLink(id:string){const link=$<HTMLInputElement>('replay-share-link');link.value=replayLink(id);link.hidden=false;link.focus();link.select();void navigator.clipboard?.writeText(link.value).then(()=>{$('history-status').textContent='Replay link copied. Anyone with the link can watch.';}).catch(()=>{$('history-status').textContent='Copy the replay link below.';});}
 async function exportReplay(run:RecordedRun){
@@ -361,6 +394,7 @@ async function openHistory(){
  list.append(row);}
  for(const item of shared){const row=document.createElement('div');row.className='history-row';const title=document.createElement('span');title.textContent=`${item.slot===0?'LEADERBOARD REPLAY':'SHARED REPLAY'} · ${format(item.survival_ms/1000)} s · ${(item.bytes/1024).toFixed(0)} KB${item.ready?'':' · unfinished upload'}`;row.append(title);if(item.ready){const copy=document.createElement('button');copy.textContent='COPY LINK';copy.onclick=()=>showShareLink(item.id);row.append(copy);}const remove=document.createElement('button');remove.textContent='REMOVE LINK';remove.onclick=async()=>{remove.disabled=true;try{await removeSharedReplay(item.id);await openHistory();}catch(error){$('history-status').textContent=error instanceof Error?error.message:'Could not remove link.';remove.disabled=false;}};row.append(remove);list.append(row);}
  }catch{list.textContent='Replay storage is unavailable in this browser.';}
+ await crewBoard?.history();
 }
 function updatePlayerCard(){
  $('player-name').textContent=profile.name||'Unlisted player';$('player-sharing').textContent=scoreQueue.pending?(scoreQueue.busy?'Saving your best…':'Best saved here · waiting to publish'):profile.automatic?'New bests publish automatically':'Scores stay local until you publish';
@@ -403,6 +437,7 @@ function publishCurrentRun(){
  if(scoreQueue.pending)void scoreQueue.flush();
 }
 function renderRankings(){
+ if(crewBoard?.active)return;
  const list=$('leaderboard-rows'),search=$<HTMLInputElement>('leaderboard-search').value.trim().toLocaleLowerCase();list.replaceChildren();
  const scores=leaderboardScores.map((score,index)=>({score,rank:index+1})).filter(({score})=>score.player_name.toLocaleLowerCase().includes(search));
  for(const {score,rank} of scores){const row=document.createElement('tr');const isOwn=ownScore?.rank===rank&&ownScore.player_name===score.player_name&&ownScore.survival_ms===score.survival_ms&&ownScore.achieved_at===score.achieved_at;const isChampion=rank===1&&crown.matchesName(score.player_name);if(isChampion){row.classList.add('sovereign-row');row.setAttribute('aria-label','Reigning champion');}if(isOwn){row.classList.add('your-score');row.setAttribute('aria-label','Your public best');}
@@ -411,6 +446,7 @@ function renderRankings(){
  if(search&&!scores.length){const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=6;cell.textContent='No matching players. Try another nickname.';row.append(cell);list.append(row);}
 }
 function renderPersonalRanking(){
+ if(crewBoard?.active)return;
  const card=$('leaderboard-personal');card.replaceChildren();const name=document.createElement('strong');name.textContent=ownScore?`${ownScore.player_name} · YOUR PUBLIC BEST`:profile.name||'YOUR PLAYER PROFILE';const detail=document.createElement('span');detail.textContent=ownScore?`${format(ownScore.survival_ms/1000)} s · rank #${ownScore.rank}`:scoreQueue.pending?'Your best is saved here and waiting to publish.':'Complete standard Survival to set your first public best.';card.append(name,detail);
  if(scoreQueue.pending){const retry=document.createElement('button');retry.className='lobby-back';retry.textContent=scoreQueue.busy?'SAVING…':'RETRY SAVE';retry.disabled=scoreQueue.busy;retry.onclick=()=>void scoreQueue.flush();card.append(retry);}
 }
@@ -423,11 +459,11 @@ async function refreshRankings(){
   try{
    const [scores]=await Promise.all([loadLeaderboard(),syncPublicBest()]);leaderboardScores=scores;crown.setScores(scores,ownScore,profile.name);renderRankings();renderPersonalRanking();roster();
    $('leaderboard-updated').textContent=`Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;showPanels();
-  }catch(error){crown.unavailable();$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable. Your runs still work.';}
+  }catch(error){crown.unavailable();if(crewBoard?.active)return;$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable. Your runs still work.';}
  })().finally(()=>{rankingRequest=null;});return rankingRequest;
 }
 async function openLeaderboard(){
- leaderboardOpen=true;showPanels();renderPersonalRanking();const button=$<HTMLButtonElement>('leaderboard-refresh');if(button.disabled)return;button.disabled=true;$('leaderboard-status').textContent='Connecting to the public leaderboard…';
+ leaderboardOpen=true;showPanels();if(crewBoard?.active){await crewBoard.refresh();return;}renderPersonalRanking();const button=$<HTMLButtonElement>('leaderboard-refresh');if(button.disabled)return;button.disabled=true;$('leaderboard-status').textContent='Connecting to the public leaderboard…';
  try{await refreshRankings();}finally{button.disabled=false;}
 }
 function setupLeaderboard(){
@@ -446,7 +482,7 @@ function setupLeaderboard(){
  if(profile.automatic&&scoreQueue.pending)void scoreQueue.flush();
  }catch(error){$('profile-error').textContent=error instanceof Error?error.message:'Choose a nickname.';}};
  $('publish-run').onclick=publishCurrentRun;
- $('leaderboard-open').onclick=()=>void openLeaderboard();$('death-leaderboard').onclick=()=>void openLeaderboard();$('leaderboard-refresh').onclick=()=>void openLeaderboard();$('leaderboard-search').oninput=renderRankings;$('leaderboard-close').onclick=()=>{leaderboardOpen=false;showPanels();};
+ $('leaderboard-open').onclick=()=>void openLeaderboard();$('death-leaderboard').onclick=()=>void openLeaderboard();$('leaderboard-refresh').onclick=()=>void openLeaderboard();$('leaderboard-search').oninput=()=>crewBoard?.active?crewBoard.search():renderRankings();$('leaderboard-close').onclick=()=>{leaderboardOpen=false;showPanels();};
  const shrine=$('champion-shrine'),stage=$('champion-stage'),compactShrine=matchMedia('(max-width:1100px)');
  stage.append(shrine);
  const placeShrine=()=>{if(compactShrine.matches)document.querySelector('.menu-content')!.insertBefore(stage,document.querySelector('.altar-menu'));else $('menu').append(stage);};placeShrine();compactShrine.addEventListener('change',placeShrine);
@@ -520,9 +556,11 @@ function updateControlHints(){
 }
 function controlMenuRoot():HTMLElement|null {
  if(profileOpen)return $('player-profile');if(settingsOpen)return $('settings');if(leaderboardOpen)return $('leaderboard');if(historyOpen)return $('history');if(friendsOpen)return $('friends');
+ if(mode==='crew-replay')return crewViewer.root;
  if(mode==='paused')return $('pause');if(mode==='dead')return analysisActive?$('death-analysis'):$('death');if(mode==='replay')return $('replay-controls');if(mode==='menu')return $('menu');return null;
 }
 function closeControlMenu(){
+ if(mode==='crew-replay'){crewViewer.close();return;}
  if(profileOpen){profileOpen=false;showPanels();}else if(settingsOpen){settingsOpen=false;showPanels();}else if(leaderboardOpen){leaderboardOpen=false;showPanels();}else if(historyOpen){historyOpen=false;showPanels();}else if(friendsOpen){friendsOpen=false;showPanels();}else if(analysisActive)endDeathAnalysis();else if(mode==='replay')home();
 }
 function focusControl(element:HTMLElement){
@@ -531,11 +569,12 @@ function focusControl(element:HTMLElement){
 }
 function controllerMenu(state:ReturnType<typeof controllerState>,previous:ReturnType<typeof controllerState>|null){
  const edge=(key:keyof typeof state)=>!!state[key]&&!previous?.[key];
+ if(['up','down','left','right','jump','pause'].some(key=>edge(key as keyof typeof state)))replayControlsVisibility.reveal();
  if(edge('back')){menuAudio.unlock();menuAudio.cue('back');closeControlMenu();return;}
  const root=controlMenuRoot();if(!root)return;
  const elements=Array.from(root.querySelectorAll<HTMLElement>('button,input,select,summary')).filter(el=>el.getClientRects().length&&!el.matches(':disabled'));
  if(!elements.length)return;
- const defaultId=mode==='menu'&&root===$('menu')?'start':root===$('pause')?'resume':root===$('death')?'retry':root===$('death-analysis')?'analysis-retry':root===$('settings')?'control-scheme':root===$('replay-controls')?'replay-pause':'';
+ const defaultId=mode==='menu'&&root===$('menu')?'start':root===$('pause')?'resume':root===$('death')?'retry':root===$('death-analysis')?'analysis-retry':root===$('settings')?'control-scheme':root===$('replay-controls')?'replay-pause':root===crewViewer.root?'crew-replay-pause':'';
  let index=elements.indexOf(document.activeElement as HTMLElement);
  if(index<0){index=Math.max(0,elements.findIndex(el=>el.id===defaultId));if(edge('up')||edge('down')||edge('left')||edge('right')||edge('jump'))focusControl(elements[index]);}
  else if(edge('up')||edge('down')){index=(index+(edge('down')?1:-1)+elements.length)%elements.length;focusControl(elements[index]);}
@@ -558,6 +597,7 @@ function pollController(dt:number){
  const {pads,standard,unavailable}=readControllers();
  let pad=standard.find(p=>p.index===activePadIndex);
  if(!pad&&activePadIndex!==null){
+  if(mode==='crew-replay')crewViewer.suspend();
   if(settings.controlScheme==='controller'&&mode==='playing'){paused();notice('CONTROLLER DISCONNECTED · RECONNECT TO RETURN',5);}
   activePadIndex=null;previousPad=null;
  }
@@ -574,6 +614,7 @@ function pollController(dt:number){
  if(!state.jump)blockedPadJump=false;if(!state.fire)blockedPadFire=false;if(!state.homing)blockedPadHoming=false;
  if(document.hidden||!document.hasFocus())return;
  if(waitingForController&&settings.controlScheme==='controller'&&mode==='paused'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!historyOpen&&!friendsOpen){resume();return;}
+ if(mode==='crew-replay'){if(state.pause&&!previous?.pause)crewViewer.toggle();crewViewer.controllerMove(state,dt,settings.controllerSensitivity);if(crewViewer.camera!=='free'||crewViewer.root.contains(document.activeElement)||state.up||state.down||state.left||state.right||state.back)controllerMenu(state,previous);return;}
  if(controlMenuRoot()){
   if(state.pause&&!previous?.pause&&mode==='paused'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!historyOpen&&!friendsOpen){resume();return;}
   controllerMenu(state,previous);return;
@@ -602,13 +643,14 @@ function beginCrewLobby(host:boolean){
  beginCrew(host,true);
 }
 function beginCrew(host:boolean,lobby=false){
- const crossed=entrance&&!lobby;stopHostClock();
+ crewReplayRequest++;crewReplayDownloading=false;crewViewer?.dispose();const crossed=entrance&&!lobby;stopHostClock();
  entrance=lobby;entranceRun=null;
  spectator.reset();
  $('pause').querySelector('p')!.textContent=lobby?'Walk into the seal to start the run for the whole crew.':'The crew run is live. Click return to capture your mouse.';
  resetDeathAnalysis(true);renderer.clear();sound.clear();recorder=null;replay=null;lastRun=null;practice=true;historyOpen=false;settingsOpen=false;friendsOpen=false;world=host?friends!.world:new World(1,{schedule:false});yaw=0;pitch=0;clearInput();accumulator=0;last=performance.now();renderer.topDown=false;mode='playing';(document.activeElement as HTMLElement|null)?.blur();showPanels();if(lobby)void sound.prepareEntrance(best);else if(crossed)void sound.collectDagger(best);else void sound.start();void captureMouse();notice(lobby?'WALK INTO THE SEAL TO START THE CREW RUN':'CREW RUN · RELEASE FIRE TO SHARE GEMS',4);if(host)startHostClock();
 }
 function roster(){
+ crewBoard?.sessionChanged();
  const joined=!!friends;$('friends-browser').hidden=joined;$('friends-waiting').hidden=!joined;if(!friends)return;
  $('friends-room-name').textContent=friends.lobbyName;$('friends-player-count').textContent=`${friends.members.length} / 4 PLAYERS`;
  const list=$('friends-roster');list.replaceChildren();const local=friends.members.find(p=>p.id===friends!.localId);
@@ -626,14 +668,16 @@ function renderLobbies(){
 function newSession(role:'host'|'guest'){
  const previous=friends;friends=null;previous?.close();lobbyCrewCount=1;receivedEpoch=-1;
  const configured=import.meta.env.VITE_WEBRTC_ICE_SERVERS;let ice:RTCIceServer[]|undefined;if(configured){ice=JSON.parse(configured);}
- const session=new FriendsSession(role,ice);session.setName($<HTMLInputElement>('friends-name').value);friends=session;
- session.onChange=()=>{if(friends!==session)return;roster();if(role==='host'&&session.running&&entrance)beginCrew(true);if(role==='guest'&&!session.connected&&world){home();friendsOpen=true;showPanels();roster();$('friends-status').textContent='The host left. Choose another lobby to play again.';}};
+ const session=new FriendsSession(role,ice);crewBoard?.attach(session);session.setName($<HTMLInputElement>('friends-name').value);friends=session;
+ session.onChange=()=>{if(friends!==session)return;roster();if(role==='host'&&session.running&&entrance)beginCrew(true);if(role==='guest'&&!session.connected&&world){if(mode==='crew-replay'&&crewViewer.player){notice('HOST LEFT · YOUR DOWNLOADED REPLAY REMAINS AVAILABLE',6);return;}home();friendsOpen=true;showPanels();roster();$('friends-status').textContent='The host left. Choose another lobby to play again.';}};
+ session.onReplayReady=run=>{window.dispatchEvent(new CustomEvent('abyss-crew-run-finished',{detail:{run,session}}));updateCrewReplayActions();};
+ session.onReplayProgress=progress=>{if(mode==='dead')$('crew-replay-download-status').textContent=`Preparing team replay… ${Math.round(progress*100)}%`;};
  session.onError=message=>{$('friends-status').textContent=message;notice(message,6);};
- session.onSnapshot=(snapshot:ArenaSnapshot)=>{if(friends!==session)return;lobbyCrewCount=snapshot.crew.length;if(snapshot.prelobby){if(!entrance||!world||snapshot.epoch!==receivedEpoch){receivedEpoch=snapshot.epoch;beginCrewLobby(false);}if(world)session.reconcile(world,snapshot);return;}if(!snapshot.running){spectator.reset();entrance=false;if(world){world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;showPanels();}roster();return;}if(snapshot.epoch!==receivedEpoch){receivedEpoch=snapshot.epoch;beginCrew(false);}if(world){session.reconcile(world,snapshot);for(const effect of snapshot.effects??[]){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}}};
- session.onEffects=effects=>{if(friends!==session||!world)return;for(const effect of effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}};roster();return session;
+ session.onSnapshot=(snapshot:ArenaSnapshot)=>{if(friends!==session)return;lobbyCrewCount=snapshot.crew.length;if(snapshot.prelobby){if(!entrance||!world||snapshot.epoch!==receivedEpoch){receivedEpoch=snapshot.epoch;beginCrewLobby(false);}if(world)session.reconcile(world,snapshot);return;}if(!snapshot.running){crewReplayRequest++;crewReplayDownloading=false;crewViewer.dispose();spectator.reset();entrance=false;if(world){world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;showPanels();}roster();return;}if(snapshot.epoch!==receivedEpoch){receivedEpoch=snapshot.epoch;beginCrew(false);}if(world){session.reconcile(world,snapshot);if(mode!=='crew-replay')for(const effect of snapshot.effects??[]){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}}};
+ session.onEffects=effects=>{if(friends!==session||!world||mode==='crew-replay')return;for(const effect of effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}};roster();return session;
 }
 async function joinLobby(room:PublicLobby){$('friends-status').textContent=`Joining ${room.name}…`;const session=newSession('guest');session.lobbyName=room.name;roster();await session.joinPublic(room);$('friends-status').textContent='Connecting to your crew…';}
-function returnCrewLobby(){stopHostClock();spectator.reset();if(friends?.role!=='host')return;friends.returnToLobby();entrance=false;world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;settingsOpen=false;showPanels();roster();}
+function returnCrewLobby(){crewReplayRequest++;crewReplayDownloading=false;crewViewer.dispose();stopHostClock();spectator.reset();if(friends?.role!=='host')return;friends.returnToLobby();entrance=false;world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;settingsOpen=false;showPanels();roster();}
 function setupFriends(){
  lobbyBrowser.onChange=renderLobbies;lobbyBrowser.onStatus=text=>$('friends-service').textContent=text;
  $('friends-open').onclick=()=>{friendsOpen=true;showPanels();roster();renderLobbies();if(!lobbyStarted){lobbyStarted=true;void lobbyBrowser.start();}};
@@ -649,6 +693,7 @@ function init() {
   setupPwa();
   setupFullscreenMenu($<HTMLButtonElement>('fullscreen-toggle'),$('fullscreen-label'),$('fullscreen-status'));
   try {renderer=new GameRenderer($<HTMLCanvasElement>('game'),settings);}catch(error){$('error').hidden=false;$('error').textContent=`The arena could not initialize WebGL2. Enable hardware acceleration and use a current browser. ${error instanceof Error?error.message:''}`;return;}
+  crewViewer=new CrewReplayViewer(renderer,sound,()=>settings.controlScheme,()=>settings.controlScheme==='mobile'?settings.mobileSensitivity:settings.sensitivity);setupCrewReplayActions();
   updateBest();showPanels();setupSettings();
   document.addEventListener('pointerdown',()=>music.unlock());
   document.addEventListener('keydown',()=>music.unlock());
@@ -668,7 +713,7 @@ function init() {
   document.addEventListener('pointerlockchange',()=>{if(settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&document.pointerLockElement!==$('game')&&!capturingMouse)paused();});
   document.addEventListener('visibilitychange',()=>{fpsStarted=null;fpsFrames=0;music.setHidden(document.hidden);if(document.hidden&&mode==='playing'){document.exitPointerLock?.();paused();}});
   window.addEventListener('blur',()=>{if(mode==='playing'){document.exitPointerLock?.();paused();}});
-  window.addEventListener('keydown',e=>{if(e.code==='Escape'){if(analysisActive){e.preventDefault();endDeathAnalysis();return;}if(friends?.running&&mode==='playing'){e.preventDefault();return;}if(profileOpen||settingsOpen||leaderboardOpen||historyOpen||friendsOpen){e.preventDefault();closeControlMenu();return;}if(mode==='playing'){e.preventDefault();paused();return;}}if(analysisActive&&e.code==='Space'){e.preventDefault();analysisSuspended=!analysisSuspended;updateDeathAnalysis();return;}if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLSelectElement)return;if(mode==='replay'&&e.code==='KeyM'){renderer.topDown=!renderer.topDown;return;}if(mode==='replay'&&(e.code==='ArrowLeft'||e.code==='ArrowRight')&&replay){sound.clear();world=seekReplay(replay.tick+(e.code==='ArrowLeft'?-1:1)*(e.ctrlKey?10:3)/STEP);accumulator=0;return;}if(!entrance&&!friends&&['Digit1','Digit2','Digit3','Digit4','Numpad1','Numpad2','Numpad3','Numpad4'].includes(e.code)&&(mode==='playing'||mode==='paused')&&world&&!settingsOpen){e.preventDefault();if(e.repeat)return;const level=Number(e.code.slice(-1));world.level=level;world.stats.collected=level===1?0:level===2?10:level===3?70:200;world.reserve=level===4?190:level>=2?50:0;practice=true;recorder=null;world.emit('upgrade',world.player.pos,level);notice(`WEAPON ${level} · UNRANKED TEST RUN`,4);updateHud();return;}if(e.code==='Space'&&mode==='playing')e.preventDefault();if(e.code==='KeyR'&&mode==='dead'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!(e.target instanceof HTMLInputElement)){if(friends){if(friends.role==='host')returnCrewLobby();}else startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);return;}if(e.code==='Escape'&&leaderboardOpen){leaderboardOpen=false;showPanels();return;}if(e.code==='Escape'&&settingsOpen){settingsOpen=false;showPanels();return;}if(e.code==='Escape'&&settings.controlScheme==='controller'&&mode==='playing'){paused();return;}if(mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'){if(!pressedKeys.has(e.code))pressedKeys.set(e.code,e.key.toLowerCase());keys.add(e.code);keys.add(pressedKeys.get(e.code)!);if(e.code==='Space'&&!e.repeat&&!spectator.position)buttonEdges.push({button:'jump',held:true});}});
+  window.addEventListener('keydown',e=>{if(mode==='crew-replay'){if(e.code==='Escape'){e.preventDefault();crewViewer.close();}return;}if(e.code==='Escape'){if(analysisActive){e.preventDefault();endDeathAnalysis();return;}if(friends?.running&&mode==='playing'){e.preventDefault();return;}if(profileOpen||settingsOpen||leaderboardOpen||historyOpen||friendsOpen){e.preventDefault();closeControlMenu();return;}if(mode==='playing'){e.preventDefault();paused();return;}}if(analysisActive&&e.code==='Space'){e.preventDefault();analysisSuspended=!analysisSuspended;updateDeathAnalysis();return;}if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLSelectElement)return;if(mode==='replay'&&e.code==='KeyM'){renderer.topDown=!renderer.topDown;return;}if(mode==='replay'&&(e.code==='ArrowLeft'||e.code==='ArrowRight')&&replay){sound.clear();world=seekReplay(replay.tick+(e.code==='ArrowLeft'?-1:1)*(e.ctrlKey?10:3)/STEP);accumulator=0;return;}if(!entrance&&!friends&&['Digit1','Digit2','Digit3','Digit4','Numpad1','Numpad2','Numpad3','Numpad4'].includes(e.code)&&(mode==='playing'||mode==='paused')&&world&&!settingsOpen){e.preventDefault();if(e.repeat)return;const level=Number(e.code.slice(-1));world.level=level;world.stats.collected=level===1?0:level===2?10:level===3?70:200;world.reserve=level===4?190:level>=2?50:0;practice=true;recorder=null;world.emit('upgrade',world.player.pos,level);notice(`WEAPON ${level} · UNRANKED TEST RUN`,4);updateHud();return;}if(e.code==='Space'&&mode==='playing')e.preventDefault();if(e.code==='KeyR'&&mode==='dead'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!(e.target instanceof HTMLInputElement)){if(friends){if(friends.role==='host')returnCrewLobby();}else startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);return;}if(e.code==='Escape'&&leaderboardOpen){leaderboardOpen=false;showPanels();return;}if(e.code==='Escape'&&settingsOpen){settingsOpen=false;showPanels();return;}if(e.code==='Escape'&&settings.controlScheme==='controller'&&mode==='playing'){paused();return;}if(mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'){if(!pressedKeys.has(e.code))pressedKeys.set(e.code,e.key.toLowerCase());keys.add(e.code);keys.add(pressedKeys.get(e.code)!);if(e.code==='Space'&&!e.repeat&&!spectator.position)buttonEdges.push({button:'jump',held:true});}});
   window.addEventListener('keyup',e=>{const letter=pressedKeys.get(e.code);pressedKeys.delete(e.code);keys.delete(e.code);if(letter&&!Array.from(pressedKeys.values()).includes(letter))keys.delete(letter);if(mode==='playing'&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&e.code==='Space')buttonEdges.push({button:'jump',held:false});});
   document.addEventListener('mousemove',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||document.pointerLockElement!==$('game'))return;yaw-=e.movementX*.002*settings.sensitivity;const limit=spectator.position?Math.PI/2:1.5;pitch=Math.max(-limit,Math.min(limit,pitch-e.movementY*.002*settings.sensitivity));});
   document.addEventListener('mousedown',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position||document.pointerLockElement!==$('game'))return;if(e.button===0)buttonEdges.push({button:'fire',held:true});if(e.button===2){buttonEdges.push({button:'homing',held:true});if(world&&!world.homingUnlocked)notice(`HOMING AWAKENS AT ${world.homingUnlockGems} GEMS`,1.5);}});
@@ -677,8 +722,10 @@ function init() {
   setupMobileControls();
   $('game').addEventListener('contextmenu',e=>e.preventDefault());
   // Read-only diagnostic surface for development smoke tests and frame profiling.
-  if(import.meta.env.DEV) Object.defineProperty(window,'abyss',{get:()=>({mode,menuRelics:renderer.menuRelics.diagnostics,sky:renderer.skyDiagnostics,mist:renderer.openingMist.diagnostics,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,position:p.player.pos})),running:friends.running,prelobby:friends.prelobby}:null,audio:sound.diagnostics,menuAudio:menuAudio.diagnostics,music:music.diagnostics})});
+  if(import.meta.env.DEV) Object.defineProperty(window,'abyss',{get:()=>({mode,crewReplay:crewViewer?.diagnostics,crewRecording:friends?.replayDiagnostics,completedCrewReplay:friends?.completedReplay?{id:friends.completedReplay.id,ticks:friends.completedReplay.ticks}:null,menuRelics:renderer.menuRelics.diagnostics,sky:renderer.skyDiagnostics,mist:renderer.openingMist.diagnostics,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,position:p.player.pos})),running:friends.running,prelobby:friends.prelobby}:null,audio:sound.diagnostics,menuAudio:menuAudio.diagnostics,music:music.diagnostics})});
   updateControlHints();setupFriends();setupLeaderboard();
+  crewBoard=new CrewLeaderboardUI({session:()=>friends,mode:()=>mode,watch:(run,onExit)=>watchCrewRun(run,0,onExit),solo:()=>{renderRankings();renderPersonalRanking();void refreshRankings();},history:()=>void openHistory()});
+  setupWindowCloseButtons(()=>crown.dismissCoronation());
   requestAnimationFrame(frame);
 }
 init();

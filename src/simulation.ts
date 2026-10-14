@@ -8,11 +8,11 @@ import {updateCentipede as updateLegacyCentipede} from './legacy-centipede-motio
 import {initializeCentipede,updateCentipede,type CentipedeMotion} from './centipede-motion';
 import {armorBounds,sweepArmor} from './projectile-collision';
 import {touchesPlayer} from './player-contact';
-import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,crystalToEnemy,enemyEmergenceScale,towerOutletHeight,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
+import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,LEVIATHAN_HOVER_HEIGHT,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,crystalToEnemy,enemyEmergenceScale,towerOutletHeight,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
 import {arenaRadius,floorHeight,sweepFloor,sweepFloorLegacy} from './arena';
 import {constrainEnemyFloor,enemyFloorHeight} from './enemy-floor';
 import {originalSpawnRadius,originalTowerSpawnHeight,nextPerimeterSpawnAngle,pedeSpawnPosition,thornSpawnPosition,THORN_SPAWN_DEPTH} from './spawn-placement';
-import {towerEntrancePose,towerEmissionTick} from './tower-spawn';
+import {towerGameplayEntrancePose,towerEmissionTick} from './tower-spawn';
 import {entranceFloor,ENTRANCE_SPAWN,ENTRANCE_COURTYARD,touchesEntranceSeal} from './entrance-layout';
 import {ENEMY_STATS,isSquid,isSpider,isEgg,isPede,isSkull,skullTier,type EnemyKind} from './enemy-kinds';
 import {survivalSchedule,legacySurvivalSchedule,TIMELINE,type ScheduledSpawn} from './survival';
@@ -39,7 +39,7 @@ export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,f
 export type WorldOptions={legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
-export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
+export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;deathSource?:DeathSource;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
 export class World {
  crew:CrewPlayer[]=[];private activeCrew:CrewPlayer|null=null;
  addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=4)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0},input:idleInput(),alive:true,cause:'',respawnAt:null,life:0,protectedUntil:0,primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
@@ -89,7 +89,7 @@ export class World {
     p.player={pos:spawn,vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0};
     p.input={...idleInput(),yaw:target.input.yaw,pitch:target.input.pitch};
     p.primary=channel();p.secondary=channel();p.wasJump=false;p.lastShotTick=-1;
-    p.alive=true;p.cause='';p.respawnAt=null;p.life++;p.protectedUntil=this.time+CREW_RESPAWN_PROTECTION;
+    p.alive=true;p.cause='';p.deathSource=undefined;p.respawnAt=null;p.life++;p.protectedUntil=this.time+CREW_RESPAWN_PROTECTION;
     break;
    }
   }
@@ -124,7 +124,7 @@ export class World {
  stats={kills:0,shots:0,hits:0,collected:0,expired:0,eaten:0,released:0,homingFired:0,homingEaten:0,transmuted:0,maxReserve:0,maxEnemies:0,upgradeTimes:[0,0,0,0],leviathanDown:0,orbDown:0,killed:{} as Partial<Record<EnemyKind,number>>};
  reserve=0;level=1;wave=-1;
  private bloodSequence=0;
- private shotRngSeed:number;private rng:number;private nextId=1;private options:WorldOptions;private schedule:Generator<ScheduledSpawn>;private nextEvent:IteratorResult<ScheduledSpawn>;
+ private shotRngSeed:number;private rng:number;private nextId=1;private options:WorldOptions;private schedule:Generator<ScheduledSpawn>;private nextEvent:IteratorResult<ScheduledSpawn>;private scheduleCursor=0;
  // Scheduled placement has its own seeded stream, independent of combat randomness.
  private spawnRng=80421;private spawnAngle=0;
  private spawnRandom(){this.spawnRng^=this.spawnRng<<13;this.spawnRng^=this.spawnRng>>>17;this.spawnRng^=this.spawnRng<<5;return(this.spawnRng>>>0)/4294967296;}
@@ -139,6 +139,19 @@ export class World {
  private delayed:{time:number;kind:EnemyKind;pos:Vec;activeAt?:number}[]=[];
  private detonations:{tick:number;pos:Vec;exclude?:{entity:number;segment:number}}[]=[];
  constructor(seed=80421,options:WorldOptions={}){this.rng=this.shotRngSeed=seed>>>0||1;this.options=options;this.schedule=options.legacySpawnRules?legacySurvivalSchedule():survivalSchedule();if(!options.legacySpawnRules){this.spawnRng=seed>>>0||1;this.spawnAngle=this.spawnRandom()*Math.PI*2;}this.nextEvent=this.schedule.next();}
+ /** Complete simulation state at a tick boundary; transport snapshots are not checkpoints. */
+ captureCrewCheckpoint(){
+  return structuredClone({version:1 as const,options:this.options,scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
+ }
+ static restoreCrewCheckpoint(value:CrewCheckpoint){
+  const s=structuredClone(value),w=new World(s.shotRngSeed,s.options);
+  Object.assign(w,{rng:s.rng,shotRngSeed:s.shotRngSeed,spawnRng:s.spawnRng,spawnAngle:s.spawnAngle,nextId:s.nextId,bloodSequence:s.bloodSequence,time:s.time,tick:s.tick,state:s.state,cause:s.cause,radius:s.radius,wave:s.wave,stats:s.stats,crew:s.crew,enemies:s.enemies,projectiles:s.projectiles,gems:s.gems,rings:s.rings,delayed:s.delayed,detonations:s.detonations});
+  for(let i=0;i<s.scheduleCursor;i++)w.nextEvent=w.schedule.next();w.scheduleCursor=s.scheduleCursor;
+  w.upgradePulses=s.upgradePulses.map(p=>({...p,hit:new Set(p.hit)}));
+  s.crew.forEach((p,i)=>w.playerStarts.set(p.player,s.playerStarts[i]));
+  if(s.selectedId)w.selectCrew(s.selectedId);w.level=s.level;w.reserve=s.reserve;w.wasJump=s.wasJump;w.lastShotTick=s.lastShotTick;
+  return w;
+ }
  get spawnFixesEnabled(){return !this.options.legacySpawnFixes;}
  get enemyFloorEnabled(){return !this.options.legacyEnemyFloor;}
  random(){this.rng^=this.rng<<13;this.rng^=this.rng>>>17;this.rng^=this.rng<<5;return(this.rng>>>0)/4294967296;}
@@ -171,18 +184,18 @@ export class World {
   }
   if(!this.options.legacySpawnRules&&(isSquid(kind)||isSpider(kind))){
    const radius=originalSpawnRadius(kind,Math.floor(this.time*60+1e-6))!;
-   const y=isSquid(kind)?originalTowerSpawnHeight(kind):1.5;
+   const y=isSquid(kind)?this.options.legacySpawnFixes?originalTowerSpawnHeight(kind):towerGameplayEntrancePose(kind,0).height:1.5;
    const e=this.spawn(kind,v(Math.sin(angle)*radius,y,Math.cos(angle)*radius),false);
    if(isSpider(kind)){e.pos.x=Math.sin(angle)*radius;e.pos.z=Math.cos(angle)*radius;e.radialOffset=this.options.legacySpawnFixes?radius-this.radius:3.8*e.size;e.spawnRadius=radius;}
    else if(!this.options.legacySpawnFixes)e.towerEntrance={born:this.time,elapsed:0};
    this.emit('spawn',e.pos,undefined,kind);return e;
   }
-  if(kind==='leviathan')return this.spawn(kind,v(0,15,0));
+  if(kind==='leviathan')return this.spawn(kind,v(0,LEVIATHAN_HOVER_HEIGHT,0));
   const r=isSquid(kind)?this.radius-3:kind==='thorn'?this.radius*(.3+(radialSample??this.random())*.5):this.radius-5;
   const y=kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?7:kind==='ghostpede'?9:isPede(kind)?3:1.5;
   return this.spawn(kind,v(Math.sin(angle)*r,y,Math.cos(angle)*r));
  }
- die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(this.time<this.activeCrew.protectedUntil)return;if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.activeCrew.respawnAt=this.time+CREW_RESPAWN_DELAY;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
+ die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(this.time<this.activeCrew.protectedUntil)return;if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;if(enemy)this.activeCrew.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};this.activeCrew.respawnAt=this.time+CREW_RESPAWN_DELAY;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
   // A dagger or transmutation ring can change/remove the killer later this tick.
   // Preserve its lethal presentation once, without retaining mutable AI history.
   this.deathEnemy={...enemy,pos:{...enemy.pos},vel:{...enemy.vel},target:{...enemy.target},segments:enemy.segments.map(s=>({pos:{...s.pos},hp:s.hp})),weakpoints:enemy.weakpoints.map(p=>({local:{...p.local},hp:p.hp})),centipedeMotion:undefined,gigapedeMotion:undefined,towerFlight:enemy.towerFlight?{...enemy.towerFlight}:undefined};
@@ -209,7 +222,7 @@ export class World {
   if(this.options.schedule!==false)while(!this.nextEvent.done&&this.time+1e-7>=this.nextEvent.value.time){const event=this.nextEvent.value;this.wave=event.wave;
    if(this.options.legacySpawnPlacement)this.spawnAt(event.kind,event.tick===180?Math.PI:this.random()*Math.PI*2);
    else {const placement=this.scheduledPlacement(event.kind);this.spawnAt(event.kind,this.options.legacySpawnRules&&event.tick===180?Math.PI:placement.angle,placement.radialSample);}
-   this.nextEvent=this.schedule.next();}
+   this.nextEvent=this.schedule.next();this.scheduleCursor++;}
   for(const pending of this.delayed.filter(s=>s.time<=this.time+1e-7)){const e=this.spawn(pending.kind,pending.pos);if(pending.activeAt!==undefined){e.activeAt=pending.activeAt-this.time;e.nextBeckon=e.activeAt;}}
   this.delayed=this.delayed.filter(s=>s.time>this.time+1e-7);
   this.updateEnemies(dt);this.updateRings(dt);this.updateUpgradePulses();this.updateProjectiles(dt);
@@ -220,7 +233,7 @@ export class World {
   this.time=Math.max(0,time);this.tick=Math.round(this.time/STEP);this.level=clamp(Math.round(level),1,4);this.reserve=this.homingUnlocked?Math.max(0,Math.round(reserve)):0;
   this.stats.collected=this.options.legacyHomingUnlock?(this.level===1?0:this.level===2?10:70+this.reserve):Math.max(this.level===1?0:this.level===2?10:this.level===3?70:200,this.homingUnlocked?10+this.reserve:0);this.stats.maxReserve=this.reserve;
   this.radius=arenaRadius(this.time);this.player.pos=v(0,floorHeight(0,0,this.time)+TUNING.eyeHeight,0);
-  while(!this.nextEvent.done&&this.nextEvent.value.time<this.time-1e-7){if(!this.options.legacySpawnPlacement)this.scheduledPlacement(this.nextEvent.value.kind);this.nextEvent=this.schedule.next();}
+  while(!this.nextEvent.done&&this.nextEvent.value.time<this.time-1e-7){if(!this.options.legacySpawnPlacement)this.scheduledPlacement(this.nextEvent.value.kind);this.nextEvent=this.schedule.next();this.scheduleCursor++;}
  }
  private move(input:Input,dt:number,ground=(x:number,z:number)=>floorHeight(x,z,this.time)){
   const p=this.player;this.playerStarts.set(p,{...p.pos});const pressed=input.jump&&!this.wasJump;this.wasJump=input.jump;p.hopPulse=Math.max(0,p.hopPulse-dt*4);
@@ -344,7 +357,7 @@ export class World {
    e.age+=dt;
    if(isSquid(e.kind)){
     if(e.towerEntrance){
-     const motion=e.towerEntrance,elapsed=Math.max(0,this.time-motion.born),before=towerEntrancePose(e.kind,motion.elapsed),after=towerEntrancePose(e.kind,elapsed);
+     const motion=e.towerEntrance,elapsed=Math.max(0,this.time-motion.born),before=towerGameplayEntrancePose(e.kind,motion.elapsed),after=towerGameplayEntrancePose(e.kind,elapsed);
      const radius=Math.hypot(e.pos.x,e.pos.z),travel=Math.min(radius,Math.max(0,before.radius-after.radius));
      if(radius>0){const factor=(radius-travel)/radius;e.vel.x=-e.pos.x/radius*travel/dt;e.vel.z=-e.pos.z/radius*travel/dt;e.pos.x*=factor;e.pos.z*=factor;}
      e.pos.y+=after.height-before.height;motion.elapsed=elapsed;
@@ -394,7 +407,7 @@ export class World {
      if(touchesPlayer(wasActive?previous:e.pos,e.pos,playerBefore,player.pos,e.radius*growing,e.kind==='thorn'?7:0))return true;
      contactSegment=e.segments.findIndex((s,i)=>touchesPlayer(wasActive?segmentsBefore[i]:s.pos,s.pos,playerBefore,player.pos,e.size*.8));return contactSegment>=0;
     };
-    if(this.crew.length){for(const p of this.crew)if(p.alive&&collides(p.player)){this.useCrew(p);this.die(ENEMY_STATS[e.kind].death);}}
+    if(this.crew.length){for(const p of this.crew)if(p.alive&&collides(p.player)){this.useCrew(p);this.die(ENEMY_STATS[e.kind].death,e,contactSegment);}}
     else if(collides(this.player))this.die(ENEMY_STATS[e.kind].death,e,contactSegment);
    }
   }
@@ -740,4 +753,5 @@ export class World {
  }this.stats.collected++;if(this.stats.collected>this.homingUnlockGems)this.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,this.reserve);
   const next=this.collectedHandLevel(this.level,this.reserve);if(next>this.level){this.level=next;this.stats.upgradeTimes[next-1]=this.time;this.emit('upgrade',this.player.pos,next);}}
 }
+export type CrewCheckpoint=ReturnType<World['captureCrewCheckpoint']>;
 export function segmentSphere(a:Vec,b:Vec,c:Vec,r:number):number|null{const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z,ox=a.x-c.x,oy=a.y-c.y,oz=a.z-c.z,aa=dx*dx+dy*dy+dz*dz,bb=2*(ox*dx+oy*dy+oz*dz),cc=ox*ox+oy*oy+oz*oz-r*r;if(cc<=0)return 0;if(aa<1e-10)return null;const disc=bb*bb-4*aa*cc;if(disc<0)return null;const t=(-bb-Math.sqrt(disc))/(2*aa);return t>=0&&t<=1?t:null;}

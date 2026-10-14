@@ -1,0 +1,25 @@
+body[data-game-mode="replay"] #replay-controls,
+body[data-game-mode="replay"] #hud,
+body[data-game-mode="crew-replay"] #crew-replay-controls,
+body[data-game-mode="crew-replay"] #crew-replay-height {
+ opacity:1;
+ visibility:visible;
+ transition:opacity .35s ease,visibility 0s;
+}
+
+body[data-replay-idle="true"][data-game-mode="replay"] #replay-controls,
+body[data-replay-idle="true"][data-game-mode="replay"] #hud,
+body[data-replay-idle="true"][data-game-mode="crew-replay"] #crew-replay-controls,
+body[data-replay-idle="true"][data-game-mode="crew-replay"] #crew-replay-height {
+ opacity:0;
+ visibility:hidden;
+ pointer-events:none;
+ transition:opacity .35s ease,visibility 0s .35s;
+}
+
+@media(prefers-reduced-motion:reduce){
+ body[data-game-mode="replay"] #replay-controls,
+ body[data-game-mode="replay"] #hud,
+ body[data-game-mode="crew-replay"] #crew-replay-controls,
+ body[data-game-mode="crew-replay"] #crew-replay-height {transition:none!important}
+}

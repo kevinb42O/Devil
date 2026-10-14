@@ -22,5 +22,13 @@ export function towerEntrancePose(kind:EnemyKind,age:number){
  const value=(column:1|2)=>(2*u3-3*u2+1)*a[column]+(u3-2*u2+u)*h*slope(samples,i,column)+(-2*u3+3*u2)*b[column]+(u3-u2)*h*slope(samples,i+1,column);
  return {radius:value(1)*WORLD_SCALE,height:value(2)*WORLD_SCALE};
 }
+/** Match the large tower's underside to the small tower's floor clearance.
+ * Their imported bottoms are -2.812 and -3.229 world units respectively.
+ * Keep the large tower's measured radial travel, using the small tower's lift. */
+export function towerGameplayEntrancePose(kind:EnemyKind,age:number){
+ const pose=towerEntrancePose(kind,age);
+ if(kind==='squid3')pose.height=towerEntrancePose('squid',age).height-.417;
+ return pose;
+}
 /** Recovered from emitted child ticks in both original recordings. */
 export function towerEmissionTick(kind:EnemyKind,burst:number,index:number){return 184+burst*(kind==='squid3'?1231:1222)+Math.floor(index*9/5);}

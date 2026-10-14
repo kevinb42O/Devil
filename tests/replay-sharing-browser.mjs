@@ -8,6 +8,7 @@ try{
  if(method==='abyss_my_score')body=[own];
  else if(method==='abyss_leaderboard_replays')body=[{...own,replay_id:shared.find(r=>r.slot===0&&r.ready)?.id??null},{player_name:'Older score',survival_ms:500,kills:0,gems:0,achieved_at:'2026-10-13T00:00:00Z',replay_id:null}];
  else if(method==='abyss_own_replays')body=shared;
+ else if(method==='abyss_crew_own_replays')body=[];
  else if(method==='abyss_reserve_replay'){bytes=args.p_bytes;shared=[{id,slot:args.p_slot,run_id:args.p_run_id,survival_ms:args.p_time_ms,ready:false,bytes}];body=id;}
  else if(method==='abyss_finish_replay'){shared[0].ready=true;body=null;}
  else if(method==='abyss_promote_replay'){shared[0].slot=0;body=null;}

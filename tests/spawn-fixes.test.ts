@@ -2,24 +2,29 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {World,STEP,idleInput,type EnemyKind} from '../src/simulation.ts';
 import {originalSpawnRadius} from '../src/spawn-placement.ts';
-import {towerEmissionTick} from '../src/tower-spawn.ts';
+import {towerEmissionTick,towerEntrancePose} from '../src/tower-spawn.ts';
 import {towerSpitPulse} from '../src/enemy-presentation.ts';
 import {createRun,RunRecorder,ReplayPlayer} from '../src/replay.ts';
 import reference from '../research/devil-daggers-v3/original-survival-replay-spawns.json';
 import emissions from '../research/devil-daggers-v3/original-tower-emissions.json';
 import enemyReference from '../research/devil-daggers-v3/reference-data.json';
 
-test('tower entrance poses match independent original samples within replay coordinate precision',()=>{
+test('tower entrances preserve recorded travel while the large tower matches normal floor clearance',()=>{
  for(const replay of reference.replays)for(const kind of ['squid','squid2','squid3'] as const){
   const birth=replay.spawns.find(e=>e.kind===kind)!;
   const samples=replay.firstEnemyMotion.filter(e=>e.id===birth.id&&e.tick-birth.tick<=900);
   const world=new World(29,{schedule:false,invulnerable:true});world.startAt(birth.time);
   const tower=world.spawnAt(kind,birth.angle!,.5);tower.nextSpawn=Infinity;
+  const normal=kind==='squid3'?world.spawnAt('squid',birth.angle!,.5):null;
+  if(normal)normal.nextSpawn=Infinity;
   for(const sample of samples){
    while(world.tick<sample.tick*2)world.step(idleInput());
    const radius=Math.hypot(tower.pos.x,tower.pos.z),expected=Math.hypot(sample.position[0],sample.position[2])*.62;
    assert.ok(Math.abs(radius-expected)<.04,`${replay.source}: ${kind} at ${sample.tick}, error ${radius-expected}`);
-   assert.ok(Math.abs(tower.pos.y-sample.position[1]*.62)<.02);
+   if(normal){
+    assert.ok(Math.abs((tower.pos.y-2.812134)-(normal.pos.y-3.229219))<.001,'large and normal tower undersides share floor clearance');
+    assert.ok(Math.abs(towerEntrancePose(kind,(sample.tick-birth.tick)/60).height-sample.position[1]*.62)<.02,'original measurements remain available');
+   }else assert.ok(Math.abs(tower.pos.y-sample.position[1]*.62)<.02);
   }
  }
 });

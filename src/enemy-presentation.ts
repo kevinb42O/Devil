@@ -4,6 +4,9 @@ import {towerEmissionTick} from './tower-spawn';
 const v=(x:number,y:number,z:number):Vec=>({x,y,z});
 /** Coordinate mapping shared by the mesh rig and damage targets. Placement is prototype tuning. */
 export const CREATURE_SCALE=.62;
+// The imported Leviathan extends 5.77 units below its origin. At this height
+// its underside hovers at 2.23, just above the player's 1.7 eye height.
+export const LEVIATHAN_HOVER_HEIGHT=8;
 export const SPIDER_SIZE=1.65;
 export const SPIDER_CRYSTAL_SCALE=1.8;
 export const SPIDER_CRYSTAL_RADIUS=CREATURE_SCALE*SPIDER_CRYSTAL_SCALE*.5;

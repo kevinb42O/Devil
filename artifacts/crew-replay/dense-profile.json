@@ -1,0 +1,25 @@
+{
+  "runtime": "v24.14.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "initialEnemies": 302,
+  "initialProjectiles": 280,
+  "ticks": 1201,
+  "baselineTickP95Ms": 2.2078329999999937,
+  "recordedTickP95Ms": 2.4451250000000186,
+  "seekMs": 89.33291700000063,
+  "recorder": {
+    "ticks": 1201,
+    "frames": 2,
+    "checkpoints": 32,
+    "estimatedBytes": 21249024,
+    "error": ""
+  },
+  "memory": {
+    "rss": 269713408,
+    "heapTotal": 195854336,
+    "heapUsed": 86502864,
+    "external": 3718260,
+    "arrayBuffers": 1175688
+  }
+}

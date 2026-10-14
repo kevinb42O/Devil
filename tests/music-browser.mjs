@@ -40,4 +40,44 @@ try{
  await page.waitForFunction(()=>window.abyss.mode==='menu'&&window.abyss.music.tracks.some(t=>t.name==='menutheme'&&t.playing&&t.volume>0));
  await page.reload();await page.click('#settings-open');assert.equal(await page.locator('#musicVolume').inputValue(),'30');
  assert.deepEqual(errors,[]);console.log('Game integration: menu, entrance, return home and saved music volume passed.');
+ // Reproduce iOS: element volume writes do nothing and reads always return 1.
+ // Measure actual samples after the music mixer, rather than trusting diagnostics.
+ const mobile=await browser.newContext({viewport:{width:844,height:390},isMobile:true,hasTouch:true});
+ await mobile.addInitScript(()=>{
+  Object.defineProperty(HTMLMediaElement.prototype,'volume',{get:()=>1,set:()=>{},configurable:true});
+  localStorage.setItem('abyss-player-profile',JSON.stringify({name:'Music audit',automatic:false,configured:true}));
+  localStorage.setItem('abyss-settings',JSON.stringify({quality:'low',volume:0,musicVolume:100}));
+  const connect=AudioNode.prototype.connect;
+  AudioNode.prototype.connect=function(destination,...args){
+   if(destination===this.context.destination){
+    const analyser=this.context.createAnalyser();analyser.fftSize=2048;
+    connect.call(this,analyser);window.audioOutputs??=[];window.audioOutputs.push(analyser);
+   }
+   return connect.call(this,destination,...args);
+  };
+  window.outputPeak=()=>Math.max(0,...(window.audioOutputs??[]).map(analyser=>{
+   const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);
+   return Math.max(...samples.map(Math.abs));
+  }));
+ });
+ const touch=await mobile.newPage();touch.on('pageerror',e=>errors.push(e.message));
+ await touch.goto('http://127.0.0.1:5173');await touch.locator('#settings-open').tap();
+ await touch.waitForFunction(()=>window.outputPeak()>.001);
+ await touch.locator('#musicVolume').fill('20');
+ assert.equal(await touch.evaluate(()=>JSON.parse(localStorage.getItem('abyss-settings')).musicVolume),20);
+ await touch.waitForFunction(()=>window.abyss.music.tracks.some(t=>t.playing&&Math.abs(t.volume-.13)<.001));
+ await touch.locator('#musicVolume').fill('0');
+ await touch.waitForFunction(()=>window.outputPeak()===0&&window.abyss.music.tracks.every(t=>!t.playing));
+ await touch.locator('#musicVolume').fill('100');await touch.waitForFunction(()=>window.outputPeak()>.001);
+ await touch.locator('#settings-close').tap();await touch.waitForFunction(()=>!document.querySelector('#start').disabled);await touch.locator('#start').tap();
+ await touch.waitForFunction(()=>window.abyss.entrance&&window.abyss.music.tracks.some(t=>t.name==='menuatmos'&&t.playing));
+ const cdp=await mobile.newCDPSession(touch);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:150,y:270}]});
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:150,y:180}]});
+ await touch.waitForFunction(()=>!window.abyss.entrance);
+ await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+ await touch.waitForFunction(()=>window.abyss.music.scene==='silent'&&window.abyss.music.tracks.every(t=>!t.playing)&&window.outputPeak()===0);
+ assert.deepEqual(errors,[]);await mobile.close();
+ console.log('Mobile regression: ignored element volume, streamed audio output, slider mute/unmute, entrance transition and arena silence passed.');
+
 }finally{await browser.close();}

@@ -1,0 +1,28 @@
+/* A consistent, touch-sized close target above the window's content. */
+body :is(.window-closable, #install-dialog, #crew-replay-controls, #replay-controls, #death-analysis) > button.window-close{
+ position:sticky;top:0;float:right;z-index:5;
+ display:flex;align-items:center;justify-content:center;
+ width:44px;height:44px;min-width:44px;min-height:44px;
+ margin:-16px -16px -28px 0;padding:10px;
+ border:1px solid #b93b39;border-radius:4px;
+ background:#290c0ef2;color:#ff6666;box-shadow:0 2px 10px #0008;
+ cursor:pointer;clip-path:none;pointer-events:auto;
+}
+body :is(.window-closable, #install-dialog, #crew-replay-controls, #replay-controls, #death-analysis) > button.window-close svg{
+ width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;
+}
+body :is(.window-closable, #install-dialog, #crew-replay-controls, #replay-controls, #death-analysis) > button.window-close::before,
+body :is(.window-closable, #install-dialog, #crew-replay-controls, #replay-controls, #death-analysis) > button.window-close::after{content:none}
+body :is(.window-closable, #install-dialog, #crew-replay-controls, #replay-controls, #death-analysis) > button.window-close:hover{background:#591519;color:#ff9a9a;border-color:#ff6666}
+body :is(.window-closable, #install-dialog, #crew-replay-controls, #replay-controls, #death-analysis) > button.window-close:focus-visible{outline:2px solid #ff9a9a;outline-offset:3px}
+.window-closable > .eyebrow{padding-right:40px}
+#install-dialog.window-closable h2{padding-right:44px}
+.friends-shell.window-closable .friends-header{padding-right:52px}
+body #death-analysis > button.window-close{position:absolute;top:12px;right:12px;float:none;margin:0}
+body #replay-controls > button.window-close,
+body #crew-replay-controls > button.window-close{position:absolute;top:8px;right:8px;float:none;margin:0}
+#replay-controls.window-closable{padding-right:64px;min-height:60px}
+#crew-replay-controls.window-closable .crew-replay-heading{padding-right:46px;min-height:38px}
+@media(max-width:600px){
+ body :is(.panel, .friends-shell, #install-dialog, #coronation) > button.window-close{margin:-12px -12px -32px 0}
+}

@@ -1,3 +1,4 @@
+import {UPGRADE_PULSE} from './upgrade-pulse-tuning';
 import {UpgradeGroundPulse} from './upgrade-ground-pulse';
 import {MenuRelics} from './menu-relics';
 import {BloodRenderer} from './blood-renderer';
@@ -12,6 +13,7 @@ import { AbyssSky } from './sky';
 import {EnvironmentLighting} from './environment-lighting';
 import {OpeningMist} from './opening-mist';
 import {SegmentBatches} from './segment-batches';
+import {EnemyHitFlash,enemyHitFlash} from './enemy-hit-flash';
 import {GemLighting} from './gem-lighting';
 import {EnemyLighting} from './enemy-lighting';
 import {EnemyGlowSources} from './enemy-glow-sources';
@@ -58,7 +60,7 @@ export class GameRenderer {
   private updateCrewDeaths(world:World|null,menu:boolean,dt:number){
     if(!world||menu||!world.crew.length)return;
     // Keep the last crew explosions moving after a team wipe freezes simulation.
-    this.crewDeathTime=world.state==='dead'?Math.max(world.time,this.crewDeathTime+Math.min(.1,Math.max(0,dt))):world.time;
+    this.crewDeathTime=world.state==='dead'&&!this.crewReplayMode?Math.max(world.time,this.crewDeathTime+Math.min(.1,Math.max(0,dt))):world.time;
     for(const p of world.crew){
       const alive=this.crewAlive.get(p.id);
       if(p.alive&&alive===false)this.crewExploded.delete(p.id);
@@ -97,6 +99,7 @@ export class GameRenderer {
   }
   private dyingTowers=new Map<number,{model:THREE.Group;started:number;y:number;yaw:number;direction:number;depth:number}>();
   private crewModels=new Map<string,THREE.Group>();
+  private crewReplayExternal=false;
   private crewNames=new Map<string,string>();
   private crewMuzzlePosition=new THREE.Vector3();
   setCrewNames(members:{id:string;name:string}[]){this.crewNames=new Map(members.map(p=>[p.id,p.name]));}
@@ -114,12 +117,13 @@ export class GameRenderer {
   }
   private updateCrewModels(world:World|null,dt:number,crewInterpolated:boolean,scene:THREE.Scene,menu=false){
     const crewIds=new Set<string>();
-    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if(p.player===world.player||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,scene===this.entrance.scene?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18);this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
+    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,scene===this.entrance.scene?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18);this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
   }
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
 
   readonly entrance:SinglePlayerEntrance;
+  crewReplayMode=false;
   topDown=false;renderer:THREE.WebGLRenderer;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(95,1,.05,180);composer:EffectComposer; bloom:UnrealBloomPass;
   private swarmBounds=new Map<EnemyKind,THREE.Sphere>();private swarmFrustum=new THREE.Frustum();private swarmProjection=new THREE.Matrix4();private swarmSphere=new THREE.Sphere();private swarmCopy=new THREE.Matrix4();
   private swarmBatches=new Map<EnemyKind,{meshes:THREE.InstancedMesh[];capacity:number}>();private originalFloor=false;private tileHeights:number[]=[];private beckons=new Map<number,THREE.Mesh>();private baseFov=90;private enemies=new Map<number,THREE.Group>();private tiles:THREE.InstancedMesh;private tilePositions:THREE.Vector3[]=[];
@@ -141,6 +145,8 @@ export class GameRenderer {
   private nightGroundLight=new THREE.Color(0x18100c);private dayGroundLight=new THREE.Color(0x858b91);
   private altarLight=new THREE.PointLight(0xcde98b,12,9);
   private playerLight=new THREE.PointLight(0xffb56b,24,11,2);
+  private swarmFlashCopy=new THREE.Color();
+  private enemyHitFlash=new EnemyHitFlash();
   private enemyLighting:EnemyLighting;private enemyGlowSources:EnemyGlowSources;
   projectileLighting:ProjectileLighting;
   readonly blood:BloodRenderer;
@@ -241,12 +247,12 @@ export class GameRenderer {
     this.blood.effect(effect,world);
   }
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
-    this.renderer.info.reset();if(menu){
+    this.crewReplayExternal=!!spectatorPosition;this.renderer.info.reset();if(menu){
       this.upgradePulse.clear();
       // The menu has its own scene; retire gameplay glows before the early return.
       this.projectileLighting.update(null,true,projectileAlpha,this.renderer.domElement.height);
       this.menuRelics.render(this.renderer,dt);return;
-    }this.visualTime+=dt;const t=this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
+    }this.visualTime+=dt;const t=this.crewReplayMode&&world?world.time:this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
     if(entrance&&world){
       this.upgradePulse.clear();
       samplePlayerPosition(world,projectileAlpha,this.camera.position);this.camera.rotation.set(pitch,yaw,0,'YXZ');
@@ -270,7 +276,7 @@ export class GameRenderer {
     } else if(world) {
       if(spectatorPosition)this.camera.position.set(spectatorPosition.x,spectatorPosition.y,spectatorPosition.z);
       else samplePlayerPosition(world,projectileAlpha,this.camera.position);
-      this.camera.rotation.set(pitch,yaw,0,'YXZ');if(this.topDown){this.camera.position.set(0,55,.001);this.camera.lookAt(0,0,0);}
+      this.camera.rotation.set(pitch,yaw,0,'YXZ');if(this.topDown){const centerZ=this.crewReplayMode?14:0;this.camera.position.set(0,55,centerZ+.001);this.camera.lookAt(0,0,centerZ);}
       this.updateTiles(world.time);
       const fov=this.baseFov+(spectatorPosition?0:world.player.hopPulse*3);if(this.camera.fov!==fov){this.camera.fov=fov;this.camera.updateProjectionMatrix();}
       const ringIds=new Set<number>();for(const ring of world.rings){ringIds.add(ring.id);let mesh=this.beckons.get(ring.id);if(!mesh){mesh=new THREE.Mesh(new THREE.TorusGeometry(1,.035,4,64),new THREE.MeshBasicMaterial({color:0xff4422,transparent:true,opacity:.65}));mesh.rotation.x=Math.PI/2;this.beckons.set(ring.id,mesh);this.scene.add(mesh);}mesh.position.set(ring.pos.x,1,ring.pos.z);mesh.scale.setScalar(Math.max(.01,ring.radius));}for(const [id,mesh] of this.beckons)if(!ringIds.has(id)){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();this.beckons.delete(id);}
@@ -288,8 +294,8 @@ export class GameRenderer {
           this.swarmSphere.radius+=Math.sqrt(3)/16;
           if(!this.swarmFrustum.intersectsSphere(this.swarmSphere))continue;
           const index=swarmCounts.get(e.kind)??0;
-          if(index>=batch.capacity){for(const mesh of batch.meshes){this.scene.remove(mesh);mesh.geometry.dispose();mesh.dispose();}const capacity=batch.capacity*2,meshes=this.originalEnemies.createSwarmBatch(e.kind,capacity);for(let i=0;i<batch.capacity;i++)for(let j=0;j<meshes.length;j++){batch.meshes[j].getMatrixAt(i,this.swarmCopy);meshes[j].setMatrixAt(i,this.swarmCopy);}batch={meshes,capacity};for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(e.kind,batch);}
-          for(const mesh of batch.meshes)mesh.setMatrixAt(index,this.dummy.matrix);swarmCounts.set(e.kind,index+1);continue;
+          if(index>=batch.capacity){for(const mesh of batch.meshes){this.scene.remove(mesh);mesh.geometry.dispose();mesh.dispose();}const capacity=batch.capacity*2,meshes=this.originalEnemies.createSwarmBatch(e.kind,capacity);for(let i=0;i<batch.capacity;i++)for(let j=0;j<meshes.length;j++){batch.meshes[j].getMatrixAt(i,this.swarmCopy);meshes[j].setMatrixAt(i,this.swarmCopy);if(batch.meshes[j].instanceColor){batch.meshes[j].getColorAt(i,this.swarmFlashCopy);meshes[j].setColorAt(i,this.swarmFlashCopy);}}batch={meshes,capacity};for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(e.kind,batch);}
+          for(const mesh of batch.meshes){mesh.material=this.enemyHitFlash.swarmMaterial(mesh.material as THREE.Material);mesh.setMatrixAt(index,this.dummy.matrix);mesh.setColorAt(index,enemyHitFlash(e,world.time)?this.enemyHitFlash.hit:this.enemyHitFlash.normal);}swarmCounts.set(e.kind,index+1);continue;
         }
         present.add(e.id);let model=this.enemies.get(e.id);
         if(model&&model.name!==e.kind){this.scene.remove(model);this.enemies.delete(e.id);model=undefined;}
@@ -306,14 +312,17 @@ export class GameRenderer {
         model.visible=true;model.position.set(e.pos.x,e.pos.y,e.pos.z);const emergence=enemyEmergenceScale(e);model.scale.setScalar(emergence);
         model.rotation.y=enemyYaw(e,world.player.pos);
         if(e.kind.startsWith('squid'))model.userData.towerSpinDirection=e.towerSpinDirection??-1;
+        this.enemyHitFlash.restore(model);
         this.originalEnemies.animate(model,e,world.time,world.spawnFixesEnabled);
+        if(enemyHitFlash(e,world.time))this.enemyHitFlash.apply(model);
         if(isPede(e.kind)) {
           model.rotation.set(0,0,0);model.children[0].rotation.set(-Math.atan2(e.vel.y,Math.hypot(e.vel.x,e.vel.z)),enemyYaw(e,world.player.pos),0,'YXZ');const segments=this.segmentNodes.get(model)!;
           for(let i=0;i<segments.length;i++){const {node,weakPoints}=segments[i],s=e.segments[i],lead=i===0?e.pos:e.segments[i-1].pos;node.position.set(s.pos.x-e.pos.x,s.pos.y-e.pos.y,s.pos.z-e.pos.z);node.rotation.set(-Math.atan2(lead.y-s.pos.y,Math.hypot(lead.x-s.pos.x,lead.z-s.pos.z)),Math.atan2(lead.x-s.pos.x,lead.z-s.pos.z),0,'YXZ');for(const point of weakPoints)point.visible=s.hp>0;}
         }
       }
-      for(const [kind,batch] of this.swarmBatches)for(const mesh of batch.meshes){mesh.count=swarmCounts.get(kind)??0;if(mesh.count){mesh.instanceMatrix.clearUpdateRanges();mesh.instanceMatrix.addUpdateRange(0,mesh.count*16);mesh.instanceMatrix.needsUpdate=true;}}
+      for(const [kind,batch] of this.swarmBatches)for(const mesh of batch.meshes){mesh.count=swarmCounts.get(kind)??0;if(mesh.count){mesh.instanceMatrix.clearUpdateRanges();mesh.instanceMatrix.addUpdateRange(0,mesh.count*16);mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;}}
       for(const [id,model] of this.enemies)if(!present.has(id)) {
+        this.enemyHitFlash.restore(model);
         if(model.name.startsWith('squid')){
           model.traverse(node=>{if(node.name.startsWith('weak-point-'))node.visible=false;});
           model.updateWorldMatrix(true,true);
@@ -349,6 +358,19 @@ export class GameRenderer {
     this.openingMist.updateLights(this.camera,this.enemyLighting.aura,this.projectileLighting.glow);
     this.upgradePulse.update(dt,world?.time??0);
     this.composer.render();this.originalWeapon.render(this.renderer,menu||!!spectatorPosition||this.topDown);
+  }
+  restoreReplayUpgrade(effect:Effect,world:World,age:number){
+    const localId=world.crew.find(p=>p.player===world.player)?.id,local=effect.shooterId===localId;
+    this.originalWeapon.effect(effect,world,0,0,local);if(local)this.originalWeapon.restoreReplayUpgradeAge(age);
+    if(age<UPGRADE_PULSE.duration){this.upgradePulse.begin(effect.pos,effect.level??world.level,world.time-age);this.upgradePulse.update(0,world.time);this.upgradePulse.update(0,world.time);}
+  }
+  /** Restore large corpses directly when a seek skipped their removal frame. */
+  restoreReplayTowerDeaths(world:World,deaths:{tick:number;enemy:Enemy}[]){
+    if(!this.originalEnemies.ready)return;
+    for(const {tick,enemy:e}of deaths){const started=tick/120;if(started>world.time||world.time-started>10||world.enemies.some(x=>x.id===e.id))continue;
+      const model=this.originalEnemies.clone(e.kind);model.position.set(e.pos.x,e.pos.y,e.pos.z);model.scale.setScalar(enemyEmergenceScale(e));model.rotation.y=enemyYaw(e,world.player.pos);this.originalEnemies.animate(model,e,started,world.spawnFixesEnabled);model.traverse(node=>{if(node.name.startsWith('weak-point-'))node.visible=false;});model.updateWorldMatrix(true,true);
+      const top=new THREE.Box3().setFromObject(model).max.y,floor=floorHeight(model.position.x,model.position.z,started),depth=Math.max(1,top-Math.max(-5,floor)+.5);if(towerDeathPose(world.time-started,depth).done)continue;this.scene.add(model);this.dyingTowers.set(e.id,{model,started,y:e.pos.y,yaw:model.rotation.y,direction:e.towerSpinDirection??-1,depth});
+    }
   }
   clear() {this.upgradePulse.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

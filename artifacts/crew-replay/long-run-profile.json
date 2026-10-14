@@ -1,0 +1,36 @@
+{
+  "runtime": "v24.14.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "ticks": 216000,
+  "players": 4,
+  "scene": "No enemies; changing analog movement/look, jumps and four-player bursts. This is a long-input/storage fixture, not a dense renderer benchmark.",
+  "baselineMs": 9325.926583999999,
+  "recordingMs": 9728.767124999998,
+  "baselineTickP95Ms": 0.06316700000024866,
+  "recordedTickP95Ms": 0.06491599999935715,
+  "recorder": {
+    "ticks": 216000,
+    "frames": 216000,
+    "checkpoints": 361,
+    "estimatedBytes": 52520578,
+    "error": ""
+  },
+  "packedBytes": 41177146,
+  "compressedBytes": 12163180,
+  "seekCostsMs": [
+    60.5455409999995,
+    0.5096249999987776,
+    15.103209000000788,
+    42.95887500000026,
+    9.82508300000336
+  ],
+  "heapGrowthBytes": 36226568,
+  "memory": {
+    "rss": 573046784,
+    "heapTotal": 247169024,
+    "heapUsed": 102034072,
+    "external": 106286099,
+    "arrayBuffers": 115689937
+  }
+}

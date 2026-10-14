@@ -216,6 +216,7 @@ export class OriginalWeapon {
   get projectileDiagnostics(){return {count:this.daggers.reduce((n,b)=>n+b.count,0),batches:this.daggers.filter(b=>b.count>0).length,capacities:this.daggers.map(b=>b.instanceMatrix.count)};}
   /** Project a measured fingertip through the exact overlay pose for browser alignment checks. */
   socketScreen(level:number,socket=0){this.handScene.updateMatrixWorld(true);const p=HAND_SOCKETS[level-1][socket];return new THREE.Vector3(p.x,p.y,p.z).applyMatrix4(this.pose.matrixWorld).project(this.handCamera);}
+  restoreReplayUpgradeAge(age:number){this.upgradeTime=Math.max(0,HAND_UPGRADE_DURATION-Math.max(0,age));this.freshUpgrade=false;}
   update(world:World|null,dt:number,menu:boolean,camera?:THREE.PerspectiveCamera,projectileAlpha=1) {
     if(!this.ready)return;this.pose.visible=!menu;const level=world?.level||this.lastLevel;
     if(camera&&this.handCamera.aspect!==camera.aspect){this.handCamera.aspect=camera.aspect;this.handCamera.updateProjectionMatrix();}

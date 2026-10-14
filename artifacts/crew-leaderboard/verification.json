@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "unit_tests": 350,
+  "build": "passed",
+  "database_migrations": [
+    "20261014212124_multiplayer_leaderboard.sql",
+    "20261014213750_crew_publication_recovery.sql"
+  ],
+  "browser_checks": [
+    "party names and size filters",
+    "server-side teammate search",
+    "exact replay download and integrity",
+    "free flight and top view",
+    "cached repeated Watch",
+    "local import/history persists after reload",
+    "independent host/guest authenticated confirmations before combat",
+    "score survives storage upload failure",
+    "durable outbox retry after reload"
+  ],
+  "live_backend": "passed; temporary storage-only replay removed; no test scores published",
+  "delivery": "workspace implementation; Supabase backend applied",
+  "storage": {
+    "cloud_max_bytes": 8388608,
+    "local_max_compressed_bytes": 33554432,
+    "decoded_max_bytes": 67108864
+  }
+}

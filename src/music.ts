@@ -3,20 +3,43 @@ const ROOT='/assets/original/devil-daggers/audio/';
 /** Stream the original long stereo recordings without decoding them on the game thread. */
 export class Music {
  private tracks=new Map<string,HTMLAudioElement>();
+ private gains=new Map<string,GainNode>();
+ private context:AudioContext|null=null;
+ private master:GainNode|null=null;
  private scene:MusicScene='menu';
  private unlocked=false;
  private hidden=false;
  private volume=.55;
  private failed=new Set<string>();
  private starting=new Set<string>();
- get diagnostics(){return {scene:this.scene,unlocked:this.unlocked,hidden:this.hidden,failed:[...this.failed],tracks:[...this.tracks].map(([name,a])=>({name,playing:!a.paused,time:a.currentTime,volume:a.volume,ready:a.readyState}))};}
- setVolume(value:number){this.volume=Math.max(0,Math.min(1,value));}
+ get diagnostics(){return {scene:this.scene,unlocked:this.unlocked,hidden:this.hidden,failed:[...this.failed],tracks:[...this.tracks].map(([name,a])=>({name,playing:!a.paused,time:a.currentTime,volume:(this.gains.get(name)?.gain.value??0)*this.volume,ready:a.readyState}))};}
+ setVolume(value:number){
+  this.volume=Math.max(0,Math.min(1,value));
+  if(this.master)this.master.gain.value=this.volume;
+  if(this.volume===0)for(const a of this.tracks.values())a.pause();
+ }
  setScene(scene:MusicScene){this.scene=scene;}
- setHidden(hidden:boolean){this.hidden=hidden;if(hidden)for(const a of this.tracks.values()){a.pause();a.volume=0;}}
- unlock(){this.unlocked=true;this.failed.clear();this.update(0);}
+ setHidden(hidden:boolean){
+  this.hidden=hidden;
+  if(hidden)for(const [name,a] of this.tracks){a.pause();this.gains.get(name)!.gain.value=0;}
+ }
+ unlock(){
+  if(this.hidden)return;
+  if(!this.context){
+   this.context=new AudioContext();this.master=this.context.createGain();
+   this.master.gain.value=this.volume;this.master.connect(this.context.destination);
+  }
+  void this.context.resume().catch(()=>{});
+  this.unlocked=true;this.failed.clear();this.update(0);
+ }
  private track(name:string){
   let a=this.tracks.get(name);if(a)return a;
-  a=new Audio(ROOT+name+'.wav');a.loop=true;a.preload='none';a.volume=0;
+  a=new Audio(ROOT+name+'.wav');a.loop=true;a.preload='none';
+  // iOS ignores HTMLMediaElement.volume. Route every stream through Web Audio
+  // before playback so neither a new track nor a scene fade bypasses the mixer.
+  const gain=this.context!.createGain();gain.gain.value=0;
+  this.context!.createMediaElementSource(a).connect(gain);gain.connect(this.master!);
+  this.gains.set(name,gain);
   a.addEventListener('error',()=>this.failed.add(name));this.tracks.set(name,a);return a;
  }
  update(dt:number){
@@ -24,14 +47,17 @@ export class Music {
   const desired=this.scene==='menu'?'menutheme':this.scene==='entrance'?'menuatmos':null;
   if(desired&&this.volume>0)this.track(desired);
   for(const [name,a] of this.tracks){
-   const target=name===desired?this.volume*.65:0;
+   const gain=this.gains.get(name)!.gain;
+   const target=name===desired&&this.volume>0?.65:0;
    // Linear fades reach silence, allowing inactive streams to stop completely.
    const step=Math.max(0,dt)*1.3;
-   a.volume=target>a.volume?Math.min(target,a.volume+step):Math.max(target,a.volume-step);
+   gain.value=target>gain.value?Math.min(target,gain.value+step):Math.max(target,gain.value-step);
    if(name===desired&&this.volume>0&&a.paused&&!this.starting.has(name)&&!this.failed.has(name)){
-    this.starting.add(name);void a.play().then(()=>{if(this.hidden)a.pause();}).catch(()=>this.failed.add(name)).finally(()=>this.starting.delete(name));
+    this.starting.add(name);void a.play().then(()=>{
+     if(this.hidden||this.volume===0||(this.scene==='silent'))a.pause();
+    }).catch(()=>this.failed.add(name)).finally(()=>this.starting.delete(name));
    }
-   if(a.volume===0&&(name!==desired||this.volume===0))a.pause();
+   if(gain.value===0&&(name!==desired||this.volume===0))a.pause();
   }
  }
 }

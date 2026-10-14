@@ -1,0 +1,30 @@
+{
+  "downloadMs": 100.89941700000054,
+  "seekMs": 70.23370799999975,
+  "ticks": 548,
+  "events": [
+    {
+      "kind": "death",
+      "playerId": "7671e6d173f15544aab5cfd9b93afc3d",
+      "life": 0,
+      "tick": 1,
+      "time": 0.008333333333333333,
+      "cause": "FALLEN"
+    },
+    {
+      "kind": "death",
+      "playerId": "host",
+      "life": 0,
+      "tick": 548,
+      "time": 4.566666666666683,
+      "cause": "FALLEN"
+    },
+    {
+      "kind": "wipe",
+      "tick": 548,
+      "time": 4.566666666666683,
+      "cause": "CREW LOST"
+    }
+  ],
+  "errors": []
+}

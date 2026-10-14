@@ -19,7 +19,8 @@ export class Sound{
  private pending=new Map<string,Promise<AudioBuffer|undefined>>();
  private loops=new Map<number|string,Voice>();
  private shots=new Set<Voice>();
- private volume=.55;
+ private volume=.55;private playbackRate=1;
+ setPlaybackRate(rate:number){this.playbackRate=Math.max(.25,Math.min(2,rate));for(const v of [...this.loops.values(),...this.shots])v.source.playbackRate.value=this.playbackRate;}
  private loudness=new Map<string,number>();
  private loading:Promise<void>|null=null;
  private cooldowns=new Map<string,number>();
@@ -103,7 +104,7 @@ export class Sound{
   if(throttle)this.cooldowns.set(throttleKey,c.currentTime+throttle);
   const source=c.createBufferSource();source.buffer=buffer;const gain=c.createGain();gain.gain.value=this.volumeFor(name)*scale;source.connect(gain);
   const panner=pos?this.panner(pos):undefined;if(panner){gain.connect(panner);panner.connect(this.master);}else gain.connect(this.master);
-  const voice:Voice={source,gain,panner,name,priority,ended:false};this.shots.add(voice);source.onended=()=>this.disconnect(voice);source.start();
+  const voice:Voice={source,gain,panner,name,priority,ended:false};this.shots.add(voice);source.onended=()=>this.disconnect(voice);source.playbackRate.value=this.playbackRate;source.start();
  }
  play(e:Effect,world:World){
   const level=e.level??world.level;
@@ -136,7 +137,7 @@ export class Sound{
   if(voice&&voice.name!==name){this.stop(id);voice=undefined;}
   if(!voice){const buffer=this.buffers.get(name);if(!buffer){void this.load(name);return;}const source=c.createBufferSource();source.buffer=buffer;source.loop=true;const gain=c.createGain(),panner=pos?this.panner(pos):undefined;
    const target=this.volumeFor(name)*scale;gain.gain.setValueAtTime(0,c.currentTime);gain.gain.linearRampToValueAtTime(target,c.currentTime+.012);source.connect(gain);if(panner){gain.connect(panner);panner.connect(this.master);}else gain.connect(this.master);
-   voice={source,gain,panner,name,priority:0,ended:false};const current=voice;source.onended=()=>this.disconnect(current);this.loops.set(id,voice);source.start(0,randomPhase?Math.random()*buffer.duration:0);
+   voice={source,gain,panner,name,priority:0,ended:false};const current=voice;source.onended=()=>this.disconnect(current);this.loops.set(id,voice);source.playbackRate.value=this.playbackRate;source.start(0,randomPhase?Math.random()*buffer.duration:0);
   }
   if(pos&&voice.panner){voice.panner.positionX.value=pos.x;voice.panner.positionY.value=pos.y;voice.panner.positionZ.value=pos.z;}
  }

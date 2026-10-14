@@ -53,6 +53,8 @@ try{
  const startRound=async()=>{
   for(const page of pages){await page.bringToFront();await page.locator('#friends-ready').evaluate(el=>el.click());}
   await host.waitForFunction(()=>window.abyss.friends.allReady);await host.bringToFront();await host.click('#friends-start');
+  await host.waitForFunction(()=>window.abyss.friends.prelobby&&window.abyss.mode==='playing');
+  await host.evaluate(()=>{window.auditSession.world.crew[0].player.pos={...window.abyss.entranceSeal};});
   for(const page of pages)await page.waitForFunction(()=>window.abyss.mode==='playing'&&window.abyss.friends.crew?.length===3&&window.abyss.time>.1);
  };
  const kill=async(id,fall=false)=>{await host.evaluate(({id,fall})=>window.auditKill={id,fall},{id,fall});};

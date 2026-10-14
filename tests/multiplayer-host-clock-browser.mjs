@@ -10,11 +10,11 @@ try{
  });
  await page.goto(process.env.GAME_URL||'http://127.0.0.1:5173');await page.waitForFunction(()=>window.abyss?.originalAssets&&window.abyss?.originalEnemies);
  await page.evaluate(async()=>{
-  const {FriendsSession}=await import('/src/multiplayer.ts'),{LobbyBrowser}=await import('/src/lobbies.ts');
-  LobbyBrowser.prototype.start=async()=>{};FriendsSession.prototype.hostPublic=async function(){this.onChange();};
+  const moduleUrl=name=>performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname===`/src/${name}.ts`).at(-1)?.name??`/src/${name}.ts`;const {FriendsSession}=await import(moduleUrl('multiplayer')),{LobbyBrowser}=await import(moduleUrl('lobbies'));
+  LobbyBrowser.prototype.start=async()=>{};FriendsSession.prototype.hostPublic=async function(){window.auditSession=this;this.onChange();};
   const start=FriendsSession.prototype.start;FriendsSession.prototype.start=function(){start.call(this);this.startAt=0;};
  });
- await page.click('#friends-open');await page.click('#friends-host');await page.click('#friends-ready');await page.click('#friends-start');await page.waitForFunction(()=>window.abyss.time>.1);
+ await page.click('#friends-open');await page.click('#friends-host');await page.click('#friends-ready');await page.click('#friends-start');await page.waitForFunction(()=>window.abyss.entrance);await page.evaluate(()=>{window.auditSession.world.crew[0].player.pos={...window.abyss.entranceSeal};});await page.waitForFunction(()=>window.abyss.time>.1);
  const before=await page.evaluate(()=>{window.allowFrames=false;return window.abyss.time;});
  await page.waitForFunction(before=>window.abyss.time>=before+1,before,{timeout:3000,polling:50});
  const during=await page.evaluate(()=>window.abyss.time);assert.ok(during-before<1.3);
