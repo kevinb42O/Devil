@@ -33,9 +33,13 @@ In the courtyard, Escape opens the local pause menu without stopping other playe
 
 Lobby discovery uses public MQTT brokers with failover, separate room and lobby namespaces, heartbeat announcements and stale-room expiry. Ready state and start authority travel over reliable WebRTC channels; the host validates every readiness transition and will not start a public lobby with unready players. Only the host can launch the courtyard after everyone readies up. Once inside, any player can trigger the arena run by reaching the seal; the host validates that movement. Peer IDs are validated before signaling creates offers or roster entries, and again when parsing connection codes or routing inputs. Reserved host IDs and malformed IDs cannot enter the lobby or overwrite host controls. Ready/unready controls carry monotonic revisions; local intent updates immediately and stale roster snapshots cannot undo a newer click.
 
+Room signaling forwards ICE candidates discovered after the initial seven-second SDP gathering window, queues candidates until the remote description is available, and replays them on handshake retries. Duplicate broker deliveries apply each candidate once. A guest waiting for the first host roster sees Connecting, with Ready enabled once their roster entry arrives.
+
 Direct internet connections use Google and Cloudflare STUN. Deployments that need relay fallback can configure `VITE_WEBRTC_ICE_SERVERS` with their own ICE server JSON before building. This is deployment configuration; players never enter network settings in the game. A TURN relay account is not bundled. Different-home NAT traversal still depends on the participating networks; testing several browser profiles on one computer does not establish compatibility with every firewall.
 
 ## Validation
+
+- `npm run test:lobby-joining`: isolated-broker discovery, lost offer/answer recovery, delayed and dropped ICE candidates, candidate deduplication, and a phone-sized touch Ready flow (requires a running development build).
 
 - `npm test`: solo regression tests plus crew movement/deaths, shared gem credit, independent homing reserves and snapshot application.
 - `npm run test:multiplayer`: four-player public lobby discovery, one-click joining, ready/unready gate, shared start, guest movement/firing and disconnect (requires a running development build and internet access).

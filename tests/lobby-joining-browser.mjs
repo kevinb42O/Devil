@@ -2,12 +2,13 @@ import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 
 const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+const lateIce=process.env.LATE_ICE==='1';
 const brokers=new Map(),dropped=new Set(),errors=[];
 function packet(type,body){let n=body.length;const length=[];do{const b=n%128;n=Math.floor(n/128);length.push(b|(n?128:0));}while(n);return Buffer.from([type,...length,...body]);}
 try{
  const pages=[];
  for(const role of ['host','guest']){
-  const context=await browser.newContext();
+  const context=await browser.newContext(role==='guest'?{viewport:{width:390,height:844},isMobile:true,hasTouch:true}:{});
   await context.routeWebSocket(/wss:\/\/broker\./,socket=>{
    // The host cannot reach the primary. The guest can reach both. Public
    // brokers have separate subscription maps and never relay to each other.
@@ -26,6 +27,13 @@ try{
     const len=bytes.readUInt16BE(offset);offset+=2;const topic=bytes.subarray(offset,offset+len).toString();
     let data;try{data=JSON.parse(bytes.subarray(offset+len).toString());}catch{return;}
     if(name.includes('hivemq')&&['offer','answer'].includes(data.type)&&!dropped.has(data.type)){dropped.add(data.type);return;}
+    if(lateIce&&data.type==='ice'){
+     const key=`ice-${data.to==='host'?'answer':'offer'}`;
+     if(!dropped.has(key)){dropped.add(key);return;}
+     // Arrive after the old seven-second SDP gathering cutoff, including
+     // duplicate/retried messages from independent brokers.
+     setTimeout(()=>{for(const [peer,topics]of peers)if(topics.has(topic))peer.send(bytes);},9000);return;
+    }
     for(const [peer,topics]of peers)if(topics.has(topic))peer.send(bytes);
    });
   });
@@ -33,6 +41,12 @@ try{
   await page.route('**/join-regression',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><html><body></body></html>'}));
   await page.goto((process.env.GAME_URL||'http://127.0.0.1:5173')+'/join-regression');
   await page.evaluate(async role=>{const {FriendsSession}=await import('/src/multiplayer.ts');window.session=new FriendsSession(role);window.session.setName(role);window.session.onError=e=>window.sessionError=e;},role);
+  if(lateIce)await page.evaluate(()=>{
+   // Simulate candidates absent from initial SDP. A valid connection must
+   // receive them later through signaling, rather than relying on that SDP.
+   const original=window.session.description;
+   window.session.description=async function(...args){const description=await original.apply(this,args);description.sdp=description.sdp.replace(/^a=(candidate:.*|end-of-candidates)\r?\n/gm,'');return description;};
+  });
   pages.push(page);
  }
  const [host,guest]=pages;
@@ -42,7 +56,7 @@ try{
  const lobby=await guest.evaluate(()=>window.lobbies.list[0]);
  await guest.evaluate(lobby=>window.session.joinPublic(lobby),lobby);
  try{for(const page of pages)await page.waitForFunction(()=>window.session.members.length===2&&window.session.connected===1,null,{timeout:35000});}catch(error){for(const page of pages)console.log(await page.evaluate(()=>({role:window.session.role,error:window.sessionError,members:window.session.members,links:[...window.session.links.values()].map(l=>({state:l.pc.connectionState,signaling:l.pc.signalingState,signal:!!l.signal,channel:l.state?.readyState}))})));throw error;}
- assert.deepEqual([...dropped].sort(),['answer','offer']);
+ assert.deepEqual([...dropped].sort(),lateIce?['answer','ice-answer','ice-offer','offer']:['answer','offer']);
  const roster=await host.evaluate(()=>window.session.members);
  assert.deepEqual(await guest.evaluate(()=>window.session.members),roster);
  for(const page of pages)await page.evaluate(()=>window.session.setReady(true));
@@ -52,5 +66,5 @@ try{
  assert.deepEqual(errors,[]);
  await guest.evaluate(()=>window.lobbies.close());
  for(const page of pages)await page.evaluate(()=>window.session.close());
- console.log('Lobby joining passed with isolated brokers, host primary outage, dropped first offer/answer, matching rosters, readiness and shared courtyard.');
+ console.log(`Lobby joining passed with a mobile guest, isolated brokers, host primary outage, dropped first offer/answer, ${lateIce?'delayed and dropped ICE candidates, ':''}matching rosters, readiness and shared courtyard.`);
 }finally{await browser.close();}
