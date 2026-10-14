@@ -2,7 +2,7 @@ import {readdir,readFile,writeFile,stat} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 
 // Called after Vite copies runtime assets. Each release owns an immutable cache;
-// an update waits until every window using the previous release has closed.
+// a fully downloaded update activates immediately, and reload uses the latest release.
 export async function buildPwa(root='dist'){
  const files=[];
  async function walk(dir){for(const entry of await readdir(dir,{withFileTypes:true})){
