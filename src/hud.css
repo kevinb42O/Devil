@@ -114,6 +114,21 @@
   color: #f3dbb8;
 }
 
+#hud #respawn-status.is-invincible {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  padding: 7px 16px;
+  border: 1px solid #8ce6ff;
+  border-radius: 4px;
+  background: rgba(9, 34, 47, .85);
+  color: #b8f1ff;
+  box-shadow: 0 0 18px rgba(98, 207, 255, .35);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 /* Quiet performance and multiplayer status, clear of the aiming area. */
 #hud #connection-meter {
   position: absolute;

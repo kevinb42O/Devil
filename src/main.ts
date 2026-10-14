@@ -91,10 +91,12 @@ function syncSpectator(){
   // A crew wipe freezes the free camera at its last position. Keep using it
   // behind the results panel so the view cannot snap to a corpse or show a hand.
   const respawnStatus=$('respawn-status');
-  respawnStatus.hidden=!local||local.alive||world?.state!=='playing'||local.respawnAt===null;
-  respawnStatus.textContent=respawnStatus.hidden?'':crewRespawnStatus(local!,world!.time);
+  const protectedRemaining=local?.alive&&world?Math.max(0,local.protectedUntil-world.time):0;
+  respawnStatus.hidden=!local||world?.state!=='playing'||(local.alive?protectedRemaining<=0:local.respawnAt===null);
+  respawnStatus.classList.toggle('is-invincible',protectedRemaining>0);
+  respawnStatus.textContent=respawnStatus.hidden?'':protectedRemaining>0?`INVINCIBLE · ${protectedRemaining.toFixed(1)}s`:crewRespawnStatus(local!,world!.time);
   const lifeKey=local&&friends?`${friends.id}:${friends.epoch}:${local.life}`:'';
-  if(local?.alive&&lifeKey!==spectatorLifeKey&&local.life>0){yaw=local.input.yaw;pitch=local.input.pitch;clearInput();notice('RESPAWNED · 1s PROTECTION',1);}
+  if(local?.alive&&lifeKey!==spectatorLifeKey&&local.life>0){yaw=local.input.yaw;pitch=local.input.pitch;clearInput();notice('RESPAWNED · 3s INVINCIBILITY',3);}
   spectatorLifeKey=lifeKey;
   if(local&&!local.alive){if(!spectator.position){spectator.start(local.player.pos);clearInput();}}else spectator.reset();
 }

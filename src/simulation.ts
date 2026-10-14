@@ -21,7 +21,7 @@ import {HAND_MUZZLES,weaponMuzzle} from './weapon-origin';
 export {TIMELINE};export type {EnemyKind};
 /** Fixed-step combat. Reference counts/timers are separated from unmeasured movement/AI tuning. */
 export const STEP=1/120;
-export const CREW_RESPAWN_DELAY=15,CREW_RESPAWN_PROTECTION=1;
+export const CREW_RESPAWN_DELAY=15,CREW_RESPAWN_PROTECTION=3;
 export const TUNING={radius:arenaRadius(0),eyeHeight:1.7,speed:11,acceleration:100,airAcceleration:17,friction:8,gravity:26,jump:9,maxSpeed:18,projectileSpeed:70,gemLifetime:10,towerCrystalRadius:.63,towerDriftSpeed:.5};
 export type Vec={x:number;y:number;z:number};
 export type DeathSource={enemyId:number;kind:EnemyKind;segment:number;tick:number;time:number;player:Vec;contactBody:Vec};
@@ -182,7 +182,7 @@ export class World {
   const y=kind==='squid'?3.3:kind==='squid2'?5.2:kind==='squid3'?7:kind==='ghostpede'?9:isPede(kind)?3:1.5;
   return this.spawn(kind,v(Math.sin(angle)*r,y,Math.cos(angle)*r));
  }
- die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(cause!=='FALLEN'&&this.time<this.activeCrew.protectedUntil)return;if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.activeCrew.respawnAt=this.time+CREW_RESPAWN_DELAY;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
+ die(cause:string,enemy?:Enemy,segment=-1){if(this.options.invulnerable)return;if(this.activeCrew){if(this.time<this.activeCrew.protectedUntil)return;if(this.activeCrew.alive){this.activeCrew.alive=false;this.activeCrew.cause=cause;this.activeCrew.respawnAt=this.time+CREW_RESPAWN_DELAY;this.emit('death',this.player.pos);}return;}if(this.state==='dead')return;this.state='dead';this.cause=cause;if(enemy){this.deathSource={enemyId:enemy.id,kind:enemy.kind,segment,tick:this.tick,time:this.time,player:{...this.player.pos},contactBody:{...(segment<0?enemy.pos:enemy.segments[segment].pos)}};
   // A dagger or transmutation ring can change/remove the killer later this tick.
   // Preserve its lethal presentation once, without retaining mutable AI history.
   this.deathEnemy={...enemy,pos:{...enemy.pos},vel:{...enemy.vel},target:{...enemy.target},segments:enemy.segments.map(s=>({pos:{...s.pos},hp:s.hp})),weakpoints:enemy.weakpoints.map(p=>({local:{...p.local},hp:p.hp})),centipedeMotion:undefined,gigapedeMotion:undefined,towerFlight:enemy.towerFlight?{...enemy.towerFlight}:undefined};

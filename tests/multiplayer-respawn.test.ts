@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {World,STEP,TUNING,idleInput,v,CREW_RESPAWN_DELAY} from '../src/simulation';
+import {World,STEP,TUNING,idleInput,v,CREW_RESPAWN_DELAY,CREW_RESPAWN_PROTECTION} from '../src/simulation';
 import {floorHeight} from '../src/arena';
 import {FriendsSession,applySnapshot} from '../src/multiplayer';
 import {encodePacket} from '../src/network-codec';
@@ -19,12 +19,13 @@ test('revives at 15 seconds beside the nearest survivor, facing them, with progr
  assert.equal(p.input.yaw,.8);assert.equal(p.input.pitch,.3);assert.deepEqual(p.player.vel,v());assert.equal(p.input.fire,false);
  assert.ok(Math.hypot(p.player.pos.x-w.crew[2].player.pos.x,p.player.pos.z-w.crew[2].player.pos.z)<=2.4);
  assert.equal(p.player.pos.y,floorHeight(p.player.pos.x,p.player.pos.z,w.time)+TUNING.eyeHeight);
- assert.equal(p.protectedUntil,w.time+1);
+ assert.equal(CREW_RESPAWN_PROTECTION,3);assert.equal(p.protectedUntil,w.time+3);
 });
 test('independent deadlines and repeated deaths get a full new timer',()=>{
  const w=world();kill(w,'a');const first=w.crew[1].respawnAt!;stepTo(w,w.time+2);kill(w,'b');const second=w.crew[2].respawnAt!;
  stepTo(w,first);assert.equal(w.crew[1].alive,true);assert.equal(w.crew[2].alive,false);
- kill(w,'a');assert.equal(w.crew[1].respawnAt,w.time+15);stepTo(w,second);assert.equal(w.crew[2].alive,true);assert.equal(w.crew[1].alive,false);
+ stepTo(w,second);assert.equal(w.crew[2].alive,true);assert.equal(w.crew[1].alive,true);
+ stepTo(w,w.crew[1].protectedUntil);kill(w,'a');assert.equal(w.crew[1].respawnAt,w.time+15);assert.equal(w.crew[1].alive,false);
 });
 test('team wipe on the deadline wins over pending respawns',()=>{
  const w=world();kill(w,'a');kill(w,'b');w.time=w.crew[1].respawnAt!-STEP;kill(w,'host');assert.equal(w.state,'dead');assert.ok(w.crew.every(p=>!p.alive));w.stepCrew(new Map());assert.equal(w.crew[1].life,0);
@@ -33,11 +34,32 @@ test('simultaneous revivals use original survivors and do not refill reserve',()
  const w=world();w.crew[1].player.pos=v(80,-10,80);w.crew[2].player.pos=v(-80,-10,-80);w.stepCrew(new Map());w.crew[1].reserve=9;w.crew[2].reserve=3;
  stepTo(w,w.crew[1].respawnAt!);assert.ok(w.crew.every(p=>p.alive));assert.deepEqual(w.crew.map(p=>p.reserve),[0,9,3]);
 });
-test('protection blocks enemy contact for one second but never blocks falling',()=>{
+test('respawn blocks enemy contact for all three seconds and expires at its deadline',()=>{
  const w=world();kill(w,'a');stepTo(w,w.crew[1].respawnAt!);const p=w.crew[1];w.crew[0].player.pos=v(-10,TUNING.eyeHeight,-10);w.crew[2].player.pos=v(-15,TUNING.eyeHeight,-10);
- const e=w.spawn('skull',{...p.player.pos});e.age=2;w.stepCrew(new Map());assert.equal(p.alive,true);
- w.enemies=[];stepTo(w,p.protectedUntil);const second=w.spawn('skull',{...p.player.pos});second.age=2;w.stepCrew(new Map());assert.equal(p.alive,false);
- w.enemies=[];stepTo(w,p.respawnAt!);assert.equal(p.life,2);kill(w,'a');assert.equal(p.alive,false);
+ const until=p.protectedUntil;
+ for(const time of [until-3+STEP,until-2,until-1,until-STEP]){
+  w.time=time-STEP;const e=w.spawn('skull',{...p.player.pos});e.age=2;
+  w.stepCrew(new Map());assert.equal(p.alive,true);assert.equal(p.respawnAt,null);w.enemies=[];
+ }
+ w.time=until;const e=w.spawn('skull',{...p.player.pos});e.age=2;
+ w.stepCrew(new Map());assert.equal(p.alive,false);assert.equal(p.respawnAt,w.time+CREW_RESPAWN_DELAY);
+});
+test('respawn protection also blocks abyss deaths until the three-second deadline',()=>{
+ const w=world();kill(w,'a');stepTo(w,w.crew[1].respawnAt!);const p=w.crew[1],until=p.protectedUntil;
+ for(const time of [until-3+STEP,until-2,until-1,until-STEP]){
+  w.time=time-STEP;w.effects=[];kill(w,'a');
+  assert.equal(p.alive,true);assert.equal(p.cause,'');assert.equal(p.respawnAt,null);assert.ok(!w.effects.some(e=>e.kind==='death'));
+ }
+ w.time=until;kill(w,'a');assert.equal(p.alive,false);assert.equal(p.cause,'FALLEN');
+});
+test('respawn protection permits movement and firing, and is carried in network snapshots',()=>{
+ const host=new FriendsSession('host');try{
+  host.start();host.world=world();const w=host.world;kill(w,'a');stepTo(w,w.crew[1].respawnAt!);const p=w.crew[1],before={...p.player.pos};
+  for(let i=0;i<30;i++)w.stepCrew(new Map([['a',{...idleInput(),forward:1,fire:true}]]));
+  assert.equal(p.alive,true);assert.ok(w.time<p.protectedUntil);assert.ok(Math.hypot(p.player.pos.x-before.x,p.player.pos.z-before.z)>.5);assert.ok(w.stats.shots>0);
+  const snapshot=decodeState(encodeState(host.snapshot()!,1,0),new Map())!.snapshot;
+  const view=new World(1);applySnapshot(view,snapshot,'a');assert.equal(view.crew[1].protectedUntil,p.protectedUntil);assert.ok(view.time<view.crew[1].protectedUntil);
+ }finally{host.close();}
 });
 test('unsafe falling survivors delay revival, then use valid ground without another countdown',()=>{
  const w=world();kill(w,'a');w.crew[2].alive=false;w.crew[2].cause='DISCONNECTED';w.time=w.crew[1].respawnAt!-STEP;

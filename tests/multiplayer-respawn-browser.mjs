@@ -24,7 +24,7 @@ try{
    FriendsSession.prototype.hostPublic=async function(name){this.lobbyName=name;this.iceServers=[];window.auditSession=this;this.onChange();};
    FriendsSession.prototype.joinPublic=async function(){this.iceServers=[];window.auditSession=this;};
    const start=FriendsSession.prototype.start;
-   FriendsSession.prototype.start=function(){start.call(this);this.startAt=0;this.world.options.schedule=false;this.world.addCrew('audit-survivor');this.world.crew.forEach((p,i)=>{p.player.pos=v((i-1)*8,1.8,2);});};
+   FriendsSession.prototype.start=function(...args){start.apply(this,args);this.startAt=0;this.world.options.schedule=false;this.world.addCrew('audit-survivor');this.world.crew.forEach((p,i)=>{p.player.pos=v((i-1)*8,1.8,2);});};
    const step=FriendsSession.prototype.step;
    FriendsSession.prototype.step=function(input){
     window.auditWorld=this.world;this.world.enemies=[];
@@ -53,6 +53,8 @@ try{
  const startRound=async()=>{
   for(const page of pages){await page.bringToFront();await page.locator('#friends-ready').evaluate(el=>el.click());}
   await host.waitForFunction(()=>window.abyss.friends.allReady);await host.bringToFront();await host.click('#friends-start');
+  await host.waitForFunction(()=>window.abyss.friends.prelobby&&window.abyss.mode==='playing');
+  await host.evaluate(()=>{window.auditSession.world.crew[0].player.pos={...window.abyss.entranceSeal};});
   for(const page of pages)await page.waitForFunction(()=>window.abyss.mode==='playing'&&window.abyss.friends.crew?.length===3&&window.abyss.time>.1);
  };
  const kill=async(id,fall=false)=>{await host.evaluate(({id,fall})=>window.auditKill={id,fall},{id,fall});};
@@ -79,12 +81,16 @@ try{
  const shotCount=await host.evaluate(()=>window.abyss.stats.shots);
  await guest.keyboard.up('KeyW');await guest.mouse.up();await guest.keyboard.down('KeyD');
  await guest.waitForFunction(()=>window.abyss.friends.crew.find(p=>p.id===window.auditSession.localId).life===1&&!window.abyss.spectating,{},{timeout:20000});
- assert.equal(await guest.locator('#respawn-status').isVisible(),false);
+ assert.equal(await guest.locator('#respawn-status').isVisible(),true);
+ assert.match(await guest.locator('#respawn-status').textContent(),/INVINCIBLE · [0-3]\.[0-9]s/);
+ assert.equal(await guest.locator('#respawn-status').evaluate(el=>el.classList.contains('is-invincible')),true);
  const revived=await sample(guest);assert.equal(revived.hand,true);assert.equal(revived.deathPanel,false);assert.equal(revived.state.input.fire,false);assert.equal(revived.state.input.strafe,0);assert.equal(revived.state.stats.shots,shotCount);
  assert.equal(revived.state.sky.chapter,'The Cathedral Below');assert.ok(revived.state.sky.time>=350,'revival does not reset the shared descent');
  assert.ok(Math.abs(revived.state.sky.time-revived.state.time)<.3,'guest sky follows the presented match clock');
  const hostLife=await host.evaluate(id=>({time:window.abyss.time,p:window.auditWorld.crew.find(p=>p.id===id)}),localId);
  assert.ok(hostLife.time>=deadline);assert.ok(hostLife.time<deadline+1);assert.equal(hostLife.p.life,1);assert.equal(hostLife.p.alive,true);
+ await kill(localId);await host.waitForFunction(()=>window.auditKill===null);
+ assert.equal(await host.evaluate(id=>window.auditWorld.crew.find(p=>p.id===id).alive,localId),true);
  await guest.keyboard.up('KeyD');await guest.keyboard.down('KeyW');
  const before=await host.evaluate(id=>({...window.auditWorld.crew.find(p=>p.id===id).player.pos}),localId);
  await host.waitForFunction(({id,before})=>{const pos=window.auditWorld.crew.find(p=>p.id===id).player.pos;return Math.hypot(pos.x-before.x,pos.z-before.z)>.5;},{id:localId,before},{timeout:5000});await guest.keyboard.up('KeyW');
@@ -93,11 +99,19 @@ try{
  await kill('host');await host.waitForFunction(()=>window.abyss.spectating);assert.equal(await host.locator('#respawn-status').isVisible(),true);assert.match(await host.locator('#respawn-status').textContent(),/RESPAWNING IN 15s/);
  await host.evaluate(()=>{window.auditWorld.time=window.auditWorld.crew[0].respawnAt-.1;});
  await host.waitForFunction(()=>window.abyss.friends.crew[0].life===1&&!window.abyss.spectating);
+ assert.equal(await host.locator('#respawn-status').isVisible(),true);assert.match(await host.locator('#respawn-status').textContent(),/INVINCIBLE/);
+ // Falling cannot kill a newly revived player, including the authoritative host.
+ await kill('host',true);await host.waitForFunction(()=>window.auditKill===null);
+ assert.equal(await host.evaluate(()=>window.auditWorld.crew[0].alive),true);
+ await host.evaluate(()=>{window.auditWorld.crew[0].player.pos={x:0,y:2,z:0};window.auditWorld.crew[0].player.vel={x:0,y:0,z:0};});
  const hostRevived=await sample(host);assert.equal(hostRevived.hand,true);assert.equal(hostRevived.state.input.fire,false);assert.ok(Math.abs(hostRevived.state.pitch)<=1.5);
  assert.equal(hostRevived.state.sky.chapter,'The Cathedral Below');assert.ok(hostRevived.state.sky.time>=350);
  // A second death receives a new deadline; a total wipe cancels the pending return.
+ await guest.waitForFunction(()=>{const p=window.abyss.friends.crew.find(p=>p.id===window.auditSession.localId);return window.abyss.time>=p.protectedUntil;});
+ assert.equal(await guest.locator('#respawn-status').isVisible(),false);
  await kill(localId,true);await guest.waitForFunction(()=>window.abyss.spectating);
  assert.equal(await guest.locator('#respawn-status').isVisible(),true);assert.match(await guest.locator('#respawn-status').textContent(),/RESPAWNING IN 15s/);
+ await host.waitForFunction(()=>window.auditWorld.crew.every(p=>!p.alive||window.auditWorld.time>=p.protectedUntil));
  await host.evaluate(()=>{for(const p of window.auditWorld.crew)if(p.alive)p.player.pos={x:85,y:-9,z:85};});
  for(const page of pages)await page.waitForFunction(()=>window.abyss.mode==='dead');
  assert.ok(await host.evaluate(()=>window.abyss.friends.crew.every(p=>!p.alive)));
@@ -105,5 +119,5 @@ try{
  await startRound();for(const page of pages){await page.waitForFunction(()=>document.querySelector('#gems').textContent==='0');assert.equal(await page.locator('#respawn-status').isVisible(),false);}for(const page of pages)assert.ok(await page.evaluate(()=>window.abyss.friends.crew.every(p=>p.life===0&&p.alive&&p.respawnAt===null)));
  for(const page of pages){await page.waitForFunction(()=>window.abyss.sky.chapter==='The Last Sky'&&!window.abyss.sky.menu);assert.ok(await page.evaluate(()=>window.abyss.sky.time<10),'new match resets the descent');}
  assert.deepEqual(errors,[]);
- console.log('Multiplayer respawn passed: real 15s guest countdown, WebRTC revival, first-person return, cleared spectator inputs, fresh movement/fire, host revival, repeat death, wipe and restart.');
+ console.log('Multiplayer respawn passed: real 15s guest countdown, WebRTC revival, first-person return, visible three-second invincibility, enemy and fall immunity, cleared spectator inputs, fresh movement/fire, host revival, repeat death, wipe and restart.');
 }finally{await browser.close();}
