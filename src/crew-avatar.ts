@@ -4,7 +4,7 @@ import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
 import type {Input,Vec} from './simulation';
 
 const fallbackGeometry=new THREE.CapsuleGeometry(.38,1.05,4,8);
-const colors=[0xcde98b,0x62cfff,0xffbd66,0xd994ff];
+const colors=[0xcde98b,0x62cfff,0xffbd66,0xd994ff,0xee9eae,0xedda80];
 const pending=new Set<THREE.Group>();
 let template:THREE.Group|null=null,clips:THREE.AnimationClip[]=[],loading:Promise<void>|null=null,failed=false;
 let modelScale=1,floorOffset=0;

@@ -29,7 +29,7 @@ try{
  const offer=await host.evaluate(()=>window.session.offer());
  const answer=await guest.evaluate(offer=>window.session.answer(offer),offer);await host.evaluate(answer=>window.session.accept(answer),answer);
  await guest.waitForFunction(()=>window.abyss.friends?.members.length===2&&!document.querySelector('#friends-ready').disabled);
- assert.equal(await guest.locator('#friends-player-count').textContent(),'2 / 4 PLAYERS');
+ assert.equal(await guest.locator('#friends-player-count').textContent(),'2 / 6 PLAYERS');
  assert.equal(await guest.locator('#friends-status').textContent(),'Connected to your crew.');
  await guest.locator('#friends-ready').tap();
  await host.waitForFunction(()=>window.abyss.friends.members.find(p=>!p.host)?.ready);

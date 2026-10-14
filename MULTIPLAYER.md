@@ -1,6 +1,6 @@
 # Online friends mode
 
-Open **Friends · up to 4 players**. Everyone loads the same public game URL.
+Open **Friends · up to 6 players**. Everyone loads the same public game URL.
 
 1. Enter your player name.
 2. Click **Create lobby**, or click **Join** on a visible lobby in **Open lobbies**.

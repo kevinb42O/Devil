@@ -23,7 +23,7 @@ export class CrewRankingSession{
   const roster=this.currentRoster(),sig=JSON.stringify({epoch:s.epoch,roster,consents:roster.map(m=>this.preferences.get(m.id)===true)});
   if(sig!==this.signature){this.signature=sig;this.token++;this.registration=null;this.roster=roster;this.confirmed.clear();this.working=false;this.invitedAt=0;}
   if(!leaderboardConfigured()){this.setStatus('Offline crew · public rankings are not connected.');return;}
-  if(roster.length<2){this.setStatus('Two to four players are needed for a ranked party.');return;}
+  if(roster.length<2){this.setStatus('Two to six players are needed for a ranked party.');return;}
   if(!roster.every(m=>this.preferences.get(m.id)===true)){this.setStatus('Unranked until everyone enables public party scores and replays.');return;}
   if(this.registration?.state==='locked'){this.setStatus('Party confirmed · the next standard run can be ranked.');return;}
   if(!this.registration&&!this.working&&this.invitedAt<Date.now()-5000){this.working=true;this.invitedAt=Date.now();const token=this.token,nextEpoch=s.epoch+1;this.setStatus('Confirming the party for public ranking…');

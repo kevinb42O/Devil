@@ -56,3 +56,10 @@ test('tower death poses survive removal and remain independent of mutable enemie
 test('replay freezes the public roster whitelist and never stores lobby readiness fields',()=>{
  const w=new World(1,{schedule:false});w.addCrew('host');const member={id:'host',name:'Captain',host:true,ready:true,readyRevision:9},recorder=new CrewRunRecorder(1,w,[member],'s',1);assert.deepEqual(recorder.roster,[{id:'host',name:'Captain',host:true}]);member.name='Changed';assert.equal(recorder.roster[0].name,'Captain');
 });
+
+ test('six-player replay preserves the last slots through encoding and playback',async()=>{
+ const w=new World(12,{schedule:false});for(let i=0;i<6;i++)w.addCrew('p'+i);w.selectCrew('p0');
+ const recorder=new CrewRunRecorder(12,w,w.crew.map((p,i)=>({id:p.id,name:'Player '+i,host:i===0})),'six-player',1);
+ for(let n=0;n<2000&&w.state==='playing';n++){const before=w.crew.map(p=>({id:p.id,alive:p.alive,life:p.life,cause:p.cause}));const inputs=new Map(w.crew.map((p,i)=>[p.id,{...idleInput(),forward:n===0?0:1,yaw:i*.2}]));const waiting=n===0?new Set(['p4','p5']):new Set<string>();w.stepCrew(inputs,STEP,waiting);recorder.record(w,inputs,waiting,before);w.effects=[];}
+ const run=recorder.finish(w);assert.ok(run);const decoded=await decodeCrewReplay(await encodeCrewReplay(run));assert.equal(decoded.roster.length,6);assert.equal(decoded.frames.at(0)!.waiting,48);const player=new CrewReplayPlayer(decoded);while(player.tick<decoded.ticks)player.step();assert.equal(crewCheckpointDigest(player.world.captureCrewCheckpoint()),crewCheckpointDigest(w.captureCrewCheckpoint()));
+ });

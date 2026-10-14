@@ -1,3 +1,4 @@
+import {MAX_CREW_PLAYERS} from './crew-config';
 import {type ArenaSnapshot} from './multiplayer';
 import {STEP,TUNING,type Projectile,type Vec} from './simulation';
 import {encodePacket,decodePacket,presentationPrecision,NETWORK_PROTOCOL_VERSION} from './network-codec';
@@ -47,7 +48,7 @@ export function encodeState(s:ArenaSnapshot,frame:number,base:number,baseline?:S
 }
 export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>):{frame:number;snapshot:ArenaSnapshot}|null{
  const w=decodePacket(data) as WireState;
- if(w?.version!==NETWORK_PROTOCOL_VERSION||!Number.isInteger(w.frame)||w.frame<1||!w.body||w.body.epoch!==w.epoch||!Array.isArray(w.body.crew)||w.body.crew.length>4||!Array.isArray(w.body.enemies)||!Array.isArray(w.body.gems)||!Array.isArray(w.body.rings)||!Number.isFinite(w.body.serverNow)||!Number.isFinite(w.body.time)||!Number.isInteger(w.body.tick)||!w.flight||!Array.isArray(w.flight.updates)||!Array.isArray(w.flight.shots)||!w.creatures)throw Error('Invalid state');
+ if(w?.version!==NETWORK_PROTOCOL_VERSION||!Number.isInteger(w.frame)||w.frame<1||!w.body||w.body.epoch!==w.epoch||!Array.isArray(w.body.crew)||w.body.crew.length>MAX_CREW_PLAYERS||!Array.isArray(w.body.enemies)||!Array.isArray(w.body.gems)||!Array.isArray(w.body.rings)||!Number.isFinite(w.body.serverNow)||!Number.isFinite(w.body.time)||!Number.isInteger(w.body.tick)||!w.flight||!Array.isArray(w.flight.updates)||!Array.isArray(w.flight.shots)||!w.creatures)throw Error('Invalid state');
  const ids=unpackIds(w.creatures.ids),projectileIds=unpackIds(w.flight.ids);
  const baseline=w.flight.base?baselines.get(w.flight.base):undefined;if(w.flight.base&&!baseline)return null;
  if(typeof w.creatures.relative!=='boolean'||w.creatures.relative&&!baseline)throw Error('Invalid relative poses');

@@ -1,3 +1,4 @@
+import {MAX_CREW_PLAYERS} from './crew-config';
 import {UPGRADE_PULSE} from './upgrade-pulse-tuning';
 import {UpgradeGroundPulse} from './upgrade-ground-pulse';
 import {MenuRelics} from './menu-relics';
@@ -171,7 +172,7 @@ export class GameRenderer {
     this.blood=new BloodRenderer(this.scene,stone);
     this.upgradePulse=new UpgradeGroundPulse(stone);
     this.deathBurst=new PlayerDeathBurst(this.scene,this.blood.field);
-    for(let i=0;i<4;i++)this.crewDeathBursts.push({burst:new PlayerDeathBurst(this.scene,this.blood.field,this.deathBurst),id:null,position:{x:0,y:0,z:0},started:0});
+    for(let i=0;i<MAX_CREW_PLAYERS;i++)this.crewDeathBursts.push({burst:new PlayerDeathBurst(this.scene,this.blood.field,this.deathBurst),id:null,position:{x:0,y:0,z:0},started:0});
     this.tiles=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE_SIZE,.1,TILE_SIZE),stone,this.tilePositions.length);this.scene.add(this.tiles);
     this.updateTiles(0);
     this.gemMesh=new THREE.InstancedMesh(gemGeo,crystal,1200);this.gemMesh.count=0;this.gemMesh.frustumCulled=false;this.scene.add(this.gemMesh);

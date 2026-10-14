@@ -1,3 +1,4 @@
+import {CREW_COLORS,RANKED_CREW_SIZES} from './crew-config';
 import './crew-leaderboard.css';
 import type {FriendsSession} from './multiplayer';
 import {decodeCrewReplay,encodeCrewReplay,type RecordedCrewRun,type CrewReplayMember} from './crew-replay';
@@ -9,7 +10,7 @@ import {CrewPublicationQueue,ownCrewReplays,uploadCrewReplay,downloadCrewReplay,
 import {leaderboardConfigured} from './leaderboard';
 import {replayLink} from './replay-sharing';
 const $=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
-const colors=['#cfdfa0','#8ed4dd','#e1bc8d','#c4a7df'];
+const colors=CREW_COLORS;
 const seconds=(ms:number)=>(ms/1000).toFixed(3);
 type Hooks={session:()=>FriendsSession|null;mode:()=>string;watch:(run:RecordedCrewRun,onExit?:()=>void)=>void;solo:()=>void;history:()=>void};
 function button(text:string,action:()=>unknown,id?:string){const b=document.createElement('button');b.type='button';b.textContent=text;if(id)b.id=id;b.onclick=()=>{const result=action();if(result instanceof Promise)void result.catch(e=>{$('crew-local-status').textContent=e.message;});};return b;}
@@ -20,7 +21,7 @@ export class CrewLeaderboardUI{
   const panel=$('leaderboard').querySelector('.panel')!,description=panel.querySelector('p')!;description.id='leaderboard-description';
   const tabs=document.createElement('div');tabs.className='crew-board-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Leaderboard mode');
   for(const [id,label,crew]of [['leaderboard-solo','SOLO',false],['leaderboard-crew','MULTIPLAYER',true]] as const){const b=button(label,()=>this.select(crew),id);b.setAttribute('role','tab');b.setAttribute('aria-selected',String(!crew));tabs.append(b);}description.after(tabs);
-  const filters=document.createElement('div');filters.id='crew-board-filters';filters.hidden=true;filters.className='crew-board-tabs';filters.setAttribute('aria-label','Party size');for(const n of [2,3,4]){const b=button(`${n} PLAYERS`,()=>{this.size=n;this.updateFilters();void this.refresh();},`crew-size-${n}`);filters.append(b);}tabs.after(filters);
+  const filters=document.createElement('div');filters.id='crew-board-filters';filters.hidden=true;filters.className='crew-board-tabs';filters.setAttribute('aria-label','Party size');for(const n of RANKED_CREW_SIZES){const b=button(`${n} PLAYERS`,()=>{this.size=n;this.updateFilters();void this.refresh();},`crew-size-${n}`);filters.append(b);}tabs.after(filters);
   this.more=button('LOAD MORE PARTIES',()=>this.refresh(true),'crew-board-more');this.more.hidden=true;$('leaderboard').querySelector('.leaderboard-table')!.after(this.more);
   const consent=document.createElement('div');consent.id='crew-publication-options';consent.innerHTML=`<label><input id="crew-public-consent" type="checkbox"> Allow public party scores and replay sharing</label><small>Every teammate confirms their own preference. Public recordings show everyone's name and gameplay.</small><label><input id="crew-auto-publish" type="checkbox"> Publish my party bests automatically when I host</label><p id="crew-registration-status" role="status"></p>`;$('friends-roster').after(consent);
   $<HTMLInputElement>('crew-public-consent').checked=this.preferences.consent;$<HTMLInputElement>('crew-auto-publish').checked=this.preferences.automatic;
@@ -37,7 +38,7 @@ export class CrewLeaderboardUI{
  sessionChanged(){this.coordinator?.tick();this.registrationStatus();}
  private registrationStatus(){const s=this.hooks.session();$('crew-registration-status').textContent=this.coordinator?.session===s?this.coordinator.status:'Public party scores are optional. Completed replays are saved locally.';$<HTMLInputElement>('crew-public-consent').disabled=!!s?.running;$<HTMLInputElement>('crew-auto-publish').disabled=!!s?.running;}
  select(crew:boolean){this.active=crew;this.request++;$('leaderboard').dataset.board=crew?'crew':'solo';$('leaderboard-solo').setAttribute('aria-selected',String(!crew));$('leaderboard-crew').setAttribute('aria-selected',String(crew));$('crew-board-filters').hidden=!crew;this.more.hidden=true;$('leaderboard-description').textContent=crew?'The best Survival run for each party. Every teammate is shown. Rankings are separate by party size.':'The best published time for each player. Standard Survival runs only.';$('leaderboard').querySelector('.eyebrow')!.textContent=crew?'PARTY SURVIVAL · WORLDWIDE':'SOLO SURVIVAL · WORLDWIDE';$('leaderboard').querySelectorAll('thead th')[1].textContent=crew?'PARTY':'PLAYER';$<HTMLInputElement>('leaderboard-search').placeholder=crew?'Find any teammate':'Search the top 100';if(crew)void this.refresh();else this.hooks.solo();}
- private updateFilters(){for(const n of [2,3,4])$('crew-size-'+n).setAttribute('aria-pressed',String(this.size===n));}
+ private updateFilters(){for(const n of RANKED_CREW_SIZES)$('crew-size-'+n).setAttribute('aria-pressed',String(this.size===n));}
  search(){clearTimeout(this.debounce);this.debounce=window.setTimeout(()=>void this.refresh(),200);}
  async refresh(append=false){if(!this.active)return;const request=++this.request,size=this.size,search=$<HTMLInputElement>('leaderboard-search').value.trim(),offset=append?this.rows.length:0;this.more.disabled=true;$('leaderboard-status').textContent='Loading party rankings…';
   try{const [rows,mine]=await Promise.all([loadCrewLeaderboard(size,search,offset),loadOwnCrewBests(size)]);if(request!==this.request||!this.active)return;this.rows=append?[...this.rows,...rows]:rows;this.mine=mine;this.more.hidden=rows.length<100;this.render();$('leaderboard-updated').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}catch(e){if(request===this.request&&this.active){$('leaderboard-status').textContent=e instanceof Error?e.message:'Party rankings are unavailable.';$('leaderboard-rows').replaceChildren();$('leaderboard-personal').textContent='Local crew replays remain available in run history.';this.more.hidden=true;}}finally{if(request===this.request)this.more.disabled=false;}

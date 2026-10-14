@@ -1,3 +1,4 @@
+import {MAX_CREW_PLAYERS} from './crew-config';
 import {ENEMY_KINDS} from './enemy-kinds';
 import {World,STEP,idleInput,type Input,type CrewCheckpoint,type Effect,type DeathSource,type Enemy,type Vec} from './simulation';
 import {randomId} from './id';
@@ -7,7 +8,7 @@ export const CREW_REPLAY_VERSION=1,CREW_GAMEPLAY_REVISION=18;
 export const MAX_CREW_REPLAY_TICKS=30*60*120,MAX_CREW_DECODED_BYTES=64*1024*1024,MAX_CREW_REPLAY_BYTES=32*1024*1024;
 export type CrewReplayMember={id:string;name:string;host:boolean};
 export type CrewReplayFrame={ticks:number;inputs:Input[];waiting:number;disconnected:number};
-/** Float64 inputs stay exact, but do not retain four JS objects per changing-input tick. */
+/** Float64 inputs stay exact, but do not retain one JS object per player per changing-input tick. */
 export class CrewReplayFrames{
  private chunks:Uint8Array[]=[];private count=0;readonly stride:number;private capacity=1024;
  constructor(readonly players:number){this.stride=6+players*33;}
@@ -104,7 +105,7 @@ const vector=(v:unknown)=>obj(v)&&['x','y','z'].every(k=>finite(v[k]));
 export function validateCrewReplay(value:unknown):RecordedCrewRun{
  if(!obj(value))invalid();const r=value;
  if(r.format!=='abyss-crew-replay'||r.version!==1||r.combatRevision!==18||typeof r.id!=='string'||!/^[\w-]{1,80}$/.test(r.id)||typeof r.sessionId!=='string'||r.sessionId.length>80||!integer(r.epoch,0,1e9)||!integer(r.seed,0,0xffffffff)||!finite(r.created,0,1e15)||!integer(r.ticks,1,MAX_CREW_REPLAY_TICKS)||!finite(r.time,0,1801)||typeof r.cause!=='string'||r.cause.length>80)invalid();
- if(!Array.isArray(r.roster)||!integer(r.roster.length,1,4))invalid();const ids=new Set<string>();for(const p of r.roster){if(!obj(p)||typeof p.id!=='string'||!/^[\w-]{1,64}$/.test(p.id)||ids.has(p.id)||typeof p.name!=='string'||p.name.length>24||typeof p.host!=='boolean')invalid();ids.add(p.id);}
+ if(!Array.isArray(r.roster)||!integer(r.roster.length,1,MAX_CREW_PLAYERS))invalid();const ids=new Set<string>();for(const p of r.roster){if(!obj(p)||typeof p.id!=='string'||!/^[\w-]{1,64}$/.test(p.id)||ids.has(p.id)||typeof p.name!=='string'||p.name.length>24||typeof p.host!=='boolean')invalid();ids.add(p.id);}
  if(!(r.frames instanceof CrewReplayFrames)&&!Array.isArray(r.frames)||r.frames.length>r.ticks)invalid();let ticks=0;for(const f of r.frames){if(!obj(f)||!integer(f.ticks,1,r.ticks)||!integer(f.waiting,0,(1<<ids.size)-1)||!integer(f.disconnected,0,(1<<ids.size)-1)||f.disconnected&&f.ticks!==1||!Array.isArray(f.inputs)||f.inputs.length!==ids.size)invalid();for(const i of f.inputs)if(!obj(i)||!finite(i.forward,-1,1)||!finite(i.strafe,-1,1)||!finite(i.yaw,-1e6,1e6)||!finite(i.pitch,-Math.PI,Math.PI)||['jump','fire','homing'].some(k=>typeof i[k]!=='boolean'))invalid();ticks+=f.ticks;if(ticks>r.ticks)invalid();}if(ticks!==r.ticks)invalid();
  if(!Array.isArray(r.checkpoints)||r.checkpoints.length<2||r.checkpoints.length>1000||r.checkpoints[0]?.tick!==0||r.checkpoints.at(-1)?.tick!==r.ticks)invalid();let previous=-1;
  for(const c of r.checkpoints){if(!obj(c)||!integer(c.tick,0,r.ticks)||c.tick<=previous||typeof c.digest!=='string'||!/^[a-f0-9]{8}$/.test(c.digest))invalid();previous=c.tick;validateCheckpoint(c.state,ids);if(c.state.tick!==c.tick||Math.abs(c.state.time-c.tick*STEP)>.0001||crewCheckpointDigest(c.state)!==c.digest)invalid();}
@@ -133,7 +134,7 @@ export function packCrewReplay(run:RecordedCrewRun){
  for(const f of frames){view.setUint32(at,f.ticks,true);at+=4;bytes[at++]=f.waiting;bytes[at++]=f.disconnected;for(const input of f.inputs){for(const k of numeric){view.setFloat64(at,input[k],true);at+=8;}bytes[at++]=(input.jump?1:0)|(input.fire?2:0)|(input.homing?4:0);}}return bytes;
 }
 export function unpackCrewReplay(bytes:Uint8Array):RecordedCrewRun{
- if(bytes.length>MAX_CREW_DECODED_BYTES||bytes.length<9||magic.some((v,i)=>bytes[i]!==v))invalid();const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),length=view.getUint32(5,true);let at=9+length;if(at>bytes.length)invalid();const metadata=parse(new TextDecoder().decode(bytes.subarray(9,at)));if(!obj(metadata)||!Array.isArray(metadata.roster)||!integer(metadata.roster.length,1,4))invalid();const size=rowSize(metadata.roster.length);if((bytes.length-at)%size||(bytes.length-at)/size>MAX_CREW_REPLAY_TICKS)invalid();const frames=new CrewReplayFrames(metadata.roster.length);
+ if(bytes.length>MAX_CREW_DECODED_BYTES||bytes.length<9||magic.some((v,i)=>bytes[i]!==v))invalid();const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),length=view.getUint32(5,true);let at=9+length;if(at>bytes.length)invalid();const metadata=parse(new TextDecoder().decode(bytes.subarray(9,at)));if(!obj(metadata)||!Array.isArray(metadata.roster)||!integer(metadata.roster.length,1,MAX_CREW_PLAYERS))invalid();const size=rowSize(metadata.roster.length);if((bytes.length-at)%size||(bytes.length-at)/size>MAX_CREW_REPLAY_TICKS)invalid();const frames=new CrewReplayFrames(metadata.roster.length);
  while(at<bytes.length){const ticks=view.getUint32(at,true);at+=4;const waiting=bytes[at++],disconnected=bytes[at++],inputs:Input[]=[];for(let n=0;n<metadata.roster.length;n++){const input=idleInput();for(const k of numeric){input[k]=view.getFloat64(at,true);at+=8;}const flags=bytes[at++];if(flags>7)invalid();input.jump=!!(flags&1);input.fire=!!(flags&2);input.homing=!!(flags&4);inputs.push(input);}frames.append({ticks,waiting,disconnected,inputs});}return validateCrewReplay({...metadata,frames});
 }
 export async function encodeCrewReplay(run:RecordedCrewRun,maxBytes=MAX_CREW_REPLAY_BYTES):Promise<Blob>{const packed=packCrewReplay(run),bytes=await readBounded(new Blob([packed as BlobPart]).stream().pipeThrough(new CompressionStream('gzip')),maxBytes);return new Blob([bytes as BlobPart],{type:'application/gzip'});}

@@ -59,3 +59,12 @@ test('repeated join requests resend a lost offer and repeated offers resend a lo
   assert.deepEqual(messages.slice(2).map(m=>m.signal),['same-answer','same-answer']);
  }finally{host.close();guest.close();}
 });
+
+ test('simultaneous join requests reserve five guest slots and reject the seventh player',async()=>{
+ const host=new FriendsSession('host'),messages:any[]=[];try{
+ (host as any).mqtt.publish=(_topic:string,payload:string)=>messages.push(JSON.parse(payload));
+ (host as any).offer=async(id:string)=>{host.links.set(id,{pc:{close(){}},timer:0} as any);await Promise.resolve();return 'offer-'+id;};
+ await Promise.all(Array.from({length:6},(_,i)=>(host as any).signalMessage(JSON.stringify({type:'join',id:'guest-'+i,name:'Guest '+i}),'test-topic')));
+ assert.equal(host.links.size,5);assert.equal(host.members.length,6);assert.equal(messages.filter(m=>m.type==='offer').length,5);assert.equal(messages.filter(m=>m.type==='reject').length,1);assert.equal(messages.find(m=>m.type==='reject').to,'guest-5');
+ }finally{host.close();}
+ });

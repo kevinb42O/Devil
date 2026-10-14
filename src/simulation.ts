@@ -1,3 +1,4 @@
+import {MAX_CREW_PLAYERS} from './crew-config';
 import {UPGRADE_PULSE,upgradePulseRadius} from './upgrade-pulse-tuning';
 import {projectileRoll} from './projectile-presentation';
 import {sphereAimDistance} from './projectile-aim';
@@ -42,7 +43,7 @@ const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;deathSource?:DeathSource;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
 export class World {
  crew:CrewPlayer[]=[];private activeCrew:CrewPlayer|null=null;
- addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=4)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0},input:idleInput(),alive:true,cause:'',respawnAt:null,life:0,protectedUntil:0,primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
+ addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=MAX_CREW_PLAYERS)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0},input:idleInput(),alive:true,cause:'',respawnAt:null,life:0,protectedUntil:0,primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
  selectCrew(id:string){const p=this.crew.find(p=>p.id===id);if(p)this.useCrew(p);this.activeCrew=null;}
  private useCrew(p:CrewPlayer){this.activeCrew=p;this.player=p.player;this.primary=p.primary;this.secondary=p.secondary;this.wasJump=p.wasJump;this.lastShotTick=p.lastShotTick;this.level=p.level;this.reserve=p.reserve;}
  stepCrew(inputs:Map<string,Input>,dt=STEP,waiting=new Set<string>()){

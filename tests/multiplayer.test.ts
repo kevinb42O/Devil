@@ -3,8 +3,8 @@ import assert from 'node:assert/strict';
 import {World,STEP,idleInput,v} from '../src/simulation';
 import {cleanInput,applySnapshot,FriendsSession} from '../src/multiplayer';
 
-test('crew shares one clock, caps at four and moves/fires independently',()=>{
- const w=new World(24,{schedule:false});for(const id of ['host','a','b','c','extra'])w.addCrew(id);assert.equal(w.crew.length,4);
+test('crew shares one clock, caps at six and moves/fires independently',()=>{
+ const w=new World(24,{schedule:false});for(const id of ['host','a','b','c','d','e','extra'])w.addCrew(id);assert.equal(w.crew.length,6);
  const inputs=new Map([['host',{...idleInput(),forward:1,fire:true}],['a',{...idleInput(),strafe:1,fire:true}],['b',idleInput()],['c',idleInput()]]);
  for(let i=0;i<120;i++)w.stepCrew(inputs);
  assert.ok(Math.abs(w.time-1)<1e-8);assert.ok(w.crew[0].player.pos.z<4);assert.ok(w.crew[1].player.pos.x>5);assert.equal(w.crew[2].player.pos.x,-2);assert.ok(w.stats.shots>=30);
@@ -56,3 +56,21 @@ test('remote demon aim and firing survive encoded snapshots and presentation int
   const legacy=structuredClone(first);delete legacy.crew[1].pitch;applySnapshot(guest,legacy,'host');assert.equal(guest.crew[1].input.pitch,0);assert.equal(guest.crew[1].input.fire,true);
  }finally{host.close();}
 });
+
+ test('arena start preserves courtyard roster order when guests connect out of order',()=>{
+ const host=new FriendsSession('host');try{
+ for(const id of ['first','second','third','fourth','fifth'])host.links.set(id,{pc:{close(){}},state:{readyState:'open',bufferedAmount:0,send(){}},timer:0} as any);
+ for(const id of ['fifth','third','first','fourth','second'])(host as any).addLobbyCrew(id);
+ const roster=host.world!.crew.map(p=>p.id);host.broadcast=()=>{};host.beforeArenaStart=()=>true;host.start(true);
+ assert.deepEqual(host.world!.crew.map(p=>p.id),roster);
+ }finally{host.close();}
+ });
+
+ test('replacement lobby guest uses the empty spawn instead of overlapping another player',()=>{
+ const host=new FriendsSession('host');try{
+ for(const id of ['a','b','c','d','e'])(host as any).addLobbyCrew(id);
+ const vacated={...host.world!.crew.find(p=>p.id==='b')!.player.pos};host.world!.crew=host.world!.crew.filter(p=>p.id!=='b');
+ (host as any).addLobbyCrew('replacement');assert.deepEqual(host.world!.crew.at(-1)!.player.pos,vacated);
+ const positions=host.world!.crew.map(p=>({...p.player.pos}));(host as any).addLobbyCrew('seventh');assert.deepEqual(host.world!.crew.map(p=>p.player.pos),positions);
+ }finally{host.close();}
+ });
