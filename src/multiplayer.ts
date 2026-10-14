@@ -12,7 +12,7 @@ export type LobbyMember={id:string;name:string;ready:boolean;host:boolean;readyR
 export type ArenaSnapshot={members:LobbyMember[];lobbyName:string;serverNow:number;startAt:number;effects:Effect[];epoch:number;running:boolean;prelobby?:boolean;time:number;tick:number;state:World['state'];cause:string;radius:number;wave:number;level:number;reserve:number;stats:World['stats'];enemies:World['enemies'];projectiles:World['projectiles'];gems:World['gems'];rings:World['rings'];crew:{id:string;player:World['player'];alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;yaw:number;pitch?:number;level:number;reserve:number;primary:CrewPlayerWireChannel;secondary:CrewPlayerWireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;ack:number;queuedInputs?:number}[]};
 type CrewPlayerWireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 type StateTransfer={frame:number;epoch:number;packets:ArrayBuffer[];next:number;baseline:StateBaseline;at:number;size:number};
-type Link={transfer?:StateTransfer;eventEpoch?:number;rttMs?:number;pongAt?:number;pc:RTCPeerConnection;state?:RTCDataChannel;input?:RTCDataChannel;updates?:RTCDataChannel;timer:ReturnType<typeof setTimeout>;assembler:StateAssembler;baselines:Map<number,StateBaseline>;ackFrame:number;sentEpoch:number;tokens:number;tokenAt:number;lastSend:number;sendInterval:number;events:Effect[];disconnectTimer?:ReturnType<typeof setTimeout>};
+type Link={signal?:string;transfer?:StateTransfer;eventEpoch?:number;rttMs?:number;pongAt?:number;pc:RTCPeerConnection;state?:RTCDataChannel;input?:RTCDataChannel;updates?:RTCDataChannel;timer:ReturnType<typeof setTimeout>;assembler:StateAssembler;baselines:Map<number,StateBaseline>;ackFrame:number;sentEpoch:number;tokens:number;tokenAt:number;lastSend:number;sendInterval:number;events:Effect[];disconnectTimer?:ReturnType<typeof setTimeout>};
 export function validPeerId(id:unknown):id is string{return typeof id==='string'&&/^[A-Za-z0-9_-]{1,64}$/.test(id)&&!['host','constructor','prototype','__proto__'].includes(id.toLowerCase());}
 type Signal={version:typeof NETWORK_PROTOCOL_VERSION;room:string;id:string;description:RTCSessionDescriptionInit};
 export function cleanInput(value:unknown):Input|null{if(!value||typeof value!=='object')return null;const p=value as Input;for(const key of ['forward','strafe','yaw','pitch'] as const)if(!Number.isFinite(p[key]))return null;return {forward:Math.max(-1,Math.min(1,p.forward)),strafe:Math.max(-1,Math.min(1,p.strafe)),yaw:p.yaw%(Math.PI*2),pitch:Math.max(-1.5,Math.min(1.5,p.pitch)),jump:p.jump===true,fire:p.fire===true,homing:p.homing===true};}
@@ -48,15 +48,19 @@ export class FriendsSession{
  async auto(room?:string){this.room=room?.trim().toUpperCase()||randomId().replaceAll('-','').slice(0,10).toUpperCase();if(!/^[A-Z0-9]{6,16}$/.test(this.room))throw Error('This lobby is no longer available.');const topic=`abyss-daggers/v1/rooms/${this.room}`;
   this.mqtt.subscribe(topic,raw=>{void this.signalMessage(raw,topic).catch(e=>this.onError(String(e.message||e)));});
   await this.mqtt.connect();const deadline=Date.now()+12000;while(!this.mqtt.isConnected()&&!this.closed&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,250));if(this.closed)throw Error('Lobby closed.');if(!this.mqtt.isConnected())throw Error('Lobby service is reconnecting. Try joining again in a moment.');
-  if(this.role==='guest'){const join=()=>this.mqtt.publish(topic,JSON.stringify({type:'join',id:this.id,name:this.name}));join();this.joinTimer=setInterval(join,3000);setTimeout(()=>{if(!this.closed&&!this.connected)this.onError('Connection timed out. The internet connection to this host could not be established. Try another lobby.');},30000);}
+  if(this.role==='guest'){const join=()=>{if(!this.connected)this.mqtt.publish(topic,JSON.stringify({type:'join',id:this.id,name:this.name}));};join();this.joinTimer=setInterval(join,3000);setTimeout(()=>{if(!this.closed&&!this.connected)this.onError('Connection timed out. The internet connection to this host could not be established. Try another lobby.');},30000);}
   this.onChange();return this.room;
  }
  private async signalMessage(raw:string,topic:string){if(this.closed||raw.length>100000)return;let m;try{m=JSON.parse(raw);}catch{return;}
   if(!m||typeof m!=='object')return;
-  if(this.role==='host'&&m.type==='join'&&validPeerId(m.id)&&!this.links.has(m.id)&&!this.members.some(p=>p.id===m.id)){
+  if(this.role==='host'&&m.type==='join'&&validPeerId(m.id)){
+   const existing=this.links.get(m.id);if(existing){if(existing.signal)this.mqtt.publish(topic,JSON.stringify({type:'offer',to:m.id,signal:existing.signal}));return;}
    if(this.links.size>=3||this.running||this.prelobby){this.mqtt.publish(topic,JSON.stringify({type:'reject',to:m.id,reason:this.running||this.prelobby?'Run already started. Join a new room with the host after this run.':'Room is full (4 players).'}));return;}
-   this.members.push({id:m.id,name:typeof m.name==='string'?m.name.slice(0,24):'Wanderer',ready:false,host:false});const offer=await this.offer(m.id);if(!this.closed)this.mqtt.publish(topic,JSON.stringify({type:'offer',to:m.id,signal:offer}));
-  }else if(this.role==='guest'&&m.to===this.id&&m.type==='offer'&&!this.links.size){if(this.joinTimer)clearInterval(this.joinTimer);const answer=await this.answer(m.signal);this.mqtt.publish(topic,JSON.stringify({type:'answer',signal:answer}));}
+   this.members.push({id:m.id,name:typeof m.name==='string'?m.name.slice(0,24):'Wanderer',ready:false,host:false});const offer=await this.offer(m.id);const link=this.links.get(m.id);if(link)link.signal=offer;if(!this.closed&&link)this.mqtt.publish(topic,JSON.stringify({type:'offer',to:m.id,signal:offer}));
+  }else if(this.role==='guest'&&m.to===this.id&&m.type==='offer'){
+   const existing=this.links.get(this.id);if(existing){if(existing.signal)this.mqtt.publish(topic,JSON.stringify({type:'answer',signal:existing.signal}));return;}
+   const answer=await this.answer(m.signal);const link=this.links.get(this.id);if(link&&!this.closed){link.signal=answer;this.mqtt.publish(topic,JSON.stringify({type:'answer',signal:answer}));}
+  }
   else if(this.role==='host'&&m.type==='answer')await this.accept(m.signal);
   else if(this.role==='guest'&&m.to===this.id&&m.type==='reject'){if(this.joinTimer)clearInterval(this.joinTimer);this.onError(m.reason);}
  }
@@ -65,7 +69,7 @@ export class FriendsSession{
  }
  private bind(id:string,link:Link,ch:RTCDataChannel){
   if(ch.label==='input')link.input=ch;else if(ch.label==='state')link.state=ch;else if(ch.label==='updates')link.updates=ch;else{ch.close();return;}ch.binaryType='arraybuffer';
-  ch.onopen=()=>{if(ch.label==='state'){clearTimeout(link.timer);if(this.role==='host'&&!this.world?.crew.some(p=>p.id===id)&&this.running){this.drop(id);return;}if(this.role==='host'&&!this.running){this.addLobbyCrew(id);if(!this.members.some(p=>p.id===id))this.members.push({id,name:'Wanderer',ready:false,host:false});this.updateLobby();}else if(this.role==='guest')this.control({type:'hello',name:this.name});this.onChange();}};
+  ch.onopen=()=>{if(ch.label==='state'){clearTimeout(link.timer);if(this.role==='host'&&!this.world?.crew.some(p=>p.id===id)&&this.running){this.drop(id);return;}if(this.role==='host'&&!this.running){this.addLobbyCrew(id);if(!this.members.some(p=>p.id===id))this.members.push({id,name:'Wanderer',ready:false,host:false});this.updateLobby();}else if(this.role==='guest'){if(this.joinTimer)clearInterval(this.joinTimer);this.control({type:'hello',name:this.name});}this.onChange();}};
   ch.onclose=()=>{if(!this.closed)this.drop(id);};
   ch.onmessage=e=>{
    if(e.data instanceof ArrayBuffer){this.bytesReceived+=e.data.byteLength;if(this.role==='guest'&&(ch.label==='state'||ch.label==='updates'))this.receiveState(link,e.data);else if(this.role==='host'&&ch.label==='input')this.receiveCommands(id,e.data);return;}

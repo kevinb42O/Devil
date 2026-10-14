@@ -4,7 +4,7 @@ const PUBLIC_BROKERS = [
   'wss://broker.hivemq.com:8884/mqtt',
 ];
 
-const TOPIC_LOBBY_LIST = 'abyss-daggers/v1/lobbies';
+const TOPIC_LOBBY_LIST = 'abyss-daggers/v2/lobbies';
 const MAX_QUEUED_SIGNAL_MESSAGES = 256;
 
 function encodeRemainingLength(len: number): number[] {
@@ -27,7 +27,7 @@ function utf8BytesToString(bytes: Uint8Array): string {
 }
 
 /** Lightweight zero-dependency MQTT 3.1.1 over WebSocket client */
-export class MqttWsSignalingClient {
+class BrokerSignalingClient {
   private ws: WebSocket | null = null;
   private connected = false;
   private connecting = false;
@@ -148,6 +148,7 @@ export class MqttWsSignalingClient {
 
         ws.onclose = () => {
           clearTimeout(timeout);
+          if (this.ws !== ws) {settle(false);return;}
           const failedBeforeConnect = !this.connected && this.ws === ws;
           this.connected = false;
           this.connecting = false;
@@ -163,6 +164,7 @@ export class MqttWsSignalingClient {
       } catch {
         this.connecting = false;
         settle(false);
+        if (!this.closed) this.scheduleReconnect();
       }
     });
   }
@@ -334,4 +336,47 @@ export class MqttWsSignalingClient {
   }
 }
 
-/** Global shared instance for public signaling */
+/** Public brokers are independent networks, not replicas. Keep each connected
+ * so discovery and room handshakes always reach the same available brokers. */
+export class MqttWsSignalingClient {
+  private readonly clients: BrokerSignalingClient[];
+
+  constructor(brokerUrls: string[] = PUBLIC_BROKERS) {
+    this.clients = brokerUrls.map(url => new BrokerSignalingClient([url]));
+  }
+
+  connect(): Promise<boolean> {
+    if (!this.clients.length) return Promise.resolve(false);
+    return new Promise(resolve => {
+      let pending = this.clients.length;
+      for (const client of this.clients) void client.connect().then(connected => {
+        if (connected) resolve(true);
+        if (--pending === 0) resolve(this.isConnected());
+      });
+    });
+  }
+
+  subscribe(topic: string, handler: (payload: string, topic: string) => void): () => void {
+    // Deduplicate copies from different brokers, without suppressing retries
+    // on the same broker or starving additional local subscription handlers.
+    const seen = new Map<string, {broker: number; at: number}>();
+    const unsubscribe = this.clients.map((client, broker) => client.subscribe(topic, (payload, actualTopic) => {
+      const key = actualTopic + '\0' + payload, now = Date.now(), previous = seen.get(key);
+      if (previous && previous.broker !== broker && now - previous.at < 2000) return;
+      seen.delete(key);seen.set(key, {broker, at: now});
+      while (seen.size > MAX_QUEUED_SIGNAL_MESSAGES) seen.delete(seen.keys().next().value!);
+      handler(payload, actualTopic);
+    }));
+    return () => {for (const stop of unsubscribe) stop();seen.clear();};
+  }
+
+  publish(topic: string, message: string): void {
+    for (const client of this.clients) client.publish(topic, message);
+  }
+
+  isConnected(): boolean {return this.clients.some(client => client.isConnected());}
+
+  close(): void {
+    for (const client of this.clients) client.close();
+  }
+}
