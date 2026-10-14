@@ -1,0 +1,339 @@
+{
+  "hardware": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+  "timerQueries": true,
+  "method": "Isolated fog draws plus full-frame comparison. One context, 120 enemies, 1280×720, ABBA blocks; 6 warm-up + 16 measured frames/block. GPU disjoint queries when available; wall time is a proxy only.",
+  "results": [
+    {
+      "quality": "high",
+      "name": "clouds",
+      "gpuOn": {
+        "median": 7.495416,
+        "p95": 12.735041,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 3.001166,
+        "p95": 7.690874,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.5,
+        "p95": 1,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.5,
+        "p95": 0.9000000059604645,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "high",
+      "name": "clouds-up",
+      "gpuOn": {
+        "median": 6.557125,
+        "p95": 11.853208,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 2.727749,
+        "p95": 7.307624,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.5999999940395355,
+        "p95": 1.199999988079071,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.4000000059604645,
+        "p95": 1,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "high",
+      "name": "furnace",
+      "gpuOn": {
+        "median": 5.439749,
+        "p95": 10.4995,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 2.474083,
+        "p95": 9.9135,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.9000000059604645,
+        "p95": 1.4000000059604645,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.699999988079071,
+        "p95": 1,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "high",
+      "name": "cathedral",
+      "gpuOn": {
+        "median": 10.161499,
+        "p95": 16.2685,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 2.752124,
+        "p95": 11.072208,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.7999999821186066,
+        "p95": 1.199999988079071,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.699999988079071,
+        "p95": 1,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "high",
+      "name": "depths",
+      "gpuOn": {
+        "median": 5.147958,
+        "p95": 11.328749,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 1.909041,
+        "p95": 8.468666,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.7999999821186066,
+        "p95": 1.4000000059604645,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.7999999821186066,
+        "p95": 1.199999988079071,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "low",
+      "name": "clouds",
+      "gpuOn": {
+        "median": 2.032041,
+        "p95": 4.571749,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 1.252125,
+        "p95": 4.154916,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.699999988079071,
+        "p95": 1.0999999940395355,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.5999999940395355,
+        "p95": 1.199999988079071,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "low",
+      "name": "clouds-up",
+      "gpuOn": {
+        "median": 2.364083,
+        "p95": 4.958875,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 1.385125,
+        "p95": 3.665291,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.699999988079071,
+        "p95": 1.2000000178813934,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.699999988079071,
+        "p95": 1.0999999940395355,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "low",
+      "name": "furnace",
+      "gpuOn": {
+        "median": 2.73,
+        "p95": 6.669416,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 2.671374,
+        "p95": 6.334416,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.5,
+        "p95": 1.300000011920929,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.3999999761581421,
+        "p95": 0.800000011920929,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "low",
+      "name": "cathedral",
+      "gpuOn": {
+        "median": 2.4515,
+        "p95": 5.174124,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 1.414124,
+        "p95": 4.803083,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.29999998211860657,
+        "p95": 0.5,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.30000001192092896,
+        "p95": 0.5999999940395355,
+        "samples": 32
+      }
+    },
+    {
+      "quality": "low",
+      "name": "depths",
+      "gpuOn": {
+        "median": 2.120916,
+        "p95": 4.827249,
+        "samples": 32
+      },
+      "gpuOff": {
+        "median": 1.0795,
+        "p95": 2.927875,
+        "samples": 32
+      },
+      "wallOn": {
+        "median": 0.5,
+        "p95": 1.0999999940395355,
+        "samples": 32
+      },
+      "wallOff": {
+        "median": 0.5,
+        "p95": 1.5,
+        "samples": 32
+      }
+    }
+  ],
+  "isolated": [
+    {
+      "quality": "high",
+      "name": "clouds",
+      "gpuMs": {
+        "median": 1.638208,
+        "p95": 5.106291,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "high",
+      "name": "clouds-up",
+      "gpuMs": {
+        "median": 2.251375,
+        "p95": 7.382708,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "high",
+      "name": "furnace",
+      "gpuMs": {
+        "median": 1.597249,
+        "p95": 8.23725,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "high",
+      "name": "cathedral",
+      "gpuMs": {
+        "median": 2.554541,
+        "p95": 4.709875,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "high",
+      "name": "depths",
+      "gpuMs": {
+        "median": 2.155791,
+        "p95": 3.424249,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "low",
+      "name": "clouds",
+      "gpuMs": {
+        "median": 1.699624,
+        "p95": 7.826208,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "low",
+      "name": "clouds-up",
+      "gpuMs": {
+        "median": 1.053999,
+        "p95": 3.743875,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "low",
+      "name": "furnace",
+      "gpuMs": {
+        "median": 1.1015,
+        "p95": 4.690125,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "low",
+      "name": "cathedral",
+      "gpuMs": {
+        "median": 2.653833,
+        "p95": 5.467458,
+        "samples": 20
+      }
+    },
+    {
+      "quality": "low",
+      "name": "depths",
+      "gpuMs": {
+        "median": 1.37425,
+        "p95": 4.59675,
+        "samples": 20
+      }
+    }
+  ]
+}

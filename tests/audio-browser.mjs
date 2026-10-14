@@ -62,6 +62,33 @@ try{
   check(sound.loops.get(-10)===stream&&!stream.ended,'remote death preserves local weapon loop');
   check(sound.shots.has(jump)&&!jump.ended,'remote death preserves local one-shot');
   const remote=[...sound.shots].find(v=>v.name==='fall');check(!!remote?.panner&&remote.panner.positionX.value===20,'remote fall cue is positional');sound.clear();
+  // Teammates' bursts and continuous fire stay attached to their own positions.
+  const weapons=new World(4,{schedule:false,invulnerable:true});weapons.addCrew('host');weapons.addCrew('guest');weapons.selectCrew('host');
+  for(const [amount,level,name] of [[0,1,'shot1'],[1,3,'daggerseek'],[1,4,'magentashot']]){
+   sound.clear();sound.play({kind:'burst',shooterId:'guest',pos:v(40,2,-12),amount,level},weapons);
+   const remoteShot=[...sound.shots].find(v=>v.name===name);
+   check(remoteShot?.panner?.positionX.value===40&&remoteShot.panner.positionZ.value===-12,'remote '+name+' has positional attenuation');
+   sound.clear();sound.play({kind:'burst',shooterId:'host',pos:v(40,2,-12),amount,level},weapons);
+   check([...sound.shots].some(v=>v.name===name&&!v.panner),'local '+name+' retains direct weapon mix');
+  }
+  sound.clear();
+  for(let i=0;i<30;i++)weapons.stepCrew(new Map([['guest',{...idleInput(),fire:true}]]));
+  sound.update(weapons);const guest=weapons.crew[1],remoteStream=sound.loops.get('crew:guest');
+  check(remoteStream?.name==='rapid1'&&!!remoteStream.panner&&!sound.loops.has(-10),'remote stream plays while local player is idle');
+  guest.player.pos.x=17;sound.update(weapons);
+  check(sound.loops.get('crew:guest')===remoteStream&&remoteStream.panner.positionX.value===17,'remote stream follows movement without stacking');
+  guest.level=3;guest.reserve=100;sound.update(weapons);
+  check(sound.loops.get('crew:guest')?.name==='rapid3','remote upgrade replaces stream');
+  weapons.stepCrew(new Map([['guest',{...idleInput(),fire:true,homing:true}]]));sound.update(weapons);
+  check(!sound.loops.has('crew:guest'),'remote homing interrupts primary stream');
+  for(let i=0;i<30;i++)weapons.stepCrew(new Map([['host',{...idleInput(),fire:true}],['guest',{...idleInput(),fire:true}]]));
+  sound.update(weapons);check(sound.loops.has(-10)&&sound.loops.has('crew:guest'),'local and remote streams coexist');
+  weapons.stepCrew(new Map([['host',{...idleInput(),fire:true}]]));sound.update(weapons);
+  check(sound.loops.has(-10)&&!sound.loops.has('crew:guest'),'remote release preserves local stream');
+  for(let i=0;i<30;i++)weapons.stepCrew(new Map([['guest',{...idleInput(),fire:true}]]));sound.update(weapons);
+  guest.alive=false;sound.update(weapons);check(!sound.loops.has('crew:guest'),'remote death stops its stream');
+  guest.alive=true;sound.update(weapons);check(sound.loops.has('crew:guest'),'remote stream fixture restored');
+  weapons.crew.pop();sound.update(weapons);check(!sound.loops.has('crew:guest'),'departed player stops its stream');sound.clear();
   const enemies=[];
   for(const kind of ENEMY_KINDS){sound.clear();const fixture=new World(5,{schedule:false}),enemy=fixture.spawn(kind,v(4,3,0));enemy.age=20;enemy.status='idle';for(const event of fixture.effects)sound.play(event,fixture);sound.update(fixture);check(sound.diagnostics.loops.length===5,kind+' chatter and four ambient loops');sound.play({kind:'hit',enemy:kind,pos:enemy.pos},fixture);sound.play({kind:'kill',enemy:kind,pos:enemy.pos},fixture);enemies.push({kind,loops:sound.diagnostics.loops,cues:[...sound.shots].map(v=>v.name)});}
   // Enemy damage must not be synthesized by armor contacts or suppressed by
@@ -98,6 +125,23 @@ try{
   sound.clear();sound.listener(v(),.8,.6);const listener=sound.context.listener;const dot=listener.forwardX.value*listener.upX.value+listener.forwardY.value*listener.upY.value+listener.forwardZ.value*listener.upZ.value;check(Math.abs(dot)<1e-6,'orthogonal pitched listener');
   // Verify fresh weapon sounds cannot be queued into a later run while loading.
   const cached=sound.buffers.get('shot1');sound.buffers.delete('shot1');const pending=sound.load('shot1');sound.play({kind:'burst',level:1,pos:v()},w);sound.clear();await pending;check(sound.diagnostics.oneShots===0,'no stale cue after load/restart');sound.buffers.set('shot1',cached);
+  // Failed loop downloads back off, then recover when the recording is available.
+  const ambient=sound.buffers.get('polarity1e'),fetchOriginal=window.fetch;let attempts=0,unavailable=true;
+  sound.buffers.delete('polarity1e');
+  window.fetch=async(...args)=>{if(String(args[0]).endsWith('/polarity1e.wav')){attempts++;if(unavailable)return new Response('',{status:503});}return fetchOriginal(...args);};
+  try{
+   const retryWorld=new World(1,{schedule:false});
+   for(let i=0;i<12;i++){sound.update(retryWorld);await Promise.resolve();}
+   check(attempts===1&&sound.diagnostics.failed.includes('polarity1e'),'failed ambient recording does not retry every update');
+   sound.clear();sound.update(retryWorld);await Promise.resolve();check(attempts===1,'restart preserves download backoff');
+   await new Promise(r=>setTimeout(r,1100));sound.update(retryWorld);await Promise.resolve();
+   check(attempts===2,'failed recording retries after initial backoff');
+   unavailable=false;await new Promise(r=>setTimeout(r,1100));sound.update(retryWorld);await Promise.resolve();
+   check(attempts===2,'repeated failure increases backoff');
+   await new Promise(r=>setTimeout(r,1100));sound.update(retryWorld);await sound.pending.get('polarity1e');sound.update(retryWorld);
+   check(attempts===3&&sound.loops.get(-1)?.name==='polarity1e','ambient loop recovers automatically');
+   check(!sound.diagnostics.failed.includes('polarity1e'),'successful retry clears failure diagnostics');
+  }finally{window.fetch=fetchOriginal;sound.buffers.set('polarity1e',ambient);sound.clear();}
   // Real audio output: render each original weapon through the same mixer gain.
   const rendered=[];
   for(const name of ['rapid1','rapid2','rapid3','rapid4','shot1','shot2','shot3alt1','shot4alt1']){

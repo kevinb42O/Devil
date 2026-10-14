@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import {buildPwa} from './tools/build-pwa.mjs';
 import { cp, mkdir, access } from 'node:fs/promises';
 // Keep provenance/source downloads out of the shipped game; include runtime assets.
 export default defineConfig({
@@ -14,5 +15,6 @@ export default defineConfig({
     await cp('node_modules/@fontsource/dm-sans/LICENSE','dist/assets/licenses/dm-sans-OFL.txt');
     await access('assets/original/devil-daggers/manifest.json');
     await cp('assets/original/devil-daggers','dist/assets/original/devil-daggers',{recursive:true});
+    await buildPwa();
   }}]
 });

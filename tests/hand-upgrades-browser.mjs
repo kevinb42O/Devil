@@ -28,14 +28,15 @@ try{
    weapon.update(world,.1,false);
    check(weapon.effectDiagnostics.visibleLevel===level,'mesh switches in upgrade frame '+level);
    check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.handTextures[level-1],'old shot does not flash new hand '+level);
-   check(weapon.effectDiagnostics.upgradeTime===.3,'first upgrade animation frame survives stall');
-   check(weapon.handMaterials[level-1].uniforms.brightness.value>1,'upgrade lights the local hand');
+   check(weapon.effectDiagnostics.upgradeTime===weapon.effectDiagnostics.upgradeDuration,'first upgrade animation frame survives stall');
+   check(weapon.handMaterials[level-1].uniforms.brightness.value>1,'upgrade lights the idle hand');
    renderer.clear();weapon.render(renderer,false);screenshots.push(renderer.domElement.toDataURL());
-   weapon.update(world,.5,false);check(weapon.effectDiagnostics.upgradeTime===0,'upgrade animation settles');
+   weapon.update(world,2,false);check(weapon.effectDiagnostics.upgradeTime===0,'upgrade animation settles');
    world.effects=[];world.shoot(idleInput(),true,false);weapon.effect(world.effects.at(-1),world,0,0);
    weapon.update(world,.1,false);
    check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.flashTextures[level-1],'first firing flash survives slow frame '+level);
    check(weapon.effectDiagnostics.recoil>0,'recoil survives first frame');
+   check(weapon.handMaterials[level-1].uniforms.upgradePower.value===0,'firing suppresses upgrade emission');
    weapon.update(world,.1,false);check(weapon.effectDiagnostics.flashTime===0,'flash settles next frame');
    world.effects=[];sound.clear();
   }

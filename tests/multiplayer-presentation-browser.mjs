@@ -41,6 +41,17 @@ try{
  });
  assert.deepEqual(spectatorView.first,spectatorView.expected);assert.deepEqual(spectatorView.second,spectatorView.expected);
  assert.deepEqual(spectatorView.body,spectatorView.afterBody);assert.equal(spectatorView.handHidden,true);assert.deepEqual(spectatorView.crew,['bob']);
+ const courtyard=await page.evaluate(async()=>{
+  const {renderer,world}=window.presentation;await renderer.entrance.ready;
+  world.crew.forEach(p=>p.alive=true);world.selectCrew('host');world.player.pos={x:0,y:1.7,z:0};
+  world.crew[1].player.pos={x:-1.5,y:1.7,z:-3};world.crew[2].player.pos={x:1.5,y:1.7,z:-3};
+  renderer.render(world,0,0,1/60,false,1,null,true,true);
+  return {names:renderer.crewPresentation.map(p=>[p.id,p.name,p.label]),parents:[...renderer.crewModels.values()].every(model=>model.parent===renderer.entrance.scene)};
+ });
+ assert.deepEqual(courtyard.names,[['bob','Bob',true],['alice','Alice',true]]);assert.equal(courtyard.parents,true);
+ await page.screenshot({path:'artifacts/multiplayer-courtyard-teammates.png'});
+ await page.evaluate(()=>{const {renderer,world}=window.presentation;renderer.render(world,0,0,1/60,false,1);});
+ assert.equal(await page.evaluate(()=>[...window.presentation.renderer.crewModels.values()].every(model=>model.parent===window.presentation.renderer.scene)),true,'teammates move back to the arena scene');
  await page.evaluate(()=>window.presentation.renderer.clear());assert.deepEqual(await page.evaluate(()=>window.presentation.renderer.crewPresentation),[]);assert.deepEqual(errors,[]);
  console.log('Multiplayer presentation passed: named teammates, near/distant remote firing without local recoil, local recoil, death, independent spectator camera with hidden weapon, and cleanup.');
 }finally{await browser.close();}

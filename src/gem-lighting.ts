@@ -8,6 +8,7 @@ export class GemLighting {
  private count={value:0};
  private playerPosition={value:new THREE.Vector3()};
  private playerStrength={value:0};
+ daylight=0;
  private dummy=new THREE.Object3D();
  constructor(scene:THREE.Scene,floor:THREE.MeshBasicMaterial){
   floor.onBeforeCompile=shader=>{
@@ -46,7 +47,7 @@ export class GemLighting {
  setPlayerLight(position:THREE.Vector3,enabled=true){this.playerPosition.value.copy(position);this.playerStrength.value=enabled?1:0;}
  update(world:World|null,camera:THREE.Camera,menu:boolean){
   this.playerPosition.value.copy(camera.position);this.playerPosition.value.y-=.35;
-  this.playerStrength.value=!menu&&world?1:0;
+  this.playerStrength.value=!menu&&world?1-this.daylight*.85:0;
   const gems=!menu&&world?world.gems:[];this.halo.count=Math.min(1200,gems.length);
   for(let i=0;i<this.halo.count;i++){
    const g=gems[i];this.dummy.position.set(g.pos.x,g.pos.y,g.pos.z);this.dummy.quaternion.copy(camera.quaternion);this.dummy.scale.setScalar(g.age>8?.65:1);this.dummy.updateMatrix();this.halo.setMatrixAt(i,this.dummy.matrix);

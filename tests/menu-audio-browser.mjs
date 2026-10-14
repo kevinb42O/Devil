@@ -1,0 +1,54 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
+const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+const url=process.env.GAME_URL||'http://127.0.0.1:5173';
+try{
+ const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.route(url+'/menu-audio-test',r=>r.fulfill({contentType:'text/html',body:`<section id="menu"><button id="open">Open</button><button id="disabled" disabled>Disabled</button><button id="champion-shrine">Crown</button></section><section id="settings"><button id="settings-close">Back</button><input id="volume" type="range" min="0" max="100" value="55"><select><option>A</option><option>B</option></select></section>`}));
+ await page.goto(url+'/menu-audio-test');
+ await page.evaluate(async()=>{const {MenuAudio,setupMenuAudio}=await import('/src/menu-audio.ts');window.menuAudio=new MenuAudio();setupMenuAudio(menuAudio,()=>Number(document.querySelector('#volume').value)/100);});
+ assert.equal(await page.evaluate(()=>menuAudio.diagnostics.loaded.length),0,'no decoding before gesture');
+ await page.click('#open');await page.waitForFunction(()=>menuAudio.diagnostics.recent.includes('uiclick'));
+ await page.waitForFunction(()=>menuAudio.diagnostics.loaded.length===3);
+ await page.waitForTimeout(200);
+ const count=()=>page.evaluate(()=>menuAudio.diagnostics.recent.length);
+ let before=await count();await page.hover('#disabled');await page.waitForTimeout(100);assert.equal(await count(),before,'disabled controls stay silent');
+ await page.evaluate(()=>menuAudio.context.suspend());
+ await page.hover('#settings-close');await page.waitForFunction(()=>menuAudio.diagnostics.recent.at(-1)==='uihover');
+ assert.equal(await page.evaluate(()=>menuAudio.diagnostics.lastPlayback.gain),1.6,'hover has an audible mix level');
+ await page.waitForTimeout(180);before=await count();
+ await page.evaluate(()=>{const el=document.querySelector('#volume');for(let i=0;i<30;i++)el.dispatchEvent(new Event('input'));});
+ await page.waitForTimeout(80);assert.equal(await count(),before+1,'controller slider events are audible and rate limited');
+ assert.equal(await page.evaluate(()=>menuAudio.diagnostics.recent.at(-1)),'uislider');
+ await page.waitForTimeout(170);await page.selectOption('select','B');await page.waitForFunction(()=>menuAudio.diagnostics.recent.at(-1)==='uiclick');
+ await page.waitForTimeout(200);await page.click('#champion-shrine');await page.waitForFunction(()=>menuAudio.diagnostics.recent.includes('highscore1'));
+ assert.ok(await page.evaluate(()=>menuAudio.diagnostics.lastPlayback.duration>6),'complete leaderboard recording is scheduled');
+ await page.waitForTimeout(3000);assert.equal(await page.evaluate(()=>menuAudio.diagnostics.voices),1,'leaderboard accent continues beyond the old cutoff');
+ await page.waitForFunction(()=>menuAudio.diagnostics.voices===0);
+ await page.evaluate(()=>{menuAudio.setHidden(true);});await page.waitForFunction(()=>menuAudio.diagnostics.voices===0);
+ before=await count();await page.evaluate(()=>menuAudio.cue('confirm'));await page.waitForTimeout(180);assert.equal(await count(),before,'hidden page stays silent');
+ await page.evaluate(()=>{menuAudio.setHidden(false);document.querySelector('#volume').value='0';document.querySelector('#volume').dispatchEvent(new Event('input'));});
+ await page.waitForTimeout(180);before=await count();await page.click('#open');await page.waitForTimeout(100);assert.equal(await count(),before,'mute applies to every menu cue');
+ await page.evaluate(()=>{document.querySelector('#volume').value='55';document.querySelector('#volume').dispatchEvent(new Event('input'));});
+ await page.waitForFunction(n=>menuAudio.diagnostics.recent.length>n,before);
+
+ // Real game: menu interactions remain audible after suspending arena audio.
+ await page.addInitScript(()=>{localStorage.setItem('abyss-player-profile',JSON.stringify({name:'Menu audit',automatic:false,configured:true}));localStorage.setItem('abyss-settings',JSON.stringify({quality:'low',volume:55,musicVolume:0,controlScheme:'qwerty'}));});
+ await page.goto(url);await page.waitForFunction(()=>window.abyss&&!document.querySelector('#start').disabled);
+ await page.keyboard.press('Tab');await page.waitForFunction(()=>window.abyss.menuAudio.unlocked&&window.abyss.menuAudio.loaded.length===3);
+ await page.hover('#leaderboard-open');await page.waitForFunction(()=>window.abyss.menuAudio.recent.at(-1)==='uihover');
+ await page.click('#leaderboard-open');await page.waitForFunction(()=>window.abyss.menuAudio.recent.includes('highscore1'));
+ await page.click('#leaderboard-close');
+ await page.click('#settings-open');await page.waitForFunction(()=>window.abyss.menuAudio.recent.includes('uiclick'));
+ await page.waitForTimeout(200);await page.locator('#fov').evaluate(el=>{el.value='95';el.dispatchEvent(new Event('input'));});await page.waitForFunction(()=>window.abyss.menuAudio.recent.at(-1)==='uislider');
+ await page.click('#settings-close');await page.click('#start');await page.waitForFunction(()=>window.abyss.entrance);
+ await page.keyboard.press('Escape');await page.waitForFunction(()=>window.abyss.mode==='paused');
+ await page.waitForTimeout(200);await page.click('#pause-settings');await page.waitForFunction(()=>window.abyss.menuAudio.recent.at(-1)==='uiclick');
+ assert.ok(!(await page.evaluate(()=>window.abyss.audio.oneShotNames)).includes('uiclick'),'UI does not resume the arena mixer');
+ await page.click('#settings-close');await page.click('#quit');await page.waitForFunction(()=>window.abyss.mode==='menu');
+ await page.waitForTimeout(200);await page.click('#history-open');await page.waitForFunction(()=>window.abyss.menuAudio.recent.at(-1)==='uiclick');
+ assert.deepEqual(errors,[]);
+ console.log('Original menu recordings: first click/keyboard unlock, hover, disabled controls, slider throttling/controller events, selects, crown, hidden/mute, pause/settings and return-home passed.');
+}finally{await browser.close();}

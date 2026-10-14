@@ -29,7 +29,7 @@ test('floor sweep finds contacts before a lower tile and at entry into a higher 
  const a=v(boundary-.55,high+.0801,zz),b=v(a.x+70*STEP,a.y-.1*STEP,zz);
  const hit=sweepFloor(a,b,0);assert.ok(hit);assert.ok(Math.abs(hit.t-.001/STEP)<1e-8);assert.equal(hit.y,high+.08);
  const back=v(boundary+.55,low+.081,zz),end=v(back.x-70*STEP,back.y-.1*STEP,zz),raised=sweepFloor(back,end,0);
- assert.ok(raised);assert.ok(Math.abs(raised.t-.55/(70*STEP))<1e-8);assert.equal(raised.y,high+.08);
+ assert.ok(raised);assert.ok(Math.abs(raised.t-.55/(70*STEP))<1e-8);assert.ok(raised.normal?.x===1);assert.ok(raised.y<high+.08);
  assert.equal(sweepFloor(a,v(a.x+.1,a.y+.1,zz),0),null);
  assert.equal(sweepFloor(v(1000,0,1000),v(1001,-1,1000),0),null);
 });

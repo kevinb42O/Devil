@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "Abyss / Daggers",
+  "short_name": "Abyss",
+  "description": "A ritual of endless survival. Enter the abyss with touch, keyboard or controller.",
+  "lang": "en",
+  "start_url": "/",
+  "scope": "/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "landscape",
+  "background_color": "#100807",
+  "theme_color": "#100807",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    {"src": "/icons/abyss-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/abyss-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "/icons/abyss-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

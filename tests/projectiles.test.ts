@@ -44,12 +44,13 @@ test('physical stream expands toward aim as a cone rather than parallel or inwar
     const x=p.pos.x-socket.x,y=p.pos.y-socket.y;
     // Measure about the central muzzle-to-crosshair ray, which includes the
     // hand's vertical parallax, rather than about a world-horizontal line.
-    const centerX=(world.player.pos.x-socket.x)/(80+socket.z-world.player.pos.z);
-    const centerY=(world.player.pos.y-socket.y)/(80+socket.z-world.player.pos.z);
+    const centerX=(world.player.pos.x-socket.x)/(196+socket.z-world.player.pos.z);
+    const centerY=(world.player.pos.y-socket.y)/(196+socket.z-world.player.pos.z);
     const slopeX=p.vel.x/-p.vel.z-centerX,slopeY=p.vel.y/-p.vel.z-centerY;
     assert.ok(x*slopeX+y*slopeY>0,'outward radial velocity');
     const atDistance=(distance:number)=>Math.hypot(x+slopeX*distance,y+slopeY*distance);
-    assert.ok(atDistance(10)>atDistance(2)*4,'cone is over four times wider at 10m than at 2m');
+    const core=level>1&&i<(level===4?2:1);
+    assert.ok(atDistance(10)>atDistance(2)*(core?1.5:4),core?'focused core still expands':'outer cone is over four times wider at 10m than at 2m');
    }
   }
  }
@@ -183,7 +184,7 @@ test('destroyed pede segments absorb shots without damage or ricochets',()=>{
 });
 test('floor impacts retain a damped reflection and a bent interpolated flight path',()=>{
  const w=new World(1,{schedule:false});const p={id:900,pos:v(0,1,0),vel:v(20,-200,0),age:0,homing:false};w.projectiles.push(p);tickProjectiles(w);
- assert.equal(w.projectiles.length,1);assert.ok(p.vel.y>0);assert.ok(p.vel.x<20);assert.ok(w.projectiles[0].path?.length);assert.ok(w.effects.some(e=>e.kind==='ricochet'));
+ assert.equal(w.projectiles.length,1);assert.ok(p.vel.y>0);assert.ok(Math.hypot(p.vel.x,p.vel.y,p.vel.z)<Math.hypot(20,200));assert.ok(w.projectiles[0].path?.length);assert.ok(w.effects.some(e=>e.kind==='ricochet'));
  const out=v();sampleProjectile(w.projectiles[0],w.projectiles[0].path![0].t,out);assert.deepEqual(out,w.projectiles[0].path![0].pos);
  const rebound=p.vel.y;tickProjectiles(w);assert.ok(p.vel.y<rebound,'gravity curves the reflected flight');
 });

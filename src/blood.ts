@@ -4,7 +4,7 @@ import type {Effect,Vec} from './simulation';
 export const BLOOD_CAPACITY=768;
 export const BLOOD_SPAN=ARENA_DIMENSION*TILE_SIZE;
 const GRAVITY=18,STEP=1/60,MASK_SIZE=32;
-export type BloodDrop={origin:Vec;velocity:Vec;pos:Vec;born:number;age:number;size:number;angle:number;stretch:number;seed:number};
+export type BloodDrop={origin:Vec;velocity:Vec;pos:Vec;born:number;age:number;size:number;angle:number;stretch:number;seed:number;enemyBurst?:boolean};
 export function bloodRandom(seed:number){let value=seed>>>0||1;return ()=>{value^=value<<13;value^=value>>>17;value^=value<<5;return (value>>>0)/4294967296;};}
 
 /** Cosmetic only: fixed storage, independent of World.random and render frame rate. */
@@ -33,7 +33,7 @@ export class BloodField {
   }
  }
  emit(effect:Effect,time:number){
-  if(effect.kind!=='hit'&&effect.kind!=='kill')return;
+  if(effect.bloodless||(effect.kind!=='hit'&&effect.kind!=='kill'))return;
   const id=effect.bloodId;
   if(id!==undefined){
    if(this.identities.has(id))return;
@@ -51,6 +51,7 @@ export class BloodField {
    if(origin.y<ground-.2){this.discarded++;continue;}
    const angle=random()*Math.PI*2,speed=(1+random()*4)*Math.sqrt(large),direction=effect.direction;
    const drop:BloodDrop={origin:{...origin},pos:{...origin},velocity:{x:Math.cos(angle)*speed+(direction?.x??0)*2,y:1+random()*5+Math.max(-1,direction?.y??0)*2,z:Math.sin(angle)*speed+(direction?.z??0)*2},born,age:0,size:(effect.kind==='kill'?.18:.09)*(1+random()*1.8)*Math.sqrt(large),angle,stretch:1+random()*1.2,seed:Math.floor(random()*4294967296)};
+   drop.enemyBurst=effect.kind==='kill'&&(effect.enemyId??0)>=0;
    if(this.drops.length<this.capacity)this.drops.push(drop);
    else {this.drops[this.cursor]=drop;this.cursor=(this.cursor+1)%this.capacity;this.discarded++;}
   }

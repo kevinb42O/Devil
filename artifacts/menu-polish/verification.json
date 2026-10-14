@@ -1,0 +1,72 @@
+{
+  "results": [
+    {
+      "width": 1600,
+      "height": 1000,
+      "stageFits": true,
+      "startFits": true,
+      "scrollFits": true,
+      "bestVisible": true,
+      "primaryVisible": true
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "stageFits": true,
+      "startFits": true,
+      "scrollFits": true,
+      "bestVisible": true,
+      "primaryVisible": true
+    },
+    {
+      "width": 1366,
+      "height": 768,
+      "stageFits": true,
+      "startFits": true,
+      "scrollFits": true,
+      "bestVisible": true,
+      "primaryVisible": true
+    },
+    {
+      "width": 1152,
+      "height": 648,
+      "stageFits": true,
+      "startFits": true,
+      "scrollFits": true,
+      "bestVisible": false,
+      "primaryVisible": true
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "stageFits": true,
+      "startFits": true,
+      "scrollFits": true,
+      "bestVisible": false,
+      "primaryVisible": true
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "stageFits": true,
+      "startFits": true,
+      "scrollFits": true,
+      "bestVisible": false,
+      "primaryVisible": false
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "stageFits": true,
+      "startFits": true,
+      "scrollFits": true,
+      "bestVisible": false,
+      "primaryVisible": false
+    }
+  ],
+  "errors": [],
+  "models": "existing player and downloaded crown loaded; crown failure fallback verified",
+  "mist": "depth-aware volume rendered",
+  "reducedMotion": "frozen",
+  "descent": "passed"
+}

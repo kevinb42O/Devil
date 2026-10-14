@@ -27,7 +27,7 @@ try{
   const timings=[],activeTimings=[];
   for(let i=10;i<240;i++){world.time=i/60;const active=renderer.blood.diagnostics.active;const start=performance.now();renderer.blood.advance(world.time);const ms=performance.now()-start;timings.push(ms);if(active)activeTimings.push(ms);}
   render();const settledCalls=renderer.renderer.info.render.calls,d=renderer.blood.diagnostics;
-  check(d.landings>300,'sprays land');check(d.active===0,'all droplets settle');check(settledCalls===baselineCalls,'settled blood adds zero draw calls');check(airborneCalls===baselineCalls+1,'airborne blood adds one draw call');
+  check(d.landings>300,'sprays land');check(d.active===0,'all droplets settle');check(settledCalls===baselineCalls,'settled blood adds zero draw calls');check(airborneCalls===baselineCalls+12,'airborne blood uses eleven native gore batches and one spray batch');
   const version=renderer.blood.texture.version;render();check(renderer.blood.texture.version===version,'no texture upload on unchanged frame');
   renderer.effect({kind:'kill',bloodId:140,bloodTime:0,pos:v(0,5,0)},world,0,0);check(renderer.blood.diagnostics.active===0,'duplicate network event ignored');
   const before=renderer.blood.field.pixels.slice();world.time=150;render();check(before.every((n,i)=>n===renderer.blood.field.pixels[i]),'shrinking floor retains painted texture');
@@ -40,7 +40,18 @@ try{
  await page.screenshot({path:'artifacts/blood-floor-low.png'});
  await page.evaluate(()=>{bloodFixture.renderer.configure({quality:'high',fov:95});bloodFixture.render();});
  await page.screenshot({path:'artifacts/blood-floor-high.png'});
+ const burst=await page.evaluate(()=>{
+  const {renderer,world,render,v}=bloodFixture;renderer.clear();world.time=0;world.player.pos=v(0,5,8);
+  const enemy=world.spawn('skull',v(0,3,0));world.damageEnemy(enemy,enemy.hp);
+  for(const effect of world.effects)renderer.effect(effect,world,0,0);world.effects=[];world.enemies=[];world.gems=[];renderer.originalWeapon.clear();
+  world.time=.1;render();return renderer.blood.diagnostics;
+ });
+ assert.equal(burst.assetsReady,true,'native gore assets loaded');assert.equal(burst.goreVariants,11);
+ assert.ok(burst.sprayActive>=24,'single enemy kill produces a visible textured burst');
+ await page.screenshot({path:'artifacts/blood-enemy-kill.png'});
+ const faded=await page.evaluate(()=>{bloodFixture.world.time=.55;bloodFixture.render();return bloodFixture.renderer.blood.diagnostics;});
+ assert.equal(faded.sprayActive,0,'textured burst expires promptly');assert.ok(faded.active>0,'gore continues falling after initial spray');
  const reset=await page.evaluate(()=>{bloodFixture.renderer.clear();bloodFixture.render();return {active:bloodFixture.renderer.blood.diagnostics.active,landings:bloodFixture.renderer.blood.diagnostics.landings,empty:bloodFixture.renderer.blood.field.pixels.every(n=>n===0)};});
  assert.deepEqual(reset,{active:0,landings:0,empty:true});assert.deepEqual(errors,[]);
- await writeFile('artifacts/blood-audit.json',JSON.stringify({...result,reset,errors},null,2)+'\n');console.log('Blood browser checks passed:',JSON.stringify(result));
+ await writeFile('artifacts/blood-audit.json',JSON.stringify({...result,burst,faded,reset,errors},null,2)+'\n');console.log('Blood browser checks passed:',JSON.stringify(result));
 }finally{await browser.close();}

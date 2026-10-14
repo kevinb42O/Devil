@@ -1,5 +1,5 @@
-/* Minimal run HUD: time, current hand, collected gems, homing ammo and pending respawn. */
-#hud > :not(.hud-top):not(.hud-bottom):not(.economy):not(#respawn-status),
+/* Minimal run HUD with optional nearby-threat cues. */
+#hud > :not(.hud-top):not(.hud-bottom):not(.economy):not(#respawn-status):not(#connection-meter):not(#threat-ring),
 #hud .hud-top > :not(#timer),
 #hud .hud-bottom > :not(.power),
 #hud .power small,
@@ -7,6 +7,13 @@
 #crew-hud {
   display: none !important;
 }
+
+#threat-ring .threat { background: #ef7257; }
+#threat-ring .threat[data-family=spider] { background: #c991ff; }
+#threat-ring .threat[data-family=egg] { background: #b8e56b; }
+#threat-ring .threat[data-family=pede] { background: #70d9e5; }
+#threat-ring .threat[data-family=tower] { background: #ffd078; }
+#threat-ring .threat[data-family=boss] { background: #f5eee0; }
 
 #hud .hud-top {
   top: 12px;
@@ -106,3 +113,72 @@
   letter-spacing: 1px;
   color: #f3dbb8;
 }
+
+/* Quiet performance and multiplayer status, clear of the aiming area. */
+#hud #connection-meter {
+  position: absolute;
+  top: max(12px, env(safe-area-inset-top));
+  left: max(18px, env(safe-area-inset-left));
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 26px;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: none;
+  color: #f3dbb8;
+  font: 700 18px/1 'Barlow Condensed', sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+#hud #connection-meter[hidden],
+#hud #connection-unit[hidden] { display: none; }
+#connection-unit { font-size: 11px; color: #c6b7a4; }
+.connection-bars { display: flex; align-items: flex-end; gap: 2px; height: 12px; margin-right: 3px; color: #bca98c; }
+.connection-bars i { width: 3px; height: 3px; background: currentColor; opacity: .22; }
+.connection-bars i:nth-child(2) { height: 6px; }
+.connection-bars i:nth-child(3) { height: 9px; }
+.connection-bars i:nth-child(4) { height: 12px; }
+[data-quality=good] .connection-bars { color: #b9d994; }
+[data-quality=fair] .connection-bars { color: #e9ba70; }
+[data-quality=poor] .connection-bars,
+[data-quality=stalled] .connection-bars,
+[data-quality=offline] .connection-bars { color: #ed8972; }
+[data-quality=good] .connection-bars i,
+[data-quality=hosting] .connection-bars i,
+[data-quality=fair] .connection-bars i:nth-child(-n+3),
+[data-quality=poor] .connection-bars i:nth-child(-n+2),
+[data-quality=stalled] .connection-bars i:first-child,
+[data-quality=offline] .connection-bars i:first-child { opacity: 1; }
+
+#connection-context { font: 500 10px/1 'Barlow Condensed', sans-serif; letter-spacing: .7px; color: #c6b7a4; }
+#connection-value { width: 4ch; flex: none; text-align: right; }
+[data-quality=stalled] #connection-value,
+[data-quality=offline] #connection-value { color: #ffad94; }
+
+#fps-meter {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  margin-left: 3px;
+  padding-left: 8px;
+  border-left: 1px solid #ead2ac25;
+  color: #fff;
+  font: 500 14px/1 'Barlow Condensed', sans-serif;
+}
+#fps-value { width: 4ch; text-align: right; }
+#fps-meter small { font-size: 14px; }
+
+#connection-meter[data-multiplayer=false] > :not(#fps-meter) { display: none; }
+#connection-meter[data-multiplayer=false] #fps-meter {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: 0;
+}
+#crew-lobby-controls{position:fixed;right:24px;top:24px;z-index:8;display:flex;gap:8px}
+#crew-lobby-controls[hidden]{display:none}
+#crew-lobby-controls button{padding:10px 14px;background:#100b08cc;border:1px solid #96725466;color:#edd7bb;font:500 12px 'Barlow Condensed',sans-serif;letter-spacing:1.5px}
+body[data-crew-courtyard=true] #crew-hud:not([hidden]){display:block!important;left:24px;top:24px;font-size:12px;line-height:1.6;letter-spacing:.6px;color:#edd7bb}
+@media(max-width:700px){#crew-lobby-controls{top:12px;right:12px}#crew-lobby-controls button{padding:8px 10px}}
+@media(max-width:700px){body[data-crew-courtyard=true] #crew-hud:not([hidden]){left:12px;top:62px;font-size:11px}}

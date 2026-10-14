@@ -1,0 +1,18 @@
+#install-dialog{width:min(520px,calc(var(--game-width,100vw) - 32px));max-height:calc(var(--game-height,100dvh) - 32px);overflow:auto;border:1px solid #92734e;background:#100c0a;color:#e4d6c1;padding:28px;box-shadow:0 24px 90px #000b;margin:auto;font:14px/1.65 'DM Sans',sans-serif}
+#install-dialog::backdrop{background:#000b}
+#install-dialog h2{font:700 28px/1.1 'Barlow Condensed',sans-serif;letter-spacing:2px;margin:0 0 20px}
+#install-dialog button{display:block;width:100%;min-height:44px;padding:12px;margin-top:16px;background:#302318;color:#f1dfbe;border:1px solid #92734e;font:700 13px 'Barlow Condensed',sans-serif;letter-spacing:1px}
+#offline-status{font-size:12px;color:#c7b28e}
+#menu .menu-links{flex-wrap:wrap}
+html{overscroll-behavior:none;background:#100807}
+/* Keep menu targets clear of notches in the installed edge-to-edge window. */
+body[data-controls=mobile] #menu header{left:max(4.4%,env(safe-area-inset-left));right:max(4.4%,env(safe-area-inset-right));top:max(20px,env(safe-area-inset-top))}
+body[data-controls=mobile] #menu footer{left:max(4.4%,env(safe-area-inset-left));right:max(4.4%,env(safe-area-inset-right));bottom:max(20px,env(safe-area-inset-bottom))}
+/* Physical safe-area edges follow the CSS landscape fallback's rotation. */
+body[data-controls=mobile][data-mobile-rotated=true] #menu header{left:max(4.4%,env(safe-area-inset-top));right:max(4.4%,env(safe-area-inset-bottom));top:max(20px,env(safe-area-inset-right))}
+body[data-controls=mobile][data-mobile-rotated=true] #menu footer{left:max(4.4%,env(safe-area-inset-top));right:max(4.4%,env(safe-area-inset-bottom));bottom:max(20px,env(safe-area-inset-left))}
+body[data-installed=true] #fullscreen-toggle,body[data-installed=true] #fullscreen-status{display:none}
+body[data-installed=true][data-controls=mobile] #hud .hud-top{top:calc(12px + env(safe-area-inset-top))}
+body[data-installed=true][data-controls=mobile][data-mobile-rotated=true] #hud .hud-top{top:calc(12px + env(safe-area-inset-right))}
+body[data-controls=mobile][data-mobile-rotated=true] #hud .hud-bottom{left:max(18px,env(safe-area-inset-top));bottom:max(18px,env(safe-area-inset-left))}
+body[data-controls=mobile][data-mobile-rotated=true] #hud>.economy{right:max(18px,env(safe-area-inset-bottom));bottom:max(18px,env(safe-area-inset-left))}

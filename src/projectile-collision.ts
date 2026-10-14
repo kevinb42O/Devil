@@ -1,5 +1,5 @@
 import baked from './projectile-colliders.json';
-import {enemyYaw} from './enemy-presentation';
+import {enemyYaw,enemyEmergenceScale,towerPartOffset,CREATURE_SCALE} from './enemy-presentation';
 import type {Enemy,Vec} from './simulation';
 const meshes=new Map(Object.entries(baked.meshes).map(([kind,m])=>[kind,{nodes:m.nodes,vertices:new Float32Array(m.vertices),indices:new Uint32Array(m.indices)}]));
 const colliders=new Map(Object.entries(baked.instances).map(([kind,instances])=>{
@@ -14,27 +14,32 @@ const colliders=new Map(Object.entries(baked.instances).map(([kind,instances])=>
 export const armorMesh=(e:Enemy)=>colliders.get(e.kind);
 export type ArmorHit={t:number;nx:number;ny:number;nz:number};
 // Shared scratch stack visits only BVH nodes overlapped by the segment.
-// Geometry is shared by all towers; only the final successful query allocates.
+// Geometry is shared by all towers; queries allocate only on successful hits.
 const stack:number[]=[];
-export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0):ArmorHit|null{
+export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0,originalCadence=true):ArmorHit|null{
  const collider=armorMesh(e);if(!collider)return null;
- const yaw=enemyYaw(e,player),c=Math.cos(yaw),s=Math.sin(yaw),scale=Math.min(1,e.age/(e.kind==='leviathan'?8.533333:1.1));if(scale<.0001)return null;
+ const yaw=enemyYaw(e,player),c=Math.cos(yaw),s=Math.sin(yaw),scale=enemyEmergenceScale(e);if(scale<.0001)return null;
  const ax=((a.x-e.pos.x)*c-(a.z-e.pos.z)*s)/scale,ay=(a.y-e.pos.y)/scale,az=((a.x-e.pos.x)*s+(a.z-e.pos.z)*c)/scale;
  const dx=((b.x-a.x)*c-(b.z-a.z)*s)/scale,dy=(b.y-a.y)/scale,dz=((b.x-a.x)*s+(b.z-a.z)*c)/scale;
- let found=false,closest=limit;
+ let normal:Vec|null=null,closest=limit;
  for(const p of collider.parts){
   const sign=p.flip?-1:1;
-  const ox=(ax*p.c-az*p.s)/p.sx,oy=ay*sign/p.sy,oz=(ax*p.s+az*p.c)*sign/p.sx;
+  const ox=(ax*p.c-az*p.s)/p.sx,oy=(ay-towerPartOffset(e,p.name,originalCadence)*CREATURE_SCALE)*sign/p.sy,oz=(ax*p.s+az*p.c)*sign/p.sx;
   const vx=(dx*p.c-dz*p.s)/p.sx,vy=dy*sign/p.sy,vz=(dx*p.s+dz*p.c)*sign/p.sx;
   const bounds=p.mesh.nodes[0],endY=oy+vy*closest;
   if(Math.max(oy,endY)<bounds[1]||Math.min(oy,endY)>bounds[4])continue;
-  const hit:number|null=p.wave?traceRibbon(p.mesh,ox,oy,oz,vx,vy,vz,closest,time):trace(p.mesh,ox,oy,oz,vx,vy,vz,closest);
+  const hit=p.wave?traceRibbon(p.mesh,ox,oy,oz,vx,vy,vz,closest,time):trace(p.mesh,ox,oy,oz,vx,vy,vz,closest);
   if(hit===null)continue;
-  closest=hit;found=true;
+  closest=hit.t;
+  // Inverse transpose of the part transform, then the enemy's yaw.
+  const x=hit.nx/p.sx,y=hit.ny*sign/p.sy,z=hit.nz*sign/p.sx;
+  const rx=x*p.c+z*p.s,rz=-x*p.s+z*p.c;
+  normal={x:rx*c+rz*s,y,z:-rx*s+rz*c};
  }
- if(!found)return null;
- const speed=Math.hypot(b.x-a.x,b.y-a.y,b.z-a.z)||1;
- return {t:closest,nx:(a.x-b.x)/speed,ny:(a.y-b.y)/speed,nz:(a.z-b.z)/speed};
+ if(!normal)return null;
+ const length=Math.hypot(normal.x,normal.y,normal.z)||1;
+ const sign=normal.x*(b.x-a.x)+normal.y*(b.y-a.y)+normal.z*(b.z-a.z)>0?-1:1;
+ return {t:closest,nx:normal.x/length*sign,ny:normal.y/length*sign,nz:normal.z/length*sign};
 }
 
 // Invert the native arm shader in mesh space. Its deformation preserves Y;
@@ -45,21 +50,28 @@ function ribbonInverse(x:number,y:number,z:number,time:number,out:Vec){
  out.x=-x*s-z*c;out.y=y;out.z=x*c-z*s-wave*Math.sin(curve-time*.7)*.6*.62;return out;
 }
 const ribbonA={x:0,y:0,z:0},ribbonB={x:0,y:0,z:0};
-function traceRibbon(mesh:NonNullable<ReturnType<typeof meshes.get>>,x:number,y:number,z:number,dx:number,dy:number,dz:number,limit:number,time:number):number|null{
+function traceRibbon(mesh:NonNullable<ReturnType<typeof meshes.get>>,x:number,y:number,z:number,dx:number,dy:number,dz:number,limit:number,time:number):ArmorHit|null{
  const steps=Math.min(32,Math.max(1,Math.ceil(Math.abs(dy)*limit/.08)));
  ribbonInverse(x,y,z,time,ribbonA);
  for(let i=0;i<steps;i++){
   const start=limit*i/steps,end=limit*(i+1)/steps;
   ribbonInverse(x+dx*end,y+dy*end,z+dz*end,time,ribbonB);
   const hit=trace(mesh,ribbonA.x,ribbonA.y,ribbonA.z,ribbonB.x-ribbonA.x,ribbonB.y-ribbonA.y,ribbonB.z-ribbonA.z,1);
-  if(hit!==null)return start+(end-start)*hit;
+  if(hit!==null){
+   const t=start+(end-start)*hit.t,at={x:x+dx*t,y:y+dy*t,z:z+dz*t};
+   // The ribbon is non-rigid: transform its mesh normal by the inverse
+   // deformation's Jacobian transpose at the contact.
+   const base={...ribbonInverse(at.x,at.y,at.z,time,{x:0,y:0,z:0})},out={x:0,y:0,z:0},epsilon=1e-4;
+   const derivative=(axis:'x'|'y'|'z')=>{ribbonInverse(at.x+(axis==='x'?epsilon:0),at.y+(axis==='y'?epsilon:0),at.z+(axis==='z'?epsilon:0),time,out);return ((out.x-base.x)*hit.nx+(out.y-base.y)*hit.ny+(out.z-base.z)*hit.nz)/epsilon;};
+   return {t,nx:derivative('x'),ny:derivative('y'),nz:derivative('z')};
+  }
   Object.assign(ribbonA,ribbonB);
  }
  return null;
 }
 
-function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:number,az:number,dx:number,dy:number,dz:number,limit:number):number|null{
- let best=limit,hit=false;stack.length=0;stack.push(0);
+function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:number,az:number,dx:number,dy:number,dz:number,limit:number):ArmorHit|null{
+ let best=limit,normal:Vec|null=null;stack.length=0;stack.push(0);
  while(stack.length){const node=mesh.nodes[stack.pop()!];let lo=0,hi=best;
   for(let i=0;i<3;i++){if(Math.abs((i===0?dx:i===1?dy:dz))<1e-12){if((i===0?ax:i===1?ay:az)<node[i]-.00001||(i===0?ax:i===1?ay:az)>node[i+3]+.00001){hi=-1;break;}}else{const u=(node[i]-.00001-(i===0?ax:i===1?ay:az))/(i===0?dx:i===1?dy:dz),v=(node[i+3]+.00001-(i===0?ax:i===1?ay:az))/(i===0?dx:i===1?dy:dz);lo=Math.max(lo,Math.min(u,v));hi=Math.min(hi,Math.max(u,v));}}
   if(lo>hi)continue;
@@ -76,10 +88,10 @@ function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:numb
    const tx=ax-v[ia],ty=ay-v[ia+1],tz=az-v[ia+2],u=(tx*px+ty*py+tz*pz)/det;if(u<0||u>1)continue;
    const qx=ty*ez-tz*ey,qy=tz*ex-tx*ez,qz=tx*ey-ty*ex,w=(dx*qx+dy*qy+dz*qz)/det;if(w<0||u+w>1)continue;
    const at=(fx*qx+fy*qy+fz*qz)/det;if(at<1e-7||at>best)continue;
-   best=at;hit=true;
+   best=at;normal={x:ey*fz-ez*fy,y:ez*fx-ex*fz,z:ex*fy-ey*fx};
   }
  }
- return hit?best:null;
+ return normal?{t:best,nx:normal.x,ny:normal.y,nz:normal.z}:null;
 }
 
 // Conservative broad phase for the rotated mesh, once per enemy per tick.

@@ -1,0 +1,214 @@
+/* The throne: bone for navigation, ember for action, gold for the sovereign. */
+#menu{background:linear-gradient(90deg,#080a0df5 0%,#080a0de8 27%,#080a0d75 47%,#080a0d05 67%),linear-gradient(0deg,#080a0d 0%,transparent 28%,transparent 85%,#080a0d80);color:#e4ddd0}
+#menu:before{background:none}
+#menu:after{inset:18px;border-color:#ad98751c;box-shadow:none}
+#menu header{top:36px;left:4.5%;right:4.5%}
+#menu .brand{font-size:26px;letter-spacing:3px;color:#e8dfce}
+#menu .brand-sigil{font-size:27px;color:#bd7658;text-shadow:none}
+#menu .brand b{font-size:11px;letter-spacing:3px;color:#9c9790}
+#menu .brand-version{display:inline-block;margin-left:10px;font:500 11px 'Barlow Condensed',sans-serif;letter-spacing:1px;color:#bd7658;white-space:nowrap}
+#menu .build-tag{font:500 10px 'Barlow Condensed',sans-serif;letter-spacing:2px;color:#9b9387}
+#menu .build-tag i{border:0;color:#827c72;margin-left:18px;padding:0}
+#menu #fullscreen-toggle{border-color:#a89b802e;background:#11121660;color:#aaa49a;font-size:11px;letter-spacing:1.5px}
+#menu #fullscreen-toggle:hover{border-color:#c6ae7f88;color:#f1e3c9;background:#25231e}
+#menu .menu-content{left:8%;top:16%;width:440px;max-height:calc(84dvh - 100px);padding:0 14px 20px 0;scrollbar-width:thin;scrollbar-color:#514438 transparent}
+#menu .eyebrow{font-size:11px;letter-spacing:2.8px;color:#c58a6d}
+#menu .eyebrow>span{width:26px;background:#bc6549}
+#menu h1{font-size:clamp(110px,10vw,160px);margin:25px 0 22px;line-height:.95}
+#menu h1 .title-prelude{font-size:15px;letter-spacing:6px;margin:0 0 12px;color:#bcb3a4}
+#menu h1 em{color:#e8dfcb;text-shadow:0 2px 1px #65564850,0 15px 45px #0008;letter-spacing:-2px}
+#menu .intro{font-size:13px;line-height:1.85;color:#a8a39b;margin:0 0 25px}
+#menu .altar-menu{width:100%;max-width:390px}
+#menu .player-card{padding:0 0 19px;gap:12px}
+#menu .player-crest{width:33px;height:37px;background:none;border:0;color:#99876b!important;clip-path:none}
+#menu .player-crest svg{width:27px;height:30px;stroke-width:1.3}
+#menu .player-card small{font-size:9px;letter-spacing:2px;color:#9d8b72}
+#menu .player-card strong{font:500 14px/1.4 'DM Sans',sans-serif;margin:3px 0;color:#d3cec4;overflow-wrap:anywhere}
+#menu .player-card .player-identity>span{font-size:10px;color:#928b80;line-height:1.5}
+#menu #profile-edit{font-size:11px;color:#aaa091;min-width:44px;min-height:44px;letter-spacing:1.4px}
+#menu .player-card.is-sovereign{padding:0 0 19px;border:0;background:none;margin:0}
+#menu .ritual-actions{gap:4px}
+#menu .ritual-action{height:70px;min-height:70px;padding:0 18px 0 14px;gap:15px;clip-path:none;border:1px solid transparent;border-bottom-color:#c6af8521;background:linear-gradient(90deg,#27272230,transparent);box-shadow:none;color:#c6c0b4;transition:background .18s,color .18s,border-color .18s,transform .12s}
+#menu .ritual-action:before{inset:auto;left:-1px;top:20px;bottom:20px;width:2px;border:0;clip-path:none;background:#bd6848;transform:scaleY(0);transition:transform .18s}
+#menu .ritual-action:after{display:none}
+#menu .ritual-action .action-icon{color:#9c8e74;width:28px;filter:none}
+#menu .action-icon svg{width:28px;height:34px;stroke-width:1.3}
+#menu .action-label strong{font:500 23px/1.15 'Barlow Condensed',sans-serif;letter-spacing:.35px}
+#menu .action-label small{font-size:10px;letter-spacing:1.8px;color:#979080;margin-top:5px}
+#menu .action-number{font:12px Georgia,serif;color:#898273;border:0;min-width:18px;padding:0}
+#menu .ritual-action-start{border-color:#b4654d70;background:linear-gradient(100deg,#71332170,#301b1750 80%);color:#f3e4ce;box-shadow:inset 0 1px #edb38e14}
+#menu .ritual-action-start .action-icon{color:#d79571}
+#menu .ritual-action-start .action-label strong{font-size:26px}
+#menu .ritual-action-start .action-label small{color:#c29b80}
+#menu .ritual-action-start .action-number{color:#c18c70}
+#menu .ritual-action:hover:not(:disabled),#menu .ritual-action.controller-focus{background:linear-gradient(90deg,#6d372550,#3a292520);border-color:#ba8b6460;color:#fff0d8;box-shadow:none}
+#menu .ritual-action:hover:before,#menu .ritual-action.controller-focus:before,#menu .ritual-action:focus-visible:before{transform:scaleY(1)}
+#menu .ritual-action:active:not(:disabled){transform:translateY(1px);background:#6a352b60}
+#menu .ritual-action:focus-visible,#menu .ritual-action.controller-focus{outline:1px solid #e3b78b!important;outline-offset:3px}
+#menu .under-button{font:500 9px 'Barlow Condensed',sans-serif;letter-spacing:1.1px;color:#8f887c;margin:13px 0 0;gap:12px}
+#menu .menu-links{border:0;padding:0;margin:17px 0 0}
+#menu .menu-links .text-button{font-size:11px;letter-spacing:1.5px;color:#b2a795;padding:8px 0;min-height:36px}
+#menu .menu-links .text-button>span{color:#827565}
+#menu .practice{margin:0}
+#menu .practice summary{font-size:11px;letter-spacing:1.5px;color:#9e9380;padding:10px 0;min-height:36px}
+#menu .best-card{margin-top:15px;padding-top:18px;border-top-color:#b49e7629;gap:12px}
+#menu .record-mark{font-size:25px;color:#9b8664}
+#menu .best-card small{font-size:10px;letter-spacing:1.5px;max-width:180px;color:#a39a89}
+#menu .best-card strong{font:500 27px 'Barlow Condensed',sans-serif;color:#e2d8c5;font-variant-numeric:tabular-nums}
+#menu .best-card strong span{font-size:9px;color:#a39a89;letter-spacing:1px}
+#menu footer{left:4.5%;right:4.5%;bottom:32px;border-top-color:#b49e7624;padding-top:18px}
+#menu footer>span{font:500 9px 'Barlow Condensed',sans-serif;letter-spacing:1.3px;color:#91897a}
+#menu footer button{font-size:11px;letter-spacing:1.6px;color:#bdb19d;min-height:36px}
+#menu .champion-stage{right:1%;top:50%;width:min(54vw,780px,calc(100dvh - 150px));transform:translateY(-50%);border:0;background:none;overflow:visible}
+#menu .champion-stage .infernal-art{opacity:1}
+#menu .champion-stage .infernal-seal,#menu .seal-halo{visibility:hidden;animation:none}
+#menu .seal-inscription{bottom:1%;font-size:9px;letter-spacing:5px;color:#947250;opacity:.65}
+#menu .champion-shrine{justify-content:flex-start;padding:8cqw 10cqw 6cqw}
+#menu .champion-shrine:before{display:none}
+#menu .shrine-relic{width:100%;height:55cqw;margin:0 0 1cqw;filter:none;animation:none}
+#menu .sovereign-crown,#menu .sovereign-dagger,#menu .shrine-orbit,#menu .shrine-embers{visibility:hidden;animation:none}
+#menu .champion-shrine .shrine-kicker{font:500 11px/1.6 'Barlow Condensed',sans-serif;letter-spacing:3px;color:#b69b68}
+#menu .shrine-name{font-size:clamp(26px,5.5cqw,44px);margin:8px 0 10px;color:#e6d6b3;text-shadow:0 3px 20px #000}
+#menu .shrine-record{font-size:12px;line-height:1.6;letter-spacing:1.8px;color:#b3a07c}
+#menu .shrine-invitation{font-size:9px;letter-spacing:2px;line-height:1.5;color:#928676;margin-top:18px}
+#menu .shrine-invitation b{font-size:10px;letter-spacing:1.8px;margin-top:8px;color:#c6b18b}
+#menu .champion-shrine:hover .shrine-invitation b{color:#f4dfb5}
+#menu .champion-shrine:focus-visible{outline:1px solid #c8aa72!important;outline-offset:-10px}
+#menu .is-vacant .shrine-relic{opacity:1}
+#menu .is-vacant .shrine-name{font-size:30px}
+#menu .is-vacant .shrine-record{font-size:11px;letter-spacing:1px}
+/* Arrival is brief. Repeat runs retain the existing immediate start and pointer capture. */
+#menu .menu-content{animation:altar-arrival .7s ease-out both}
+.overlay:not([hidden])>.panel{animation:panel-arrival .22s ease-out both}
+#menu-threshold{position:fixed;inset:0;z-index:15;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 72% 40%,#b16c3a30,#07090cf5 65%)}
+#menu-threshold.is-crossing{animation:cross-threshold .75s ease-out both}
+@keyframes altar-arrival{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes panel-arrival{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cross-threshold{0%{opacity:1}25%{opacity:.9}100%{opacity:0}}
+@media(min-width:1101px) and (max-height:850px){
+ #menu .menu-content{top:14%;max-height:calc(86dvh - 83px)}
+ #menu h1{font-size:clamp(92px,8.5vw,128px);margin:15px 0 16px}
+ #menu h1 .title-prelude{font-size:13px;margin-bottom:8px}
+ #menu .intro{margin-bottom:17px;font-size:12px}
+ #menu .player-card{padding-bottom:13px}
+ #menu .ritual-action{height:62px;min-height:62px}
+ #menu .menu-links{margin-top:10px}
+ #menu .best-card{margin-top:8px;padding-top:10px}
+ #menu footer{bottom:20px;padding-top:12px}
+}
+@media(max-width:1100px){
+ #menu{background:linear-gradient(90deg,#080a0dbb,#080a0d18 75%),linear-gradient(0deg,#080a0d 0%,transparent 60%)}
+ #menu .menu-content{left:8%;top:125px;width:84%;max-height:calc(100dvh - 210px);padding-right:10px;display:flex;flex-direction:column;align-items:flex-start}
+ #menu h1{font-size:116px;margin:22px 0 18px}
+ #menu .intro{margin-bottom:0}
+ #menu .champion-stage{position:relative;right:auto;top:auto;width:min(420px,100%);transform:none;margin:12px 0 22px;align-self:center;flex-shrink:0;aspect-ratio:1}
+ #menu .champion-shrine{padding:0 7cqw 6cqw}
+ #menu .shrine-relic{height:54cqw}
+ #menu .shrine-name{font-size:32px;margin:6px 0}
+ #menu .shrine-invitation{margin-top:10px;font-size:8px}
+ #menu .seal-inscription{font-size:8px;bottom:-1%;letter-spacing:3px}
+ #menu .altar-menu{max-width:440px;width:100%;align-self:center}
+ #menu .champion-shrine .shrine-kicker{font-size:10px;letter-spacing:2px}
+ #menu .shrine-record{font-size:11px}
+}
+@media(max-width:600px){
+ #menu:after{inset:9px}
+ #menu header{top:22px;left:7%;right:7%}
+ #menu .brand{font-size:25px}
+ #menu .brand-sigil{font-size:25px;margin-right:6px}
+ #menu .build-tag{display:none}
+ #menu #fullscreen-toggle{border:0;background:none;padding:8px;font-size:10px;min-width:44px}
+ #menu .menu-content{left:8%;top:104px;width:84%;max-height:calc(100dvh - 184px);padding-right:5px}
+ body[data-controls=mobile] #menu .menu-content{max-height:calc(100dvh - 184px)}
+ #menu .eyebrow{font-size:10px;letter-spacing:1.9px;gap:9px}
+ #menu .eyebrow>span{width:18px}
+ #menu h1{font-size:100px;margin:22px 0 16px}
+ #menu h1 .title-prelude{font-size:12px;letter-spacing:5px;margin-bottom:10px}
+ #menu .intro{font-size:12px}
+ #menu .champion-stage{width:min(340px,100%);margin:2px 0 26px}
+ #menu .shrine-name{font-size:28px}
+ #menu .shrine-invitation{margin-top:8px}
+ #menu .shrine-invitation b{font-size:10px;margin-top:6px}
+ #menu .seal-inscription{bottom:-3%;font-size:7px}
+ #menu .player-card{padding-bottom:15px}
+ #menu .ritual-action{height:66px;min-height:66px}
+ #menu .action-label strong{font-size:22px}
+ #menu .ritual-action-start .action-label strong{font-size:25px}
+ #menu .action-label small{font-size:9px;letter-spacing:1.4px}
+ #menu .under-button{font-size:8px;letter-spacing:.8px}
+ #menu footer{left:8%;right:8%;bottom:18px;padding-top:10px;align-items:center;gap:12px}
+ #menu footer>span{font-size:8px;line-height:1.7;letter-spacing:.6px;max-width:140px}
+ #menu footer button{font-size:10px;letter-spacing:1px;text-align:right;padding:6px 0;max-width:145px}
+}
+@media(max-width:1100px) and (max-height:560px){
+ #menu .menu-content{top:92px;max-height:calc(100dvh - 160px)}
+ #menu .champion-stage{width:min(320px,100%)}
+ #menu header{top:20px}
+ #menu footer{bottom:14px}
+}
+@media(prefers-reduced-motion:reduce){
+ #menu .menu-content,.overlay:not([hidden])>.panel,#menu-threshold.is-crossing{animation:none}
+ #menu .ritual-action,#menu .ritual-action:before{transition:none}
+}
+body[data-sky-motion=reduced] #menu .menu-content,body[data-sky-motion=reduced] .overlay>.panel,body[data-sky-motion=reduced] #menu-threshold{animation:none}
+/* A compact vignette keeps the first action accessible on phones and short windows. */
+@media(max-width:600px),(max-width:1100px) and (max-height:560px){
+ #menu .champion-stage{height:225px;width:100%;aspect-ratio:auto;margin:10px 0 14px}
+ #menu .champion-shrine{display:grid;grid-template-columns:44% 56%;grid-template-rows:1fr auto auto auto 1fr;align-items:center;justify-items:center;padding:0;text-align:center;column-gap:0}
+ #menu .shrine-relic{grid-column:1;grid-row:1/6;height:210px;width:100%;margin:0}
+ #menu .champion-shrine>.shrine-kicker{grid-column:2;grid-row:2;font-size:9px;letter-spacing:1.6px}
+ #menu .shrine-name{grid-column:2;grid-row:3;font-size:26px;line-height:1.1;margin:10px 0 8px}
+ #menu .shrine-record{grid-column:2;grid-row:4;font-size:10px;letter-spacing:.8px;line-height:1.7}
+ #menu .shrine-invitation{grid-column:2;grid-row:5;align-self:start;font-size:8px;letter-spacing:1px;margin-top:12px}
+ #menu .shrine-invitation b{font-size:9px;letter-spacing:1px}
+ #menu .seal-inscription{display:none}
+ #menu .intro{margin:0}
+}
+@media(min-width:1101px){
+ #menu .menu-content{top:14%;max-height:calc(86dvh - 100px)}
+ #menu h1{font-size:clamp(108px,9vw,144px);margin:20px 0 18px}
+ #menu .intro{margin-bottom:20px}
+ #menu .player-card{padding-bottom:15px}
+ #menu .best-card{margin-top:10px;padding-top:12px}
+}
+@media(min-width:1101px) and (max-height:850px){
+ #menu .menu-content{top:14%;max-height:calc(86dvh - 83px)}
+ #menu h1{font-size:clamp(88px,7.5vw,108px);margin:12px 0 14px}
+ #menu .intro{margin-bottom:14px}
+ #menu .player-card{padding-bottom:10px}
+ #menu .ritual-action{height:57px;min-height:57px}
+ #menu .under-button{margin-top:10px}
+ #menu .menu-links{margin-top:6px}
+ #menu .practice summary{padding:6px 0;min-height:30px}
+ #menu .best-card{margin-top:6px;padding-top:9px}
+}
+@media(min-width:1101px){
+ #menu .altar-menu{display:flex;flex-wrap:wrap;align-items:center}
+ #menu .altar-menu>.player-card,#menu .altar-menu>.ritual-actions,#menu .altar-menu>.under-button,#menu .altar-menu>.best-card{width:100%}
+ #menu .altar-menu>.menu-links{width:58%;margin-top:12px}
+ #menu .altar-menu>.practice{width:42%;margin-top:12px}
+ #menu .altar-menu>.practice summary{text-align:right;font-size:10px;letter-spacing:1px;white-space:nowrap}
+ #menu .altar-menu>.practice[open]{width:100%}
+ #menu .altar-menu>.practice[open] summary{text-align:left}
+}
+@media(min-width:1101px) and (max-height:950px){
+ #menu h1{font-size:clamp(88px,7.5vw,108px);margin:12px 0 14px}
+ #menu .intro{margin-bottom:14px}
+ #menu .player-card{padding-bottom:10px}
+ #menu .ritual-action{height:57px;min-height:57px}
+ #menu .under-button{margin-top:10px}
+ #menu .best-card{margin-top:6px;padding-top:9px}
+}
+@media(min-width:1101px) and (max-height:780px){
+ #menu .menu-content{top:13%;max-height:calc(87dvh - 76px)}
+ #menu h1{font-size:90px;margin:10px 0 12px}
+ #menu h1 .title-prelude{font-size:12px;margin-bottom:6px}
+ #menu .intro{font-size:12px;margin-bottom:12px}
+ #menu .ritual-action{height:54px;min-height:54px}
+ #menu .altar-menu>.menu-links,#menu .altar-menu>.practice{margin-top:5px}
+ #menu .menu-links .text-button,#menu .practice summary{min-height:30px;padding:6px 0}
+}
+#menu .seal-halo,#menu .shrine-embers{display:none}
+@media(max-width:600px){
+ #menu{background:linear-gradient(0deg,#080a0d 0%,#080a0d00 40%,#080a0d11)}
+}

@@ -1,0 +1,253 @@
+{
+  "colors": [
+    {
+      "pitch": -0.7,
+      "pixel": [
+        6,
+        7,
+        8,
+        255
+      ]
+    },
+    {
+      "pitch": 0,
+      "pixel": [
+        5,
+        6,
+        7,
+        255
+      ]
+    },
+    {
+      "pitch": 0.7,
+      "pixel": [
+        6,
+        6,
+        8,
+        255
+      ]
+    }
+  ],
+  "floor": {
+    "daylight": [
+      66,
+      74,
+      81,
+      255
+    ],
+    "unlit": [
+      60,
+      68,
+      74,
+      255
+    ]
+  },
+  "shots": [
+    {
+      "quality": "high",
+      "level": 1,
+      "pitch": 0.22,
+      "contrast": 342.44561612028264,
+      "daggers": 12,
+      "background": [
+        19,
+        24,
+        27
+      ]
+    },
+    {
+      "quality": "high",
+      "level": 1,
+      "pitch": 0.7,
+      "contrast": 267.92909509793816,
+      "daggers": 14,
+      "background": [
+        28,
+        30,
+        37
+      ]
+    },
+    {
+      "quality": "high",
+      "level": 2,
+      "pitch": 0.22,
+      "contrast": 287.26816739764257,
+      "daggers": 22,
+      "background": [
+        18,
+        22,
+        28
+      ]
+    },
+    {
+      "quality": "high",
+      "level": 2,
+      "pitch": 0.7,
+      "contrast": 309.51898164732967,
+      "daggers": 28,
+      "background": [
+        28,
+        29,
+        37
+      ]
+    },
+    {
+      "quality": "high",
+      "level": 3,
+      "pitch": 0.22,
+      "contrast": 347.1527041519337,
+      "daggers": 48,
+      "background": [
+        18,
+        23,
+        28
+      ]
+    },
+    {
+      "quality": "high",
+      "level": 3,
+      "pitch": 0.7,
+      "contrast": 348.6961427948408,
+      "daggers": 60,
+      "background": [
+        28,
+        29,
+        37
+      ]
+    },
+    {
+      "quality": "high",
+      "level": 4,
+      "pitch": 0.22,
+      "contrast": 333.0855745900744,
+      "daggers": 68,
+      "background": [
+        18,
+        21,
+        26
+      ]
+    },
+    {
+      "quality": "high",
+      "level": 4,
+      "pitch": 0.7,
+      "contrast": 323.07429486110465,
+      "daggers": 72,
+      "background": [
+        30,
+        31,
+        38
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 1,
+      "pitch": 0.22,
+      "contrast": 231.2855378098683,
+      "daggers": 14,
+      "background": [
+        27,
+        17,
+        11
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 1,
+      "pitch": 0.7,
+      "contrast": 244.77132184959905,
+      "daggers": 14,
+      "background": [
+        25,
+        27,
+        35
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 2,
+      "pitch": 0.22,
+      "contrast": 242.9691338421405,
+      "daggers": 19,
+      "background": [
+        18,
+        22,
+        28
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 2,
+      "pitch": 0.7,
+      "contrast": 308.82357422968863,
+      "daggers": 30,
+      "background": [
+        25,
+        27,
+        35
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 3,
+      "pitch": 0.22,
+      "contrast": 323.91665594717415,
+      "daggers": 48,
+      "background": [
+        52,
+        33,
+        22
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 3,
+      "pitch": 0.7,
+      "contrast": 344.3414003572617,
+      "daggers": 56,
+      "background": [
+        25,
+        27,
+        36
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 4,
+      "pitch": 0.22,
+      "contrast": 336.25734192728044,
+      "daggers": 64,
+      "background": [
+        19,
+        21,
+        27
+      ]
+    },
+    {
+      "quality": "low",
+      "level": 4,
+      "pitch": 0.7,
+      "contrast": 342.94460194031336,
+      "daggers": 72,
+      "background": [
+        24,
+        27,
+        35
+      ]
+    }
+  ],
+  "first": {
+    "time": 21.060000000000002,
+    "sky": {
+      "time": 21.060000000000002,
+      "chapter": "The Last Sky",
+      "blend": 0.00003325925925926178,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.37908000000000003
+    }
+  },
+  "paused": 21.093300000000003,
+  "recorded": false
+}

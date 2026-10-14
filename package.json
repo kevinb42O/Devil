@@ -9,6 +9,7 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "tsx --test tests/*.test.ts tests/*.test.mjs",
     "test:browser": "node tests/browser.mjs",
+    "test:champion": "node tests/champion-browser.mjs && node tests/champion-alignment-browser.mjs",
     "test:fullscreen": "node tests/fullscreen-browser.mjs",
     "test:audit-rendering": "node tests/game-audit-browser.mjs",
     "test:production": "node tests/production-browser.mjs",
@@ -51,7 +52,16 @@
     "test:death-controller": "node tests/death-analysis-controller.mjs",
     "test:death-performance": "node tests/death-analysis-performance.mjs",
     "test:multiplayer-respawn": "tsx --test tests/multiplayer-respawn.test.ts && node tests/multiplayer-respawn-browser.mjs",
-    "test:gem-hud": "node tests/gem-hud-browser.mjs"
+    "test:gem-hud": "node tests/gem-hud-browser.mjs",
+    "test:descent": "tsx --test tests/descent.test.ts && node tests/descent-browser.mjs && node tests/descent-play-browser.mjs && node tests/descent-preview-browser.mjs",
+    "test:descent-performance": "node tests/descent-performance-browser.mjs",
+    "test:multiplayer-recovery": "tsx --test tests/multiplayer-recovery.test.ts && node tests/multiplayer-host-clock-browser.mjs",
+    "test:multiplayer-network-regressions": "tsx --test tests/multiplayer-network-regressions.test.ts && node tests/multiplayer-large-state-browser.mjs",
+    "test:multiplayer-soak": "node tests/multiplayer-soak-browser.mjs",
+    "test:replay-sharing": "tsx --test tests/replay-file.test.ts tests/replay.test.ts tests/score-queue.test.ts && node tests/replay-sharing-browser.mjs",
+    "test:mist": "tsx --test tests/mist-state.test.ts tests/mist-light-field.test.ts && node tests/mist-distance-edge-browser.mjs && node tests/opening-mist-browser.mjs && node tests/descent-mist-browser.mjs && node tests/mist-toggle-browser.mjs",
+    "test:mist-performance": "node tests/descent-mist-performance-browser.mjs",
+    "test:pwa": "node tests/pwa-browser.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.3.0",

@@ -36,6 +36,10 @@ export function towerSpitPulse(age:number,kind:Enemy['kind']='squid',originalCad
  return 0;
 }
 export function swarmEmergenceScale(enemy:Enemy){return Math.max(0,Math.min(1,enemy.age/(enemy.statusUntil>0&&isSkull(enemy.kind)?.12:1.1)));}
+export function enemyEmergenceScale(enemy:Enemy){return isPede(enemy.kind)?1:isSkull(enemy.kind)||enemy.kind==='spiderling'?swarmEmergenceScale(enemy):Math.max(0,Math.min(1,enemy.age/(enemy.kind==='spider2'?9:enemy.kind==='leviathan'?8.533333:1.1)));}
+export function towerPartOffset(enemy:Enemy,name:string,originalCadence=true){return enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(name)?towerSpitPulse(enemy.age,enemy.kind,originalCadence)*(name.includes('crest')?.4:-.18):0;}
+/** Attached damage targets share the render root's emergence transform. */
+export function crystalToEnemy(enemy:Enemy,player:Vec,local:Vec){const scale=enemyEmergenceScale(enemy);return localToEnemy(enemy,player,v(local.x*scale,local.y*scale,local.z*scale));}
 export function enemyYaw(enemy:Enemy,player:Vec){return isSpider(enemy.kind)?enemy.facingYaw:enemy.kind==='leviathan'?enemy.phase:isPede(enemy.kind)?(Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):enemy.facingYaw):enemy.kind.startsWith('squid')?enemy.facingYaw+(enemy.towerSpinDirection??-1)*enemy.age*TOWER_SPIN_SPEED:isSkull(enemy.kind)&&Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):Math.atan2(player.x-enemy.pos.x,player.z-enemy.pos.z);}
 export function localToEnemy(enemy:Enemy,player:Vec,local:Vec):Vec {const yaw=enemyYaw(enemy,player);return v(enemy.pos.x+local.x*Math.cos(yaw)+local.z*Math.sin(yaw),enemy.pos.y+local.y,enemy.pos.z-local.x*Math.sin(yaw)+local.z*Math.cos(yaw));}
 export const SQUID_I_GEM=v(0,-.04*CREATURE_SCALE,-.51*CREATURE_SCALE);
@@ -47,7 +51,7 @@ export function spiderLocalPoint(enemy:Enemy,player:Vec,local:Vec):Vec {
  local=v(local.x*enemy.size,local.y*enemy.size,local.z*enemy.size);
  const pivot=v(0,.2*CREATURE_SCALE*enemy.size,1*CREATURE_SCALE*enemy.size),angle=(1-enemy.headExposure)*.9;
  const y=local.y-pivot.y,z=local.z-pivot.z;
- return localToEnemy(enemy,player,v(local.x,pivot.y+y*Math.cos(angle)-z*Math.sin(angle),pivot.z+y*Math.sin(angle)+z*Math.cos(angle)));
+ return crystalToEnemy(enemy,player,v(local.x,pivot.y+y*Math.cos(angle)-z*Math.sin(angle),pivot.z+y*Math.sin(angle)+z*Math.cos(angle)));
 }
 
 export const SQUID_III_GEMS=Array.from({length:3},(_,i)=>{const angle=i*Math.PI*2/3;return v(Math.sin(angle)*2.34*CREATURE_SCALE,.38*CREATURE_SCALE,Math.cos(angle)*2.34*CREATURE_SCALE);});

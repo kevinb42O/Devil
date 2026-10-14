@@ -25,6 +25,13 @@ try{
   check(renderer.originalWeapon.fragments.some(f=>f.life<=.16),'short impact animation');
   world.enemies=[];world.effects=[];world.projectiles=[{id:1,pos:v(0,1,-4),vel:v(20,-200,0),age:0,homing:false,level:1}];world.updateProjectiles(STEP);
   check(world.projectiles.length===1&&world.projectiles[0].vel.y>0,'floor still bounces');
+  const ricochet=world.effects.find(e=>e.kind==='ricochet');check(ricochet,'ricochet event');
+  const before=renderer.originalWeapon.fragments.length;
+  renderer.effect(ricochet,world,0,0);
+  check(renderer.originalWeapon.fragments.length===before+3,'three ricochet sparks');
+  const spark=renderer.originalWeapon.fragments.at(-1);
+  check(spark.life<=.14&&spark.vel.y>0,'brief upward sparks');
+  check(spark.emitter.start[1]===1,'hand-colored sparks');
   let maxAlignmentError=0;
   for(const alpha of [0,.2,.5,.8,1]){
    renderer.render(world,0,0,0,false,alpha);

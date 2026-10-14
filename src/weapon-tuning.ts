@@ -34,3 +34,6 @@ export const STREAM_PRESENTATION = [
   {particles:3,flameSize:.068,emberSize:.04},
   {particles:4,flameSize:.075,emberSize:.045},
 ] as const;
+
+/** Floor rebound: preserve flight readability and convert steep shots to a fan. */
+export const RICOCHET_TUNING={retention:.65,verticalRetention:.55,minRiseSpeed:4,steepRatio:2,fanSpeed:.4,agePenalty:.1} as const;

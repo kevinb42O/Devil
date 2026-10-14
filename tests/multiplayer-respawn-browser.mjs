@@ -63,6 +63,9 @@ try{
   await page.keyboard.down(code);await page.waitForFunction(({before,axis,sign})=>sign*(window.abyss.cameraPosition[axis]-before)>.5,{before,axis,sign},{timeout:5000});await page.keyboard.up(code);
  };
  await startRound();
+ // A shared late-game environment survives local death and revival on both peers.
+ await host.evaluate(()=>{window.auditWorld.time=350;});
+ for(const page of pages)await page.waitForFunction(()=>window.abyss.sky.chapter==='The Cathedral Below');
  // Shared collection drives both visible counters; spending reserve is separate.
  await host.evaluate(()=>{for(let i=0;i<80;i++)window.auditWorld.collect();});
  for(const page of pages){await page.waitForFunction(()=>document.querySelector('#gems').textContent==='80');assert.equal(await page.locator('.economy').isVisible(),true);assert.equal(await page.locator('.economy').innerText(),'80\n70');}
@@ -78,6 +81,8 @@ try{
  await guest.waitForFunction(()=>window.abyss.friends.crew.find(p=>p.id===window.auditSession.localId).life===1&&!window.abyss.spectating,{},{timeout:20000});
  assert.equal(await guest.locator('#respawn-status').isVisible(),false);
  const revived=await sample(guest);assert.equal(revived.hand,true);assert.equal(revived.deathPanel,false);assert.equal(revived.state.input.fire,false);assert.equal(revived.state.input.strafe,0);assert.equal(revived.state.stats.shots,shotCount);
+ assert.equal(revived.state.sky.chapter,'The Cathedral Below');assert.ok(revived.state.sky.time>=350,'revival does not reset the shared descent');
+ assert.ok(Math.abs(revived.state.sky.time-revived.state.time)<.3,'guest sky follows the presented match clock');
  const hostLife=await host.evaluate(id=>({time:window.abyss.time,p:window.auditWorld.crew.find(p=>p.id===id)}),localId);
  assert.ok(hostLife.time>=deadline);assert.ok(hostLife.time<deadline+1);assert.equal(hostLife.p.life,1);assert.equal(hostLife.p.alive,true);
  await guest.keyboard.up('KeyD');await guest.keyboard.down('KeyW');
@@ -89,6 +94,7 @@ try{
  await host.evaluate(()=>{window.auditWorld.time=window.auditWorld.crew[0].respawnAt-.1;});
  await host.waitForFunction(()=>window.abyss.friends.crew[0].life===1&&!window.abyss.spectating);
  const hostRevived=await sample(host);assert.equal(hostRevived.hand,true);assert.equal(hostRevived.state.input.fire,false);assert.ok(Math.abs(hostRevived.state.pitch)<=1.5);
+ assert.equal(hostRevived.state.sky.chapter,'The Cathedral Below');assert.ok(hostRevived.state.sky.time>=350);
  // A second death receives a new deadline; a total wipe cancels the pending return.
  await kill(localId,true);await guest.waitForFunction(()=>window.abyss.spectating);
  assert.equal(await guest.locator('#respawn-status').isVisible(),true);assert.match(await guest.locator('#respawn-status').textContent(),/RESPAWNING IN 15s/);
@@ -97,6 +103,7 @@ try{
  assert.ok(await host.evaluate(()=>window.abyss.friends.crew.every(p=>!p.alive)));
  await host.bringToFront();await host.click('#retry');for(const page of pages)await page.waitForFunction(()=>window.abyss.mode==='menu');
  await startRound();for(const page of pages){await page.waitForFunction(()=>document.querySelector('#gems').textContent==='0');assert.equal(await page.locator('#respawn-status').isVisible(),false);}for(const page of pages)assert.ok(await page.evaluate(()=>window.abyss.friends.crew.every(p=>p.life===0&&p.alive&&p.respawnAt===null)));
+ for(const page of pages){await page.waitForFunction(()=>window.abyss.sky.chapter==='The Last Sky'&&!window.abyss.sky.menu);assert.ok(await page.evaluate(()=>window.abyss.sky.time<10),'new match resets the descent');}
  assert.deepEqual(errors,[]);
  console.log('Multiplayer respawn passed: real 15s guest countdown, WebRTC revival, first-person return, cleared spectator inputs, fresh movement/fire, host revival, repeat death, wipe and restart.');
 }finally{await browser.close();}

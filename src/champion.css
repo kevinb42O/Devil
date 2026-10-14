@@ -1,0 +1,56 @@
+/* A single crown, forged in iron and lit with pale gold. */
+/* The seal and its honours share a containing block and a single centre line. */
+.champion-stage{position:absolute;right:1%;top:50%;width:min(53vw,760px,calc(100dvh - 128px));aspect-ratio:1;transform:translateY(-52%);container-type:inline-size;pointer-events:none}
+.champion-stage .infernal-art{inset:0;width:100%;height:100%;transform:none;aspect-ratio:auto;z-index:0;opacity:1}
+.champion-stage .infernal-seal{display:block}
+.champion-stage .seal-inscription{font-size:clamp(8px,1.45cqw,11px);letter-spacing:.9cqw}
+#menu .menu-content{z-index:1}#menu>header,#menu>footer{z-index:2}
+.champion-shrine{position:relative;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0;background:none;color:#e9d3ab;padding:6cqw 12cqw;text-align:center;isolation:isolate;pointer-events:auto}
+.champion-shrine:before{content:'';position:absolute;inset:6% 8%;z-index:-1;background:radial-gradient(ellipse,#af752415,transparent 66%);border-radius:50%;transition:background .3s}
+.champion-shrine:hover:before{background:radial-gradient(ellipse,#af75242a,transparent 66%)}
+.shrine-relic{position:relative;display:block;flex-shrink:0;width:26.32cqw;height:39.47cqw;margin-bottom:3.3cqw;filter:drop-shadow(0 0 24px #cf9a4633);animation:relic-float 6s ease-in-out infinite}
+.sovereign-crown{position:absolute;top:0;left:50%;transform:translateX(-50%);width:15.79cqw;height:10.53cqw;filter:drop-shadow(0 0 10px #e3b45866)}
+.sovereign-dagger{position:absolute;top:10.26cqw;left:50%;width:10cqw;height:30cqw;transform:translateX(-50%);animation:relic-turn 14s ease-in-out infinite}
+.shrine-orbit{position:absolute;left:50%;transform:translateX(-50%);width:32.9cqw;bottom:-1.32cqw;height:5.26cqw;border:1px solid #b8944e44;border-radius:50%;box-shadow:0 0 24px #c1862722,inset 0 0 20px #c1862711}
+.shrine-kicker{display:block;color:#d3ad6b;font:500 11px 'Barlow Condensed',sans-serif;letter-spacing:4px;line-height:1.5}
+.champion-shrine .shrine-kicker{font-size:clamp(8px,1.45cqw,11px);letter-spacing:.53cqw}
+.shrine-name{display:block;width:100%;overflow-wrap:anywhere;font:clamp(22px,6.32cqw,48px)/1.1 var(--display);margin:1.58cqw 0;color:#f1dfbb;text-shadow:0 2px 4px #000,0 0 26px #ddae4222}
+.shrine-record{display:block;width:100%;font:500 clamp(8px,1.58cqw,12px)/1.5 'Barlow Condensed',sans-serif;letter-spacing:.26cqw;color:#bd9f73;font-variant-numeric:tabular-nums}
+.shrine-invitation{display:block;width:100%;margin-top:2.9cqw;font:clamp(7px,1.18cqw,9px)/1.5 'Barlow Condensed',sans-serif;letter-spacing:.26cqw;color:#917c5f}
+.shrine-invitation b{display:block;font-weight:500;color:#ccb17e;margin-top:1.32cqw;letter-spacing:.26cqw}
+.shrine-embers{position:absolute;inset:-20px;pointer-events:none}.shrine-embers i{position:absolute;left:22%;bottom:4%;width:2px;height:3px;background:#edc67f;box-shadow:0 0 6px #ffc969;opacity:0;animation:crown-ember 5s linear infinite}.shrine-embers i:nth-child(2){left:67%;animation-delay:1s}.shrine-embers i:nth-child(3){left:45%;animation-delay:2.6s}.shrine-embers i:nth-child(4){left:83%;animation-delay:3.2s}.shrine-embers i:nth-child(5){left:12%;animation-delay:4.1s}
+.is-vacant .shrine-relic{opacity:.3;filter:none}.is-vacant .shrine-embers{display:none}.is-vacant .shrine-name{font-size:clamp(22px,4.74cqw,36px);color:#b39a77}
+.champion-throne{position:relative;display:flex;align-items:center;gap:20px;padding:22px;margin:24px 0;border:1px solid #bd954e88;background:repeating-linear-gradient(174deg,#ffffff02 0 1px,transparent 1px 5px),radial-gradient(ellipse at 0 50%,#b78b2622,transparent 75%),linear-gradient(110deg,#302619,#15120d);box-shadow:inset 0 1px #f2ce8533,0 0 25px #bd852010}
+.champion-throne:before,.champion-throne:after{content:'◆';position:absolute;top:-6px;color:#bd954e;font-size:9px}.champion-throne:before{left:14px}.champion-throne:after{right:14px}
+.champion-throne>img{width:74px;flex-shrink:0;filter:drop-shadow(0 0 12px #cc994455)}.throne-identity{flex:1;min-width:0}.throne-identity .shrine-kicker{font-size:9px;letter-spacing:2px}.throne-identity>strong{display:block;font:32px/1.15 var(--display);color:#f1dfbb;margin:6px 0;overflow-wrap:anywhere}.throne-motto{font-size:10px;color:#a69270}.throne-score{text-align:right;flex-shrink:0}.throne-score strong{display:block;font:500 32px 'Barlow Condensed',sans-serif;color:#efce91;font-variant-numeric:tabular-nums}.throne-score>span{font:8px 'Barlow Condensed',sans-serif;letter-spacing:1.5px;color:#b19a74}
+.crown-badge{display:inline-block;width:26px;height:20px;vertical-align:middle;margin-right:7px;filter:drop-shadow(0 0 5px #d7b35b55)}
+.leaderboard-table tr.sovereign-row{background:linear-gradient(90deg,#a1792626,#a1792609)}.leaderboard-table tr.sovereign-row td{border-top:1px solid #b9925388;color:#f1d7a3}.sovereign-row-title{display:block!important;font:9px 'Barlow Condensed',sans-serif!important;letter-spacing:1.3px;color:#d1ad69!important;margin-top:5px}
+.altar-menu .player-card.is-sovereign{padding:12px;border:1px solid #b9925377;background:linear-gradient(110deg,#7d59241f,#17120c66);margin-bottom:12px}.altar-menu .player-card.is-sovereign small{color:#e6c27c;letter-spacing:2px}.is-sovereign .player-crest{color:#e6c27c!important;position:relative}.is-sovereign .player-crest svg{visibility:hidden}.is-sovereign .player-crest:after{content:'';position:absolute;inset:5px;background:url('/ui/sovereign-crown.svg') center/contain no-repeat}
+.leaderboard-personal.is-sovereign,.crew-slot.is-sovereign{border-color:#c6a05699;background:radial-gradient(ellipse at 50% 0,#ad7f2726,transparent 80%),var(--iron-face)}.crew-slot.is-sovereign small{color:#e2bc70}.crew-slot.is-sovereign .crew-avatar:after{content:'';position:absolute;top:0;width:44px;height:32px;background:url('/ui/sovereign-crown.svg') center/contain no-repeat;filter:drop-shadow(0 0 6px #d7b35b55)}
+.coronation{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,90%);text-align:center;padding:34px;border:1px solid #c6a056aa;background:radial-gradient(ellipse at 50% 0,#72501f44,transparent 80%),#110e09f5;box-shadow:0 0 120px #ac781e44,0 25px 100px #000;animation:coronation-arrive .8s ease-out}.coronation>img{width:100px;display:block;margin:0 auto 20px;filter:drop-shadow(0 0 16px #dcb85b88)}.coronation>span{font:11px 'Barlow Condensed',sans-serif;letter-spacing:3px;color:#d7b679;line-height:1.7}.coronation>strong{display:block;font:44px/1.2 var(--display);color:#f5e1b9;margin:14px 0;overflow-wrap:anywhere}.coronation p{font-size:12px;color:#bba37c}.coronation .lobby-back{min-height:44px;color:#efd3a0}.is-coronating .infernal-seal{filter:drop-shadow(0 0 38px #edbf7399);opacity:.8}
+@keyframes relic-float{50%{transform:translateY(-9px)}}@keyframes relic-turn{0%,100%{transform:translateX(-50%) rotateY(-22deg)}50%{transform:translateX(-50%) rotateY(22deg)}}@keyframes crown-ember{15%{opacity:.7}85%{opacity:0;transform:translate(14px,-220px)}}@keyframes coronation-arrive{from{opacity:0;transform:translate(-50%,-46%)}to{opacity:1;transform:translate(-50%,-50%)}}
+@media(max-width:1100px){
+ .champion-stage{position:relative;inset:auto;width:min(360px,100%);transform:none;margin-top:22px;overflow:hidden;border:1px solid #aa874c55;background:linear-gradient(110deg,#211a12aa,#100d09cc)}
+ .champion-stage .infernal-art{opacity:.55}
+ .champion-stage .seal-inscription{bottom:3%;font-size:7px;letter-spacing:.7cqw}
+ .champion-shrine{padding:8cqw 10cqw}
+ .shrine-relic{animation:none}
+ .champion-shrine .shrine-kicker{font-size:9px}
+ .shrine-name,.is-vacant .shrine-name{font-size:clamp(16px,6.32cqw,22px)}
+ .shrine-record{font-size:9px}
+ .shrine-invitation{font-size:8px}
+}
+@media(max-width:850px){.champion-throne{gap:12px;padding:16px;flex-wrap:wrap}.champion-throne>img{width:52px}.throne-identity>strong{font-size:28px}.throne-score{width:100%;text-align:left;padding-left:64px}.throne-score strong{display:inline;margin-right:10px}.throne-score>span{display:inline}.coronation{padding:26px}.coronation>strong{font-size:34px}}
+@media(prefers-reduced-motion:reduce){.shrine-relic,.sovereign-dagger,.shrine-embers i,.coronation{animation:none}.shrine-embers{display:none}}
+body[data-sky-motion=reduced] .shrine-relic,body[data-sky-motion=reduced] .sovereign-dagger{animation:none}
+/* Short landscape windows keep the entire composition inside the scroll viewport. */
+@media(max-width:1100px) and (max-height:560px){
+ .champion-stage{width:min(360px,100%,calc(100dvh - 180px))}
+ .champion-shrine{padding:4cqw 10cqw}
+ .shrine-relic{height:36cqw}
+ .sovereign-dagger{height:26cqw}
+ .shrine-name,.is-vacant .shrine-name{font-size:clamp(16px,6.32cqw,28px)}
+ .champion-shrine .shrine-kicker{font-size:8px}
+ .shrine-record{font-size:8px}
+ .shrine-invitation{font-size:7px}
+}

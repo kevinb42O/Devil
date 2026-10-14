@@ -23,6 +23,8 @@ async function check(page,name){
  for(const [id,value] of Object.entries(preferences))assert.equal(await page.locator('#'+id).inputValue(),value,id);
  assert.equal(await page.locator('#control-scheme').inputValue(),'azerty');
  assert.equal(await page.locator('#quality').inputValue(),'low');
+ assert.equal(await page.locator('#sky-motion').inputValue(),'reduced');
+ assert.equal(await page.locator('#volumetric-mist').isChecked(),false);
  assert.equal(await page.locator('#threat-cues').isChecked(),true);
  await page.click('#settings-close');
  await page.click('#profile-edit');assert.equal(await page.locator('#profile-name').inputValue(),name);
@@ -30,10 +32,13 @@ async function check(page,name){
 }
 try{
  let page=await open();await page.click('#settings-open');
+ assert.equal(await page.locator('#volumetric-mist').isChecked(),true,'mist enabled for existing/default preferences');
+ await page.uncheck('#volumetric-mist');
+ assert.equal(await page.evaluate(()=>window.abyss.menuRelics.mist.enabled),false);
  for(const id of ['sensitivity','fov','volume'])await page.locator('#'+id).fill(preferences[id]);
  await page.selectOption('#control-scheme','controller');
  for(const id of ['controllerSensitivity','controllerDeadzone'])await page.locator('#'+id).fill(preferences[id]);
- await page.selectOption('#control-scheme','azerty');await page.selectOption('#quality','low');await page.check('#threat-cues');await page.click('#settings-close');
+ await page.selectOption('#control-scheme','azerty');await page.selectOption('#quality','low');await page.selectOption('#sky-motion','reduced');await page.check('#threat-cues');await page.click('#settings-close');
  await page.click('#start');await page.locator('#profile-name').fill('Local nickname');await page.click('#profile-local');
  assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('abyss-player-profile')).name),'Local nickname');
  await page.reload();await page.waitForFunction(()=>!document.querySelector('#start').disabled);await check(page,'Local nickname');

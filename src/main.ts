@@ -1,7 +1,10 @@
+import {setupPwa} from './pwa';
+import {version as gameVersion} from '../package.json';
 import {ENTRANCE_SPAWN,ENTRANCE_SEAL,touchesEntranceSeal} from './entrance-layout';
 import {MobileControls} from './mobile-controls';
 import {fullscreenElement,fullscreenAvailable,enterFullscreen,exitFullscreen,fullscreenEvents,setupFullscreenMenu} from './fullscreen';
 import {gameViewport,gamePoint} from './game-viewport';
+import {nearbyThreats} from './threat-cues';
 import { keyboardMovement, controllerState, type ControlScheme } from './controls';
 import '@fontsource/pirata-one/latin-400.css';
 import '@fontsource/barlow-condensed/latin-500.css';
@@ -15,35 +18,45 @@ import './iron-ui.css';
 import './mobile.css';
 import './hud.css';
 import './death-analysis.css';
+import './champion.css';
+import './menu-polish.css';
+import {CrownOfTheAbyss, crownBadge} from './champion';
+import {encodeReplay,decodeReplay,MAX_DECODED_BYTES} from './replay-file';
+import {shareReplay,ownReplays,removeSharedReplay,replayLink,linkedReplay,downloadReplay,retainPendingReplay,pendingReplay,clearPendingReplay} from './replay-sharing';
 import {DeathHistory,type DeathAnalysis,killerName} from './death-analysis';
 import {leaderboardConfigured,loadLeaderboard,loadOwnScore,publishCandidate,scoreCandidate,eligibleForLeaderboard} from './leaderboard';
 import {ScoreQueue,cleanNickname,type PendingScore,type OwnScore} from './score-queue';
 import { LobbyBrowser, type PublicLobby } from './lobbies';
 import { FriendsSession, type ArenaSnapshot } from './multiplayer';
+import {CrewClock} from './crew-clock';
 import { GameRenderer } from './renderer';
 import {SpectatorCamera} from './spectator';
 const spectator=new SpectatorCamera();
 import { Sound } from './audio';
 import { Music } from './music';
+import {MenuAudio,setupMenuAudio} from './menu-audio';
 import {RunRecorder,ReplayPlayer,createRun,listRuns,saveRun,DEFAULT_SETUP,type RunSetup,type RecordedRun} from './replay';
 import {ENEMY_KINDS,isPede,isSpider} from './enemy-kinds';
-import { World, STEP, idleInput, distance, TIMELINE, type Input } from './simulation';
+import { World, STEP, idleInput, TIMELINE, type Input } from './simulation';
 const $ = <T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
-type Settings={sensitivity:number;mobileSensitivity:number;fov:number;volume:number;musicVolume:number;quality:string;threatCues:boolean;controlScheme:ControlScheme;controllerSensitivity:number;controllerDeadzone:number};
+$('game-version').textContent=`v${gameVersion}`;
+type Settings={sensitivity:number;mobileSensitivity:number;fov:number;volume:number;musicVolume:number;quality:string;skyMotion:'full'|'reduced';mist:boolean;threatCues:boolean;controlScheme:ControlScheme;controllerSensitivity:number;controllerDeadzone:number};
 const touchDevice=navigator.maxTouchPoints>0&&matchMedia('(pointer:coarse)').matches;
 const mobileControls=new MobileControls();let mobileFullscreen=false,mobileOrientationLocked=false;
-const defaults:Settings={sensitivity:1,mobileSensitivity:1,fov:90,volume:55,musicVolume:55,quality:touchDevice?'low':'high',threatCues:false,controlScheme:touchDevice?'mobile':'qwerty',controllerSensitivity:1,controllerDeadzone:.15};
+const defaults:Settings={sensitivity:1,mobileSensitivity:1,fov:90,volume:55,musicVolume:55,quality:touchDevice?'low':'high',skyMotion:matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':'full',mist:true,threatCues:false,controlScheme:touchDevice?'mobile':'qwerty',controllerSensitivity:1,controllerDeadzone:.15};
 function readStore<T>(key:string,fallback:T):T {try {const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback;}catch{return fallback;}}
 function saveStore(key:string,value:unknown) {try{localStorage.setItem(key,JSON.stringify(value));}catch{/* Play remains available with storage disabled. */}}
 let settings={...defaults,...readStore<Partial<Settings>>('abyss-settings',{})};
-settings.sensitivity=Math.max(.3,Math.min(3,Number(settings.sensitivity)||1));settings.fov=Math.max(75,Math.min(115,Number(settings.fov)||95));settings.volume=Math.max(0,Math.min(100,Number(settings.volume)||0));settings.quality=settings.quality==='low'?'low':'high';
+settings.sensitivity=Math.max(.3,Math.min(3,Number(settings.sensitivity)||1));settings.fov=Math.max(75,Math.min(145,Number(settings.fov)||95));settings.volume=Math.max(0,Math.min(100,Number(settings.volume)||0));settings.quality=settings.quality==='low'?'low':'high';
 settings.mobileSensitivity=Math.max(.3,Math.min(3,Number(settings.mobileSensitivity)||1));
+settings.skyMotion=settings.skyMotion==='reduced'?'reduced':'full';
+settings.mist=settings.mist!==false;
 settings.musicVolume=Math.max(0,Math.min(100,Number(settings.musicVolume)||0));
 settings.controlScheme=['qwerty','azerty','controller','mobile'].includes(settings.controlScheme)?settings.controlScheme:'qwerty';
 settings.controllerSensitivity=Math.max(.3,Math.min(3,Number(settings.controllerSensitivity)||1));settings.controllerDeadzone=Math.max(.05,Math.min(.4,Number(settings.controllerDeadzone)||.15));
-document.body.dataset.controls=settings.controlScheme;
+document.body.dataset.controls=settings.controlScheme;document.body.dataset.skyMotion=settings.skyMotion;
 let best=Math.max(0,Number(readStore('abyss-survival-v3-best',0))||0);
-let renderer:GameRenderer;const sound=new Sound();sound.setVolume(settings.volume/100);const music=new Music();music.setVolume(settings.musicVolume/100);
+let renderer:GameRenderer;const sound=new Sound();sound.setVolume(settings.volume/100);const music=new Music();music.setVolume(settings.musicVolume/100);const menuAudio=new MenuAudio();menuAudio.setVolume(settings.volume/100);
 let entrance=false;let entranceRun:{seed:number;setup:RunSetup}|null=null;
 const deathHistory=new DeathHistory();let deathAnalysis:DeathAnalysis|null=null;let analysisActive=false;let analysisSuspended=false;
 let mode:'menu'|'playing'|'paused'|'dead'|'replay'='menu';let world:World|null=null;let yaw=0,pitch=0;let input:Input=idleInput();let accumulator=0,last=performance.now(),hudTime=0;let settingsOpen=false;let noticeUntil=0,noticeText='';const keys=new Set<string>();const pressedKeys=new Map<string,string>();
@@ -53,9 +66,12 @@ const savedName=typeof savedProfile.name==='string'?savedProfile.name:readStore<
 let profile:PlayerProfile={name:typeof savedName==='string'?savedName:'',automatic:savedProfile.automatic===true,configured:savedProfile.configured===true||(typeof savedName==='string'&&savedName.trim().length>0)};
 let runNickname='',runAutomatic=false,profileOpen=false,profileAction:'start'|'edit'|'publish'='edit';
 let leaderboardOpen=false,leaderboardScores:Awaited<ReturnType<typeof loadLeaderboard>>=[],ownScore:OwnScore|null=null;
+const crown=new CrownOfTheAbyss();
+let rankingRequest:Promise<void>|null=null;
 const scoreQueue=new ScoreQueue(pending=>saveStore('abyss-pending-score',pending),publishCandidate,readStore<PendingScore|null>('abyss-pending-score',null));
 let recorder:RunRecorder|null=null,replay:ReplayPlayer|null=null,lastRun:RecordedRun|null=null;let practice=false,historyOpen=false,replayPaused=false;
-let friends:FriendsSession|null=null;let friendsOpen=false;const lobbyBrowser=new LobbyBrowser();let lobbyStarted=false;let lobbyCrewCount=1;let receivedEpoch=-1;let lastSnapshotAt=0;
+let friends:FriendsSession|null=null;let friendsOpen=false;const lobbyBrowser=new LobbyBrowser();let lobbyStarted=false;let lobbyCrewCount=1;let receivedEpoch=-1;
+const hostClock=new CrewClock();let hostClockWorker:Worker|null=null;
 const buttonEdges:{button:'fire'|'homing'|'jump';held:boolean}[]=[];let sampledFire=false,sampledHoming=false,sampledJump=false;let capturingMouse=false,captureTicket=0;
 let previousPad:ReturnType<typeof controllerState>|null=null;let activePadIndex:number|null=null;let padFire=false,padHoming=false,padJump=false;
 let waitingForController=false;
@@ -63,7 +79,7 @@ let movement={forward:0,strafe:0,jump:false},controllerDown=false,controllerFast
 let blockedPadJump=true,blockedPadFire=true,blockedPadHoming=true;
 const format=(time:number)=>time.toFixed(3);
 function updateBest() {$('best-menu').innerHTML=best?`${format(best)} <span>SECONDS</span>`:'— <span>SECONDS</span>';$('best-hud').textContent=format(best);}
-function showPanels() {if(!friends||mode!=='playing')$('respawn-status').hidden=true;music.setScene(analysisActive?'silent':entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('menu').hidden=mode!=='menu';$('hud').hidden=mode==='menu'||(entrance&&settings.controlScheme!=='mobile');$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
+function showPanels() {document.body.dataset.crewCourtyard=String(!!friends?.prelobby);const previousMode=document.body.dataset.gameMode;document.body.dataset.gameMode=mode;if(previousMode==='menu'&&mode==='playing'&&entrance){const threshold=$('menu-threshold');threshold.classList.remove('is-crossing');void threshold.offsetWidth;threshold.classList.add('is-crossing');}updateConnectionMeter();if(!friends||mode!=='playing')$('respawn-status').hidden=true;music.setScene(analysisActive?'silent':entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu';$('crew-lobby-controls').hidden=!friends||friends.running||mode==='menu';$('menu').hidden=mode!=='menu';crown.showCoronation(mode==='menu'&&!profileOpen&&!leaderboardOpen&&!friendsOpen&&!settingsOpen&&!historyOpen);$('hud').hidden=mode==='menu'||(entrance&&settings.controlScheme!=='mobile');$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen||friendsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
 function crewRespawnStatus(player:World['crew'][number],time:number){
   if(player.respawnAt===null)return player.cause||'DEAD';
   const remaining=player.respawnAt-time;
@@ -93,6 +109,7 @@ async function captureMouse() {
   finally {if(ticket===captureTicket)capturingMouse=false;}
 }
 function startRun(setup:RunSetup=DEFAULT_SETUP) {music.unlock();
+ watchRequest++;
   if(!renderer.originalEnemies.ready||!renderer.originalWeapon.ready)return;
   const previewParams=new URLSearchParams(location.search),previewHand=Number(previewParams.get('hand-preview'));const devPreview=import.meta.env.DEV&&((previewHand>=1&&previewHand<=4)||ENEMY_KINDS.includes(previewParams.get('enemy-preview') as typeof ENEMY_KINDS[number]));
   if(!devPreview&&setup.time===0&&setup.level===1&&setup.reserve===0&&!profile.configured){openProfile('start');return;}
@@ -112,17 +129,17 @@ function enterArena(){
 function resume() {music.unlock();if(!world||profileOpen||leaderboardOpen||historyOpen||friendsOpen)return;
   if(settings.controlScheme==='controller'&&!readControllers().pad){waitingForController=true;clearInput();return;}
   waitingForController=false;clearInput();(document.activeElement as HTMLElement|null)?.blur();mode='playing';settingsOpen=false;accumulator=0;last=performance.now();showPanels();if(entrance)void sound.prepareEntrance(best);else void sound.start();void captureMouse();}
-function home() {waitingForController=false;resetDeathAnalysis(true);entrance=false;entranceRun=null;leaveMobileFullscreen();spectator.reset();leaderboardOpen=false;friends?.close();friends=null;friendsOpen=false;replay=null;recorder=null;renderer.topDown=false;historyOpen=false;mode='menu';world=null;settingsOpen=false;clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();sound.pause();updateBest();showPanels();}
+function home() {watchRequest++;stopHostClock();waitingForController=false;resetDeathAnalysis(true);entrance=false;entranceRun=null;leaveMobileFullscreen();spectator.reset();leaderboardOpen=false;friends?.close();friends=null;friendsOpen=false;replay=null;recorder=null;renderer.topDown=false;historyOpen=false;mode='menu';world=null;settingsOpen=false;clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();sound.pause();updateBest();showPanels();}
 function paused() {
   if(mode!=='playing')return;
   // Browser interruptions release held controls, but multiplayer never pauses.
-  if(friends){friends.releaseControls();clearInput();return;}
+  if(friends){friends.releaseControls();clearInput();if(friends.running)return;}
   waitingForController=false;mode='paused';accumulator=0;clearInput();document.exitPointerLock?.();sound.pause();showPanels();
 }
 function death() {
   if(!world)return;mode='dead';clearInput();document.exitPointerLock?.();
   const record=!friends&&!practice&&world.time>best;if(record){best=world.time;saveStore('abyss-survival-v3-best',best);}
-  $('death-time').textContent=format(world.time);$('retry').hidden=!!friends&&friends.role==='guest';$('retry').innerHTML=friends?'RETURN TO LOBBY <span>↗</span>':'DEFY IT AGAIN <span>↗</span>';$('death-cause').textContent=friends?'The crew fell. '+(friends.role==='host'?'Return to the lobby to ready up again.':'Waiting for the host to restart.'):world.deathSource?`Killed by ${killerName(world.deathSource.kind)}.`:world.cause==='FALLEN'?'Fell into the abyss.':`Taken by ${world.cause.toLowerCase()}.`;$('death-title').textContent=world.cause==='FALLEN'?'LOST BELOW.':'CONSUMED.';
+  $('death-time').textContent=format(world.time);$('retry').hidden=!!friends&&friends.role==='guest';$('retry').innerHTML=friends?'RETURN TO LOBBY <span>↗</span>':'DEFY IT AGAIN <span>↗</span>';$('death-cause').textContent=friends?'The crew fell. '+(friends.role==='host'?'Return to the courtyard to start again.':'Waiting for the host to restart.'):world.deathSource?`Killed by ${killerName(world.deathSource.kind)}.`:world.cause==='FALLEN'?'Fell into the abyss.':`Taken by ${world.cause.toLowerCase()}.`;$('death-title').textContent=world.cause==='FALLEN'?'LOST BELOW.':'CONSUMED.';
   $('new-best').hidden=!record;$('stat-kills').textContent=String(world.stats.kills);$('stat-gems').textContent=String(world.stats.collected);$('stat-accuracy').textContent=`${Math.round(world.stats.hits/Math.max(1,world.stats.shots)*100)}%`;
   saveStore('abyss-last-run',{time:world.time,cause:world.cause,...world.stats});lastRun=friends?null:recorder?.finish(world)??null;$('watch-last').hidden=!lastRun;$('retry').hidden=!!friends&&friends.role==='guest';if(lastRun)void saveRun(lastRun).catch(()=>notice('REPLAY STORAGE UNAVAILABLE'));recorder=null;updateBest();showPanels();handleRunScore();
   if(!friends&&!entrance){deathHistory.capture(world,yaw,pitch,true,input.fire||input.homing);deathAnalysis=deathHistory.clip(world.deathSource);$('watch-death').hidden=!deathAnalysis;if(deathAnalysis)startDeathAnalysis();}else $('watch-death').hidden=true;
@@ -149,7 +166,50 @@ function updateDeathAnalysis(){
  $('analysis-pause').textContent=analysisSuspended?'RESUME':'PAUSE';
  $('analysis-state').textContent=analysisSuspended?'PAUSED':a.impact?'FINAL MOMENT':'DEATH REPLAY';
 }
+let fpsStarted:number|null=null,fpsFrames=0,displayedFps:number|null=null;
+function sampleFrameRate(now:number){
+  if(document.hidden||mode!=='playing'){
+    fpsStarted=null;fpsFrames=0;
+    if(displayedFps!==null){displayedFps=null;$('fps-value').textContent='—';}
+    return;
+  }
+  if(fpsStarted===null){fpsStarted=now;return;}
+  fpsFrames++;
+  const elapsed=now-fpsStarted;
+  if(elapsed<500)return;
+  const fps=Math.round(fpsFrames*10000/elapsed)/10;
+  if(fps!==displayedFps){displayedFps=fps;$('fps-value').textContent=fps.toFixed(1);}
+  fpsStarted=now;fpsFrames=0;
+}
+let meterSession:FriendsSession|null=null;
+let meterQuality:'good'|'fair'|'poor'|null=null;
+function updateConnectionMeter(){
+  const meter=$('connection-meter');meter.hidden=mode==='menu'||mode==='replay';
+  meter.dataset.multiplayer=String(!!friends);
+  if(meterSession!==friends){meterSession=friends;meterQuality=null;}
+  if(meter.hidden)return;
+  if(!friends){
+    delete meter.dataset.quality;
+    const label=displayedFps!==null?`Rendering: ${displayedFps} frames per second.`:'Measuring frame rate.';
+    meter.setAttribute('aria-label',label);meter.title=label;return;
+  }
+  const {state,rttMs}=friends.connection;
+  // Keep the measured number live; hysteresis only steadies the colour near a boundary.
+  if(state==='connected'&&rttMs!==null){
+    meterQuality=meterQuality==='good'&&rttMs<=88?'good':meterQuality==='poor'&&rttMs>152?'poor':meterQuality==='fair'&&rttMs>72&&rttMs<=168?'fair':rttMs<=80?'good':rttMs<=160?'fair':'poor';
+  }else{meterQuality=null;}
+  const quality=meterQuality??state;
+  meter.dataset.quality=quality;
+  $('connection-context').textContent=friends.role==='host'?'CREW':'PING';
+  $('connection-value').textContent=rttMs!==null?(rttMs>999?'999+':String(rttMs)):state==='hosting'?'HOST':state==='stalled'?'WAIT':state==='offline'?'LOST':'…';
+  $('connection-unit').hidden=rttMs===null;
+  const label=rttMs!==null?`${friends.role==='host'?'Slowest player':'Host'} round-trip latency: ${rttMs} milliseconds. ${quality==='good'?'Good':quality==='fair'?'Fair':'High latency'} connection.`:state==='hosting'?'Hosting. No other players connected.':state==='stalled'?'Connection stalled. Waiting for replies.':state==='offline'?'Connection lost.':'Measuring connection latency.';
+  const description=label+(displayedFps!==null?` Rendering: ${displayedFps} frames per second.`:'');
+  meter.setAttribute('aria-label',description);meter.title=description;
+}
+const threatMarkers:HTMLElement[]=[];
 function updateHud() {
+  updateConnectionMeter();
   if(!world)return;const w=world;
   $('timer').textContent=format(w.time);$('gems').textContent=String(w.stats.collected);$('kills').textContent=String(w.stats.kills);
   $('level').textContent=['I','II','III','IV'][w.level-1];$('power-name').textContent=['AWAKENED','KINDLED','ASCENDANT','UNBOUND'][w.level-1];
@@ -160,20 +220,43 @@ function updateHud() {
   $('collection').style.color=input.fire||input.homing?'var(--muted)':'var(--bone)';
   $('phase').textContent=spectator.position?'SPECTATING':friends?'FRIENDS':mode==='replay'?'REPLAY':practice?'PRACTICE':w.wave>=0?`WAVE ${w.wave+1}`:'SURVIVAL';
   $('notice').textContent=noticeText;$('notice').style.opacity=performance.now()<noticeUntil?'1':'0';
-  const ring=$('threat-ring');ring.replaceChildren();
+  const ring=$('threat-ring');
   if(settings.threatCues&&!spectator.position) {
-    const threats=w.enemies.filter(e=>distance(e.pos,w.player.pos)<9&&e.age>1).sort((a,b)=>distance(a.pos,w.player.pos)-distance(b.pos,w.player.pos)).slice(0,5);
-    for(const e of threats) {
-      const angle=Math.atan2(e.pos.x-w.player.pos.x,-(e.pos.z-w.player.pos.z))+yaw;
-      const dist=distance(e.pos,w.player.pos);const element=document.createElement('i');element.className='threat';
-      const viewport=gameViewport(),radius=Math.min(viewport.width,viewport.height)*.32;
-      element.style.transform=`translate(${Math.sin(angle)*radius}px,${-Math.cos(angle)*radius}px) rotate(${angle}rad)`;element.style.opacity=String(Math.max(.2,1-dist/10));ring.append(element);
+    const threats=nearbyThreats(w,yaw),viewport=gameViewport(),radius=Math.min(viewport.width,viewport.height)*.32;
+    for(let i=0;i<threats.length;i++) {
+      const {angle,distance:dist,family}=threats[i];
+      let element=threatMarkers[i];
+      if(!element){element=document.createElement('i');element.className='threat';threatMarkers.push(element);}
+      if(element.dataset.family!==family)element.dataset.family=family;
+      element.style.transform=`translate(${Math.sin(angle)*radius}px,${-Math.cos(angle)*radius}px) rotate(${angle}rad)`;element.style.opacity=String(Math.max(.2,1-dist/10));
+      if(element.parentElement!==ring)ring.append(element);
     }
-  }
+    for(let i=threats.length;i<threatMarkers.length;i++)if(threatMarkers[i].parentElement===ring)threatMarkers[i].remove();
+  }else if(ring.childElementCount)ring.replaceChildren();
   const next=settings.threatCues&&!spectator.position?TIMELINE.find(e=>e.time>w.time&&e.time-w.time<1.5):undefined;
   if(next&&performance.now()>noticeUntil)notice(next.kind==='spider'?'A REAPER STIRS':isPede(next.kind)?'SOMETHING MOVES BELOW':'A SUMMONER APPROACHES',1);
 }
+function stopHostClock(){hostClockWorker?.terminate();hostClockWorker=null;hostClock.reset();}
+function advanceHost(now:number){
+ if(friends?.role!=='host'||!world||world.state!=='playing')return;
+ hostClock.advance(now,()=>{
+  const active=!document.hidden&&mode==='playing'&&!controlMenuRoot()&&!spectator.position;
+  const move=settings.controlScheme==='qwerty'||settings.controlScheme==='azerty'?keyboardMovement(keys,settings.controlScheme):movement;
+  if(active&&Date.now()>=friends!.startAt){const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}}
+  input={forward:active?move.forward:0,strafe:active?move.strafe:0,yaw,pitch,jump:active&&sampledJump,fire:active&&sampledFire,homing:active&&sampledHoming};
+  friends!.step({...input});syncSpectator();
+ });
+ // Network effects have already been captured by FriendsSession.step. Avoid
+ // retaining a particle/audio backlog while the host has no rendered frames.
+ if(document.hidden)world.effects=[];
+}
+function startHostClock(){
+ stopHostClock();hostClock.advance(performance.now(),()=>{});
+ const worker=new Worker(new URL('./crew-clock-worker.ts',import.meta.url),{type:'module'});hostClockWorker=worker;
+ worker.onmessage=()=>{if(hostClockWorker!==worker)return;advanceHost(performance.now());worker.postMessage(null);};
+}
 function frame(now:number) {
+  sampleFrameRate(now);
   const elapsed=Math.max(0,(now-last)/1000),dt=Math.min(.05,elapsed);last=now;
   music.update(dt);
   pollController(dt);
@@ -183,33 +266,38 @@ function frame(now:number) {
   if(!friends&&mode==='playing'&&world&&!controlMenuRoot()) {
     input.forward=movement.forward;input.strafe=movement.strafe;input.jump=movement.jump;input.yaw=yaw;input.pitch=pitch;
     accumulator+=Math.min(.1,elapsed);let steps=0;
-    while(accumulator>=STEP&&world.state==='playing'&&steps++<12) {const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}input.fire=sampledFire;input.homing=sampledHoming;input.jump=sampledJump;if(entrance){world.stepEntrance(input);if(touchesEntranceSeal(world.player.pos))enterArena();}else{recorder?.record(input);world.step(input);deathHistory.capture(world,yaw,pitch,false,input.fire||input.homing);}accumulator-=STEP;}
+    while(accumulator>=STEP&&world.state==='playing'&&steps++<12) {const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}input.fire=sampledFire;input.homing=sampledHoming;input.jump=sampledJump;if(entrance){world.stepEntrance(input);if(touchesEntranceSeal(world.player.pos,world.previousPlayerPosition))enterArena();}else{recorder?.record(input);world.step(input);deathHistory.capture(world,yaw,pitch,false,input.fire||input.homing);}accumulator-=STEP;}
     sound.listener(world.player.pos,yaw,pitch);
     for(const effect of world.effects) {renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);if(effect.kind==='upgrade')notice(`ATTUNEMENT ${['','I','II','III','IV'][effect.amount||1]} · ${effect.amount===(world.homingUnlockGems===10?2:3)?'HOMING UNLOCKED':'POWER RISES'}`,3);if(effect.kind==='death'){$('flash').style.opacity='1';setTimeout(()=>$('flash').style.opacity='0',170);}}
     world.effects=[];
     if(entrance)sound.entrance(best,ENTRANCE_SEAL);else sound.update(world);
     if(world.state==='dead')death();
   }
-  if(friends&&world&&friends.running){
+  if(friends&&world){
     syncSpectator();
     const cameraActive=mode==='playing'&&!controlMenuRoot();
     if(cameraActive&&spectator.position)spectator.move(dt,yaw,pitch,movement.forward,movement.strafe,(movement.jump||keys.has('e')?1:0)-(controllerDown||keys.has('ControlLeft')||keys.has('ControlRight')||(settings.controlScheme==='qwerty'&&keys.has('q'))?1:0),controllerFast||keys.has('ShiftLeft')||keys.has('ShiftRight'));
     const active=cameraActive&&!spectator.position;input.forward=active?movement.forward:0;input.strafe=active?movement.strafe:0;input.jump=active&&movement.jump;input.yaw=yaw;input.pitch=pitch;
     input.fire=active&&sampledFire;input.homing=active&&sampledHoming;
-    accumulator+=Math.min(.1,elapsed);let crewSteps=0;
-    while(accumulator>=STEP&&world.state==='playing'&&crewSteps++<12){
-      if(active&&Date.now()>=friends.startAt){const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}}
-      input.fire=active&&sampledFire;input.homing=active&&sampledHoming;input.jump=active&&sampledJump;
-      if(friends.role==='host')friends.step({...input});else if(active)friends.predict(world,{...input});syncSpectator();accumulator-=STEP;
+    if(friends.role==='host')advanceHost(now);
+    else {
+     accumulator+=Math.min(.1,elapsed);let crewSteps=0;
+     while(accumulator>=STEP&&world.state==='playing'&&crewSteps++<12){
+      const edge=active&&Date.now()>=friends.startAt?buttonEdges[0]:undefined;
+      const fire=edge?.button==='fire'?edge.held:sampledFire,homing=edge?.button==='homing'?edge.held:sampledHoming,jump=edge?.button==='jump'?edge.held:sampledJump;
+      input.fire=active&&fire;input.homing=active&&homing;input.jump=active&&jump;
+      if(active&&friends.predict(world,{...input})&&edge){buttonEdges.shift();sampledFire=fire;sampledHoming=homing;sampledJump=jump;}
+      syncSpectator();accumulator-=STEP;
+     }
     }
     if(friends.role==='host')world.selectCrew('host');
     for(const effect of world.effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}world.effects=[];
     syncSpectator();
-    sound.listener(spectator.position??world.player.pos,yaw,pitch);if(cameraActive)sound.update(world);
+    sound.listener(spectator.position??world.player.pos,yaw,pitch);if(cameraActive){if(entrance)sound.entrance(best,ENTRANCE_SEAL);else sound.update(world);}
     if(Date.now()<friends.startAt)notice(`CREW READY · STARTING IN ${Math.max(1,Math.ceil((friends.startAt-Date.now())/1000))}`,1);
-    $('crew-hud').textContent=`FRIENDS · ${world.crew.length}/4 · ${friends.role==='host'?'HOST':'GUEST'}\n`+world.crew.map((p,i)=>`${i+1}. ${p.id===friends!.localId?'YOU':friends!.members.find(m=>m.id===p.id)?.name??'FRIEND '+(i+1)} · ${p.alive?'ALIVE':p.cause==='DISCONNECTED'?'DISCONNECTED':world!.state==='playing'&&p.respawnAt!==null?crewRespawnStatus(p,world!.time):p.cause||'DEAD'}`).join('\n');
+    $('crew-hud').textContent=(entrance?`CREW COURTYARD · ${world.crew.length} PLAYERS\nENTER THE SEAL TO START EVERYONE\n`:`FRIENDS · ${world.crew.length}/4 · ${friends.role==='host'?'HOST':'GUEST'}\n`)+world.crew.map((p,i)=>`${i+1}. ${p.id===friends!.localId?'YOU':friends!.members.find(m=>m.id===p.id)?.name??'FRIEND '+(i+1)} · ${p.alive?(entrance?'IN COURTYARD':'ALIVE'):p.cause==='DISCONNECTED'?'DISCONNECTED':world!.state==='playing'&&p.respawnAt!==null?crewRespawnStatus(p,world!.time):p.cause||'DEAD'}`).join('\n');
     const local=world.crew.find(p=>p.id===friends!.localId);if(local&&!local.alive&&world.state==='playing'){$('crew-hud').textContent+=settings.controlScheme==='mobile'?'\nSPECTATING':settings.controlScheme==='controller'?'\nSPECTATING · Left stick fly · Right stick look\nA / Cross up · LB / L1 down · L3 faster':`\nSPECTATING · ${settings.controlScheme==='azerty'?'ZQSD':'WASD'} fly · Mouse look\nSpace / E up · Ctrl down · Shift faster`;}
-    if(friends.role==='guest'&&(now-lastSnapshotAt>1000||friends.diagnostics.predictionStalled)){$('crew-hud').textContent+='\nWaiting for host connection…';friends.releaseControls();clearInput();}
+    if(friends.waitingForHost){$('crew-hud').textContent+='\nWaiting for host connection…';friends.releaseControls();clearInput();}
     if(world.state==='dead'&&mode!=='dead')death();
   }
   if(mode==='replay'&&replay){if(!replayPaused){accumulator+=Math.min(.1,elapsed);let steps=0;while(accumulator>=STEP&&!replay.done&&steps++<12){const view=replay.input;if(view){yaw=view.yaw;pitch=view.pitch;input={...view};}replay.step();accumulator-=STEP;}if(replay.done){replayPaused=true;sound.stopLoops();$('replay-pause').textContent='PLAY';}}world=replay.world;yaw=replay.lastInput.yaw;pitch=replay.lastInput.pitch;sound.listener(world.player.pos,yaw,pitch);if(!replayPaused)sound.update(world);for(const effect of world.effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}world.effects=[];$<HTMLInputElement>('replay-seek').value=String(replay.tick);$('replay-time').textContent=`${format(world.time)} / ${format(replay.run.time)}`;}
@@ -219,7 +307,7 @@ function frame(now:number) {
   if(analysisActive&&deathAnalysis){if(!analysisSuspended&&!document.hidden&&!settingsOpen&&!profileOpen&&!leaderboardOpen)deathAnalysis.advance(dt);if(deathAnalysis.done)endDeathAnalysis();else updateDeathAnalysis();}
   renderer.setCrewNames(friends?.members??[]);
   // Frozen views show the completed tick; guests already have a sampled network view.
-  const renderAlpha=friends?.role==='guest'||world?.state==='dead'||(!friends&&(mode==='paused'||settingsOpen))||(mode==='replay'&&replayPaused)?1:Math.min(1,accumulator/STEP);
+  const renderAlpha=friends?.role==='guest'||world?.state==='dead'||(!friends&&(mode==='paused'||settingsOpen))||(mode==='replay'&&replayPaused)?1:friends?.role==='host'?hostClock.alpha:Math.min(1,accumulator/STEP);
   const analysis=analysisActive?deathAnalysis:null;
   renderer.setDeathGhost(analysis?.view.player.pos??null,analysis?.victimYaw,analysis?.impact,analysis?Math.max(0,analysis.elapsed-analysis.duration):0,analysis?.end);
   renderer.render(analysis?.view??(world&&friends?friends.presentation(world,now):world),analysis?.camera.yaw??yaw,analysis?.camera.pitch??pitch,analysis?dt:friends?dt:(mode==='paused'||settingsOpen)?0:dt,mode==='menu',analysis?1:renderAlpha,analysis?.camera.position??spectator.position,friends?.role==='guest',entrance,analysis?{...idleInput(),yaw:analysis.victimYaw,pitch:analysis.victimPitch,fire:analysis.victimFiring}:mode==='replay'?replay?.lastInput:null);
@@ -227,19 +315,54 @@ function frame(now:number) {
   requestAnimationFrame(frame);
 }
 function watchRun(run:RecordedRun){
+ if(friends){notice('Leave the crew before watching a replay.');return;}
+ watchRequest++;leaderboardOpen=false;friendsOpen=false;clearInput();
  resetDeathAnalysis();
  entrance=false;entranceRun=null;
  try{renderer.clear();replay=new ReplayPlayer(run);world=replay.world;recorder=null;mode='replay';historyOpen=false;settingsOpen=false;replayPaused=false;accumulator=0;renderer.topDown=false;document.exitPointerLock?.();sound.clear();void sound.start();const slider=$<HTMLInputElement>('replay-seek');slider.max=String(run.ticks);slider.value='0';$('replay-pause').textContent='PAUSE';showPanels();}catch(error){notice(error instanceof Error?error.message:'REPLAY UNAVAILABLE');}
 }
+let watchRequest=0,replayUploadBusy=false,replayUploadError='',replayRetryAt=0;
+async function watchShared(id:string,button:HTMLButtonElement){
+ if(friends){notice('Leave the crew before watching a replay.');return;}
+ const request=++watchRequest;button.disabled=true;const label=button.textContent;button.textContent='LOADING…';
+ try{const run=await downloadReplay(id);if(request===watchRequest&&!friends)watchRun(run);}catch(error){notice(error instanceof Error?error.message:'REPLAY UNAVAILABLE',6);}finally{button.disabled=false;button.textContent=label;}
+}
+function showShareLink(id:string){const link=$<HTMLInputElement>('replay-share-link');link.value=replayLink(id);link.hidden=false;link.focus();link.select();void navigator.clipboard?.writeText(link.value).then(()=>{$('history-status').textContent='Replay link copied. Anyone with the link can watch.';}).catch(()=>{$('history-status').textContent='Copy the replay link below.';});}
+async function exportReplay(run:RecordedRun){
+ try{const blob=await encodeReplay(run,MAX_DECODED_BYTES),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`abyss-${run.id}.abyss.gz`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(error){$('history-status').textContent=error instanceof Error?error.message:'Could not export replay.';}
+}
+function replayStatus(){
+ $('replay-publish-status').textContent=replayUploadBusy?'Uploading compressed replay…':replayUploadError||'';
+ $<HTMLButtonElement>('replay-upload-retry').hidden=!replayUploadError;$<HTMLButtonElement>('replay-upload-retry').disabled=replayUploadBusy;
+}
+async function queueScoreRun(run:RecordedRun,name:string){
+ try{await retainPendingReplay(run,name);}catch{replayUploadError='Your score can save, but replay storage is unavailable in this browser.';replayStatus();}
+ scoreQueue.enqueue(scoreCandidate(run),name);await scoreQueue.flush();void uploadPendingBest(true);
+}
+async function uploadPendingBest(manual=false){
+ if(replayUploadBusy||(!manual&&Date.now()<replayRetryAt))return;replayUploadBusy=true;
+ try{const pending=await pendingReplay(),confirmed=scoreQueue.confirmed;if(!pending||!confirmed)return;
+  const ms=Math.round(pending.run.time*1000);if(confirmed.survival_ms>ms){await clearPendingReplay(pending.run.id);return;}if(confirmed.survival_ms!==ms)return;
+  replayUploadError='';replayStatus();await shareReplay(pending.run,pending.name,true);await clearPendingReplay(pending.run.id);replayUploadError='';
+  $('replay-publish-status').textContent='Leaderboard replay saved ✓';if(leaderboardOpen)void openLeaderboard();
+ }catch(error){replayUploadError=error instanceof Error?error.message:'Replay upload failed. Your score is saved.';replayRetryAt=Date.now()+60000;
+ }finally{replayUploadBusy=false;if(replayUploadError)replayStatus();else $<HTMLButtonElement>('replay-upload-retry').hidden=true;}
+}
 async function openHistory(){
- historyOpen=true;showPanels();const list=$('history-list');list.replaceChildren();
- try{const runs=await listRuns();if(!runs.length){list.textContent='Your completed runs will appear here.';return;}
- for(const run of runs){const row=document.createElement('div');row.className='history-row';const title=document.createElement('span');title.textContent=`${format(run.time)} s · ${run.practice?'PRACTICE':run.cause} · ${run.stats.collected} gems`;const watch=document.createElement('button');watch.textContent='WATCH';watch.onclick=()=>watchRun(run);const keep=document.createElement('button');keep.textContent=run.saved?'KEPT':'KEEP';keep.onclick=()=>{run.saved=!run.saved;void saveRun(run).then(()=>openHistory());};const download=document.createElement('button');download.textContent='EXPORT';download.onclick=()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(run)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download=`abyss-${run.id}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};row.append(title,watch,keep,download);list.append(row);}
+ historyOpen=true;showPanels();const list=$('history-list');list.replaceChildren();$('history-status').textContent='';
+ let shared:Awaited<ReturnType<typeof ownReplays>>=[];try{if(leaderboardConfigured())shared=await ownReplays();}catch(error){$('history-status').textContent=error instanceof Error?error.message:'Shared replays unavailable.';}
+ try{const runs=await listRuns();if(!runs.length)list.textContent='Your completed runs will appear here.';
+ for(const run of runs){const row=document.createElement('div');row.className='history-row';const title=document.createElement('span');title.textContent=`${format(run.time)} s · ${run.practice?'PRACTICE':run.cause} · ${run.stats.collected} gems`;
+ const watch=document.createElement('button');watch.textContent='WATCH';watch.onclick=()=>watchRun(run);const keep=document.createElement('button');keep.textContent=run.saved?'KEPT':'KEEP';keep.onclick=()=>{run.saved=!run.saved;void saveRun(run).then(()=>openHistory());};const download=document.createElement('button');download.textContent='EXPORT';download.onclick=()=>void exportReplay(run);row.append(title,watch,keep,download);
+ if(leaderboardConfigured()){const share=document.createElement('button');share.textContent=shared.some(r=>r.run_id===run.id&&r.ready)?'COPY LINK':'SHARE';share.onclick=async()=>{share.disabled=true;$('history-status').textContent='Preparing compressed replay…';try{showShareLink(await shareReplay(run,profile.name));$('history-status').textContent='Replay shared. Copy the link below.';}catch(error){$('history-status').textContent=error instanceof Error?error.message:'Sharing failed.';}finally{share.disabled=false;}};row.append(share);
+ if(eligibleForLeaderboard(run,false,false)&&ownScore&&Math.round(run.time*1000)===ownScore.survival_ms&&run.stats.kills===ownScore.kills&&run.stats.collected===ownScore.gems){const attach=document.createElement('button');attach.textContent='ATTACH TO BEST';attach.onclick=async()=>{attach.disabled=true;try{await shareReplay(run,profile.name||ownScore!.player_name,true);$('history-status').textContent='Leaderboard replay saved.';}catch(error){$('history-status').textContent=String(error);}finally{attach.disabled=false;}};row.append(attach);}}
+ list.append(row);}
+ for(const item of shared){const row=document.createElement('div');row.className='history-row';const title=document.createElement('span');title.textContent=`${item.slot===0?'LEADERBOARD REPLAY':'SHARED REPLAY'} · ${format(item.survival_ms/1000)} s · ${(item.bytes/1024).toFixed(0)} KB${item.ready?'':' · unfinished upload'}`;row.append(title);if(item.ready){const copy=document.createElement('button');copy.textContent='COPY LINK';copy.onclick=()=>showShareLink(item.id);row.append(copy);}const remove=document.createElement('button');remove.textContent='REMOVE LINK';remove.onclick=async()=>{remove.disabled=true;try{await removeSharedReplay(item.id);await openHistory();}catch(error){$('history-status').textContent=error instanceof Error?error.message:'Could not remove link.';remove.disabled=false;}};row.append(remove);list.append(row);}
  }catch{list.textContent='Replay storage is unavailable in this browser.';}
 }
 function updatePlayerCard(){
  $('player-name').textContent=profile.name||'Unlisted player';$('player-sharing').textContent=scoreQueue.pending?(scoreQueue.busy?'Saving your best…':'Best saved here · waiting to publish'):profile.automatic?'New bests publish automatically':'Scores stay local until you publish';
- $<HTMLInputElement>('friends-name').value=profile.name||'Wanderer';
+ $<HTMLInputElement>('friends-name').value=profile.name||'Wanderer';crown.updatePlayer(profile.name,ownScore);
 }
 function openProfile(action:'start'|'edit'|'publish'){
  profileAction=action;profileOpen=true;$<HTMLInputElement>('profile-name').value=profile.name;$<HTMLInputElement>('profile-auto').checked=profile.configured?profile.automatic:true;$('profile-error').textContent='';
@@ -268,37 +391,51 @@ function renderRunScore(){
  button.hidden=!runNickname;button.textContent='PUBLISH THIS RUN';$('score-profile').hidden=!!runNickname;
 }
 function handleRunScore(){
- const run=lastRun;if(eligibleForLeaderboard(run,practice,!!friends)&&run&&runAutomatic&&runNickname&&leaderboardConfigured()){scoreQueue.enqueue(scoreCandidate(run),runNickname);void scoreQueue.flush();}
+ const run=lastRun;if(eligibleForLeaderboard(run,practice,!!friends)&&run&&runAutomatic&&runNickname&&leaderboardConfigured()){void queueScoreRun(run,runNickname);}
  renderRunScore();
 }
 function publishCurrentRun(){
  const run=lastRun;if(eligibleForLeaderboard(run,practice,!!friends)&&run){
-  if(!runNickname){openProfile('publish');return;}scoreQueue.enqueue(scoreCandidate(run),runNickname);
+  if(!runNickname){openProfile('publish');return;}void queueScoreRun(run,runNickname);return;
  }
  if(scoreQueue.pending)void scoreQueue.flush();
 }
 function renderRankings(){
  const list=$('leaderboard-rows'),search=$<HTMLInputElement>('leaderboard-search').value.trim().toLocaleLowerCase();list.replaceChildren();
  const scores=leaderboardScores.map((score,index)=>({score,rank:index+1})).filter(({score})=>score.player_name.toLocaleLowerCase().includes(search));
- for(const {score,rank} of scores){const row=document.createElement('tr');const isOwn=ownScore?.rank===rank&&ownScore.player_name===score.player_name&&ownScore.survival_ms===score.survival_ms&&ownScore.achieved_at===score.achieved_at;if(isOwn){row.className='your-score';row.setAttribute('aria-label','Your public best');}
- for(const value of [rank,score.player_name+(isOwn?' · YOU':''),format(score.survival_ms/1000),score.kills,score.gems]){const cell=document.createElement('td');cell.textContent=String(value);row.append(cell);}list.append(row);}
+ for(const {score,rank} of scores){const row=document.createElement('tr');const isOwn=ownScore?.rank===rank&&ownScore.player_name===score.player_name&&ownScore.survival_ms===score.survival_ms&&ownScore.achieved_at===score.achieved_at;const isChampion=rank===1&&crown.matchesName(score.player_name);if(isChampion){row.classList.add('sovereign-row');row.setAttribute('aria-label','Reigning champion');}if(isOwn){row.classList.add('your-score');row.setAttribute('aria-label','Your public best');}
+ for(const value of [rank,score.player_name+(isOwn?' · YOU':''),format(score.survival_ms/1000),score.kills,score.gems]){const cell=document.createElement('td');cell.textContent=String(value);if(isChampion&&row.children.length===1){cell.prepend(crownBadge());const title=document.createElement('small');title.className='sovereign-row-title';title.textContent='REIGNING CHAMPION';cell.append(title);}row.append(cell);}const replayCell=document.createElement('td');if(score.replay_id){const watch=document.createElement('button');watch.className='text-button';watch.textContent='WATCH';watch.setAttribute('aria-label',`Watch ${score.player_name}'s replay`);watch.onclick=()=>void watchShared(score.replay_id!,watch);replayCell.append(watch);}else{replayCell.textContent='—';replayCell.title='No replay attached to this score.';}row.append(replayCell);list.append(row);}
  $('leaderboard-status').textContent=search?`${scores.length} matching ${scores.length===1?'player':'players'} in the top 100`:leaderboardScores.length?`${leaderboardScores.length} ranked ${leaderboardScores.length===1?'player':'players'} · top 100`:'The arena is waiting for its first published score.';
- if(search&&!scores.length){const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=5;cell.textContent='No matching players. Try another nickname.';row.append(cell);list.append(row);}
+ if(search&&!scores.length){const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=6;cell.textContent='No matching players. Try another nickname.';row.append(cell);list.append(row);}
 }
 function renderPersonalRanking(){
  const card=$('leaderboard-personal');card.replaceChildren();const name=document.createElement('strong');name.textContent=ownScore?`${ownScore.player_name} · YOUR PUBLIC BEST`:profile.name||'YOUR PLAYER PROFILE';const detail=document.createElement('span');detail.textContent=ownScore?`${format(ownScore.survival_ms/1000)} s · rank #${ownScore.rank}`:scoreQueue.pending?'Your best is saved here and waiting to publish.':'Complete standard Survival to set your first public best.';card.append(name,detail);
  if(scoreQueue.pending){const retry=document.createElement('button');retry.className='lobby-back';retry.textContent=scoreQueue.busy?'SAVING…':'RETRY SAVE';retry.disabled=scoreQueue.busy;retry.onclick=()=>void scoreQueue.flush();card.append(retry);}
 }
 async function syncPublicBest(){
- try{ownScore=await loadOwnScore();scoreQueue.remember(ownScore);renderPersonalRanking();}catch{/* Reading rankings still works if a player session cannot load. */}
+ try{const score=await loadOwnScore();scoreQueue.remember(score);ownScore=score;renderPersonalRanking();void uploadPendingBest();}catch{/* Reading rankings still works if a player session cannot load. */}
+}
+async function refreshRankings(){
+ if(rankingRequest)return rankingRequest;
+ rankingRequest=(async()=>{
+  try{
+   const [scores]=await Promise.all([loadLeaderboard(),syncPublicBest()]);leaderboardScores=scores;crown.setScores(scores,ownScore,profile.name);renderRankings();renderPersonalRanking();roster();
+   $('leaderboard-updated').textContent=`Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;showPanels();
+  }catch(error){crown.unavailable();$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable. Your runs still work.';}
+ })().finally(()=>{rankingRequest=null;});return rankingRequest;
 }
 async function openLeaderboard(){
  leaderboardOpen=true;showPanels();renderPersonalRanking();const button=$<HTMLButtonElement>('leaderboard-refresh');if(button.disabled)return;button.disabled=true;$('leaderboard-status').textContent='Connecting to the public leaderboard…';
- try{const [scores]=await Promise.all([loadLeaderboard(),syncPublicBest()]);leaderboardScores=scores;renderRankings();$('leaderboard-updated').textContent=`Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
- }catch(error){$('leaderboard-status').textContent=error instanceof Error?error.message:'The leaderboard is unavailable. Your runs still work.';}finally{button.disabled=false;}
+ try{await refreshRankings();}finally{button.disabled=false;}
 }
 function setupLeaderboard(){
- updatePlayerCard();scoreQueue.onChange=()=>{updatePlayerCard();renderRunScore();ownScore=scoreQueue.confirmed;renderPersonalRanking();if(leaderboardOpen&&!scoreQueue.pending&&!scoreQueue.busy)void openLeaderboard();};
+ updatePlayerCard();let scoreWasBusy=scoreQueue.busy;
+ scoreQueue.onChange=()=>{
+  const published=scoreWasBusy&&!scoreQueue.busy&&!scoreQueue.pending&&!scoreQueue.error;scoreWasBusy=scoreQueue.busy;
+  ownScore=scoreQueue.confirmed;updatePlayerCard();renderRunScore();renderPersonalRanking();
+  if(!scoreQueue.pending&&!scoreQueue.busy)void uploadPendingBest();
+  if(published){if(rankingRequest)void rankingRequest.then(()=>refreshRankings());else void refreshRankings();}
+ };
  $('profile-edit').onclick=()=>openProfile('edit');$('leaderboard-profile').onclick=()=>openProfile('edit');$('score-profile').onclick=()=>openProfile('publish');
  $('profile-cancel').onclick=()=>{profileOpen=false;showPanels();};$('profile-local').onclick=()=>{try{const typed=$<HTMLInputElement>('profile-name').value.trim();saveProfile(typed?cleanNickname(typed):'',false);profileOpen=false;showPanels();startRun();}catch(error){$('profile-error').textContent=error instanceof Error?error.message:'Choose a nickname.';}};
  $<HTMLInputElement>('friends-name').onchange=()=>{try{saveProfile(cleanNickname($<HTMLInputElement>('friends-name').value),profile.automatic);}catch(error){$('friends-status').textContent=error instanceof Error?error.message:'Choose a nickname.';}};
@@ -308,9 +445,16 @@ function setupLeaderboard(){
  }catch(error){$('profile-error').textContent=error instanceof Error?error.message:'Choose a nickname.';}};
  $('publish-run').onclick=publishCurrentRun;
  $('leaderboard-open').onclick=()=>void openLeaderboard();$('death-leaderboard').onclick=()=>void openLeaderboard();$('leaderboard-refresh').onclick=()=>void openLeaderboard();$('leaderboard-search').oninput=renderRankings;$('leaderboard-close').onclick=()=>{leaderboardOpen=false;showPanels();};
- if(leaderboardConfigured())void syncPublicBest();
+ const shrine=$('champion-shrine'),stage=$('champion-stage'),compactShrine=matchMedia('(max-width:1100px)');
+ stage.append(shrine);
+ const placeShrine=()=>{if(compactShrine.matches)document.querySelector('.menu-content')!.insertBefore(stage,document.querySelector('.altar-menu'));else $('menu').append(stage);};placeShrine();compactShrine.addEventListener('change',placeShrine);
+ $('champion-shrine').onclick=()=>void openLeaderboard();
+ $('coronation-dismiss').onclick=()=>{crown.dismissCoronation();void openLeaderboard();};
+ if(leaderboardConfigured()){void refreshRankings();setInterval(()=>{if(!document.hidden&&(mode==='menu'||leaderboardOpen||friendsOpen))void refreshRankings();},60000);}
+ const refreshCrown=()=>{if(leaderboardConfigured()&&!document.hidden&&(mode==='menu'||leaderboardOpen||friendsOpen))void refreshRankings();};
+ document.addEventListener('visibilitychange',refreshCrown);window.addEventListener('online',refreshCrown);
  const retryPending=()=>{if(profile.automatic&&scoreQueue.pending&&!scoreQueue.busy&&leaderboardConfigured())void scoreQueue.flush();};
- window.addEventListener('online',retryPending);setInterval(retryPending,15000);retryPending();
+ window.addEventListener('online',retryPending);setInterval(()=>{retryPending();if(profile.automatic)void uploadPendingBest();},15000);retryPending();
 }
 function updateMobileLayout(){
  const {width,height,rotated}=gameViewport();document.body.dataset.mobileRotated=String(rotated);
@@ -380,11 +524,12 @@ function closeControlMenu(){
  if(profileOpen){profileOpen=false;showPanels();}else if(settingsOpen){settingsOpen=false;showPanels();}else if(leaderboardOpen){leaderboardOpen=false;showPanels();}else if(historyOpen){historyOpen=false;showPanels();}else if(friendsOpen){friendsOpen=false;showPanels();}else if(analysisActive)endDeathAnalysis();else if(mode==='replay')home();
 }
 function focusControl(element:HTMLElement){
+ menuAudio.unlock();
  document.querySelectorAll('.controller-focus').forEach(el=>el.classList.remove('controller-focus'));element.classList.add('controller-focus');element.focus();element.scrollIntoView({block:'nearest'});
 }
 function controllerMenu(state:ReturnType<typeof controllerState>,previous:ReturnType<typeof controllerState>|null){
  const edge=(key:keyof typeof state)=>!!state[key]&&!previous?.[key];
- if(edge('back')){closeControlMenu();return;}
+ if(edge('back')){menuAudio.unlock();menuAudio.cue('back');closeControlMenu();return;}
  const root=controlMenuRoot();if(!root)return;
  const elements=Array.from(root.querySelectorAll<HTMLElement>('button,input,select,summary')).filter(el=>el.getClientRects().length&&!el.matches(':disabled'));
  if(!elements.length)return;
@@ -442,25 +587,32 @@ function pollController(dt:number){
 function setupSettings() {
   for(const name of ['sensitivity','mobileSensitivity','fov','volume','musicVolume','controllerSensitivity','controllerDeadzone'] as const) {
     const el=$<HTMLInputElement>(name);el.value=String(settings[name]);$(name+'-value').textContent=(name==='volume'||name==='musicVolume')?`${settings[name]}%`:String(settings[name]);
-    el.oninput=()=>{settings[name]=Number(el.value);$(name+'-value').textContent=(name==='volume'||name==='musicVolume')?`${el.value}%`:el.value;saveStore('abyss-settings',settings);sound.setVolume(settings.volume/100);music.setVolume(settings.musicVolume/100);renderer.configure(settings);};
+    el.oninput=()=>{settings[name]=Number(el.value);$(name+'-value').textContent=(name==='volume'||name==='musicVolume')?`${el.value}%`:el.value;saveStore('abyss-settings',settings);sound.setVolume(settings.volume/100);menuAudio.setVolume(settings.volume/100);music.setVolume(settings.musicVolume/100);renderer.configure(settings);};
   }
   const scheme=$<HTMLSelectElement>('control-scheme');scheme.value=settings.controlScheme;scheme.onchange=()=>{settings.controlScheme=scheme.value as ControlScheme;waitingForController=false;clearInput();saveStore('abyss-settings',settings);updateControlHints();};updateControlHints();
   const q=$<HTMLSelectElement>('quality');q.value=settings.quality;q.onchange=()=>{settings.quality=q.value;saveStore('abyss-settings',settings);renderer.configure(settings);};
+  const sky=$<HTMLSelectElement>('sky-motion');sky.value=settings.skyMotion;sky.onchange=()=>{settings.skyMotion=sky.value==='reduced'?'reduced':'full';document.body.dataset.skyMotion=settings.skyMotion;saveStore('abyss-settings',settings);renderer.configure(settings);};
+  const mist=$<HTMLInputElement>('volumetric-mist');mist.checked=settings.mist;mist.onchange=()=>{settings.mist=mist.checked;saveStore('abyss-settings',settings);renderer.configure(settings);};
   const cues=$<HTMLInputElement>('threat-cues');cues.checked=settings.threatCues;cues.onchange=()=>{settings.threatCues=cues.checked;saveStore('abyss-settings',settings);};
 }
 function openSettings() {if(friends&&mode==='playing')return;if(mode==='playing')paused();settingsOpen=true;clearInput();setupSettings();showPanels();}
-function beginCrew(host:boolean){
- entrance=false;entranceRun=null;
+function beginCrewLobby(host:boolean){
+ beginCrew(host,true);
+}
+function beginCrew(host:boolean,lobby=false){
+ const crossed=entrance&&!lobby;stopHostClock();
+ entrance=lobby;entranceRun=null;
  spectator.reset();
- $('pause').querySelector('p')!.textContent='The crew run is live. Click return to capture your mouse.';
- resetDeathAnalysis(true);renderer.clear();sound.clear();recorder=null;replay=null;lastRun=null;practice=true;historyOpen=false;settingsOpen=false;friendsOpen=false;world=host?friends!.world:new World(1,{schedule:false});yaw=0;pitch=0;clearInput();accumulator=0;last=performance.now();renderer.topDown=false;mode='playing';(document.activeElement as HTMLElement|null)?.blur();showPanels();void sound.start();void captureMouse();notice('CREW RUN · RELEASE FIRE TO SHARE GEMS',4);
+ $('pause').querySelector('p')!.textContent=lobby?'Walk into the seal to start the run for the whole crew.':'The crew run is live. Click return to capture your mouse.';
+ resetDeathAnalysis(true);renderer.clear();sound.clear();recorder=null;replay=null;lastRun=null;practice=true;historyOpen=false;settingsOpen=false;friendsOpen=false;world=host?friends!.world:new World(1,{schedule:false});yaw=0;pitch=0;clearInput();accumulator=0;last=performance.now();renderer.topDown=false;mode='playing';(document.activeElement as HTMLElement|null)?.blur();showPanels();if(lobby)void sound.prepareEntrance(best);else if(crossed)void sound.collectDagger(best);else void sound.start();void captureMouse();notice(lobby?'WALK INTO THE SEAL TO START THE CREW RUN':'CREW RUN · RELEASE FIRE TO SHARE GEMS',4);if(host)startHostClock();
 }
 function roster(){
  const joined=!!friends;$('friends-browser').hidden=joined;$('friends-waiting').hidden=!joined;if(!friends)return;
  $('friends-room-name').textContent=friends.lobbyName;$('friends-player-count').textContent=`${friends.members.length} / 4 PLAYERS`;
  const list=$('friends-roster');list.replaceChildren();const local=friends.members.find(p=>p.id===friends!.localId);
- for(let i=0;i<4;i++){const member=friends.members[i];const card=document.createElement('div');card.className='crew-slot'+(member?.ready?' is-ready':'')+(!member?' empty':'');card.style.setProperty('--crew-color',['#cfdfa0','#8ed4dd','#e1bc8d','#c4a7df'][i]);const mark=document.createElement('div');mark.className='crew-avatar';mark.textContent=member?'◇':'+';const name=document.createElement('strong');name.textContent=member?member.name+(member.id===friends.localId?' · YOU':''):'OPEN SLOT';const role=document.createElement('small');role.textContent=member?(member.host?'HOST':'CREW'):'WAITING FOR A PLAYER';const badge=document.createElement('span');badge.className='crew-ready';badge.textContent=member?(member.ready?'✓ READY':'NOT READY'):'—';card.append(mark,name,role,badge);list.append(card);}
- const count=friends.members.filter(p=>p.ready).length;$('friends-ready-count').textContent=`${count} / ${friends.members.length} READY`;$('friends-launch-hint').textContent=friends.role==='host'?(friends.allReady?'The crew is ready. Start when you are.':'Waiting for every player to mark ready.'):'The host will start when everyone is ready.';
+ for(let i=0;i<4;i++){const member=friends.members[i];const card=document.createElement('div');card.className='crew-slot'+(member?.ready?' is-ready':'')+(!member?' empty':'');card.style.setProperty('--crew-color',['#cfdfa0','#8ed4dd','#e1bc8d','#c4a7df'][i]);const mark=document.createElement('div');mark.className='crew-avatar';mark.textContent=member?'◇':'+';const name=document.createElement('strong');name.textContent=member?member.name+(member.id===friends.localId?' · YOU':''):'OPEN SLOT';const role=document.createElement('small');role.textContent=member?(member.host?'HOST':'CREW'):'WAITING FOR A PLAYER';const badge=document.createElement('span');badge.className='crew-ready';badge.textContent=member?(friends.prelobby?'IN COURTYARD':member.ready?'✓ READY':'NOT READY'):'—';if(member&&crown.matchesName(member.name)){card.classList.add('is-sovereign');name.prepend(crownBadge());role.textContent='REIGNING CHAMPION · '+role.textContent;}card.append(mark,name,role,badge);list.append(card);}
+ if(friends.prelobby){$('friends-ready-count').textContent=`${friends.members.length} / 4 IN THE COURTYARD`;$('friends-launch-hint').textContent='Any player can walk into the seal to start the run for everyone.';const ready=$<HTMLButtonElement>('friends-ready');ready.disabled=false;ready.classList.remove('is-ready');ready.textContent='RETURN TO COURTYARD →';$('friends-start').hidden=true;return;}
+ const count=friends.members.filter(p=>p.ready).length;$('friends-ready-count').textContent=`${count} / ${friends.members.length} READY`;$('friends-launch-hint').textContent=friends.role==='host'?(friends.allReady?'The crew is ready. Start to enter the courtyard together.':'Waiting for every player to mark ready.'):'The host will send everyone to the courtyard when the crew is ready.';
  const ready=$<HTMLButtonElement>('friends-ready');ready.disabled=!local||friends.running;ready.classList.toggle('is-ready',!!local?.ready);ready.textContent=local?.ready?'READY ✓ · CLICK TO UNREADY':"I'M READY ✓";
  const start=$<HTMLButtonElement>('friends-start');start.hidden=friends.role!=='host';start.disabled=!friends.allReady||friends.running||!renderer.originalEnemies.ready||!renderer.originalWeapon.ready;
 }
@@ -473,41 +625,48 @@ function newSession(role:'host'|'guest'){
  const previous=friends;friends=null;previous?.close();lobbyCrewCount=1;receivedEpoch=-1;
  const configured=import.meta.env.VITE_WEBRTC_ICE_SERVERS;let ice:RTCIceServer[]|undefined;if(configured){ice=JSON.parse(configured);}
  const session=new FriendsSession(role,ice);session.setName($<HTMLInputElement>('friends-name').value);friends=session;
- session.onChange=()=>{if(friends!==session)return;roster();if(role==='guest'&&!session.connected&&world&&session.running){home();friendsOpen=true;showPanels();roster();$('friends-status').textContent='The host left. Choose another lobby to play again.';}};
+ session.onChange=()=>{if(friends!==session)return;roster();if(role==='host'&&session.running&&entrance)beginCrew(true);if(role==='guest'&&!session.connected&&world){home();friendsOpen=true;showPanels();roster();$('friends-status').textContent='The host left. Choose another lobby to play again.';}};
  session.onError=message=>{$('friends-status').textContent=message;notice(message,6);};
- session.onSnapshot=(snapshot:ArenaSnapshot)=>{if(friends!==session)return;lastSnapshotAt=performance.now();lobbyCrewCount=snapshot.crew.length;if(!snapshot.running){spectator.reset();if(world){world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;showPanels();}roster();return;}if(snapshot.epoch!==receivedEpoch){receivedEpoch=snapshot.epoch;beginCrew(false);}if(world){session.reconcile(world,snapshot);for(const effect of snapshot.effects??[]){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}}};
+ session.onSnapshot=(snapshot:ArenaSnapshot)=>{if(friends!==session)return;lobbyCrewCount=snapshot.crew.length;if(snapshot.prelobby){if(!entrance||!world||snapshot.epoch!==receivedEpoch){receivedEpoch=snapshot.epoch;beginCrewLobby(false);}if(world)session.reconcile(world,snapshot);return;}if(!snapshot.running){spectator.reset();entrance=false;if(world){world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;showPanels();}roster();return;}if(snapshot.epoch!==receivedEpoch){receivedEpoch=snapshot.epoch;beginCrew(false);}if(world){session.reconcile(world,snapshot);for(const effect of snapshot.effects??[]){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}}};
  session.onEffects=effects=>{if(friends!==session||!world)return;for(const effect of effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}};roster();return session;
 }
 async function joinLobby(room:PublicLobby){$('friends-status').textContent=`Joining ${room.name}…`;const session=newSession('guest');session.lobbyName=room.name;roster();await session.joinPublic(room);$('friends-status').textContent='Connecting to your crew…';}
-function returnCrewLobby(){spectator.reset();if(friends?.role!=='host')return;friends.returnToLobby();world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;settingsOpen=false;showPanels();roster();}
+function returnCrewLobby(){stopHostClock();spectator.reset();if(friends?.role!=='host')return;friends.returnToLobby();entrance=false;world=null;mode='menu';clearInput();document.exitPointerLock?.();renderer.clear();sound.clear();friendsOpen=true;settingsOpen=false;showPanels();roster();}
 function setupFriends(){
  lobbyBrowser.onChange=renderLobbies;lobbyBrowser.onStatus=text=>$('friends-service').textContent=text;
  $('friends-open').onclick=()=>{friendsOpen=true;showPanels();roster();renderLobbies();if(!lobbyStarted){lobbyStarted=true;void lobbyBrowser.start();}};
- $('friends-refresh').onclick=()=>lobbyBrowser.refresh();$('friends-close').onclick=()=>{friendsOpen=false;showPanels();};
+ $('friends-refresh').onclick=()=>lobbyBrowser.refresh();$('friends-close').onclick=()=>{friendsOpen=false;if(friends&&world&&!friends.running)resume();else showPanels();};
+ $('crew-lobby-room').onclick=()=>{paused();friendsOpen=true;showPanels();roster();};
+ $('crew-lobby-leave').onclick=()=>home();
  $('friends-leave').onclick=()=>{home();friendsOpen=true;showPanels();roster();renderLobbies();$('friends-status').textContent='You left the lobby.';};
  $('friends-host').onclick=()=>{const button=$<HTMLButtonElement>('friends-host');button.disabled=true;$('friends-status').textContent='Creating your lobby…';const session=newSession('host');void session.hostPublic($<HTMLInputElement>('friends-lobby-name').value).then(()=>{$('friends-status').textContent='Lobby is live. Your friends can find it in Open lobbies.';roster();}).catch(e=>{$('friends-status').textContent=String(e.message||e);friends=null;session.close();roster();}).finally(()=>button.disabled=false);};
- $('friends-ready').onclick=()=>{if(!friends)return;const local=friends.members.find(p=>p.id===friends!.localId);if(!local)return;const ready=!local.ready;friends.setReady(ready);if(!ready||settings.controlScheme==='mobile'||settings.controlScheme==='controller'){roster();return;}capturingMouse=true;void $('game').requestPointerLock().then(()=>{document.exitPointerLock?.();}).catch(()=>{}).finally(()=>{capturingMouse=false;});roster();};
- $('friends-start').onclick=()=>{if(friends?.role==='host'&&friends.allReady){friends.start();beginCrew(true);}};
+ $('friends-ready').onclick=()=>{if(!friends)return;if(friends.prelobby){friendsOpen=false;resume();return;}const local=friends.members.find(p=>p.id===friends!.localId);if(!local)return;const ready=!local.ready;friends.setReady(ready);if(!ready||settings.controlScheme==='mobile'||settings.controlScheme==='controller'){roster();return;}capturingMouse=true;void $('game').requestPointerLock().then(()=>{document.exitPointerLock?.();}).catch(()=>{}).finally(()=>{capturingMouse=false;});roster();};
+ $('friends-start').onclick=()=>{if(friends?.role==='host'&&friends.allReady){friends.enterPrelobby();beginCrewLobby(true);}};
 }
 function init() {
+  setupPwa();
   setupFullscreenMenu($<HTMLButtonElement>('fullscreen-toggle'),$('fullscreen-label'),$('fullscreen-status'));
   try {renderer=new GameRenderer($<HTMLCanvasElement>('game'),settings);}catch(error){$('error').hidden=false;$('error').textContent=`The arena could not initialize WebGL2. Enable hardware acceleration and use a current browser. ${error instanceof Error?error.message:''}`;return;}
   updateBest();showPanels();setupSettings();
-  // Begin decoding on the first menu gesture, before a quick initial burst.
-  document.addEventListener('pointerdown',()=>void sound.start(),{once:true});
   document.addEventListener('pointerdown',()=>music.unlock());
   document.addEventListener('keydown',()=>music.unlock());
+  setupMenuAudio(menuAudio,()=>settings.volume/100);
+
   const start=$<HTMLButtonElement>('start');start.disabled=true;void renderer.prepare().then(()=>{start.disabled=!(renderer.originalEnemies.ready&&renderer.originalWeapon.ready);if(start.disabled){$('error').hidden=false;$('error').textContent='The original game assets could not load. '+renderer.originalEnemies.error+' '+renderer.originalWeapon.error;}}).catch(error=>{$('error').hidden=false;$('error').textContent='The arena could not prepare its graphics. '+String(error);});
   $('analysis-retry').onclick=()=>$('retry').click();$('analysis-skip').onclick=endDeathAnalysis;$('analysis-pause').onclick=()=>{analysisSuspended=!analysisSuspended;updateDeathAnalysis();};$('watch-death').onclick=startDeathAnalysis;
   $('start').onclick=()=>{if(friends){friendsOpen=true;showPanels();return;}startRun();};$('retry').onclick=()=>{if(friends){if(friends.role==='host')returnCrewLobby();return;}startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);};$('resume').onclick=resume;$('quit').onclick=home;$('home').onclick=home;
   $('settings-open').onclick=openSettings;$('pause-settings').onclick=openSettings;$('settings-close').onclick=()=>{settingsOpen=false;showPanels();};
   $('practice-start').onclick=()=>{if(friends){friendsOpen=true;showPanels();return;}startRun({time:Math.max(0,Math.min(1200,Number($<HTMLInputElement>('practice-time').value)||0)),level:Number($<HTMLSelectElement>('practice-level').value),reserve:Math.max(0,Math.min(1000,Number($<HTMLInputElement>('practice-homing').value)||0))});};
+  $('replay-upload-retry').onclick=()=>void uploadPendingBest(true);
+  $('replay-import').onclick=()=>$<HTMLInputElement>('replay-import-file').click();
+  $<HTMLInputElement>('replay-import-file').onchange=async()=>{const input=$<HTMLInputElement>('replay-import-file'),file=input.files?.[0];if(!file)return;try{const run=await decodeReplay(file);run.saved=true;await saveRun(run);$('history-status').textContent='Replay imported and kept.';watchRun(run);}catch(error){$('history-status').textContent=error instanceof Error?error.message:'Could not import replay.';}finally{input.value='';}};
+  const updateSharedLink=()=>{const sharedId=linkedReplay(location.hash);$('shared-replay-open').hidden=!sharedId;$('shared-replay-open').onclick=sharedId?()=>void watchShared(sharedId,$<HTMLButtonElement>('shared-replay-open')):null;};updateSharedLink();window.addEventListener('hashchange',updateSharedLink);
   $('history-open').onclick=()=>void openHistory();$('history-close').onclick=()=>{historyOpen=false;showPanels();};$('watch-last').onclick=()=>{if(lastRun)watchRun(lastRun);};$('replay-exit').onclick=home;$('replay-pause').onclick=()=>{if(replay?.done){seekReplay(0);sound.clear();}replayPaused=!replayPaused;if(replayPaused)sound.pause();else void sound.start();accumulator=0;$('replay-pause').textContent=replayPaused?'PLAY':'PAUSE';};
   $<HTMLInputElement>('replay-seek').oninput=()=>{if(replay){sound.clear();world=seekReplay(Number($<HTMLInputElement>('replay-seek').value));accumulator=0;}};
   document.addEventListener('pointerlockchange',()=>{if(settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&document.pointerLockElement!==$('game')&&!capturingMouse)paused();});
-  document.addEventListener('visibilitychange',()=>{music.setHidden(document.hidden);if(document.hidden&&mode==='playing'){document.exitPointerLock?.();paused();}});
+  document.addEventListener('visibilitychange',()=>{fpsStarted=null;fpsFrames=0;music.setHidden(document.hidden);if(document.hidden&&mode==='playing'){document.exitPointerLock?.();paused();}});
   window.addEventListener('blur',()=>{if(mode==='playing'){document.exitPointerLock?.();paused();}});
-  window.addEventListener('keydown',e=>{if(e.code==='Escape'){if(analysisActive){e.preventDefault();endDeathAnalysis();return;}if(friends&&mode==='playing'){e.preventDefault();return;}if(profileOpen||settingsOpen||leaderboardOpen||historyOpen||friendsOpen){e.preventDefault();closeControlMenu();return;}if(mode==='playing'){e.preventDefault();paused();return;}}if(analysisActive&&e.code==='Space'){e.preventDefault();analysisSuspended=!analysisSuspended;updateDeathAnalysis();return;}if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLSelectElement)return;if(mode==='replay'&&e.code==='KeyM'){renderer.topDown=!renderer.topDown;return;}if(mode==='replay'&&(e.code==='ArrowLeft'||e.code==='ArrowRight')&&replay){sound.clear();world=seekReplay(replay.tick+(e.code==='ArrowLeft'?-1:1)*(e.ctrlKey?10:3)/STEP);accumulator=0;return;}if(!entrance&&!friends&&['Digit1','Digit2','Digit3','Digit4','Numpad1','Numpad2','Numpad3','Numpad4'].includes(e.code)&&(mode==='playing'||mode==='paused')&&world&&!settingsOpen){e.preventDefault();if(e.repeat)return;const level=Number(e.code.slice(-1));world.level=level;world.stats.collected=level===1?0:level===2?10:level===3?70:200;world.reserve=level===4?190:level>=2?50:0;practice=true;recorder=null;world.emit('upgrade',world.player.pos,level);notice(`WEAPON ${level} · UNRANKED TEST RUN`,4);updateHud();return;}if(e.code==='Space'&&mode==='playing')e.preventDefault();if(e.code==='KeyR'&&mode==='dead'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!(e.target instanceof HTMLInputElement)){if(friends){if(friends.role==='host')returnCrewLobby();}else startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);return;}if(e.code==='Escape'&&leaderboardOpen){leaderboardOpen=false;showPanels();return;}if(e.code==='Escape'&&settingsOpen){settingsOpen=false;showPanels();return;}if(e.code==='Escape'&&settings.controlScheme==='controller'&&mode==='playing'){paused();return;}if(mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'){if(!pressedKeys.has(e.code))pressedKeys.set(e.code,e.key.toLowerCase());keys.add(e.code);keys.add(pressedKeys.get(e.code)!);if(e.code==='Space'&&!e.repeat&&!spectator.position)buttonEdges.push({button:'jump',held:true});}});
+  window.addEventListener('keydown',e=>{if(e.code==='Escape'){if(analysisActive){e.preventDefault();endDeathAnalysis();return;}if(friends?.running&&mode==='playing'){e.preventDefault();return;}if(profileOpen||settingsOpen||leaderboardOpen||historyOpen||friendsOpen){e.preventDefault();closeControlMenu();return;}if(mode==='playing'){e.preventDefault();paused();return;}}if(analysisActive&&e.code==='Space'){e.preventDefault();analysisSuspended=!analysisSuspended;updateDeathAnalysis();return;}if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLSelectElement)return;if(mode==='replay'&&e.code==='KeyM'){renderer.topDown=!renderer.topDown;return;}if(mode==='replay'&&(e.code==='ArrowLeft'||e.code==='ArrowRight')&&replay){sound.clear();world=seekReplay(replay.tick+(e.code==='ArrowLeft'?-1:1)*(e.ctrlKey?10:3)/STEP);accumulator=0;return;}if(!entrance&&!friends&&['Digit1','Digit2','Digit3','Digit4','Numpad1','Numpad2','Numpad3','Numpad4'].includes(e.code)&&(mode==='playing'||mode==='paused')&&world&&!settingsOpen){e.preventDefault();if(e.repeat)return;const level=Number(e.code.slice(-1));world.level=level;world.stats.collected=level===1?0:level===2?10:level===3?70:200;world.reserve=level===4?190:level>=2?50:0;practice=true;recorder=null;world.emit('upgrade',world.player.pos,level);notice(`WEAPON ${level} · UNRANKED TEST RUN`,4);updateHud();return;}if(e.code==='Space'&&mode==='playing')e.preventDefault();if(e.code==='KeyR'&&mode==='dead'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!(e.target instanceof HTMLInputElement)){if(friends){if(friends.role==='host')returnCrewLobby();}else startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);return;}if(e.code==='Escape'&&leaderboardOpen){leaderboardOpen=false;showPanels();return;}if(e.code==='Escape'&&settingsOpen){settingsOpen=false;showPanels();return;}if(e.code==='Escape'&&settings.controlScheme==='controller'&&mode==='playing'){paused();return;}if(mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'){if(!pressedKeys.has(e.code))pressedKeys.set(e.code,e.key.toLowerCase());keys.add(e.code);keys.add(pressedKeys.get(e.code)!);if(e.code==='Space'&&!e.repeat&&!spectator.position)buttonEdges.push({button:'jump',held:true});}});
   window.addEventListener('keyup',e=>{const letter=pressedKeys.get(e.code);pressedKeys.delete(e.code);keys.delete(e.code);if(letter&&!Array.from(pressedKeys.values()).includes(letter))keys.delete(letter);if(mode==='playing'&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&e.code==='Space')buttonEdges.push({button:'jump',held:false});});
   document.addEventListener('mousemove',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||document.pointerLockElement!==$('game'))return;yaw-=e.movementX*.002*settings.sensitivity;const limit=spectator.position?Math.PI/2:1.5;pitch=Math.max(-limit,Math.min(limit,pitch-e.movementY*.002*settings.sensitivity));});
   document.addEventListener('mousedown',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position||document.pointerLockElement!==$('game'))return;if(e.button===0)buttonEdges.push({button:'fire',held:true});if(e.button===2){buttonEdges.push({button:'homing',held:true});if(world&&!world.homingUnlocked)notice(`HOMING AWAKENS AT ${world.homingUnlockGems} GEMS`,1.5);}});
@@ -516,7 +675,7 @@ function init() {
   setupMobileControls();
   $('game').addEventListener('contextmenu',e=>e.preventDefault());
   // Read-only diagnostic surface for development smoke tests and frame profiling.
-  if(import.meta.env.DEV) Object.defineProperty(window,'abyss',{get:()=>({mode,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,position:p.player.pos})),running:friends.running}:null,audio:sound.diagnostics,music:music.diagnostics})});
+  if(import.meta.env.DEV) Object.defineProperty(window,'abyss',{get:()=>({mode,menuRelics:renderer.menuRelics.diagnostics,sky:renderer.skyDiagnostics,mist:renderer.openingMist.diagnostics,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,position:p.player.pos})),running:friends.running,prelobby:friends.prelobby}:null,audio:sound.diagnostics,menuAudio:menuAudio.diagnostics,music:music.diagnostics})});
   updateControlHints();setupFriends();setupLeaderboard();
   requestAnimationFrame(frame);
 }

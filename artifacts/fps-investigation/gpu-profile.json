@@ -1,0 +1,293 @@
+{
+  "hardware": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+  "rows": [
+    {
+      "quality": "high",
+      "scene": "entrance",
+      "mode": "current",
+      "cpuMs": {
+        "median": 0.699999988079071,
+        "p95": 0.9000000059604645
+      },
+      "gpuMs": {
+        "median": 11.332083,
+        "p95": 17.998374
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 89
+    },
+    {
+      "quality": "high",
+      "scene": "entrance",
+      "mode": "mist-off",
+      "cpuMs": {
+        "median": 0.5,
+        "p95": 0.9000000059604645
+      },
+      "gpuMs": {
+        "median": 6.597208,
+        "p95": 8.710958
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 87
+    },
+    {
+      "quality": "high",
+      "scene": "entrance",
+      "mode": "old-sky-mist-off",
+      "cpuMs": {
+        "median": 0.5,
+        "p95": 0.800000011920929
+      },
+      "gpuMs": {
+        "median": 6.209124,
+        "p95": 10.198291
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 87
+    },
+    {
+      "quality": "high",
+      "scene": "entrance",
+      "mode": "current",
+      "cpuMs": {
+        "median": 0.5999999940395355,
+        "p95": 0.800000011920929
+      },
+      "gpuMs": {
+        "median": 13.287499,
+        "p95": 17.034166
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 89
+    },
+    {
+      "quality": "high",
+      "scene": "arena",
+      "mode": "current",
+      "cpuMs": {
+        "median": 1,
+        "p95": 1.2000000178813934
+      },
+      "gpuMs": {
+        "median": 9.436624,
+        "p95": 14.491708
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 26
+    },
+    {
+      "quality": "high",
+      "scene": "arena",
+      "mode": "mist-off",
+      "cpuMs": {
+        "median": 0.800000011920929,
+        "p95": 1.0999999940395355
+      },
+      "gpuMs": {
+        "median": 3.799999,
+        "p95": 7.476208
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 24
+    },
+    {
+      "quality": "high",
+      "scene": "arena",
+      "mode": "old-sky-mist-off",
+      "cpuMs": {
+        "median": 0.800000011920929,
+        "p95": 1
+      },
+      "gpuMs": {
+        "median": 4.236124,
+        "p95": 6.998374
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 24
+    },
+    {
+      "quality": "high",
+      "scene": "arena",
+      "mode": "current",
+      "cpuMs": {
+        "median": 0.9000000059604645,
+        "p95": 1.0999999940395355
+      },
+      "gpuMs": {
+        "median": 10.625999,
+        "p95": 16.978375
+      },
+      "buffer": [
+        1600,
+        1000
+      ],
+      "drawCalls": 26
+    },
+    {
+      "quality": "low",
+      "scene": "entrance",
+      "mode": "current",
+      "cpuMs": {
+        "median": 1.300000011920929,
+        "p95": 1.899999976158142
+      },
+      "gpuMs": {
+        "median": 5.782083,
+        "p95": 8.44075
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 76
+    },
+    {
+      "quality": "low",
+      "scene": "entrance",
+      "mode": "mist-off",
+      "cpuMs": {
+        "median": 0.6000000238418579,
+        "p95": 1.699999988079071
+      },
+      "gpuMs": {
+        "median": 4.663625,
+        "p95": 5.955375
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 74
+    },
+    {
+      "quality": "low",
+      "scene": "entrance",
+      "mode": "old-sky-mist-off",
+      "cpuMs": {
+        "median": 1.199999988079071,
+        "p95": 1.800000011920929
+      },
+      "gpuMs": {
+        "median": 5.287874,
+        "p95": 6.597625
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 74
+    },
+    {
+      "quality": "low",
+      "scene": "entrance",
+      "mode": "current",
+      "cpuMs": {
+        "median": 1.4000000059604645,
+        "p95": 2.0999999940395355
+      },
+      "gpuMs": {
+        "median": 6.276625,
+        "p95": 8.448749
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 76
+    },
+    {
+      "quality": "low",
+      "scene": "arena",
+      "mode": "current",
+      "cpuMs": {
+        "median": 2,
+        "p95": 3.0999999940395355
+      },
+      "gpuMs": {
+        "median": 4.09425,
+        "p95": 5.747499
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 13
+    },
+    {
+      "quality": "low",
+      "scene": "arena",
+      "mode": "mist-off",
+      "cpuMs": {
+        "median": 1.800000011920929,
+        "p95": 2.199999988079071
+      },
+      "gpuMs": {
+        "median": 2.318083,
+        "p95": 3.090708
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 11
+    },
+    {
+      "quality": "low",
+      "scene": "arena",
+      "mode": "old-sky-mist-off",
+      "cpuMs": {
+        "median": 1.800000011920929,
+        "p95": 2.7999999821186066
+      },
+      "gpuMs": {
+        "median": 2.791541,
+        "p95": 4.033375
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 11
+    },
+    {
+      "quality": "low",
+      "scene": "arena",
+      "mode": "current",
+      "cpuMs": {
+        "median": 2.0999999940395355,
+        "p95": 2.800000011920929
+      },
+      "gpuMs": {
+        "median": 4.126166,
+        "p95": 6.588041
+      },
+      "buffer": [
+        1440,
+        900
+      ],
+      "drawCalls": 13
+    }
+  ]
+}

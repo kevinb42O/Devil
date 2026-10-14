@@ -1,0 +1,62 @@
+{
+  "paused": {
+    "time": 349.0999999999999,
+    "chapter": "The Furnace",
+    "blend": 0.9927499999999986,
+    "menu": false,
+    "motion": "full",
+    "octaves": 2,
+    "travel": 6.283799999999998
+  },
+  "live": {
+    "time": 350.0083333333324,
+    "sky": {
+      "time": 350.0083333333324,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "reduced",
+      "octaves": 2,
+      "travel": 0
+    }
+  },
+  "death": {
+    "sky": {
+      "time": 349.0833,
+      "chapter": "The Furnace",
+      "blend": 0.9924832608472096,
+      "menu": false,
+      "motion": "reduced",
+      "octaves": 2,
+      "travel": 0
+    },
+    "replay": {
+      "active": true,
+      "remaining": 2.2250333333312335,
+      "duration": 2.308333333331234,
+      "impact": false,
+      "viewTime": 349.0833,
+      "killerVisible": false,
+      "suspended": true
+    },
+    "finalTime": 351.30833333333123
+  },
+  "end": {
+    "time": 351.30833333333123,
+    "chapter": "The Cathedral Below",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "rewind": {
+    "time": 349,
+    "chapter": "The Furnace",
+    "blend": 0.9910836762688615,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  }
+}

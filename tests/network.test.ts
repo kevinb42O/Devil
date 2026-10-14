@@ -42,6 +42,23 @@ test('replaying outstanding commands from an acknowledged snapshot preserves lan
   assert.deepEqual(reconciled.player,guest.player);assert.deepEqual(reconciled.crew[1].primary,guest.crew[1].primary);assert.equal(reconciled.crew[1].wasJump,guest.crew[1].wasJump);assert.equal(reconciled.crew[1].shotSequence,guest.crew[1].shotSequence);
  }finally{host.close();}
 });
+test('a pending jump tap survives binary snapshots and prediction replay without leaking to teammates',()=>{
+ const host=setup();try{
+  const w=host.world!,p=w.crew[1].player;
+  p.pos={x:0,y:TUNING.eyeHeight+.025,z:0};p.vel.y=-1;p.grounded=false;
+  const guest=new World(1,{schedule:false});applySnapshot(guest,host.snapshot()!,'guest');
+  const press={...idleInput(),jump:true};guest.predictCrew('guest',press);w.stepCrew(new Map([['guest',press]]));
+  assert.ok(p.jumpBuffer>0);assert.equal(p.grounded,false);assert.equal(w.crew[0].player.jumpBuffer,0);
+  const packet=encodeState(host.snapshot()!,1,0),snapshot=decodeState(packet,new Map())!.snapshot;
+  const repaired=new World(1,{schedule:false});applySnapshot(repaired,snapshot,'guest');
+  assert.equal(repaired.player.jumpBuffer,p.jumpBuffer);
+  for(let i=0;i<8;i++){
+   guest.predictCrew('guest',idleInput());repaired.predictCrew('guest',idleInput());w.stepCrew(new Map());
+   assert.deepEqual(guest.player,p);assert.deepEqual(repaired.player,p);
+  }
+  assert.ok(p.vel.y>0);assert.equal(w.crew[0].player.grounded,true);
+ }finally{host.close();}
+});
 test('projectile deltas recover spawns/removals and gravity against acknowledged baselines',()=>{
  const host=setup();try{
   host.world!.projectiles=[{id:1,pos:{x:1,y:8,z:2},vel:{x:1,y:4,z:3},age:.2,homing:false,floorBounces:1,shotKey:'guest:1:0'}];
@@ -71,7 +88,7 @@ test('four level-IV shooters use substantially less bandwidth without dropping p
   let base:ReturnType<typeof snapshotBaseline>|undefined,receiver:ReturnType<typeof snapshotBaseline>|undefined,frame=0,binary=0,json=0;for(let tick=0;tick<240;tick++){
    host.world!.stepCrew(new Map(host.world!.crew.map(p=>[p.id,{...idleInput(),fire:true}])));host.world!.effects=[];
    if(tick%6!==5)continue;const snapshot=host.snapshot()!,encoded=encodeState(snapshot,frame+1,frame,base),decoded=decodeState(encoded,new Map(receiver?[[frame,receiver]]:[]))!;assert.equal(decoded.snapshot.projectiles.length,snapshot.projectiles.length);for(let i=0;i<snapshot.projectiles.length;i++)assert.ok(Math.hypot(decoded.snapshot.projectiles[i].pos.x-snapshot.projectiles[i].pos.x,decoded.snapshot.projectiles[i].pos.y-snapshot.projectiles[i].pos.y,decoded.snapshot.projectiles[i].pos.z-snapshot.projectiles[i].pos.z)<.001);
-   binary+=fragmentState(encoded,frame+1).reduce((n,p)=>n+p.byteLength,0);const {serverNow,...legacyFields}=snapshot;const legacy={...legacyFields,projectiles:snapshot.projectiles.map(({shotKey,...p})=>p),crew:snapshot.crew.map(({ack,shotSequence,shotSeed,wasJump,lastShotTick,...p})=>p)};json+=new TextEncoder().encode(JSON.stringify(JSON.stringify(legacy))).length;base=snapshotBaseline(snapshot);receiver=snapshotBaseline(decoded.snapshot);frame++;
+   binary+=fragmentState(encoded,frame+1).reduce((n,p)=>n+p.byteLength,0);const {serverNow,...legacyFields}=snapshot;const legacy={...legacyFields,projectiles:snapshot.projectiles.map(({shotKey,launch,...p})=>p),crew:snapshot.crew.map(({ack,shotSequence,shotSeed,wasJump,lastShotTick,...p})=>p)};json+=new TextEncoder().encode(JSON.stringify(JSON.stringify(legacy))).length;base=snapshotBaseline(snapshot);receiver=snapshotBaseline(decoded.snapshot);frame++;
   }
   assert.ok(json/binary>20,`Only ${(json/binary).toFixed(1)}x reduction`);assert.ok(binary/2<100000,`State exceeds 100 KB/s budget: ${binary/2}`);
   console.log(`Level IV: ${(binary/2000).toFixed(1)} KB/s per guest including repair packets, ${(json/binary).toFixed(1)}x smaller than JSON.`);
@@ -82,7 +99,7 @@ test('compact enemy state preserves all rigs, weakpoints and fields used by loca
  const host=setup();try{
   for(const kind of ['skull','skull2','skull3','skull4','transmuted1','transmuted2','transmuted3','transmuted4','squid','squid2','squid3','spider','spider2','egg','egg2','spiderling','centipede','gigapede','ghostpede','leviathan','orb','thorn'] as const){const e=host.world!.spawn(kind,{x:1.125,y:4.5,z:8.25});e.age=10;e.headExposure=.5;e.lastHit=3.125;}
   const snapshot=host.snapshot()!,decoded=decodeState(encodeState(snapshot,1,0),new Map())!.snapshot;assert.equal(decoded.enemies.length,22);
-  for(let i=0;i<22;i++){const a=snapshot.enemies[i],b=decoded.enemies[i];assert.equal(b.kind,a.kind);assert.ok(Math.hypot(b.pos.x-a.pos.x,b.pos.y-a.pos.y,b.pos.z-a.pos.z)<.00001);assert.equal(b.hp,a.hp);assert.equal(b.headExposure,a.headExposure);assert.equal(b.lastHit,a.lastHit);assert.equal(b.status,a.status);assert.equal(b.segments.length,a.segments.length);assert.equal(b.weakpoints.length,a.weakpoints.length);assert.ok(Math.abs(b.activeAt-a.activeAt)<.00001);}
+  for(let i=0;i<22;i++){const a=snapshot.enemies[i],b=decoded.enemies[i];assert.equal(b.kind,a.kind);assert.ok(Math.hypot(b.pos.x-a.pos.x,b.pos.y-a.pos.y,b.pos.z-a.pos.z)<=Math.sqrt(3)/1024);assert.equal(b.hp,a.hp);assert.equal(b.headExposure,a.headExposure);assert.equal(b.lastHit,a.lastHit);assert.equal(b.status,a.status);assert.equal(b.segments.length,a.segments.length);assert.equal(b.weakpoints.length,a.weakpoints.length);assert.ok(Math.abs(b.activeAt-a.activeAt)<.00001);}
  }finally{host.close();}
 });
 test('congested peers receive current recovery state rather than a backlog of queued snapshots',()=>{
@@ -128,7 +145,7 @@ test('a thousand moving enemies send poses without repeating unchanged metadata 
   const first=structuredClone(host.snapshot()!),received=decodeState(encodeState(first,1,0),new Map())!.snapshot,baseline=snapshotBaseline(first),receiver=snapshotBaseline(received);
   host.world!.time=.05;for(const e of host.world!.enemies){e.pos.z-=.1;e.age+=.05;}
   host.world!.enemies[0].hp=0;host.world!.enemies[1].hp=0;host.world!.enemies=host.world!.enemies.filter(e=>e.hp>0);const s=host.snapshot()!,encoded=encodeState(s,2,1,baseline),decoded=decodeState(encoded,new Map([[1,receiver]]))!.snapshot;
-  assert.equal(decoded.enemies.length,998);for(let i=0;i<998;i++){const a=s.enemies[i],b=decoded.enemies[i];assert.equal(b.id,a.id);assert.ok(Math.abs(b.pos.z-a.pos.z)<.00001);assert.ok(Math.abs(b.age-a.age)<.00001);}
+  assert.equal(decoded.enemies.length,998);for(let i=0;i<998;i++){const a=s.enemies[i],b=decoded.enemies[i];assert.equal(b.id,a.id);assert.ok(Math.abs(b.pos.z-a.pos.z)<.001);assert.ok(Math.abs(b.age-a.age)<.00001);}
   assert.ok(encoded.length<17000,`Dense state grew to ${encoded.length} bytes`);assert.equal(receiver.enemies.get(first.enemies[2].id)![2][2],Math.fround(first.enemies[2].pos.z),'Decoding must not mutate baseline data');
   console.log(`1,000-enemy poses: ${(encoded.length/1000).toFixed(1)} KB per update; unchanged enemy metadata is omitted.`);
  }finally{host.close();}

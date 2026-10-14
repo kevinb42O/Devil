@@ -1,8 +1,9 @@
 import * as THREE from 'three';
+import {EnvironmentLighting,ENVIRONMENT_FRAGMENT} from './environment-lighting';
 import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {type Enemy, type EnemyKind} from './simulation';
-import {CREATURE_SCALE,SPIDER_SIZE,SPIDER_CRYSTAL_SCALE,SPIDER_HIT_FLASH_DURATION,towerSpitPulse} from './enemy-presentation';
+import {CREATURE_SCALE,SPIDER_SIZE,SPIDER_CRYSTAL_SCALE,SPIDER_HIT_FLASH_DURATION,towerPartOffset} from './enemy-presentation';
 import {ENEMY_KINDS,isPede} from './enemy-kinds';
 const ROOT='/assets/original/devil-daggers/';
 const parts={
@@ -26,8 +27,9 @@ export class OriginalEnemies {
  private orbMaterial!:THREE.ShaderMaterial;
  private spiderCrystalMaterial!:THREE.MeshBasicMaterial;
  private spiderHitMaterial!:THREE.MeshBasicMaterial;
+ private crystalHitMaterial!:THREE.MeshBasicMaterial;
  private armMaterial!:THREE.ShaderMaterial;private materialClock={value:0};
- constructor(){this.loaded=this.load().catch(error=>{this.error=String(error);console.error('Original enemy assets could not load:',error);});}
+ constructor(private environment=new EnvironmentLighting()){this.loaded=this.load().catch(error=>{this.error=String(error);console.error('Original enemy assets could not load:',error);});}
  private async load(){
   const names=[...new Set(Object.values(parts).flat().concat(['gib','tile2']))];const loader=new OBJLoader(),textureLoader=new THREE.TextureLoader();
   const textureNames=[...new Set(names.filter(n=>!['minisquidgem','squidgem','ultrasquidgem','levigem','pedeweak','spiderlingpalms','tile2','leviorb','immortalorb','ultrasquidtent','ultrasquidteeth'].includes(n)).concat(['crystal','minisquidarm','squidarm','spiderlingpalm','boidlev','boid2lev','boid2hornslev','boid3lev','boid3hornslev','boid3jawlev','boid4lev','boid4jawlev','leviwarp','pedeblackhead','pedeblackjaw','pedeblackbody','pedeblackleg1','pedeblackleg2','pedeblackleg3','pedeblackbodyfragged','pedeblackleg1fragged','pedeblackleg2fragged','pedeblackleg3fragged','ultrapedehead','ultrapedejaw','ultrapedebody','ultrapedeleg1','ultrapedeleg2','ultrapedeleg3','gigaspiderleg1','gigaspiderleg2','gigaspiderleg3']))];
@@ -40,15 +42,22 @@ export class OriginalEnemies {
 localPosition=instanceMatrix*localPosition;
 #endif
 vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWorld.xyz*16.)/16.;vec4 mvPosition=viewMatrix*originalWorld;gl_Position=projectionMatrix*mvPosition;`);};
+   if(name!=='crystal')this.environment.attach(material);
    this.materials.set(name,material);
   })),Promise.all(names.map(async name=>{const response=await fetch(ROOT+`meshes/${name}.obj`);if(!response.ok)throw Error(`Original ${name} mesh missing`);const object=loader.parse(await response.text());object.traverse(o=>{if(o instanceof THREE.Mesh)this.geometry.set(name,o.geometry);});if(!this.geometry.has(name))throw Error(`No geometry in ${name}`);}))]);
   const armMap=this.materials.get('minisquidarm')!.map!;
   this.armMaterial=new THREE.ShaderMaterial({uniforms:{map:{value:armMap},time:this.materialClock},vertexShader:`varying vec2 u;uniform float time;void main(){u=uv;vec3 p=position;float wave=clamp((-p.y-1.5)*.5,0.,1.)*.5;float curve=pow(max(0.,-p.y),2.1)*.07;vec3 off=wave*vec3(0.,0.,sin(curve-time*.7)*.6);p+=off;float angle=atan(p.z,p.x)-wave*curve*.35;float len=length(p.xz);p.x=sin(angle)*len;p.z=-cos(angle)*len;vec4 w=modelMatrix*vec4(p,1.);w.xyz=floor(w.xyz*16.)/16.;gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`uniform sampler2D map;varying vec2 u;void main(){vec4 c=texture2D(map,u);gl_FragColor=c;}`,side:THREE.DoubleSide,toneMapped:false});
+  this.environment.bindShader(this.armMaterial);
+  this.armMaterial.fragmentShader=this.armMaterial.fragmentShader.replace('void main()',`${ENVIRONMENT_FRAGMENT}\nvoid main()`).replace('gl_FragColor=c;','gl_FragColor=vec4(environmentLight(c.rgb,vec3(0.,.5,.5)),c.a);');
   const warpMap=this.materials.get('leviwarp')!.map!;warpMap.wrapS=warpMap.wrapT=THREE.RepeatWrapping;
   // Adapted from the original warpeye shader; animation parameter speed remains unmeasured.
   this.orbMaterial=new THREE.ShaderMaterial({uniforms:{map:{value:warpMap},time:this.materialClock},transparent:true,side:THREE.DoubleSide,toneMapped:false,vertexShader:`varying vec2 u;varying vec3 viewDir;uniform float time;void main(){u=position.yy*.03+vec2(time*.08,0.);vec4 w=modelMatrix*vec4(position,1.);w.xyz=floor(w.xyz*16.)/16.;viewDir=w.xyz-cameraPosition;gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`uniform sampler2D map;uniform float time;varying vec2 u;varying vec3 viewDir;void main(){vec3 d=normalize(viewDir);vec2 hackuv=vec2(d.y/max(.001,length(d.xz))*.5+time,atan(d.z,d.x)/3.14159*3.);vec3 c=texture2D(map,hackuv).rgb;gl_FragColor=vec4(c,.65);}`});
   // Keep attached weak-point crystals luminous even with the native unlit materials.
   this.materials.get('crystal')!.color.setRGB(2.5,1.2,.8);
+  // One shared brighter material, using the same texture and shader program.
+  this.crystalHitMaterial=this.materials.get('crystal')!.clone();
+  this.crystalHitMaterial.onBeforeCompile=this.materials.get('crystal')!.onBeforeCompile;
+  this.crystalHitMaterial.color.setRGB(8,5,3);
   // Recolor the texture's brightness so its red channels cannot suppress the green tint.
   const spiderMaterial=(hit:boolean)=>{
    const material=this.materials.get('crystal')!.clone();material.color.setRGB(1,1,1);
@@ -164,12 +173,22 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
  clone(kind:EnemyKind){const template=this.templates.get(kind);if(!template)throw Error(`Original ${kind} rig not loaded`);return template.clone();}
  animate(model:THREE.Group,enemy:Enemy,time:number,originalCadence=false){
   this.materialClock.value=time;let nodes=this.animationNodes.get(model);
-  if(!nodes){nodes=[];model.traverse(o=>{if(o.name==='spider-held-gem'||o.name==='spider-head-pivot'||o.name==='spider-leg'||o.name.startsWith('weak-point-')||(enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(o.name)))nodes!.push(o);});this.animationNodes.set(model,nodes);}
-  const spit=enemy.kind.startsWith('squid')?towerSpitPulse(enemy.age,enemy.kind,originalCadence):0;
+  if(!nodes){nodes=[];model.traverse(o=>{if(o.name==='spider-held-gem'||o.name==='spider-head-pivot'||o.name==='spider-leg'||o.name.startsWith('weak-point-')||(enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(o.name)))nodes!.push(o);
+   if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.userData.crystalIndex=i;o.userData.crystalHp=enemy.weakpoints[i]?.hp??1;o.userData.crystalHitAt=-Infinity;}
+  });this.animationNodes.set(model,nodes);}
   for(const o of nodes){if(o.name==='spider-held-gem'){
    const sinceHit=time-enemy.lastHit;
    (o as THREE.Mesh).material=sinceHit>=0&&sinceHit<SPIDER_HIT_FLASH_DURATION?this.spiderHitMaterial:this.spiderCrystalMaterial;
-  }else if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;else if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055;else if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.visible=(enemy.weakpoints?.[i]?.hp??1)>0;}else {o.position.y=spit*(o.name.includes('crest')?.4:-.18);o.updateMatrix();}}
+  }else if(o.name==='spider-head-pivot')o.rotation.x=(1-enemy.headExposure)*.9;else if(o.name==='spider-leg')o.rotation.y=Math.sin(time*7+o.userData.phase)*.055;else if(o.name.startsWith('weak-point-')){
+   const state=o.userData,hp=enemy.weakpoints[state.crystalIndex]?.hp??1;
+   // Detect individual hits from existing health, including multiplayer snapshots.
+   // No per-hit allocations, simulation timers, or extra network state.
+   if(hp<state.crystalHp)state.crystalHitAt=time;
+   else if(hp>state.crystalHp||time<state.crystalHitAt)state.crystalHitAt=-Infinity;
+   state.crystalHp=hp;o.visible=hp>0;
+   const elapsed=time-state.crystalHitAt;
+   (o as THREE.Mesh).material=o.visible&&enemy.hp>0&&elapsed>=0&&elapsed<.16&&(elapsed<.045||elapsed>=.085&&elapsed<.13)?this.crystalHitMaterial:this.gemMaterial;
+  }else {o.position.y=towerPartOffset(enemy,o.name,originalCadence);o.updateMatrix();}}
  }
  segment(alive:boolean,kind:EnemyKind='centipede'){const node=(this.segmentTemplates.get(kind)??this.segmentTemplate).clone();node.traverse(o=>{if(o.name==='segment-weak-point')o.visible=alive;});return node;}
 }

@@ -1,5 +1,5 @@
 import {type ArenaSnapshot} from './multiplayer';
-import {World,type Vec} from './simulation';
+import {World,STEP,type Vec} from './simulation';
 import {mixPosition,flightPosition} from './network-state';
 import {constrainEnemyFloor} from './enemy-floor';
 const angle=(a:number,b:number,t:number)=>a+Math.atan2(Math.sin(b-a),Math.cos(b-a))*t;
@@ -11,10 +11,11 @@ export class SnapshotTimeline{
  reset(){this.samples=[];this.delay=.06;this.interval=.05;this.jitter=0;}
  view(world:World,localId:string,now:number,offset:Vec):World{
  const latest=this.samples.at(-1);if(!latest)return world;
- const target=latest.s.time+Math.min(.12,Math.max(0,(now-latest.at)/1000))-this.delay;
- let a=this.samples[0].s,b=latest.s;for(const sample of this.samples){if(sample.s.time<=target)a=sample.s;if(sample.s.time>=target){b=sample.s;break;}}
- const fraction=b.time>a.time?Math.max(0,Math.min(1,(target-a.time)/(b.time-a.time))):1;
- const view=Object.create(world) as World;view.time=Math.max(a.time,Math.min(target,b.time));
+ const clock=(s:ArenaSnapshot)=>s.prelobby?s.tick*STEP:s.time;
+ const target=clock(latest.s)+Math.min(.12,Math.max(0,(now-latest.at)/1000))-this.delay;
+ let a=this.samples[0].s,b=latest.s;for(const sample of this.samples){if(clock(sample.s)<=target)a=sample.s;if(clock(sample.s)>=target){b=sample.s;break;}}
+ const fraction=clock(b)>clock(a)?Math.max(0,Math.min(1,(target-clock(a))/(clock(b)-clock(a)))):1;
+ const view=Object.create(world) as World;view.time=latest.s.prelobby?0:Math.max(a.time,Math.min(target,b.time));
  const olderEnemies=new Map(a.enemies.map(e=>[e.id,e]));view.enemies=b.enemies.map(e=>{const old=olderEnemies.get(e.id);return old?{...e,pos:mixPosition(old.pos,e.pos,fraction),age:old.age+(e.age-old.age)*fraction,segments:e.segments.map((part,i)=>({...part,pos:old.segments[i]?mixPosition(old.segments[i].pos,part.pos,fraction):part.pos}))}:e;});
  if(world.enemyFloorEnabled)view.enemies=view.enemies.map(e=>{const safe={...e,pos:{...e.pos},vel:{...e.vel}};constrainEnemyFloor(safe,view.time);return safe;});
  const olderGems=new Map(a.gems.map(g=>[g.id,g]));view.gems=b.gems.map(g=>({...g,pos:olderGems.has(g.id)?mixPosition(olderGems.get(g.id)!.pos,g.pos,fraction):g.pos}));

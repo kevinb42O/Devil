@@ -1,0 +1,1 @@
+Enemy lighting browser passed: {"initialLights":6,"swarmLights":6,"singleCalls":6,"swarmCalls":6,"swarmCount":2,"overlapBounded":true,"fieldBytes":65536,"allKinds":true,"cleared":true,"dispersedSources":800,"sourceLit":[237,232,230,255],"sourceUnlit":[68,52,34,255],"swarmMedianMs":3}

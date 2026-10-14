@@ -50,3 +50,5 @@ header{position:absolute;top:34px;left:4.4%;right:4.4%;display:flex;align-items:
 .ritual-actions{gap:6px}.ritual-action{height:60px;min-height:60px}.ritual-action:after{box-shadow:0 36px #b98c63,-339px 0 #b98c63,-339px 36px #b98c63}.altar-menu .player-card{padding-bottom:12px}.altar-menu .best-card>div{display:flex;flex:1;align-items:center;justify-content:space-between;gap:10px}.altar-menu .best-card small{max-width:145px;line-height:1.5}.altar-menu .best-card strong{white-space:nowrap;margin:0}.altar-menu .best-card{margin-top:10px;padding-top:10px}
 @media(min-width:851px){#menu h1{font-size:clamp(90px,7.3vw,120px)}}
 @media(max-width:600px){#menu h1{font-size:80px}.action-label strong{font-size:24px}.altar-menu .best-card small{font-size:8px;letter-spacing:1.4px}}
+
+#replay-share-link{width:100%;padding:12px;margin:8px 0;background:#130b08;color:var(--bone);border:1px solid var(--line);font:12px 'DM Sans',sans-serif}.leaderboard-table .text-button{white-space:nowrap;padding:6px;font-size:11px}#history-status,#replay-publish-status{font-size:12px;line-height:1.5}.history-row{flex-wrap:wrap}.history-row>span{min-width:180px}#shared-replay-open{margin:10px 0}

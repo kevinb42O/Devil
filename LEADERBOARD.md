@@ -25,3 +25,25 @@ This is a casual community leaderboard. The browser reports scores; the database
 ## Checks
 
 `npm test` includes eligibility and score-queue regression checks: successive higher bests, saves overlapping later runs, duplicate saves, and recovery after network failure and reload. `npm run build` checks types and creates the production game. Integration checks cover public reading, blocked direct table access and unauthenticated publication, anonymous publication, best-time retention, and visibility from another browser.
+
+## Replay sharing (14 October 2026)
+
+New published solo bests retain an independent replay outbox in IndexedDB and upload their recording after the score is confirmed. A failed replay upload does not fail the score; the death screen offers **Retry replay upload**. Automatic publication retries replay uploads with a cooldown. The outbox preserves the best pending recording even when the ten-run history rotates.
+
+The public board includes **Watch** only when a finalized recording belongs to the exact winning score's browser identity and matches its rules, time, kills and gems. Earlier scores cannot be reconstructed from score metadata. Open history and use **Attach to best** if that exact recording still exists locally; importing an old JSON export also makes attachment possible. Matching another browser's nickname does not grant permission to attach to its score.
+
+History supports **Share**, **Copy link**, **Import replay**, and compressed **Export**. Shared links use `#replay=<UUID>` and display **Watch shared replay** on the menu. Sharing supports solo practice recordings as well as Survival. It does not record co-op. Public recordings contain gameplay inputs, seed, timestamps and run statistics; anonymous account identifiers are excluded from the file and public metadata. Anyone with a link can watch it. Removing a hosted link retains the local recording; previously downloaded copies cannot be revoked.
+
+Recordings are losslessly packed into a versioned binary format with float64 aim/movement values, integer tick counts and button flags, then gzip-compressed. Existing JSON exports remain importable. Files are validated before simulation, with a 30-minute recording limit, bounded decompression (32 MiB), compatible rules/revision checks and input/tick validation. Cloud uploads are capped at 2 MiB; local exports can exceed that cloud cap. A synthetic ten-minute recording with continuously changing aim measured 9,945,885 JSON bytes, 2,664,504 binary bytes and approximately 1.13 MB after gzip. This is a reproducible synthetic benchmark, not a promise about real recordings.
+
+Storage downloads occur only on Watch, never while listing scores. Up to ten downloaded recordings are cached in a separate local IndexedDB store. Seeking and repeated playback are local. Concurrent downloads of the same recording share one request. Immutable file paths use a one-year cache-control setting; the deployment's CDN behavior still determines cached versus uncached egress.
+
+### Server limits and ownership
+
+Migration `20261014173501_replay_sharing.sql` was applied through the authenticated game project's SQL Editor. It adds the public `abyss-replays` bucket and metadata RPCs while preserving the original score RPCs for older clients. The public API uses invoker wrappers around privileged implementations in the unexposed `abyss_private` schema. Raw replay metadata is inaccessible to browser roles; ownership derives from `auth.uid()` in authenticated RPCs. Storage upload policies require a fresh reservation belonging to the caller; overwriting objects is disallowed. Finalization checks the actual stored size and owner before exposing a replay. Storage deletion is owner-only.
+
+Each browser identity has one leaderboard slot and three manually shared slots. A new leaderboard replay replaces its previous hosted replay, expiring that previous link. Manually shared recordings can be promoted to the best slot without another file upload. Reservations are limited to one per 30 seconds per identity. Unfinished uploads stay visible in history for removal and count against capacity.
+
+The replay bucket has a conservative **512 MiB aggregate budget**: finalized files count their verified sizes; unfinished reservations count the full 2 MiB per-file maximum. The budget is serialized with a transaction lock. Other Supabase Storage buckets and all outbound traffic remain outside this feature's budget; this is not an account-wide bandwidth cap. Multiple anonymous identities can still be created, so these limits reduce quota exposure rather than proving identity or preventing all abuse. The server does not simulate recordings to verify scores.
+
+Validation: `npm run test:replay-sharing`, `npx tsx tests/replay-sharing-live.ts` (requires game production connection settings), and `npm run build`. The live check creates temporary anonymous test profiles, tests upload/download and cross-owner access, then removes its replay file and reservation without modifying existing highscores.

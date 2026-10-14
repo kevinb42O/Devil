@@ -69,7 +69,7 @@ Attunement II unlocks at 10 collected gems, III at 70. Gems collected after III 
 - Summoner crystal hit zones and per-segment centipede health and gem rewards.
 - Original V3 Survival event ledger, accelerating endless waves with every-third-wave Ghostpede substitution, and reference tile sinking shared with collision.
 - Original Devil Daggers meshes and textures for all 22 implemented enemy kinds/states, the arena tiles, gems, four hands, daggers, and weapon effects in the local build.
-- Procedural abyss sky with drifting cloud bands, sparse stars, an eclipsed moon, and a dark combat horizon.
+- Six-stage procedural descent from bright blue skies and white clouds through storms, a furnace and distant cathedral ribs to unlit depths; full surrounding skies, coordinated scene lighting, replay/match-clock timing, and a saved reduced-motion option. The menu retains the starry abyss and eclipsed moon.
 - Original weapon/enemy/event audio, persistent positional enemy voices and cardinal ambience, optional directional threat markers, and readable gem collection status.
 - Start, pause, settings, death summary, instant retry, best-time persistence, practice starts, and replay history/keep/export/seek/top-down playback.
 
@@ -95,7 +95,7 @@ Multiplayer teammates and third-person replay/killcam bodies use Quaternius's CC
 
 Expand **Practice an encounter** on the menu to choose a start time, hand and homing reserve. Start at 229 for the six-squid wave, 259 for the Gigapede trio, 350 for Leviathan, or 442 for Ghostpede. Earlier enemies are not carried into a practice start. Practice records stay separate from standard Survival best times.
 
-After death, **Watch this run** opens playback. Use the slider or Left/Right arrows to seek ±3 seconds (Ctrl gives ±10); M toggles top-down view. **Run history & replays** retains ten recent runs. **Keep** retains a run longer and **Export** downloads the port's JSON replay. Replay files are versioned for this implementation, not native Devil Daggers replays.
+After death, **Watch this run** opens playback. Use the slider or Left/Right arrows to seek ±3 seconds (Ctrl gives ±10); M toggles top-down view. **Run history & replays** retains ten recent runs. **Keep** retains a run longer and **Export** downloads the port's JSON replay. Replay files are versioned for this implementation, not native Devil Daggers replays. History also supports compressed export, importing earlier JSON exports, and sharing up to three hosted replay links. New published bests automatically attach a compressed replay to the leaderboard; Watch downloads it once and caches playback locally. Existing highscores need their matching local recording attached from history. See [LEADERBOARD.md](LEADERBOARD.md) for ownership, upload limits and storage budgeting.
 
 ## Next work
 
@@ -120,3 +120,9 @@ The main menu includes browser-to-browser WebRTC cooperative survival for up to 
 Original music uses the bundled `menutheme.wav` in menus and `menuatmos.wav` in the entrance, with fades between screens. Arena play and replays are silent apart from game sounds. Music starts after a click, tap or key press, pauses while the tab is hidden, and has its own saved Music volume setting. Run `npm run test:music` against the development server to verify playback and transitions.
 
 The solo entrance also plays the original positional dagger call at the seal and the original dagger pickup cue exactly when crossing into the arena. Both select the normal, bronze, silver, gold, devil, or 1,000-second recordings from the locally saved best time. Entrance cues are prepared before crossing and use Sound volume independently of Music volume.
+
+## Crown of the Abyss
+
+The current first-place solo Survival record holds the Crown of the Abyss. Everyone sees the crowned dagger shrine on the main menu and the champion’s throne above the leaderboard. The holder’s browser profile receives a special frame and title, with a brief coronation at the altar once per observed reign. Crew lobby seats with the champion’s published nickname show the same crown, matching the leaderboard’s existing nickname identity model. This is entirely cosmetic.
+
+The crown follows the server’s leaderboard ordering, including tied times. Rankings refresh on menu startup, every minute while menus are visible, on reconnect or tab return, and after a successful score publication. Narrow menus show the seal and shrine together in the scrolling menu, with one shared centre line and proportional sizing; reduced motion disables its animation. Empty rankings show an unclaimed crown, and failed ranking requests remove champion honours until a successful refresh. Former-champion history and in-arena character effects are not included. Verify with `npm run test:champion`; test ranking responses are intercepted locally and never publish scores.

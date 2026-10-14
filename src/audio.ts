@@ -17,7 +17,7 @@ export class Sound{
  private master:GainNode|null=null;
  private buffers=new Map<string,AudioBuffer>();
  private pending=new Map<string,Promise<AudioBuffer|undefined>>();
- private loops=new Map<number,Voice>();
+ private loops=new Map<number|string,Voice>();
  private shots=new Set<Voice>();
  private volume=.55;
  private loudness=new Map<string,number>();
@@ -25,6 +25,7 @@ export class Sound{
  private cooldowns=new Map<string,number>();
  private choices=new Map<string,number>();
  private failures=new Set<string>();
+ private retries=new Map<string,{attempts:number;nextAt:number}>();
  private generation=0;
  private preparedHands=new Set<number>();
  get diagnostics(){return {loaded:this.buffers.size,failed:[...this.failures],oneShots:this.shots.size,oneShotNames:[...this.shots].map(v=>v.name),loops:[...this.loops.values()].map(v=>v.name)};}
@@ -44,7 +45,12 @@ export class Sound{
  private load(name:string):Promise<AudioBuffer|undefined>{
   if(this.buffers.has(name))return Promise.resolve(this.buffers.get(name));
   if(this.pending.has(name))return this.pending.get(name)!;
-  const promise=(async()=>{try{const response=await fetch(ROOT+name+'.wav');if(!response.ok)throw Error(String(response.status));const buffer=await this.context!.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);return buffer;}catch{this.failures.add(name);return undefined;}finally{this.pending.delete(name);}})();
+  const retry=this.retries.get(name);
+  if(retry&&performance.now()<retry.nextAt)return Promise.resolve(undefined);
+  const promise=(async()=>{try{const response=await fetch(ROOT+name+'.wav');if(!response.ok)throw Error(String(response.status));const buffer=await this.context!.decodeAudioData(await response.arrayBuffer());this.buffers.set(name,buffer);this.failures.delete(name);this.retries.delete(name);return buffer;}catch{
+   this.failures.add(name);const attempts=(retry?.attempts??0)+1;
+   this.retries.set(name,{attempts,nextAt:performance.now()+Math.min(30000,1000*2**Math.min(attempts-1,5))});return undefined;
+  }finally{this.pending.delete(name);}})();
   this.pending.set(name,promise);return promise;
  }
  setVolume(value:number){this.volume=Math.max(0,Math.min(1,value));if(this.master&&this.context)this.master.gain.setTargetAtTime(this.volume,this.context.currentTime,.03);}
@@ -101,10 +107,12 @@ export class Sound{
  }
  play(e:Effect,world:World){
   const level=e.level??world.level;
+  const remotePlayer=e.shooterId&&world.crew.find(p=>p.id===e.shooterId&&p.player!==world.player);
   if(e.kind==='shot'||e.kind==='burst'){
-   if(e.amount===1){if(e.kind==='burst')this.oneShot(level===4?'magentashot':'daggerseek',undefined,.8,3);return;}
-   if(e.kind==='burst')this.oneShot(level<=2?`shot${level}`:this.choose(variants(`shot${level}alt`,level===3?4:5)),undefined,1,3);
-   return; // Primary stream is a single loop owned by the weapon state.
+   const pos=remotePlayer?e.pos:undefined;
+   if(e.amount===1){if(e.kind==='burst')this.oneShot(level===4?'magentashot':'daggerseek',pos,.8,3);return;}
+   if(e.kind==='burst')this.oneShot(level<=2?`shot${level}`:this.choose(variants(`shot${level}alt`,level===3?4:5)),pos,1,3);
+   return; // Primary streams are loops owned by each player's weapon state.
   }
   if(e.kind==='spawn'){if(e.amount===-1)return;if(e.enemy&&SPAWN[e.enemy])this.oneShot(SPAWN[e.enemy]!,e.pos,1,2);return;}
   if(e.kind==='kill'){if(e.enemyId!==undefined){this.stop(e.enemyId);this.cooldowns.delete(`hit:${e.enemyId}`);}this.oneShot(this.choose(e.enemy?KILL[e.enemy]??'killskull1':'killskull1'),e.pos,1,2);return;}
@@ -121,10 +129,9 @@ export class Sound{
    this.oneShot((e.deathCause??victim?.cause??world.cause)==='FALLEN'?'fall':'death',local?undefined:e.pos,1,4);return;
   }
   const name=e.kind==='pickup'?level>=3?'gibcollectmagic':'gibcollect':e.kind==='upgrade'?e.amount===1?'leveldown':`levelup${e.amount}`:e.kind==='jump'?e.amount===3?'jump3':e.amount===2?'jump2':'jump1':e.kind==='land'?e.amount===2?'land2':'land':e.kind==='beckon'?e.enemy==='orb'?'leviathanbeckon2':'leviathanbeckon':e.kind==='transmute'?'leviathantransmute':e.kind==='explosion'?this.choose(variants('magentadetonate',5)):e.kind==='bounce'?'eggbounce':e.kind==='hatch'?e.enemy==='egg2'?'eggburst2':'eggburst':e.kind==='burrow'?'burrowcentipede':e.kind==='emerge'?'unburrowcentipede':undefined;
-  const remotePlayer=e.shooterId&&world.crew.find(p=>p.id===e.shooterId&&p.player!==world.player);
   if(name)this.oneShot(name,remotePlayer||['beckon','transmute','explosion','bounce','hatch','burrow','emerge'].includes(e.kind)?e.pos:undefined,1,e.kind==='upgrade'?4:1,e.kind==='pickup'?.025:e.kind==='explosion'?.035:0);
  }
- private loop(id:number,name:string,pos?:Vec,scale=1,randomPhase=true){
+ private loop(id:number|string,name:string,pos?:Vec,scale=1,randomPhase=true){
   const c=this.context;if(!c||!this.master||c.state!=='running')return;let voice=this.loops.get(id);
   if(voice&&voice.name!==name){this.stop(id);voice=undefined;}
   if(!voice){const buffer=this.buffers.get(name);if(!buffer){void this.load(name);return;}const source=c.createBufferSource();source.buffer=buffer;source.loop=true;const gain=c.createGain(),panner=pos?this.panner(pos):undefined;
@@ -142,8 +149,12 @@ export class Sound{
    const names=[`rapid${level}`,level<=2?`shot${level}`:variants(`shot${level}alt`,level===3?4:5),level===1?'leveldown':`levelup${level}`,...(level>=2?['gibcollectmagic',level===4?'magentashot':'daggerseek',level===4?'magentadrone':'daggerdrone']:[])].flat();
    void Promise.all(names.map(name=>this.load(name)));
   }
-  const ids=new Set<number>();
+  const ids=new Set<number|string>();
   if(world.weaponAudio.primary){ids.add(-10);this.loop(-10,`rapid${world.level}`,undefined,1,false);}
+  for(const crew of world.crew){
+   if(crew.player===world.player||!world.weaponAudioFor(crew).primary)continue;
+   const id=`crew:${crew.id}`;ids.add(id);this.loop(id,`rapid${crew.level}`,crew.player.pos,1,false);
+  }
   // Homing drone follows surviving projectiles, instead of stacking an eight-second drone per launch.
   const homing:World['projectiles']=[],ranges:number[]=[];
   for(const p of world.projectiles){if(!p.homing)continue;const range=(p.pos.x-world.player.pos.x)**2+(p.pos.y-world.player.pos.y)**2+(p.pos.z-world.player.pos.z)**2;let slot=0;while(slot<ranges.length&&ranges[slot]<=range)slot++;if(slot>=8)continue;homing.splice(slot,0,p);ranges.splice(slot,0,range);if(homing.length>8){homing.pop();ranges.pop();}}
@@ -156,7 +167,7 @@ export class Sound{
   for(const [id,name,pos] of [[-1,'polarity1e',{x:32,y:0,z:0}],[-2,'polarity2w',{x:-32,y:0,z:0}],[-3,'polarity3n',{x:0,y:0,z:-32}],[-4,'polarity4s',{x:0,y:0,z:32}]] as const){ids.add(id);this.loop(id,name,pos,.35);}
   for(const id of this.loops.keys())if(!ids.has(id))this.stop(id);
  }
- private stop(id:number){const voice=this.loops.get(id),c=this.context;if(!voice||!c)return;this.loops.delete(id);voice.gain.gain.cancelScheduledValues(c.currentTime);voice.gain.gain.setTargetAtTime(0,c.currentTime,.005);voice.source.stop(c.currentTime+.025);}
+ private stop(id:number|string){const voice=this.loops.get(id),c=this.context;if(!voice||!c)return;this.loops.delete(id);voice.gain.gain.cancelScheduledValues(c.currentTime);voice.gain.gain.setTargetAtTime(0,c.currentTime,.005);voice.source.stop(c.currentTime+.025);}
  stopLoops(){for(const id of this.loops.keys())this.stop(id);}
  clear(){this.generation++;this.stopLoops();for(const voice of [...this.shots]){voice.source.stop();this.disconnect(voice);}this.cooldowns.clear();}
  pause(){void this.context?.suspend();}

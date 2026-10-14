@@ -1,18 +1,22 @@
+import {UPGRADE_PULSE,upgradePulseRadius} from './upgrade-pulse-tuning';
+import {projectileRoll} from './projectile-presentation';
+import {sphereAimDistance} from './projectile-aim';
+import {daggerLaunch,type ShotLaunch} from './projectile-launch';
 import {touchesPede} from './pede-contact';
 import {initializeGigapede,updateGigapede,type GigapedeMotion} from './gigapede-motion';
 import {updateCentipede as updateLegacyCentipede} from './legacy-centipede-motion';
 import {initializeCentipede,updateCentipede,type CentipedeMotion} from './centipede-motion';
 import {armorBounds,sweepArmor} from './projectile-collision';
 import {touchesPlayer} from './player-contact';
-import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,localToEnemy,towerOutletHeight,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
-import {arenaRadius,floorHeight,sweepFloor} from './arena';
+import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,crystalToEnemy,enemyEmergenceScale,towerOutletHeight,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
+import {arenaRadius,floorHeight,sweepFloor,sweepFloorLegacy} from './arena';
 import {constrainEnemyFloor,enemyFloorHeight} from './enemy-floor';
 import {originalSpawnRadius,originalTowerSpawnHeight,nextPerimeterSpawnAngle,pedeSpawnPosition,thornSpawnPosition,THORN_SPAWN_DEPTH} from './spawn-placement';
 import {towerEntrancePose,towerEmissionTick} from './tower-spawn';
-import {entranceFloor,ENTRANCE_SPAWN} from './entrance-layout';
+import {entranceFloor,ENTRANCE_SPAWN,ENTRANCE_COURTYARD,touchesEntranceSeal} from './entrance-layout';
 import {ENEMY_STATS,isSquid,isSpider,isEgg,isPede,isSkull,skullTier,type EnemyKind} from './enemy-kinds';
 import {survivalSchedule,legacySurvivalSchedule,TIMELINE,type ScheduledSpawn} from './survival';
-import {SHOTGUN_LAUNCH_SPEED,WEAPON_PRESENTATION,STREAM_RADIUS,LEGACY_STREAM_SPREAD,LEGACY_WIDE_STREAM_RADIUS} from './weapon-tuning';
+import {RICOCHET_TUNING,SHOTGUN_LAUNCH_SPEED,WEAPON_PRESENTATION,STREAM_RADIUS,LEGACY_STREAM_SPREAD,LEGACY_WIDE_STREAM_RADIUS} from './weapon-tuning';
 import {HAND_MUZZLES,weaponMuzzle} from './weapon-origin';
 export {TIMELINE};export type {EnemyKind};
 /** Fixed-step combat. Reference counts/timers are separated from unmeasured movement/AI tuning. */
@@ -26,19 +30,19 @@ export const distance=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 export function direction(a:Vec,b:Vec):Vec{const d=Math.max(distance(a,b),.001);return v((b.x-a.x)/d,(b.y-a.y)/d,(b.z-a.z)/d);}
 const clamp=(n:number,lo:number,hi:number)=>Math.max(lo,Math.min(hi,n));
 export type Enemy={id:number;kind:EnemyKind;pos:Vec;hp:number;age:number;phase:number;nextSpawn:number;radius:number;gems:number;eaten:number;segments:{pos:Vec;hp:number}[];weakpoints:{local:Vec;hp:number}[];vel:Vec;headExposure:number;lastHit:number;duckUntil:number;pendingDuck:boolean;nextMove:number;orbitSpeed:number;radialOffset:number;facingYaw:number;towerSpinDirection?:number;spawnRadius?:number;towerEntrance?:{born:number;elapsed:number};towerEmission?:{born:number;burst:number;index:number};eggCooldown:number;target:Vec;status:'emerging'|'idle'|'hunting'|'burrowing';statusUntil:number;activeAt:number;nextBeckon:number;size:number;centipedeMotion?:CentipedeMotion;gigapedeMotion?:GigapedeMotion;towerFlight?:{gravity:number;height:number;descentSpeed:number;agility:number;curl:number}};
-export type Projectile={shotKey?:string;id:number;pos:Vec;previous?:Vec;vel:Vec;age:number;homing:boolean;level?:number;energy?:number;floorBounces?:number;path?:{pos:Vec;t:number}[]};
+export type Projectile={launch?:ShotLaunch;shotKey?:string;id:number;pos:Vec;previous?:Vec;vel:Vec;age:number;homing:boolean;level?:number;energy?:number;floorBounces?:number;path?:{pos:Vec;t:number}[]};
 export type Gem={id:number;pos:Vec;vel:Vec;age:number};
 export type Ring={id:number;owner:number;pos:Vec;radius:number;previous:number;age:number};
-export type Effect={bloodId?:number;bloodTime?:number;bloodSources?:Vec[];bloodSegment?:boolean;shotKey?:string;networkId?:number;shooterId?:string;deathCause?:string;kind:'shot'|'burst'|'hit'|'kill'|'pickup'|'upgrade'|'spawn'|'jump'|'death'|'egg'|'beckon'|'transmute'|'explosion'|'land'|'impact'|'ricochet'|'pierce'|'eat'|'bounce'|'hatch'|'burrow'|'emerge';pos:Vec;amount?:number;enemy?:EnemyKind;enemyId?:number;level?:number;direction?:Vec;muzzles?:Vec[]};
+export type Effect={bloodless?:boolean;bloodId?:number;bloodTime?:number;bloodSources?:Vec[];bloodSegment?:boolean;shotKey?:string;networkId?:number;shooterId?:string;deathCause?:string;kind:'shot'|'burst'|'hit'|'kill'|'pickup'|'upgrade'|'spawn'|'jump'|'death'|'egg'|'beckon'|'transmute'|'explosion'|'land'|'impact'|'ricochet'|'pierce'|'eat'|'bounce'|'hatch'|'burrow'|'emerge';pos:Vec;amount?:number;enemy?:EnemyKind;enemyId?:number;level?:number;direction?:Vec;muzzles?:Vec[]};
 export type Input={forward:number;strafe:number;yaw:number;pitch:number;jump:boolean;fire:boolean;homing:boolean};
 export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});
-export type WorldOptions={legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
+export type WorldOptions={legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
 export class World {
  crew:CrewPlayer[]=[];private activeCrew:CrewPlayer|null=null;
- addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=4)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0},input:idleInput(),alive:true,cause:'',respawnAt:null,life:0,protectedUntil:0,primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
+ addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=4)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0},input:idleInput(),alive:true,cause:'',respawnAt:null,life:0,protectedUntil:0,primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
  selectCrew(id:string){const p=this.crew.find(p=>p.id===id);if(p)this.useCrew(p);this.activeCrew=null;}
  private useCrew(p:CrewPlayer){this.activeCrew=p;this.player=p.player;this.primary=p.primary;this.secondary=p.secondary;this.wasJump=p.wasJump;this.lastShotTick=p.lastShotTick;this.level=p.level;this.reserve=p.reserve;}
  stepCrew(inputs:Map<string,Input>,dt=STEP,waiting=new Set<string>()){
@@ -48,6 +52,17 @@ export class World {
   this.advanceWorld(dt);this.updateGems(idleInput(),dt);this.selectCrew(this.crew[0].id);
   if(!this.crew.some(p=>p.alive)){this.state='dead';this.cause='CREW LOST';return;}
   this.respawnCrew();this.selectCrew(this.crew[0].id);
+ }
+ /** Shared courtyard movement; no survival clock, combat, pickups or damage. */
+ stepCrewEntrance(inputs:Map<string,Input>,dt=STEP,waiting=new Set<string>()){
+  this.playerStarts.clear();this.tick++;let reached:string|null=null;
+  for(const p of this.crew){
+   if(!p.alive||waiting.has(p.id))continue;
+   p.input={...(inputs.get(p.id)??idleInput()),fire:false,homing:false};this.useCrew(p);
+   this.stepEntrance(p.input,dt);p.wasJump=this.wasJump;
+   if(touchesEntranceSeal(p.player.pos,this.previousPlayerPosition))reached??=p.id;
+  }
+  this.selectCrew(this.crew[0].id);return reached;
  }
 
  /** Resolve only after all damage: a team wipe always beats a pending revival. */
@@ -71,7 +86,7 @@ export class World {
      if(spawn)break;
     }
     if(!spawn)continue;
-    p.player={pos:spawn,vel:v(),grounded:true,landedAt:-1000,hopPulse:0};
+    p.player={pos:spawn,vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0};
     p.input={...idleInput(),yaw:target.input.yaw,pitch:target.input.pitch};
     p.primary=channel();p.secondary=channel();p.wasJump=false;p.lastShotTick=-1;
     p.alive=true;p.cause='';p.respawnAt=null;p.life++;p.protectedUntil=this.time+CREW_RESPAWN_PROTECTION;
@@ -82,8 +97,9 @@ export class World {
 
  // Prediction runs only the local controller; shared enemies, pickups and damage
  // are advanced exclusively by the host. Reconciliation uses this same path.
- predictCrew(id:string,input:Input,dt=STEP){
+ predictCrew(id:string,input:Input,dt=STEP,entrance=false){
   const p=this.crew.find(p=>p.id===id);if(!p?.alive||this.state!=='playing')return;
+  if(entrance){this.tick++;this.useCrew(p);p.input={...input,fire:false,homing:false};this.stepEntrance(p.input,dt);p.wasJump=this.wasJump;this.selectCrew(id);return;}
   this.tick++;this.time+=dt;this.radius=arenaRadius(this.time);this.useCrew(p);
   p.input={...input};this.prediction=true;this.move(input,dt);
   // Predicted falling is visual only; the host confirms death.
@@ -93,11 +109,17 @@ export class World {
   p.wasJump=this.wasJump;p.lastShotTick=this.lastShotTick;p.level=this.level;p.reserve=this.reserve;this.selectCrew(id);
  }
  private prediction=false;
+ private upgradePulses:{pos:Vec;born:number;level:number;shooterId?:string;previous:number;hit:Set<number>}[]=[];
+ private beginUpgradePulse(pos:Vec,level:number,shooterId?:string){
+  if(this.options.legacyUpgradePulse||this.prediction||level<2)return;
+  this.upgradePulses.push({pos:{...pos},born:this.time,level,shooterId,previous:0,hit:new Set()});
+ }
  private playerStarts=new Map<World['player'],Vec>();
+ private projectileTargetStarts=new Map<Enemy,{pos:Vec;targets:Vec[]}>();
  /** Start of the last movement tick, shared with projectile render interpolation. */
  get previousPlayerPosition():Vec{return this.playerStarts.get(this.player)??this.player.pos;}
  time=0;tick=0;state:'playing'|'dead'='playing';cause='';radius=TUNING.radius;deathSource:DeathSource|null=null;deathEnemy:Enemy|null=null;
- player={pos:v(0,TUNING.eyeHeight,10),vel:v(),grounded:true,landedAt:-1000,hopPulse:0};
+ player={pos:v(0,TUNING.eyeHeight,10),vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0};
  enemies:Enemy[]=[];projectiles:Projectile[]=[];gems:Gem[]=[];effects:Effect[]=[];rings:Ring[]=[];
  stats={kills:0,shots:0,hits:0,collected:0,expired:0,eaten:0,released:0,homingFired:0,homingEaten:0,transmuted:0,maxReserve:0,maxEnemies:0,upgradeTimes:[0,0,0,0],leviathanDown:0,orbDown:0,killed:{} as Partial<Record<EnemyKind,number>>};
  reserve=0;level=1;wave=-1;
@@ -120,7 +142,7 @@ export class World {
  get spawnFixesEnabled(){return !this.options.legacySpawnFixes;}
  get enemyFloorEnabled(){return !this.options.legacyEnemyFloor;}
  random(){this.rng^=this.rng<<13;this.rng^=this.rng>>>17;this.rng^=this.rng<<5;return(this.rng>>>0)/4294967296;}
- emit(kind:Effect['kind'],pos:Vec,amount?:number,enemy?:EnemyKind,enemyId?:number){this.effects.push({kind,pos:{...pos},amount,enemy,enemyId,level:this.level,shooterId:kind==='jump'||kind==='land'||kind==='death'||kind==='pickup'?this.activeCrew?.id:undefined});if(kind==='death')this.effects[this.effects.length-1].deathCause=this.activeCrew?.cause??this.cause;}
+ emit(kind:Effect['kind'],pos:Vec,amount?:number,enemy?:EnemyKind,enemyId?:number){this.effects.push({kind,pos:{...pos},amount,enemy,enemyId,level:this.level,shooterId:kind==='jump'||kind==='land'||kind==='death'||kind==='pickup'?this.activeCrew?.id:undefined});if(kind==='death')this.effects[this.effects.length-1].deathCause=this.activeCrew?.cause??this.cause;if(kind==='upgrade')this.beginUpgradePulse(pos,this.level,this.activeCrew?.id);}
  spawn(kind:EnemyKind,pos:Vec,announce=true):Enemy{
   const spec=ENEMY_STATS[kind];const size=isSpider(kind)?SPIDER_SIZE*(kind==='spider2'?2:1):kind==='gigapede'?1.5:kind==='ghostpede'?2:1;
   const e:Enemy={id:this.nextId++,kind,pos:{...pos},hp:spec.hp,radius:spec.radius*(isSpider(kind)?SPIDER_SIZE:1),gems:this.options.legacySpawnFixes&&isSpider(kind)?5:spec.gems,age:0,phase:isSquid(kind)||isSpider(kind)?Math.atan2(pos.x,pos.z):this.random()*Math.PI*2,nextSpawn:3,eaten:0,segments:[],weakpoints:[],vel:v(),headExposure:isSpider(kind)?0:1,lastHit:-99,duckUntil:0,pendingDuck:false,nextMove:3,orbitSpeed:0,radialOffset:3.8*size,facingYaw:Math.atan2(pos.x,pos.z)+Math.PI,eggCooldown:0,target:{...pos},status:'emerging',statusUntil:0,activeAt:kind==='leviathan'?8.533333333:kind==='orb'?6.683333333:isPede(kind)||kind==='thorn'?3:.6,nextBeckon:kind==='leviathan'?13.533333333:kind==='orb'?6.683333333:Infinity,size};
@@ -173,6 +195,13 @@ export class World {
  /** Move on the entrance platform without advancing survival or combat. */
  stepEntrance(input:Input,dt=STEP){
   this.move({...input,fire:false,homing:false},dt,entranceFloor);
+  const before=this.previousPlayerPosition,bounds=ENTRANCE_COURTYARD;
+  // The courtyard walls slide the player along their faces. The seal trigger
+  // begins just before the front wall, so entering never needs a precise aim.
+  if(Math.abs(before.x)<=bounds.halfWidth&&before.z>=bounds.frontZ&&before.z<=bounds.backZ){
+   const p=this.player,x=clamp(p.pos.x,-bounds.halfWidth,bounds.halfWidth),z=clamp(p.pos.z,bounds.frontZ,bounds.backZ);
+   if(x!==p.pos.x){p.pos.x=x;p.vel.x=0;}if(z!==p.pos.z){p.pos.z=z;p.vel.z=0;}
+  }
   this.effects=[];
   if(this.player.pos.y<-8){this.state='playing';this.cause='';this.player.pos={...ENTRANCE_SPAWN};this.player.vel=v();this.player.grounded=true;this.playerStarts.clear();}
  }
@@ -183,28 +212,34 @@ export class World {
    this.nextEvent=this.schedule.next();}
   for(const pending of this.delayed.filter(s=>s.time<=this.time+1e-7)){const e=this.spawn(pending.kind,pending.pos);if(pending.activeAt!==undefined){e.activeAt=pending.activeAt-this.time;e.nextBeckon=e.activeAt;}}
   this.delayed=this.delayed.filter(s=>s.time>this.time+1e-7);
-  this.updateEnemies(dt);this.updateRings(dt);this.updateProjectiles(dt);
+  this.updateEnemies(dt);this.updateRings(dt);this.updateUpgradePulses();this.updateProjectiles(dt);
   this.stats.maxEnemies=Math.max(this.stats.maxEnemies,this.enemies.length);
  }
  startAt(time:number,level=1,reserve=0){
+  this.upgradePulses=[];
   this.time=Math.max(0,time);this.tick=Math.round(this.time/STEP);this.level=clamp(Math.round(level),1,4);this.reserve=this.homingUnlocked?Math.max(0,Math.round(reserve)):0;
   this.stats.collected=this.options.legacyHomingUnlock?(this.level===1?0:this.level===2?10:70+this.reserve):Math.max(this.level===1?0:this.level===2?10:this.level===3?70:200,this.homingUnlocked?10+this.reserve:0);this.stats.maxReserve=this.reserve;
   this.radius=arenaRadius(this.time);this.player.pos=v(0,floorHeight(0,0,this.time)+TUNING.eyeHeight,0);
   while(!this.nextEvent.done&&this.nextEvent.value.time<this.time-1e-7){if(!this.options.legacySpawnPlacement)this.scheduledPlacement(this.nextEvent.value.kind);this.nextEvent=this.schedule.next();}
  }
  private move(input:Input,dt:number,ground=(x:number,z:number)=>floorHeight(x,z,this.time)){
-  const p=this.player;this.playerStarts.set(p,{...p.pos});const jump=input.jump&&!this.wasJump;this.wasJump=input.jump;p.hopPulse=Math.max(0,p.hopPulse-dt*4);
+  const p=this.player;this.playerStarts.set(p,{...p.pos});const pressed=input.jump&&!this.wasJump;this.wasJump=input.jump;p.hopPulse=Math.max(0,p.hopPulse-dt*4);
+  // Keep a short tap until touchdown, independently for each crew member.
+  p.jumpBuffer=this.options.legacyJumpMovement?0:(pressed ? .08 : Math.max(0,p.jumpBuffer-dt));
+  const jump=this.options.legacyJumpMovement?pressed:p.jumpBuffer>0&&p.grounded;
   if(p.grounded){const speed=Math.hypot(p.vel.x,p.vel.z),retained=Math.max(0,speed-Math.max(speed,3)*TUNING.friction*dt);if(speed>0&&!jump){p.vel.x*=retained/speed;p.vel.z*=retained/speed;}}
   const magnitude=Math.hypot(input.forward,input.strafe),len=this.options.legacyAnalogMovement?Math.max(1,magnitude):magnitude||1;
   const wx=(-Math.sin(input.yaw)*input.forward+Math.cos(input.yaw)*input.strafe)/len,wz=(-Math.cos(input.yaw)*input.forward-Math.sin(input.yaw)*input.strafe)/len;
   const strength=this.options.legacyAnalogMovement?1:Math.min(1,magnitude),wishSpeed=TUNING.speed*strength;
   const add=Math.max(0,wishSpeed-p.vel.x*wx-p.vel.z*wz),accel=Math.min(add,(p.grounded?TUNING.acceleration:TUNING.airAcceleration)*dt);
   p.vel.x+=wx*accel;p.vel.z+=wz*accel;
-  if(jump&&p.grounded){if(this.tick-p.landedAt<=8){p.vel.x*=1.12;p.vel.z*=1.12;p.hopPulse=1;}p.vel.y=TUNING.jump;p.grounded=false;this.emit('jump',p.pos,p.hopPulse?3:1);}
+  if(jump&&p.grounded){p.jumpBuffer=0;if(this.tick-p.landedAt<=8){p.vel.x*=1.12;p.vel.z*=1.12;p.hopPulse=1;}p.vel.y=TUNING.jump;p.grounded=false;this.emit('jump',p.pos,p.hopPulse?3:1);}
   const speed=Math.hypot(p.vel.x,p.vel.z);if(speed>TUNING.maxSpeed){p.vel.x*=TUNING.maxSpeed/speed;p.vel.z*=TUNING.maxSpeed/speed;}
   const beforeY=p.pos.y;p.vel.y-=TUNING.gravity*dt;p.pos.x+=p.vel.x*dt;p.pos.y+=p.vel.y*dt;p.pos.z+=p.vel.z*dt;
   const floor=ground(p.pos.x,p.pos.z)+TUNING.eyeHeight;
-  if(p.pos.y<=floor&&beforeY>=floor-.2&&p.vel.y<=0){if(!p.grounded){p.landedAt=this.tick;
+  // Follow tiny tile drops while walking; never snap an airborne jump or an arena edge.
+  const followStep=!this.options.legacyJumpMovement&&p.grounded&&beforeY>=floor&&beforeY-floor<=.08;
+  if((p.pos.y<=floor||followStep)&&beforeY>=floor-.2&&p.vel.y<=0){if(!p.grounded){p.landedAt=this.tick;
    // Tiny tile-height changes briefly lift the controller off the floor.
    // They are ground contacts, but must not play a full landing thud.
    if(p.vel.y<-3)this.emit('land',p.pos,p.vel.y<-10?2:1);
@@ -214,10 +249,15 @@ export class World {
  get homingUnlockGems(){return this.options.legacyHomingUnlock?70:10;}
  get homingUnlocked(){return this.level>=(this.options.legacyHomingUnlock?3:2);}
  get weaponAudio(){
-  if(this.crew.length&&!this.crew.find(p=>p.player===this.player)?.alive)return {primary:false,homing:false};
-  const homing=this.secondary.wasHeld&&this.homingUnlocked&&this.reserve>0;
-  return {primary:this.state==='playing'&&this.primary.wasHeld&&this.primary.streaming&&!homing&&this.tick>=this.primary.recoverUntil,
-   homing:this.state==='playing'&&homing&&this.secondary.streaming&&this.tick>=this.secondary.recoverUntil};
+  return this.weaponAudioFor(this.crew.find(p=>p.player===this.player));
+ }
+ weaponAudioFor(crew?:CrewPlayer){
+  if((crew&&!crew.alive)||(this.crew.length&&!crew))return {primary:false,homing:false};
+  const primary=crew?.primary??this.primary,secondary=crew?.secondary??this.secondary;
+  const level=crew?.level??this.level,reserve=crew?.reserve??this.reserve;
+  const homing=secondary.wasHeld&&level>=(this.options.legacyHomingUnlock?3:2)&&reserve>0;
+  return {primary:this.state==='playing'&&primary.wasHeld&&primary.streaming&&!homing&&this.tick>=primary.recoverUntil,
+   homing:this.state==='playing'&&homing&&secondary.streaming&&this.tick>=secondary.recoverUntil};
  }
  private weapon(input:Input){
   const homingAvailable=this.homingUnlocked&&this.reserve>0;
@@ -245,47 +285,41 @@ export class World {
   const forward=v(-Math.sin(input.yaw)*Math.cos(input.pitch),Math.sin(input.pitch),-Math.cos(input.yaw)*Math.cos(input.pitch));
   // Converge on the closest damageable target under the crosshair, otherwise a
   // distant point on the aim ray. Physical daggers still sweep their whole path.
-  const end=v(this.player.pos.x+forward.x*80,this.player.pos.y+forward.y*80,this.player.pos.z+forward.z*80);
-  let aimDistance=80;
+  const aimRange=legacyStream||this.options.legacyWideStream?80:TUNING.projectileSpeed*2.8;
+  const end=v(this.player.pos.x+forward.x*aimRange,this.player.pos.y+forward.y*aimRange,this.player.pos.z+forward.z*aimRange);
+  let aimDistance=aimRange;
   if(!this.options.cameraProjectiles)for(const e of this.enemies){
-   if(e.hp<=0||!this.active(e)||(isSpider(e.kind)&&e.headExposure<.5))continue;
-   const test=(point:Vec,radius:number)=>{const t=segmentSphere(this.player.pos,end,point,radius);if(t!==null)aimDistance=Math.min(aimDistance,Math.max(.6,t*80));};
-   if(e.segments.length){for(const p of e.segments)if(p.hp>0)test(p.pos,.53*e.size);}
-   else if(e.weakpoints.length){for(const p of e.weakpoints)if(p.hp>0)test(localToEnemy(e,this.player.pos,p.local),e.kind==='leviathan'?.6:TUNING.towerCrystalRadius);}
-   else test(this.weakPoint(e),isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size:e.radius);
+   if(e.hp<=0||!this.active(e))continue;
+   if(!legacyStream&&!this.options.legacyWideStream){
+    const armor=sweepArmor(e,this.player.pos,this.player.pos,end,1,this.time,this.spawnFixesEnabled);
+    if(armor)aimDistance=Math.min(aimDistance,Math.max(.6,armor.t*aimRange));
+    if(isSpider(e.kind)&&e.headExposure<.5){const t=segmentSphere(this.player.pos,end,e.pos,e.radius);if(t!==null)aimDistance=Math.min(aimDistance,Math.max(.6,t*aimRange));continue;}
+   }else if(isSpider(e.kind)&&e.headExposure<.5)continue;
+   const test=(point:Vec,radius:number)=>{
+    if(legacyStream||this.options.legacyWideStream){const t=segmentSphere(this.player.pos,end,point,radius);if(t!==null)aimDistance=Math.min(aimDistance,Math.max(.6,t*aimRange));}
+    else aimDistance=Math.min(aimDistance,sphereAimDistance(this.player.pos,forward,point,radius,aimRange));
+   };
+   if(e.segments.length){for(const p of e.segments)test(p.pos,.53*e.size);}
+   else if(e.weakpoints.length){for(const p of e.weakpoints)if(p.hp>0)test(crystalToEnemy(e,this.player.pos,p.local),(e.kind==='leviathan'?.6:TUNING.towerCrystalRadius)*enemyEmergenceScale(e));}
+   else test(this.weakPoint(e),isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size*enemyEmergenceScale(e):e.radius);
   }
+  if(!legacyStream&&!this.options.legacyWideStream){const floor=(this.options.legacyRicochet?sweepFloorLegacy:sweepFloor)(this.player.pos,end,this.time);if(floor)aimDistance=Math.min(aimDistance,Math.max(.6,floor.t*aimRange));}
   const muzzles=this.options.cameraProjectiles?[{...this.player.pos}]:HAND_MUZZLES[this.level-1].map((_,i)=>weaponMuzzle(this.player.pos,input.yaw,input.pitch,this.level,i,this.options.legacyWeaponOrigin));
   // Crew shots have an independent RNG: prediction must not consume world RNG.
   const shotKey=this.activeCrew?`${this.activeCrew.id}:${++this.activeCrew.shotSequence}`:undefined;
   let shotSeed=(this.activeCrew?.shotSeed??0)^2166136261;for(const c of shotKey??'')shotSeed=Math.imul(shotSeed^c.charCodeAt(0),16777619);
   const shotRandom=()=>{if(!shotKey)return this.random();shotSeed^=shotSeed<<13;shotSeed^=shotSeed>>>17;shotSeed^=shotSeed<<5;return(shotSeed>>>0)/4294967296;};
+  const spec:ShotLaunch={pos:{...this.player.pos},muzzles,yaw:input.yaw,pitch:input.pitch,spread,aimDistance,radius:!burst&&!legacyStream?(this.options.legacyWideStream?LEGACY_WIDE_STREAM_RADIUS:STREAM_RADIUS)[this.level-1]:null,camera:!!this.options.cameraProjectiles,legacyOrigin:!!this.options.legacyWeaponOrigin,cone:!legacyStream&&!this.options.legacyWideStream,focused:!burst&&!homing&&!legacyStream&&!this.options.legacyWideStream&&this.level>1,seed:shotSeed};
   const launches:Vec[]=[];
   for(let i=0;i<count;i++){
-   const u=shotRandom(),w=shotRandom(),angle=u*Math.PI*2;
-   // A circular target footprint matches the circular launch area, producing
-   // an outward fan instead of an unrelated square jitter pattern.
-   const radialSpread=spread*Math.sqrt(w);
-   const yaw=!burst&&!legacyStream?input.yaw-Math.cos(angle)*radialSpread:input.yaw+(u-.5)*spread*2;
-   const pitch=!burst&&!legacyStream?input.pitch+Math.sin(angle)*radialSpread:input.pitch+(w-.5)*spread*2,speed=homing?42:TUNING.projectileSpeed;
-   const origin={...muzzles[i%muzzles.length]},target=v(this.player.pos.x-Math.sin(yaw)*Math.cos(pitch)*aimDistance,this.player.pos.y+Math.sin(pitch)*aimDistance,this.player.pos.z-Math.cos(yaw)*Math.cos(pitch)*aimDistance);
-   if(!burst&&!legacyStream){
-    // Use the same two random samples as the existing target spread: no extra
-    // RNG consumption, particles or damage. Even hand I traverses many lanes
-    // through its circular firing area over successive stream shots.
-    const radius=(this.options.legacyWideStream?LEGACY_WIDE_STREAM_RADIUS:STREAM_RADIUS)[this.level-1]*Math.sqrt(w);
-    const side=Math.cos(angle)*radius,up=Math.sin(angle)*radius;
-    const sy=Math.sin(input.yaw),cy=Math.cos(input.yaw),sp=Math.sin(input.pitch),cp=Math.cos(input.pitch);
-    origin.x+=cy*side+sy*sp*up;origin.y+=cp*up;origin.z+=-sy*side+cy*sp*up;
-   }
-   launches.push(origin);
-   const dir=direction(origin,target);
-   this.projectiles.push({shotKey:shotKey?`${shotKey}:${i}`:undefined,id:this.prediction?-this.nextId++:this.nextId++,pos:{...origin},previous:{...origin},vel:this.options.cameraProjectiles?v(-Math.sin(yaw)*Math.cos(pitch)*speed,Math.sin(pitch)*speed,-Math.cos(yaw)*Math.cos(pitch)*speed):v(dir.x*speed,dir.y*speed,dir.z*speed),age:0,homing,level:this.level,energy:homing?10:1});
+   const {pos,vel}=daggerLaunch(spec,i,shotRandom(),shotRandom(),homing?42:TUNING.projectileSpeed);launches.push(pos);
+   this.projectiles.push({launch:shotKey?spec:undefined,shotKey:shotKey?`${shotKey}:${i}`:undefined,id:this.prediction?-this.nextId++:this.nextId++,pos,previous:{...pos},vel,age:0,homing,level:this.level,energy:homing?10:1});
   }
   this.stats.shots+=count;this.emit(burst?'burst':'shot',launches[0],homing?1:0);
   const effect=this.effects[this.effects.length-1];effect.shotKey=shotKey;effect.shooterId=this.activeCrew?.id;effect.direction=direction(launches[0],v(this.player.pos.x+forward.x*aimDistance,this.player.pos.y+forward.y*aimDistance,this.player.pos.z+forward.z*aimDistance));effect.muzzles=launches.slice(0,Math.min(count,muzzles.length));
   if(burst){if(!this.prediction)for(const g of this.gems){const d=direction(this.player.pos,g.pos);g.vel.x+=d.x*8;g.vel.y+=d.y*8;g.vel.z+=d.z*8;}
    const floor=floorHeight(this.player.pos.x,this.player.pos.z,this.time);
-   if(input.pitch<-.95&&this.player.pos.y-floor<3.8){this.player.vel.y=Math.max(this.player.vel.y,SHOTGUN_LAUNCH_SPEED[this.level-1]);this.player.grounded=false;this.emit('jump',this.player.pos,2);}}
+   if(input.pitch<-.95&&this.player.pos.y-floor<3.8&&(this.options.legacyJumpMovement||(floor>-1000&&this.player.pos.y-floor>=TUNING.eyeHeight-1e-6))){this.player.vel.y=Math.max(this.player.vel.y,SHOTGUN_LAUNCH_SPEED[this.level-1]);this.player.grounded=false;this.emit('jump',this.player.pos,2);}}
  }
  active(e:Enemy){
   if(this.options.legacyEnemyBehavior)return e.age+1e-7>=e.activeAt&&e.status!=='burrowing';
@@ -301,10 +335,13 @@ export class World {
   return exposed(e.pos,e.radius)||e.segments.some(s=>exposed(s.pos,e.size*.8));
  }
  private updateEnemies(dt:number){
+  this.projectileTargetStarts.clear();
   const cells=new Map<string,Enemy[]>();for(const e of this.enemies){const key=`${Math.floor(e.pos.x/3)},${Math.floor(e.pos.z/3)}`;const cell=cells.get(key)||[];cell.push(e);cells.set(key,cell);}
   for(const e of [...this.enemies]){
    if(this.crew.length){const target=this.crew.filter(p=>p.alive).sort((a,b)=>distance(a.player.pos,e.pos)-distance(b.player.pos,e.pos))[0];if(!target)break;this.useCrew(target);}
-   if(e.hp<=0)continue;const wasActive=this.active(e),previous={...e.pos},velocityBefore={...e.vel},segmentsBefore=e.segments.map(s=>({...s.pos}));e.age+=dt;
+   if(e.hp<=0)continue;const wasActive=this.active(e),previous={...e.pos},velocityBefore={...e.vel},segmentsBefore=e.segments.map(s=>({...s.pos}));
+   if(wasActive&&this.projectiles.length)this.projectileTargetStarts.set(e,{pos:{...e.pos},targets:e.segments.length?segmentsBefore:e.weakpoints.length?e.weakpoints.map(s=>crystalToEnemy(e,this.player.pos,s.local)):[{...this.weakPoint(e)}]});
+   e.age+=dt;
    if(isSquid(e.kind)){
     if(e.towerEntrance){
      const motion=e.towerEntrance,elapsed=Math.max(0,this.time-motion.born),before=towerEntrancePose(e.kind,motion.elapsed),after=towerEntrancePose(e.kind,elapsed);
@@ -517,15 +554,41 @@ export class World {
   }
   this.rings=this.rings.filter(r=>r.radius<this.radius+8);
  }
+ private updateUpgradePulses(){
+  for(const pulse of this.upgradePulses){
+   const age=this.time-pulse.born,radius=upgradePulseRadius(age);
+   for(const e of this.enemies){
+    if(e.hp<=0||!this.active(e)||pulse.hit.has(e.id))continue;
+    // Respect segmented/crystal health: one live target per enemy per wave.
+    const points=e.weakpoints.length?e.weakpoints.map((s,i)=>({pos:crystalToEnemy(e,this.player.pos,s.local),hp:s.hp,index:i,weak:true,r:TUNING.towerCrystalRadius})):
+     e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false,r:.53*e.size})):
+     [{pos:this.weakPoint(e),hp:e.hp,index:-1,weak:false,r:e.radius}];
+    const point=points.find(p=>{
+     if(p.hp<=0||Math.abs(p.pos.y-pulse.pos.y)>UPGRADE_PULSE.verticalReach+p.r)return false;
+     const d=Math.hypot(p.pos.x-pulse.pos.x,p.pos.z-pulse.pos.z);
+     return d>=pulse.previous-p.r&&d<=radius+p.r;
+    });
+    if(!point)continue;
+    const firstEffect=this.effects.length;
+    if(this.damageEnemy(e,UPGRADE_PULSE.damage[pulse.level as 2|3|4],point.pos,point.index,point.weak)>0){
+     pulse.hit.add(e.id);
+     for(let i=firstEffect;i<this.effects.length;i++){this.effects[i].level=pulse.level;this.effects[i].shooterId=pulse.shooterId;}
+    }
+   }
+   pulse.previous=radius;
+  }
+  this.upgradePulses=this.upgradePulses.filter(p=>this.time-p.born<UPGRADE_PULSE.duration);
+ }
  damageEnemy(e:Enemy,damage:number,point:Vec=e.pos,segment=-1,weak=false){
   if(e.hp<=0)return 0;let applied=0;
   if(segment>=0){const s=weak?e.weakpoints[segment]:e.segments[segment];applied=Math.min(s.hp,damage);s.hp-=applied;e.hp-=applied;if(applied>0&&s.hp===0)this.dropGems(point,1);}
   else{applied=Math.min(e.hp,damage);e.hp-=applied;}
   if(applied<=0)return 0;e.lastHit=this.time;if(isSpider(e.kind))e.pendingDuck=true;this.emit('hit',point,undefined,e.kind,e.id);
-  const hit=this.effects[this.effects.length-1];hit.bloodId=++this.bloodSequence;hit.bloodTime=this.time;hit.bloodSegment=segment>=0&&(weak?e.weakpoints[segment]:e.segments[segment]).hp===0;
+  const crystal=weak||isSpider(e.kind)||segment>=0;
+  const hit=this.effects[this.effects.length-1];hit.bloodless=crystal;hit.bloodId=++this.bloodSequence;hit.bloodTime=this.time;hit.bloodSegment=segment>=0&&(weak?e.weakpoints[segment]:e.segments[segment]).hp===0;
   if(e.hp<=0){e.hp=0;this.stats.kills++;this.stats.killed[e.kind]=(this.stats.killed[e.kind]||0)+1;this.emit('kill',e.pos,e.radius,e.kind,e.id);
-   const kill=this.effects[this.effects.length-1];kill.bloodId=++this.bloodSequence;kill.bloodTime=this.time;
-   kill.bloodSources=e.segments.length?e.segments.filter((_,i)=>i%Math.max(1,Math.ceil(e.segments.length/8))===0).slice(0,8).map(s=>({...s.pos})):e.weakpoints.length?e.weakpoints.slice(0,8).map(s=>localToEnemy(e,this.player.pos,s.local)):[{...point}];
+   const kill=this.effects[this.effects.length-1];kill.bloodless=crystal;kill.bloodId=++this.bloodSequence;kill.bloodTime=this.time;
+   kill.bloodSources=e.segments.length?e.segments.filter((_,i)=>i%Math.max(1,Math.ceil(e.segments.length/8))===0).slice(0,8).map(s=>({...s.pos})):e.weakpoints.length?e.weakpoints.slice(0,8).map(s=>crystalToEnemy(e,this.player.pos,s.local)):[{...point}];
    if(!e.weakpoints.length&&!e.segments.length)this.dropGems(isSpider(e.kind)?spiderLocalPoint(e,this.player.pos,SPIDER_GEM):e.pos,e.gems);
    if(e.kind==='leviathan'){this.stats.leviathanDown=this.time;this.delayed.push({time:this.time+3.316666667,kind:'orb',pos:v(e.pos.x,5,e.pos.z),activeAt:this.time+10});}
    if(e.kind==='orb')this.stats.orbDown=this.time;
@@ -534,76 +597,113 @@ export class World {
  }
  private explode(pos:Vec,exclude?:{entity:number;segment:number}){
   this.emit('explosion',pos);for(const e of this.enemies){if(e.hp<=0||!this.active(e))continue;
-   const points=e.weakpoints.length?e.weakpoints.map((s,i)=>({pos:localToEnemy(e,this.player.pos,s.local),hp:s.hp,index:i,weak:true})):e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false})):[{pos:this.weakPoint(e),hp:e.hp,index:-1,weak:false}];
+   const points=e.weakpoints.length?e.weakpoints.map((s,i)=>({pos:crystalToEnemy(e,this.player.pos,s.local),hp:s.hp,index:i,weak:true})):e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false})):[{pos:this.weakPoint(e),hp:e.hp,index:-1,weak:false}];
    for(const p of points)if(p.hp>0&&!(exclude?.entity===e.id&&exclude.segment===p.index)&&distance(pos,p.pos)<1.9)this.damageEnemy(e,e.kind==='leviathan'||e.kind==='orb'?1:10,p.pos,p.index,p.weak);
   }
  }
  private updateProjectiles(dt:number){
   for(const explosion of this.detonations.filter(x=>x.tick<=this.tick))this.explode(explosion.pos,explosion.exclude);this.detonations=this.detonations.filter(x=>x.tick>this.tick);
-  if(!this.projectiles.length){this.enemies=this.enemies.filter(e=>e.hp>0);return;}
+  if(!this.projectiles.length){this.enemies=this.enemies.filter(e=>e.hp>0);this.projectileTargetStarts.clear();return;}
   // Build damage targets once per tick; query only cells touched by each swept dagger.
   // Target health stays live because an earlier dagger can destroy a crystal this tick.
-  type Target={e:Enemy;pos:Vec;r:number;i:number;weak:boolean;armor?:boolean;stamp?:number};
+  type Target={e:Enemy;pos:Vec;r:number;i:number;weak:boolean;armor?:boolean;absorb?:boolean;previous?:Vec;stamp?:number};
   const cells=new Map<string,Target[]>(),cellSize=4;
   for(const e of this.enemies){
    if(e.hp<=0||!this.active(e))continue;
-   const targets:Target[]=e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*e.size,i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:localToEnemy(e,this.player.pos,s.local),r:e.kind==='leviathan'?.6:TUNING.towerCrystalRadius,i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size:e.radius,i:-1,weak:false}];
+   const targets:Target[]=e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*e.size,i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:crystalToEnemy(e,this.player.pos,s.local),r:(e.kind==='leviathan'?.6:TUNING.towerCrystalRadius)*enemyEmergenceScale(e),i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size*enemyEmergenceScale(e):e.radius,i:-1,weak:false}];
+   // Destroyed tower crystals disappear; the surviving armor still blocks shots.
+   for(let i=targets.length-1;i>=0;i--)if(targets[i].weak&&e.weakpoints[targets[i].i].hp<=0)targets.splice(i,1);
+   if(e.kind==='ghostpede'){
+    targets.push({e,pos:e.pos,r:1.5,i:-1,weak:false,absorb:true});
+    for(let i=0;i<e.segments.length;i++)targets.push({e,pos:e.segments[i].pos,r:1,i,weak:false,absorb:true});
+   }
    const radius=armorBounds(e);
    if(radius!==null)targets.push({e,pos:e.pos,r:radius,i:-1,weak:false,armor:true});
    if(isSpider(e.kind)&&e.headExposure<.5){targets.length=0;targets.push({e,pos:e.pos,r:e.radius,i:-1,weak:false,armor:true});}
-   for(const target of targets)for(let x=Math.floor((target.pos.x-target.r)/cellSize);x<=Math.floor((target.pos.x+target.r)/cellSize);x++)for(let z=Math.floor((target.pos.z-target.r)/cellSize);z<=Math.floor((target.pos.z+target.r)/cellSize);z++){
+   for(const target of targets){
+    const history=this.projectileTargetStarts.get(e);
+    target.previous=(target.armor||target.absorb&&target.i<0?history?.pos:history?.targets[Math.max(0,target.i)])??target.pos;
+    for(let x=Math.floor((Math.min(target.previous.x,target.pos.x)-target.r)/cellSize);x<=Math.floor((Math.max(target.previous.x,target.pos.x)+target.r)/cellSize);x++)for(let z=Math.floor((Math.min(target.previous.z,target.pos.z)-target.r)/cellSize);z<=Math.floor((Math.max(target.previous.z,target.pos.z)+target.r)/cellSize);z++){
     const key=x+','+z,cell=cells.get(key);if(cell)cell.push(target);else cells.set(key,[target]);
+    }
    }
   }
-  const ghost=this.enemies.find(e=>e.kind==='ghostpede'&&e.hp>0&&this.active(e));
+  const ghosts=this.enemies.filter(e=>e.kind==='ghostpede'&&e.hp>0&&this.active(e));
   const homingTargets=this.projectiles.some(p=>p.homing)?this.enemies.filter(e=>!isEgg(e.kind)&&e.kind!=='orb'&&e.hp>0&&this.active(e)):[];
-  const old=v();let queryStamp=0;
+  const old=v(),relativeOld=v(),relativeEnd=v();let queryStamp=0;
   for(const p of this.projectiles){
    p.previous??={...p.pos};Object.assign(p.previous,p.pos);
-   p.path=undefined;p.age+=dt;p.energy??=p.homing?10:1;
-   if(p.floorBounces&&!p.homing)p.vel.y-=TUNING.gravity*dt;
-   if(p.homing){let target:Vec|undefined,nearest=Infinity;
+   const lifetime=p.homing?8:2.8,ageBefore=p.age,flightDt=Math.min(dt,Math.max(0,lifetime-ageBefore));
+   p.path=undefined;if(flightDt<=0)continue;p.age+=flightDt;p.energy??=p.homing?10:1;
+   let agePenalty=0;
+   if(p.floorBounces&&!p.homing)p.vel.y-=TUNING.gravity*flightDt;
+   if(p.homing){const ghost=ghosts.find(e=>e.hp>0);let target:Vec|undefined,nearest=Infinity;
     if(ghost)target=ghost.pos;
     else for(const e of homingTargets){if(e.hp<=0)continue;const point=this.weakPoint(e),dist=(p.pos.x-point.x)**2+(p.pos.y-point.y)**2+(p.pos.z-point.z)**2;if(dist<nearest){nearest=dist;target=point;}}
-    if(target){const dir=direction(p.pos,target),blend=Math.min(1,dt*7);p.vel.x+=(dir.x*42-p.vel.x)*blend;p.vel.y+=(dir.y*42-p.vel.y)*blend;p.vel.z+=(dir.z*42-p.vel.z)*blend;}
-    if(ghost&&(distance(p.pos,ghost.pos)<1.5||ghost.segments.some(s=>distance(p.pos,s.pos)<1))){this.stats.homingEaten++;this.emit('eat',p.pos,undefined,'ghostpede');this.expireProjectile(p);continue;}
+    if(target){const dir=direction(p.pos,target),blend=Math.min(1,flightDt*7);p.vel.x+=(dir.x*42-p.vel.x)*blend;p.vel.y+=(dir.y*42-p.vel.y)*blend;p.vel.z+=(dir.z*42-p.vel.z)*blend;}
    }
-   Object.assign(old,p.pos);p.pos.x+=p.vel.x*dt;p.pos.y+=p.vel.y*dt;p.pos.z+=p.vel.z*dt;
-   let elapsed=0,remaining=dt;
+   Object.assign(old,p.pos);p.pos.x+=p.vel.x*flightDt;p.pos.y+=p.vel.y*flightDt;p.pos.z+=p.vel.z*flightDt;
+   let elapsed=0,remaining=flightDt;
    for(let pass=0;pass<4&&p.age<99;pass++){
-    let best:{e:Enemy;segment:number;weak:boolean;t:number;pos:Vec;dead:boolean;armor:boolean;r:number;nx?:number;ny?:number;nz?:number}|undefined;
+    let best:{e:Enemy;segment:number;weak:boolean;t:number;pos:Vec;dead:boolean;armor:boolean;absorb?:boolean;r:number;nx?:number;ny?:number;nz?:number}|undefined;
     const stamp=++queryStamp;
     for(let x=Math.floor(Math.min(old.x,p.pos.x)/cellSize);x<=Math.floor(Math.max(old.x,p.pos.x)/cellSize);x++)for(let z=Math.floor(Math.min(old.z,p.pos.z)/cellSize);z<=Math.floor(Math.max(old.z,p.pos.z)/cellSize);z++)for(const target of cells.get(x+','+z)??[]){
      if(target.stamp===stamp)continue;target.stamp=stamp;const e=target.e;
-     if(e.hp<=0||(p.homing&&e.kind==='ghostpede'))continue;
+     if(e.hp<=0||(target.absorb?!p.homing:p.homing&&e.kind==='ghostpede'))continue;
      const hp=target.i<0?e.hp:target.weak?e.weakpoints[target.i].hp:e.segments[target.i].hp,dead=hp<=0;
+     if(target.weak&&dead)continue;
+     // Relative motion maps a moving target to its final position. Rebounds
+     // start at the corresponding fraction of the enemy's movement tick.
+     const before=target.previous!,fraction=elapsed/dt;
+     relativeOld.x=old.x+(target.pos.x-before.x)*(1-fraction);relativeOld.y=old.y+(target.pos.y-before.y)*(1-fraction);relativeOld.z=old.z+(target.pos.z-before.z)*(1-fraction);
+     const endFraction=(elapsed+remaining)/dt;
+     relativeEnd.x=p.pos.x+(target.pos.x-before.x)*(1-endFraction);relativeEnd.y=p.pos.y+(target.pos.y-before.y)*(1-endFraction);relativeEnd.z=p.pos.z+(target.pos.z-before.z)*(1-endFraction);
      if(target.armor){
-      const hit=armorBounds(e)!==null?sweepArmor(e,this.player.pos,old,p.pos,best?.t??1,this.time):null;
-      const t=hit?.t??(armorBounds(e)===null?segmentSphere(old,p.pos,target.pos,target.r):null);
+      const hit=armorBounds(e)!==null?sweepArmor(e,this.player.pos,relativeOld,relativeEnd,best?.t??1,this.time,this.spawnFixesEnabled):null;
+      const t=hit?.t??(armorBounds(e)===null?segmentSphere(relativeOld,relativeEnd,target.pos,target.r):null);
       if(t!==null&&(!best||t<best.t))best={e,segment:-1,weak:false,t,pos:target.pos,dead:false,armor:true,r:target.r,...(hit??{})};continue;
      }
-     const t=segmentSphere(old,p.pos,target.pos,target.r);if(t!==null&&(!best||t<best.t||(t===best.t&&best.armor)))best={e,segment:target.i,weak:target.weak,t,pos:target.pos,dead,armor:false,r:target.r};
+     const t=segmentSphere(relativeOld,relativeEnd,target.pos,target.r);if(t!==null&&(!best||t<best.t||(t===best.t&&best.armor)))best={e,segment:target.i,weak:target.weak,t,pos:target.pos,dead,armor:false,absorb:target.absorb,r:target.r};
     }
     // Resolve the earliest floor crossing on the remaining swept path too.
     let floorHit:ReturnType<typeof sweepFloor>;
     if(this.options.legacyFloorSweep){
      const floor=floorHeight(p.pos.x,p.pos.z,this.time,0)+.08;
      floorHit=p.vel.y<0&&p.pos.y<floor?{t:clamp((old.y-floor)/Math.max(1e-9,old.y-p.pos.y),0,1),y:floor}:null;
-    }else floorHit=sweepFloor(old,p.pos,this.time);
+    }else floorHit=(this.options.legacyRicochet?sweepFloorLegacy:sweepFloor)(old,p.pos,this.time);
     if(floorHit){
      const {t,y:floor}=floorHit;
      if(!best||t<best.t){
       const contact=v(old.x+(p.pos.x-old.x)*t,floor,old.z+(p.pos.z-old.z)*t);
-      this.emit('ricochet',contact,p.homing?p.level:1);elapsed+=remaining*t;remaining*=1-t;
+      this.emit('ricochet',contact,p.homing?p.level:1);const effect=this.effects[this.effects.length-1];effect.level=p.level;elapsed+=remaining*t;remaining*=1-t;
       (p.path??=[]).push({pos:contact,t:elapsed/dt});
-      p.vel.y*=-.55;p.vel.x*=.65;p.vel.z*=.65;p.age+=.4;p.floorBounces=(p.floorBounces??0)+1;
-      old.x=contact.x;old.y=floor+.002;old.z=contact.z;
+      const normal=floorHit.normal??v(0,1,0);
+      if(this.options.legacyRicochet){p.vel.y*=-.55;p.vel.x*=.65;p.vel.z*=.65;agePenalty+=.4;}
+      else{
+       const horizontal=Math.hypot(p.vel.x,p.vel.z),incomingY=p.vel.y;
+       const dot=p.vel.x*normal.x+p.vel.y*normal.y+p.vel.z*normal.z;
+       p.vel.x=(p.vel.x-2*dot*normal.x)*RICOCHET_TUNING.retention;p.vel.y=(p.vel.y-2*dot*normal.y)*RICOCHET_TUNING.retention;p.vel.z=(p.vel.z-2*dot*normal.z)*RICOCHET_TUNING.retention;
+       if(normal.y===1){
+        p.vel.y=Math.max(RICOCHET_TUNING.minRiseSpeed,-incomingY*RICOCHET_TUNING.verticalRetention);
+        // Steep first contacts turn the existing spread into an outward fan.
+        if(!p.homing&&!p.floorBounces&&-incomingY>horizontal*RICOCHET_TUNING.steepRatio){
+         const radial=Math.max(horizontal*RICOCHET_TUNING.retention,-incomingY*RICOCHET_TUNING.fanSpeed);
+         if(horizontal>1e-6){p.vel.x*=radial/(horizontal*RICOCHET_TUNING.retention);p.vel.z*=radial/(horizontal*RICOCHET_TUNING.retention);}
+         else{const angle=projectileRoll(p);p.vel.x=Math.cos(angle)*radial;p.vel.z=Math.sin(angle)*radial;}
+        }
+       }
+       agePenalty+=RICOCHET_TUNING.agePenalty;
+      }
+      effect.direction=direction(v(),p.vel);remaining=Math.min(remaining,Math.max(0,lifetime-ageBefore-elapsed-agePenalty));p.age=Math.min(lifetime,ageBefore+elapsed+remaining+agePenalty);p.floorBounces=(p.floorBounces??0)+1;
+      if(remaining===0){Object.assign(p.pos,contact);break;}
+      old.x=contact.x+normal.x*.002;old.y=floor+normal.y*.002;old.z=contact.z+normal.z*.002;
       p.pos.x=old.x+p.vel.x*remaining;p.pos.y=old.y+p.vel.y*remaining;p.pos.z=old.z+p.vel.z*remaining;
       if(pass===3)Object.assign(p.pos,old);continue;
      }
     }
     if(!best)break;const {e,segment}=best;
     const contact=v(old.x+(p.pos.x-old.x)*best.t,old.y+(p.pos.y-old.y)*best.t,old.z+(p.pos.z-old.z)*best.t);
+    if(best.absorb){Object.assign(p.pos,contact);this.stats.homingEaten++;this.emit('eat',contact,undefined,'ghostpede');this.expireProjectile(p);break;}
     if((best.armor&&e.kind!=='thorn')||best.dead){
      Object.assign(p.pos,contact);this.emit('impact',contact,p.level,e.kind);
      const effect=this.effects[this.effects.length-1];effect.direction=best.nx===undefined?direction(p.pos,old):v(best.nx,best.ny,best.nz);
@@ -616,10 +716,10 @@ export class World {
     this.expireProjectile(p,{entity:e.id,segment});break;
    }
   }
-  let surviving=0;for(let i=0;i<this.projectiles.length;i++){const p=this.projectiles[i];if(p.age<(p.homing?8:2.8)&&p.pos.x*p.pos.x+p.pos.z*p.pos.z<8100)this.projectiles[surviving++]=p;}this.projectiles.length=surviving;this.enemies=this.enemies.filter(e=>e.hp>0);
+  let surviving=0;for(let i=0;i<this.projectiles.length;i++){const p=this.projectiles[i];if(p.age<(p.homing?8:2.8))this.projectiles[surviving++]=p;}this.projectiles.length=surviving;this.enemies=this.enemies.filter(e=>e.hp>0);this.projectileTargetStarts.clear();
  }
  private expireProjectile(p:Projectile,exclude?:{entity:number;segment:number}){p.age=99;if(p.homing&&p.level===4)this.detonations.push({tick:this.tick+2,pos:{...p.pos},exclude});}
- weakPoint(e:Enemy){const point=e.weakpoints.find(s=>s.hp>0);if(point)return localToEnemy(e,this.player.pos,point.local);const segment=e.segments.find(s=>s.hp>0);return segment?.pos??(isSpider(e.kind)?spiderLocalPoint(e,this.player.pos,SPIDER_GEM):e.kind==='thorn'?v(e.pos.x,3,e.pos.z):e.pos);}
+ weakPoint(e:Enemy){const point=e.weakpoints.find(s=>s.hp>0);if(point)return crystalToEnemy(e,this.player.pos,point.local);const segment=e.segments.find(s=>s.hp>0);return segment?.pos??(isSpider(e.kind)?spiderLocalPoint(e,this.player.pos,SPIDER_GEM):e.kind==='thorn'?v(e.pos.x,3,e.pos.z):e.pos);}
  dropGems(pos:Vec,count:number){this.stats.released+=count;for(let i=0;i<count;i++)this.gems.push({id:this.nextId++,pos:{...pos},vel:v((this.random()-.5)*3,-2,(this.random()-.5)*3),age:0});}
  private updateGems(input:Input,dt:number){
   let attracting=!input.fire&&!input.homing&&this.lastShotTick!==this.tick;
@@ -635,7 +735,7 @@ export class World {
  get finalHandProgress(){return this.options.legacyFinalHandUnlock?this.reserve/150:(this.stats.collected-70)/130;}
  private collectedHandLevel(level:number,reserve:number){return (this.options.legacyFinalHandUnlock?level>=3&&reserve>=150:this.stats.collected>=200)?4:this.stats.collected>=70?3:this.stats.collected>=10?2:1;}
  collect(){if(this.crew.length){
-  this.stats.collected++;for(const p of this.crew){if(this.stats.collected>this.homingUnlockGems)p.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,p.reserve);const next=this.collectedHandLevel(p.level,p.reserve);if(next>p.level){p.level=next;this.stats.upgradeTimes[next-1]=this.time;this.effects.push({kind:'upgrade',pos:{...p.player.pos},amount:next,level:next,shooterId:p.id});}}
+  this.stats.collected++;for(const p of this.crew){if(this.stats.collected>this.homingUnlockGems)p.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,p.reserve);const next=this.collectedHandLevel(p.level,p.reserve);if(next>p.level){p.level=next;this.stats.upgradeTimes[next-1]=this.time;this.effects.push({kind:'upgrade',pos:{...p.player.pos},amount:next,level:next,shooterId:p.id});if(p.alive)this.beginUpgradePulse(p.player.pos,next,p.id);}}
   const local=this.crew.find(p=>p.player===this.player);if(local){this.level=local.level;this.reserve=local.reserve;}return;
  }this.stats.collected++;if(this.stats.collected>this.homingUnlockGems)this.reserve++;this.stats.maxReserve=Math.max(this.stats.maxReserve,this.reserve);
   const next=this.collectedHandLevel(this.level,this.reserve);if(next>this.level){this.level=next;this.stats.upgradeTimes[next-1]=this.time;this.emit('upgrade',this.player.pos,next);}}

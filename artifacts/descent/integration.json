@@ -1,0 +1,167 @@
+{
+  "frames": [
+    {
+      "time": 0,
+      "chapter": "The Last Sky",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0,
+      "calls": 67
+    },
+    {
+      "time": 39,
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.702,
+      "calls": 67
+    },
+    {
+      "time": 114,
+      "chapter": "The Bruised Veil",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 2.052,
+      "calls": 67
+    },
+    {
+      "time": 229,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.122,
+      "calls": 67
+    },
+    {
+      "time": 259,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.662,
+      "calls": 67
+    },
+    {
+      "time": 350,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.3,
+      "calls": 67
+    },
+    {
+      "time": 442,
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.9559999999999995,
+      "calls": 67
+    },
+    {
+      "time": 520,
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.9559999999999995,
+      "calls": 67
+    }
+  ],
+  "first": {
+    "time": 350,
+    "chapter": "The Cathedral Below",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 6.3
+  },
+  "second": {
+    "time": 350,
+    "chapter": "The Cathedral Below",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 6.3
+  },
+  "paused": {
+    "time": 350,
+    "chapter": "The Cathedral Below",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 6.3
+  },
+  "scrub": {
+    "time": 114,
+    "chapter": "The Bruised Veil",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 2.052
+  },
+  "restart": {
+    "time": 0,
+    "chapter": "The Last Sky",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 0
+  },
+  "reduced": {
+    "time": 259,
+    "chapter": "The Furnace",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "reducedLater": {
+    "time": 350,
+    "chapter": "The Cathedral Below",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "final": {
+    "time": 442,
+    "chapter": "The Unlit Depth",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "menu": {
+    "time": 5.5,
+    "chapter": "The Last Sky",
+    "blend": 0,
+    "menu": true,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "skyProgram": 66,
+  "finalSkyProgram": 66
+}

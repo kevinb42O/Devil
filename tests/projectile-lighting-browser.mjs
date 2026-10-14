@@ -48,8 +48,11 @@ try{
   world.projectiles[0].previous=v(2,1,-3);world.projectiles[0].pos=v(4,1,-5);lighting.update(world,false,.5,720);
   const center=lighting.glow.geometry.getAttribute('shotCenter');const interpolated=[center.getX(0),center.getZ(0)];
   renderer.render(world,0,0,0,true);const menuCount=lighting.diagnostics.count;
+  const menuHidden=!lighting.glow.visible,menuFieldEmpty=lighting.pixels.every(value=>value===0),worldCount=world.projectiles.length;
+  const menuTextureVersion=lighting.field.version;renderer.render(world,0,0,0,true);const menuUploadFree=lighting.field.version===menuTextureVersion;
+  renderer.render(world,0,0,0,false);const resumedCount=lighting.diagnostics.count;
   world.projectiles=[];lighting.update(world,false,1,720);const version=center.version,textureVersion=lighting.field.version;lighting.update(world,false,1,720);
-  return {dense,interpolated,menuCount,emptyUploadFree:center.version===version&&lighting.field.version===textureVersion,updateMedianMs:times[20],updateP95Ms:times[38]};
+  return {dense,interpolated,menuCount,menuHidden,menuFieldEmpty,worldCount,menuUploadFree,resumedCount,emptyUploadFree:center.version===version&&lighting.field.version===textureVersion,updateMedianMs:times[20],updateP95Ms:times[38]};
  });
  const strafe=await page.evaluate(()=>{
   const {THREE,v}=window.lightFixture,scene=new THREE.Scene();
@@ -74,7 +77,7 @@ try{
   if(maxCenterError>.1||maxAnisotropy>.01)throw Error('strafe produces a shifted or elongated light');
   return {checks,maxCenterError,maxAnisotropy,velocityIndependent:true};
  });
- assert.equal(dense.dense.count,6000);assert.ok(dense.dense.maxGpuInstances>=6000);assert.deepEqual(dense.interpolated,[3,-4]);assert.equal(dense.menuCount,0);assert.ok(dense.emptyUploadFree);assert.deepEqual(errors,[]);
+ assert.equal(dense.dense.count,6000);assert.ok(dense.dense.maxGpuInstances>=6000);assert.deepEqual(dense.interpolated,[3,-4]);assert.equal(dense.menuCount,0);assert.ok(dense.menuHidden);assert.ok(dense.menuFieldEmpty);assert.equal(dense.worldCount,6000);assert.ok(dense.menuUploadFree);assert.equal(dense.resumedCount,6000);assert.ok(dense.emptyUploadFree);assert.deepEqual(errors,[]);
  await writeFile('artifacts/projectile-lighting-audit.json',JSON.stringify({results,...dense,strafe},null,2)+'\n');
  console.log('Projectile lighting passed',JSON.stringify({results,...dense,strafe}));
 }finally{await browser.close();}

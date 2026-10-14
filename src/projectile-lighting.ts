@@ -1,7 +1,7 @@
 import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex} from './projectile-presentation';
 import {PROJECTILE_HAND_CLEARANCE} from './weapon-tuning';
 import * as THREE from 'three';
-import {type World} from './simulation';
+import {type World,type Projectile,type Vec} from './simulation';
 
 const FIELD_SIZE=128,FIELD_SPAN=160;
 
@@ -58,7 +58,7 @@ export class ProjectileLighting {
   this.colors=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity*3),3).setUsage(THREE.DynamicDrawUsage);
   geometry.setAttribute('shotCenter',this.centers);geometry.setAttribute('shotColor',this.colors);
  }
- update(world:World|null,menu:boolean,alpha:number,height:number){
+ update(world:World|null,menu:boolean,alpha:number,height:number,projectileView?:(p:Projectile,position:Vec)=>Vec){
   const shots=world&&!menu?world.projectiles:[],count=shots.length;
   this.glow.visible=count>0;this.glow.geometry.instanceCount=count;this.glow.material.uniforms.viewportHeight.value=height;
   if(!count){if(this.active)this.clear();return;}
@@ -74,7 +74,8 @@ export class ProjectileLighting {
    const p=shots[i],position=sampleProjectile(p,alpha,this.sample);
    const {x,y,z}=position;
    const color=PROJECTILE_COLORS[projectileStyleIndex(p.level??world!.level,p.homing)];
-   this.centers.setXYZ(i,x,y,z);this.colors.setXYZ(i,color[0],color[1],color[2]);
+   if(projectileView)projectileView(p,position);
+   this.centers.setXYZ(i,position.x,position.y,position.z);this.colors.setXYZ(i,color[0],color[1],color[2]);
    // Compact splats into a world-space field. Maximum blending prevents dense
    // bursts bleaching the arena; altitude dims spill from overhead shots.
    if(y<-.5||y>9)continue;

@@ -1,0 +1,43 @@
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+
+/** Authored Poly Haven architecture and scanned rock, shared across instances. */
+export async function loadEntranceEnvironment(scene:THREE.Scene){
+ const loader=new GLTFLoader();
+ const [fort,rock,lantern]=await Promise.all([
+  loader.loadAsync('/models/entrance/fort/model.gltf'),
+  loader.loadAsync('/models/entrance/rock/model.gltf'),
+  loader.loadAsync('/models/entrance/lantern/model.gltf'),
+ ]);
+ const place=(source:THREE.Object3D,x:number,z:number,scale:number,rotation=0,y=0)=>{
+  const model=source.clone(true);model.position.set(0,0,0);model.rotation.set(0,rotation,0);model.scale.setScalar(scale);
+  const bounds=new THREE.Box3().setFromObject(model),center=bounds.getCenter(new THREE.Vector3());
+  model.position.set(x-center.x,y-bounds.min.y,z-center.z);scene.add(model);return model;
+ };
+ const piece=(suffix:string)=>{
+  const model=fort.scene.getObjectByName(`modular_fort_01_${suffix}`);
+  if(!model)throw new Error(`Missing entrance architecture: ${suffix}`);
+  return model;
+ };
+ // Keep the actual gate opening centered on the seal and the approach clear.
+ place(piece('wall_thin_gate_01'),0,-7.85,1.1,Math.PI/2);
+ for(const side of [-1,1]){
+  place(piece('wall_thin_straight_03'),side*8.15,-7.85,1.1,Math.PI/2);
+  place(piece('wall_thin_straight_02'),side*7.65,1.7,.9,side<0?Math.PI:0);
+  place(piece('tower_round'),side*12,-14,.8);
+  place(piece('wall_thick_end_01'),side*7.6,10,.85);
+  // Cliff shoulders and rubble continue beyond the courtyard walls.
+  for(let i=0;i<4;i++)place(rock.scene,side*(11.5+i*1.2),-9+i*6,2.4,side*(.4+i*.65),-.5);
+  for(let i=0;i<3;i++)place(rock.scene,side*(4.9+i*.25),-5+i*4,.25+i*.04,side*i*1.2,-.08);
+ }
+ place(piece('wall_thin_straight_01'),0,12,.95,Math.PI/2);
+ place(rock.scene,-5,-21,3.3,.3,-1);
+ place(rock.scene,6,-23,4.1,-.7,-1);
+ const moon=new THREE.DirectionalLight(0x91a9c2,1.4);moon.position.set(-8,16,5);scene.add(moon);
+ for(const side of [-1,1]){
+  const pedestal=place(piece('wall_thick_end_01'),side*4.5,-6,.16);
+  const top=new THREE.Box3().setFromObject(pedestal).max.y;
+  place(lantern.scene,side*4.5,-6,1.5,side*.2,top);
+  const wash=new THREE.PointLight(0xff994f,18,12,2);wash.position.set(side*4.5,top+.28,-5.9);scene.add(wash);
+ }
+}

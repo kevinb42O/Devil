@@ -1,16 +1,19 @@
+import {ENTRANCE_SPAWN} from './entrance-layout';
 import {LOBBY_TOPIC,DISCOVERY_TOPIC,type PublicLobby} from './lobbies';
 import {randomId} from './id';
 import {World,STEP,idleInput,v,distance,type Input,type Effect,type Vec} from './simulation';
-import {CommandBuffer,InputHistory,MAX_PENDING_INPUTS,inputRuns} from './network-input';
-import {encodeState,decodeState,fragmentState,StateAssembler,snapshotBaseline,type StateBaseline} from './network-state';
+import {CommandBuffer,InputHistory,MAX_PENDING_INPUTS,inputRuns,InputPacer} from './network-input';
+import {encodeState,decodeState,fragmentState,StateAssembler,snapshotBaseline,stateAssemblyTimeout,type StateBaseline} from './network-state';
 import {encodePacket,decodePacket,NETWORK_PROTOCOL_VERSION} from './network-codec';
 import {SnapshotTimeline} from './network-presentation';
 import {MqttWsSignalingClient} from './signaling';
 const STATE_BYTES_PER_SECOND=192000,STATE_BURST_BYTES=256*1024;
 export type LobbyMember={id:string;name:string;ready:boolean;host:boolean;readyRevision?:number};
-export type ArenaSnapshot={members:LobbyMember[];lobbyName:string;serverNow:number;startAt:number;effects:Effect[];epoch:number;running:boolean;time:number;tick:number;state:World['state'];cause:string;radius:number;wave:number;level:number;reserve:number;stats:World['stats'];enemies:World['enemies'];projectiles:World['projectiles'];gems:World['gems'];rings:World['rings'];crew:{id:string;player:World['player'];alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;yaw:number;pitch?:number;level:number;reserve:number;primary:CrewPlayerWireChannel;secondary:CrewPlayerWireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;ack:number}[]};
+export type ArenaSnapshot={members:LobbyMember[];lobbyName:string;serverNow:number;startAt:number;effects:Effect[];epoch:number;running:boolean;prelobby?:boolean;time:number;tick:number;state:World['state'];cause:string;radius:number;wave:number;level:number;reserve:number;stats:World['stats'];enemies:World['enemies'];projectiles:World['projectiles'];gems:World['gems'];rings:World['rings'];crew:{id:string;player:World['player'];alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;yaw:number;pitch?:number;level:number;reserve:number;primary:CrewPlayerWireChannel;secondary:CrewPlayerWireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;ack:number;queuedInputs?:number}[]};
 type CrewPlayerWireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
-type Link={pc:RTCPeerConnection;state?:RTCDataChannel;input?:RTCDataChannel;updates?:RTCDataChannel;timer:ReturnType<typeof setTimeout>;assembler:StateAssembler;baselines:Map<number,StateBaseline>;ackFrame:number;sentEpoch:number;tokens:number;tokenAt:number;lastSend:number;sendInterval:number;events:Effect[];disconnectTimer?:ReturnType<typeof setTimeout>};
+type StateTransfer={frame:number;epoch:number;packets:ArrayBuffer[];next:number;baseline:StateBaseline;at:number;size:number};
+type Link={transfer?:StateTransfer;eventEpoch?:number;rttMs?:number;pongAt?:number;pc:RTCPeerConnection;state?:RTCDataChannel;input?:RTCDataChannel;updates?:RTCDataChannel;timer:ReturnType<typeof setTimeout>;assembler:StateAssembler;baselines:Map<number,StateBaseline>;ackFrame:number;sentEpoch:number;tokens:number;tokenAt:number;lastSend:number;sendInterval:number;events:Effect[];disconnectTimer?:ReturnType<typeof setTimeout>};
+export function validPeerId(id:unknown):id is string{return typeof id==='string'&&/^[A-Za-z0-9_-]{1,64}$/.test(id)&&!['host','constructor','prototype','__proto__'].includes(id.toLowerCase());}
 type Signal={version:typeof NETWORK_PROTOCOL_VERSION;room:string;id:string;description:RTCSessionDescriptionInit};
 export function cleanInput(value:unknown):Input|null{if(!value||typeof value!=='object')return null;const p=value as Input;for(const key of ['forward','strafe','yaw','pitch'] as const)if(!Number.isFinite(p[key]))return null;return {forward:Math.max(-1,Math.min(1,p.forward)),strafe:Math.max(-1,Math.min(1,p.strafe)),yaw:p.yaw%(Math.PI*2),pitch:Math.max(-1.5,Math.min(1.5,p.pitch)),jump:p.jump===true,fire:p.fire===true,homing:p.homing===true};}
 // Movement uses the latest sample; button transitions are consumed one per tick.
@@ -21,15 +24,24 @@ export class CrewInputBuffer {
  next(){const edge=this.edges.shift();if(edge)this.buttons=edge;return {...this.latest,...this.buttons};}
 }
 export class FriendsSession{
- readonly id=randomId();room='';name='Wanderer';lobbyName='The First Circle';members:LobbyMember[]=[];startAt=0;private heartbeat?:ReturnType<typeof setInterval>;private publicLobby=false;role:'host'|'guest';links=new Map<string,Link>();inputs=new Map<string,Input>();private inputBuffers=new Map<string,CrewInputBuffer>();private commands=new Map<string,CommandBuffer>();private history=new InputHistory();private timeline=new SnapshotTimeline();private cameraOffset:Vec=v();private predictedShots=new Set<string>();private seenEvents=new Set<number>();private eventSequence=0;private networkTimer:ReturnType<typeof setInterval>;private lastBroadcast=0;private lastPing=0;private lastView=0;private lastState=0;private bytesSent=0;private bytesReceived=0;private rtt=0;private correction=0;private releasedSequence=-1;private localLife=0;private readyRevision=0;private pendingReady?:{revision:number;ready:boolean};private hostStepMs=0;private snapshotInterval=50;private rateAt=0;private rateSent=0;private rateReceived=0;private sendRate=0;private receiveRate=0;inputTimes=new Map<string,number>();world:World|null=null;epoch=0;running=false;localId='host';closed=false;private sequence=0;private pendingEffects:Effect[]=[];private mqtt=new MqttWsSignalingClient();private joinTimer?:ReturnType<typeof setInterval>;
+ readonly id=randomId();room='';name='Wanderer';lobbyName='The First Circle';members:LobbyMember[]=[];startAt=0;private heartbeat?:ReturnType<typeof setInterval>;private publicLobby=false;role:'host'|'guest';links=new Map<string,Link>();inputs=new Map<string,Input>();private inputBuffers=new Map<string,CrewInputBuffer>();private commands=new Map<string,CommandBuffer>();private history=new InputHistory();private pacer=new InputPacer();private lastProgress=0;private progressTick=-1;private hostPlaying=false;private timeline=new SnapshotTimeline();private cameraOffset:Vec=v();private predictedShots=new Set<string>();private seenEvents=new Set<number>();private eventSequence=0;private networkTimer:ReturnType<typeof setInterval>;private lastBroadcast=0;private lastPing=0;private lastView=0;private lastState=0;private bytesSent=0;private bytesReceived=0;private rtt=0;private correction=0;private releasedSequence=-1;private localLife=0;private readyRevision=0;private pendingReady?:{revision:number;ready:boolean};private hostStepMs=0;private snapshotInterval=50;private rateAt=0;private rateSent=0;private rateReceived=0;private sendRate=0;private receiveRate=0;inputTimes=new Map<string,number>();world:World|null=null;epoch=0;running=false;prelobby=false;localId='host';closed=false;private sequence=0;private pendingEffects:Effect[]=[];private mqtt=new MqttWsSignalingClient();private joinTimer?:ReturnType<typeof setInterval>;
  onEffects=(_effects:Effect[])=>{};onChange=()=>{};onSnapshot=(_s:ArenaSnapshot)=>{};onError=(_s:string)=>{};
- constructor(role:'host'|'guest',private iceServers:RTCIceServer[]=[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']}]){this.role=role;if(role==='host'){this.world=new World(1);this.world.addCrew('host');this.world.selectCrew('host');this.members=[{id:'host',name:this.name,ready:false,host:true}];}this.networkTimer=setInterval(()=>this.pumpNetwork(),25);}
+ constructor(role:'host'|'guest',private iceServers:RTCIceServer[]=[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']}]){this.role=role;if(role==='host'){this.world=new World(1,{schedule:false});this.addLobbyCrew('host');this.world.selectCrew('host');this.members=[{id:'host',name:this.name,ready:false,host:true}];}this.networkTimer=setInterval(()=>this.pumpNetwork(),25);}
+ private addLobbyCrew(id:string){if(!this.world||this.world.crew.some(p=>p.id===id))return;this.world.addCrew(id);const i=this.world.crew.length-1,p=this.world.crew[i];p.player.pos={...ENTRANCE_SPAWN,x:i%2?1.05:-1.05,z:Math.floor(i/2)*2};}
  get connected(){return [...this.links.values()].filter(l=>l.state?.readyState==='open').length;}
+ // The host reports the slowest peer so a healthy peer cannot hide a bad link.
+ get connection(){
+  const links=[...this.links.values()],open=links.filter(l=>l.state?.readyState==='open'),now=performance.now();
+  if(!open.length)return {state:this.role==='host'&&!links.length?'hosting':'offline',rttMs:null} as const;
+  if(open.some(l=>l.pc.connectionState==='disconnected'||l.pc.connectionState==='failed'||l.pongAt!==undefined&&now-l.pongAt>3000)||this.waitingForHost)return {state:'stalled',rttMs:null} as const;
+  if(open.some(l=>l.rttMs===undefined))return {state:'measuring',rttMs:null} as const;
+  return {state:'connected',rttMs:Math.round(Math.max(...open.map(l=>l.rttMs!)))} as const;
+ }
  get allReady(){return this.members.length===1+this.connected&&this.members.every(p=>p.ready);}
  setName(name:string){this.name=name.trim().slice(0,24)||'Wanderer';if(this.role==='host')this.members[0].name=this.name;}
- setReady(ready:boolean){if(this.running)return;if(this.role==='host'){this.members[0].ready=ready;this.updateLobby();}else{const revision=++this.readyRevision;this.pendingReady={revision,ready};const local=this.members.find(p=>p.id===this.localId);if(local)local.ready=ready;this.control({type:'ready',ready,revision,name:this.name});this.onChange();}}
+ setReady(ready:boolean){if(this.running||this.prelobby)return;if(this.role==='host'){this.members[0].ready=ready;this.updateLobby();}else{const revision=++this.readyRevision;this.pendingReady={revision,ready};const local=this.members.find(p=>p.id===this.localId);if(local)local.ready=ready;this.control({type:'ready',ready,revision,name:this.name});this.onChange();}}
  private control(message:unknown){let sent=false;const type=(message as {type?:string})?.type;for(const l of this.links.values())if(l.state?.readyState==='open'&&(!(type==='ping'||type==='ack')||l.state.bufferedAmount<32000))try{const payload=JSON.stringify(message);l.state.send(payload);this.bytesSent+=new TextEncoder().encode(payload).length;sent=true;}catch{/* Lifecycle handles closed channels. */}return sent;}
- private announce(closed=false){if(!this.publicLobby)return;const lobby:PublicLobby={id:this.room,name:this.lobbyName,host:this.name,players:1+this.connected,ready:this.members.filter(p=>p.ready).length,state:this.running?'playing':'waiting',updated:Date.now(),closed};this.mqtt.publish(LOBBY_TOPIC,JSON.stringify(lobby));}
+ private announce(closed=false){if(!this.publicLobby)return;const lobby:PublicLobby={id:this.room,name:this.lobbyName,host:this.name,players:1+this.connected,ready:this.members.filter(p=>p.ready).length,state:this.running||this.prelobby?'playing':'waiting',updated:Date.now(),closed};this.mqtt.publish(LOBBY_TOPIC,JSON.stringify(lobby));}
  private updateLobby(){this.broadcast();this.announce();this.onChange();}
  async hostPublic(name:string){if(this.role!=='host')throw Error('Only a host can create a lobby.');this.lobbyName=name.trim().slice(0,40)||`${this.name}'s lobby`;this.publicLobby=true;this.mqtt.subscribe(DISCOVERY_TOPIC,()=>this.announce());await this.auto();this.announce();this.heartbeat=setInterval(()=>{this.announce();if(!this.running)this.broadcast();},2500);}
  async joinPublic(lobby:PublicLobby){if(lobby.state!=='waiting'||lobby.players>=4)throw Error('This lobby is no longer available.');await this.auto(lobby.id);}
@@ -40,29 +52,31 @@ export class FriendsSession{
   this.onChange();return this.room;
  }
  private async signalMessage(raw:string,topic:string){if(this.closed||raw.length>100000)return;let m;try{m=JSON.parse(raw);}catch{return;}
-  if(this.role==='host'&&m.type==='join'&&typeof m.id==='string'&&!this.links.has(m.id)){
-   if(this.links.size>=3||this.running){this.mqtt.publish(topic,JSON.stringify({type:'reject',to:m.id,reason:this.running?'Run already started. Join a new room with the host after this run.':'Room is full (4 players).'}));return;}
+  if(!m||typeof m!=='object')return;
+  if(this.role==='host'&&m.type==='join'&&validPeerId(m.id)&&!this.links.has(m.id)&&!this.members.some(p=>p.id===m.id)){
+   if(this.links.size>=3||this.running||this.prelobby){this.mqtt.publish(topic,JSON.stringify({type:'reject',to:m.id,reason:this.running||this.prelobby?'Run already started. Join a new room with the host after this run.':'Room is full (4 players).'}));return;}
    this.members.push({id:m.id,name:typeof m.name==='string'?m.name.slice(0,24):'Wanderer',ready:false,host:false});const offer=await this.offer(m.id);if(!this.closed)this.mqtt.publish(topic,JSON.stringify({type:'offer',to:m.id,signal:offer}));
   }else if(this.role==='guest'&&m.to===this.id&&m.type==='offer'&&!this.links.size){if(this.joinTimer)clearInterval(this.joinTimer);const answer=await this.answer(m.signal);this.mqtt.publish(topic,JSON.stringify({type:'answer',signal:answer}));}
   else if(this.role==='host'&&m.type==='answer')await this.accept(m.signal);
   else if(this.role==='guest'&&m.to===this.id&&m.type==='reject'){if(this.joinTimer)clearInterval(this.joinTimer);this.onError(m.reason);}
  }
- private makeLink(id:string){if(this.links.has(id))throw Error('This invitation is already in use.');const pc=new RTCPeerConnection({iceServers:this.iceServers});const link:Link={pc,assembler:new StateAssembler(),baselines:new Map(),ackFrame:0,sentEpoch:-1,tokens:STATE_BURST_BYTES,tokenAt:performance.now(),lastSend:0,sendInterval:50,events:[],timer:setTimeout(()=>{if(link.state?.readyState!=='open'){this.drop(id);this.onError('Peer connection timed out. A TURN relay may be needed on this network.');}},35000)};this.links.set(id,link);
+ private makeLink(id:string){if(!validPeerId(id))throw Error('Invalid peer identity.');if(this.links.has(id))throw Error('This invitation is already in use.');const pc=new RTCPeerConnection({iceServers:this.iceServers});const link:Link={pc,assembler:new StateAssembler(),baselines:new Map(),ackFrame:0,sentEpoch:-1,tokens:STATE_BURST_BYTES,tokenAt:performance.now(),lastSend:0,sendInterval:50,events:[],timer:setTimeout(()=>{if(link.state?.readyState!=='open'){this.drop(id);this.onError('Peer connection timed out. A TURN relay may be needed on this network.');}},35000)};this.links.set(id,link);
   pc.ondatachannel=e=>this.bind(id,link,e.channel);pc.onconnectionstatechange=()=>{if(pc.connectionState==='disconnected'&&!link.disconnectTimer)link.disconnectTimer=setTimeout(()=>{if(pc.connectionState==='disconnected')this.drop(id);},12000);if(pc.connectionState==='connected'&&link.disconnectTimer){clearTimeout(link.disconnectTimer);link.disconnectTimer=undefined;}if(pc.connectionState==='failed'||pc.connectionState==='closed')this.drop(id);this.onChange();};return link;
  }
  private bind(id:string,link:Link,ch:RTCDataChannel){
   if(ch.label==='input')link.input=ch;else if(ch.label==='state')link.state=ch;else if(ch.label==='updates')link.updates=ch;else{ch.close();return;}ch.binaryType='arraybuffer';
-  ch.onopen=()=>{if(ch.label==='state'){clearTimeout(link.timer);if(this.role==='host'&&!this.world?.crew.some(p=>p.id===id)&&this.running){this.drop(id);return;}if(this.role==='host'&&!this.running){this.world?.addCrew(id);if(!this.members.some(p=>p.id===id))this.members.push({id,name:'Wanderer',ready:false,host:false});this.updateLobby();}else if(this.role==='guest')this.control({type:'hello',name:this.name});this.onChange();}};
+  ch.onopen=()=>{if(ch.label==='state'){clearTimeout(link.timer);if(this.role==='host'&&!this.world?.crew.some(p=>p.id===id)&&this.running){this.drop(id);return;}if(this.role==='host'&&!this.running){this.addLobbyCrew(id);if(!this.members.some(p=>p.id===id))this.members.push({id,name:'Wanderer',ready:false,host:false});this.updateLobby();}else if(this.role==='guest')this.control({type:'hello',name:this.name});this.onChange();}};
   ch.onclose=()=>{if(!this.closed)this.drop(id);};
   ch.onmessage=e=>{
    if(e.data instanceof ArrayBuffer){this.bytesReceived+=e.data.byteLength;if(this.role==='guest'&&(ch.label==='state'||ch.label==='updates'))this.receiveState(link,e.data);else if(this.role==='host'&&ch.label==='input')this.receiveCommands(id,e.data);return;}
    if(ch.label!=='state'||typeof e.data!=='string'||e.data.length>20000)return;
    this.bytesReceived+=new TextEncoder().encode(e.data).length;try{const m=JSON.parse(e.data);
     if(m.type==='ping'){const pong=JSON.stringify({type:'pong',at:m.at});ch.send(pong);this.bytesSent+=pong.length;return;}
-    if(m.type==='pong'&&Number.isFinite(m.at)){this.rtt=Math.max(0,performance.now()-m.at);return;}
+    if(m.type==='pong'&&Number.isFinite(m.at)){const now=performance.now();link.rttMs=Math.max(0,now-m.at);link.pongAt=now;this.rtt=link.rttMs;return;}
     if(this.role==='host'){
+     if(!validPeerId(id))return;
      if(m.type==='ack'&&m.epoch===this.epoch&&Number.isInteger(m.frame)){if(m.frame===0)link.ackFrame=0;else if(link.baselines.has(m.frame)&&m.frame>link.ackFrame)link.ackFrame=m.frame;return;}
-     if(m.type==='release'&&m.epoch===this.epoch&&(m.life??0)===this.world?.crew.find(p=>p.id===id)?.life){let commands=this.commands.get(id);if(!commands){commands=new CommandBuffer();this.commands.set(id,commands);}if(!commands.discardThrough(m.seq))return;this.inputs.set(id,idleInput());this.inputTimes.set(id,-Infinity);this.inputBuffers.delete(id);return;}
+     if(m.type==='release'&&m.epoch===this.epoch&&(m.life??0)===this.world?.crew.find(p=>p.id===id)?.life){let commands=this.commands.get(id);if(!commands){commands=new CommandBuffer();this.commands.set(id,commands);}if(!commands.discardThrough(m.seq))return;this.inputs.set(id,this.neutralInput(id));this.inputTimes.set(id,-Infinity);this.inputBuffers.delete(id);return;}
      // Compatibility path for direct transport tests/tools: real gameplay uses
      // fixed-duration binary commands. Legacy samples use reliable controls.
      if(m.type==='sample'&&m.epoch===this.epoch&&this.world?.crew.some(p=>p.id===id&&p.alive&&p.life===(m.life??0))){const input=cleanInput(m.input);if(input){let b=this.inputBuffers.get(id);if(!b){b=new CrewInputBuffer();this.inputBuffers.set(id,b);}b.push(input);this.inputs.set(id,input);this.inputTimes.set(id,performance.now());}return;}
@@ -72,7 +86,7 @@ export class FriendsSession{
   };
  }
  private receiveCommands(id:string,data:ArrayBuffer){
-  if(!this.running||data.byteLength>20000)return;
+  if(!validPeerId(id)||(!this.running&&!this.prelobby)||data.byteLength>20000)return;
   try{const packet=decodePacket(new Uint8Array(data)) as {epoch:number;life?:number;runs:unknown[][]};if(packet.epoch!==this.epoch||!this.world?.crew.some(p=>p.id===id&&p.alive&&p.life===(packet.life??0))||!Array.isArray(packet.runs)||packet.runs.length>MAX_PENDING_INPUTS)return;let buffer=this.commands.get(id);if(!buffer){buffer=new CommandBuffer();this.commands.set(id,buffer);}let remaining=MAX_PENDING_INPUTS;
    for(const row of packet.runs){if(!Array.isArray(row)||row.length!==7)return;const [seq,ticks,forward,strafe,yaw,pitch,flags]=row as number[];if(!Number.isSafeInteger(seq)||seq<1||!Number.isInteger(ticks)||ticks<1||ticks>remaining||!Number.isInteger(flags)||flags<0||flags>7)return;remaining-=ticks;const input=cleanInput({forward,strafe,yaw,pitch,jump:!!(flags&1),fire:!!(flags&2),homing:!!(flags&4)});if(!input)return;
     for(let tick=0;tick<ticks;tick++)if(buffer.push({seq:seq+tick,input})){this.inputs.set(id,input);this.inputTimes.set(id,performance.now());}
@@ -81,60 +95,112 @@ export class FriendsSession{
  }
  private receiveState(link:Link,data:ArrayBuffer){
   try{const bytes=link.assembler.push(data,performance.now());if(!bytes)return;const decoded=decodeState(bytes,link.baselines);if(!decoded){this.control({type:'ack',epoch:this.epoch,frame:0});return;}const {frame,snapshot}=decoded;if(frame<=link.assembler.last)return;
-   if(snapshot.epoch!==this.epoch){this.history.reset();this.localLife=0;this.releasedSequence=-1;this.pendingReady=undefined;this.timeline.reset();this.predictedShots.clear();this.seenEvents.clear();this.cameraOffset=v();this.lastState=0;this.snapshotInterval=50;link.baselines.clear();}
+   if(snapshot.epoch!==this.epoch){this.history.reset();this.pacer.reset();this.lastProgress=0;this.progressTick=-1;this.localLife=0;this.releasedSequence=-1;this.pendingReady=undefined;this.timeline.reset();this.predictedShots.clear();this.seenEvents.clear();this.cameraOffset=v();this.lastState=0;this.snapshotInterval=50;link.baselines.clear();}
    link.baselines.set(frame,snapshotBaseline(snapshot));while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);link.assembler.accept(frame);
    const local=snapshot.members.find(p=>p.id===this.localId);if(this.pendingReady&&local){if((local.readyRevision??0)>=this.pendingReady.revision)this.pendingReady=undefined;else local.ready=this.pendingReady.ready;}
-   const changed=this.running!==snapshot.running||JSON.stringify(this.members)!==JSON.stringify(snapshot.members);this.running=snapshot.running;this.epoch=snapshot.epoch;this.members=snapshot.members??[];this.lobbyName=snapshot.lobbyName;this.startAt=snapshot.time>0||!snapshot.startAt?0:Date.now()+Math.max(0,snapshot.startAt-snapshot.serverNow-this.rtt/2);const receivedAt=performance.now();if(this.lastState)this.snapshotInterval=this.snapshotInterval*.8+(receivedAt-this.lastState)*.2;this.lastState=receivedAt;this.timeline.push(snapshot,this.lastState);this.control({type:'ack',epoch:this.epoch,frame});if(changed)this.onChange();this.onSnapshot(snapshot);
+   const changed=this.running!==snapshot.running||this.prelobby!==!!snapshot.prelobby||JSON.stringify(this.members)!==JSON.stringify(snapshot.members);this.running=snapshot.running;this.prelobby=!!snapshot.prelobby;this.epoch=snapshot.epoch;this.members=snapshot.members??[];this.lobbyName=snapshot.lobbyName;this.startAt=snapshot.time>0||!snapshot.startAt?0:Date.now()+Math.max(0,snapshot.startAt-snapshot.serverNow-this.rtt/2);const receivedAt=performance.now();if(this.lastState)this.snapshotInterval=this.snapshotInterval*.8+(receivedAt-this.lastState)*.2;this.lastState=receivedAt;this.hostPlaying=(snapshot.running||!!snapshot.prelobby)&&snapshot.state==='playing';if(snapshot.tick!==this.progressTick){this.progressTick=snapshot.tick;this.lastProgress=receivedAt;}this.timeline.push(snapshot,this.lastState);this.control({type:'ack',epoch:this.epoch,frame});if(changed)this.onChange();this.onSnapshot(snapshot);
   }catch{/* Corrupt/incomplete updates expire; the next baseline repairs state. */}
  }
  private pumpNetwork(){
   if(this.closed)return;const now=performance.now();if(now-this.rateAt>=1000){const elapsed=(now-this.rateAt)/1000;this.sendRate=(this.bytesSent-this.rateSent)/elapsed;this.receiveRate=(this.bytesReceived-this.rateReceived)/elapsed;this.rateSent=this.bytesSent;this.rateReceived=this.bytesReceived;this.rateAt=now;}if(now-this.lastPing>=1000){this.lastPing=now;this.control({type:'ping',at:now});}
-  if(!this.running)return;if(this.role==='host'){if(now-this.lastBroadcast>=50){this.lastBroadcast=now-(now-this.lastBroadcast)%50;this.broadcast();}}else this.flushInputs();
+  if(!this.running&&!this.prelobby)return;if(this.role==='host'){for(const link of this.links.values())this.drainState(link,now);if(now-this.lastBroadcast>=50){this.lastBroadcast=now-(now-this.lastBroadcast)%50;this.broadcast();}}else this.flushInputs();
  }
  private flushInputs(){
   if(!this.history.commands.length)return;const packet=encodePacket({epoch:this.epoch,life:this.localLife,runs:inputRuns(this.history.commands)});
   for(const link of this.links.values())if(link.input?.readyState==='open'&&link.input.bufferedAmount<8000)try{link.input.send(packet.buffer as ArrayBuffer);this.bytesSent+=packet.byteLength;}catch{/* Retry outstanding commands on the next pump. */}
  }
- predict(w:World,input:Input){if(this.role!=='guest'||!this.running||Date.now()<this.startAt||performance.now()-this.lastState>1000)return;const local=w.crew.find(p=>p.id===this.localId);if(!local?.alive||w.state!=='playing')return;const command=this.history.record(input);if(!command)return;w.predictCrew(this.localId,command.input);for(const effect of w.effects)if(effect.shotKey)this.predictedShots.add(effect.shotKey);while(this.predictedShots.size>512)this.predictedShots.delete(this.predictedShots.values().next().value!);}
+ predict(w:World,input:Input):boolean{
+  if(this.role!=='guest'||(!this.running&&!this.prelobby)||Date.now()<this.startAt||this.waitingForHost)return false;
+  const local=w.crew.find(p=>p.id===this.localId);if(!local?.alive||w.state!=='playing'||!this.pacer.next(input))return false;
+  const command=this.history.record(input);if(!command)return false;w.predictCrew(this.localId,command.input,STEP,this.prelobby);
+  for(const effect of w.effects)if(effect.shotKey)this.predictedShots.add(effect.shotKey);while(this.predictedShots.size>512)this.predictedShots.delete(this.predictedShots.values().next().value!);return true;
+ }
+ get waitingForHost(){return this.role==='guest'&&(this.running||this.prelobby)&&(performance.now()-this.lastState>1000||this.history.stalled||this.hostStalled);}
+ get hostStalled(){return this.role==='guest'&&(this.running||this.prelobby)&&this.hostPlaying&&Date.now()>=this.startAt&&this.lastProgress>0&&performance.now()-this.lastProgress>500;}
+ private neutralInput(id:string){const last=this.world?.crew.find(p=>p.id===id)?.input??this.inputs.get(id)??idleInput();return {...idleInput(),yaw:last.yaw,pitch:last.pitch};}
+
  reconcile(w:World,s:ArenaSnapshot){
   const next=s.crew.find(p=>p.id===this.localId),changedLife=!!next&&next.life!==this.localLife;
-  if(changedLife){this.localLife=next!.life;this.history.reset();this.releasedSequence=-1;this.predictedShots.clear();this.cameraOffset=v();}
+  if(changedLife){this.localLife=next!.life;this.history.reset();this.pacer.reset();this.releasedSequence=-1;this.predictedShots.clear();this.cameraOffset=v();}
+  this.pacer.update(next?.queuedInputs??0);
   const before={x:w.player.pos.x+this.cameraOffset.x,y:w.player.pos.y+this.cameraOffset.y,z:w.player.pos.z+this.cameraOffset.z};this.history.acknowledge(s.crew.find(p=>p.id===this.localId)?.ack??0);applySnapshot(w,s,this.localId);if(!w.crew.find(p=>p.id===this.localId)?.alive||w.state==='dead')this.history.commands=[];
-  for(const command of this.history.commands)w.predictCrew(this.localId,command.input);w.effects=[];this.correction=distance(before,w.player.pos);this.cameraOffset=!changedLife&&this.correction<2&&w.crew.find(p=>p.id===this.localId)?.alive?v(before.x-w.player.pos.x,before.y-w.player.pos.y,before.z-w.player.pos.z):v();
+  for(const command of this.history.commands)w.predictCrew(this.localId,command.input,STEP,this.prelobby);w.effects=[];this.correction=distance(before,w.player.pos);this.cameraOffset=!changedLife&&this.correction<2&&w.crew.find(p=>p.id===this.localId)?.alive?v(before.x-w.player.pos.x,before.y-w.player.pos.y,before.z-w.player.pos.z):v();
  }
  presentation(w:World,now:number){if(this.role!=='guest')return w;const dt=this.lastView?Math.min(.1,(now-this.lastView)/1000):0;this.lastView=now;const decay=Math.exp(-20*dt);this.cameraOffset.x*=decay;this.cameraOffset.y*=decay;this.cameraOffset.z*=decay;return this.timeline.view(w,this.localId,now,this.cameraOffset);}
  releaseControls(){if(this.role==='guest'){const seq=this.history.lastSequence;if(seq===this.releasedSequence)return;if(this.control({type:'release',epoch:this.epoch,life:this.localLife,seq}))this.releasedSequence=seq;}}
- get diagnostics(){return {updateHz:Math.round(1000/(this.role==='host'?Math.max(50,...[...this.links.values()].map(l=>l.sendInterval)):this.snapshotInterval)),hostStepMs:Number(this.hostStepMs.toFixed(2)),sendKBps:Number((this.sendRate/1000).toFixed(1)),receiveKBps:Number((this.receiveRate/1000).toFixed(1)),rttMs:Math.round(this.rtt),snapshotAgeMs:this.lastState?Math.round(performance.now()-this.lastState):0,pendingInputs:this.history.commands.length,predictionStalled:this.history.stalled,correction:this.correction,interpolationMs:Math.round(this.timeline.delay*1000),bytesSent:this.bytesSent,bytesReceived:this.bytesReceived,queuedBytes:[...this.links.values()].reduce((n,l)=>n+(l.updates?.bufferedAmount??0)+(l.input?.bufferedAmount??0)+(l.state?.bufferedAmount??0),0)};}
+ get diagnostics(){return {updateHz:Math.round(1000/(this.role==='host'?Math.max(50,...[...this.links.values()].map(l=>l.sendInterval)):this.snapshotInterval)),hostStepMs:Number(this.hostStepMs.toFixed(2)),sendKBps:Number((this.sendRate/1000).toFixed(1)),receiveKBps:Number((this.receiveRate/1000).toFixed(1)),rttMs:Math.round(this.rtt),snapshotAgeMs:this.lastState?Math.round(performance.now()-this.lastState):0,pendingInputs:this.history.commands.length,predictionStalled:this.history.stalled,hostStalled:this.hostStalled,hostQueue:this.pacer.queued,correction:this.correction,interpolationMs:Math.round(this.timeline.delay*1000),bytesSent:this.bytesSent,bytesReceived:this.bytesReceived,queuedBytes:[...this.links.values()].reduce((n,l)=>n+(l.updates?.bufferedAmount??0)+(l.input?.bufferedAmount??0)+(l.state?.bufferedAmount??0),0)};}
  private async description(link:Link,type:'offer'|'answer'){await link.pc.setLocalDescription(type==='offer'?await link.pc.createOffer():await link.pc.createAnswer());if(link.pc.iceGatheringState!=='complete')await new Promise<void>(resolve=>{const timer=setTimeout(done,7000);function done(){clearTimeout(timer);link.pc.removeEventListener('icegatheringstatechange',change);resolve();}function change(){if(link.pc.iceGatheringState==='complete')done();}link.pc.addEventListener('icegatheringstatechange',change);});if(this.closed)throw Error('Session closed.');return link.pc.localDescription!.toJSON();}
- async offer(id=randomId()){if(this.role!=='host'||this.links.size>=3||this.running)throw Error('Host can invite three friends before starting.');this.room||=randomId().replaceAll('-','').slice(0,10).toUpperCase();const l=this.makeLink(id);this.bind(id,l,l.pc.createDataChannel('state'));this.bind(id,l,l.pc.createDataChannel('input',{ordered:false,maxRetransmits:0}));this.bind(id,l,l.pc.createDataChannel('updates',{ordered:false,maxRetransmits:0}));return JSON.stringify({version:NETWORK_PROTOCOL_VERSION,room:this.room,id,description:await this.description(l,'offer')} satisfies Signal);}
- private parse(raw:string,type:'offer'|'answer'){if(raw.length>100000)throw Error('Connection code is too large.');let s:Signal;try{s=JSON.parse(raw.trim());}catch{throw Error('Paste the complete connection code.');}if(s.version!==NETWORK_PROTOCOL_VERSION)throw Error('This lobby uses a different game build. Reload every player’s browser.');if(typeof s.id!=='string'||typeof s.room!=='string'||s.description?.type!==type||typeof s.description.sdp!=='string')throw Error('Invalid connection code.');return s;}
+ async offer(id=randomId()){if(!validPeerId(id))throw Error('Invalid peer identity.');if(this.role!=='host'||this.links.size>=3||this.running||this.prelobby)throw Error('Host can invite three friends before starting.');this.room||=randomId().replaceAll('-','').slice(0,10).toUpperCase();const l=this.makeLink(id);this.bind(id,l,l.pc.createDataChannel('state'));this.bind(id,l,l.pc.createDataChannel('input',{ordered:false,maxRetransmits:0}));this.bind(id,l,l.pc.createDataChannel('updates',{ordered:false,maxRetransmits:0}));return JSON.stringify({version:NETWORK_PROTOCOL_VERSION,room:this.room,id,description:await this.description(l,'offer')} satisfies Signal);}
+ private parse(raw:string,type:'offer'|'answer'){if(raw.length>100000)throw Error('Connection code is too large.');let s:Signal;try{s=JSON.parse(raw.trim());}catch{throw Error('Paste the complete connection code.');}if(s.version!==NETWORK_PROTOCOL_VERSION)throw Error('This lobby uses a different game build. Reload every player’s browser.');if(!validPeerId(s.id)||typeof s.room!=='string'||s.description?.type!==type||typeof s.description.sdp!=='string')throw Error('Invalid connection code.');return s;}
  async answer(raw:string){if(this.role!=='guest'||this.links.size)throw Error('Leave the current room before joining another.');const s=this.parse(raw,'offer');this.room=s.room;this.localId=s.id;const l=this.makeLink(s.id);await l.pc.setRemoteDescription(s.description);return JSON.stringify({...s,description:await this.description(l,'answer')});}
  async accept(raw:string){const s=this.parse(raw,'answer');if(this.role!=='host'||s.room!==this.room)throw Error('Answer belongs to another room.');const l=this.links.get(s.id);if(!l)throw Error('Invitation expired. Create a new offer.');if(l.pc.signalingState==='have-local-offer')await l.pc.setRemoteDescription(s.description);}
- start(){if(this.role!=='host')return;if(this.publicLobby&&!this.allReady&&!this.running)throw Error('Every player must be ready before starting.');this.startAt=Date.now()+3000;this.world=new World(crypto.getRandomValues(new Uint32Array(1))[0]);this.world.addCrew('host');this.world.selectCrew('host');for(const [id,l]of this.links)if(l.state?.readyState==='open')this.world.addCrew(id);this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.epoch++;this.running=true;this.updateLobby();}
- returnToLobby(){if(this.role!=='host')return;this.running=false;this.startAt=0;for(const p of this.members)p.ready=false;this.world=new World(1);this.world.addCrew('host');this.world.selectCrew('host');for(const [id,l]of this.links)if(l.state?.readyState==='open')this.world.addCrew(id);this.updateLobby();}
- step(input:Input){if(this.role==='host'&&this.world&&this.running&&Date.now()>=this.startAt){
+ start(fromEntrance=false){if(this.role!=='host'||fromEntrance&&this.running)return;if(!fromEntrance&&this.publicLobby&&!this.allReady&&!this.running)throw Error('Every player must be ready before starting.');this.startAt=Date.now()+3000;this.world=new World(crypto.getRandomValues(new Uint32Array(1))[0]);this.world.addCrew('host');this.world.selectCrew('host');for(const [id,l]of this.links)if(l.state?.readyState==='open')this.world.addCrew(id);this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.epoch++;this.running=true;this.prelobby=false;this.updateLobby();}
+ enterPrelobby(){
+  if(this.role!=='host'||this.running||this.prelobby)return;
+  if(!this.allReady)throw Error('Every player must be ready before entering the courtyard.');
+  this.prelobby=true;this.startAt=0;this.epoch++;this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];
+  this.world=new World(1,{schedule:false});this.addLobbyCrew('host');for(const [id,l]of this.links)if(l.state?.readyState==='open')this.addLobbyCrew(id);this.world.selectCrew('host');this.updateLobby();
+ }
+ returnToLobby(){if(this.role!=='host')return;this.running=false;this.prelobby=false;this.startAt=0;this.epoch++;this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];for(const p of this.members)p.ready=false;this.world=new World(1,{schedule:false});this.addLobbyCrew('host');this.world.selectCrew('host');for(const [id,l]of this.links)if(l.state?.readyState==='open')this.addLobbyCrew(id);this.updateLobby();}
+ step(input:Input){if(this.role==='host'&&this.world&&(this.running||this.prelobby)&&Date.now()>=this.startAt){
   const started=performance.now();this.inputs.set('host',input);const waiting=new Set<string>();
-  for(const id of this.links.keys()){const commands=this.commands.get(id),command=commands?.next();if(command)this.inputs.set(id,command.input);else if(commands){if(performance.now()-(this.inputTimes.get(id)??0)<150)waiting.add(id);else this.inputs.set(id,idleInput());}else if(performance.now()-(this.inputTimes.get(id)??0)>500){this.inputs.set(id,idleInput());this.inputBuffers.delete(id);}else{const buffer=this.inputBuffers.get(id);if(buffer)this.inputs.set(id,buffer.next());}}
+  for(const id of this.links.keys()){if(!validPeerId(id))continue;const commands=this.commands.get(id),command=commands?.next();if(command)this.inputs.set(id,command.input);else if(commands){if(performance.now()-(this.inputTimes.get(id)??0)<150)waiting.add(id);else this.inputs.set(id,this.neutralInput(id));}else if(performance.now()-(this.inputTimes.get(id)??0)>500){this.inputs.set(id,this.neutralInput(id));this.inputBuffers.delete(id);}else{const buffer=this.inputBuffers.get(id);if(buffer)this.inputs.set(id,buffer.next());}}
   const lives=new Map(this.world.crew.map(p=>[p.id,{life:p.life,alive:p.alive}]));
-  const start=this.world.effects.length;this.world.stepCrew(this.inputs,STEP,waiting);for(const p of this.world.crew){const old=lives.get(p.id);if(old&&(old.life!==p.life||old.alive&&!p.alive)){this.inputs.delete(p.id);this.inputBuffers.delete(p.id);this.commands.delete(p.id);this.inputTimes.delete(p.id);}}this.startAt=0;this.pendingEffects.push(...this.world.effects.slice(start).map(e=>({...e,networkId:++this.eventSequence})));if(this.pendingEffects.length>1024)this.pendingEffects.splice(0,this.pendingEffects.length-1024);this.hostStepMs=this.hostStepMs*.9+(performance.now()-started)*.1;
+  const start=this.world.effects.length;if(this.running)this.world.stepCrew(this.inputs,STEP,waiting);else if(this.world.stepCrewEntrance(this.inputs,STEP,waiting)){this.start(true);return;}for(const p of this.world.crew){const old=lives.get(p.id);if(old&&(old.life!==p.life||old.alive&&!p.alive)){this.inputs.delete(p.id);this.inputBuffers.delete(p.id);this.commands.delete(p.id);this.inputTimes.delete(p.id);}}this.startAt=0;this.pendingEffects.push(...this.world.effects.slice(start).map(e=>({...e,networkId:++this.eventSequence})));if(this.pendingEffects.length>1024)this.pendingEffects.splice(0,this.pendingEffects.length-1024);this.hostStepMs=this.hostStepMs*.9+(performance.now()-started)*.1;
  }}
  sendInput(input:Input){this.control({type:'sample',epoch:this.epoch,life:this.localLife,input});}
- snapshot():ArenaSnapshot|null{const w=this.world;if(!w)return null;return {members:this.members.filter(p=>p.host||this.links.get(p.id)?.state?.readyState==='open'),lobbyName:this.lobbyName,serverNow:Date.now(),startAt:this.startAt,effects:this.pendingEffects,epoch:this.epoch,running:this.running,time:w.time,tick:w.tick,state:w.state,cause:w.cause,radius:w.radius,wave:w.wave,level:w.level,reserve:w.reserve,stats:w.stats,enemies:w.enemies,projectiles:w.projectiles,gems:w.gems,rings:w.rings,crew:w.crew.map(p=>({id:p.id,player:p.player,alive:p.alive,cause:p.cause,respawnAt:p.respawnAt,life:p.life,protectedUntil:p.protectedUntil,yaw:p.input.yaw,pitch:p.input.pitch||undefined,level:p.level,reserve:p.reserve,primary:p.primary,secondary:p.secondary,wasJump:p.wasJump,lastShotTick:p.lastShotTick,shotSequence:p.shotSequence,shotSeed:p.shotSeed,ack:this.commands.get(p.id)?.acknowledged??0}))};}
+ snapshot():ArenaSnapshot|null{const w=this.world;if(!w)return null;return {members:this.members.filter(p=>p.host||this.links.get(p.id)?.state?.readyState==='open'),lobbyName:this.lobbyName,serverNow:Date.now(),startAt:this.startAt,effects:this.pendingEffects,epoch:this.epoch,running:this.running,prelobby:this.prelobby||undefined,time:w.time,tick:w.tick,state:w.state,cause:w.cause,radius:w.radius,wave:w.wave,level:w.level,reserve:w.reserve,stats:w.stats,enemies:w.enemies,projectiles:w.projectiles,gems:w.gems,rings:w.rings,crew:w.crew.map(p=>({id:p.id,player:p.player,alive:p.alive,cause:p.cause,respawnAt:p.respawnAt,life:p.life,protectedUntil:p.protectedUntil,yaw:p.input.yaw,pitch:p.input.pitch||undefined,level:p.level,reserve:p.reserve,primary:p.primary,secondary:p.secondary,wasJump:p.wasJump,lastShotTick:p.lastShotTick,shotSequence:p.shotSequence,shotSeed:p.shotSeed,ack:this.commands.get(p.id)?.acknowledged??0,queuedInputs:this.commands.get(p.id)?.size||undefined}))};}
+ private refillStateBudget(link:Link,now:number){link.tokens=Math.min(STATE_BURST_BYTES,link.tokens+(now-link.tokenAt)*STATE_BYTES_PER_SECOND/1000);link.tokenAt=now;}
+ private cacheStateBaseline(link:Link,frame:number,baseline:StateBaseline){link.baselines.set(frame,baseline);while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);}
+ private rememberState(link:Link,frame:number,baseline:StateBaseline,now:number){
+  if(link.lastSend)link.sendInterval=link.sendInterval*.8+(now-link.lastSend)*.2;link.lastSend=now;
+  this.cacheStateBaseline(link,frame,baseline);
+ }
+ private drainState(link:Link,now:number){
+  const transfer=link.transfer;if(!transfer)return;
+  if(transfer.epoch!==this.epoch||!this.running||now-transfer.at>stateAssemblyTimeout(transfer.size)){link.transfer=undefined;return;}
+  const channel=link.updates;if(channel?.readyState!=='open')return;this.refillStateBudget(link,now);
+  // One frame in flight, bounded work/queue per pump, and per-chunk accounting.
+  // A frame can exceed the token bucket without requiring an unbounded burst.
+  for(let sent=0;sent<8&&transfer.next<transfer.packets.length;sent++){
+   const packet=transfer.packets[transfer.next];if(channel.bufferedAmount>8000||link.tokens<packet.byteLength)break;
+   try{channel.send(packet);}catch{return;}transfer.next++;link.tokens-=packet.byteLength;this.bytesSent+=packet.byteLength;
+  }
+  if(transfer.next===transfer.packets.length){this.rememberState(link,transfer.frame,transfer.baseline,now);link.transfer=undefined;}
+ }
+ private flushEffects(link:Link){
+  if(link.sentEpoch!==this.epoch||link.state?.readyState!=='open')return;
+  while(link.events.length&&link.state.bufferedAmount<16000){
+   const events=link.events.slice(0,24),message=JSON.stringify({type:'effects',epoch:this.epoch,events});
+   try{link.state.send(message);}catch{return;}link.events.splice(0,events.length);this.bytesSent+=new TextEncoder().encode(message).length;
+  }
+ }
  broadcast(){
   const snapshot=this.snapshot();if(!snapshot)return;const frame=++this.sequence,now=performance.now();
   for(const link of this.links.values())if(link.state?.readyState==='open'){
-   if(link.sentEpoch!==this.epoch){link.events=[];link.baselines.clear();link.ackFrame=0;}
+   if(link.sentEpoch!==this.epoch){
+    if(link.eventEpoch!==this.epoch){link.events=[];link.eventEpoch=this.epoch;}link.baselines.clear();link.ackFrame=0;link.transfer=undefined;
+   }else link.eventEpoch=this.epoch;
    link.events.push(...this.pendingEffects);if(link.events.length>1024)link.events.splice(0,link.events.length-1024);
-   // Critical lifecycle snapshots use the reliable control channel. Playing
-   // updates use a bounded lossy stream with acknowledged projectile baselines.
-   const lifecycle=link.sentEpoch!==this.epoch||!this.running;const channel=lifecycle?link.state:link.updates;if(channel?.readyState!=='open')continue;
-   link.tokens=Math.min(STATE_BURST_BYTES,link.tokens+(now-link.tokenAt)*STATE_BYTES_PER_SECOND/1000);link.tokenAt=now;
+   this.flushEffects(link);
+   const lifecycle=link.sentEpoch!==this.epoch||!this.running;
+   if(lifecycle)link.transfer=undefined;
+   else if(link.transfer){this.drainState(link,now);continue;}
+   const channel=lifecycle?link.state:link.updates;if(channel?.readyState!=='open')continue;
+   this.refillStateBudget(link,now);if(!lifecycle&&channel.bufferedAmount>8000)continue;
    const base=lifecycle?0:link.ackFrame,baseline=base?link.baselines.get(base):undefined;
-   if(!lifecycle&&channel.bufferedAmount>8000)continue;
-   const bytes=encodeState(snapshot,frame,base,baseline),packets=fragmentState(bytes,frame);const size=packets.reduce((total,p)=>total+p.byteLength,0);
-   if(!lifecycle&&(link.tokens<size))continue;
-   try{for(const packet of packets)channel.send(packet);link.tokens-=size;this.bytesSent+=size;if(link.lastSend)link.sendInterval=link.sendInterval*.8+(now-link.lastSend)*.2;link.lastSend=now;link.sentEpoch=this.epoch;link.baselines.set(frame,snapshotBaseline(snapshot));while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);}catch{continue;}
-   if(link.events.length&&link.state.bufferedAmount<16000){while(link.events.length){const events=link.events.splice(0,24);const message=JSON.stringify({type:'effects',epoch:this.epoch,events});link.state.send(message);this.bytesSent+=new TextEncoder().encode(message).length;if(link.state.bufferedAmount>=16000)break;}}
+   let packets:ArrayBuffer[];
+   try{packets=fragmentState(encodeState(snapshot,frame,base,baseline),frame);}catch(error){this.onError(`World update could not be encoded: ${error instanceof Error?error.message:String(error)}`);continue;}
+   const size=packets.reduce((total,p)=>total+p.byteLength,0);
+   // Small unsent updates are replaced by current state on the next broadcast.
+   if(!lifecycle&&size<=STATE_BURST_BYTES&&link.tokens<size)continue;
+   const nextBaseline=snapshotBaseline(snapshot);
+   if(!lifecycle){link.transfer={frame,epoch:this.epoch,packets,next:0,baseline:nextBaseline,at:now,size};
+    // The receiver can finish before the trailing XOR repair packet is sent.
+    // Cache the immutable candidate now; only its ACK makes it a delta base.
+    this.cacheStateBaseline(link,frame,nextBaseline);this.drainState(link,now);continue;}
+   try{for(const packet of packets)channel.send(packet);}catch{continue;}
+   link.tokens-=size;this.bytesSent+=size;link.sentEpoch=this.epoch;this.rememberState(link,frame,nextBaseline,now);this.flushEffects(link);
   }
   this.pendingEffects=[];
  }

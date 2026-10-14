@@ -44,3 +44,19 @@ test('replay seeks expose cosmetic events and reset before backward rebuild',()=
  player.seek(15,()=>steps++,()=>resets++);assert.equal(steps,15);assert.equal(resets,0);
  steps=0;player.seek(10,()=>steps++,()=>resets++);assert.equal(steps,10);assert.equal(resets,1);
 });
+test('crystal hits and destruction emit no blood; flesh kills still bleed',()=>{
+ const world=new World(17,{schedule:false}),field=new BloodField(256);
+ const tower=world.spawn('squid',v(0,6,0));
+ world.damageEnemy(tower,tower.weakpoints[0].hp,v(0,6,0),0,true);
+ const pede=world.spawn('centipede',v(0,6,0));
+ world.damageEnemy(pede,pede.segments[0].hp,pede.segments[0].pos,0);
+ const spider=world.spawn('spider',v(0,6,0));
+ world.damageEnemy(spider,spider.hp,v(0,6,0));
+ for(const effect of world.effects)field.emit(effect,world.time);
+ assert.equal(field.drops.length,0,'crystal damage must not create droplets');
+ field.advance(3);assert.equal(field.landings,0);assert.ok(field.pixels.every(n=>n===0));
+ world.effects=[];
+ const skull=world.spawn('skull',v(0,6,0));world.damageEnemy(skull,skull.hp);
+ for(const effect of world.effects)field.emit(effect,world.time);
+ assert.ok(field.drops.some(drop=>drop.enemyBurst),'flesh death retains its gore burst');
+});

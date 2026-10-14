@@ -1,0 +1,364 @@
+{
+  "results": [
+    {
+      "quality": "high",
+      "name": "entrance",
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 40,
+        "time": 0,
+        "entrance": true,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 0
+      },
+      "meanDifference": 4.5296032262731485,
+      "fencedMs": 0.9000000059604645,
+      "glError": 0,
+      "calls": 79
+    },
+    {
+      "quality": "high",
+      "name": "arena",
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 0
+      },
+      "meanDifference": 6.712150245949074,
+      "fencedMs": 0.9000000059604645,
+      "glError": 0,
+      "calls": 19
+    },
+    {
+      "quality": "high",
+      "name": "fading",
+      "mist": {
+        "enabled": true,
+        "strength": 0.5,
+        "steps": 40,
+        "time": 19,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.08,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.999197976150786,
+        "lights": 0
+      },
+      "meanDifference": 5.173454499421296,
+      "fencedMs": 0.30000001192092896,
+      "glError": 0,
+      "calls": 19
+    },
+    {
+      "quality": "high",
+      "name": "cloud-arrival",
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 40,
+        "time": 30,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0.5,
+        "density": 0.065,
+        "height": 8.399999999999999,
+        "bank": 0.5,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.10250000000000001,
+          0.1375,
+          0.175
+        ],
+        "pulse": 0.7994717747516978,
+        "lights": 0
+      },
+      "meanDifference": 6.7851374421296295,
+      "fencedMs": 0.7999999821186066,
+      "glError": 0,
+      "calls": 19
+    },
+    {
+      "quality": "high",
+      "name": "above",
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 0
+      },
+      "meanDifference": 9.683499348958334,
+      "fencedMs": 0.4000000059604645,
+      "glError": 0,
+      "calls": 19
+    },
+    {
+      "quality": "low",
+      "name": "entrance",
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 20,
+        "time": 0,
+        "entrance": true,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 0
+      },
+      "meanDifference": 4.861799406828704,
+      "fencedMs": 0.20000001788139343,
+      "glError": 0,
+      "calls": 66
+    },
+    {
+      "quality": "low",
+      "name": "arena",
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 20,
+        "time": 0,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 0
+      },
+      "meanDifference": 6.734798538773148,
+      "fencedMs": 0.30000001192092896,
+      "glError": 0,
+      "calls": 6
+    },
+    {
+      "quality": "low",
+      "name": "fading",
+      "mist": {
+        "enabled": true,
+        "strength": 0.5,
+        "steps": 20,
+        "time": 19,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.08,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.999197976150786,
+        "lights": 0
+      },
+      "meanDifference": 5.188178891782408,
+      "fencedMs": 0.29999998211860657,
+      "glError": 0,
+      "calls": 6
+    },
+    {
+      "quality": "low",
+      "name": "cloud-arrival",
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 20,
+        "time": 30,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0.5,
+        "density": 0.065,
+        "height": 8.399999999999999,
+        "bank": 0.5,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.10250000000000001,
+          0.1375,
+          0.175
+        ],
+        "pulse": 0.7994717747516978,
+        "lights": 0
+      },
+      "meanDifference": 6.823526837384259,
+      "fencedMs": 0.20000001788139343,
+      "glError": 0,
+      "calls": 6
+    },
+    {
+      "quality": "low",
+      "name": "above",
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 20,
+        "time": 0,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 0
+      },
+      "meanDifference": 9.681015986689815,
+      "fencedMs": 0.19999998807907104,
+      "glError": 0,
+      "calls": 6
+    }
+  ],
+  "depth": {
+    "nearDifference": 0,
+    "farDifference": 6
+  },
+  "reduced": {
+    "enabled": true,
+    "strength": 1,
+    "steps": 20,
+    "time": 0,
+    "entrance": false,
+    "volumeSize": [
+      320,
+      180
+    ],
+    "chapter": "The Last Sky",
+    "blend": 0,
+    "density": 0.16,
+    "height": 3.8,
+    "bank": 0,
+    "smoke": 0,
+    "shafts": 0,
+    "color": [
+      0.11,
+      0.14,
+      0.17
+    ],
+    "pulse": 1,
+    "lights": 0
+  },
+  "errors": []
+}

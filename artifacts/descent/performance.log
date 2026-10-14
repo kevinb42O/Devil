@@ -1,0 +1,712 @@
+{
+  "hardware": {
+    "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+    "timerQueries": true,
+    "viewport": [
+      1280,
+      720
+    ],
+    "devicePixelRatio": 1
+  },
+  "method": "One WebGL context; identical world and camera. Full-frame ABBA blocks: 20 warm-up + 40 measured frames per block (80 measured frames per mode/case). Isolated sky alternates modes: 25 warm-up + 60 measured frames per mode/case, pitch 0.8 radians. GPU disjoint queries when available; fenced wall time otherwise is a proxy, not GPU time.",
+  "results": [
+    {
+      "name": "daylight/combat",
+      "quality": "high",
+      "time": 0,
+      "pitch": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 81,
+        "after": 81
+      },
+      "before": {
+        "gpuMs": {
+          "median": 6.459374,
+          "p95": 9.546125,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.7000000178813934,
+          "p95": 2.9000000059604645,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.7000000178813934,
+          "p95": 2.9000000059604645,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 4.766458,
+          "p95": 8.219708,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5999999940395355,
+          "p95": 2.199999988079071,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5999999940395355,
+          "p95": 2.199999988079071,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "daylight/mostly-sky",
+      "quality": "high",
+      "time": 0,
+      "pitch": 1.15,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 26,
+        "after": 26
+      },
+      "before": {
+        "gpuMs": {
+          "median": 5.431083,
+          "p95": 9.365083,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.4000000059604645,
+          "p95": 2.7999999821186066,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5,
+          "p95": 2.7999999821186066,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 4.982958,
+          "p95": 8.503749,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5,
+          "p95": 2.0999999940395355,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5,
+          "p95": 2.0999999940395355,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "furnace/combat",
+      "quality": "high",
+      "time": 259,
+      "pitch": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 81,
+        "after": 81
+      },
+      "before": {
+        "gpuMs": {
+          "median": 5.147374,
+          "p95": 7.943625,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5,
+          "p95": 1.9000000059604645,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5999999940395355,
+          "p95": 2,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 4.308125,
+          "p95": 7.530375,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.699999988079071,
+          "p95": 2,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.699999988079071,
+          "p95": 2.100000023841858,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "cathedral/sky",
+      "quality": "high",
+      "time": 350,
+      "pitch": 0.8,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 48,
+        "after": 48
+      },
+      "before": {
+        "gpuMs": {
+          "median": 4.618041,
+          "p95": 8.8925,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5,
+          "p95": 2,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5,
+          "p95": 2,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 4.982583,
+          "p95": 7.297041,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.699999988079071,
+          "p95": 2,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.699999988079071,
+          "p95": 2.0999999940395355,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "depths/combat",
+      "quality": "high",
+      "time": 442,
+      "pitch": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 81,
+        "after": 81
+      },
+      "before": {
+        "gpuMs": {
+          "median": 4.626875,
+          "p95": 7.251875,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5,
+          "p95": 2,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5999999940395355,
+          "p95": 2,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 4.785375,
+          "p95": 7.731791,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.4000000059604645,
+          "p95": 1.9000000059604645,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.4000000059604645,
+          "p95": 1.9000000059604645,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "daylight/combat",
+      "quality": "low",
+      "time": 0,
+      "pitch": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 68,
+        "after": 68
+      },
+      "before": {
+        "gpuMs": {
+          "median": 2.867999,
+          "p95": 5.056249,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.4000000059604645,
+          "p95": 1.7000000178813934,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.4000000059604645,
+          "p95": 1.7999999821186066,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 2.802458,
+          "p95": 4.389333,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5999999940395355,
+          "p95": 2,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5999999940395355,
+          "p95": 2,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "daylight/mostly-sky",
+      "quality": "low",
+      "time": 0,
+      "pitch": 1.15,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 13,
+        "after": 13
+      },
+      "before": {
+        "gpuMs": {
+          "median": 2.021124,
+          "p95": 3.924666,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.399999976158142,
+          "p95": 1.800000011920929,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.399999976158142,
+          "p95": 1.800000011920929,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 2.106541,
+          "p95": 3.896875,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.399999976158142,
+          "p95": 1.7999999821186066,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.4000000059604645,
+          "p95": 1.7999999821186066,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "furnace/combat",
+      "quality": "low",
+      "time": 259,
+      "pitch": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 68,
+        "after": 68
+      },
+      "before": {
+        "gpuMs": {
+          "median": 2.696583,
+          "p95": 4.513749,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5999999940395355,
+          "p95": 2,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5999999940395355,
+          "p95": 2,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 2.771375,
+          "p95": 4.742374,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.7999999821186066,
+          "p95": 2.0999999940395355,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.7999999821186066,
+          "p95": 2.0999999940395355,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "cathedral/sky",
+      "quality": "low",
+      "time": 350,
+      "pitch": 0.8,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 35,
+        "after": 35
+      },
+      "before": {
+        "gpuMs": {
+          "median": 3.095666,
+          "p95": 5.597625,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.300000011920929,
+          "p95": 1.600000023841858,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.399999976158142,
+          "p95": 1.600000023841858,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 4.17825,
+          "p95": 9.299249,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.4000000059604645,
+          "p95": 1.800000011920929,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.4000000059604645,
+          "p95": 1.800000011920929,
+          "samples": 80
+        }
+      }
+    },
+    {
+      "name": "depths/combat",
+      "quality": "low",
+      "time": 442,
+      "pitch": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "calls": {
+        "before": 68,
+        "after": 68
+      },
+      "before": {
+        "gpuMs": {
+          "median": 3.597083,
+          "p95": 6.247291,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5,
+          "p95": 1.800000011920929,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5,
+          "p95": 1.800000011920929,
+          "samples": 80
+        }
+      },
+      "after": {
+        "gpuMs": {
+          "median": 3.509166,
+          "p95": 6.065416,
+          "samples": 80
+        },
+        "cpuMs": {
+          "median": 1.5,
+          "p95": 1.800000011920929,
+          "samples": 80
+        },
+        "fencedMs": {
+          "median": 1.5,
+          "p95": 1.800000011920929,
+          "samples": 80
+        }
+      }
+    }
+  ],
+  "skyOnly": [
+    {
+      "quality": "high",
+      "time": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.425583,
+        "p95": 4.604583,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.246291,
+        "p95": 4.081999,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "high",
+      "time": 39,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.470583,
+        "p95": 4.253416,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.280958,
+        "p95": 4.754624,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "high",
+      "time": 114,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.419625,
+        "p95": 3.194541,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.348416,
+        "p95": 3.985874,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "high",
+      "time": 259,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.479291,
+        "p95": 3.959875,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.220541,
+        "p95": 4.9775,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "high",
+      "time": 350,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.316249,
+        "p95": 3.705874,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.057166,
+        "p95": 3.471125,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "high",
+      "time": 442,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.252374,
+        "p95": 2.913999,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 0.86,
+        "p95": 3.891666,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "low",
+      "time": 0,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.297874,
+        "p95": 5.322916,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.023999,
+        "p95": 3.851874,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "low",
+      "time": 39,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.479333,
+        "p95": 2.863125,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 0.853041,
+        "p95": 4.7785,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "low",
+      "time": 114,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.310916,
+        "p95": 3.369875,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.065916,
+        "p95": 3.904624,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "low",
+      "time": 259,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.277791,
+        "p95": 4.236874,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.013,
+        "p95": 3.021,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "low",
+      "time": 350,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.314749,
+        "p95": 3.720875,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.047166,
+        "p95": 2.710708,
+        "samples": 60
+      }
+    },
+    {
+      "quality": "low",
+      "time": 442,
+      "drawingBuffer": [
+        1280,
+        720
+      ],
+      "beforeGpuMs": {
+        "median": 1.318499,
+        "p95": 4.037541,
+        "samples": 60
+      },
+      "afterGpuMs": {
+        "median": 1.128375,
+        "p95": 4.689,
+        "samples": 60
+      }
+    }
+  ]
+}

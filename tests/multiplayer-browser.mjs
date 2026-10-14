@@ -11,8 +11,14 @@ try{
  await host.waitForFunction(()=>window.abyss.friends.allReady);assert.equal(await host.locator('#friends-start').isEnabled(),true);
  await pages[3].locator('#friends-ready').evaluate(el=>el.click());await host.waitForFunction(()=>!window.abyss.friends.allReady);assert.equal(await host.locator('#friends-start').isDisabled(),true);await pages[3].locator('#friends-ready').evaluate(el=>el.click());await host.waitForFunction(()=>window.abyss.friends.allReady);
  await host.screenshot({path:'artifacts/multiplayer-ready-lobby.png'});await host.bringToFront();await host.click('#friends-start');
+ for(const p of pages)await p.waitForFunction(()=>window.abyss.entrance&&window.abyss.friends?.prelobby&&window.abyss.friends.crew?.length===4);
+ for(const p of pages){assert.equal(await p.evaluate(()=>window.abyss.time),0);assert.equal(await p.evaluate(()=>window.abyss.friends.running),false);}
+ await host.screenshot({path:'artifacts/multiplayer-courtyard.png'});
+ const crossing=pages[1];await crossing.bringToFront();if(await crossing.evaluate(()=>window.abyss.mode==='paused'))await crossing.click('#resume');if(!await crossing.evaluate(()=>!!document.pointerLockElement))await crossing.locator('#game').click();await crossing.waitForFunction(()=>window.abyss.mode==='playing'&&!!document.pointerLockElement);
+ await crossing.mouse.down();await crossing.waitForTimeout(250);await crossing.mouse.up();assert.equal(await host.evaluate(()=>window.abyss.stats.shots),0,'weapons stay inactive in the courtyard');
+ await crossing.keyboard.down('Space');await crossing.keyboard.down('KeyW');await host.waitForFunction(()=>window.abyss.friends?.running);await crossing.keyboard.up('KeyW');await crossing.keyboard.up('Space');
  for(const p of pages)await p.waitForFunction(()=>window.abyss.friends?.running&&window.abyss.friends.crew?.length===4&&window.abyss.time>.1);
  const guest=pages[1];await guest.bringToFront();if(await guest.evaluate(()=>window.abyss.mode==='paused'))await guest.click('#resume');await guest.waitForFunction(()=>window.abyss.mode==='playing'&&!!document.pointerLockElement);const before=await guest.evaluate(()=>window.abyss.position.x);await guest.keyboard.down('KeyD');await guest.mouse.down();await guest.waitForFunction(x=>window.abyss.position.x>x+1,before,{timeout:10000});await host.waitForFunction(()=>window.abyss.stats.shots>0,{},{timeout:10000});await guest.keyboard.up('KeyD');await guest.mouse.up();assert.ok(await host.evaluate(()=>window.abyss.stats.shots)>0);
  await pages[3].close();await host.waitForFunction(()=>window.abyss.friends.connected===2);await host.waitForFunction(()=>window.abyss.friends.crew[3].cause==='DISCONNECTED');
- assert.deepEqual(errors,[]);console.log('Four-player public lobby passed: discovery, one-click join, all-player readiness gate, unready, simultaneous start, guest movement/fire and disconnect.');
+ assert.deepEqual(errors,[]);console.log('Four-player public lobby passed: discovery, one-click join, all-player readiness gate, unready, shared courtyard, guest seal crossing, simultaneous arena start, guest movement/fire and disconnect.');
 }finally{await browser.close();}

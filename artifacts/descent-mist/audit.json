@@ -1,0 +1,804 @@
+{
+  "phases": [
+    {
+      "quality": "high",
+      "name": "opening",
+      "time": 0,
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 8
+      },
+      "meanDifference": 6.921177300347222,
+      "calls": 65,
+      "sky": {
+        "time": 0,
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 0
+      }
+    },
+    {
+      "quality": "high",
+      "name": "cloud-arrival",
+      "time": 30,
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 40,
+        "time": 30,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0.5,
+        "density": 0.065,
+        "height": 8.399999999999999,
+        "bank": 0.5,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.10250000000000001,
+          0.1375,
+          0.175
+        ],
+        "pulse": 0.7994717747516978,
+        "lights": 8
+      },
+      "meanDifference": 6.980910734953704,
+      "calls": 65,
+      "sky": {
+        "time": 30,
+        "chapter": "The Last Sky",
+        "blend": 0.5,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 0.5399999999999999
+      }
+    },
+    {
+      "quality": "high",
+      "name": "cloud-grave",
+      "time": 45.5,
+      "mist": {
+        "enabled": true,
+        "strength": 0.8125,
+        "steps": 40,
+        "time": 45.5,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "density": 0.13,
+        "height": 13,
+        "bank": 1,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.095,
+          0.135,
+          0.18
+        ],
+        "pulse": 1,
+        "lights": 8
+      },
+      "meanDifference": 16.693049406828703,
+      "calls": 65,
+      "sky": {
+        "time": 45.5,
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 0.819
+      }
+    },
+    {
+      "quality": "high",
+      "name": "cloud-break",
+      "time": 58.5,
+      "mist": {
+        "enabled": true,
+        "strength": 0.8125,
+        "steps": 40,
+        "time": 58.5,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "density": 0.13,
+        "height": 13,
+        "bank": 1,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.095,
+          0.135,
+          0.18
+        ],
+        "pulse": 0.78,
+        "lights": 8
+      },
+      "meanDifference": 13.065381221064815,
+      "calls": 65,
+      "sky": {
+        "time": 58.5,
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 1.053
+      }
+    },
+    {
+      "quality": "high",
+      "name": "bruised-veil",
+      "time": 140,
+      "mist": {
+        "enabled": true,
+        "strength": 0.53125,
+        "steps": 40,
+        "time": 140,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Bruised Veil",
+        "blend": 0,
+        "density": 0.085,
+        "height": 11,
+        "bank": 0.8,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.105,
+          0.065,
+          0.145
+        ],
+        "pulse": 0.8170565075935124,
+        "lights": 8
+      },
+      "meanDifference": 9.848072193287036,
+      "calls": 65,
+      "sky": {
+        "time": 140,
+        "chapter": "The Bruised Veil",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 2.52
+      }
+    },
+    {
+      "quality": "high",
+      "name": "furnace",
+      "time": 259,
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 40,
+        "time": 259,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Furnace",
+        "blend": 0,
+        "density": 0.065,
+        "height": 12,
+        "bank": 0.25,
+        "smoke": 1,
+        "shafts": 0,
+        "color": [
+          0.1,
+          0.027,
+          0.012
+        ],
+        "pulse": 0.9163247230716315,
+        "lights": 8
+      },
+      "meanDifference": 2.068758318865741,
+      "calls": 65,
+      "sky": {
+        "time": 259,
+        "chapter": "The Furnace",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 4.662
+      }
+    },
+    {
+      "quality": "high",
+      "name": "cathedral",
+      "time": 370,
+      "mist": {
+        "enabled": true,
+        "strength": 0.5,
+        "steps": 40,
+        "time": 370,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cathedral Below",
+        "blend": 0,
+        "density": 0.08,
+        "height": 22,
+        "bank": 0.3,
+        "smoke": 0,
+        "shafts": 1,
+        "color": [
+          0.055,
+          0.038,
+          0.08
+        ],
+        "pulse": 0.780802023849214,
+        "lights": 8
+      },
+      "meanDifference": 9.844549334490742,
+      "calls": 65,
+      "sky": {
+        "time": 370,
+        "chapter": "The Cathedral Below",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 6.659999999999999
+      }
+    },
+    {
+      "quality": "high",
+      "name": "unlit-depth",
+      "time": 460,
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 40,
+        "time": 460,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Unlit Depth",
+        "blend": 0,
+        "density": 0.065,
+        "height": 10,
+        "bank": 0.65,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.003,
+          0.002,
+          0.007
+        ],
+        "pulse": 0.9928517866953954,
+        "lights": 8
+      },
+      "meanDifference": 2.7855541087962963,
+      "calls": 65,
+      "sky": {
+        "time": 460,
+        "chapter": "The Unlit Depth",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 3,
+        "travel": 7.9559999999999995
+      }
+    },
+    {
+      "quality": "low",
+      "name": "opening",
+      "time": 0,
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 20,
+        "time": 0,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 8
+      },
+      "meanDifference": 6.94853443287037,
+      "calls": 52,
+      "sky": {
+        "time": 0,
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 0
+      }
+    },
+    {
+      "quality": "low",
+      "name": "cloud-arrival",
+      "time": 30,
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 20,
+        "time": 30,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0.5,
+        "density": 0.065,
+        "height": 8.399999999999999,
+        "bank": 0.5,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.10250000000000001,
+          0.1375,
+          0.175
+        ],
+        "pulse": 0.7994717747516978,
+        "lights": 8
+      },
+      "meanDifference": 7.029536675347222,
+      "calls": 52,
+      "sky": {
+        "time": 30,
+        "chapter": "The Last Sky",
+        "blend": 0.5,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 0.5399999999999999
+      }
+    },
+    {
+      "quality": "low",
+      "name": "cloud-grave",
+      "time": 45.5,
+      "mist": {
+        "enabled": true,
+        "strength": 0.8125,
+        "steps": 20,
+        "time": 45.5,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "density": 0.13,
+        "height": 13,
+        "bank": 1,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.095,
+          0.135,
+          0.18
+        ],
+        "pulse": 1,
+        "lights": 8
+      },
+      "meanDifference": 16.82195167824074,
+      "calls": 52,
+      "sky": {
+        "time": 45.5,
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 0.819
+      }
+    },
+    {
+      "quality": "low",
+      "name": "cloud-break",
+      "time": 58.5,
+      "mist": {
+        "enabled": true,
+        "strength": 0.8125,
+        "steps": 20,
+        "time": 58.5,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "density": 0.13,
+        "height": 13,
+        "bank": 1,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.095,
+          0.135,
+          0.18
+        ],
+        "pulse": 0.78,
+        "lights": 8
+      },
+      "meanDifference": 13.149644097222222,
+      "calls": 52,
+      "sky": {
+        "time": 58.5,
+        "chapter": "The Cloud Grave",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 1.053
+      }
+    },
+    {
+      "quality": "low",
+      "name": "bruised-veil",
+      "time": 140,
+      "mist": {
+        "enabled": true,
+        "strength": 0.53125,
+        "steps": 20,
+        "time": 140,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Bruised Veil",
+        "blend": 0,
+        "density": 0.085,
+        "height": 11,
+        "bank": 0.8,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.105,
+          0.065,
+          0.145
+        ],
+        "pulse": 0.8170565075935124,
+        "lights": 8
+      },
+      "meanDifference": 9.926731047453703,
+      "calls": 52,
+      "sky": {
+        "time": 140,
+        "chapter": "The Bruised Veil",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 2.52
+      }
+    },
+    {
+      "quality": "low",
+      "name": "furnace",
+      "time": 259,
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 20,
+        "time": 259,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Furnace",
+        "blend": 0,
+        "density": 0.065,
+        "height": 12,
+        "bank": 0.25,
+        "smoke": 1,
+        "shafts": 0,
+        "color": [
+          0.1,
+          0.027,
+          0.012
+        ],
+        "pulse": 0.9163247230716315,
+        "lights": 8
+      },
+      "meanDifference": 2.065287543402778,
+      "calls": 52,
+      "sky": {
+        "time": 259,
+        "chapter": "The Furnace",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 4.662
+      }
+    },
+    {
+      "quality": "low",
+      "name": "cathedral",
+      "time": 370,
+      "mist": {
+        "enabled": true,
+        "strength": 0.5,
+        "steps": 20,
+        "time": 370,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cathedral Below",
+        "blend": 0,
+        "density": 0.08,
+        "height": 22,
+        "bank": 0.3,
+        "smoke": 0,
+        "shafts": 1,
+        "color": [
+          0.055,
+          0.038,
+          0.08
+        ],
+        "pulse": 0.780802023849214,
+        "lights": 8
+      },
+      "meanDifference": 9.838324291087963,
+      "calls": 52,
+      "sky": {
+        "time": 370,
+        "chapter": "The Cathedral Below",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 6.659999999999999
+      }
+    },
+    {
+      "quality": "low",
+      "name": "unlit-depth",
+      "time": 460,
+      "mist": {
+        "enabled": true,
+        "strength": 0.40625,
+        "steps": 20,
+        "time": 460,
+        "entrance": false,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Unlit Depth",
+        "blend": 0,
+        "density": 0.065,
+        "height": 10,
+        "bank": 0.65,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.003,
+          0.002,
+          0.007
+        ],
+        "pulse": 0.9928517866953954,
+        "lights": 8
+      },
+      "meanDifference": 2.793387225115741,
+      "calls": 52,
+      "sky": {
+        "time": 460,
+        "chapter": "The Unlit Depth",
+        "blend": 0,
+        "menu": false,
+        "motion": "full",
+        "octaves": 2,
+        "travel": 7.9559999999999995
+      }
+    }
+  ],
+  "stability": {
+    "pausedDifference": 0,
+    "rewindDifference": 0,
+    "reducedA": {
+      "enabled": true,
+      "strength": 0.8125,
+      "steps": 20,
+      "time": 0,
+      "entrance": false,
+      "volumeSize": [
+        320,
+        180
+      ],
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "density": 0.13,
+      "height": 13,
+      "bank": 1,
+      "smoke": 0,
+      "shafts": 0,
+      "color": [
+        0.095,
+        0.135,
+        0.18
+      ],
+      "pulse": 1,
+      "lights": 8
+    },
+    "reducedB": {
+      "enabled": true,
+      "strength": 0.8125,
+      "steps": 20,
+      "time": 0,
+      "entrance": false,
+      "volumeSize": [
+        320,
+        180
+      ],
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "density": 0.13,
+      "height": 13,
+      "bank": 1,
+      "smoke": 0,
+      "shafts": 0,
+      "color": [
+        0.095,
+        0.135,
+        0.18
+      ],
+      "pulse": 1,
+      "lights": 8
+    }
+  },
+  "lights": {
+    "enemyDifference": 1.830217013888889,
+    "shooting": {
+      "enabled": true,
+      "strength": 0.40625,
+      "steps": 40,
+      "time": 460.1666666666665,
+      "entrance": false,
+      "volumeSize": [
+        320,
+        180
+      ],
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "density": 0.065,
+      "height": 10,
+      "bank": 0.65,
+      "smoke": 0,
+      "shafts": 0,
+      "color": [
+        0.003,
+        0.002,
+        0.007
+      ],
+      "pulse": 0.9943390086141848,
+      "lights": 9
+    },
+    "cleared": {
+      "enabled": true,
+      "strength": 0.40625,
+      "steps": 40,
+      "time": 460.1666666666665,
+      "entrance": false,
+      "volumeSize": [
+        320,
+        180
+      ],
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "density": 0.065,
+      "height": 10,
+      "bank": 0.65,
+      "smoke": 0,
+      "shafts": 0,
+      "color": [
+        0.003,
+        0.002,
+        0.007
+      ],
+      "pulse": 0.9943390086141848,
+      "lights": 0
+    }
+  },
+  "live": {
+    "sky": {
+      "time": 39.14999999999999,
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 2,
+      "travel": 0.7046999999999998
+    },
+    "mist": {
+      "enabled": true,
+      "strength": 0.8125,
+      "steps": 20,
+      "time": 39.14999999999999,
+      "entrance": false,
+      "volumeSize": [
+        320,
+        180
+      ],
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "density": 0.13,
+      "height": 13,
+      "bank": 1,
+      "smoke": 0,
+      "shafts": 0,
+      "color": [
+        0.095,
+        0.135,
+        0.18
+      ],
+      "pulse": 0.8939865328753789,
+      "lights": 0
+    }
+  },
+  "errors": []
+}

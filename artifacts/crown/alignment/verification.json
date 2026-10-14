@@ -1,0 +1,98 @@
+[
+  {
+    "width": 2560,
+    "height": 1440,
+    "centre": 2144.40625,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1920,
+    "height": 1080,
+    "centre": 1510.8125,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "centre": 1050.609375,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1366,
+    "height": 768,
+    "centre": 1043.34375,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1280,
+    "height": 720,
+    "centre": 982.203125,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1152,
+    "height": 648,
+    "centre": 891.484375,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1101,
+    "height": 620,
+    "centre": 855,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1100,
+    "height": 760,
+    "centre": 545,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 1024,
+    "height": 768,
+    "centre": 506.984375,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 851,
+    "height": 600,
+    "centre": 420.484375,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 850,
+    "height": 600,
+    "centre": 420,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "centre": 378.984375,
+    "maximumAlignmentError": 0.0078125
+  },
+  {
+    "width": 600,
+    "height": 800,
+    "centre": 297.5,
+    "maximumAlignmentError": 0
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "centre": 192.484375,
+    "maximumAlignmentError": 0
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "centre": 157.4921875,
+    "maximumAlignmentError": 0
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "centre": 416.9921875,
+    "maximumAlignmentError": 0
+  }
+]
