@@ -10,6 +10,9 @@ self.addEventListener('install',event=>{
   await Promise.all(Array.from({length:4},async()=>{
    while(next<CORE.length){const url=CORE[next++];await cache.add(new Request(url,{cache:'reload'}));}
   }));
+  // Activate the downloaded release without requiring every game window to close.
+  // Existing documents keep running; the next navigation loads the new release.
+  await self.skipWaiting();
  })());
 });
 self.addEventListener('activate',event=>{
@@ -28,6 +31,14 @@ self.addEventListener('fetch',event=>{
  event.respondWith((async()=>{
   const cache=await caches.open(CACHE);
   const key=request.mode==='navigate'?'/index.html':url.pathname;
+  // Online reloads must discover the deployed page rather than remain pinned
+  // to the version installed when offline support was first enabled.
+  if(request.mode==='navigate'){
+   try{
+    const response=await fetch(new Request(request,{cache:'no-store'}));
+    if(response.ok){event.waitUntil(cache.put(key,response.clone()).catch(()=>{}));return response;}
+   }catch{/* A saved page still launches when the network is unavailable. */}
+  }
   const cached=await cache.match(key);
   if(cached){
    // Safari streams music using byte ranges. A cached full WAV must become a

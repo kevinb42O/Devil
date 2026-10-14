@@ -19,7 +19,7 @@ The worker installs the app shell, models, textures, fonts and UI with bounded c
 
 Solo gameplay and local recordings work offline after the complete download. Leaderboards, cooperative play and shared replay downloads require internet. Same-origin static game files are the only intercepted requests; remote backend traffic is untouched. Cached audio supports byte-range responses for Safari streaming.
 
-Each build hashes the shipped files and creates a separate cache. Updates wait until all windows using the old worker close; no automatic reload interrupts a run. The next activation deletes older Abyss caches. Reopen the offline panel to save the new release's audio for full offline play.
+Each build hashes the shipped files and creates a separate cache. Downloaded updates activate without closing every window; no automatic reload interrupts a run. Online navigation fetches the current deployed page, falling back to the cached page when offline. Reload after a run to display a newly installed release. The next activation deletes older Abyss caches. Reopen the offline panel to save the new release's audio for full offline play.
 
 ## Build and validation
 

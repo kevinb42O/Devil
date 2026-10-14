@@ -35,13 +35,13 @@ export function setupPwa(){
  sync();
  if(!import.meta.env.PROD){status.textContent='Offline downloads are available in the production build served over HTTPS or localhost.';return;}
  if(!('serviceWorker' in navigator)||!window.isSecureContext){status.textContent='Installation and offline saving require an HTTPS connection.';return;}
- // Register immediately, but never reload a running game when a new release is
- // available. A waiting worker takes over after all older game windows close.
+ // Register immediately. Updated workers activate without reloading a run;
+ // the next navigation loads the latest online release.
  void (async()=>{
   const registration=await navigator.serviceWorker.register('/sw.js',{updateViaCache:'none'});
   registration.addEventListener('updatefound',()=>{
    const worker=registration.installing;
-   worker?.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller&&!downloading)status.textContent='An update is ready. Close every Abyss window and reopen to apply it.';});
+   worker?.addEventListener('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller&&!downloading)status.textContent='An update is ready. Reload Abyss when your run is finished to apply it.';});
   });
   await navigator.serviceWorker.ready;
   if(!navigator.serviceWorker.controller)await new Promise<void>(resolve=>navigator.serviceWorker.addEventListener('controllerchange',()=>resolve(),{once:true}));
