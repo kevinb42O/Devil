@@ -14,6 +14,11 @@ test('expanded rules preserve historical scores and isolate explicit v20 crew re
  await assert.rejects(()=>scalar("select public.abyss_crew_submit_v20($1,'bad',$2::jsonb,120,1000,2,3) value",[old.id,roster]),/different gameplay/);
  await scalar("select public.abyss_crew_submit($1,'old-run',$2::jsonb,240,2000,2,3) value",[old.id,roster]);await scalar("select public.abyss_crew_submit_v20($1,'new-run',$2::jsonb,120,1000,2,3) value",[fresh.id,roster]);
  await actor(null);assert.equal((await db.query("select * from public.abyss_crew_board(2,'',0)")).rows[0].survival_ms,2000);assert.equal((await db.query("select * from public.abyss_crew_board_v20(2,'',0)")).rows[0].survival_ms,1000);
+ const historical=(await db.query("select * from public.abyss_crew_board_history(19,2,'Guest',0)")).rows;
+ assert.equal(historical.length,1);assert.equal(historical[0].run_id,old.id);assert.equal(historical[0].rank,1);
+ assert.equal((await db.query("select * from public.abyss_crew_board_history(19,2,'Nobody',0)")).rows.length,0);
+ assert.equal((await db.query("select * from public.abyss_crew_board_history(19,2,'',1)")).rows.length,0);
+ assert.equal((await db.query("select * from public.abyss_crew_board_history(20,2,'',0)")).rows.length,0,'archive cannot mix in current rules');
  await assert.rejects(()=>scalar("select public.abyss_crew_register_v20('anon',1,$1::jsonb) value",[roster]),/permission denied/);
  await actor(host);const id=await scalar("select public.abyss_reserve_replay(1,'test-v7','Host',7,3000,10,10,true,128) value");assert.ok(id);
  const checks=(await db.query("select has_function_privilege('anon','public.abyss_crew_register_v20(text,integer,jsonb)','execute') forbidden, has_function_privilege('anon','public.abyss_crew_board_v20(integer,text,integer)','execute') allowed")).rows[0];assert.equal(checks.forbidden,false);assert.equal(checks.allowed,true);

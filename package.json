@@ -74,6 +74,7 @@
     "test:pwa": "node tests/pwa-browser.mjs",
     "test:crew-replay": "tsx --test tests/crew-replay.test.ts tests/crew-replay-transfer.test.ts && node tests/crew-replay-browser.mjs && node tests/crew-replay-controls-browser.mjs",
     "test:crew-replay-performance": "tsx tests/crew-replay-profile.ts && tsx tests/crew-replay-dense-profile.ts",
+    "test:leaderboard-history": "tsx --test tests/twin-rules-sql.test.mjs && node tests/leaderboard-history-browser.mjs",
     "test:crew-leaderboard": "tsx --test tests/crew-ranking.test.ts tests/crew-leaderboard-sql.test.mjs && node tests/crew-leaderboard-browser.mjs && node tests/crew-publication-browser.mjs",
     "test:lobby-honors": "tsx --test tests/lobby-honors.test.ts && node tests/lobby-honors-browser.mjs",
     "test:lobby-joining": "tsx --test tests/lobby-joining.test.ts && node tests/lobby-joining-browser.mjs && LATE_ICE=1 node tests/lobby-joining-browser.mjs && node tests/lobby-mobile-browser.mjs",

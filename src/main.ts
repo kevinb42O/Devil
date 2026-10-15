@@ -481,7 +481,7 @@ function renderRankings(){
  const scores=leaderboardScores.map((score,index)=>({score,rank:index+1})).filter(({score})=>score.player_name.toLocaleLowerCase().includes(search));
  for(const {score,rank} of scores){const row=document.createElement('tr');const isOwn=ownScore?.rank===rank&&ownScore.player_name===score.player_name&&ownScore.survival_ms===score.survival_ms&&ownScore.achieved_at===score.achieved_at;const isChampion=rank===1&&crown.matchesName(score.player_name);if(isChampion){row.classList.add('sovereign-row');row.setAttribute('aria-label','Reigning champion');}if(isOwn){row.classList.add('your-score');row.setAttribute('aria-label','Your public best');}
  for(const value of [rank,score.player_name+(isOwn?' · YOU':''),format(score.survival_ms/1000),score.kills,score.gems]){const cell=document.createElement('td');cell.textContent=String(value);if(isChampion&&row.children.length===1){cell.prepend(crownBadge());const title=document.createElement('small');title.className='sovereign-row-title';title.textContent='REIGNING CHAMPION';cell.append(title);}row.append(cell);}const replayCell=document.createElement('td');if(score.replay_id){const watch=document.createElement('button');watch.className='text-button';watch.textContent='WATCH';watch.setAttribute('aria-label',`Watch ${score.player_name}'s replay`);watch.onclick=()=>void watchShared(score.replay_id!,watch);replayCell.append(watch);}else{replayCell.textContent='—';replayCell.title='No replay attached to this score.';}row.append(replayCell);list.append(row);}
- $('leaderboard-status').textContent=search?`${scores.length} matching ${scores.length===1?'player':'players'} in the top 100`:leaderboardScores.length?`${leaderboardScores.length} ranked ${leaderboardScores.length===1?'player':'players'} · top 100`:'The arena is waiting for its first published score.';
+ $('leaderboard-status').textContent=search?`${scores.length} matching ${scores.length===1?'player':'players'} in the top 100`:leaderboardScores.length?`${leaderboardScores.length} ranked ${leaderboardScores.length===1?'player':'players'} · top 100`:'No scores for the current gameplay version yet. Previous rankings are preserved below.';
  if(search&&!scores.length){const row=document.createElement('tr'),cell=document.createElement('td');cell.colSpan=6;cell.textContent='No matching players. Try another nickname.';row.append(cell);list.append(row);}
 }
 function renderPersonalRanking(){
@@ -502,6 +502,7 @@ async function refreshRankings(){
  })().finally(()=>{rankingRequest=null;});return rankingRequest;
 }
 async function openLeaderboard(){
+ void crewBoard?.rankingHistory.refresh();
  leaderboardOpen=true;showPanels();if(crewBoard?.active){await crewBoard.refresh();return;}renderPersonalRanking();const button=$<HTMLButtonElement>('leaderboard-refresh');if(button.disabled)return;button.disabled=true;$('leaderboard-status').textContent='Connecting to the public leaderboard…';
  try{await refreshRankings();}finally{button.disabled=false;}
 }
