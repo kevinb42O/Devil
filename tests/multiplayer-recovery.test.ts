@@ -10,6 +10,9 @@ import {packIds,unpackIds,packPositions,unpackPositions} from '../src/network-pa
 const setup=()=>{const s=new FriendsSession('host');s.running=true;s.world=new World(42,{schedule:false});s.world.addCrew('host');s.world.addCrew('guest');s.world.selectCrew('host');return s;};
 const link=()=>({pc:{close(){}},state:{readyState:'open',bufferedAmount:0,send(){}},timer:0} as any);
 test('excess guest backlog drains during continuous input without skipping command numbers',()=>{
+ // Queue recovery is simulated synchronously; CPU load must not trigger the
+ // separate wall-clock disconnect/stall policy during this fixture.
+ const originalPerformance=globalThis.performance;globalThis.performance={now:()=>1000} as Performance;
  const host=setup(),guest=new FriendsSession('guest');try{
   host.links.set('guest',link());guest.localId='guest';guest.running=true;(guest as any).lastState=performance.now();const world=new World(1);applySnapshot(world,host.snapshot()!,'guest');
   const history:InputHistory=(guest as any).history;
@@ -22,7 +25,7 @@ test('excess guest backlog drains during continuous input without skipping comma
    if(i%6===5)guest.reconcile(world,host.snapshot()!);
   }
   const snapshot=host.snapshot()!;assert.ok((snapshot.crew[1].queuedInputs??0)<=6);assert.ok(snapshot.crew[1].ack>=350);assert.equal(snapshot.crew[1].ack+(snapshot.crew[1].queuedInputs??0),accepted);
- }finally{host.close();guest.close();}
+ }finally{host.close();guest.close();globalThis.performance=originalPerformance;}
 });
 test('pacing keeps full normal rate and skipped prediction does not consume a tap',()=>{
  const pacer=new InputPacer();pacer.update(6);for(let i=0;i<30;i++)assert.equal(pacer.next(),true);

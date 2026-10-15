@@ -1,3 +1,5 @@
+import {validateCourtyard} from './courtyard-state';
+import {projectileSocket} from './weapon-origin';
 import {MAX_CREW_PLAYERS} from './crew-config';
 import {type ArenaSnapshot} from './multiplayer';
 import {STEP,TUNING,type Projectile,type Vec} from './simulation';
@@ -8,6 +10,7 @@ import {shotLaunches} from './projectile-launch';
 import {packShotLaunch,unpackShotLaunch} from './network-shots';
 type WireCrew=Omit<ArenaSnapshot['crew'][number],'life'|'respawnAt'|'protectedUntil'>&{life?:number;respawnAt?:number;protectedUntil?:number};
 export type StateBaseline={time:number;projectiles:Map<number,Projectile>;enemies:Map<number,EnemyRow>};
+const projectileFlags=(p:Projectile)=>(p.homing?1:0)|(((p.level??1)-1)<<1)|(p.kind==='shotgun'?16:0);
 type ShotRow=[owner:number,sequence:number,flags:number,energy:number,age:number,launch:number[],entries:number[]];
 export type WireState={version:typeof NETWORK_PROTOCOL_VERSION;frame:number;epoch:number;body:Omit<ArenaSnapshot,'projectiles'|'enemies'|'effects'|'crew'>&{enemies:(EnemyRow|EnemyDelta)[];crew:WireCrew[]};creatures:{ids:Uint8Array;positions:Uint8Array;relative:boolean};flight:{base:number;ids:Uint8Array;updates:unknown[][];shots:ShotRow[]}};
 export function snapshotBaseline(s:ArenaSnapshot):StateBaseline{return {time:s.time,projectiles:new Map(s.projectiles.map(p=>[p.id,structuredClone((({launch,...flight})=>flight)(p))])),enemies:new Map(s.enemies.map(e=>{const row=packEnemy(e),pos=canonicalPosition(e.pos);row[2].set([pos.x,pos.y,pos.z]);return [e.id,row];}))};}
@@ -17,27 +20,27 @@ export function flightPosition(p:Projectile,dt:number):Vec{
 }
 const row=(p:Projectile,crew:ArenaSnapshot['crew'])=>{
  const key=p.shotKey?.split(':'),owner=key?crew.findIndex(c=>c.id===key[0]):-1;
- return [p.id,new Float32Array([p.pos.x,p.pos.y,p.pos.z,p.vel.x,p.vel.y,p.vel.z,p.age]),(p.homing?1:0)|(((p.level??1)-1)<<1),p.energy??1,p.floorBounces??0,owner,owner>=0?Number(key![1]):0,owner>=0?Number(key![2]):0];
+ return [p.id,new Float32Array([p.pos.x,p.pos.y,p.pos.z,p.vel.x,p.vel.y,p.vel.z,p.age]),projectileFlags(p),p.energy??1,p.floorBounces??0,owner,owner>=0?Number(key![1]):0,owner>=0?Number(key![2]):0];
 };
 export function encodeState(s:ArenaSnapshot,frame:number,base:number,baseline?:StateBaseline){
  const {projectiles,effects,...body}=s;const updates:unknown[][]=[],shots:ShotRow[]=[],enemies:(EnemyRow|EnemyDelta)[]=[];
  for(const enemy of s.enemies){const packed=packEnemy(enemy),old=baseline?.enemies.get(enemy.id);if(!old)enemies.push(packed);else if(!sameEnemyState(packed,old,s.time-baseline!.time)){const delta=enemyDelta(packed,old,s.time-baseline!.time);if(delta[1]||delta[3]||delta[4])enemies.push(delta);}}
  const groups=new Map<string,Projectile[]>();
  for(const p of projectiles){const old=baseline?.projectiles.get(p.id),elapsed=s.time-(baseline?.time??s.time),gravity=old?.floorBounces&&!p.homing?TUNING.gravity:0;
-  if(old&&elapsed<.5&&!p.homing&&p.floorBounces===old.floorBounces&&Math.abs(p.vel.x-old.vel.x)<=.0001&&Math.abs(p.vel.y-old.vel.y+gravity*elapsed)<=.0001&&Math.abs(p.vel.z-old.vel.z)<=.0001&&Math.abs(p.age-old.age-elapsed)<=.02)continue;
+  if(old&&projectileFlags(old)===projectileFlags(p)&&old.energy===p.energy&&elapsed<.5&&!p.homing&&p.floorBounces===old.floorBounces&&Math.abs(p.vel.x-old.vel.x)<=.0001&&Math.abs(p.vel.y-old.vel.y+gravity*elapsed)<=.0001&&Math.abs(p.vel.z-old.vel.z)<=.0001&&Math.abs(p.age-old.age-elapsed)<=.02)continue;
   if(p.launch&&!p.homing&&!p.floorBounces&&p.shotKey){const key=p.shotKey.slice(0,p.shotKey.lastIndexOf(':')),group=groups.get(key);if(group)group.push(p);else groups.set(key,[p]);}else updates.push(row(p,s.crew));
  }
  for(const [key,group]of groups){
-  const [ownerId,sequence]=key.split(':'),owner=s.crew.findIndex(c=>c.id===ownerId),spec=group[0].launch!,age=group[0].age,energy=group[0].energy??1,flags=((group[0].level??1)-1)<<1;
+  const [ownerId,sequence]=key.split(':'),owner=s.crew.findIndex(c=>c.id===ownerId),spec=group[0].launch!,age=group[0].age,energy=group[0].energy??1,flags=projectileFlags(group[0]);
   const indices=group.map(p=>Number(p.shotKey!.split(':')[2])),count=Math.max(...indices)+1;
-  if(group.length<4||owner<0||count>60||indices.some(i=>!Number.isInteger(i)||i<0)){for(const p of group)updates.push(row(p,s.crew));continue;}
-  const description=packShotLaunch(spec,1+(flags>>1));if(!description){for(const p of group)updates.push(row(p,s.crew));continue;}
+  if(group.length<4||owner<0||count>96||indices.some(i=>!Number.isInteger(i)||i<0)){for(const p of group)updates.push(row(p,s.crew));continue;}
+  const description=packShotLaunch(spec,1+((flags>>1)&7));if(!description){for(const p of group)updates.push(row(p,s.crew));continue;}
   const launches=shotLaunches(spec,count,TUNING.projectileSpeed),entries:number[]=[];
   for(let i=0;i<group.length;i++){
    const p=group[i],launch=launches[indices[i]],expected={x:launch.pos.x+launch.vel.x*age,y:launch.pos.y+launch.vel.y*age,z:launch.pos.z+launch.vel.z*age};
    // Pierces, externally modified projectiles or any non-ballistic motion use
    // explicit corrections. A seed must never hide a real host trajectory.
-   if(p.age!==age||(p.energy??1)!==energy||(((p.level??1)-1)<<1)!==flags||Math.hypot(p.pos.x-expected.x,p.pos.y-expected.y,p.pos.z-expected.z)>.00001||Math.hypot(p.vel.x-launch.vel.x,p.vel.y-launch.vel.y,p.vel.z-launch.vel.z)>.00001)updates.push(row(p,s.crew));
+   if(p.age!==age||(p.energy??1)!==energy||projectileFlags(p)!==flags||Math.hypot(p.pos.x-expected.x,p.pos.y-expected.y,p.pos.z-expected.z)>.00001||Math.hypot(p.vel.x-launch.vel.x,p.vel.y-launch.vel.y,p.vel.z-launch.vel.z)>.00001)updates.push(row(p,s.crew));
    else entries.push(p.id,indices[i]);
   }
   if(entries.length)shots.push([owner,Number(sequence),flags,energy,age,description,entries]);
@@ -49,6 +52,7 @@ export function encodeState(s:ArenaSnapshot,frame:number,base:number,baseline?:S
 export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>):{frame:number;snapshot:ArenaSnapshot}|null{
  const w=decodePacket(data) as WireState;
  if(w?.version!==NETWORK_PROTOCOL_VERSION||!Number.isInteger(w.frame)||w.frame<1||!w.body||w.body.epoch!==w.epoch||!Array.isArray(w.body.crew)||w.body.crew.length>MAX_CREW_PLAYERS||!Array.isArray(w.body.enemies)||!Array.isArray(w.body.gems)||!Array.isArray(w.body.rings)||!Number.isFinite(w.body.serverNow)||!Number.isFinite(w.body.time)||!Number.isInteger(w.body.tick)||!w.flight||!Array.isArray(w.flight.updates)||!Array.isArray(w.flight.shots)||!w.creatures)throw Error('Invalid state');
+ if(w.body.courtyard&&!validateCourtyard(w.body.courtyard))throw Error('Invalid courtyard');
  const ids=unpackIds(w.creatures.ids),projectileIds=unpackIds(w.flight.ids);
  const baseline=w.flight.base?baselines.get(w.flight.base):undefined;if(w.flight.base&&!baseline)return null;
  if(typeof w.creatures.relative!=='boolean'||w.creatures.relative&&!baseline)throw Error('Invalid relative poses');
@@ -64,15 +68,16 @@ export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>)
  }
  const updates=new Map<number,Projectile>();for(const r of w.flight.updates){
   if(!Array.isArray(r)||r.length!==8||!Number.isInteger(r[0])||!(r[1] instanceof Float32Array)||r[1].length!==7||r.slice(2).some(v=>typeof v!=='number'||!Number.isFinite(v)))throw Error('Invalid flight');
-  const [id,values,flags,energy,floorBounces,owner,shot,index]=r as [number,Float32Array,number,number,number,number,number,number];const [x,y,z,vx,vy,vz,age]=values;
-  updates.set(id,{id,pos:{x,y,z},previous:{x,y,z},vel:{x:vx,y:vy,z:vz},age,homing:!!(flags&1),level:1+((flags>>1)&3),energy,floorBounces,shotKey:owner>=0&&w.body.crew[owner]?`${w.body.crew[owner].id}:${shot}:${index}`:undefined});
+  const [id,values,flags,energy,floorBounces,owner,shot,index]=r as [number,Float32Array,number,number,number,number,number,number];if(!Number.isInteger(flags)||flags<0||flags>31||((flags>>1)&7)>6)throw Error('Invalid projectile flags');const [x,y,z,vx,vy,vz,age]=values;
+  updates.set(id,{id,pos:{x,y,z},previous:{x,y,z},vel:{x:vx,y:vy,z:vz},age,...(flags&16?{kind:'shotgun' as const}:{}),homing:!!(flags&1),level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces,shotKey:owner>=0&&w.body.crew[owner]?`${w.body.crew[owner].id}:${shot}:${index}`:undefined});
  }
  for(const r of w.flight.shots){
   if(!Array.isArray(r)||r.length!==7)throw Error('Invalid shot');const [owner,sequence,flags,energy,age,description,entries]=r;
-  if(!Number.isInteger(owner)||!w.body.crew[owner]||!Number.isSafeInteger(sequence)||sequence<1||!Number.isInteger(flags)||flags<0||flags>6||flags%2||!Number.isFinite(energy)||!Number.isFinite(age)||age<0||age>3||!Array.isArray(entries)||entries.length>120||entries.length%2)throw Error('Invalid shot launch');
-  let count=0;for(let i=0;i<entries.length;i+=2){if(!Number.isSafeInteger(entries[i])||entries[i]<0||!Number.isInteger(entries[i+1])||entries[i+1]<0||entries[i+1]>=60)throw Error('Invalid shot identity');count=Math.max(count,entries[i+1]+1);}
-  const spec=unpackShotLaunch(description,1+(flags>>1)),launches=shotLaunches(spec,count,TUNING.projectileSpeed);
-  for(let i=0;i<entries.length;i+=2){const id=entries[i],index=entries[i+1],{pos:origin,vel}=launches[index],pos={x:origin.x+vel.x*age,y:origin.y+vel.y*age,z:origin.z+vel.z*age};if(updates.has(id))throw Error('Duplicate shot identity');updates.set(id,{id,pos,previous:{...pos},vel,age,homing:false,level:1+(flags>>1),energy,floorBounces:0,shotKey:`${w.body.crew[owner].id}:${sequence}:${index}`});}
+  if(!Number.isInteger(owner)||!w.body.crew[owner]||!Number.isSafeInteger(sequence)||sequence<1||!Number.isInteger(flags)||flags<0||flags>30||((flags>>1)&7)>6||flags%2||!Number.isFinite(energy)||!Number.isFinite(age)||age<0||age>3||!Array.isArray(entries)||entries.length>192||entries.length%2)throw Error('Invalid shot launch');
+  let count=0;for(let i=0;i<entries.length;i+=2){if(!Number.isSafeInteger(entries[i])||entries[i]<0||!Number.isInteger(entries[i+1])||entries[i+1]<0||entries[i+1]>=96)throw Error('Invalid shot identity');count=Math.max(count,entries[i+1]+1);}
+  const spec=unpackShotLaunch(description,1+((flags>>1)&7)),launches=shotLaunches(spec,count,TUNING.projectileSpeed);
+  if(!!(flags&16)!==!!spec.shotgunCount||spec.shotgunCount&&count>spec.shotgunCount)throw Error('Invalid shotgun identity');
+  for(let i=0;i<entries.length;i+=2){const id=entries[i],index=entries[i+1],{pos:origin,vel}=launches[index],pos={x:origin.x+vel.x*age,y:origin.y+vel.y*age,z:origin.z+vel.z*age};if(updates.has(id))throw Error('Duplicate shot identity');updates.set(id,{id,pos,previous:{...pos},vel,age,...(flags&16?{kind:'shotgun' as const}:{}),homing:false,level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces:0,shotKey:`${w.body.crew[owner].id}:${sequence}:${index}`});}
  }
  const projectiles:Projectile[]=[];for(const id of projectileIds){let p=updates.get(id);if(!p){const old=baseline?.projectiles.get(id);if(!old)return null;p={...old,age:old.age+elapsed,pos:flightPosition(old,elapsed),vel:{...old.vel,y:old.vel.y-(old.floorBounces&&!old.homing?TUNING.gravity*elapsed:0)}};p.previous={...p.pos};}projectiles.push(p);}
  return {frame:w.frame,snapshot:{...w.body,crew:w.body.crew.map(p=>({...p,life:p.life??0,respawnAt:p.respawnAt??null,protectedUntil:p.protectedUntil??0})),effects:[],enemies,projectiles}};

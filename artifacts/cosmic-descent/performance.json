@@ -1,0 +1,156 @@
+{
+  "reference": "83f316e83d5eb4a29179c496894ad72fc5ef6335",
+  "method": "Isolated sky + two fog draws, same context and fixed scene depth. Alternate old opening and new opening at 0/25/30s. 15 warm-up + 35 samples each. Fenced wall times are only a proxy; no lower-power-device claim.",
+  "renderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+  "viewport": [
+    1280,
+    720
+  ],
+  "timerQueries": true,
+  "cases": [
+    {
+      "quality": "high",
+      "time": 0,
+      "beforeGpuMs": {
+        "median": 10.667875,
+        "p95": 22.706416,
+        "samples": 35
+      },
+      "afterGpuMs": {
+        "median": 10.23825,
+        "p95": 20.543499,
+        "samples": 35
+      },
+      "beforeFencedMs": {
+        "median": 0.19999998807907104,
+        "p95": 0.5,
+        "samples": 35
+      },
+      "afterFencedMs": {
+        "median": 0.20000004768371582,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      }
+    },
+    {
+      "quality": "high",
+      "time": 25,
+      "beforeGpuMs": {
+        "median": 9.84175,
+        "p95": 23.546791,
+        "samples": 35
+      },
+      "afterGpuMs": {
+        "median": 12.918749,
+        "p95": 28.81275,
+        "samples": 35
+      },
+      "beforeFencedMs": {
+        "median": 0.10000002384185791,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      },
+      "afterFencedMs": {
+        "median": 0.19999998807907104,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      }
+    },
+    {
+      "quality": "high",
+      "time": 30,
+      "beforeGpuMs": {
+        "median": 11.234166,
+        "p95": 19.267875,
+        "samples": 35
+      },
+      "afterGpuMs": {
+        "median": 10.23275,
+        "p95": 21.352124,
+        "samples": 35
+      },
+      "beforeFencedMs": {
+        "median": 0.19999998807907104,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      },
+      "afterFencedMs": {
+        "median": 0.19999998807907104,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      }
+    },
+    {
+      "quality": "low",
+      "time": 0,
+      "beforeGpuMs": {
+        "median": 9.519541,
+        "p95": 20.249375,
+        "samples": 35
+      },
+      "afterGpuMs": {
+        "median": 6.953999,
+        "p95": 17.694125,
+        "samples": 35
+      },
+      "beforeFencedMs": {
+        "median": 0.20000004768371582,
+        "p95": 0.699999988079071,
+        "samples": 35
+      },
+      "afterFencedMs": {
+        "median": 0.30000001192092896,
+        "p95": 0.5999999642372131,
+        "samples": 35
+      }
+    },
+    {
+      "quality": "low",
+      "time": 25,
+      "beforeGpuMs": {
+        "median": 8.730958,
+        "p95": 19.329125,
+        "samples": 35
+      },
+      "afterGpuMs": {
+        "median": 10.203583,
+        "p95": 21.907666,
+        "samples": 35
+      },
+      "beforeFencedMs": {
+        "median": 0.19999998807907104,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      },
+      "afterFencedMs": {
+        "median": 0.10000002384185791,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      }
+    },
+    {
+      "quality": "low",
+      "time": 30,
+      "beforeGpuMs": {
+        "median": 9.640125,
+        "p95": 26.071124,
+        "samples": 35
+      },
+      "afterGpuMs": {
+        "median": 11.241625,
+        "p95": 24.230875,
+        "samples": 35
+      },
+      "beforeFencedMs": {
+        "median": 0.19999998807907104,
+        "p95": 0.40000003576278687,
+        "samples": 35
+      },
+      "afterFencedMs": {
+        "median": 0.19999998807907104,
+        "p95": 0.30000001192092896,
+        "samples": 35
+      }
+    }
+  ]
+}

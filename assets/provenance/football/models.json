@@ -1,0 +1,18 @@
+{
+  "source": "https://opengameart.org/content/soccer-field",
+  "author": "tiko479",
+  "license": "CC0-1.0",
+  "sourceSha256": "8208231ecb5c47d60df1676570bd53e404f7584716bb0eb41e1d471ffe16a0f0",
+  "models": [
+    {
+      "file": "pitch.glb",
+      "source": "Soccer_Field",
+      "sha256": "80aac3bee1f627908ada6d982781f9baa3942f658d1cff9aa9ff7eba165709b1"
+    },
+    {
+      "file": "goal.glb",
+      "source": "Soccer_Goal001",
+      "sha256": "3cf7f817f281ccbb11cf78f805ed0d2abea6257a73a5367cff155e3576453068"
+    }
+  ]
+}

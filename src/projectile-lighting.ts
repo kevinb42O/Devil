@@ -1,4 +1,4 @@
-import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex} from './projectile-presentation';
+import {sampleProjectile,ALL_PROJECTILE_COLORS,projectileVisualIndex} from './projectile-presentation';
 import {PROJECTILE_HAND_CLEARANCE} from './weapon-tuning';
 import * as THREE from 'three';
 import {type World,type Projectile,type Vec} from './simulation';
@@ -12,6 +12,7 @@ export class ProjectileLighting {
  private sample={x:0,y:0,z:0};
  private centers!:THREE.InstancedBufferAttribute;
  private colors!:THREE.InstancedBufferAttribute;
+ private profiles!:THREE.InstancedBufferAttribute;
  private pixels=new Uint8Array(FIELD_SIZE*FIELD_SIZE*4);
  private field=new THREE.DataTexture(this.pixels,FIELD_SIZE,FIELD_SIZE);
  private active=false;
@@ -31,20 +32,20 @@ export class ProjectileLighting {
   geometry.instanceCount=0;
   const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false,
    uniforms:{viewportHeight:{value:720}},
-   vertexShader:`attribute vec3 shotCenter;attribute vec3 shotColor;
-    uniform float viewportHeight;varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;
+   vertexShader:`attribute vec3 shotCenter;attribute vec3 shotColor;attribute float shotPellet;
+    uniform float viewportHeight;varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;varying float glowPellet;
     void main(){
-     glowUV=uv;glowColor=shotColor;
+     glowUV=uv;glowColor=shotColor;glowPellet=shotPellet;
      vec4 center=modelViewMatrix*vec4(shotCenter,1.);glowDistance=length(center.xyz);
      // A centered, round light cannot acquire a false flight angle as the
      // camera strafes past it. The physical dagger supplies the silhouette.
      float pixelWorld=2.*max(.05,-center.z)/(projectionMatrix[1][1]*viewportHeight);
-     float width=max(.32,pixelWorld*6.);
+     float width=max(mix(.32,.22,shotPellet),pixelWorld*mix(6.,4.,shotPellet));
      center.xy+=position.xy*width;
      gl_Position=projectionMatrix*center;
     }`,
-   fragmentShader:`varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;
-    void main(){if(glowDistance<${(PROJECTILE_HAND_CLEARANCE+.25).toFixed(2)})discard;vec2 p=(glowUV-.5)*2.;float edge=max(0.,1.-dot(p,p));
+   fragmentShader:`varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;varying float glowPellet;
+    void main(){if(glowDistance<mix(${(PROJECTILE_HAND_CLEARANCE+.25).toFixed(2)},.8,glowPellet))discard;vec2 p=(glowUV-.5)*2.;float edge=max(0.,1.-dot(p,p));
      float halo=edge*edge*.16;
      float core=pow(max(0.,1.-length(p)*4.),2.);
      float brightness=max(glowColor.r,max(glowColor.g,glowColor.b));
@@ -56,7 +57,8 @@ export class ProjectileLighting {
   const geometry=this.glow.geometry;
   this.centers=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity*3),3).setUsage(THREE.DynamicDrawUsage);
   this.colors=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity*3),3).setUsage(THREE.DynamicDrawUsage);
-  geometry.setAttribute('shotCenter',this.centers);geometry.setAttribute('shotColor',this.colors);
+  this.profiles=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity),1).setUsage(THREE.DynamicDrawUsage);
+  geometry.setAttribute('shotPellet',this.profiles);geometry.setAttribute('shotCenter',this.centers);geometry.setAttribute('shotColor',this.colors);
  }
  update(world:World|null,menu:boolean,alpha:number,height:number,projectileView?:(p:Projectile,position:Vec)=>Vec){
   const shots=world&&!menu?world.projectiles:[],count=shots.length;
@@ -73,7 +75,7 @@ export class ProjectileLighting {
   for(let i=0;i<count;i++){
    const p=shots[i],position=sampleProjectile(p,alpha,this.sample);
    const {x,y,z}=position;
-   const color=PROJECTILE_COLORS[projectileStyleIndex(p.level??world!.level,p.homing)];
+   const color=ALL_PROJECTILE_COLORS[projectileVisualIndex(p,world!.level)];this.profiles.setX(i,p.kind==='shotgun'?1:0);
    if(projectileView)projectileView(p,position);
    this.centers.setXYZ(i,position.x,position.y,position.z);this.colors.setXYZ(i,color[0],color[1],color[2]);
    // Compact splats into a world-space field. Maximum blending prevents dense
@@ -85,7 +87,7 @@ export class ProjectileLighting {
     for(let channel=0;channel<3;channel++)this.pixels[offset+channel]=Math.max(this.pixels[offset+channel],color[channel]*falloff);
    }
   }
-  for(const attribute of [this.centers,this.colors]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,count*3);attribute.needsUpdate=true;}
+  for(const attribute of [this.centers,this.colors,this.profiles]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,count*attribute.itemSize);attribute.needsUpdate=true;}
   this.field.needsUpdate=true;
  }
  clear(){this.glow.visible=false;this.glow.geometry.instanceCount=0;this.pixels.fill(0);this.field.needsUpdate=true;this.active=false;}

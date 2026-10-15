@@ -1,8 +1,11 @@
+export const COSMIC_INTRO_DURATION=30;
+export const environmentTime=(time:number)=>Math.max(0,(Number.isFinite(time)?time:0)-COSMIC_INTRO_DURATION);
+
 export type SkyMotion='full'|'reduced';
 type RGB=readonly [number,number,number];
 type Chapter={time:number;name:string;zenith:RGB;haze:RGB;cloud:RGB;coverage:number};
 
-/** Encounter times, independent of frame rate, player life, and renderer age. */
+/** Original environment offsets; presentation adds the intro without moving encounters. */
 export const DESCENT_CHAPTERS:readonly Chapter[]=Object.freeze([
   {time:0,name:'The Last Sky',zenith:[.018,.023,.032],haze:[.012,.016,.022],cloud:[.045,.048,.052],coverage:.33},
   {time:39,name:'The Cloud Grave',zenith:[.025,.05,.08],haze:[.018,.025,.035],cloud:[.075,.085,.105],coverage:.33},
@@ -12,20 +15,20 @@ export const DESCENT_CHAPTERS:readonly Chapter[]=Object.freeze([
   {time:442,name:'The Unlit Depth',zenith:[.009,.004,.017],haze:[.004,.002,.008],cloud:[.015,.008,.026],coverage:.49},
 ]);
 
-export type DescentState={time:number;chapter:number;blend:number;zenith:number[];haze:number[];cloud:number[];coverage:number;daylight:number;opening:number;furnace:number;cathedral:number;crown:number;travel:number;furnaceHeight:number;cathedralRise:number};
+export type DescentState={time:number;environmentTime:number;cosmic:number;cosmicTravel:number;chapter:number;blend:number;zenith:number[];haze:number[];cloud:number[];coverage:number;daylight:number;opening:number;furnace:number;cathedral:number;crown:number;travel:number;furnaceHeight:number;cathedralRise:number};
 export function createDescentState():DescentState {
-  return {time:0,chapter:0,blend:0,zenith:[0,0,0],haze:[0,0,0],cloud:[0,0,0],coverage:0,daylight:0,opening:0,furnace:0,cathedral:0,crown:0,travel:0,furnaceHeight:0,cathedralRise:0};
+  return {time:0,environmentTime:0,cosmic:0,cosmicTravel:0,chapter:0,blend:0,zenith:[0,0,0],haze:[0,0,0],cloud:[0,0,0],coverage:0,daylight:0,opening:0,furnace:0,cathedral:0,crown:0,travel:0,furnaceHeight:0,cathedralRise:0};
 }
 const ease=(value:number)=>{const x=Math.max(0,Math.min(1,value));return x*x*(3-2*x);};
 
 /** Reconstruct at arbitrary replay/practice timestamps; optional output avoids frame allocations. */
 export function descentAt(time:number,out=createDescentState()):DescentState {
-  const t=Number.isFinite(time)?Math.max(0,time):0;
+  const clock=Number.isFinite(time)?Math.max(0,time):0,t=environmentTime(clock);
   let chapter=0;
   for(let i=1;i<DESCENT_CHAPTERS.length;i++)if(t>=DESCENT_CHAPTERS[i].time)chapter=i;
   const current=DESCENT_CHAPTERS[chapter],next=DESCENT_CHAPTERS[Math.min(chapter+1,DESCENT_CHAPTERS.length-1)];
   const blend=current===next?0:ease((t-next.time+18)/18);
-  out.time=t;out.chapter=chapter;out.blend=blend;
+  out.time=clock;out.environmentTime=t;out.cosmic=1-ease((clock-21)/9);out.cosmicTravel=ease(clock/30);out.chapter=chapter;out.blend=blend;
   for(let i=0;i<3;i++){
     out.zenith[i]=current.zenith[i]+(next.zenith[i]-current.zenith[i])*blend;
     out.haze[i]=current.haze[i]+(next.haze[i]-current.haze[i])*blend;

@@ -4,12 +4,16 @@ Open **Friends · up to 6 players**. Everyone loads the same public game URL.
 
 1. Enter your player name.
 2. Click **Create lobby**, or click **Join** on a visible lobby in **Open lobbies**.
-3. Each player clicks **I'm ready**. Player cards show everyone's readiness.
-4. When every connected player is ready, the host's **Start run** button becomes available.
-5. The host sends all players into the shared stone courtyard. Players can see and move around with their teammates; survival and weapons remain inactive.
-6. Any player walks or jumps into the seal. The host confirms the crossing, then starts the shared three-second countdown and moves everyone into the arena.
+3. Creating or joining places you directly in the shared courtyard. Friends can keep joining while you hang out. Copy an invite from **Room & crew** or the courtyard toolbar; invite URLs join that room directly.
+4. The right-hand passage leads to a separate football room with a 36 × 50-meter textured pitch and two nine-meter netted goals. Hold left mouse to charge a left-foot kick and release to strike the original in-game skull; full power takes 1.2 seconds, and right mouse cancels. A ball fully outside the pitch returns to exact midfield, preserving the score. Charge, contact, and kick strength are host-authoritative; the left-leg pose is shared with the crew. You can also high-five. The football skull has dedicated courtyard lighting; both goal scoreboards show the same shared score, and a goal whistle plays once for each confirmed goal. Combat skull rendering and audio remain unchanged. Press F to ready/unready on keyboard; tap Ready up on mobile. Colors and eligible skins can be changed while gathering; changing appearance clears your ready status.
+5. Each player finishes loading and marks ready. When all current players are present and ready, and the pit cover is clear, only the host can hold **Open pit**.
+6. The cover slides open. Every player drops into the shaft; the host starts one synchronized arena epoch only when everyone is below. The existing one-second settling interval and five-second arrival countdown precede survival simulation.
+7. The host can cancel departure. Unreadying or a lost connection before launch also restores dropped players before closing the cover. Empty slots never block a smaller crew.
+8. After the crew falls, the host selects **Return to courtyard**. Ready state, pit, social effects and skull reset; the last descent and current crew's best remain visible. Full results and team replays remain accessible through the existing results/history flow.
 
-There are no room-code fields, copied connection offers, or LAN setup in the game interface. Lobby discovery and connection negotiation use public internet signaling. Gameplay uses WebRTC between the host browser and up to three guest browsers.
+Lobby discovery and connection negotiation use public internet signaling. Gameplay uses WebRTC between the host browser and up to five guest browsers. Gathering rooms remain joinable; opening the pit freezes admissions until the next courtyard. Host migration and joining an arena run already in progress are not supported.
+
+The courtyard uses the existing authored skull mesh/texture and floor tiles. Its additional CC0 props are downloaded Kenney models, stored locally with embedded palette textures; see `public/models/courtyard/LICENSE.md` and `assets/provenance/courtyard/`. `python3 tools/import-courtyard-assets.py` reproduces those prop imports. No generated model is used.
 
 ## Shared gems
 
@@ -31,7 +35,7 @@ In the courtyard, Escape opens the local pause menu without stopping other playe
 
 `npm run build` produces the static game in `dist/`. `npm run serve:online` serves only that directory on localhost port 5180, with compression for scripts, meshes, styles and JSON. Publish this service through an HTTPS tunnel for a temporary playtest, or upload `dist/` to an HTTPS static host for a persistent URL. Everyone opens the resulting **internet URL**, then uses the lobby browser.
 
-Lobby discovery uses public MQTT brokers with failover, separate room and lobby namespaces, heartbeat announcements and stale-room expiry. Ready state and start authority travel over reliable WebRTC channels; the host validates every readiness transition and will not start a public lobby with unready players. Only the host can launch the courtyard after everyone readies up. Once inside, any player can trigger the arena run by reaching the seal; the host validates that movement. Peer IDs are validated before signaling creates offers or roster entries, and again when parsing connection codes or routing inputs. Reserved host IDs and malformed IDs cannot enter the lobby or overwrite host controls. Ready/unready controls carry monotonic revisions; local intent updates immediately and stale roster snapshots cannot undo a newer click.
+Lobby discovery uses public MQTT brokers with failover, separate room and lobby namespaces, heartbeat announcements and stale-room expiry. Ready state and start authority travel over reliable WebRTC channels; the host validates every readiness transition and will not start a public lobby with unready players. Only the host can open the central pit after everyone has loaded and readied up. The arena begins once every crew member has dropped into the open pit; the host validates each descent. Peer IDs are validated before signaling creates offers or roster entries, and again when parsing connection codes or routing inputs. Reserved host IDs and malformed IDs cannot enter the lobby or overwrite host controls. Ready/unready controls carry monotonic revisions; local intent updates immediately and stale roster snapshots cannot undo a newer click.
 
 Room signaling forwards ICE candidates discovered after the initial seven-second SDP gathering window, queues candidates until the remote description is available, and replays them on handshake retries. Duplicate broker deliveries apply each candidate once. A guest waiting for the first host roster sees Connecting, with Ready enabled once their roster entry arrives.
 
@@ -42,7 +46,11 @@ Direct internet connections use Google and Cloudflare STUN. Deployments that nee
 - `npm run test:lobby-joining`: isolated-broker discovery, lost offer/answer recovery, delayed and dropped ICE candidates, candidate deduplication, and a phone-sized touch Ready flow (requires a running development build).
 
 - `npm test`: solo regression tests plus crew movement/deaths, shared gem credit, independent homing reserves and snapshot application.
-- `npm run test:multiplayer`: four-player public lobby discovery, one-click joining, ready/unready gate, shared start, guest movement/firing and disconnect (requires a running development build and internet access).
+- `npm run test:multiplayer`: six real WebRTC clients exercising the courtyard, host pit hold, shared descent, arena fire, wipe, return and disconnect; discovery is stubbed.
+- `npm run test:courtyard`: courtyard state/physics/prediction, charged football kicks and boundary resets, plus two-client UI flow and mobile/controller checks.
+- `npm run test:football-feedback`: football illumination, unchanged combat skull pixels, synchronized score displays, goal audio and left-leg pose checks.
+- `npm run test:courtyard:six`: ten six-client courtyard/run/return cycles.
+- `GAME_URL=http://127.0.0.1:4173 node tests/courtyard-invite-browser.mjs`: production UI, actual public signaling, copied invite URLs, automatic joining, host pit controls and departure. Start the production preview first. All browser checks require a running development server; set `GAME_URL` to use another address.
 - `npm run test:multiplayer-respawn`: respawn rules and a real WebRTC 15-second guest countdown, camera return, held-input cleanup, fresh movement/firing, host revival, repeated death, wipe and restart (requires a running development build; public discovery is stubbed).
 - `npm run test:multiplayer-spectator`: spectator flow and revival with AZERTY, controller and mobile controls.
 - `npm run test:multiplayer-transport`: real WebRTC input, large fragmented snapshots, epoch changes and a complete guest tap received before simulation.
@@ -54,10 +62,10 @@ Direct internet connections use Google and Cloudflare STUN. Deployments that nee
 - `npm run test:multiplayer-responsiveness`: actual game keyboard input and rendered camera response on the next frame with 1,000 ms added RTT, plus focus-loss release recovery (requires internet lobby discovery).
 - `npm run test:multiplayer-presentation`: teammate labels, remote muzzle particles without local recoil, local recoil, death visibility and cleanup.
 
-Current scope: online cooperative survival for four players, public lobby browser, readiness, synchronized countdown, individual movement/weapons/deaths and shared gem rewards. No host migration, mid-run admission or multiplayer replay recording. Multiplayer scores remain separate from solo records.
+Current scope includes up to six players, a joinable social courtyard, readiness and host-controlled pit, synchronized arena arrival, individual movement/weapons/deaths, shared gem rewards and recorded team replays. No host migration or mid-run admission. Multiplayer scores remain separate from solo records.
 
 The deterministic four-player level-IV firing benchmark in `tests/network.test.ts` measures approximately 80 KB/s of state per guest, including repair chunks, versus approximately 2.5 MB/s with escaped full-world JSON over the same two-second run. This is an empty-arena state benchmark, not a guarantee for dense endgame encounters; homing, enemies, reliable effects, input retransmission and transport headers add traffic. The network tests also cover landing/weapon-state reconciliation, independent shot randomness, lost baselines, removals, corrupted packets and fragment expiry. All players must reload the updated build before playing together.
 
 The 1,000-enemy pose benchmark reduces steady-state enemy updates from approximately 78 KB to 5 KB per snapshot before repair chunks; health changes and removals are verified against decoded state. Browser interruptions release held guest controls while the match continues. Late releases are ignored after newer commands have been processed, critical releases remain deliverable under control-channel pressure, and run restarts discard old queued effects and baselines.
 
-The optimized pose-only 1,000-enemy benchmark includes approximately 126 KB/s at 20 Hz with repair chunks, down from approximately 348 KB/s before the packed residual format. These are controlled benchmarks; changing enemy metadata and projectile corrections add traffic. Network protocol version 8 requires every player to reload the same build.
+The optimized pose-only 1,000-enemy benchmark includes approximately 126 KB/s at 20 Hz with repair chunks, down from approximately 348 KB/s before the packed residual format. These are controlled benchmarks; changing enemy metadata and projectile corrections add traffic. Network protocol version 13 requires every player to reload the same build.

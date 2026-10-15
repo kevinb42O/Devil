@@ -30,3 +30,5 @@ test('server-confirmed best prevents duplicate or stale publication',async()=>{
 test('nicknames retain spaces and reject blank or control-character names',()=>{
  assert.equal(cleanNickname('  Player One  '),'Player One');for(const name of ['', '  ', 'a'.repeat(25), 'Player\nOne'])assert.throws(()=>cleanNickname(name));
 });
+
+test('expanded-rules pending score survives reload with its rules identity',async()=>{let saved:PendingScore|null=null;const q=new ScoreQueue(job=>saved=job,async()=>{throw Error('offline');});q.enqueue({...candidate(4000),rules:7},'Player');await q.flush();const sent:number[]=[];const restored=new ScoreQueue(job=>saved=job,async job=>{sent.push(job.score.rules);return confirmation(job.score.timeMs);},saved);await restored.flush();assert.deepEqual(sent,[7]);assert.equal(saved,null);});

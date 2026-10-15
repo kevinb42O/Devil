@@ -8,11 +8,13 @@ export class GemLighting {
  private count={value:0};
  private playerPosition={value:new THREE.Vector3()};
  private playerStrength={value:0};
- daylight=0;
+ daylight=0;cosmic=0;nebulaTime=0;
+ private space={value:0};private nebulaClock={value:0};
  private dummy=new THREE.Object3D();
  constructor(scene:THREE.Scene,floor:THREE.MeshBasicMaterial){
   floor.onBeforeCompile=shader=>{
    shader.uniforms.gemLightPositions=this.positions;shader.uniforms.gemLightCount=this.count;
+   shader.uniforms.cosmicFloor=this.space;shader.uniforms.nebulaFloorTime=this.nebulaClock;
    shader.uniforms.playerLightPosition=this.playerPosition;shader.uniforms.playerLightStrength=this.playerStrength;
    shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 gemFloorPosition;').replace('#include <project_vertex>',`#include <project_vertex>
     vec4 gemFloorWorld=vec4(transformed,1.);
@@ -22,12 +24,15 @@ export class GemLighting {
     gemFloorPosition=(modelMatrix*gemFloorWorld).xyz;`);
    shader.fragmentShader=shader.fragmentShader.replace('#include <common>',`#include <common>
     varying vec3 gemFloorPosition;uniform vec3 gemLightPositions[8];uniform int gemLightCount;
-    uniform vec3 playerLightPosition;uniform float playerLightStrength;`).replace('#include <opaque_fragment>',`
+    uniform vec3 playerLightPosition;uniform float playerLightStrength,cosmicFloor,nebulaFloorTime;`).replace('#include <opaque_fragment>',`
     float playerDistance=distance(gemFloorPosition,playerLightPosition);
     float playerFalloff=pow(max(0.,1.-playerDistance/11.),2.);
     // Preserve the stone texture while lifting nearby tiles with warm light.
-    outgoingLight*=1.+vec3(1.,.64,.34)*playerFalloff*playerLightStrength*2.4;
-    outgoingLight+=vec3(.065,.032,.012)*playerFalloff*playerLightStrength;
+    outgoingLight*=1.+mix(vec3(1.,.64,.34),vec3(.22,.42,.95),cosmicFloor)*playerFalloff*playerLightStrength*2.4;
+    outgoingLight+=mix(vec3(.065,.032,.012),vec3(.006,.016,.043),cosmicFloor)*playerFalloff*playerLightStrength;
+    float nebulaPool=.5+.5*sin(gemFloorPosition.x*.075+gemFloorPosition.z*.043+nebulaFloorTime*.035);
+    vec3 nebulaTint=mix(vec3(.12,.25,.65),vec3(.5,.16,.42),nebulaPool);
+    outgoingLight*=1.+nebulaTint*cosmicFloor*.8;
     for(int i=0;i<8;i++){
      if(i>=gemLightCount)break;
      float distanceToGem=distance(gemFloorPosition,gemLightPositions[i]);
@@ -36,7 +41,7 @@ export class GemLighting {
     }
     #include <opaque_fragment>`);
   };
-  floor.customProgramCacheKey=()=> 'gem-and-player-lit-floor-v2';
+  floor.customProgramCacheKey=()=> 'gem-and-player-lit-floor-v3';
   const material=new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false,
    vertexShader:'varying vec2 glowUV;void main(){glowUV=uv;gl_Position=projectionMatrix*modelViewMatrix*instanceMatrix*vec4(position,1.);}',
    fragmentShader:'varying vec2 glowUV;void main(){float r=length(glowUV-.5)*2.;float a=pow(max(0.,1.-r),3.)*.48;gl_FragColor=vec4(1.,.12,.02,a);}'
@@ -46,6 +51,7 @@ export class GemLighting {
  /** Reuse the player's floor illumination around a fixed world object. */
  setPlayerLight(position:THREE.Vector3,enabled=true){this.playerPosition.value.copy(position);this.playerStrength.value=enabled?1:0;}
  update(world:World|null,camera:THREE.Camera,menu:boolean){
+  this.space.value=menu?0:this.cosmic;this.nebulaClock.value=this.nebulaTime;
   this.playerPosition.value.copy(camera.position);this.playerPosition.value.y-=.35;
   this.playerStrength.value=!menu&&world?1-this.daylight*.85:0;
   const gems=!menu&&world?world.gems:[];this.halo.count=Math.min(1200,gems.length);

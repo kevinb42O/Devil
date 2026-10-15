@@ -3,25 +3,25 @@
     {
       "quality": "low",
       "dark": [
-        58,
-        58,
-        60,
+        17,
+        24,
+        48,
         255
       ],
       "lit": [
-        68,
-        92,
-        63,
+        24,
+        51,
+        51,
         255
       ],
       "floorLit": [
-        68,
-        92,
-        63,
+        24,
+        51,
+        51,
         255
       ],
       "extraGlowDraws": 1,
-      "glowPixelGain": 51122,
+      "glowPixelGain": 107225,
       "count": 12,
       "drawCalls": 1,
       "capacity": 256,
@@ -30,25 +30,25 @@
     {
       "quality": "high",
       "dark": [
-        58,
-        59,
-        60,
+        17,
+        24,
+        48,
         255
       ],
       "lit": [
-        68,
-        93,
-        63,
+        24,
+        51,
+        51,
         255
       ],
       "floorLit": [
-        68,
-        93,
-        63,
+        24,
+        51,
+        51,
         255
       ],
       "extraGlowDraws": 1,
-      "glowPixelGain": 51073,
+      "glowPixelGain": 107229,
       "count": 12,
       "drawCalls": 1,
       "capacity": 256,
@@ -73,8 +73,8 @@
   "menuUploadFree": true,
   "resumedCount": 6000,
   "emptyUploadFree": true,
-  "updateMedianMs": 1.2000000178813934,
-  "updateP95Ms": 3.800000011920929,
+  "updateMedianMs": 3.099999964237213,
+  "updateP95Ms": 7.099999964237213,
   "strafe": {
     "checks": 3,
     "maxCenterError": 0,

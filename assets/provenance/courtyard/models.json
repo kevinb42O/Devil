@@ -1,0 +1,134 @@
+[
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/graveyard-kit",
+    "download": "https://kenney.nl/media/pages/assets/graveyard-kit/ba8d4b4517-1760691807/kenney_graveyard-kit_5.0.zip",
+    "original": "Models/GLB format/fire-basket.glb",
+    "file": "fire-basket.glb",
+    "source_sha256": "f72e5a3f69711b30055219961d16824fe6d1ac5a8240d456d7f1a1a2cb7d5433",
+    "sha256": "8d4e6a92a04cd29d479fec4ac6cb6e3cda0de41302fc0b5cd784fe6e791d44eb",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/graveyard-kit",
+    "download": "https://kenney.nl/media/pages/assets/graveyard-kit/ba8d4b4517-1760691807/kenney_graveyard-kit_5.0.zip",
+    "original": "Models/GLB format/altar-stone.glb",
+    "file": "altar-stone.glb",
+    "source_sha256": "6cdcdc19c2d979fc0fafa073bc31db9a45ddc76390bfef366f23e92768d7dde9",
+    "sha256": "19e064f228effadcdd5adad0fca8c7af631754772c23c529d7aac18912814678",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/graveyard-kit",
+    "download": "https://kenney.nl/media/pages/assets/graveyard-kit/ba8d4b4517-1760691807/kenney_graveyard-kit_5.0.zip",
+    "original": "Models/GLB format/candle-multiple.glb",
+    "file": "candle-multiple.glb",
+    "source_sha256": "e747e04390e8f431e0d80b17696ef01cfa935dd8efff44f7008de6408236b547",
+    "sha256": "7a58c0889d84867d3da726916677cbdbc7a2645aba21364dadde8a103d244d2f",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/graveyard-kit",
+    "download": "https://kenney.nl/media/pages/assets/graveyard-kit/ba8d4b4517-1760691807/kenney_graveyard-kit_5.0.zip",
+    "original": "Models/GLB format/pillar-small.glb",
+    "file": "pillar-small.glb",
+    "source_sha256": "f662421741bf09c8fc41b46f9146901208f28280cc83bc6c0e7563e774cad841",
+    "sha256": "d5567448e68f31348616f4cbb92e5a1d9c7550d9d5e8d4c57a05fb3740fb0915",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/graveyard-kit",
+    "download": "https://kenney.nl/media/pages/assets/graveyard-kit/ba8d4b4517-1760691807/kenney_graveyard-kit_5.0.zip",
+    "original": "Models/GLB format/stone-wall.glb",
+    "file": "stone-wall.glb",
+    "source_sha256": "f6276d585e0ae3603d005e5a80d8d2ac6af3da5f357df520d21de0df62837f59",
+    "sha256": "e4f792acb74aeee5dd96bd9b199ed1604f456619272a0f7cbf1d5897d92fda72",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/graveyard-kit",
+    "download": "https://kenney.nl/media/pages/assets/graveyard-kit/ba8d4b4517-1760691807/kenney_graveyard-kit_5.0.zip",
+    "original": "Models/GLB format/stone-wall-column.glb",
+    "file": "stone-wall-column.glb",
+    "source_sha256": "7c979fd9868e28c0d762d11a8deccc33075afe8a47cbf5adf833396383172a5b",
+    "sha256": "c8327e4bd34d207a216dd694646e13366de1bcb2c17422be28f8aff1feb147ae",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/graveyard-kit",
+    "download": "https://kenney.nl/media/pages/assets/graveyard-kit/ba8d4b4517-1760691807/kenney_graveyard-kit_5.0.zip",
+    "original": "Models/GLB format/detail-bowl.glb",
+    "file": "detail-bowl.glb",
+    "source_sha256": "84ef12ff1eac613fd96fb0be19f905caa66f019a642fa527b92429f0459fc710",
+    "sha256": "e72e4484ebb716849ca814d03d2f5039a4c33b66580c8cc8ec2cc4cc972639bc",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/modular-dungeon-kit",
+    "download": "https://kenney.nl/media/pages/assets/modular-dungeon-kit/7bed87605b-1771926065/kenney_modular-dungeon-kit_1.0.zip",
+    "original": "Models/GLB format/gate-metal-bars.glb",
+    "file": "gate-metal-bars.glb",
+    "source_sha256": "e3a2228906e1601c6d4fbb53d615f03541094177a624168e77b1ab0220e081f4",
+    "sha256": "7b697ac31f4fcdb9f2890457f6c5cd1d5cd9edab47aa30465741a7c2bc171767",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/modular-dungeon-kit",
+    "download": "https://kenney.nl/media/pages/assets/modular-dungeon-kit/7bed87605b-1771926065/kenney_modular-dungeon-kit_1.0.zip",
+    "original": "Models/GLB format/gate.glb",
+    "file": "gate.glb",
+    "source_sha256": "491c9e9980751cf4fee75e3cfc4390075402c0070962ff1d33fe98138ea289c9",
+    "sha256": "21b8bc29fd2e089a1ee45a53143320ed0435a94c907bc547304d77a2d3e56464",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/modular-dungeon-kit",
+    "download": "https://kenney.nl/media/pages/assets/modular-dungeon-kit/7bed87605b-1771926065/kenney_modular-dungeon-kit_1.0.zip",
+    "original": "Models/GLB format/template-floor.glb",
+    "file": "template-floor.glb",
+    "source_sha256": "2499e536e31a15ed29da17f1c8ae500c274fb169c993edb39f4072e486dadc41",
+    "sha256": "24fcd786faa28b15386024a78591387b158a11f5bb744c7e26df07db20578af6",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/modular-dungeon-kit",
+    "download": "https://kenney.nl/media/pages/assets/modular-dungeon-kit/7bed87605b-1771926065/kenney_modular-dungeon-kit_1.0.zip",
+    "original": "Models/GLB format/template-wall.glb",
+    "file": "template-wall.glb",
+    "source_sha256": "58a34df2429968d82b45f0666ed1371cdcaa1e42468c1d4697c04bff47e9fbe5",
+    "sha256": "e5784d7d6b26023086c64821a518607ab693d4d2f0ddd74cded70a05c3515491",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  },
+  {
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "page": "https://kenney.nl/assets/modular-dungeon-kit",
+    "download": "https://kenney.nl/media/pages/assets/modular-dungeon-kit/7bed87605b-1771926065/kenney_modular-dungeon-kit_1.0.zip",
+    "original": "Models/GLB format/stairs.glb",
+    "file": "stairs.glb",
+    "source_sha256": "1110a2578cc74e4954901cf688b184a191d34bd8eebcb15215a0efc5e9ca50c1",
+    "sha256": "abfd29096472438e3fb54bbf74b091e2c912e8b30bd04988383d4ba45a5befbd",
+    "transforms": "Embed supplied palette PNG; runtime placement, scale and rotation. Mesh geometry unchanged."
+  }
+]

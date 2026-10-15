@@ -19,22 +19,22 @@ try{
   await page.click('#settings-open');
   assert.equal(await page.locator('#sky-motion').inputValue(),'reduced','honor OS motion preference on first use');
   await page.selectOption('#sky-motion','full');await page.click('#settings-close');
-  await page.locator('.practice summary').click();await page.locator('#practice-time').fill('349');await page.click('#practice-start');
+  await page.locator('.practice summary').click();await page.locator('#practice-time').fill('379');await page.click('#practice-start');
   await page.waitForFunction(()=>window.abyss.entrance);await page.keyboard.down('KeyW');await page.waitForFunction(()=>!window.abyss.entrance);await page.keyboard.up('KeyW');
-  await page.waitForFunction(()=>window.abyss.sky.time>=349&&window.abyss.sky.time<350);
+  await page.waitForFunction(()=>window.abyss.sky.time>=379&&window.abyss.sky.time<380);
   await page.keyboard.press('Escape');await page.waitForFunction(()=>window.abyss.mode==='paused');
   await page.waitForTimeout(80);const paused=await page.evaluate(()=>window.abyss.sky);
   await page.waitForTimeout(250);assert.deepEqual(await page.evaluate(()=>window.abyss.sky),paused);
   await page.click('#pause-settings');await page.selectOption('#sky-motion','reduced');await page.click('#settings-close');
   await page.waitForFunction(()=>window.abyss.sky.motion==='reduced');assert.equal(await page.evaluate(()=>window.abyss.sky.travel),0);
-  await page.click('#resume');await page.waitForFunction(()=>window.abyss.sky.time>=350);
+  await page.click('#resume');await page.waitForFunction(()=>window.abyss.sky.time>=380);
   const live=await page.evaluate(()=>({time:window.abyss.time,sky:window.abyss.sky}));
   assert.equal(live.sky.chapter,'The Cathedral Below');assert.ok(Math.abs(live.time-live.sky.time)<.1);
   // Exercise the real death-replay adapter with a deterministic fatal event.
   await page.evaluate(async()=>{
     const moduleUrl=performance.getEntriesByType('resource').filter(e=>new URL(e.name).pathname==='/src/simulation.ts').at(-1)?.name??'/src/simulation.ts';
     const {World}=await import(moduleUrl),step=World.prototype.step;
-    World.prototype.step=function(...args){step.apply(this,args);if(this.time>=351.3&&this.state!=='dead')this.die('FALLEN');};
+    World.prototype.step=function(...args){step.apply(this,args);if(this.time>=381.3&&this.state!=='dead')this.die('FALLEN');};
   });
   await page.waitForFunction(()=>window.abyss.deathAnalysis?.active);
   await page.click('#analysis-pause');await page.waitForTimeout(80);
@@ -45,9 +45,9 @@ try{
   await page.keyboard.press('Escape');await page.click('#watch-last');await page.waitForFunction(()=>window.abyss.mode==='replay');
   await page.click('#replay-pause');
   await page.locator('#replay-seek').evaluate(el=>{el.value=el.max;el.dispatchEvent(new Event('input',{bubbles:true}));});
-  await page.waitForFunction(()=>window.abyss.sky.time>=351);const end=await page.evaluate(()=>window.abyss.sky);
+  await page.waitForFunction(()=>window.abyss.sky.time>=381);const end=await page.evaluate(()=>window.abyss.sky);
   await page.locator('#replay-seek').evaluate(el=>{el.value='0';el.dispatchEvent(new Event('input',{bubbles:true}));});
-  await page.waitForFunction(()=>window.abyss.sky.time===349);const rewind=await page.evaluate(()=>window.abyss.sky);
+  await page.waitForFunction(()=>window.abyss.sky.time===379);const rewind=await page.evaluate(()=>window.abyss.sky);
   assert.equal(rewind.chapter,'The Furnace');assert.equal(end.chapter,'The Cathedral Below');
   // The main menu uses its own relic scene; gameplay sky diagnostics stay at the last replay frame.
   await page.click('#replay-exit');await page.waitForFunction(()=>window.abyss.mode==='menu');

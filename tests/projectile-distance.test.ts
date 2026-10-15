@@ -17,8 +17,8 @@ function planeHit(s:ShotLaunch,p:ReturnType<typeof daggerLaunch>,range:number){
 }
 
 test('beam radii and outer spread stay unchanged while spread rotates with the aim',()=>{
- assert.deepEqual(STREAM_RADIUS,[.008,.01,.012,.015]);
- assert.deepEqual(WEAPON_PRESENTATION.map(p=>p.streamSpread),[.045,.07,.11,.155]);
+ assert.deepEqual(STREAM_RADIUS.slice(0,4),[.008,.01,.012,.015]);
+ assert.deepEqual(WEAPON_PRESENTATION.slice(0,4).map(p=>p.streamSpread),[.045,.07,.11,.155]);
  for(const burst of [false,true])for(const focused of [false,true]){
   for(let i=0;i<250;i++){
    const points=[];

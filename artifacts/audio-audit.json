@@ -1,6 +1,6 @@
 {
   "totalDecoded": 275,
-  "used": 152,
+  "used": 166,
   "enemies": [
     {
       "kind": "skull",
@@ -13,7 +13,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killskull4"
+        "killskull5"
       ]
     },
     {
@@ -69,7 +69,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killskullblack1"
+        "killskullblack4"
       ]
     },
     {
@@ -230,13 +230,13 @@
       ],
       "cues": [
         "daggerhit1",
-        "killspiderling2"
+        "killspiderling4"
       ]
     },
     {
       "kind": "centipede",
       "loops": [
-        "chattercentipede",
+        "subchattercentipede",
         "polarity1e",
         "polarity2w",
         "polarity3n",
@@ -339,79 +339,92 @@
   "levels": [
     {
       "level": 1,
-      "loaded": 152,
+      "loaded": 166,
       "failed": [],
       "oneShots": 1,
+      "oneShotNames": [
+        "shot1"
+      ],
       "loops": []
     },
     {
       "level": 2,
-      "loaded": 152,
+      "loaded": 166,
       "failed": [],
       "oneShots": 1,
+      "oneShotNames": [
+        "shot2"
+      ],
       "loops": []
     },
     {
       "level": 3,
-      "loaded": 152,
+      "loaded": 166,
       "failed": [],
       "oneShots": 1,
+      "oneShotNames": [
+        "shot3alt2"
+      ],
       "loops": []
     },
     {
       "level": 4,
-      "loaded": 152,
+      "loaded": 166,
       "failed": [],
       "oneShots": 1,
+      "oneShotNames": [
+        "shot4alt2"
+      ],
       "loops": []
     }
   ],
   "rendered": [
     {
       "name": "rapid1",
-      "rms": 0.010938704725253372,
+      "rms": 0.005469352362626686,
       "tail": 0
     },
     {
       "name": "rapid2",
-      "rms": 0.01149678027022732,
+      "rms": 0.00574839013511366,
       "tail": 0
     },
     {
       "name": "rapid3",
-      "rms": 0.020058248808847667,
+      "rms": 0.010029124404423833,
       "tail": 0
     },
     {
       "name": "rapid4",
-      "rms": 0.01833284998450846,
+      "rms": 0.00916642499225423,
       "tail": 0
     },
     {
       "name": "shot1",
-      "rms": 0.03565645197139228,
-      "tail": 0.03223828971385956
+      "rms": 0.01782822598569614,
+      "tail": 0.01611914485692978
     },
     {
       "name": "shot2",
-      "rms": 0.036647905586434486,
-      "tail": 0.018938720226287842
+      "rms": 0.018323952793217243,
+      "tail": 0.009469360113143921
     },
     {
       "name": "shot3alt1",
-      "rms": 0.038856993713854523,
-      "tail": 0.039036959409713745
+      "rms": 0.019428496856927262,
+      "tail": 0.019518479704856873
     },
     {
       "name": "shot4alt1",
-      "rms": 0.037920972199010756,
-      "tail": 0.0496547557413578
+      "rms": 0.018960486099505378,
+      "tail": 0.0248273778706789
     }
   ],
   "final": {
-    "loaded": 152,
+    "loaded": 166,
     "failed": [],
     "oneShots": 0,
+    "oneShotNames": [],
     "loops": []
   }
 }

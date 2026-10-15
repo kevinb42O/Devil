@@ -1,0 +1,242 @@
+{
+  "frames": [
+    {
+      "time": 0,
+      "environmentTime": 0,
+      "cosmic": 1,
+      "chapter": "The Cosmic Expanse",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0,
+      "calls": 69
+    },
+    {
+      "time": 21,
+      "environmentTime": 0,
+      "cosmic": 1,
+      "chapter": "The Cosmic Expanse",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0,
+      "calls": 69
+    },
+    {
+      "time": 25,
+      "environmentTime": 0,
+      "cosmic": 0.5829903978052127,
+      "chapter": "The Cosmic Expanse",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0,
+      "calls": 69
+    },
+    {
+      "time": 30,
+      "environmentTime": 0,
+      "cosmic": 0,
+      "chapter": "The Last Sky",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0,
+      "calls": 69
+    },
+    {
+      "time": 69,
+      "environmentTime": 39,
+      "cosmic": 0,
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.702,
+      "calls": 69
+    },
+    {
+      "time": 144,
+      "environmentTime": 114,
+      "cosmic": 0,
+      "chapter": "The Bruised Veil",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 2.052,
+      "calls": 69
+    },
+    {
+      "time": 259,
+      "environmentTime": 229,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.122,
+      "calls": 69
+    },
+    {
+      "time": 289,
+      "environmentTime": 259,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.662,
+      "calls": 69
+    },
+    {
+      "time": 380,
+      "environmentTime": 350,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.3,
+      "calls": 69
+    },
+    {
+      "time": 472,
+      "environmentTime": 442,
+      "cosmic": 0,
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.9559999999999995,
+      "calls": 69
+    },
+    {
+      "time": 550,
+      "environmentTime": 520,
+      "cosmic": 0,
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.9559999999999995,
+      "calls": 69
+    }
+  ],
+  "first": {
+    "time": 350,
+    "environmentTime": 320,
+    "cosmic": 0,
+    "chapter": "The Furnace",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 5.76
+  },
+  "second": {
+    "time": 350,
+    "environmentTime": 320,
+    "cosmic": 0,
+    "chapter": "The Furnace",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 5.76
+  },
+  "paused": {
+    "time": 350,
+    "environmentTime": 320,
+    "cosmic": 0,
+    "chapter": "The Furnace",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 5.76
+  },
+  "scrub": {
+    "time": 144,
+    "environmentTime": 114,
+    "cosmic": 0,
+    "chapter": "The Bruised Veil",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 2.052
+  },
+  "restart": {
+    "time": 0,
+    "environmentTime": 0,
+    "cosmic": 1,
+    "chapter": "The Cosmic Expanse",
+    "blend": 0,
+    "menu": false,
+    "motion": "full",
+    "octaves": 3,
+    "travel": 0
+  },
+  "reduced": {
+    "time": 259,
+    "environmentTime": 229,
+    "cosmic": 0,
+    "chapter": "The Furnace",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "reducedLater": {
+    "time": 350,
+    "environmentTime": 320,
+    "cosmic": 0,
+    "chapter": "The Furnace",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "final": {
+    "time": 472,
+    "environmentTime": 442,
+    "cosmic": 0,
+    "chapter": "The Unlit Depth",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "menu": {
+    "time": 472,
+    "environmentTime": 442,
+    "cosmic": 0,
+    "chapter": "The Unlit Depth",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "continuity": {
+    "pause": 0,
+    "rewind": 0,
+    "arrival": 0.002529296875
+  },
+  "skyProgram": 71,
+  "finalSkyProgram": 71
+}

@@ -1,0 +1,75 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+const browser=await chromium.launch({headless:true,executablePath:process.env.CHROME_PATH||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--autoplay-policy=no-user-gesture-required']});
+try{
+ const page=await browser.newPage({viewport:{width:1280,height:800}}),errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ const url=process.env.GAME_URL||'http://127.0.0.1:5173';
+ await page.route('**/arrival-test',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><body style="margin:0;background:#080707"><div style="position:fixed;inset:0;background:radial-gradient(ellipse at 50% 75%,#4a3022,transparent 65%)"></div></body>'}));
+ await page.goto(url+'/arrival-test');
+ const result=await page.evaluate(async()=>{
+  await Promise.all([import('/src/crew-arrival.css'),import('/node_modules/@fontsource/pirata-one/latin-400.css'),import('/node_modules/@fontsource/dm-sans/latin-500.css')]);
+  const [{CrewArrival},{Sound}]=await Promise.all([import('/src/crew-arrival.ts'),import('/src/audio.ts')]);
+  const sound=new Sound();await sound.prepareCrewArrival();
+  // Verify the exact downloaded recording plays once, seeks for late guests,
+  // stops at zero, and is not resurrected by a pending decode after cleanup.
+  const scheduled=[],originalStart=AudioBufferSourceNode.prototype.start;
+  AudioBufferSourceNode.prototype.start=function(...args){scheduled.push({delay:args[0]-sound.context.currentTime,offset:args[1]});return originalStart.apply(this,args);};
+  sound.crewArrival(6,6000);await new Promise(resolve=>setTimeout(resolve,30));
+  AudioBufferSourceNode.prototype.start=originalStart;
+  const initial=sound.diagnostics;
+  sound.crewArrival(4,4000);await new Promise(resolve=>setTimeout(resolve,10));
+  const repeated=sound.diagnostics;
+  sound.crewArrival(0);const stopped=sound.diagnostics;
+  sound.clear();
+  const starts=[],start=AudioBufferSourceNode.prototype.start;
+  AudioBufferSourceNode.prototype.start=function(...args){starts.push(args);return start.apply(this,args);};
+  sound.crewArrival(3,2600);await new Promise(resolve=>setTimeout(resolve,30));
+  AudioBufferSourceNode.prototype.start=start;
+  const lateOffset=starts[0]?.[1];sound.clear();
+  sound.crewArrival(5,5000);sound.clear();await new Promise(resolve=>setTimeout(resolve,30));
+  const cancelled=sound.diagnostics;
+  const cues=[],arrival=new CrewArrival((beat,remaining)=>{cues.push(beat);sound.crewArrival(beat,remaining);});
+  arrival.update(1,6000,0,2);arrival.update(1,6000,500,2);const settlingHidden=arrival.element.hidden;
+  arrival.update(1,6000,1000,2);arrival.update(1,6000,1500,2);arrival.update(1,6000,2000,2);arrival.update(1,6000,3000,2);arrival.update(1,6000,4000,2);arrival.update(1,6000,5000,2);
+  // A guest's first live snapshot clears startAt.
+  arrival.update(1,0,6010,2);arrival.update(1,0,6020,2);
+  const audio=sound.diagnostics,release=arrival.element.textContent;
+  arrival.update(1,0,6900,2);const hidden=arrival.element.hidden;
+  arrival.reset();arrival.update(2,0,9000,2);const lateHidden=arrival.element.hidden;
+  arrival.reset();arrival.update(3,12000,9000,2);arrival.update(3,12000,11000,2);arrival.update(3,12100,11010,2);
+  arrival.reset();arrival.update(4,14000,10000,2);arrival.update(4,14000,16000,2);arrival.update(4,0,16020,2);
+  const staleHidden=arrival.element.hidden;
+  sound.clear();arrival.reset();arrival.update(5,20000,17500,2);
+  const mutations=new MutationObserver(()=>{});mutations.observe(arrival.element,{attributes:true,childList:true,characterData:true,subtree:true});
+  for(let i=0;i<120;i++)arrival.update(5,20000,17500+i,2);
+  const steadyMutations=mutations.takeRecords().length;mutations.disconnect();
+  window.preview=arrival;await document.fonts.ready;
+  return {steadyMutations,cues,audio,release,hidden,lateHidden,staleHidden,settlingHidden,scheduled,initial,repeated,stopped,lateOffset,cancelled};
+ });
+ assert.equal(result.steadyMutations,0,"holding a countdown number must not mutate or repaint the overlay every frame");
+ assert.deepEqual(result.cues,[6,5,4,3,2,1,0,3,1,4,3]);
+ assert.ok(result.audio.oneShotNames.includes('spawnplayer'));
+ assert.ok(!result.audio.oneShotNames.includes('daggercollect'));
+ assert.equal(result.initial.oneShotNames.filter(n=>n==='crew-countdown').length,1);
+ assert.equal(result.repeated.oneShotNames.filter(n=>n==='crew-countdown').length,1);
+ assert.ok(!result.stopped.oneShotNames.includes('crew-countdown'));
+ assert.ok(result.stopped.oneShotNames.includes('spawnplayer'));
+ assert.ok(result.lateOffset>=2.4&&result.lateOffset<2.6);
+ assert.equal(result.cancelled.oneShots,0);
+ assert.ok(result.release.includes('SURVIVE'));
+ assert.ok(result.hidden&&result.lateHidden&&result.staleHidden&&result.settlingHidden);
+ assert.equal(result.scheduled[0].offset,0);
+ assert.ok(result.scheduled[0].delay>.9&&result.scheduled[0].delay<=1);
+ await page.screenshot({path:'artifacts/crew-arrival-desktop.png'});
+ await page.setViewportSize({width:390,height:844});
+ assert.ok(await page.locator('.arrival-detail').evaluate(el=>el.getBoundingClientRect().width<innerWidth));
+ await page.screenshot({path:'artifacts/crew-arrival-mobile.png'});
+ await page.setViewportSize({width:1280,height:800});
+ await page.evaluate(()=>window.preview.update(5,20000,20000,2));
+ await page.screenshot({path:'artifacts/crew-arrival-release.png'});
+ await page.emulateMedia({reducedMotion:'reduce'});
+ assert.equal(await page.locator('.arrival-value').evaluate(el=>getComputedStyle(el).animationName),'none');
+ assert.deepEqual(errors,[]);
+ console.log('Arrival presentation passed: countdown beats, exact countdown recording, late guest seeking, single spawn release, guest deadline clearing, clock corrections, stale cues, cleanup, mobile layout and reduced motion.');
+}finally{await browser.close();}

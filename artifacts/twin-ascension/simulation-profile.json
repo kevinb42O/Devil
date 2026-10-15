@@ -1,0 +1,57 @@
+{
+  "note": "Local CPU-only probe; concurrent machine load affects timing. No GPU or mobile claim.",
+  "results": [
+    {
+      "level": 4,
+      "crew": 6,
+      "simulatedSeconds": 2.999999999999992,
+      "projectiles": 1786,
+      "shots": 1872,
+      "p95CpuTickMs": 5.753,
+      "p50TickMs": 2.4711249999998017,
+      "p95TickMs": 3.2447920000001886,
+      "maxTickMs": 4.819374999999809,
+      "encodedBytes": 44580,
+      "encodeMs": 13.759666000000152
+    },
+    {
+      "level": 5,
+      "crew": 6,
+      "simulatedSeconds": 2.999999999999992,
+      "projectiles": 2237,
+      "shots": 2340,
+      "p95CpuTickMs": 5.101,
+      "p50TickMs": 3.1820000000000164,
+      "p95TickMs": 5.725916999999981,
+      "maxTickMs": 7.099083000000064,
+      "encodedBytes": 52770,
+      "encodeMs": 14.166375000000016
+    },
+    {
+      "level": 6,
+      "crew": 6,
+      "simulatedSeconds": 2.999999999999992,
+      "projectiles": 2685,
+      "shots": 2808,
+      "p95CpuTickMs": 3.246,
+      "p50TickMs": 2.7267079999996895,
+      "p95TickMs": 3.195666000000074,
+      "maxTickMs": 3.446125000000393,
+      "encodedBytes": 59824,
+      "encodeMs": 5.679666999999881
+    },
+    {
+      "level": 7,
+      "crew": 6,
+      "simulatedSeconds": 2.999999999999992,
+      "projectiles": 3127,
+      "shots": 3276,
+      "p95CpuTickMs": 3.133,
+      "p50TickMs": 2.589791999999761,
+      "p95TickMs": 3.1214999999997417,
+      "maxTickMs": 3.323457999999846,
+      "encodedBytes": 67432,
+      "encodeMs": 4.545916999999918
+    }
+  ]
+}

@@ -13,9 +13,9 @@
 <div id="status" role="status">Preparing the arena…</div>
 <div class="caption"><strong id="chapter">The Last Sky</strong><small><span id="clock">0:00</span> · <span id="rate-label">Actual game renderer · paused</span></small></div>
 <div class="controls">
- <input id="timeline" type="range" min="0" max="480" step="0.01" value="0" aria-label="Survival time">
- <div class="row"><button id="play" type="button">Play descent</button><label>Speed <select id="speed"><option value="1">1× · actual pace</option><option value="8" selected>8×</option><option value="24">24× · full tour</option></select></label><label>Quality <select id="quality"><option value="high" selected>High</option><option value="low">Low</option></select></label><label><input id="fire" type="checkbox">Fire daggers</label><label>Hand <select id="hand"><option value="1">I · lime</option><option value="2">II · blue</option><option value="3">III · cyan</option><option value="4">IV · violet</option></select></label><span class="hint">Drag to look around</span></div>
- <div class="row"><label>Phase <select id="phase"><option value="0">The Last Sky</option><option value="39">The Cloud Grave</option><option value="114">The Bruised Veil</option><option value="229">The Furnace</option><option value="350">The Cathedral Below</option><option value="442">The Unlit Depth</option></select></label><button data-range="30,65" type="button">Enter the cloud · 1×</button><button data-range="21,39" type="button">Ash → cloud grave</button><button data-range="96,114" type="button">Storm → veil</button><button data-range="332,350" type="button">Furnace → cathedral</button><button data-range="424,442" type="button">Cathedral → depths</button></div>
+ <input id="timeline" type="range" min="0" max="540" step="0.01" value="0" aria-label="Survival time">
+ <div class="row"><button id="play" type="button">Play descent</button><label>Speed <select id="speed"><option value="1" selected>1× · actual pace</option><option value="8">8×</option><option value="24">24× · full tour</option></select></label><label>Quality <select id="quality"><option value="high" selected>High</option><option value="low">Low</option></select></label><label><input id="fire" type="checkbox">Fire daggers</label><label>Hand <select id="hand"><option value="1">I · lime</option><option value="2">II · blue</option><option value="3">III · cyan</option><option value="4">IV · violet</option></select></label><span class="hint">Drag to look around</span></div>
+ <div class="row"><label>Phase <select id="phase"><option value="0">The Cosmic Expanse</option><option value="21">Cloud boundary</option><option value="30">Ash · The Last Sky</option><option value="69">The Cloud Grave</option><option value="144">The Bruised Veil</option><option value="259">The Furnace</option><option value="380">The Cathedral Below</option><option value="472">The Unlit Depth</option></select></label><button data-range="0,69" type="button">Cosmic opening · 1×</button><button data-range="0,30" type="button">Nebula passage · 1×</button><button data-range="21,30" type="button">Cosmos → ash · 1×</button><button data-range="30,69" type="button">Ash passage · 1×</button><button data-range="69,126" type="button">Cloud Grave · 1×</button><button data-range="51,69" type="button">Ash → cloud grave</button><button data-range="126,144" type="button">Storm → veil</button><button data-range="241,289" type="button">Into the Furnace · 1×</button><button data-range="362,410" type="button">Cathedral arrival · 1×</button><button data-range="362,380" type="button">Furnace → cathedral</button><button data-range="454,472" type="button">Cathedral → depths</button></div>
 </div>
 <script type="module">
 import {GameRenderer} from '/src/renderer.ts';
@@ -32,20 +32,20 @@ try{
  }
  for(let i=0;i<6;i++)world.gems.push({id:1000+i,pos:v(-3+i,1,-4),vel:v(),age:2});
  world.effects=[];
- let time=Math.max(0,Math.min(480,Number(new URLSearchParams(location.search).get('time'))||0)),playing=false,rate=8,end=480,last=performance.now(),yaw=0,pitch=.22,drag=null,shotClock=0;
- const refresh=()=>{document.getElementById('phase').value=String(DESCENT_CHAPTERS.find(c=>c.name===renderer.skyDiagnostics.chapter)?.time??0);timeline.value=String(time);clock.textContent=`${Math.floor(time/60)}:${String(Math.floor(time%60)).padStart(2,'0')}`;chapter.textContent=renderer.skyDiagnostics.chapter;button.textContent=playing?'Pause':'Play descent';rateLabel.textContent=`Actual game renderer · ${playing?`${rate}× pace`:'paused'}`;};
+ let time=Math.max(0,Math.min(540,Number(new URLSearchParams(location.search).get('time'))||0)),playing=false,rate=1,end=540,last=performance.now(),yaw=0,pitch=.22,drag=null,shotClock=0;
+ const refresh=()=>{document.getElementById('phase').value=String(time<21?0:time<30?21:(DESCENT_CHAPTERS.find(c=>c.name===renderer.skyDiagnostics.chapter)?.time??0)+30);timeline.value=String(time);clock.textContent=`${Math.floor(time/60)}:${String(Math.floor(time%60)).padStart(2,'0')}`;chapter.textContent=renderer.skyDiagnostics.chapter;button.textContent=playing?'Pause':'Play descent';rateLabel.textContent=`Environment ${renderer.skyDiagnostics.environmentTime.toFixed(1)}s · ${playing?`${rate}× pace`:'paused'}`;};
  function render(dt=0){world.time=time;renderer.render(world,yaw,pitch,dt,false);refresh();}
- function setTime(value){time=Math.max(0,Math.min(480,value));render();}
+ function setTime(value){time=Math.max(0,Math.min(540,value));render();}
  function pause(){playing=false;refresh();}
- function play(){if(time>=end){time=end===480?0:Math.max(0,end-18);}playing=true;last=performance.now();refresh();}
+ function play(){if(time>=end){time=end===540?0:Math.max(0,end-18);}playing=true;last=performance.now();refresh();}
  function setRange(start,finish,speedValue=1){pause();end=finish;rate=speedValue;speed.value=String(rate);setTime(start);play();}
  document.getElementById('phase').onchange=e=>{pause();setTime(Number(e.target.value));};
- button.onclick=()=>{if(playing)pause();else{end=480;play();}};
+ button.onclick=()=>{if(playing)pause();else{end=540;play();}};
  speed.onchange=()=>{rate=Number(speed.value);refresh();};
  quality.onchange=()=>{renderer.configure({quality:quality.value,fov:96,skyMotion:'full'});render();};
  hand.onchange=()=>{world.level=Number(hand.value);render();};
  fire.onchange=()=>{shotClock=0;};
- timeline.oninput=()=>{pause();end=480;setTime(Number(timeline.value));};
+ timeline.oninput=()=>{pause();end=540;setTime(Number(timeline.value));};
  document.querySelectorAll('[data-range]').forEach(el=>{el.onclick=()=>{const [start,finish]=el.dataset.range.split(',').map(Number);setRange(start,finish,1);};});
  canvas.onpointerdown=e=>{drag={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);};
  canvas.onpointermove=e=>{if(!drag)return;yaw-=(e.clientX-drag.x)*.004;pitch=Math.max(-1.45,Math.min(1.45,pitch-(e.clientY-drag.y)*.004));drag={x:e.clientX,y:e.clientY};render();};

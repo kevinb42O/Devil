@@ -1,0 +1,752 @@
+[
+  {
+    "time": 0,
+    "sky": {
+      "time": 0,
+      "chapter": 0,
+      "blend": 0,
+      "zenith": [
+        0.018,
+        0.023,
+        0.032
+      ],
+      "haze": [
+        0.012,
+        0.016,
+        0.022
+      ],
+      "cloud": [
+        0.045,
+        0.048,
+        0.052
+      ],
+      "coverage": 0.33,
+      "daylight": 0.18,
+      "opening": 0,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 0,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 0,
+      "chapter": 0,
+      "blend": 0,
+      "density": 0.16,
+      "height": 3.8,
+      "falloff": 1.25,
+      "bank": 0,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 0,
+      "pulse": 0.89,
+      "color": [
+        0.11,
+        0.14,
+        0.17
+      ]
+    }
+  },
+  {
+    "time": 8,
+    "sky": {
+      "time": 8,
+      "chapter": 0,
+      "blend": 0,
+      "zenith": [
+        0.018,
+        0.023,
+        0.032
+      ],
+      "haze": [
+        0.012,
+        0.016,
+        0.022
+      ],
+      "cloud": [
+        0.045,
+        0.048,
+        0.052
+      ],
+      "coverage": 0.33,
+      "daylight": 0.18,
+      "opening": 0,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 0.144,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 8,
+      "chapter": 0,
+      "blend": 0,
+      "density": 0.16,
+      "height": 3.8,
+      "falloff": 1.25,
+      "bank": 0,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 0,
+      "pulse": 0.7871482133046044,
+      "color": [
+        0.11,
+        0.14,
+        0.17
+      ]
+    }
+  },
+  {
+    "time": 21,
+    "sky": {
+      "time": 21,
+      "chapter": 0,
+      "blend": 0,
+      "zenith": [
+        0.018,
+        0.023,
+        0.032
+      ],
+      "haze": [
+        0.012,
+        0.016,
+        0.022
+      ],
+      "cloud": [
+        0.045,
+        0.048,
+        0.052
+      ],
+      "coverage": 0.33,
+      "daylight": 0.18,
+      "opening": 0,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 0.37799999999999995,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 21,
+      "chapter": 0,
+      "blend": 0,
+      "density": 0.05842223891810667,
+      "height": 3.8,
+      "falloff": 1.25,
+      "bank": 0,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 0,
+      "pulse": 0.9928517866953956,
+      "color": [
+        0.11,
+        0.14,
+        0.17
+      ]
+    }
+  },
+  {
+    "time": 30,
+    "sky": {
+      "time": 30,
+      "chapter": 0,
+      "blend": 0.5,
+      "zenith": [
+        0.0215,
+        0.036500000000000005,
+        0.056
+      ],
+      "haze": [
+        0.015,
+        0.0205,
+        0.0285
+      ],
+      "cloud": [
+        0.06,
+        0.0665,
+        0.0785
+      ],
+      "coverage": 0.33,
+      "daylight": 0.09,
+      "opening": 0,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 0.5399999999999999,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 30,
+      "chapter": 0,
+      "blend": 0.5,
+      "density": 0.065,
+      "height": 8.399999999999999,
+      "falloff": 0.685,
+      "bank": 0.5,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 0.5,
+      "pulse": 0.7994717747516978,
+      "color": [
+        0.10250000000000001,
+        0.1375,
+        0.175
+      ]
+    }
+  },
+  {
+    "time": 39,
+    "sky": {
+      "time": 39,
+      "chapter": 1,
+      "blend": 0,
+      "zenith": [
+        0.025,
+        0.05,
+        0.08
+      ],
+      "haze": [
+        0.018,
+        0.025,
+        0.035
+      ],
+      "cloud": [
+        0.075,
+        0.085,
+        0.105
+      ],
+      "coverage": 0.33,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 0.702,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 39,
+      "chapter": 1,
+      "blend": 0,
+      "density": 0.13,
+      "height": 13,
+      "falloff": 0.12,
+      "bank": 1,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.89,
+      "color": [
+        0.095,
+        0.135,
+        0.18
+      ]
+    }
+  },
+  {
+    "time": 96,
+    "sky": {
+      "time": 96,
+      "chapter": 1,
+      "blend": 0,
+      "zenith": [
+        0.025,
+        0.05,
+        0.08
+      ],
+      "haze": [
+        0.018,
+        0.025,
+        0.035
+      ],
+      "cloud": [
+        0.075,
+        0.085,
+        0.105
+      ],
+      "coverage": 0.33,
+      "daylight": 0,
+      "opening": 0.32248144655377414,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 1.7279999999999998,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 96,
+      "chapter": 1,
+      "blend": 0,
+      "density": 0.13,
+      "height": 13,
+      "falloff": 0.12,
+      "bank": 1,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.9928517866953956,
+      "color": [
+        0.095,
+        0.135,
+        0.18
+      ]
+    }
+  },
+  {
+    "time": 114,
+    "sky": {
+      "time": 114,
+      "chapter": 2,
+      "blend": 0,
+      "zenith": [
+        0.038,
+        0.019,
+        0.063
+      ],
+      "haze": [
+        0.018,
+        0.011,
+        0.026
+      ],
+      "cloud": [
+        0.065,
+        0.033,
+        0.083
+      ],
+      "coverage": 0.4,
+      "daylight": 0,
+      "opening": 1,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 2.052,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 114,
+      "chapter": 2,
+      "blend": 0,
+      "density": 0.085,
+      "height": 11,
+      "falloff": 0.16,
+      "bank": 0.8,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.8170565075935124,
+      "color": [
+        0.105,
+        0.065,
+        0.145
+      ]
+    }
+  },
+  {
+    "time": 211,
+    "sky": {
+      "time": 211,
+      "chapter": 2,
+      "blend": 0,
+      "zenith": [
+        0.038,
+        0.019,
+        0.063
+      ],
+      "haze": [
+        0.018,
+        0.011,
+        0.026
+      ],
+      "cloud": [
+        0.065,
+        0.033,
+        0.083
+      ],
+      "coverage": 0.4,
+      "daylight": 0,
+      "opening": 0.4424214838416022,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 3.7979999999999996,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 211,
+      "chapter": 2,
+      "blend": 0,
+      "density": 0.085,
+      "height": 11,
+      "falloff": 0.16,
+      "bank": 0.8,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.817056507593513,
+      "color": [
+        0.105,
+        0.065,
+        0.145
+      ]
+    }
+  },
+  {
+    "time": 229,
+    "sky": {
+      "time": 229,
+      "chapter": 3,
+      "blend": 0,
+      "zenith": [
+        0.027,
+        0.009,
+        0.015
+      ],
+      "haze": [
+        0.037,
+        0.014,
+        0.013
+      ],
+      "cloud": [
+        0.088,
+        0.029,
+        0.018
+      ],
+      "coverage": 0.42,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 0.31640625,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 4.122,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 229,
+      "chapter": 3,
+      "blend": 0,
+      "density": 0.065,
+      "height": 12,
+      "falloff": 0.38,
+      "bank": 0.25,
+      "smoke": 1,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.9928517866953958,
+      "color": [
+        0.1,
+        0.027,
+        0.012
+      ]
+    }
+  },
+  {
+    "time": 259,
+    "sky": {
+      "time": 259,
+      "chapter": 3,
+      "blend": 0,
+      "zenith": [
+        0.027,
+        0.009,
+        0.015
+      ],
+      "haze": [
+        0.037,
+        0.014,
+        0.013
+      ],
+      "cloud": [
+        0.088,
+        0.029,
+        0.018
+      ],
+      "coverage": 0.42,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 1,
+      "cathedral": 0,
+      "crown": 0,
+      "travel": 4.662,
+      "furnaceHeight": 0.19,
+      "cathedralRise": 0
+    },
+    "mist": {
+      "time": 259,
+      "chapter": 3,
+      "blend": 0,
+      "density": 0.065,
+      "height": 12,
+      "falloff": 0.38,
+      "bank": 0.25,
+      "smoke": 1,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.9163247230716315,
+      "color": [
+        0.1,
+        0.027,
+        0.012
+      ]
+    }
+  },
+  {
+    "time": 332,
+    "sky": {
+      "time": 332,
+      "chapter": 3,
+      "blend": 0,
+      "zenith": [
+        0.027,
+        0.009,
+        0.015
+      ],
+      "haze": [
+        0.037,
+        0.014,
+        0.013
+      ],
+      "cloud": [
+        0.088,
+        0.029,
+        0.018
+      ],
+      "coverage": 0.42,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 1,
+      "cathedral": 0.15625,
+      "crown": 0,
+      "travel": 5.976,
+      "furnaceHeight": 0.38974336080014527,
+      "cathedralRise": 0.001704866948214359
+    },
+    "mist": {
+      "time": 332,
+      "chapter": 3,
+      "blend": 0,
+      "density": 0.065,
+      "height": 12,
+      "falloff": 0.38,
+      "bank": 0.25,
+      "smoke": 1,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.9991979761507861,
+      "color": [
+        0.1,
+        0.027,
+        0.012
+      ]
+    }
+  },
+  {
+    "time": 350,
+    "sky": {
+      "time": 350,
+      "chapter": 4,
+      "blend": 0,
+      "zenith": [
+        0.038,
+        0.019,
+        0.044
+      ],
+      "haze": [
+        0.02,
+        0.009,
+        0.026
+      ],
+      "cloud": [
+        0.046,
+        0.023,
+        0.051
+      ],
+      "coverage": 0.46,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 1,
+      "cathedral": 1,
+      "crown": 0,
+      "travel": 6.3,
+      "furnaceHeight": 0.4726639576782981,
+      "cathedralRise": 0.024355242117347985
+    },
+    "mist": {
+      "time": 350,
+      "chapter": 4,
+      "blend": 0,
+      "density": 0.08,
+      "height": 22,
+      "falloff": 0.095,
+      "bank": 0.3,
+      "smoke": 0,
+      "shafts": 1,
+      "clear": 1,
+      "pulse": 0.8636752769283681,
+      "color": [
+        0.055,
+        0.038,
+        0.08
+      ]
+    }
+  },
+  {
+    "time": 424,
+    "sky": {
+      "time": 424,
+      "chapter": 4,
+      "blend": 0,
+      "zenith": [
+        0.038,
+        0.019,
+        0.044
+      ],
+      "haze": [
+        0.02,
+        0.009,
+        0.026
+      ],
+      "cloud": [
+        0.046,
+        0.023,
+        0.051
+      ],
+      "coverage": 0.46,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 0.24353134110787167,
+      "cathedral": 0.59326171875,
+      "crown": 0.40673828125,
+      "travel": 7.632,
+      "furnaceHeight": 0.7445409087104207,
+      "cathedralRise": 0.20575218336135145
+    },
+    "mist": {
+      "time": 424,
+      "chapter": 4,
+      "blend": 0,
+      "density": 0.08,
+      "height": 22,
+      "falloff": 0.095,
+      "bank": 0.3,
+      "smoke": 0,
+      "shafts": 1,
+      "clear": 1,
+      "pulse": 0.7871482133046046,
+      "color": [
+        0.055,
+        0.038,
+        0.08
+      ]
+    }
+  },
+  {
+    "time": 442,
+    "sky": {
+      "time": 442,
+      "chapter": 5,
+      "blend": 0,
+      "zenith": [
+        0.009,
+        0.004,
+        0.017
+      ],
+      "haze": [
+        0.004,
+        0.002,
+        0.008
+      ],
+      "cloud": [
+        0.015,
+        0.008,
+        0.026
+      ],
+      "coverage": 0.49,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 1,
+      "travel": 7.9559999999999995,
+      "furnaceHeight": 0.76,
+      "cathedralRise": 0.22
+    },
+    "mist": {
+      "time": 442,
+      "chapter": 5,
+      "blend": 0,
+      "density": 0.065,
+      "height": 10,
+      "falloff": 0.2,
+      "bank": 0.65,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.8900000000000008,
+      "color": [
+        0.003,
+        0.002,
+        0.007
+      ]
+    }
+  },
+  {
+    "time": 520,
+    "sky": {
+      "time": 520,
+      "chapter": 5,
+      "blend": 0,
+      "zenith": [
+        0.009,
+        0.004,
+        0.017
+      ],
+      "haze": [
+        0.004,
+        0.002,
+        0.008
+      ],
+      "cloud": [
+        0.015,
+        0.008,
+        0.026
+      ],
+      "coverage": 0.49,
+      "daylight": 0,
+      "opening": 0,
+      "furnace": 0,
+      "cathedral": 0,
+      "crown": 1,
+      "travel": 7.9559999999999995,
+      "furnaceHeight": 0.76,
+      "cathedralRise": 0.22
+    },
+    "mist": {
+      "time": 520,
+      "chapter": 5,
+      "blend": 0,
+      "density": 0.065,
+      "height": 10,
+      "falloff": 0.2,
+      "bank": 0.65,
+      "smoke": 0,
+      "shafts": 0,
+      "clear": 1,
+      "pulse": 0.8900000000000001,
+      "color": [
+        0.003,
+        0.002,
+        0.007
+      ]
+    }
+  }
+]

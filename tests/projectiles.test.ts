@@ -55,14 +55,14 @@ test('physical stream expands toward aim as a cone rather than parallel or inwar
   }
  }
 });
-test('every hand launches bursts from its sockets and streams throughout its circular firing area',()=>{
+test('every hand launches compact bursts and streams throughout its circular firing area',()=>{
  for(let level=1;level<=4;level++)for(const burst of [false,true])for(const homing of [false,true]){
   if(homing&&level<3)continue;
   const world=new World(71,{schedule:false});world.level=level;world.reserve=200;world.player.pos=v(11,4,-7);
   const input={...idleInput(),yaw:1.3,pitch:.8};world.shoot(input,burst,homing);
   for(let i=0;i<world.projectiles.length;i++){
    const p=world.projectiles[i],origin=weaponMuzzle(world.player.pos,input.yaw,input.pitch,level,i%HAND_MUZZLES[level-1].length);
-   if(burst)assert.deepEqual(p.pos,origin);
+   if(burst){const center=weaponMuzzle(world.player.pos,input.yaw,input.pitch,level,0);assert.ok(Math.hypot(p.pos.x-center.x,p.pos.y-center.y,p.pos.z-center.z)<=.01+1e-9);assert.equal(p.kind,'shotgun');}
    else{
     const dx=p.pos.x-origin.x,dy=p.pos.y-origin.y,dz=p.pos.z-origin.z;
     assert.ok(Math.hypot(dx,dy,dz)<=STREAM_RADIUS[level-1]+1e-9,'stream launch stays inside its radius');
@@ -72,7 +72,7 @@ test('every hand launches bursts from its sockets and streams throughout its cir
    assert.deepEqual(p.previous,p.pos);assert.notDeepEqual(p.pos,world.player.pos);
    assert.ok(Math.abs(Math.hypot(p.vel.x,p.vel.y,p.vel.z)-(homing?42:TUNING.projectileSpeed))<1e-9);
   }
-  const effect=world.effects.at(-1)!;assert.deepEqual(effect.pos,world.projectiles[0].pos);assert.equal(effect.muzzles?.length,Math.min(world.projectiles.length,HAND_MUZZLES[level-1].length));
+  const effect=world.effects.at(-1)!;assert.deepEqual(effect.pos,world.projectiles[0].pos);assert.equal(effect.muzzles?.length,burst?1:Math.min(world.projectiles.length,HAND_MUZZLES[level-1].length));
  }
 });
 test('under-hand origin follows horizontal and vertical aim using the camera basis',()=>{

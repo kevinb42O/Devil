@@ -5,7 +5,7 @@ import {isSquid,isSpider,isPede} from './enemy-kinds';
 /** One short pulse, driven by damage time so pause, replay and network agree. */
 export function enemyHitFlash(enemy:Enemy,time:number){
  const elapsed=time-enemy.lastHit;
- return !isSquid(enemy.kind)&&!isSpider(enemy.kind)&&!isPede(enemy.kind)&&enemy.kind!=='leviathan'&&enemy.hp>0&&elapsed>=0&&elapsed<.05;
+ return !isSquid(enemy.kind)&&!isSpider(enemy.kind)&&!isPede(enemy.kind)&&enemy.kind!=='leviathan'&&enemy.hp>0&&elapsed>=0&&elapsed<.15;
 }
 
 /** Shared materials and cached mesh lists keep feedback independent of population. */
@@ -32,10 +32,17 @@ export class EnemyHitFlash {
   material=source.clone();const compile=source.onBeforeCompile,key=source.customProgramCacheKey();
   material.onBeforeCompile=(shader,renderer)=>{
    compile.call(source,shader,renderer);
-   // A small brightness lift preserves texture, shading, and the enemy's color.
-   shader.fragmentShader=shader.fragmentShader.replace(/}\s*$/, 'gl_FragColor.rgb*=1.04;\n}');
+   // Lift dark texels as well as highlights, before tone mapping, while
+   // retaining texture and shading. Multiplication alone hides hits in shadow.
+   if(shader.fragmentShader.includes('#include <opaque_fragment>')){
+    shader.fragmentShader=shader.fragmentShader.replace('#include <opaque_fragment>',
+     'outgoingLight=outgoingLight*1.6+vec3(.06);\n#include <opaque_fragment>');
+   }else{
+    // The orb uses a custom fragment shader with no Three.js output chunk.
+    shader.fragmentShader=shader.fragmentShader.replace(/}\s*$/, 'gl_FragColor.rgb=gl_FragColor.rgb*1.6+vec3(.06);\n}');
+   }
   };
-  material.customProgramCacheKey=()=>key+'-subtle-hit-flash';
+  material.customProgramCacheKey=()=>key+'-readable-hit-flash';
   this.hitMaterials.set(source,material);return material;
  }
  swarmMaterial(source:THREE.Material){
@@ -46,11 +53,11 @@ export class EnemyHitFlash {
    // Instance color carries a flash flag, rather than tinting dark texture pixels.
    shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>','')
     .replace('#include <opaque_fragment>',`#ifdef USE_COLOR
-outgoingLight*=1.+.04*vColor.r;
+outgoingLight+=(outgoingLight*.6+vec3(.06))*vColor.r;
 #endif
 #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey=()=>key+'-subtle-enemy-hit-flash';
+  material.customProgramCacheKey=()=>key+'-readable-enemy-hit-flash';
   this.swarmMaterials.set(source,material);this.swarmMaterials.set(material,material);return material;
  }
 }

@@ -1,0 +1,217 @@
+{
+  "frames": [
+    {
+      "time": 0,
+      "mist": {
+        "enabled": true,
+        "strength": 0.21875000000000003,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "cosmic": 1,
+        "environmentTime": 0,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cosmic Expanse",
+        "blend": 0,
+        "density": 0.035,
+        "height": 34,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.085,
+          0.155
+        ],
+        "pulse": 1,
+        "lights": 6
+      },
+      "floorRed": 21.446863636363638,
+      "floorBlue": 82.47568181818181,
+      "volumeDifference": 4.849925130208334
+    },
+    {
+      "time": 8,
+      "mist": {
+        "enabled": true,
+        "strength": 0.21875000000000003,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "cosmic": 1,
+        "environmentTime": 0,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cosmic Expanse",
+        "blend": 0,
+        "density": 0.035,
+        "height": 34,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.085,
+          0.155
+        ],
+        "pulse": 1,
+        "lights": 6
+      },
+      "floorRed": 22.4735,
+      "floorBlue": 81.445,
+      "volumeDifference": 12.336232277199073
+    },
+    {
+      "time": 16,
+      "mist": {
+        "enabled": true,
+        "strength": 0.21875000000000003,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "cosmic": 1,
+        "environmentTime": 0,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cosmic Expanse",
+        "blend": 0,
+        "density": 0.035,
+        "height": 34,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.085,
+          0.155
+        ],
+        "pulse": 1,
+        "lights": 6
+      },
+      "floorRed": 23.269272727272728,
+      "floorBlue": 80.47513636363637,
+      "volumeDifference": 20.12221535011574
+    },
+    {
+      "time": 21,
+      "mist": {
+        "enabled": true,
+        "strength": 0.21875000000000003,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "cosmic": 1,
+        "environmentTime": 0,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cosmic Expanse",
+        "blend": 0,
+        "density": 0.035,
+        "height": 34,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.085,
+          0.155
+        ],
+        "pulse": 1,
+        "lights": 6
+      },
+      "floorRed": 23.747318181818184,
+      "floorBlue": 80.00445454545455,
+      "volumeDifference": 14.954186921296296
+    },
+    {
+      "time": 25,
+      "mist": {
+        "enabled": true,
+        "strength": 0.5445387517146776,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "cosmic": 0.5829903978052127,
+        "environmentTime": 0,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Cosmic Expanse",
+        "blend": 0,
+        "density": 0.08712620027434842,
+        "height": 21.406310013717423,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.1079355281207133,
+          0.16125514403292182
+        ],
+        "pulse": 0.9541289437585734,
+        "lights": 6
+      },
+      "floorRed": 58.88709090909091,
+      "floorBlue": 74.05359090909091,
+      "volumeDifference": 18.60664894386574
+    },
+    {
+      "time": 30,
+      "mist": {
+        "enabled": true,
+        "strength": 1,
+        "steps": 40,
+        "time": 0,
+        "entrance": false,
+        "cosmic": 0,
+        "environmentTime": 0,
+        "volumeSize": [
+          320,
+          180
+        ],
+        "chapter": "The Last Sky",
+        "blend": 0,
+        "density": 0.16,
+        "height": 3.8,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.14,
+          0.17
+        ],
+        "pulse": 0.89,
+        "lights": 6
+      },
+      "floorRed": 89.92881818181819,
+      "floorBlue": 61.66731818181818,
+      "volumeDifference": 5.593992332175926
+    }
+  ],
+  "volumeMotion": [
+    {
+      "time": 0,
+      "elevation": 251.6889794266522
+    },
+    {
+      "time": 8,
+      "elevation": 287.33950039440066
+    },
+    {
+      "time": 16,
+      "elevation": 434.2221932212104
+    }
+  ],
+  "errors": []
+}

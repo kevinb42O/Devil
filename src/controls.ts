@@ -17,3 +17,9 @@ export function controllerState(pad:Pick<Gamepad,'axes'|'buttons'>,deadzone:numb
  const [lookX,lookY]=stick(pad.axes[2]??0,pad.axes[3]??0,deadzone);
  return {forward:-vertical,strafe,lookX,lookY,jump:held(0),fire:held(7),homing:held(6),pause:held(9),back:held(1),up:held(12),down:held(13),left:held(14),right:held(15),descend:held(4),fast:held(10)};
 }
+
+/** Hold either arm independently; physical key codes are deliberately avoided
+ * because AZERTY and QWERTY expose different printed letters. */
+export function courtyardEmotes(keys:ReadonlySet<string>,scheme:ControlScheme,leftTrigger=false,rightTrigger=false){
+ return {leftArm:scheme==='controller'?leftTrigger:scheme==='azerty'?keys.has('a'):scheme==='qwerty'&&keys.has('q'),rightArm:scheme==='controller'?rightTrigger:(scheme==='azerty'||scheme==='qwerty')&&keys.has('e')};
+}

@@ -1,0 +1,11 @@
+{
+  "result": {
+    "outboxPartition": true,
+    "historicalUpload": true,
+    "sameRulesProtection": true,
+    "unknownRulesProtection": true,
+    "audioPitch": true,
+    "explicitPracticeOverridesPreview": true
+  },
+  "errors": []
+}

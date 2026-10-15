@@ -7,6 +7,8 @@ const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{execu
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ // This fixture mounts its own renderer; avoid loading the unrelated game UI.
+ await page.route('http://127.0.0.1:5173/',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Projectile regression fixture</title>'}));
  await page.goto('http://127.0.0.1:5173');
  await page.evaluate(async()=>{
   const [{World,v},{GameRenderer},THREE]=await Promise.all([import('/src/simulation.ts'),import('/src/renderer.ts'),import('/node_modules/.vite/deps/three.js')]);

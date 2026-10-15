@@ -1,3 +1,4 @@
+import {playerColor} from './player-colors';
 import {CREW_COLORS,RANKED_CREW_SIZES} from './crew-config';
 import './crew-leaderboard.css';
 import type {FriendsSession} from './multiplayer';
@@ -14,7 +15,7 @@ const colors=CREW_COLORS;
 const seconds=(ms:number)=>(ms/1000).toFixed(3);
 type Hooks={session:()=>FriendsSession|null;mode:()=>string;watch:(run:RecordedCrewRun,onExit?:()=>void)=>void;solo:()=>void;history:()=>void};
 function button(text:string,action:()=>unknown,id?:string){const b=document.createElement('button');b.type='button';b.textContent=text;if(id)b.id=id;b.onclick=()=>{const result=action();if(result instanceof Promise)void result.catch(e=>{$('crew-local-status').textContent=e.message;});};return b;}
-function nameChips(roster:CrewReplayMember[]){const names=document.createElement('div');names.className='crew-ranking-names';for(const [i,p]of roster.entries()){const n=document.createElement('span');n.textContent=p.name;n.style.setProperty('--member-color',colors[i]);n.title=p.host?'Host at the start of this run':`Player ${i+1}`;names.append(n);}return names;}
+function nameChips(roster:CrewReplayMember[]){const names=document.createElement('div');names.className='crew-ranking-names';for(const [i,p]of roster.entries()){const n=document.createElement('span');n.textContent=p.name;n.style.setProperty('--member-color',p.color?playerColor(p.color).hex:colors[i]);n.title=p.host?'Host at the start of this run':`Player ${i+1}`;names.append(n);}return names;}
 export class CrewLeaderboardUI{
  active=false;private size=2;private rows:CrewLeaderboardRow[]=[];private mine:CrewLeaderboardRow[]=[];private request=0;private debounce=0;private more:HTMLButtonElement;private preferences=readCrewPreferences();private coordinator:CrewRankingSession|null=null;private queue=new CrewPublicationQueue();private latest:StoredCrewReplay|null=null;private latestRaw:RecordedCrewRun|null=null;private resultKey='';private saving=0;private resultError='';private historyRequest=0;private saved=new Set<string>();
  constructor(private hooks:Hooks){

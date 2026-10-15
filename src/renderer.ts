@@ -1,3 +1,12 @@
+import {CourtyardScene} from './courtyard-scene';
+import {isPlayerSkin,isPodiumRank,PODIUM_METALS,type PlayerSkin,type PodiumRank} from './player-skins';
+import {playerColor} from './player-colors';
+import {footballKickPose,COURTYARD_CAMERA_BLOCKERS,COURTYARD_CAMERA_BOUNDS} from './courtyard-state';
+import {CourtyardNeck,courtyardNeckFraction} from './courtyard-neck';
+import {ENTRANCE_COURTYARD} from './entrance-layout';
+import {MovementMotion} from './movement-motion';
+import {crystalImpactScale} from './impact-presentation';
+import {CameraFeedback} from './camera-feedback';
 import {MAX_CREW_PLAYERS} from './crew-config';
 import {UPGRADE_PULSE} from './upgrade-pulse-tuning';
 import {UpgradeGroundPulse} from './upgrade-ground-pulse';
@@ -8,7 +17,7 @@ import {SinglePlayerEntrance} from './entrance';
 import {gameViewport} from './game-viewport';
 import * as THREE from 'three';
 import { OriginalWeapon } from './original-weapon';
-import {createCrewAvatar,loadCrewAvatar,crewMuzzle,updateCrewAvatar,disposeCrewAvatar} from './crew-avatar';
+import {createCrewAvatar,setCrewAvatarColor,setCrewAvatarSkin,loadCrewAvatar,crewMuzzle,updateCrewAvatar,disposeCrewAvatar} from './crew-avatar';
 import { OriginalEnemies } from './original-enemies';
 import { AbyssSky } from './sky';
 import {EnvironmentLighting} from './environment-lighting';
@@ -40,9 +49,17 @@ const sphere = new THREE.SphereGeometry(1,16,12), cube = new THREE.BoxGeometry(1
 function shape(parent:THREE.Object3D,geometry:THREE.BufferGeometry,material:THREE.Material,pos:number[],scale:number[],rotation?:number[]) {
   const m=new THREE.Mesh(geometry,material);m.position.set(pos[0],pos[1],pos[2]);m.scale.set(scale[0],scale[1],scale[2]);if(rotation)m.rotation.set(rotation[0],rotation[1],rotation[2]);parent.add(m);return m;
 }
-export type VisualSettings={quality:string;fov:number;skyMotion?:'full'|'reduced';mist?:boolean};
+export type VisualSettings={quality:string;fov:number;skyMotion?:'full'|'reduced';mist?:boolean;screenShake?:number;movementMotion?:number};
 export class GameRenderer {
-  readonly crewAvatarReady=loadCrewAvatar();
+  readonly cameraFeedback=new CameraFeedback();
+  readonly movementMotion=new MovementMotion();
+  private courtyardNeck=new CourtyardNeck();
+  private feedbackWorldOffset=new THREE.Vector3();
+  private feedbackLife='';
+  private feedbackTime=-Infinity;
+  private movementClock:number|null=null;
+  resetFeedback(){this.courtyardNeck.clear();this.movementClock=null;this.movementMotion.clear();this.cameraFeedback.clear();this.feedbackWorldOffset.set(0,0,0);this.feedbackLife='';this.feedbackTime=-Infinity;this.originalWeapon?.resetMotion();}
+  crewAvatarLoaded=false;readonly crewAvatarReady=loadCrewAvatar().then(()=>{this.crewAvatarLoaded=true;});
   private deathGhost:THREE.Group|null=null;
   private replayBody:THREE.Group|null=null;
   private deathBurst:PlayerDeathBurst|null=null;
@@ -102,28 +119,34 @@ export class GameRenderer {
   private crewModels=new Map<string,THREE.Group>();
   private crewReplayExternal=false;
   private crewNames=new Map<string,string>();
+  private crewColors=new Map<string,string>();
+  private crewSkins=new Map<string,{skin:PlayerSkin;rank:PodiumRank}>();
   private crewMuzzlePosition=new THREE.Vector3();
-  setCrewNames(members:{id:string;name:string}[]){this.crewNames=new Map(members.map(p=>[p.id,p.name]));}
-  get crewPresentation(){return [...this.crewModels].map(([id,model])=>({id,name:model.userData.playerName,position:model.position.toArray(),label:model.children.some(c=>c.name==='crew-name')}));}
+  setCrewNames(members:{id:string;name:string;color?:string;skin?:string;skinRank?:number}[]){this.crewNames=new Map(members.map(p=>[p.id,p.name]));this.crewColors=new Map(members.map(p=>[p.id,playerColor(p.color).id]));this.crewSkins.clear();for(const p of members)if(isPlayerSkin(p.skin)&&isPodiumRank(p.skinRank))this.crewSkins.set(p.id,{skin:p.skin,rank:p.skinRank});}
+  get crewPresentation(){return [...this.crewModels].map(([id,model])=>({id,color:model.userData.playerColor,skin:model.userData.playerSkin,skinRank:model.userData.skinRank,skinTime:model.userData.skinTime?.value,name:model.userData.playerName,position:model.position.toArray(),label:model.children.some(c=>c.name==='crew-name')}));}
   private updateCrewName(model:THREE.Group,name:string){
-    if(model.userData.playerName===name)return;
+    const color=isPodiumRank(model.userData.skinRank)?PODIUM_METALS[model.userData.skinRank-1]:playerColor(model.userData.playerColor).hex;
+    if(model.userData.playerName===name&&model.userData.labelColor===color)return;
     const old=model.children.find(c=>c.name==='crew-name') as THREE.Sprite|undefined;
     if(old){model.remove(old);old.material.map?.dispose();old.material.dispose();}
     const canvas=document.createElement('canvas');canvas.width=512;canvas.height=96;
     const ctx=canvas.getContext('2d')!;ctx.font='500 36px "DM Sans", sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.shadowColor='rgba(0,0,0,.85)';ctx.shadowBlur=8;ctx.fillStyle='#d5d9ca';ctx.fillText(name,256,48,480);
+    ctx.shadowColor='rgba(0,0,0,.85)';ctx.shadowBlur=8;ctx.fillStyle=color;ctx.fillText(name,256,48,480);
     const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
     const label=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,opacity:.78,depthTest:true,depthWrite:false,toneMapped:false}));
-    label.name='crew-name';label.position.set(0,.9,0);label.scale.set(2.6,.49,1);model.add(label);model.userData.playerName=name;
+    label.name='crew-name';label.position.set(0,.9,0);label.scale.set(2.6,.49,1);model.add(label);model.userData.playerName=name;model.userData.labelColor=color;
   }
   private updateCrewModels(world:World|null,dt:number,crewInterpolated:boolean,scene:THREE.Scene,menu=false){
     const crewIds=new Set<string>();
-    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,scene===this.entrance.scene?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18);this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
+    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
   }
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
 
+  private emoteHands:THREE.Group|null=null;
   readonly entrance:SinglePlayerEntrance;
+ readonly courtyard=new CourtyardScene();
+ courtyardMembers:{id:string;ready:boolean;color?:string;loaded?:number}[]=[];
   crewReplayMode=false;
   topDown=false;renderer:THREE.WebGLRenderer;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(95,1,.05,180);composer:EffectComposer; bloom:UnrealBloomPass;
   private swarmBounds=new Map<EnemyKind,THREE.Sphere>();private swarmFrustum=new THREE.Frustum();private swarmProjection=new THREE.Matrix4();private swarmSphere=new THREE.Sphere();private swarmCopy=new THREE.Matrix4();
@@ -145,6 +168,10 @@ export class GameRenderer {
   private nightSkyLight=new THREE.Color(0xcad5bc);private daySkyLight=new THREE.Color(0xdceeff);
   private nightGroundLight=new THREE.Color(0x18100c);private dayGroundLight=new THREE.Color(0x858b91);
   private altarLight=new THREE.PointLight(0xcde98b,12,9);
+  private environmentMotionReduced=false;
+  private cosmicSkyLight=new THREE.Color(0x7184b4);private cosmicGroundLight=new THREE.Color(0x151c36);
+  private cosmicKeyLight=new THREE.Color(0xadc4ff);private cosmicRimLight=new THREE.Color(0x937eaf);
+  private defaultMoonColor=new THREE.Color(0xe2e8cd);private defaultRimColor=new THREE.Color(0x729786);
   private playerLight=new THREE.PointLight(0xffb56b,24,11,2);
   private swarmFlashCopy=new THREE.Color();
   private enemyHitFlash=new EnemyHitFlash();
@@ -180,7 +207,7 @@ export class GameRenderer {
     this.originalWeapon=new OriginalWeapon(this.scene,this.environment);
     this.altar=new THREE.Group();shape(this.altar,new THREE.CylinderGeometry(1.1,1.6,1.2,8),darkBone,[0,.6,0],[1,1,1]);shape(this.altar,new THREE.OctahedronGeometry(.38),greenCrystal,[0,2.7,0],[.55,2.2,.55]);this.altarLight.position.y=2;this.scene.add(this.altarLight);this.preview.add(this.altar);
     this.scene.add(this.preview);
-    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.entrance.setTileGeometry(this.originalEnemies.tileGeometry);this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});const bounds=new THREE.Box3();for(const mesh of meshes){mesh.geometry.computeBoundingBox();bounds.union(mesh.geometry.boundingBox!);}this.swarmBounds.set(kind,bounds.getBoundingSphere(new THREE.Sphere()));}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissive:0xff431a,emissiveIntensity:3,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
+    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.courtyard.setSkull(this.originalEnemies.clone('skull'));this.courtyard.setFloor(this.originalEnemies.tileGeometry,diffuse);this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.entrance.setTileGeometry(this.originalEnemies.tileGeometry);this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});const bounds=new THREE.Box3();for(const mesh of meshes){mesh.geometry.computeBoundingBox();bounds.union(mesh.geometry.boundingBox!);}this.swarmBounds.set(kind,bounds.getBoundingSphere(new THREE.Sphere()));}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissive:0xff431a,emissiveIntensity:3,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
     this.composer=new EffectComposer(this.renderer);
     // Both ping-pong targets need scene depth because pass swaps vary with quality/fade.
     for(const target of [this.composer.renderTarget1,this.composer.renderTarget2])target.depthTexture=new THREE.DepthTexture(1,1);
@@ -192,7 +219,7 @@ export class GameRenderer {
     this.configure(settings);window.addEventListener('resize',()=>this.resize());this.resize();
   }
   get skyDiagnostics(){return this.sky.diagnostics;}
-  configure(settings:VisualSettings) {this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
+  configure(settings:VisualSettings) {this.environmentMotionReduced=settings.skyMotion==='reduced';this.cameraFeedback.configure(settings.screenShake);this.movementMotion.configure(settings.movementMotion);this.originalWeapon.configureMotion(settings.movementMotion);this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
   resize() {
     const {width:w,height:h}=gameViewport();
     // Bound fill cost on Retina/4K displays; UI and the canvas keep their CSS size.
@@ -212,7 +239,7 @@ export class GameRenderer {
     this.slowFrames=this.fastFrames=0;this.resizeCooldown=3;this.resize();
   }
   async prepare() {
-    await Promise.all([this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
+    await Promise.all([this.sky.ready,this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
     if(!this.originalEnemies.ready||!this.originalWeapon.ready)return;
     // Compile the gameplay and hand materials while the menu is still visible.
     const body=createCrewAvatar(0),ghost=createCrewAvatar(0,true);
@@ -222,7 +249,7 @@ export class GameRenderer {
       this.updateFloorSide(-Infinity);await this.renderer.compileAsync(this.scene,this.camera);
       this.updateFloorSide(Infinity);await this.renderer.compileAsync(this.scene,this.camera);
     }finally{this.scene.remove(body,ghost);disposeCrewAvatar(body);disposeCrewAvatar(ghost);}
-    await this.renderer.compileAsync(this.originalWeapon.handScene,this.originalWeapon.handCamera);
+    await this.originalWeapon.prewarm(this.renderer);
   }
   updateTiles(time:number) {let changed=false;this.tiles.instanceMatrix.clearUpdateRanges();for(let i=0;i<this.tilePositions.length;i++){const tile=ARENA_TILES[i],height=tileHeight(tile.x,tile.z,time)-(this.originalFloor?0:.05);if(this.tileHeights[i]===height)continue;this.tileHeights[i]=height;changed=true;this.dummy.position.copy(this.tilePositions[i]);this.dummy.position.y=height;this.dummy.rotation.set(0,0,0);this.dummy.scale.setScalar(1);this.dummy.updateMatrix();this.tiles.setMatrixAt(i,this.dummy.matrix);this.tiles.instanceMatrix.addUpdateRange(i*16,16);}if(changed)this.tiles.instanceMatrix.needsUpdate=true;}
   private updateFloorSide(cameraY:number){
@@ -233,43 +260,96 @@ export class GameRenderer {
   }
   effect(effect:Effect,world:World,yaw:number,pitch:number) {
     if(effect.kind==='death'&&effect.shooterId&&world.crew.some(p=>p.id===effect.shooterId))this.startCrewDeath(effect.shooterId,effect.pos,world.time);
-    const localId=world.crew.find(p=>p.player===world.player)?.id;
+    const localMember=world.crew.find(p=>p.player===world.player),localId=localMember?.id;
     const local=!world.crew.length||effect.shooterId===localId;
+    const life=localMember?localMember.id+':'+localMember.life:'solo';
+    // Reset before queuing the new life's first event, so it is not discarded
+    // when that life is first rendered (including replay player changes).
+    if(this.feedbackLife&&this.feedbackLife!==life)this.resetFeedback();
+    this.feedbackLife=life;
+    this.cameraFeedback.event(effect,local,world.player.pos,yaw,local?(localMember?.deathSource??world.deathSource)?.contactBody:undefined);
     let weaponEffect=effect;
     if(!local&&(effect.kind==='shot'||effect.kind==='burst')&&effect.shooterId){
       const model=this.crewModels.get(effect.shooterId),shooter=world.crew.find(p=>p.id===effect.shooterId);
       if(model&&shooter){
-        updateCrewAvatar(model,shooter.input,shooter.player.vel,shooter.player.grounded,world.time,true);
-        if(crewMuzzle(model,this.crewMuzzlePosition))weaponEffect={...effect,muzzles:[{x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z}]};
+        updateCrewAvatar(model,shooter.input,shooter.player.vel,shooter.player.grounded,world.time,true,false,shooter.level);
+        if(crewMuzzle(model,this.crewMuzzlePosition)){
+          const muzzles=[{x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z}];
+          if(shooter.level>=5&&crewMuzzle(model,this.crewMuzzlePosition,true))muzzles.push({x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z});
+          weaponEffect={...effect,muzzles};
+        }
       }
     }
     this.originalWeapon.effect(weaponEffect,world,yaw,pitch,local);
-    if(effect.kind==='upgrade')this.upgradePulse.begin(effect.pos,effect.level??effect.amount??world.level,world.time);
+    if(effect.kind==='upgrade'&&((effect.level??0)<5||!world.crew.length||effect.sharedWave))this.upgradePulse.begin(effect.pos,effect.level??effect.amount??world.level,world.time);
     this.blood.effect(effect,world);
   }
+  private applyViewFeedback(world:World,yaw:number,pitch:number,dt:number,suppressed:boolean,impacts=true,alpha=1){
+    const member=world.crew.find(p=>p.player===world.player),life=member?member.id+':'+member.life:'solo';
+    if(document.hidden||suppressed||(this.feedbackLife&&this.feedbackLife!==life)||world.time<this.feedbackTime)this.resetFeedback();
+    this.feedbackLife=life;this.feedbackTime=world.time;this.feedbackWorldOffset.set(0,0,0);
+    if(document.hidden||suppressed)return;
+    if(impacts)this.cameraFeedback.advance(dt);else this.cameraFeedback.clear();
+    const clock=(impacts?world.time:world.tick*STEP)+(Math.max(0,Math.min(1,alpha))-1)*STEP;
+    const travelDt=this.movementClock===null?dt:Math.max(0,clock-this.movementClock);this.movementClock=clock;
+    if(world.state==='playing'&&member?.alive!==false)this.movementMotion.update(world.player,yaw,pitch,dt,travelDt);else this.movementMotion.clear();
+    const impact=this.cameraFeedback.sample(),motion=this.movementMotion.pose.camera;
+    const x=impact.x+motion.x,y=impact.y+motion.y,z=impact.z+motion.z;
+    this.feedbackWorldOffset.set(x*Math.cos(yaw)+z*Math.sin(yaw),y,-x*Math.sin(yaw)+z*Math.cos(yaw)).clampLength(0,.04);
+    this.camera.position.add(this.feedbackWorldOffset);
+  }
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
+    if(!entrance||!world||!bodyInput||spectatorPosition||this.topDown)this.courtyardNeck.clear();
     this.crewReplayExternal=!!spectatorPosition;this.renderer.info.reset();if(menu){
-      this.upgradePulse.clear();
+      this.resetFeedback();this.upgradePulse.clear();
       // The menu has its own scene; retire gameplay glows before the early return.
       this.projectileLighting.update(null,true,projectileAlpha,this.renderer.domElement.height);
       this.menuRelics.render(this.renderer,dt);return;
     }this.visualTime+=dt;const t=this.crewReplayMode&&world?world.time:this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
     if(entrance&&world){
+      const entranceScene=world.courtyard?this.courtyard.scene:this.entrance.scene;
       this.upgradePulse.clear();
-      samplePlayerPosition(world,projectileAlpha,this.camera.position);this.camera.rotation.set(pitch,yaw,0,'YXZ');
-      this.entrance.update(t,this.camera.position);this.updateCrewModels(world,dt,crewInterpolated,this.entrance.scene);
+      samplePlayerPosition(world,projectileAlpha,this.camera.position);
+      this.applyViewFeedback(world,yaw,pitch,dt,false,false,projectileAlpha);this.camera.rotation.set(pitch,yaw,0,'YXZ');
+      if(bodyInput&&!spectatorPosition&&!this.topDown){
+       const neck=this.courtyardNeck.update(pitch,document.hidden?0:dt);
+       if(neck.forward>0){
+        // Lean the eyes over the chest; keep the body/shoulders at the actual
+        // player origin and keep the camera inside the courtyard walls.
+        const fraction=courtyardNeckFraction(this.camera.position,yaw,neck,world.courtyard?COURTYARD_CAMERA_BOUNDS:ENTRANCE_COURTYARD,world.courtyard?COURTYARD_CAMERA_BLOCKERS:[]);
+        this.camera.position.x-=Math.sin(yaw)*neck.forward*fraction;
+        this.camera.position.z-=Math.cos(yaw)*neck.forward*fraction;
+        this.camera.position.y-=neck.drop*fraction;
+       }
+      }
+      if(world.courtyard)this.courtyard.update(world,this.courtyardMembers,this.environmentMotionReduced);else this.entrance.update(t,this.camera.position);this.updateCrewModels(world,dt,crewInterpolated,entranceScene);
+      if(bodyInput){
+       this.emoteHands??=createCrewAvatar(0,false,true);
+       const hands=this.emoteHands;hands.visible=true;if(hands.parent!==entranceScene)entranceScene.add(hands);
+       samplePlayerPosition(world,projectileAlpha,hands.position);hands.rotation.set(0,yaw,0);
+       const local=world.crew.find(p=>p.player===world.player),skin=local?this.crewSkins.get(local.id):undefined;
+       setCrewAvatarColor(hands,local?this.crewColors.get(local.id):undefined);setCrewAvatarSkin(hands,skin?.skin,skin?.rank);
+       updateCrewAvatar(hands,bodyInput,world.player.vel,world.player.grounded,world.crew.length?world.tick*STEP:t,false,true,1,footballKickPose(world.courtyard,local?.id??'',world.tick));
+       hands.visible=true;
+      }else if(this.emoteHands)this.emoteHands.visible=false;
       this.camera.updateWorldMatrix(true,false);
-      this.entrance.updateFloorSide(this.camera.position.y);
+      if(!world.courtyard)this.entrance.updateFloorSide(this.camera.position.y);
       if(this.camera.fov!==this.baseFov){this.camera.fov=this.baseFov;this.camera.updateProjectionMatrix();}
       this.openingMist.update(this.camera,world.time,true);
-      const pass=this.composer.passes[0] as RenderPass;pass.scene=this.entrance.scene;this.composer.render();pass.scene=this.scene;return;
+      const pass=this.composer.passes[0] as RenderPass;pass.scene=entranceScene;this.composer.render();pass.scene=this.scene;return;
     }
     const atmosphere=this.environment.update(world?.time??0,menu),day=this.environment.daylight;
     this.skyLight.intensity=1.15+day*2;this.skyLight.color.lerpColors(this.nightSkyLight,this.daySkyLight,day);this.skyLight.groundColor.lerpColors(this.nightGroundLight,this.dayGroundLight,day);
     this.moonLight.intensity=2.1+day*.8;this.rimLight.intensity=1.8+day*.3;this.infernalLight.intensity=90*(1-day*.9);
+    const cosmic=atmosphere.cosmic;
+    this.skyLight.intensity*=1-cosmic*.65;
+    this.skyLight.color.lerp(this.cosmicSkyLight,cosmic);this.skyLight.groundColor.lerp(this.cosmicGroundLight,cosmic);
+    this.moonLight.color.copy(this.defaultMoonColor).lerp(this.cosmicKeyLight,cosmic);
+    this.rimLight.color.copy(this.defaultRimColor).lerp(this.cosmicRimLight,cosmic);
+    this.infernalLight.intensity*=1-cosmic;
     this.moonLight.position.set(-12-day*.6,30-day*5.4,8-day*19.4);
     if(this.scene.fog instanceof THREE.FogExp2){this.scene.fog.color.setRGB(.08*day+atmosphere.furnace*.007,.12*day+atmosphere.furnace*.002,.17*day+atmosphere.cathedral*.007);this.scene.fog.density=.015-day*.006;}
-    this.gemLighting.daylight=day;
+    this.gemLighting.daylight=day;this.gemLighting.cosmic=atmosphere.cosmic;this.gemLighting.nebulaTime=this.environmentMotionReduced?0:Math.min(atmosphere.time,30);
     if(menu) {
       this.camera.position.set(29+Math.sin(t*.04)*2,13,30);this.camera.lookAt(-10,2,0);this.altar.rotation.y=t*.2;
       this.preview.children.forEach((o,i)=>{if(i>0){o.rotation.y+=dt*(o.name.startsWith('squid')?-TOWER_SPIN_SPEED:.045);}});
@@ -277,6 +357,7 @@ export class GameRenderer {
     } else if(world) {
       if(spectatorPosition)this.camera.position.set(spectatorPosition.x,spectatorPosition.y,spectatorPosition.z);
       else samplePlayerPosition(world,projectileAlpha,this.camera.position);
+      this.applyViewFeedback(world,yaw,pitch,dt,!!spectatorPosition||this.topDown||!!this.deathGhost?.visible||this.deathBurstActive,true,projectileAlpha);
       this.camera.rotation.set(pitch,yaw,0,'YXZ');if(this.topDown){const centerZ=this.crewReplayMode?14:0;this.camera.position.set(0,55,centerZ+.001);this.camera.lookAt(0,0,centerZ);}
       this.updateTiles(world.time);
       const fov=this.baseFov+(spectatorPosition?0:world.player.hopPulse*3);if(this.camera.fov!==fov){this.camera.fov=fov;this.camera.updateProjectionMatrix();}
@@ -318,7 +399,14 @@ export class GameRenderer {
         if(enemyHitFlash(e,world.time))this.enemyHitFlash.apply(model);
         if(isPede(e.kind)) {
           model.rotation.set(0,0,0);model.children[0].rotation.set(-Math.atan2(e.vel.y,Math.hypot(e.vel.x,e.vel.z)),enemyYaw(e,world.player.pos),0,'YXZ');const segments=this.segmentNodes.get(model)!;
-          for(let i=0;i<segments.length;i++){const {node,weakPoints}=segments[i],s=e.segments[i],lead=i===0?e.pos:e.segments[i-1].pos;node.position.set(s.pos.x-e.pos.x,s.pos.y-e.pos.y,s.pos.z-e.pos.z);node.rotation.set(-Math.atan2(lead.y-s.pos.y,Math.hypot(lead.x-s.pos.x,lead.z-s.pos.z)),Math.atan2(lead.x-s.pos.x,lead.z-s.pos.z),0,'YXZ');for(const point of weakPoints)point.visible=s.hp>0;}
+          for(let i=0;i<segments.length;i++){const {node,weakPoints}=segments[i],s=e.segments[i],lead=i===0?e.pos:e.segments[i-1].pos;node.position.set(s.pos.x-e.pos.x,s.pos.y-e.pos.y,s.pos.z-e.pos.z);node.rotation.set(-Math.atan2(lead.y-s.pos.y,Math.hypot(lead.x-s.pos.x,lead.z-s.pos.z)),Math.atan2(lead.x-s.pos.x,lead.z-s.pos.z),0,'YXZ');for(const point of weakPoints){
+            const state=point.userData;
+            if(state.feedbackHp!==undefined&&s.hp<state.feedbackHp)state.feedbackHitAt=world.time;
+            if((state.feedbackHp!==undefined&&s.hp>state.feedbackHp)||world.time<(state.feedbackHitAt??-Infinity))state.feedbackHitAt=-Infinity;
+            state.feedbackHp=s.hp;point.visible=s.hp>0;
+            if(!state.feedbackScale)state.feedbackScale=point.scale.clone();
+            point.scale.copy(state.feedbackScale).multiplyScalar(crystalImpactScale(world.time-(state.feedbackHitAt??-Infinity)));point.updateMatrix();
+          }}
         }
       }
       for(const [kind,batch] of this.swarmBatches)for(const mesh of batch.meshes){mesh.count=swarmCounts.get(kind)??0;if(mesh.count){mesh.instanceMatrix.clearUpdateRanges();mesh.instanceMatrix.addUpdateRange(0,mesh.count*16);mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;}}
@@ -340,21 +428,21 @@ export class GameRenderer {
       }
       this.gemMesh.count=Math.min(1200,world.gems.length);for(let i=0;i<this.gemMesh.count;i++){const gem=world.gems[i];this.dummy.position.set(gem.pos.x,gem.pos.y,gem.pos.z);this.dummy.rotation.set(t,t*2,0);this.dummy.scale.setScalar(1.4*(gem.age>8?Math.sin(t*18)*.2+.8:1));this.dummy.updateMatrix();this.gemMesh.setMatrixAt(i,this.dummy.matrix);}if(this.gemMesh.count){this.gemMesh.instanceMatrix.clearUpdateRanges();this.gemMesh.instanceMatrix.addUpdateRange(0,this.gemMesh.count*16);this.gemMesh.instanceMatrix.needsUpdate=true;}
     }
-    if(this.deathGhost?.visible&&world&&!menu)updateCrewAvatar(this.deathGhost,bodyInput??{forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false},world.player.vel,Math.abs(world.player.vel.y)<.2,world.time);
+    if(this.deathGhost?.visible&&world&&!menu)updateCrewAvatar(this.deathGhost,bodyInput??{forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false},world.player.vel,Math.abs(world.player.vel.y)<.2,world.time,false,false,world.level);
     if(world&&!menu&&this.topDown&&bodyInput&&!spectatorPosition&&!world.crew.length){
       if(!this.replayBody){this.replayBody=createCrewAvatar(0);this.replayBody.name='replay-player';this.scene.add(this.replayBody);}
       this.replayBody.visible=true;this.replayBody.position.set(world.player.pos.x,world.player.pos.y,world.player.pos.z);this.replayBody.rotation.y=bodyInput.yaw;
-      updateCrewAvatar(this.replayBody,bodyInput,world.player.vel,world.player.grounded,world.time);
+      updateCrewAvatar(this.replayBody,bodyInput,world.player.vel,world.player.grounded,world.time,false,false,world.level);
     }else if(this.replayBody)this.replayBody.visible=false;
     this.updateFloorSide(this.camera.position.y);
     this.updateCrewDeaths(world,menu,dt);
     this.updateCrewModels(world,dt,crewInterpolated,this.scene,menu);
-    this.playerLight.intensity=!menu&&world&&!spectatorPosition?24*(1-day*.85):0;this.playerLight.position.copy(this.camera.position);this.playerLight.position.y-=.35;
+    this.playerLight.intensity=!menu&&world&&!spectatorPosition?24*(1-day*.85)*(1-atmosphere.cosmic*.88):0;this.playerLight.color.setHex(0xffb56b).lerp(this.cosmicKeyLight,atmosphere.cosmic);this.playerLight.position.copy(this.camera.position);this.playerLight.position.y-=.35;
     this.enemyLighting.update(world,this.camera,menu,e=>this.enemyGlowSources.sources(e,world!.player.pos,this.camera,this.enemies.get(e.id)));
     this.segmentBatches.begin(this.camera);
     if(world&&!menu)for(const e of world.enemies)if(isPede(e.kind)){const model=this.enemies.get(e.id);if(model)this.segmentBatches.add(model);}
     this.segmentBatches.end();
-    this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,menu?t:world?.time??0,menu);this.originalWeapon.update(world,dt,menu,this.topDown||spectatorPosition?undefined:this.camera,projectileAlpha);
+    this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,menu?t:world?.time??0,menu);this.originalWeapon.update(world,dt,menu,this.topDown||spectatorPosition?undefined:this.camera,projectileAlpha,this.feedbackWorldOffset,this.movementMotion.pose);
     this.blood.update(world,menu,this.deathBurstActive?this.deathBloodTime:world?.crew.length?this.crewDeathTime:undefined,this.camera);this.projectileLighting.update(world,menu,projectileAlpha,this.renderer.domElement.height,this.originalWeapon.projectileView);this.openingMist.update(this.camera,world?.time??0);
     this.openingMist.updateLights(this.camera,this.enemyLighting.aura,this.projectileLighting.glow);
     this.upgradePulse.update(dt,world?.time??0);
@@ -363,7 +451,7 @@ export class GameRenderer {
   restoreReplayUpgrade(effect:Effect,world:World,age:number){
     const localId=world.crew.find(p=>p.player===world.player)?.id,local=effect.shooterId===localId;
     this.originalWeapon.effect(effect,world,0,0,local);if(local)this.originalWeapon.restoreReplayUpgradeAge(age);
-    if(age<UPGRADE_PULSE.duration){this.upgradePulse.begin(effect.pos,effect.level??world.level,world.time-age);this.upgradePulse.update(0,world.time);this.upgradePulse.update(0,world.time);}
+    if(age<UPGRADE_PULSE.duration&&((effect.level??0)<5||!world.crew.length||effect.sharedWave)){this.upgradePulse.begin(effect.pos,effect.level??world.level,world.time-age);this.upgradePulse.update(0,world.time);this.upgradePulse.update(0,world.time);}
   }
   /** Restore large corpses directly when a seek skipped their removal frame. */
   restoreReplayTowerDeaths(world:World,deaths:{tick:number;enemy:Enemy}[]){
@@ -373,5 +461,5 @@ export class GameRenderer {
       const top=new THREE.Box3().setFromObject(model).max.y,floor=floorHeight(model.position.x,model.position.z,started),depth=Math.max(1,top-Math.max(-5,floor)+.5);if(towerDeathPose(world.time-started,depth).done)continue;this.scene.add(model);this.dyingTowers.set(e.id,{model,started,y:e.pos.y,yaw:model.rotation.y,direction:e.towerSpinDirection??-1,depth});
     }
   }
-  clear() {this.upgradePulse.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
+  clear() {if(this.emoteHands){disposeCrewAvatar(this.emoteHands);this.emoteHands.removeFromParent();this.emoteHands=null;}this.resetFeedback();this.upgradePulse.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

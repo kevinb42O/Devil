@@ -1,0 +1,277 @@
+{
+  "frames": [
+    {
+      "name": "furnace-arrival",
+      "view": "front",
+      "time": 259,
+      "environmentTime": 229,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.122,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "furnace-arrival",
+      "view": "up",
+      "time": 259,
+      "environmentTime": 229,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.122,
+      "calls": 49,
+      "glError": 0
+    },
+    {
+      "name": "furnace",
+      "view": "front",
+      "time": 289,
+      "environmentTime": 259,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.662,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "furnace",
+      "view": "up",
+      "time": 289,
+      "environmentTime": 259,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 4.662,
+      "calls": 47,
+      "glError": 0
+    },
+    {
+      "name": "furnace-to-cathedral",
+      "view": "front",
+      "time": 371,
+      "environmentTime": 341,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.138,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "furnace-to-cathedral",
+      "view": "up",
+      "time": 371,
+      "environmentTime": 341,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.138,
+      "calls": 49,
+      "glError": 0
+    },
+    {
+      "name": "cathedral",
+      "view": "front",
+      "time": 380,
+      "environmentTime": 350,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.3,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "cathedral",
+      "view": "up",
+      "time": 380,
+      "environmentTime": 350,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.3,
+      "calls": 49,
+      "glError": 0
+    },
+    {
+      "name": "cathedral-later",
+      "view": "front",
+      "time": 410,
+      "environmentTime": 380,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.84,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "cathedral-later",
+      "view": "up",
+      "time": 410,
+      "environmentTime": 380,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 6.84,
+      "calls": 49,
+      "glError": 0
+    },
+    {
+      "name": "cathedral-to-depths",
+      "view": "front",
+      "time": 463,
+      "environmentTime": 433,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.794,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "cathedral-to-depths",
+      "view": "up",
+      "time": 463,
+      "environmentTime": 433,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.794,
+      "calls": 48,
+      "glError": 0
+    },
+    {
+      "name": "unlit",
+      "view": "front",
+      "time": 472,
+      "environmentTime": 442,
+      "cosmic": 0,
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.9559999999999995,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "unlit",
+      "view": "up",
+      "time": 472,
+      "environmentTime": 442,
+      "cosmic": 0,
+      "chapter": "The Unlit Depth",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 7.9559999999999995,
+      "calls": 48,
+      "glError": 0
+    }
+  ],
+  "checks": {
+    "pause": 0,
+    "rewind": 0,
+    "joins": [
+      {
+        "time": 241,
+        "difference": 0.0031993272569444445
+      },
+      {
+        "time": 259,
+        "difference": 0.0019398328993055556
+      },
+      {
+        "time": 362,
+        "difference": 0.002228461371527778
+      },
+      {
+        "time": 380,
+        "difference": 0.0032912868923611113
+      },
+      {
+        "time": 454,
+        "difference": 0.003074001736111111
+      },
+      {
+        "time": 472,
+        "difference": 0.0009052191840277778
+      }
+    ],
+    "seamA": [
+      1,
+      1,
+      1,
+      255
+    ],
+    "seamB": [
+      1,
+      1,
+      1,
+      255
+    ],
+    "top": [
+      0,
+      0,
+      0,
+      255
+    ],
+    "bottom": [
+      0,
+      0,
+      0,
+      255
+    ],
+    "isolatedCalls": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "reducedTravel": 0
+  },
+  "errors": []
+}

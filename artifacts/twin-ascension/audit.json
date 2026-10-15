@@ -1,0 +1,210 @@
+{
+  "report": [
+    {
+      "level": 4,
+      "hands": 1,
+      "visible": 4,
+      "tips": [
+        [
+          -0.048028957763990486,
+          -0.15973582372449197,
+          0.9737950453064316
+        ]
+      ],
+      "material": false,
+      "renderedModels": 0,
+      "width": 1280
+    },
+    {
+      "level": 5,
+      "hands": 2,
+      "visible": 5,
+      "tips": [
+        [
+          0.2063497279634894,
+          -0.1811574003240549,
+          0.9732355448596329
+        ],
+        [
+          -0.20634972796348938,
+          -0.1811574003240549,
+          0.9732355448596329
+        ]
+      ],
+      "material": true,
+      "renderedModels": 2,
+      "width": 1280
+    },
+    {
+      "level": 6,
+      "hands": 2,
+      "visible": 6,
+      "tips": [
+        [
+          0.2063497279634894,
+          -0.1811574003240549,
+          0.9732355448596329
+        ],
+        [
+          -0.20634972796348938,
+          -0.1811574003240549,
+          0.9732355448596329
+        ]
+      ],
+      "material": true,
+      "renderedModels": 2,
+      "width": 1280
+    },
+    {
+      "level": 7,
+      "hands": 2,
+      "visible": 7,
+      "tips": [
+        [
+          0.2063497279634894,
+          -0.1811574003240549,
+          0.9732355448596329
+        ],
+        [
+          -0.20634972796348938,
+          -0.1811574003240549,
+          0.9732355448596329
+        ]
+      ],
+      "material": true,
+      "renderedModels": 2,
+      "width": 1280
+    },
+    {
+      "level": 4,
+      "hands": 1,
+      "visible": 4,
+      "tips": [
+        [
+          -0.048028957763990486,
+          -0.15973582372449197,
+          0.9737950453064316
+        ]
+      ],
+      "material": false,
+      "renderedModels": 0,
+      "width": 390
+    },
+    {
+      "level": 5,
+      "hands": 2,
+      "visible": 5,
+      "tips": [
+        [
+          0.4047450602596505,
+          -0.4119615648325325,
+          0.9732355448596329
+        ],
+        [
+          -0.4047450602596505,
+          -0.4119615648325325,
+          0.9732355448596329
+        ]
+      ],
+      "material": true,
+      "renderedModels": 2,
+      "width": 390
+    },
+    {
+      "level": 6,
+      "hands": 2,
+      "visible": 6,
+      "tips": [
+        [
+          0.4047450602596505,
+          -0.4119615648325325,
+          0.9732355448596329
+        ],
+        [
+          -0.4047450602596505,
+          -0.4119615648325325,
+          0.9732355448596329
+        ]
+      ],
+      "material": true,
+      "renderedModels": 2,
+      "width": 390
+    },
+    {
+      "level": 7,
+      "hands": 2,
+      "visible": 7,
+      "tips": [
+        [
+          0.4047450602596505,
+          -0.4119615648325325,
+          0.9732355448596329
+        ],
+        [
+          -0.4047450602596505,
+          -0.4119615648325325,
+          0.9732355448596329
+        ]
+      ],
+      "material": true,
+      "renderedModels": 2,
+      "width": 390
+    }
+  ],
+  "alignment": {
+    "checks": 7776,
+    "maxError": 1.320978794020618e-14
+  },
+  "keyResults": [
+    {
+      "code": "Digit5",
+      "level": 5,
+      "visual": 5,
+      "phase": "PRACTICE",
+      "label": "V"
+    },
+    {
+      "code": "Digit6",
+      "level": 6,
+      "visual": 6,
+      "phase": "PRACTICE",
+      "label": "VI"
+    },
+    {
+      "code": "Digit7",
+      "level": 7,
+      "visual": 7,
+      "phase": "PRACTICE",
+      "label": "VII"
+    },
+    {
+      "code": "Numpad5",
+      "level": 5,
+      "visual": 5,
+      "phase": "PRACTICE",
+      "label": "V"
+    },
+    {
+      "code": "Numpad6",
+      "level": 6,
+      "visual": 6,
+      "phase": "PRACTICE",
+      "label": "VI"
+    },
+    {
+      "code": "Numpad7",
+      "level": 7,
+      "visual": 7,
+      "phase": "PRACTICE",
+      "label": "VII"
+    },
+    {
+      "code": "Digit4",
+      "level": 4,
+      "visual": 4,
+      "phase": "PRACTICE",
+      "label": "IV"
+    }
+  ],
+  "errors": []
+}

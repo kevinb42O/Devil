@@ -1,15 +1,24 @@
+import {loadCrewCrown} from './crew-crown';
+import {configureAscendantMaterial} from './ascendant-material';
+import {isPlayerSkin,isPodiumRank,type PlayerSkin,type PodiumRank} from './player-skins';
+import {playerColor} from './player-colors';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
 import type {Input,Vec} from './simulation';
 
+const shoulderGeometry=new THREE.IcosahedronGeometry(1,2);
 const fallbackGeometry=new THREE.CapsuleGeometry(.38,1.05,4,8);
 const colors=[0xcde98b,0x62cfff,0xffbd66,0xd994ff,0xee9eae,0xedda80];
 const pending=new Set<THREE.Group>();
 let template:THREE.Group|null=null,clips:THREE.AnimationClip[]=[],loading:Promise<void>|null=null,failed=false;
 let modelScale=1,floorOffset=0;
-type AvatarState={root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;muzzle:THREE.Object3D};
+type KickPose={charge:number;age:number;power:number};
+type AvatarState={leftFoot?:THREE.Bone;legEnd?:THREE.Bone;footBasePosition?:THREE.Vector3;footBaseRotation?:THREE.Quaternion;leftThigh?:THREE.Bone;leftShin?:THREE.Bone;legBases?:[THREE.Quaternion,THREE.Quaternion];anchor?:{bone:THREE.Bone;reference:THREE.Vector3;rootPosition:THREE.Vector3};head:THREE.Bone;dark?:THREE.SkinnedMesh;gold:boolean;crown?:THREE.Mesh;root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;leftUpper:THREE.Bone;leftLower:THREE.Bone;baseLeftUpper:THREE.Quaternion;baseLeftLower:THREE.Quaternion;leftRaise:number;rightRaise:number;fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[];shoulders?:THREE.Mesh[];muzzle:THREE.Object3D};
 const states=new WeakMap<THREE.Group,AvatarState>();
+let originalDark:THREE.BufferGeometry|undefined,crownedDark:THREE.BufferGeometry|undefined,crownMount:THREE.Matrix4|undefined;
+const emoteFrame=new THREE.Matrix4(),emoteWorld=new THREE.Quaternion(),emoteRight=new THREE.Vector3(),emoteBack=new THREE.Vector3(),handDirection=new THREE.Vector3(),handLocal=new THREE.Quaternion(),fingerTarget=new THREE.Quaternion();
+const neckPosition=new THREE.Vector3(),kickEndBefore=new THREE.Vector3(),kickFootPosition=new THREE.Vector3();
 const aim=new THREE.Vector3(),up=new THREE.Vector3(0,1,0),direction=new THREE.Vector3(),parentRotation=new THREE.Quaternion(),aimRotation=new THREE.Quaternion();
 
 /** One small, texture-free GLB shared by every third-person player body. */
@@ -17,10 +26,11 @@ export function loadCrewAvatar():Promise<void>{
  if(loading)return loading;
  loading=new GLTFLoader().loadAsync('/assets/models/crew-demon.glb').then(gltf=>{
   const candidate=gltf.scene;clips=['Idle','Run','Jump_Idle'].map(name=>gltf.animations.find(clip=>clip.name.endsWith('|'+name))!);
-  if(clips.some(clip=>!clip)||!candidate.getObjectByName('UpperArmR')||!candidate.getObjectByName('LowerArmR'))throw Error('Demon rig or locomotion clips missing');
+  if(clips.some(clip=>!clip)||!candidate.getObjectByName('UpperArmR')||!candidate.getObjectByName('LowerArmR')||!candidate.getObjectByName('UpperArmL')||!candidate.getObjectByName('LowerArmL'))throw Error('Demon rig or locomotion clips missing');
   const mixer=new THREE.AnimationMixer(candidate);mixer.clipAction(clips[0]).play();mixer.setTime(0);candidate.updateMatrixWorld(true);
   const bounds=new THREE.Box3().setFromObject(candidate);modelScale=2.05/(bounds.max.y-bounds.min.y);floorOffset=-1.7-bounds.min.y*modelScale;
   mixer.stopAllAction();mixer.uncacheRoot(candidate);template=candidate;
+  candidate.traverse(node=>{if(node instanceof THREE.SkinnedMesh&&(node.material as THREE.Material).name==='Black')originalDark=node.geometry;});
   for(const model of pending)attachDemon(model);pending.clear();
  }).catch(error=>{failed=true;console.warn('Teammate demon could not load; using simple body.',error);pending.clear();});
  return loading;
@@ -34,64 +44,228 @@ function attachDemon(model:THREE.Group){
  const fallback=model.getObjectByName('crew-fallback');if(fallback)model.remove(fallback);
  for(const material of model.userData.avatarMaterials as THREE.Material[])material.dispose();
  const root=cloneSkeleton(template!) as THREE.Group;
- const materials=new Map<THREE.Material,THREE.MeshStandardMaterial>();
+ const materials=new Map<THREE.Material,THREE.MeshStandardMaterial>();let dark:THREE.SkinnedMesh|undefined;
  root.traverse(node=>{
   if(!(node instanceof THREE.Mesh))return;
   const source=node.material as THREE.MeshStandardMaterial;
-  let material=materials.get(source);if(!material){material=source.clone();styleMaterial(material,model.userData.ghost===true);materials.set(source,material);}
-  node.material=material;node.castShadow=false;node.receiveShadow=false;
+  let material=materials.get(source);if(!material){material=source.clone();if(source.name==='Demon_Main'&&model.userData.playerColor)material.color.set(playerColor(model.userData.playerColor).hex).multiplyScalar(.64);styleMaterial(material,model.userData.ghost===true);materials.set(source,material);}
+  node.material=material;if(node instanceof THREE.SkinnedMesh&&source.name==='Black')dark=node;node.castShadow=false;node.receiveShadow=false;
   // Fixed conservative bounds cover locomotion and arm aiming without per-frame
   // CPU skinning of every vertex to recompute animated bounds.
   if(node instanceof THREE.SkinnedMesh)node.boundingSphere=new THREE.Sphere(new THREE.Vector3(0,0,0),.06);
  });
  model.userData.avatarMaterials=[...materials.values()];
+ if(model.userData.playerSkin)setCrewAvatarSkin(model,model.userData.playerSkin,model.userData.skinRank);
  root.name='quaternius-demon';root.rotation.y=Math.PI;
  // Normalize from the cached idle bounds; cloning never skins every vertex.
  const mixer=new THREE.AnimationMixer(root),actions=clips.map(clip=>mixer.clipAction(clip).play());
  actions.forEach((action,i)=>action.setEffectiveWeight(i===0?1:0));mixer.setTime(0);root.updateMatrixWorld(true);
  root.scale.setScalar(modelScale);root.position.y=floorOffset;
  model.add(root);
- const upper=root.getObjectByName('UpperArmR') as THREE.Bone,lower=root.getObjectByName('LowerArmR') as THREE.Bone;
- states.set(model,{root,mixer,actions,upper,lower,lastTime:NaN,aim:0,baseUpper:upper.quaternion.clone(),baseLower:lower.quaternion.clone(),muzzle:root.getObjectByName('Middle3R_end')!});
- model.userData.avatarSource='quaternius-demon';
+ const upper=root.getObjectByName('UpperArmR') as THREE.Bone,lower=root.getObjectByName('LowerArmR') as THREE.Bone,leftUpper=root.getObjectByName('UpperArmL') as THREE.Bone,leftLower=root.getObjectByName('LowerArmL') as THREE.Bone;
+ // First person uses the complete connected body at the real player origin.
+ // Remove only head-weighted faces so the camera never sees inside the skull;
+ // retain torso, shoulders and every arm seam at all fields of view.
+ if(model.userData.firstPerson)root.traverse(node=>{
+  if(!(node instanceof THREE.SkinnedMesh))return;
+  const skin=node.geometry.getAttribute('skinIndex'),weights=node.geometry.getAttribute('skinWeight'),index=node.geometry.getIndex(),indices:number[]=[];
+  const headBones=new Set<number>();node.skeleton.bones.forEach((bone,i)=>{for(let parent:THREE.Object3D|null=bone;parent;parent=parent.parent)if(parent.name==='Head'){headBones.add(i);break;}});
+  const isHead=(i:number)=>{let weight=0;for(let j=0;j<4;j++)if(headBones.has(skin.getComponent(i,j)))weight+=weights.getComponent(i,j);return weight>.05;};
+  const keptEdges=new Map<string,{a:number;b:number;count:number}>(),cutEdges=new Set<string>();
+  const edgeKey=(a:number,b:number)=>a<b?`${a}:${b}`:`${b}:${a}`;
+  for(let i=0;i<(index?.count??skin.count);i+=3){
+   const a=index?index.getX(i):i,b=index?index.getX(i+1):i+1,c=index?index.getX(i+2):i+2,keep=!isHead(a)&&!isHead(b)&&!isHead(c);
+   if(keep)indices.push(a,b,c);
+   for(const [from,to]of [[a,b],[b,c],[c,a]]){const key=edgeKey(from,to);if(!keep)cutEdges.add(key);else{const edge=keptEdges.get(key);if(edge)edge.count++;else keptEdges.set(key,{a:from,b:to,count:1});}}
+  }
+  // Seal the cut neck with its own skinned boundary vertices. Extreme FOV and
+  // looking down must show a closed body, never the hollow inside of the mesh.
+  const boundary=new Map<number,number>();for(const [key,edge]of keptEdges)if(edge.count===1&&cutEdges.has(key))boundary.set(edge.a,edge.b);
+  while(boundary.size){const first=boundary.keys().next().value!,loop=[first];let at=first;
+   while(boundary.has(at)){const next=boundary.get(at)!;boundary.delete(at);if(next===first)break;loop.push(next);at=next;}
+   for(let i=1;i+1<loop.length;i++)indices.push(loop[0],loop[i+1],loop[i]);
+  }
+  node.geometry=node.geometry.clone();node.geometry.setIndex(indices);node.frustumCulled=false;
+ });
+ const fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[]=[];
+ root.traverse(node=>{if(!(node instanceof THREE.Bone)||! /^(Thumb|Index|Middle|Pinky)[123][LR]$/.test(node.name))return;
+  const left=node.name.endsWith('L'),right=root.getObjectByName(node.name.slice(0,-1)+'R')!;
+  const open=right.quaternion.clone();if(left)open.set(open.x,-open.y,-open.z,open.w);
+  fingers.push({bone:node,base:node.quaternion.clone(),open,left});
+ });
+ let shoulders:THREE.Mesh[]|undefined;
+ if(model.userData.firstPerson){const material=[...materials.values()].find(m=>m.name==='Demon_Main')!;shoulders=[leftUpper,upper].map(()=>{const joint=new THREE.Mesh(shoulderGeometry,material);joint.name='first-person-shoulder';joint.scale.set(.23,.2,.22);joint.frustumCulled=false;model.add(joint);return joint;});}
+ const anchor=model.userData.firstPerson?{bone:root.getObjectByName('Neck') as THREE.Bone,reference:new THREE.Vector3(),rootPosition:root.position.clone()}:undefined;
+ if(anchor){model.updateWorldMatrix(true,true);anchor.bone.getWorldPosition(anchor.reference);model.worldToLocal(anchor.reference);}
+ const leftFoot=root.getObjectByName('FootL') as THREE.Bone|undefined,legEnd=root.getObjectByName('LowerLegL_end') as THREE.Bone|undefined;
+ const leftThigh=root.getObjectByName('UpperLegL') as THREE.Bone|undefined,leftShin=root.getObjectByName('LowerLegL') as THREE.Bone|undefined;
+ states.set(model,{leftFoot,legEnd,footBasePosition:leftFoot?.position.clone(),footBaseRotation:leftFoot?.quaternion.clone(),leftThigh,leftShin,legBases:leftThigh&&leftShin?[leftThigh.quaternion.clone(),leftShin.quaternion.clone()]:undefined,anchor,fingers,shoulders,head:root.getObjectByName('Head') as THREE.Bone,dark,gold:false,root,mixer,actions,upper,lower,lastTime:NaN,aim:0,leftUpper,leftLower,baseLeftUpper:leftUpper.quaternion.clone(),baseLeftLower:leftLower.quaternion.clone(),leftRaise:0,rightRaise:0,baseUpper:upper.quaternion.clone(),baseLower:lower.quaternion.clone(),muzzle:root.getObjectByName('Middle3R_end')!});
+ model.userData.avatarSource='quaternius-demon';updateHeadwear(model);
 }
-export function createCrewAvatar(index:number,ghost=false){
- const model=new THREE.Group();model.name='crew-devil';model.userData.ghost=ghost;
+function withoutHalo(source:THREE.BufferGeometry){
+ if(crownedDark)return crownedDark;
+ const positions=source.getAttribute('position'),index=source.getIndex()!,indices:number[]=[];
+ // Measured disjoint halo component in the source GLB (Z is its up axis).
+ // Horns end below Y=-.003385; this removes only the 112 halo vertices' faces.
+ const halo=(i:number)=>positions.getZ(i)>.027&&positions.getY(i)>-.0031;
+ for(let i=0;i<index.count;i+=3){const a=index.getX(i),b=index.getX(i+1),c=index.getX(i+2);if(!(halo(a)&&halo(b)&&halo(c)))indices.push(a,b,c);}
+ crownedDark=source.clone();crownedDark.setIndex(indices);return crownedDark;
+}
+/** Computed once at idle, then inherited directly from the animated head bone. */
+function measureCrownMount(model:THREE.Group,state:AvatarState){
+ // SkinnedMesh.updateMatrixWorld also refreshes bindMatrixInverse after normalization.
+ model.updateMatrixWorld(true);
+ const skin=state.root.getObjectByProperty('type','SkinnedMesh') as THREE.SkinnedMesh;
+ const positions=skin.geometry.getAttribute('position'),point=new THREE.Vector3(),points=new Float32Array(positions.count*3),cap=new THREE.Box3();
+ const toLocal=model.matrixWorld.clone().invert().multiply(skin.matrixWorld);let top=-Infinity;
+ for(let i=0;i<positions.count;i++){point.fromBufferAttribute(positions,i);skin.applyBoneTransform(i,point);point.applyMatrix4(toLocal);top=Math.max(top,point.y);point.toArray(points,i*3);}
+ for(let i=0;i<points.length;i+=3)if(points[i+1]>top-.14)cap.expandByPoint(point.fromArray(points,i));
+ const size=cap.getSize(new THREE.Vector3()),center=cap.getCenter(new THREE.Vector3()),width=size.x*1.1;
+ // Sink the bottom band 7 cm into the cranium so the crown is worn, never floating.
+ const desired=new THREE.Matrix4().compose(new THREE.Vector3(center.x,top-.07,center.z),new THREE.Quaternion(),new THREE.Vector3(width,width,width));
+ return state.head.matrixWorld.clone().invert().multiply(model.matrixWorld).multiply(desired);
+}
+function updateHeadwear(model:THREE.Group){
+ const state=states.get(model);if(!state)return;
+ const gold=!model.userData.firstPerson&&!model.userData.ghost&&model.userData.playerSkin==='ascendant'&&model.userData.skinRank===1;
+ if(state.gold===gold)return;state.gold=gold;
+ if(state.dark&&originalDark)state.dark.geometry=gold?withoutHalo(originalDark):originalDark;
+ if(state.crown){state.crown.visible=gold;return;}
+ if(!gold)return;
+ crownMount??=measureCrownMount(model,state);
+ void loadCrewCrown().then(asset=>{
+  if(!asset||states.get(model)!==state||!state.gold||state.crown)return;
+  const crown=new THREE.Mesh(asset.geometry,asset.material);crown.name='crew-gold-crown';crown.matrixAutoUpdate=false;crown.matrix.copy(crownMount!);state.head.add(crown);state.crown=crown;
+ });
+}
+export function createCrewAvatar(index:number,ghost=false,firstPerson=false){
+ const model=new THREE.Group();model.name='crew-devil';model.userData.ghost=ghost;model.userData.firstPerson=firstPerson;
  const material=new THREE.MeshStandardMaterial({color:colors[index%colors.length],roughness:.85});styleMaterial(material,ghost);
  model.userData.avatarMaterials=[material];
- const body=new THREE.Mesh(fallbackGeometry,material);body.name='crew-fallback';body.position.y=-.7;model.add(body);
+ const body=new THREE.Mesh(fallbackGeometry,material);body.name='crew-fallback';body.position.y=-.7;model.add(body);if(firstPerson)body.visible=false;
  if(template)attachDemon(model);else if(!failed){pending.add(model);void loadCrewAvatar();}
  return model;
+}
+/** Tint cloned skin only; dark horns, claws and eyes keep their original materials. */
+export function setCrewAvatarColor(model:THREE.Group,value:unknown){
+ const color=playerColor(value);if(model.userData.ghost||model.userData.playerColor===color.id)return;
+ model.userData.playerColor=color.id;
+ for(const material of model.userData.avatarMaterials as THREE.MeshStandardMaterial[]){
+  if(material.name==='Demon_Main'||model.getObjectByName('crew-fallback')){
+   material.color.set(color.hex).multiplyScalar(.64);material.emissive.copy(material.color);
+  }
+ }
+}
+export function setCrewAvatarSkin(model:THREE.Group,skin?:PlayerSkin,rank?:PodiumRank){
+ if(model.userData.ghost)return;
+ const active=isPlayerSkin(skin)&&isPodiumRank(rank);
+ model.userData.playerSkin=active?skin:undefined;model.userData.skinRank=active?rank:undefined;
+ const time=model.userData.skinTime??={value:0};
+ for(const material of model.userData.avatarMaterials as THREE.MeshStandardMaterial[])
+  if(material.name==='Demon_Main'||model.getObjectByName('crew-fallback'))configureAscendantMaterial(material,active?rank:null,time);
+ updateHeadwear(model);
 }
 function pointBone(bone:THREE.Bone,aim:THREE.Vector3,weight:number){
  bone.parent!.getWorldQuaternion(parentRotation);direction.copy(aim).applyQuaternion(parentRotation.invert());
  aimRotation.setFromUnitVectors(up,direction.normalize());bone.quaternion.slerp(aimRotation,weight);bone.updateWorldMatrix(false,true);
 }
+function pointEmoteArm(model:THREE.Group,upper:THREE.Bone,lower:THREE.Bone,target:THREE.Vector3,weight:number){
+ // Both segments use one world frame, preserving the rig's hand roll across
+ // the elbow. Local -Z is the palm, and local +X points toward the left thumb.
+ emoteBack.set(0,0,1).applyQuaternion(model.quaternion);
+ emoteRight.crossVectors(target,emoteBack).normalize();
+ emoteBack.crossVectors(emoteRight,target).normalize();
+ emoteWorld.setFromRotationMatrix(emoteFrame.makeBasis(emoteRight,target,emoteBack));
+ for(const bone of [upper,lower]){
+  bone.parent!.getWorldQuaternion(parentRotation);
+  aimRotation.copy(parentRotation).invert().multiply(emoteWorld);
+  bone.quaternion.slerp(aimRotation,weight);bone.updateWorldMatrix(false,true);
+ }
+}
 /** Presentation only: sample simulation time so pause/seek never advance animation. */
-export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false){
+export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false,courtyard=false,weaponLevel=1,kick?:KickPose){
+ if(model.userData.skinTime)model.userData.skinTime.value=time;
  const state=states.get(model);if(!state)return;
  const speed=Math.hypot(velocity.x,velocity.z),run=grounded?Math.min(1,speed/5):0;
  state.actions[0].setEffectiveWeight(grounded?1-run:0);state.actions[1].setEffectiveWeight(run);state.actions[2].setEffectiveWeight(grounded?0:1);
  state.upper.quaternion.copy(state.baseUpper);state.lower.quaternion.copy(state.baseLower);
+ state.leftUpper.quaternion.copy(state.baseLeftUpper);state.leftLower.quaternion.copy(state.baseLeftLower);
+ for(const finger of state.fingers)finger.bone.quaternion.copy(finger.base);
+ if(state.anchor)state.root.position.copy(state.anchor.rootPosition);
+ if(state.legBases&&state.leftThigh&&state.leftShin){state.leftThigh.quaternion.copy(state.legBases[0]);state.leftShin.quaternion.copy(state.legBases[1]);}
+ if(state.leftFoot&&state.footBasePosition&&state.footBaseRotation){state.leftFoot.position.copy(state.footBasePosition);state.leftFoot.quaternion.copy(state.footBaseRotation);}
  state.mixer.setTime(time);
+ if(state.leftFoot&&state.footBasePosition&&state.footBaseRotation){state.footBasePosition.copy(state.leftFoot.position);state.footBaseRotation.copy(state.leftFoot.quaternion);}
+ if(state.legBases&&state.leftThigh&&state.leftShin){state.legBases[0].copy(state.leftThigh.quaternion);state.legBases[1].copy(state.leftShin.quaternion);}
+ if(state.anchor){
+  // Jump/run clips contain their own root lift. Physics already moves the local
+  // eye and body together, so cancel that extra lift at the collar. Preserve
+  // the animated legs, torso rotation and the third-person jump silhouette.
+  model.updateWorldMatrix(true,true);state.anchor.bone.getWorldPosition(neckPosition);model.worldToLocal(neckPosition);
+  state.root.position.add(state.anchor.reference).sub(neckPosition);model.updateWorldMatrix(true,true);
+ }
  state.baseUpper.copy(state.upper.quaternion);state.baseLower.copy(state.lower.quaternion);
- const firing=input.fire||input.homing||recentShot,delta=time-state.lastTime;
+ state.baseLeftUpper.copy(state.leftUpper.quaternion);state.baseLeftLower.copy(state.leftLower.quaternion);
+ for(const finger of state.fingers)finger.base.copy(finger.bone.quaternion);
+ const firing=!courtyard&&(input.fire||input.homing||recentShot),delta=time-state.lastTime;
  state.aim=firing?1:!Number.isFinite(delta)||delta<0||delta>.2?0:state.aim*Math.exp(-delta*14);state.lastTime=time;
  if(state.aim>.001&&state.upper&&state.lower){
   model.updateWorldMatrix(true,true);
   const pitch=THREE.MathUtils.clamp(input.pitch,-1.35,1.35);
   aim.set(0,Math.sin(pitch),-Math.cos(pitch)).applyQuaternion(model.quaternion);
   pointBone(state.upper,aim,state.aim);pointBone(state.lower,aim,state.aim);
+  if(weaponLevel>=5&&!courtyard){pointBone(state.leftUpper,aim,state.aim);pointBone(state.leftLower,aim,state.aim);}
  }
+ const blend=!Number.isFinite(delta)||delta<0||delta>.2?1:1-Math.exp(-delta*16);
+ state.leftRaise+=((courtyard&&input.leftArm?1:0)-state.leftRaise)*blend;
+ state.rightRaise+=((courtyard&&input.rightArm?1:0)-state.rightRaise)*blend;
+ if(!courtyard)state.leftRaise=state.rightRaise=0;
+ if(state.leftRaise>.001||state.rightRaise>.001){
+  model.updateWorldMatrix(true,true);
+  // Open the salute outward and forward from the shoulders. Keeping
+  // the direction relative to body yaw clears the head/horns even while looking
+  // around, and gives both arms the same silhouette in either camera view.
+  if(state.leftRaise>.001){aim.set(-.45,1,-1.1).normalize().applyQuaternion(model.quaternion);pointEmoteArm(model,state.leftUpper,state.leftLower,aim,state.leftRaise);}
+  if(state.rightRaise>.001){aim.set(.45,1,-1.1).normalize().applyQuaternion(model.quaternion);pointEmoteArm(model,state.upper,state.lower,aim,state.rightRaise);}
+ }
+ // Keep the greeting hand upright at the wrist while the arm reaches forward.
+ // This exposes the backs of the fingers to the owner and the open palm to a
+ // friend, instead of foreshortening the whole hand into the forearm.
+ for(const left of [true,false]){
+  const weight=left?state.leftRaise:state.rightRaise;if(weight<=.001)continue;
+  const lower=left?state.leftLower:state.lower;
+  handDirection.set(left?-.15:.15,1,-.05).normalize().applyQuaternion(model.quaternion);
+  emoteBack.set(0,0,1).applyQuaternion(model.quaternion);emoteRight.crossVectors(handDirection,emoteBack).normalize();emoteBack.crossVectors(emoteRight,handDirection).normalize();
+  emoteWorld.setFromRotationMatrix(emoteFrame.makeBasis(emoteRight,handDirection,emoteBack));
+  lower.getWorldQuaternion(handLocal);handLocal.invert().multiply(emoteWorld);
+  for(const finger of state.fingers)if(finger.left===left){
+   fingerTarget.copy(finger.open);if(/1[LR]$/.test(finger.bone.name))fingerTarget.premultiply(handLocal);
+   finger.bone.quaternion.slerp(fingerTarget,weight);
+  }
+ }
+ if(courtyard&&kick&&state.leftThigh&&state.leftShin){
+  const windup=.25+.75*kick.charge;let thigh=-.3*windup,shin=-1.1*windup;
+  if(kick.charge===0&&kick.age>=0&&kick.age<.5){const strike=Math.min(1,kick.age/.13),settle=Math.max(0,1-(kick.age-.13)/.37),ease=strike*strike*(3-2*strike);thigh=(-.3+(1.1+.25*kick.power+.3)*ease)*settle;shin=(-1.1+1.02*ease)*settle;}
+  model.updateWorldMatrix(true,true);if(state.legEnd)state.legEnd.getWorldPosition(kickEndBefore);
+  for(const [bone,angle]of [[state.leftThigh,thigh],[state.leftShin,shin]] as const){
+   bone.parent!.getWorldQuaternion(parentRotation);model.getWorldQuaternion(emoteWorld);handDirection.set(1,0,0).applyQuaternion(emoteWorld).applyQuaternion(parentRotation.invert()).normalize();aimRotation.setFromAxisAngle(handDirection,angle);bone.quaternion.premultiply(aimRotation);bone.updateWorldMatrix(false,true);
+  }
+  // FootL is an independent deform bone in this rig, not a shin child.
+  if(state.leftFoot&&state.legEnd){const foot=state.leftFoot;state.legEnd.getWorldPosition(neckPosition);neckPosition.sub(kickEndBefore);foot.getWorldPosition(kickFootPosition).add(neckPosition);foot.parent!.worldToLocal(kickFootPosition);foot.position.copy(kickFootPosition);foot.parent!.getWorldQuaternion(parentRotation);model.getWorldQuaternion(emoteWorld);handDirection.set(1,0,0).applyQuaternion(emoteWorld).applyQuaternion(parentRotation.invert()).normalize();aimRotation.setFromAxisAngle(handDirection,thigh+shin);foot.quaternion.premultiply(aimRotation);foot.updateWorldMatrix(false,true);}
+
+ }
+ model.userData.footballKick=courtyard&&kick?{...kick}:null;
+ if(state.shoulders){model.updateWorldMatrix(true,true);[state.leftUpper,state.upper].forEach((bone,i)=>{bone.getWorldPosition(state.shoulders![i].position);model.worldToLocal(state.shoulders![i].position);});}
+ model.userData.emotes={left:state.leftRaise,right:state.rightRaise};
 }
 export function disposeCrewAvatar(model:THREE.Group){
  pending.delete(model);
- const state=states.get(model);if(state){state.mixer.stopAllAction();state.mixer.uncacheRoot(state.root);state.root.traverse(node=>{if(node instanceof THREE.SkinnedMesh)node.skeleton.dispose();});states.delete(model);}
+ const state=states.get(model);if(state){state.mixer.stopAllAction();state.mixer.uncacheRoot(state.root);state.root.traverse(node=>{if(node instanceof THREE.SkinnedMesh)node.skeleton.dispose();if(model.userData.firstPerson&&node instanceof THREE.SkinnedMesh)node.geometry.dispose();});states.delete(model);}
  for(const material of model.userData.avatarMaterials as THREE.Material[])material.dispose();
 }
 
 /** Cosmetic emission point only; projectile origins and ballistics stay in World. */
-export function crewMuzzle(model:THREE.Group,out:THREE.Vector3):boolean{
+export function crewMuzzle(model:THREE.Group,out:THREE.Vector3,left=false):boolean{
  const state=states.get(model);if(!state)return false;
- state.muzzle.getWorldPosition(out);return true;
+ const muzzle=left?state.root.getObjectByName('Middle3L_end'):state.muzzle;if(!muzzle)return false;muzzle.getWorldPosition(out);return true;
 }

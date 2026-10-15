@@ -1,17 +1,18 @@
 # Descent atmosphere
 
-Open `/artifacts/descent/preview.html?time=39` on the Vite development server. The Phase selector jumps to each chapter, “Enter the cloud · 1×” plays the arrival at real speed, the timeline supports seeking, and Fire daggers shows local fog illumination. Drag the view to inspect the volume from different directions.
+Open `/artifacts/descent/preview.html?time=69` on the Vite development server. The Phase selector jumps to each chapter, “Enter the cloud · 1×” plays the arrival at real speed, the timeline supports seeking, and Fire daggers shows local fog illumination. Drag the view to inspect the volume from different directions.
 
 | Chapter | Atmosphere |
 | --- | --- |
-| Last Sky | Original low mist clears before the incoming cloud layer. |
-| Cloud Grave | Taller cold banks arrive during the sky's 21–39 second transition; moving lanes open and close sightlines. |
+| Cosmic Expanse (0–30 s) | Large volumetric nebula banks rise past the arena against a generated galactic panorama. Cold floor and hand lighting softens into the ash opening during 21–30 s. |
+| Last Sky (30–69 s) | Generated charcoal ash panorama; the original low mist clears before the incoming cloud layer. |
+| Cloud Grave | Generated cold storm shelves behind taller cold banks arrive during the sky's 21–39 second transition; moving lanes open and close sightlines. |
 | Bruised Veil | Broken violet pockets with clear corridors. |
 | Furnace | Thinner rust haze and upward-moving smoke concentrated near the perimeter. |
 | Cathedral Below | Deep, slower haze and fixed shafts between the sky's seven ribs. |
 | Unlit Depth | Sparse dark medium, revealed by nearby emissive sources. |
 
-Density, height and color use the same chapter index and smooth transition windows as the sky. Noise motion and bank pulses use simulation/replay time. Reduced motion freezes drift and pulses while preserving chapter changes. No temporal history is used, so pause and backward seeks reproduce the same image.
+The complete original atmosphere is shifted by 30 seconds, without moving any encounter or replay timestamp. Density, height and color use the same chapter index and smooth transition windows as the sky. Noise motion and bank pulses use simulation/replay time. Reduced motion freezes drift and pulses while preserving chapter changes. No temporal history is used, so pause and backward seeks reproduce the same image.
 
 The volume is sampled at one quarter of each screen dimension and reconstructed against full-resolution scene depth. There are two fog draws, 40 samples on High and 20 on Low. The scene and weapon keep their original resolution. Density within three meters is suppressed in the later chapters to preserve close threats and floor detail.
 

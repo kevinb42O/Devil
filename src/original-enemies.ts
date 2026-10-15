@@ -1,3 +1,4 @@
+import {crystalImpactScale} from './impact-presentation';
 import * as THREE from 'three';
 import {EnvironmentLighting,ENVIRONMENT_FRAGMENT} from './environment-lighting';
 import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
@@ -174,7 +175,7 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
  animate(model:THREE.Group,enemy:Enemy,time:number,originalCadence=false){
   this.materialClock.value=time;let nodes=this.animationNodes.get(model);
   if(!nodes){nodes=[];model.traverse(o=>{if(o.name==='spider-held-gem'||o.name==='spider-head-pivot'||o.name==='spider-leg'||o.name.startsWith('weak-point-')||(enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(o.name)))nodes!.push(o);
-   if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.userData.crystalIndex=i;o.userData.crystalHp=enemy.weakpoints[i]?.hp??1;o.userData.crystalHitAt=-Infinity;}
+   if(o.name.startsWith('weak-point-')){const i=Number(o.name.slice(11));o.userData.crystalIndex=i;o.userData.crystalHp=enemy.weakpoints[i]?.hp??1;o.userData.crystalHitAt=-Infinity;o.userData.crystalBaseScale=o.scale.clone();}
   });this.animationNodes.set(model,nodes);}
   for(const o of nodes){if(o.name==='spider-held-gem'){
    const sinceHit=time-enemy.lastHit;
@@ -187,6 +188,7 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
    else if(hp>state.crystalHp||time<state.crystalHitAt)state.crystalHitAt=-Infinity;
    state.crystalHp=hp;o.visible=hp>0;
    const elapsed=time-state.crystalHitAt;
+   o.scale.copy(state.crystalBaseScale).multiplyScalar(crystalImpactScale(elapsed));o.updateMatrix();
    (o as THREE.Mesh).material=o.visible&&enemy.hp>0&&elapsed>=0&&elapsed<.16&&(elapsed<.045||elapsed>=.085&&elapsed<.13)?this.crystalHitMaterial:this.gemMaterial;
   }else {o.position.y=towerPartOffset(enemy,o.name,originalCadence);o.updateMatrix();}}
  }

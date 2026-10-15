@@ -16,12 +16,13 @@ try{
   const a=world.spawn('skull2',v(-2,2,-9)),b=world.spawn('skull2',v(2,2,-9));a.age=b.age=20;
   const draw=()=>renderer.render(world,0,0,0,false);
   const pixels=()=>{const gl=renderer.renderer.getContext(),data=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,data);return data;};
-  draw();const before=pixels();world.damageEnemy(a,1);draw();const hit=pixels();
+  draw();const before=pixels();world.damageEnemy(a,1);world.effects=[];draw();const hit=pixels();
   const batch=renderer.swarmBatches.get('skull2'),flags=Array.from(batch.meshes[0].instanceColor.array.slice(0,6));
-  let changed=0;for(let i=0;i<hit.length;i+=4)if(hit[i]>before[i]+1)changed++;
+  let changed=0,lift=0;for(let i=0;i<hit.length;i+=4)if(hit[i]>before[i]+20){changed++;lift+=hit[i]-before[i];}
   world.time+=.075;draw();const gap=Array.from(batch.meshes[0].instanceColor.array.slice(0,3));
   world.time+=.03;draw();const second=enemyHitFlash(a,world.time);
   world.time+=.1;draw();const expired=enemyHitFlash(a,world.time);
+  const restored=Array.from(batch.meshes[0].instanceColor.array.slice(0,3));
   // Grow a batch after setting the first enemy's flag; it must survive reallocation.
   world.damageEnemy(a,1);for(let i=0;i<130;i++){const e=world.spawn('skull2',v(2,2,-9));e.age=20;}draw();
   const growthFlag=renderer.swarmBatches.get('skull2').meshes[0].instanceColor.array[0];
@@ -30,18 +31,22 @@ try{
   for(const kind of ['spider','spider2','squid','squid2','squid3','centipede','gigapede','ghostpede','leviathan','orb','thorn']){
    const e=world.spawn(kind,v(0,3,-12));e.age=20;draw();const model=renderer.enemies.get(e.id);
    let body;model.traverse(o=>{if(!body&&o.isMesh&&!o.name.includes('weak-point')&&o.name!=='spider-held-gem')body=o;});
-   const original=body.material,segment=e.weakpoints.length?0:e.segments.length?0:-1;
-   world.damageEnemy(e,1,e.pos,segment,!!e.weakpoints.length);draw();const flashed=body.material!==original;
-   world.time+=.2;draw();checks.push({kind,flashed,restored:body.material===original});world.enemies=[];
+   const original=body.material,segment=e.weakpoints.length?0:e.segments.length?0:-1,normalPixels=pixels();
+   world.damageEnemy(e,1,e.pos,segment,!!e.weakpoints.length);world.effects=[];draw();const flashed=body.material!==original,hitPixels=pixels();
+   let brightened=0;for(let i=0;i<hitPixels.length;i+=4)if(hitPixels[i]>normalPixels[i]+20)brightened++;
+   world.time+=.2;draw();checks.push({kind,flashed,brightened,restored:body.material===original});world.enemies=[];
   }
   world.gems=[];const e=world.spawn('spider',v(0,2,-9));e.pos=v(0,0,-9);e.facingYaw=0;e.age=20;e.headExposure=1;draw();world.damageEnemy(e,1);draw();
+  // Capture an eligible, surviving enemy so the visual artifact shows the effect.
+  world.enemies=[];world.effects=[];const visible=world.spawn('skull2',v(0,2,-7));visible.age=20;draw();world.damageEnemy(visible,1);draw();
   window.hitFixture={world,renderer};
-  return {flags,gap,second,expired,changed,growthFlag,checks};
+  return {flags,gap,second,expired,restored,changed,meanLift:lift/changed,growthFlag,checks};
  });
  assert.deepEqual(result.flags,[1,1,1,0,0,0],'only the struck instance flashes');
- assert.deepEqual(result.gap,[0,0,0]);assert.equal(result.second,false);assert.equal(result.expired,false);
- assert.equal(result.growthFlag,1);assert.ok(result.changed>50,'flash must visibly brighten rendered pixels');
+ assert.deepEqual(result.gap,[1,1,1]);assert.equal(result.second,true);assert.equal(result.expired,false);assert.deepEqual(result.restored,[0,0,0]);
+ assert.equal(result.growthFlag,1);assert.ok(result.changed>50,'flash must brighten at least 50 rendered pixels by over 20/255');
  for(const check of result.checks)assert.ok(check.flashed===!['squid','squid2','squid3','spider','spider2','centipede','gigapede','ghostpede','leviathan'].includes(check.kind)&&check.restored,JSON.stringify(check));
+ for(const check of result.checks.filter(check=>['orb','thorn'].includes(check.kind)))assert.ok(check.brightened>50,`${check.kind}: custom and standard materials must visibly flash`);
  await mkdir('artifacts/hit-flash',{recursive:true});
  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>{const {world,renderer}=window.hitFixture;renderer.render(world,0,0,0,false);resolve();})));
  await page.locator('#hit-flash-test').screenshot({path:'artifacts/hit-flash/hit.png'});

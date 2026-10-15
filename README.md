@@ -38,6 +38,8 @@ Options and your nickname are saved automatically in this browser for the curren
 
 Controller mode supports controllers with a browser standard mapping (Xbox / PlayStation style). Connect the controller and press a button to detect it; Options shows its connection status. If you start before the browser detects the controller, the pause screen shows connection instructions and the game continues automatically once it is detected. Return waits for detection instead of briefly resuming and pausing again. Unsupported mappings and blocked browser access are explained on the pause screen, where Settings remains available to switch to keyboard controls. Left stick moves, right stick looks, A / Cross jumps, RT / R2 fires, LT / L2 fires homing daggers, and Start / Options pauses or resumes. Use the D-pad to move through menus, left / right to change selected sliders or choices, A / Cross to select, and B / Circle to go back. In crew spectator flight, A / Cross ascends, LB / L1 descends, and pressing the left stick speeds up flight. Controller mode does not require mouse capture. Disconnecting pauses local controls; reconnect, then press Start / Options to resume. Release jump and fire buttons after starting or resuming before pressing them again. Controller menu navigation remains available when a keyboard layout is selected. Controller sensitivity and stick dead zone are adjustable in Options.
 
+In the pregame courtyard, hold **Q / E** on QWERTY, **A / E** on AZERTY, or **LT / RT** (**L2 / R2**) on a controller to raise the left / right arm diagonally upward, angled outward to clear the head. Both arms can be raised together; release to lower them smoothly. Emotes show the backs of your open hands in first person and present the palms to the crew. The first-person body stays at the player origin, with connected shoulders through the full 75°–145° FOV range. Looking down in the courtyard smoothly leans the camera forward over the chest, then returns it as you look up; this neck motion is disabled during the run. Local jump/run animation is stabilized at the collar so it cannot add a second shoulder lift into the camera; the third-person jump pose is preserved. Neck leaning stops at courtyard walls and climbing ledges. They clear on pause, lost focus, and entry into the arena; triggers resume their weapon actions during the run.
+
 Mobile mode uses invisible touch areas across the left and right halves of the arena, with no joystick graphics or extra buttons. Hold and drag on the left to move; a short stationary left tap jumps. Hold and drag on the right to aim and fire the stream; a right tap fires the shotgun burst. Releasing the right thumb stops firing and lets gems approach. Tap the survival timer to pause and open the run options. Each thumb keeps its original side until release, so movement and aiming work simultaneously. Touch devices default to Mobile and low visual quality unless saved preferences override them. Gameplay requests fullscreen landscape where supported; a rotated landscape layout handles browsers without orientation lock. Interrupted touches pause and release both controls. Mobile mode uses the same simulation, replays, and crew input as the other control choices.
 
 | Input | Action |
@@ -47,29 +49,30 @@ Mobile mode uses invisible touch areas across the left and right halves of the a
 | Space | Jump; release and press again to hop |
 | Left mouse, tap | Release a spread of daggers |
 | Left mouse, hold | Stream daggers |
-| Right mouse | Spend homing reserve after attunement III |
+| Right mouse | Spend homing reserve after attunement II; both hands fire together at V–VII |
 | Floor-directed burst | Dagger jump |
 | Release both fire buttons | Automatically attract gems |
 | Escape | Pause and release the mouse |
 | R after death | Retry immediately |
+| 1–7 / numpad 1–7, inside the solo arena | Select a weapon tier for an unranked test run |
 
 Single-player deaths automatically replay the final five seconds with a smooth third-person camera following the killer, a ghost of your player, and a countdown to impact. The final view holds briefly before results appear. Falling deaths follow your descent. Press **R** or tap **Retry** at any point to start again; **Escape** / **Results** skips playback, and **Space** / **Pause** freezes it. **Watch death** on the results screen plays it again. Co-op uses free-flight spectating and a 15-second teammate respawn countdown; a team wipe ends the run.
 
 One touch from an active enemy ends the run. Falling also ends it. Gems expire after ten seconds. Player attraction is automatic while both fire buttons are released, stops while either button is held, and also stays off on the tick a tap burst fires. Gems already moving retain their drift during firing; bursts push them away. Large spiders hover outside the arena, raise their heads (three seconds for I, nine for II), steal gems, and eject one egg per consumed gem onto the field. Each egg hatches five spiderlings after ten seconds. Continuous hits keep the head exposed; after a one-second gap it folds down. Travel, attraction strength, and animation curves remain prototype tuning.
 
-Attunement II unlocks at 10 collected gems, III at 70. Gems collected after III become homing reserve. IV requires 150 unspent homing. An earned hand level remains unlocked for the rest of a run. Permanent best time does not change combat power.
+Attunements II–VII unlock at 10 / 70 / 200 / 350 / 550 / 800 lifetime collected gems. Homing unlocks at II; later gems add reserve independently of upgrade progress. V–VII use the native right/left hand models with copper-red, crimson and ivory/violet materials. Both hands fire on the same action and share one firing budget. Primary/homing controls and IV’s floor-launch ceiling stay intact. An earned tier remains unlocked for the rest of a run. Practice offers all seven tiers; pressing 1–7 in solo combat makes the run unranked. [HANDS_5_7_PLAN.md](HANDS_5_7_PLAN.md) records implementation and validation details.
 
 ## What is built
 
 - Momentum controller with ground friction, air steering, timed hops, gravity, and floor-shot boosts.
 - Fixed 120 Hz, seeded simulation independent of presentation.
 - Moving daggers, swept collision, burst/stream distinction, bouncing projectiles, and guided homing.
-- Four attunements, gem expiry/collection/pushback, and separate collection/reserve accounting.
+- Seven attunements, synchronized dual hands at V–VII, gem expiry/collection/pushback, and separate collection/reserve accounting.
 - All four skull tiers and their transmuted forms; three squid tiers; both spiders/eggs; spiderlings; Centipede, Gigapede, Ghostpede; Leviathan/Orb; Thorns.
 - Summoner crystal hit zones and per-segment centipede health and gem rewards.
 - Original V3 Survival event ledger, accelerating endless waves with every-third-wave Ghostpede substitution, and reference tile sinking shared with collision.
-- Original Devil Daggers meshes and textures for all 22 implemented enemy kinds/states, the arena tiles, gems, four hands, daggers, and weapon effects in the local build.
-- Six-stage procedural descent from bright blue skies and white clouds through storms, a furnace and distant cathedral ribs to unlit depths; full surrounding skies, coordinated scene lighting, replay/match-clock timing, and a saved reduced-motion option. The menu retains the starry abyss and eclipsed moon.
+- Original Devil Daggers meshes and textures for all 22 implemented enemy kinds/states, the arena tiles, gems, four original right-hand tiers plus the native left-hand mesh used for V–VII, daggers, and weapon effects in the local build.
+- A 30-second cosmic opening with a generated galactic panorama, stars and rising volumetric nebula banks. Cool directional light softens into the ash sky during 21–30 s, followed by the six-stage descent, with generated 360° panoramas for ash, Cloud Grave, the Furnace and Cathedral Below, then unlit depths. Only the environment shifts by 30 seconds; encounters and replay timing stay unchanged. Existing replays show the new environment. Low quality, mist off and reduced motion are supported; the menu retains its own scene.
 - Original weapon/enemy/event audio, persistent positional enemy voices and cardinal ambience, optional directional threat markers, and readable gem collection status.
 - Start, pause, settings, death summary, instant retry, best-time persistence, practice starts, and replay history/keep/export/seek/top-down playback.
 
@@ -117,7 +120,11 @@ The bottom-right HUD shows a gem icon and the total gems collected in the curren
 
 ## Friends multiplayer
 
-The main menu includes browser-to-browser WebRTC cooperative survival for up to four players. Create a public lobby or join a visible lobby with one click. Every player presses READY, then the host starts the run. Every gem counts for every player. Dead players respawn after 15 seconds beside a living teammate, keeping weapon progression and gaining one second of protection from enemies. A full crew wipe ends the run. See [MULTIPLAYER.md](MULTIPLAYER.md) for online hosting and validation.
+The main menu includes browser-to-browser WebRTC cooperative survival for up to six players. Create or join a room to enter the shared courtyard immediately; friends can keep joining while the pit is closed. Walk through the right-hand passage into the separate football room, with a 36 × 50-meter grass pitch, full markings and two nine-meter goals. Kick the existing in-game skull, with dedicated prelobby illumination, synchronized scoreboards above both goals and a short goal whistle. Hold **left mouse** to charge a left-foot kick, then release; full power takes 1.2 seconds. Right mouse cancels the charge. A ball fully over a field boundary returns to the exact center without changing the score. Face a friend and raise opposite hands for a high-five. Press **F** to ready/unready on keyboard; mobile players tap **Ready up**. **Room & crew** contains invitations, appearance choices, skull reset, and run history. Mobile has separate hold-to-raise hand buttons.
+
+Everyone must finish loading and mark ready before the host can hold **Open pit**. Stand clear of the cover while it opens, then jump in: the arena starts together only after every crew member has dropped. The host can cancel; unreadying or a disconnect also restores any dropped players safely before closing the pit. After a wipe, **Return to courtyard** resets readiness and the toy while keeping a last-descent and crew-best summary. Survival time, weapons, and scoring stay inactive in the courtyard.
+
+Every gem counts for every player. Dead players respawn after 15 seconds beside a living teammate, keeping weapon progression and gaining three seconds of protection from enemies. A full crew wipe ends the run. The solo entrance retains its seal. See [MULTIPLAYER.md](MULTIPLAYER.md) for online hosting and validation; `npm run test:courtyard` checks the new room, and `npm run test:courtyard:six` runs ten six-player return cycles.
 
 Original music uses the bundled `menutheme.wav` in menus and `menuatmos.wav` in the entrance, with fades between screens. Arena play and replays are silent apart from game sounds. Music starts after a click, tap or key press, pauses while the tab is hidden, and has its own saved Music volume setting. Run `npm run test:music` against the development server to verify playback and transitions.
 

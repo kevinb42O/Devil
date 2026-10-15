@@ -25,7 +25,7 @@ export class DeathHistory {
   if(this.disabled||w.crew.length||w.tick===this.lastTick)return;
   if(!force&&w.state!=='dead'&&w.tick%this.stride!==0)return;
   const enemies=w.state==='dead'&&w.deathEnemy?[...w.enemies.filter(e=>e.id!==w.deathEnemy!.id),w.deathEnemy]:w.enemies;
-  let size=HEADER+w.projectiles.length*10+w.gems.length*8+w.rings.length*8;
+  let size=HEADER+w.projectiles.length*13+w.gems.length*8+w.rings.length*8;
   for(const e of enemies)size+=ENEMY_HEADER+(e.segments.length+e.weakpoints.length)*4;
   let s=this.slots[this.cursor];
   if(s.data.length<size){
@@ -42,7 +42,7 @@ export class DeathHistory {
    for(const s of e.segments){d[i++]=s.pos.x;d[i++]=s.pos.y;d[i++]=s.pos.z;d[i++]=s.hp;}
    for(const p of e.weakpoints){d[i++]=p.local.x;d[i++]=p.local.y;d[i++]=p.local.z;d[i++]=p.hp;}
   }
-  for(const p of w.projectiles){d[i++]=p.id;d[i++]=p.pos.x;d[i++]=p.pos.y;d[i++]=p.pos.z;d[i++]=p.vel.x;d[i++]=p.vel.y;d[i++]=p.vel.z;d[i++]=p.age;d[i++]=p.homing?1:0;d[i++]=p.level??w.level;}
+  for(const p of w.projectiles){d[i++]=p.id;d[i++]=p.pos.x;d[i++]=p.pos.y;d[i++]=p.pos.z;d[i++]=p.vel.x;d[i++]=p.vel.y;d[i++]=p.vel.z;d[i++]=p.age;d[i++]=p.homing?1:0;d[i++]=p.level??w.level;d[i++]=p.kind==='shotgun'?1:0;d[i++]=p.socket??-1;d[i++]=p.floorBounces??0;}
   for(const g of w.gems){d[i++]=g.id;d[i++]=g.pos.x;d[i++]=g.pos.y;d[i++]=g.pos.z;d[i++]=g.vel.x;d[i++]=g.vel.y;d[i++]=g.vel.z;d[i++]=g.age;}
   for(const r of w.rings){d[i++]=r.id;d[i++]=r.owner;d[i++]=r.pos.x;d[i++]=r.pos.y;d[i++]=r.pos.z;d[i++]=r.radius;d[i++]=r.previous;d[i++]=r.age;}
   s.time=w.time;s.tick=w.tick;s.used=i;s.enemies=enemies.length;s.projectiles=w.projectiles.length;s.gems=w.gems.length;s.rings=w.rings.length;
@@ -94,9 +94,9 @@ export class DeathAnalysis {
   }
   for(const id of this.enemyCache.keys())if(!this.activeIds.has(id))this.enemyCache.delete(id);
   // Reuse projectile/gem/ring objects; match by ID rather than array index.
-  this.offsets.clear();for(let n=0;n<b.projectiles;n++){this.offsets.set(q[j],j);j+=10;}
+  this.offsets.clear();for(let n=0;n<b.projectiles;n++){this.offsets.set(q[j],j);j+=13;}
   while(w.projectiles.length<a.projectiles)w.projectiles.push({id:0,pos:v(),vel:v(),age:0,homing:false});w.projectiles.length=a.projectiles;
-  for(let n=0;n<a.projectiles;n++,i+=10){const p=w.projectiles[n],next=this.offsets.get(d[i]),k=next??i,other=next===undefined?d:q,f=next===undefined?0:t;p.id=d[i];blend(p.pos,d,i+1,other,k+1,f);blend(p.vel,d,i+4,other,k+4,f);p.age=mix(d[i+7],other[k+7],f);p.homing=!!d[i+8];p.level=d[i+9];}
+  for(let n=0;n<a.projectiles;n++,i+=13){const p=w.projectiles[n],next=this.offsets.get(d[i]),k=next??i,other=next===undefined?d:q,f=next===undefined?0:t;p.id=d[i];blend(p.pos,d,i+1,other,k+1,f);blend(p.vel,d,i+4,other,k+4,f);p.age=mix(d[i+7],other[k+7],f);p.homing=!!d[i+8];p.level=d[i+9];p.kind=d[i+10]?'shotgun':undefined;p.socket=d[i+11]>=0?d[i+11]:undefined;p.floorBounces=d[i+12];}
   this.offsets.clear();for(let n=0;n<b.gems;n++){this.offsets.set(q[j],j);j+=8;}
   while(w.gems.length<a.gems)w.gems.push({id:0,pos:v(),vel:v(),age:0});w.gems.length=a.gems;
   for(let n=0;n<a.gems;n++,i+=8){const g=w.gems[n],next=this.offsets.get(d[i]),k=next??i,other=next===undefined?d:q,f=next===undefined?0:t;g.id=d[i];blend(g.pos,d,i+1,other,k+1,f);blend(g.vel,d,i+4,other,k+4,f);g.age=mix(d[i+7],other[k+7],f);}

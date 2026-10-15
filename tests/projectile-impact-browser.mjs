@@ -6,6 +6,8 @@ const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+ // This fixture mounts its own renderer; avoid loading the unrelated game UI.
+ await page.route('http://127.0.0.1:5173/',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Projectile regression fixture</title>'}));
  await page.goto('http://127.0.0.1:5173',{waitUntil:'domcontentloaded'});
  const result=await page.evaluate(async()=>{
   const [{World,v,STEP},{GameRenderer},{sweepArmor},{localToEnemy}]=await Promise.all([import('/src/simulation.ts'),import('/src/renderer.ts'),import('/src/projectile-collision.ts'),import('/src/enemy-presentation.ts')]);

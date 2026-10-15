@@ -6,7 +6,7 @@ export function cleanNickname(name:string){const clean=name.trim();if(!clean||cl
 export class ScoreQueue {
  pending:PendingScore|null=null;confirmed:OwnScore|null=null;busy=false;error='';onChange=()=>{};
  constructor(private persist:(pending:PendingScore|null)=>void,private send:(pending:PendingScore)=>Promise<OwnScore>,saved:PendingScore|null=null){
-  if(saved&&typeof saved.name==='string'&&saved.score&&typeof saved.score.id==='string'&&saved.score.rules===6&&Number.isInteger(saved.score.timeMs)&&saved.score.timeMs>0&&saved.score.timeMs<=86400000&&[saved.score.kills,saved.score.gems].every(n=>Number.isInteger(n)&&n>=0&&n<=10000000)){
+  if(saved&&typeof saved.name==='string'&&saved.score&&typeof saved.score.id==='string'&&[6,7].includes(saved.score.rules)&&Number.isInteger(saved.score.timeMs)&&saved.score.timeMs>0&&saved.score.timeMs<=86400000&&[saved.score.kills,saved.score.gems].every(n=>Number.isInteger(n)&&n>=0&&n<=10000000)){
    try{this.pending={score:{...saved.score},name:cleanNickname(saved.name)};}catch{/* Ignore damaged local storage. */}
   }
  }

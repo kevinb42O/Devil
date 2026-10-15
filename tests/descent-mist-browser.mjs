@@ -26,7 +26,7 @@ try{
   window.mistAudit={renderer,world,pixels,difference};
  });
  const phases=[];
- for(const quality of ['high','low'])for(const [name,time] of [['opening',0],['cloud-arrival',30],['cloud-grave',45.5],['cloud-break',58.5],['bruised-veil',140],['furnace',259],['cathedral',370],['unlit-depth',460]]){
+ for(const quality of ['high','low'])for(const [name,time] of [['cosmos',0],['arrival',25],['opening',30],['cloud-arrival',60],['cloud-grave',75.5],['cloud-break',88.5],['bruised-veil',170],['furnace',289],['cathedral',400],['unlit-depth',490]]){
   const row=await page.evaluate(({quality,time})=>{
    const {renderer:r,world:w,pixels,difference}=window.mistAudit;w.time=time;r.configure({quality,fov:90});
    const draw=()=>r.render(w,0,.05,0,false);draw();const mist=r.openingMist.diagnostics,on=pixels();
@@ -76,7 +76,7 @@ try{
  await livePage.waitForFunction(()=>window.abyss.sky.time>=39);
  await livePage.keyboard.press('Escape');await livePage.waitForFunction(()=>window.abyss.mode==='paused');await livePage.waitForTimeout(80);
  const live=await livePage.evaluate(()=>({sky:window.abyss.sky,mist:window.abyss.mist}));
- assert.equal(live.mist.chapter,live.sky.chapter);assert.equal(live.mist.time,live.sky.time);
+ assert.equal(live.mist.chapter,live.sky.chapter);assert.equal(live.mist.environmentTime,live.sky.environmentTime);
  await livePage.waitForTimeout(180);assert.deepEqual(await livePage.evaluate(()=>window.abyss.mist),live.mist);
  await livePage.close();
  assert.deepEqual(errors,[]);

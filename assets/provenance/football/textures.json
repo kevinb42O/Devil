@@ -1,0 +1,22 @@
+{
+  "author": "ambientCG",
+  "source": "https://ambientcg.com/view?id=Grass004",
+  "license": "CC0-1.0",
+  "files": [
+    {
+      "file": "grass-color.jpg",
+      "sha256": "9e1c60da44b34a9738b1256ba827541f097dc583521b1d281e61b5f4b4217bc5"
+    },
+    {
+      "file": "grass-normal.jpg",
+      "sha256": "8014a81d896a5c589b60612a769bc39eb1213e48d96f6146f485ea36e9e9610f"
+    }
+  ],
+  "net": {
+    "author": "almaPerdida",
+    "source": "https://opengameart.org/content/soccergoal",
+    "license": "CC0-1.0",
+    "file": "net.png",
+    "sha256": "bcce6f093e5b75898cee7121f60fd3a9a0a10671a2937544d6e38272b792fcd7"
+  }
+}

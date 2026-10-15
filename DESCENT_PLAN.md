@@ -1,5 +1,7 @@
 # The Descent
 
+Implementation update: `COSMIC_DESCENT_PLAN.md` supersedes the opening and encounter alignment below. A 30-second cosmic environment intro precedes the complete existing descent. Environment offsets in the chapter table remain relative to the old opening; add 30 seconds for actual survival/replay times. Enemy encounters retain their original times. The current opening uses dim ash rather than the historical bright daylight direction described here.
+
 Design and implementation direction for an environment that falls from the open sky into the deepest part of hell. Updated to reflect the user's requirement for a bright, almost happy opening and no artificial dark horizon in any chapter.
 
 ## Creative direction

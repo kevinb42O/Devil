@@ -14,9 +14,10 @@ export async function buildPwa(root='dist'){
  const hash=createHash('sha256');
  for(const path of shipped.sort()){hash.update(path);hash.update(await readFile(root+path));}
  const version=hash.digest('hex').slice(0,16);
+ // The small football goal cue stays in core so the first offline goal has sound.
  // The sound archive is large. Cache it only on an explicit offline download,
  // or as sounds are used. Meshes, textures and the app shell install together.
- const core=shipped.filter(path=>!path.startsWith('/assets/original/devil-daggers/audio/')&&!path.startsWith('/assets/materials/')&&!path.startsWith('/assets/audio/'));
+ const core=shipped.filter(path=>!path.startsWith('/assets/original/devil-daggers/audio/')&&!path.startsWith('/assets/materials/')&&(!path.startsWith('/assets/audio/')||path==='/assets/audio/football-goal.mp3'));
  const audio=shipped.filter(path=>path.startsWith('/assets/original/devil-daggers/audio/')&&/\.(wav|ini)$/.test(path));
  const offline=[...core,...audio];
  const bytes=(await Promise.all(offline.map(path=>stat(root+path)))).reduce((sum,info)=>sum+info.size,0);

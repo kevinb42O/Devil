@@ -1,0 +1,63 @@
+{
+  "motion": [
+    {
+      "start": 30,
+      "end": 45,
+      "bestShift": 8,
+      "bestError": 3591
+    },
+    {
+      "start": 69,
+      "end": 100,
+      "bestShift": 16,
+      "bestError": 4838
+    }
+  ],
+  "reducedDifference": 0,
+  "wraps": [
+    {
+      "time": 30,
+      "left": [
+        6,
+        6,
+        7,
+        255
+      ],
+      "right": [
+        6,
+        6,
+        7,
+        255
+      ]
+    },
+    {
+      "time": 69,
+      "left": [
+        2,
+        3,
+        4,
+        255
+      ],
+      "right": [
+        2,
+        3,
+        4,
+        255
+      ]
+    }
+  ],
+  "poles": {
+    "top": [
+      6,
+      13,
+      20,
+      255
+    ],
+    "bottom": [
+      5,
+      6,
+      9,
+      255
+    ]
+  }
+}

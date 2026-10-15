@@ -13,12 +13,14 @@ function invalid():never{throw Error('Invalid or unsupported replay file.');}
 /** Validate untrusted files before allocating a world or iterating simulation ticks. */
 export function validateReplay(value:unknown):RecordedRun{
  if(!object(value))invalid();const r=value;
- if(r.format!=='abyss-replay'||![4,5,6].includes(Number(r.version))||!integer(r.version,4,6)||!integer(r.seed,0,0xffffffff)||typeof r.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(r.id)||!finite(r.created,0,1e15)||!integer(r.ticks,1,MAX_REPLAY_TICKS)||!finite(r.time,0,3000)||typeof r.cause!=='string'||r.cause.length>80||typeof r.practice!=='boolean')invalid();
- if(r.combatRevision!==undefined&&!integer(r.combatRevision,0,18))invalid();
+ if(r.format!=='abyss-replay'||![4,5,6,7].includes(Number(r.version))||!integer(r.version,4,7)||!integer(r.seed,0,0xffffffff)||typeof r.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(r.id)||!finite(r.created,0,1e15)||!integer(r.ticks,1,MAX_REPLAY_TICKS)||!finite(r.time,0,3000)||typeof r.cause!=='string'||r.cause.length>80||typeof r.practice!=='boolean')invalid();
+ if(r.combatRevision!==undefined&&!integer(r.combatRevision,0,20))invalid();
+ if(r.version===7&&r.combatRevision!==20||r.version!==7&&Number(r.combatRevision)>19)invalid();
+ if(r.independentPracticeReserve!==undefined&&typeof r.independentPracticeReserve!=='boolean')invalid();
  if(r.analogMovement!==undefined&&typeof r.analogMovement!=='boolean')invalid();
- if(!object(r.setup)||!finite(r.setup.time,0,1200)||!integer(r.setup.level,1,4)||!finite(r.setup.reserve,0,1000))invalid();
+ if(!object(r.setup)||!finite(r.setup.time,0,1200)||!integer(r.setup.level,1,r.version===7?7:4)||!finite(r.setup.reserve,0,1000))invalid();
  if(Math.abs((r.time as number)-(r.setup.time as number)-(r.ticks as number)/120)>.02)invalid();
- if(!object(r.stats)||!Array.isArray(r.stats.upgradeTimes)||r.stats.upgradeTimes.length!==4||!r.stats.upgradeTimes.every(v=>finite(v,0,3000))||!object(r.stats.killed))invalid();
+ if(!object(r.stats)||!Array.isArray(r.stats.upgradeTimes)||r.stats.upgradeTimes.length!==(r.version===7?7:4)||!r.stats.upgradeTimes.every(v=>finite(v,0,3000))||!object(r.stats.killed))invalid();
  const statKeys=['kills','shots','hits','collected','expired','eaten','released','homingFired','homingEaten','transmuted','maxReserve','maxEnemies','leviathanDown','orbDown'];
  for(const [key,v] of Object.entries(r.stats)){if(key==='upgradeTimes'||key==='killed')continue;if(!statKeys.includes(key)||!finite(v,0,10000000))invalid();}
  for(const key of statKeys)if(!finite(r.stats[key],0,10000000))invalid();

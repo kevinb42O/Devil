@@ -16,7 +16,7 @@ async function open(){
  await page.goto(url);await page.waitForFunction(()=>!document.querySelector('#start').disabled);
  return page;
 }
-const preferences={sensitivity:'1.7',fov:'103',volume:'0',controllerSensitivity:'1.6',controllerDeadzone:'0.25'};
+const preferences={sensitivity:'1.7',fov:'103',volume:'0',screenShake:'65',movementMotion:'70',controllerSensitivity:'1.6',controllerDeadzone:'0.25'};
 async function check(page,name){
  assert.equal(await page.locator('#player-name').textContent(),name);
  await page.click('#settings-open');
@@ -35,7 +35,7 @@ try{
  assert.equal(await page.locator('#volumetric-mist').isChecked(),true,'mist enabled for existing/default preferences');
  await page.uncheck('#volumetric-mist');
  assert.equal(await page.evaluate(()=>window.abyss.menuRelics.mist.enabled),false);
- for(const id of ['sensitivity','fov','volume'])await page.locator('#'+id).fill(preferences[id]);
+ for(const id of ['sensitivity','fov','volume','screenShake','movementMotion'])await page.locator('#'+id).fill(preferences[id]);
  await page.selectOption('#control-scheme','controller');
  for(const id of ['controllerSensitivity','controllerDeadzone'])await page.locator('#'+id).fill(preferences[id]);
  await page.selectOption('#control-scheme','azerty');await page.selectOption('#quality','low');await page.selectOption('#sky-motion','reduced');await page.check('#threat-cues');await page.click('#settings-close');

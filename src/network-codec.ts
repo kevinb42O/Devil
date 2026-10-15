@@ -1,7 +1,7 @@
 /** Bounded binary value codec. Object keys/strings are interned per packet;
  * integers use varints, presentation floats use float32, controller floats
  * retain float64 precision. No JSON escaping or compression dependency. */
-export const NETWORK_PROTOCOL_VERSION=9;
+export const NETWORK_PROTOCOL_VERSION=16;
 const MAX_BYTES=1024*1024,MAX_ITEMS=100000;
 export function encodePacket(value:unknown):Uint8Array{
  let bytes=new Uint8Array(4096),offset=0;const strings=new Map<string,number>(),utf8=new TextEncoder();

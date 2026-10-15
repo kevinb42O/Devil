@@ -1,5 +1,5 @@
 import {leaderboardDatabase,eligibleForLeaderboard} from './leaderboard';
-import {type RecordedRun} from './replay';
+import {REPLAY_RULES_VERSION,type RecordedRun} from './replay';
 import {encodeReplay,decodeReplay,MAX_REPLAY_BYTES,readBounded} from './replay-file';
 
 export type SharedReplay={id:string;slot:number;run_id:string;survival_ms:number;ready:boolean;bytes:number};
@@ -20,7 +20,16 @@ export async function shareReplay(run:RecordedRun,name:string,best=false):Promis
   const blob=await encodeReplay(run),db=await identity();let existing=await ownReplays();for(const unfinished of existing.filter(r=>r.run_id===run.id&&!r.ready)){await removeSharedReplay(unfinished.id);}existing=existing.filter(r=>r.run_id!==run.id||r.ready);const found=existing.find(r=>r.run_id===run.id&&r.ready);
   if(found&&(!best||found.slot===0))return found.id;
   const slot=best?0:[1,2,3].find(s=>!existing.some(r=>r.slot===s));if(slot===undefined)throw Error('Your three shared replay slots are full. Remove a shared replay to make room.');
-  if(best){const old=existing.find(r=>r.slot===0);if(old?.ready&&old.survival_ms>=Math.round(run.time*1000))throw Error('This best already has a replay. Refresh the leaderboard to watch it.');if(old)await removeSharedReplay(old.id);}
+  if(best){const old=existing.find(r=>r.slot===0);
+   if(old?.ready){
+    // The automatic slot may belong to an older rules season. Duration alone
+    // must never prevent the current season's best from getting its recording.
+    const {data,error}=await db.rpc('abyss_replay',{p_id:old.id});if(error)throw cloudError(error);
+    const rules=data?.[0]?.rules;if(!Number.isInteger(rules))throw Error('Could not verify the existing replay rules. Please retry.');
+    if(rules===run.version&&old.survival_ms>=Math.round(run.time*1000))throw Error('This best already has a replay. Refresh the leaderboard to watch it.');
+   }
+   if(old)await removeSharedReplay(old.id);
+  }
   // A manually shared run can become the leaderboard replay without a duplicate upload.
   if(found){const {error}=await db.rpc('abyss_promote_replay',{p_id:found.id});if(error)throw cloudError(error);return found.id;}
   const {data:id,error}=await db.rpc('abyss_reserve_replay',{p_slot:slot,p_run_id:run.id,p_name:name.trim()||'Wanderer',p_rules:run.version,p_time_ms:Math.round(run.time*1000),p_kills:run.stats.kills,p_gems:run.stats.collected,p_practice:run.practice,p_bytes:blob.size});
@@ -32,9 +41,15 @@ export async function shareReplay(run:RecordedRun,name:string,best=false):Promis
 async function localDatabase(){return new Promise<IDBDatabase>((resolve,reject)=>{const r=indexedDB.open('abyss-replay-sharing',1);r.onupgradeneeded=()=>{r.result.createObjectStore('cache',{keyPath:'id'});r.result.createObjectStore('pending');};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function local<T>(store:'cache'|'pending',mode:IDBTransactionMode,operation:(s:IDBObjectStore)=>IDBRequest):Promise<T>{const db=await localDatabase();try{return await new Promise<T>((resolve,reject)=>{const tx=db.transaction(store,mode),r=operation(tx.objectStore(store));tx.oncomplete=()=>resolve(r.result as T);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
 export type PendingReplay={run:RecordedRun;name:string};
-export async function retainPendingReplay(run:RecordedRun,name:string){const db=await localDatabase();try{await new Promise<void>((resolve,reject)=>{const tx=db.transaction('pending','readwrite'),s=tx.objectStore('pending'),r=s.get('best');r.onsuccess=()=>{if(!r.result||r.result.run.time<=run.time)s.put({run,name},'best');};tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
-export function pendingReplay(){return local<PendingReplay|undefined>('pending','readonly',s=>s.get('best'));}
-export async function clearPendingReplay(runId:string){const db=await localDatabase();try{await new Promise<void>((resolve,reject)=>{const tx=db.transaction('pending','readwrite'),s=tx.objectStore('pending'),r=s.get('best');r.onsuccess=()=>{if(r.result?.run.id===runId)s.delete('best');};tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);});}finally{db.close();}}
+const pendingKey=(rules:number)=>`best:v${rules}`;
+/** Per-rules outboxes keep a long historical run from suppressing a new best. */
+export async function retainPendingReplay(run:RecordedRun,name:string){const db=await localDatabase();try{await new Promise<void>((resolve,reject)=>{const tx=db.transaction('pending','readwrite'),s=tx.objectStore('pending'),key=pendingKey(run.version),r=s.get(key);r.onsuccess=()=>{if(!r.result||r.result.run.time<=run.time)s.put({run,name},key);};tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
+export async function pendingReplay(rules=REPLAY_RULES_VERSION){
+ const current=await local<PendingReplay|undefined>('pending','readonly',s=>s.get(pendingKey(rules)));if(current)return current;
+ // Read old storage in place without exposing it as a different season's best.
+ const legacy=await local<PendingReplay|undefined>('pending','readonly',s=>s.get('best'));return legacy?.run.version===rules?legacy:undefined;
+}
+export async function clearPendingReplay(runId:string,rules=REPLAY_RULES_VERSION){const db=await localDatabase();try{await new Promise<void>((resolve,reject)=>{const tx=db.transaction('pending','readwrite'),s=tx.objectStore('pending');for(const key of [pendingKey(rules),'best']){const r=s.get(key);r.onsuccess=()=>{if(r.result?.run.id===runId&&r.result.run.version===rules)s.delete(key);};}tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
 const downloads=new Map<string,Promise<RecordedRun>>();
 export function downloadReplay(id:string):Promise<RecordedRun>{
  if(!uuid.test(id))return Promise.reject(Error('Invalid replay link.'));const active=downloads.get(id);if(active)return active;

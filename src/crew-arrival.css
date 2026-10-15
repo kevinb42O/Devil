@@ -1,0 +1,18 @@
+#crew-arrival{position:fixed;inset:0;z-index:35;pointer-events:none;display:grid;place-items:center;color:#fce6bc;text-align:center}
+#crew-arrival[hidden]{display:none}
+.arrival-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 10%,#15090455 55%,#080504b8)}
+.arrival-sigil{position:absolute;width:clamp(220px,32vmin,360px);aspect-ratio:1;opacity:.8;transform:rotate(45deg)}
+.arrival-sigil>i{position:absolute;inset:0;border:1px solid #df9b4f44;box-shadow:0 0 38px #e86a1810,inset 0 0 38px #e86a1810}
+.arrival-sigil>i:nth-child(2){inset:12px;border-color:#df9b4f22;transform:rotate(15deg)}
+.arrival-sigil>i:nth-child(3){inset:-24px;border:1px solid #e9a65325;border-radius:50%;background:conic-gradient(from 180deg,transparent 0deg,#efbd7620 210deg,#efbd7690 290deg,transparent 292deg);mask:radial-gradient(transparent 69.1%,#000 69.5%);will-change:transform}
+.arrival-copy{position:relative;display:grid;justify-items:center;gap:18px;text-shadow:0 3px 24px #000,0 0 55px #ed862d55}
+.arrival-eyebrow{margin:0;font:600 10px 'DM Sans',sans-serif;letter-spacing:4px;color:#d5ac76}
+.arrival-value{font:400 clamp(86px,14vmin,156px)/1 'Pirata One',serif;min-height:1em}
+.arrival-detail{margin:0;font:500 9px 'DM Sans',sans-serif;letter-spacing:2.2px;color:#d1bd9d}
+.arrival-beats{display:flex;gap:15px;margin-top:5px}
+.arrival-beats i{width:5px;height:5px;transform:rotate(45deg);border:1px solid #d49b55;transition:background .15s,box-shadow .15s}
+.arrival-beats i.is-lit{background:#ffd496;box-shadow:0 0 12px #f5a54b}
+#crew-arrival[data-beat="0"] .arrival-value{font-size:clamp(46px,9vmin,100px);letter-spacing:7px;color:#fff0cd}
+#crew-arrival[data-beat="0"] .arrival-sigil>i{border-color:#ffce8b88}
+@media(max-width:600px){.arrival-copy{gap:15px}.arrival-eyebrow{font-size:8px;letter-spacing:3px}.arrival-detail{font-size:8px;letter-spacing:1px}.arrival-sigil{width:220px}}
+@media(prefers-reduced-motion:reduce){.arrival-sigil{transform:rotate(45deg)}.arrival-sigil>i:nth-child(3){will-change:auto}.arrival-beats i{transition:none}}

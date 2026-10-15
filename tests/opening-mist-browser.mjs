@@ -20,7 +20,7 @@ try{
  });
  const results=[];
  for(const quality of ['high','low']){
-  for(const [name,time,entrance,pitch] of [['entrance',0,true,.16],['arena',0,false,.16],['fading',19,false,.16],['cloud-arrival',30,false,.16],['above',0,false,-1.1]]){
+  for(const [name,time,entrance,pitch] of [['entrance',0,true,.16],['arena',30,false,.16],['fading',49,false,.16],['cloud-arrival',60,false,.16],['above',30,false,-1.1]]){
    const sample=await page.evaluate(({quality,name,time,entrance,pitch})=>{
     const {renderer:r,world:w}=window.mistAudit;w.time=time;w.player.pos={x:0,y:name==='above'?8:1.7,z:entrance?0:9};
     r.configure({quality,fov:90,skyMotion:'full'});
@@ -48,7 +48,7 @@ try{
   const pass=r.composer.passes[0],samples=[];
   const gl=r.renderer.getContext(),pixels=new Uint8Array(4);
   for(const distance of [.13,20]){
-   blocker.position.set(0,1.7,-distance);pass.scene=scene;r.openingMist.update(r.camera,0);r.composer.render();
+   blocker.position.set(0,1.7,-distance);pass.scene=scene;r.openingMist.update(r.camera,30);r.composer.render();
    gl.readPixels(gl.drawingBufferWidth/2,gl.drawingBufferHeight/2,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixels);const on=[...pixels];
    r.openingMist.enabled=false;r.composer.render();gl.readPixels(gl.drawingBufferWidth/2,gl.drawingBufferHeight/2,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
    samples.push(on.slice(0,3).reduce((sum,n,i)=>sum+Math.abs(n-pixels[i]),0));
@@ -56,7 +56,7 @@ try{
   pass.scene=r.scene;blocker.geometry.dispose();material.dispose();return {nearDifference:samples[0],farDifference:samples[1]};
  });
  assert.ok(depth.farDifference>5);assert.ok(depth.nearDifference<depth.farDifference*.1,'foreground geometry must occlude the volume');
- const reduced=await page.evaluate(()=>{const {renderer:r,world:w}=window.mistAudit;r.configure({quality:'low',fov:90,skyMotion:'reduced'});w.time=4;r.render(w,0,0,0,false);return r.openingMist.diagnostics;});
+ const reduced=await page.evaluate(()=>{const {renderer:r,world:w}=window.mistAudit;r.configure({quality:'low',fov:90,skyMotion:'reduced'});w.time=34;r.render(w,0,0,0,false);return r.openingMist.diagnostics;});
  assert.equal(reduced.time,0);assert.equal(reduced.steps,20);
  assert.deepEqual(errors,[]);
  await writeFile(`${directory}/audit.json`,JSON.stringify({results,depth,reduced,errors},null,2));console.log(JSON.stringify(results,null,2));

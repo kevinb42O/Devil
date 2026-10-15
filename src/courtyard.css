@@ -1,0 +1,25 @@
+body[data-crew-courtyard=true] #crew-hud,body[data-crew-courtyard=true] #crew-lobby-controls,body[data-crew-courtyard=true] #connection-meter{display:none!important}
+#courtyard-hud{position:fixed;inset:0;z-index:15;pointer-events:none;color:#e9d8c4;font-family:'DM Sans',sans-serif}
+#courtyard-hud[hidden],#courtyard-hud [hidden]{display:none!important}
+#courtyard-hud button{pointer-events:auto;touch-action:none;cursor:pointer;min-height:42px;padding:10px 15px;font:600 11px 'DM Sans',sans-serif;letter-spacing:.04em;color:#e4d5c5;background:#18171be8;border:1px solid #b69b773d;border-radius:4px}
+#courtyard-hud button:focus-visible{outline:2px solid #edc48f;outline-offset:3px}
+#courtyard-hud button:disabled{opacity:.45;cursor:default}
+#courtyard-hud .courtyard-room{position:absolute;top:18px;left:20px;display:flex;align-items:center;gap:14px}
+#courtyard-hud .courtyard-count{font-size:11px;color:#d1c5b8;text-shadow:0 1px 5px #000}
+#courtyard-hud .courtyard-toolbar{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:9px;max-width:calc(100% - 24px);width:max-content}
+#courtyard-hud .courtyard-message{font-size:12px;line-height:1.4;text-align:center;text-shadow:0 1px 5px #000,0 1px 12px #000;max-width:460px}
+#courtyard-hud .courtyard-buttons{display:flex;justify-content:center;gap:8px}
+#courtyard-hud #courtyard-ready{background:#3b3228ed;border-color:#bca07865;color:#ffe5b8}
+#courtyard-hud #courtyard-ready.is-ready{color:#b5dfc0;background:#20342bea}
+#courtyard-hud #courtyard-open{background:#934a2deb;color:#fff0d7;border-color:#e8a37480}
+#courtyard-hud #courtyard-open.is-holding{background:#d18749;transition:background .6s linear}
+#courtyard-hud .courtyard-wait{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);text-align:center;text-shadow:0 2px 12px #000}
+#courtyard-hud .courtyard-wait strong{font:500 24px 'Barlow Condensed',sans-serif}
+#courtyard-hud .courtyard-wait p{font-size:12px;color:#c2b3a3}
+#courtyard-hud .courtyard-touch-arms{display:none}
+#courtyard-hud[data-scheme=mobile] .courtyard-touch-arms{position:absolute;left:12px;top:36%;display:flex;flex-direction:column;gap:8px}
+.courtyard-room-actions{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}.courtyard-room-actions button{font:500 11px 'DM Sans',sans-serif;padding:10px 14px;background:#261d19;border:1px solid #9c724445;color:#d7b999;border-radius:3px;cursor:pointer}
+@media(max-width:600px){#courtyard-hud .courtyard-room{left:12px;top:12px;gap:10px}#courtyard-hud .courtyard-toolbar{bottom:16px}#courtyard-hud .courtyard-message{font-size:11px;max-width:320px}}
+@media(max-height:500px){#courtyard-hud .courtyard-room{top:8px}#courtyard-hud .courtyard-toolbar{bottom:8px;gap:5px}}
+
+#courtyard-hud .courtyard-kick-charge{position:absolute;bottom:115px;left:50%;transform:translateX(-50%);width:120px;text-align:center;font-size:9px;letter-spacing:.12em;text-shadow:0 1px 4px #000}#courtyard-hud .courtyard-kick-charge progress{display:block;width:100%;height:5px;margin-top:5px;accent-color:#efc890}

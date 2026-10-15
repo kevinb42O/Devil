@@ -66,5 +66,5 @@ test('previous replay revisions retain harmless upgrades; current runs record ne
  const old=createRun(1,{time:0,level:1,reserve:0},6,true,17),current=createRun(1);
  for(const w of [old,current]){w.player.pos=v(0,1.7,0);target(w,3);w.stats.collected=9;w.collect();wave(w,.2);}
  assert.equal(old.enemies[0].hp,100);assert.equal(current.enemies[0].hp,95);
- assert.equal(new RunRecorder(1).finish(current).combatRevision,18);
+ assert.equal(new RunRecorder(1).finish(current).combatRevision,20);
 });

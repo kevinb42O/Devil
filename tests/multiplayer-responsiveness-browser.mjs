@@ -15,6 +15,10 @@ try{
  const [host,guest]=pages;await host.fill('#friends-lobby-name',name);await host.click('#friends-host');await host.waitForFunction(()=>window.abyss.friends?.members.length===1);
  const row=guest.locator('.public-lobby').filter({hasText:name});await row.waitFor({timeout:30000});await row.locator('.join-lobby').click();await host.waitForFunction(()=>window.abyss.friends.connected===1,{},{timeout:35000});await guest.waitForFunction(()=>window.abyss.friends.members.length===2);
  for(const page of pages){await page.bringToFront();await page.locator('#friends-ready').click();}await host.waitForFunction(()=>window.abyss.friends.allReady);await host.bringToFront();await host.click('#friends-start');
+ // Starting the crew opens the shared courtyard. Walk through the seal before
+ // expecting the survival clock to advance, just as the real players do.
+ await host.waitForFunction(()=>window.abyss.entrance);await host.keyboard.down('KeyW');
+ try{await host.waitForFunction(()=>!window.abyss.entrance,{},{timeout:30000});}finally{await host.keyboard.up('KeyW');}
  await guest.waitForFunction(()=>window.abyss.time>.2);await guest.bringToFront();await guest.waitForFunction(()=>window.abyss.mode==='playing');
  // With half a second of delay in each direction, no host response can arrive
  // during the next frame. Inspect the real keyboard handler and rendered camera.

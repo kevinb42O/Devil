@@ -47,7 +47,7 @@ test('revision 16 preserves old ricochets and new floor-burst replays remain det
  assert.ok(old.projectiles[0].age>current.projectiles[0].age+.2);
  const w=createRun(71),recorder=new RunRecorder(71);
  for(let i=0;i<240;i++){const input={...idleInput(),pitch:-1.5,fire:i%75<5};recorder.record(input);w.step(input);w.effects=[];}
- const run=recorder.finish(w),replay=new ReplayPlayer(run);assert.equal(run.combatRevision,18);
+ const run=recorder.finish(w),replay=new ReplayPlayer(run);assert.equal(run.combatRevision,20);
  replay.seek(run.ticks);replay.world.effects=[];assert.deepEqual(replay.world,w);
  replay.seek(30);replay.seek(run.ticks);replay.world.effects=[];assert.deepEqual(replay.world,w);
 });

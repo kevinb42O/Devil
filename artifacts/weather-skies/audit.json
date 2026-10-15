@@ -1,0 +1,273 @@
+{
+  "frames": [
+    {
+      "name": "ash",
+      "view": "front",
+      "time": 30,
+      "environmentTime": 0,
+      "cosmic": 0,
+      "chapter": "The Last Sky",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "ash",
+      "view": "up",
+      "time": 30,
+      "environmentTime": 0,
+      "cosmic": 0,
+      "chapter": "The Last Sky",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0,
+      "calls": 49,
+      "glError": 0
+    },
+    {
+      "name": "ash-later",
+      "view": "front",
+      "time": 45,
+      "environmentTime": 15,
+      "cosmic": 0,
+      "chapter": "The Last Sky",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.26999999999999996,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "ash-later",
+      "view": "up",
+      "time": 45,
+      "environmentTime": 15,
+      "cosmic": 0,
+      "chapter": "The Last Sky",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.26999999999999996,
+      "calls": 48,
+      "glError": 0
+    },
+    {
+      "name": "ash-to-storm",
+      "view": "front",
+      "time": 60,
+      "environmentTime": 30,
+      "cosmic": 0,
+      "chapter": "The Last Sky",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.5399999999999999,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "ash-to-storm",
+      "view": "up",
+      "time": 60,
+      "environmentTime": 30,
+      "cosmic": 0,
+      "chapter": "The Last Sky",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.5399999999999999,
+      "calls": 48,
+      "glError": 0
+    },
+    {
+      "name": "cloud-grave",
+      "view": "front",
+      "time": 69,
+      "environmentTime": 39,
+      "cosmic": 0,
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.702,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "cloud-grave",
+      "view": "up",
+      "time": 69,
+      "environmentTime": 39,
+      "cosmic": 0,
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 0.702,
+      "calls": 47,
+      "glError": 0
+    },
+    {
+      "name": "cloud-grave-later",
+      "view": "front",
+      "time": 100,
+      "environmentTime": 70,
+      "cosmic": 0,
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 1.26,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "cloud-grave-later",
+      "view": "up",
+      "time": 100,
+      "environmentTime": 70,
+      "cosmic": 0,
+      "chapter": "The Cloud Grave",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 1.26,
+      "calls": 49,
+      "glError": 0
+    },
+    {
+      "name": "storm-to-veil",
+      "view": "front",
+      "time": 135,
+      "environmentTime": 105,
+      "cosmic": 0,
+      "chapter": "The Cloud Grave",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 1.89,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "storm-to-veil",
+      "view": "up",
+      "time": 135,
+      "environmentTime": 105,
+      "cosmic": 0,
+      "chapter": "The Cloud Grave",
+      "blend": 0.5,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 1.89,
+      "calls": 49,
+      "glError": 0
+    },
+    {
+      "name": "veil",
+      "view": "front",
+      "time": 144,
+      "environmentTime": 114,
+      "cosmic": 0,
+      "chapter": "The Bruised Veil",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 2.052,
+      "calls": 62,
+      "glError": 0
+    },
+    {
+      "name": "veil",
+      "view": "up",
+      "time": 144,
+      "environmentTime": 114,
+      "cosmic": 0,
+      "chapter": "The Bruised Veil",
+      "blend": 0,
+      "menu": false,
+      "motion": "full",
+      "octaves": 3,
+      "travel": 2.052,
+      "calls": 49,
+      "glError": 0
+    }
+  ],
+  "checks": {
+    "pause": 0,
+    "rewind": 0,
+    "joins": [
+      {
+        "time": 30,
+        "difference": 0.002900119357638889
+      },
+      {
+        "time": 51,
+        "difference": 0.0042293294270833335
+      },
+      {
+        "time": 69,
+        "difference": 0.004476996527777778
+      },
+      {
+        "time": 126,
+        "difference": 0.005660807291666667
+      },
+      {
+        "time": 144,
+        "difference": 0.0029703776041666665
+      }
+    ],
+    "seamA": [
+      2,
+      2,
+      4,
+      255
+    ],
+    "seamB": [
+      2,
+      2,
+      4,
+      255
+    ],
+    "top": [
+      6,
+      13,
+      20,
+      255
+    ],
+    "bottom": [
+      5,
+      6,
+      9,
+      255
+    ],
+    "isolatedCalls": [
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "reducedTravel": 0
+  },
+  "errors": []
+}

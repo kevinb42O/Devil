@@ -1,0 +1,72 @@
+{
+  "paused": {
+    "time": 379.1666666666665,
+    "environmentTime": 349.1666666666665,
+    "cosmic": 0,
+    "chapter": "The Furnace",
+    "blend": 0.9937684169079894,
+    "menu": false,
+    "motion": "full",
+    "octaves": 2,
+    "travel": 6.284999999999997
+  },
+  "live": {
+    "time": 380.0083333333324,
+    "sky": {
+      "time": 380.0083333333324,
+      "environmentTime": 350.0083333333324,
+      "cosmic": 0,
+      "chapter": "The Cathedral Below",
+      "blend": 0,
+      "menu": false,
+      "motion": "reduced",
+      "octaves": 2,
+      "travel": 0
+    }
+  },
+  "death": {
+    "sky": {
+      "time": 379.25,
+      "environmentTime": 349.25,
+      "cosmic": 0,
+      "chapter": "The Furnace",
+      "blend": 0.9949363425925927,
+      "menu": false,
+      "motion": "reduced",
+      "octaves": 2,
+      "travel": 0
+    },
+    "replay": {
+      "active": true,
+      "remaining": 2.058333333331234,
+      "duration": 2.308333333331234,
+      "impact": false,
+      "viewTime": 379.25,
+      "killerVisible": false,
+      "suspended": true
+    },
+    "finalTime": 381.30833333333123
+  },
+  "end": {
+    "time": 381.30833333333123,
+    "environmentTime": 351.30833333333123,
+    "cosmic": 0,
+    "chapter": "The Cathedral Below",
+    "blend": 0,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  },
+  "rewind": {
+    "time": 379,
+    "environmentTime": 349,
+    "cosmic": 0,
+    "chapter": "The Furnace",
+    "blend": 0.9910836762688615,
+    "menu": false,
+    "motion": "reduced",
+    "octaves": 2,
+    "travel": 0
+  }
+}

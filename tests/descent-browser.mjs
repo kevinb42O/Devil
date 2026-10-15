@@ -26,7 +26,7 @@ try{
     world.effects=[];
     window.descentFixture={renderer,world};
     const frames=[];
-    for(const time of [0,39,114,229,259,350,442,520]){
+    for(const time of [0,21,25,30,69,144,259,289,380,472,550]){
       world.time=time;renderer.render(world,0,0,0,false);
       frames.push({time,...renderer.skyDiagnostics,calls:renderer.renderer.info.render.calls});
     }
@@ -35,22 +35,31 @@ try{
     world.time=350;renderer.render(world,0,0,.5,false);const first={...renderer.skyDiagnostics};
     renderer.render(world,.8,-.4,3,false,1,v(4,12,8));const second={...renderer.skyDiagnostics};
     renderer.render(world,0,0,0,false);const paused={...renderer.skyDiagnostics};
-    world.time=114;renderer.render(world,0,0,0,false);const scrub={...renderer.skyDiagnostics};
+    world.time=144;renderer.render(world,0,0,0,false);const scrub={...renderer.skyDiagnostics};
     world.time=0;renderer.render(world,0,0,0,false);const restart={...renderer.skyDiagnostics};
     renderer.configure({quality:'low',fov:90,skyMotion:'reduced'});
     world.time=259;renderer.render(world,0,0,1,false);const reduced={...renderer.skyDiagnostics};
     const skyProgram=renderer.renderer.properties.get(renderer.sky.mesh.material).currentProgram.id;
     world.time=350;renderer.render(world,0,0,1,false);const reducedLater={...renderer.skyDiagnostics};
-    world.time=442;renderer.render(world,0,0,0,false);const final={...renderer.skyDiagnostics};
+    world.time=472;renderer.render(world,0,0,0,false);const final={...renderer.skyDiagnostics};
     renderer.render(null,0,0,0,true);const menu={...renderer.skyDiagnostics};
-    return {frames,first,second,paused,scrub,restart,reduced,reducedLater,final,menu,skyProgram,finalSkyProgram:renderer.renderer.properties.get(renderer.sky.mesh.material).currentProgram.id};
+    renderer.configure({quality:'low',fov:90,skyMotion:'full'});
+    const gl=renderer.renderer.getContext();
+    const capture=time=>{world.time=time;renderer.render(world,0,0,0,false);const pixels=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,pixels);return pixels;};
+    const difference=(a,b)=>a.reduce((sum,value,i)=>sum+Math.abs(value-b[i]),0)/a.length;
+    const cosmic=capture(25),cosmicPause=capture(25);capture(472);const cosmicRewind=capture(25);
+    const arrivalBefore=capture(29.999),arrivalAfter=capture(30.001);
+    const continuity={pause:difference(cosmic,cosmicPause),rewind:difference(cosmic,cosmicRewind),arrival:difference(arrivalBefore,arrivalAfter)};
+    return {frames,first,second,paused,scrub,restart,reduced,reducedLater,final,menu,continuity,skyProgram,finalSkyProgram:renderer.renderer.properties.get(renderer.sky.mesh.material).currentProgram.id};
   });
   assert.deepEqual(result.first,result.second);assert.deepEqual(result.first,result.paused);
-  assert.equal(result.scrub.chapter,'The Bruised Veil');assert.equal(result.restart.chapter,'The Last Sky');
+  assert.equal(result.scrub.chapter,'The Bruised Veil');assert.equal(result.restart.chapter,'The Cosmic Expanse');
   assert.equal(result.reduced.travel,0);assert.equal(result.reducedLater.travel,0);assert.equal(result.reduced.octaves,2);
-  assert.equal(result.final.chapter,'The Unlit Depth');assert.equal(result.menu.menu,true);
+  assert.equal(result.final.chapter,'The Unlit Depth');assert.deepEqual(result.menu,result.final,'separate menu scene leaves gameplay sky unchanged');
   assert.equal(result.skyProgram,result.finalSkyProgram,'time and chapter changes must not compile the sky shader');
-  for(const quality of ['high','low'])for(const time of [0,39,114,229,259,350,442])for(const [view,pitch] of [['front',0],['up',.8]]){
+  assert.equal(result.continuity.pause,0);assert.equal(result.continuity.rewind,0);
+  assert.ok(result.continuity.arrival<.05,'no visible jump at the thirty-second join');
+  for(const quality of ['high','low'])for(const time of [0,21,25,30,69,144,259,380,472])for(const [view,pitch] of [['front',0],['up',.8]]){
     await page.evaluate(({quality,time,pitch})=>{const {renderer,world}=window.descentFixture;renderer.configure({quality,fov:90,skyMotion:'full'});world.time=time;renderer.render(world,0,pitch,0,false);},{quality,time,pitch});
     await page.screenshot({path:`${directory}/${quality}-${time}-${view}.png`});
   }

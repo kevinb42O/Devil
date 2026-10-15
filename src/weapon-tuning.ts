@@ -4,6 +4,9 @@ export const WEAPON_PRESENTATION = [
   {streamSpread:.07,burstSpread:.21,burstParticles:12,flameSize:.11,emberSize:.06},
   {streamSpread:.11,burstSpread:.26,burstParticles:18,flameSize:.145,emberSize:.075},
   {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
+  {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
+  {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
+  {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
 ] as const;
 export const LEGACY_STREAM_SPREAD = [.022,.045,.085,.13] as const;
 
@@ -11,14 +14,14 @@ export const LEGACY_STREAM_SPREAD = [.022,.045,.085,.13] as const;
  * fill this disc and fan outward in a circular cone toward the aim target. Widen the stream's
  * cross-section without enlarging its bullets or changing its damage budget.
  */
-export const STREAM_RADIUS = [.008,.01,.012,.015] as const;
+export const STREAM_RADIUS = [.008,.01,.012,.015,.015,.015,.015] as const;
 /** Replay revision III used a broad launch disc; current streams start at a tip. */
 export const LEGACY_WIDE_STREAM_RADIUS = [.16,.25,.4,.55] as const;
 
 /** Floor-shot launch speed by hand level; stronger bursts give more vertical reach.
  * A minimum launch speed preserves faster upward momentum without stacking boosts.
  */
-export const SHOTGUN_LAUNCH_SPEED = [10.8,12.6,15,17] as const;
+export const SHOTGUN_LAUNCH_SPEED = [10.8,12.6,15,17,17,17,17] as const;
 
 /** Camera-local clearance keeps launch meshes and bloom away from the hand. */
 export const PROJECTILE_HAND_CLEARANCE=1.15;
@@ -33,7 +36,24 @@ export const STREAM_PRESENTATION = [
   {particles:2,flameSize:.06,emberSize:.036},
   {particles:3,flameSize:.068,emberSize:.04},
   {particles:4,flameSize:.075,emberSize:.045},
+  {particles:4,flameSize:.075,emberSize:.045},
+  {particles:4,flameSize:.075,emberSize:.045},
+  {particles:4,flameSize:.075,emberSize:.045},
 ] as const;
 
 /** Floor rebound: preserve flight readability and convert steep shots to a fan. */
 export const RICOCHET_TUNING={retention:.65,verticalRetention:.55,minRiseSpeed:4,steepRatio:2,fanSpeed:.4,agePenalty:.1} as const;
+
+/** A dense close-range packet, with a broad outer scatter at every hand. */
+export const SHOTGUN_TUNING={radius:.01,coreFraction:.8,coreSpread:.5,maxCoreSpread:.14,damage:2} as const;
+/** Linear RGB, primary/seeking pairs per hand: copper, gold, crimson, hot pink.
+ * A separate palette preserves the beam's lime/blue/cyan/violet progression. */
+export const SHOTGUN_COLORS=[
+ [1,.12,.025], [1,.24,.08],
+ [1,.55,.025], [1,.85,.12],
+ [1,.025,.045], [1,.16,.12],
+ [1,.025,.42], [1,.22,.65],
+ [1,.16,.045], [1,.42,.13],
+ [1,.025,.22], [1,.3,.48],
+ [1,.86,.68], [.7,.42,1],
+] as const;
