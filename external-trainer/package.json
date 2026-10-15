@@ -1,0 +1,16 @@
+{
+  "name": "abyss-external-memory-trainer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test targeting.test.mjs geometry.test.mjs",
+    "test:simulation": "node --import tsx --test simulation.test.ts",
+    "test:live": "node memory-live.test.mjs",
+    "test:native": ".venv/bin/python -m unittest -v test_trainer.py test_hotkeys.py",
+    "test:ui": ".venv/bin/python native-ui-smoke.py",
+    "test:native-live": ".venv/bin/python native-live-test.py"
+  },
+  "dependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}
