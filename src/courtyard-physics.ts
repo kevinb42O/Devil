@@ -4,9 +4,8 @@ type Body={id:string;player:{pos:Point;vel:Point};input:{yaw:number;pitch?:numbe
 export function stepFootballKicks(c:CourtyardState,players:Body[],tick:number){
  const ids=new Set(players.map(p=>p.id));for(const id of Object.keys(c.kicks))if(!ids.has(id))delete c.kicks[id];
  for(const p of players){
-  const k=c.kicks[p.id]??={started:-1,released:-1000,power:0};
-  if(p.input.homing){k.started=-1;continue;}
-  if(p.input.fire){if(k.started<0&&tick-k.released>=30)k.started=tick;continue;}
+  const k=c.kicks[p.id]??={started:-1,released:-1000,power:0},held=p.input.fire||p.input.homing;
+  if(held){if(k.started<0&&tick-k.released>=30)k.started=tick;continue;}
   if(k.started<0)continue;
   k.power=Math.min(1,Math.max(0,(tick-k.started)/KICK_CHARGE_TICKS));k.started=-1;k.released=tick;
   const s=c.skull,dx=s.pos.x-p.player.pos.x,dz=s.pos.z-p.player.pos.z,d=Math.hypot(dx,dz),forward={x:-Math.sin(p.input.yaw),z:-Math.cos(p.input.yaw)};

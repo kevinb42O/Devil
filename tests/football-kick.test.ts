@@ -21,8 +21,13 @@ test('hold and release charges exactly once, stays bounded, and produces a stron
  }
  assert.ok(speeds[1]>speeds[0]*2);assert.ok(Math.abs(speeds[1]-speeds[2])<.001);assert.ok(speeds[1]<=24);
 });
+test('right-click input charges and releases a football kick',()=>{
+ const c=createCourtyard(1),p=body();p.input.fire=false;p.input.homing=true;
+ stepFootballKicks(c,[p],1);p.input.homing=false;stepFootballKicks(c,[p],2);
+ assert.equal(c.events.filter(e=>e.kind==='kick').length,1);assert.ok(c.skull.vel.z<0);
+});
 test('cancel, backwards facing and distant releases do not kick the ball',()=>{
- for(const mode of ['cancel','back','far']){const c=createCourtyard(1),p=body();stepFootballKicks(c,[p],1);p.input.fire=false;if(mode==='cancel')p.input.homing=true;if(mode==='back')p.input.yaw=Math.PI;if(mode==='far')p.player.pos.x+=10;stepFootballKicks(c,[p],145);assert.deepEqual(c.skull.vel,{x:0,y:0,z:0});assert.equal(c.events.length,0);assert.equal(c.kicks.host.started,-1);}
+ for(const mode of ['back','far']){const c=createCourtyard(1),p=body();stepFootballKicks(c,[p],1);p.input.fire=false;if(mode==='back')p.input.yaw=Math.PI;if(mode==='far')p.player.pos.x+=10;stepFootballKicks(c,[p],145);assert.deepEqual(c.skull.vel,{x:0,y:0,z:0});assert.equal(c.events.length,0);assert.equal(c.kicks.host.started,-1);}
 });
 test('kick pose expires, departures remove state, and snapshot validation rejects unbounded kick power',()=>{
  const c=createCourtyard(1),p=body();stepFootballKicks(c,[p],1);p.input.fire=false;stepFootballKicks(c,[p],145);assert.ok(footballKickPose(c,'host',146));assert.equal(footballKickPose(c,'host',206),undefined);assert.equal(validateCourtyard(c),true);c.kicks.host.power=2;assert.equal(validateCourtyard(c),false);stepFootballKicks(c,[],207);assert.deepEqual(c.kicks,{});
