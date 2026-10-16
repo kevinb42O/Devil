@@ -3,6 +3,14 @@ export const DRAWING_ROOM={minX:66,maxX:96,minZ:-14,maxZ:20};
 export const DRAWING_PASSAGE={minX:58,maxX:66,minZ:-1,maxZ:5};
 export const DRAWING_BOARD={x:81,z:2,size:24,cells:8};
 export const MAX_INK=512;
+export const PENCIL_REACH=2.8;
+/** Shared eye-to-floor targeting: a giant pencil must be close enough to touch. */
+export function drawingTarget(pos:Point,input:{yaw:number;pitch?:number}){
+ const pitch=input.pitch??0,dy=Math.sin(pitch),distance=dy<-.08?-pos.y/dy:Infinity;
+ if(distance>PENCIL_REACH)return null;
+ const x=pos.x-Math.sin(input.yaw)*Math.cos(pitch)*distance,z=pos.z-Math.cos(input.yaw)*Math.cos(pitch)*distance;
+ return Number.isFinite(x)&&Number.isFinite(z)&&onDrawingBoard(x,z)?{x,y:.07,z}:null;
+}
 export type Pencil={owner:string|null;pos:Point;tip:{x:number;z:number}|null};
 export type DrawingState={sequence:number;pencils:Pencil[];ink:number[][]};
 export const pencilDock=(index:number):Point=>({x:76+index*10,y:.05,z:17});
@@ -24,11 +32,13 @@ export function stepDrawing(d:DrawingState,players:Artist[],tick:number,enabled=
   const p=players.find(p=>p.id===pencil.owner&&p.alive!==false);
   if(!p||!enabled||!nearDrawingRoom(p.player.pos)){d.pencils[index]={owner:null,pos:pencilDock(index),tip:null};continue;}
   pencil.pos={x:p.player.pos.x+Math.cos(p.input.yaw)*.45-Math.sin(p.input.yaw)*.7,y:p.player.pos.y-.5,z:p.player.pos.z-Math.sin(p.input.yaw)*.45-Math.cos(p.input.yaw)*.7};
-  const pitch=p.input.pitch??0,dy=Math.sin(pitch),distance=dy<-.08?-p.player.pos.y/dy:Infinity;
-  const x=p.player.pos.x-Math.sin(p.input.yaw)*Math.cos(pitch)*distance,z=p.player.pos.z-Math.cos(p.input.yaw)*Math.cos(pitch)*distance;
-  if(distance>12||!Number.isFinite(x)||!onDrawingBoard(x,z)||!(p.input.fire||p.input.homing)){pencil.tip=null;continue;}
+  const target=drawingTarget(p.player.pos,p.input);
+  if(!target||!(p.input.fire||p.input.homing)){pencil.tip=null;continue;}
+  const {x,z}=target;
   if(tick%5)continue;
-  const tip={x:Math.round((x-DRAWING_BOARD.x+12)*32),z:Math.round((z-DRAWING_BOARD.z+12)*32)},last=pencil.tip;
+  const tip={x:Math.round((x-DRAWING_BOARD.x+12)*32),z:Math.round((z-DRAWING_BOARD.z+12)*32)},previous=pencil.tip;
+  // Teleports or abrupt aim changes start a fresh stroke instead of slashing the board.
+  const last=previous&&Math.hypot(tip.x-previous.x,tip.z-previous.z)<=48?previous:null;
   if(last&&Math.hypot(tip.x-last.x,tip.z-last.z)<2)continue;
   if(d.ink.length<MAX_INK){d.ink.push([index,last?.x??tip.x,last?.z??tip.z,tip.x,tip.z]);d.sequence++;}
   pencil.tip=tip;

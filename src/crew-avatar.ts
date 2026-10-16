@@ -183,7 +183,7 @@ function pointEmoteArm(model:THREE.Group,upper:THREE.Bone,lower:THREE.Bone,targe
  }
 }
 /** Presentation only: sample simulation time so pause/seek never advance animation. */
-export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false,courtyard=false,weaponLevel=1,kick?:KickPose){
+export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false,courtyard=false,weaponLevel=1,kick?:KickPose,holdingPencil=false){
  if(model.userData.skinTime)model.userData.skinTime.value=time;
  const state=states.get(model);if(!state)return;
  const speed=Math.hypot(velocity.x,velocity.z),run=grounded?Math.min(1,speed/5):0;
@@ -216,7 +216,7 @@ export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grou
  }
  const blend=!Number.isFinite(delta)||delta<0||delta>.2?1:1-Math.exp(-delta*16);
  state.leftRaise+=((courtyard&&input.leftArm?1:0)-state.leftRaise)*blend;
- state.rightRaise+=((courtyard&&input.rightArm?1:0)-state.rightRaise)*blend;
+ state.rightRaise+=((courtyard&&input.rightArm&&!holdingPencil?1:0)-state.rightRaise)*blend;
  if(!courtyard)state.leftRaise=state.rightRaise=0;
  if(state.leftRaise>.001||state.rightRaise>.001){
   model.updateWorldMatrix(true,true);
@@ -241,6 +241,19 @@ export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grou
    finger.bone.quaternion.slerp(fingerTarget,weight);
   }
  }
+ if(courtyard&&holdingPencil){
+  // A relaxed forward reach, not the open-palm high-five pose.
+  model.updateWorldMatrix(true,true);
+  aim.set(.25,-.28,-1).normalize().applyQuaternion(model.quaternion);
+  pointEmoteArm(model,state.upper,state.lower,aim,1);
+  for(const finger of state.fingers)if(!finger.left){
+   finger.bone.quaternion.copy(finger.open);
+   if(/^(Index|Middle|Pinky)[23]R$/.test(finger.bone.name))
+    finger.bone.rotateX(1.15);
+   if(/^Thumb[23]R$/.test(finger.bone.name))finger.bone.rotateX(.55);
+  }
+ }
+ model.userData.holdingPencil=courtyard&&holdingPencil;
  const leg=state.legs[kick?.right?1:0];
  if(courtyard&&kick&&leg.thigh&&leg.shin){
   const windup=.25+.75*kick.charge;let thigh=-.3*windup,shin=-1.1*windup;
@@ -267,4 +280,14 @@ export function disposeCrewAvatar(model:THREE.Group){
 export function crewMuzzle(model:THREE.Group,out:THREE.Vector3,left=false):boolean{
  const state=states.get(model);if(!state)return false;
  const muzzle=left?state.root.getObjectByName('Middle3L_end'):state.muzzle;if(!muzzle)return false;muzzle.getWorldPosition(out);return true;
+}
+
+/** Palm socket sampled after animation, shared by first- and third-person bodies. */
+export function crewPencilGrip(model:THREE.Group,out:THREE.Vector3):boolean{
+ const state=states.get(model);if(!state)return false;
+ const index=state.root.getObjectByName('Index2R'),middle=state.root.getObjectByName('Middle2R');
+ if(!index||!middle)return false;
+ model.updateWorldMatrix(true,true);
+ index.getWorldPosition(out);middle.getWorldPosition(handDirection);
+ out.add(handDirection).multiplyScalar(.5);return true;
 }

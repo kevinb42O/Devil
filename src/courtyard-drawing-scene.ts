@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import {DRAWING_BOARD,MAX_INK,pencilDock,type DrawingState} from './courtyard-drawing';
+import {DRAWING_BOARD,MAX_INK,pencilDock,drawingTarget,type DrawingState} from './courtyard-drawing';
+import {crewPencilGrip} from './crew-avatar';
 import type {World} from './simulation';
 const colors=[0xe87a42,0x44c6bc];
 /** A code-built drawing surface and two physical hexagonal pencils. */
@@ -8,6 +9,9 @@ export class CourtyardDrawingScene{
  private pencils:THREE.Group[]=[];
  private ink:THREE.InstancedMesh;
  private sequence=-1;private inkCount=-1;
+ private transform=new THREE.Object3D();
+ private grip=new THREE.Vector3();private axis=new THREE.Vector3();private up=new THREE.Vector3(0,1,0);
+ private inkColors=colors.map(color=>new THREE.Color(color).multiplyScalar(.45));
  constructor(){
   this.root.name='tic-tac-toe-court';
   const canvas=document.createElement('canvas');canvas.width=canvas.height=1024;
@@ -24,11 +28,11 @@ export class CourtyardDrawingScene{
   for(let i=0;i<2;i++){
    const pencil=new THREE.Group();pencil.name='giant-pencil-'+i;
    const part=(geometry:THREE.BufferGeometry,material:THREE.Material,y:number)=>{const mesh=new THREE.Mesh(geometry,material);mesh.position.y=y;pencil.add(mesh);return mesh;};
-   part(new THREE.ConeGeometry(.065,.2,8),graphite,.1).rotation.z=Math.PI;
-   part(new THREE.ConeGeometry(.18,.5,6),wood,.4).rotation.z=Math.PI;
-   part(new THREE.CylinderGeometry(.18,.18,2.5,6),new THREE.MeshStandardMaterial({color:colors[i],roughness:.6}),1.9);
-   part(new THREE.CylinderGeometry(.19,.19,.22,12),metal,3.26);
-   part(new THREE.CylinderGeometry(.18,.18,.3,12),rubber,3.52);
+   part(new THREE.ConeGeometry(.04,.2,8),graphite,.1).rotation.z=Math.PI;
+   part(new THREE.ConeGeometry(.1,.5,6),wood,.4).rotation.z=Math.PI;
+   part(new THREE.CylinderGeometry(.1,.1,2.5,6),new THREE.MeshStandardMaterial({color:colors[i],roughness:.6}),1.9);
+   part(new THREE.CylinderGeometry(.11,.11,.22,12),metal,3.26);
+   part(new THREE.CylinderGeometry(.1,.1,.3,12),rubber,3.52);
    const dock=pencilDock(i);pencil.position.set(dock.x,dock.y,dock.z);
    this.pencils.push(pencil);this.root.add(pencil);
   }
@@ -40,13 +44,10 @@ export class CourtyardDrawingScene{
  }
  update(d:DrawingState|undefined,world:World){
   if(!d)return;
-  const transform=new THREE.Object3D(),up=new THREE.Vector3(0,1,0);
-  for(const [i,p] of d.pencils.entries()){
-   const model=this.pencils[i];model.position.set(p.pos.x,p.pos.y,p.pos.z);model.quaternion.identity();
-   if(p.owner){const player=world.crew.find(player=>player.id===p.owner);
-    if(p.tip){model.position.set(DRAWING_BOARD.x-12+p.tip.x/32,.07,DRAWING_BOARD.z-12+p.tip.z/32);model.quaternion.setFromUnitVectors(up,new THREE.Vector3(p.pos.x,p.pos.y,p.pos.z).sub(model.position).normalize());}
-    else {model.position.y-=.7;model.rotation.set(.35,player?.input.yaw??0,-.15);}
-   }
+  const transform=this.transform;
+  for(const [i,p]of d.pencils.entries()){
+   const model=this.pencils[i];model.visible=!p.owner;
+   if(!p.owner){model.position.set(p.pos.x,p.pos.y,p.pos.z);model.quaternion.identity();}
   }
   if(this.sequence===d.sequence&&this.inkCount===d.ink.length)return;
   this.sequence=d.sequence;this.inkCount=d.ink.length;
@@ -54,8 +55,30 @@ export class CourtyardDrawingScene{
    const dx=(x2-x1)/32,dz=(z2-z1)/32;
    transform.position.set(DRAWING_BOARD.x-12+(x1+x2)/64,.055,DRAWING_BOARD.z-12+(z1+z2)/64);
    transform.rotation.set(0,-Math.atan2(dz,dx),0);transform.scale.set(Math.max(.12,Math.hypot(dx,dz)),1,.12);transform.updateMatrix();
-   this.ink.setMatrixAt(i,transform.matrix);this.ink.setColorAt(i,new THREE.Color(colors[pencil]).multiplyScalar(.45));
+   this.ink.setMatrixAt(i,transform.matrix);this.ink.setColorAt(i,this.inkColors[pencil]);
   }
   this.ink.count=d.ink.length;this.ink.instanceMatrix.needsUpdate=true;if(this.ink.instanceColor)this.ink.instanceColor.needsUpdate=true;
+ }
+ /** Resolve AFTER the avatar bones animate, including the local connected body. */
+ updateGrips(world:World,models:Map<string,THREE.Group>,local?:{id:string;model:THREE.Group}){
+  const d=world.courtyard?.drawing;if(!d)return;
+  for(const [i,p]of d.pencils.entries()){
+   if(!p.owner)continue;
+   const model=this.pencils[i],avatar=p.owner===local?.id?local.model:models.get(p.owner);
+   const player=world.crew.find(player=>player.id===p.owner);
+   // Hide until the real rig exists rather than showing a floating substitute.
+   model.visible=!!avatar&&!!player&&crewPencilGrip(avatar,this.grip);
+   if(!model.visible||!player)continue;
+   const target=drawingTarget(player.player.pos,player.input);
+   if(target){
+    model.position.set(target.x,target.y,target.z);
+    this.axis.copy(this.grip).sub(model.position).normalize();
+   }else{
+    this.axis.set(Math.sin(player.input.yaw)*.35,.94,Math.cos(player.input.yaw)*.35).normalize();
+    model.position.copy(this.grip).addScaledVector(this.axis,-1.1);
+   }
+   model.quaternion.setFromUnitVectors(this.up,this.axis);
+   model.userData.grip=this.grip.toArray();
+  }
  }
 }

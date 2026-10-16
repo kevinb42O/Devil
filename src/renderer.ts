@@ -138,7 +138,7 @@ export class GameRenderer {
   }
   private updateCrewModels(world:World|null,dt:number,crewInterpolated:boolean,scene:THREE.Scene,menu=false){
     const crewIds=new Set<string>();
-    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
+    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===p.id));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
   }
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
@@ -329,9 +329,13 @@ export class GameRenderer {
        samplePlayerPosition(world,projectileAlpha,hands.position);hands.rotation.set(0,yaw,0);
        const local=world.crew.find(p=>p.player===world.player),skin=local?this.crewSkins.get(local.id):undefined;
        setCrewAvatarColor(hands,local?this.crewColors.get(local.id):undefined);setCrewAvatarSkin(hands,skin?.skin,skin?.rank);
-       updateCrewAvatar(hands,bodyInput,world.player.vel,world.player.grounded,world.crew.length?world.tick*STEP:t,false,true,1,footballKickPose(world.courtyard,local?.id??'',world.tick));
+       updateCrewAvatar(hands,bodyInput,world.player.vel,world.player.grounded,world.crew.length?world.tick*STEP:t,false,true,1,footballKickPose(world.courtyard,local?.id??'',world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===local?.id));
        hands.visible=true;
       }else if(this.emoteHands)this.emoteHands.visible=false;
+      if(world.courtyard){
+       const local=world.crew.find(p=>p.player===world.player);
+       this.courtyard.updatePencilGrips(world,this.crewModels,bodyInput&&this.emoteHands?{id:local?.id??'',model:this.emoteHands}:undefined);
+      }
       this.camera.updateWorldMatrix(true,false);
       if(!world.courtyard)this.entrance.updateFloorSide(this.camera.position.y);
       if(this.camera.fov!==this.baseFov){this.camera.fov=this.baseFov;this.camera.updateProjectionMatrix();}

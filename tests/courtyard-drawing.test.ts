@@ -46,3 +46,19 @@ test('authoritative pencil interaction, drawing, snapshot roundtrip and fresh co
   h.returnToLobby();assert.equal(h.courtyard!.drawing!.ink.length,0);assert.ok(h.courtyard!.drawing!.pencils.every(p=>!p.owner));
  }finally{h.close();}
 });
+
+test('out-of-reach aim cannot draw; sudden aim jumps never bridge strokes',()=>{
+ const d=createDrawing(),a=artist('a');pencilAction(d,a);a.player.pos.z=10;a.input.fire=true;
+ a.input.pitch=-.2;stepDrawing(d,[a],5);assert.equal(d.ink.length,0);
+ a.input.pitch=-1;stepDrawing(d,[a],10);a.input.yaw=2;stepDrawing(d,[a],15);
+ assert.equal(d.ink.length,2);assert.deepEqual(d.ink[1].slice(1,3),d.ink[1].slice(3));
+});
+test('host clearing the board keeps the pencil in the hand and separates the next stroke',()=>{
+ const h=new FriendsSession('host');try{
+  h.enterPrelobby();h.world!.player.pos={...pencilDock(0),y:1.7};assert.ok(h.pencilAction());
+  h.world!.player.pos.z=10;for(let i=0;i<10;i++)h.step({...idleInput(),pitch:-1,fire:true});
+  (h as any).pencilActions.clear();
+  const d=h.courtyard!.drawing!;assert.ok(d.ink.length);assert.ok(h.pencilAction(true));
+  assert.equal(d.ink.length,0);assert.equal(d.pencils[0].owner,'host');assert.equal(d.pencils[0].tip,null);
+ }finally{h.close();}
+});

@@ -132,7 +132,7 @@ function syncSpectator(){
   if(local&&!local.alive){if(!spectator.position){spectator.start(local.player.pos);clearInput();}}else spectator.reset();
 }
 const courtyardUI=new CourtyardUI({room:()=>{paused();friendsOpen=true;showPanels();roster();}});
-function sampleEmotes(active:boolean){const holdingPencil=!!friends&&world?.courtyard?.drawing?.pencils.some(p=>p.owner===friends!.localId);const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(holdingPencil||emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
+function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
 function clearInput() {courtyardUI.resetSelect();mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
 function notice(text:string,seconds=2.5) {noticeText=text;noticeUntil=performance.now()+seconds*1000;}
 async function captureMouse() {

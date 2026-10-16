@@ -71,7 +71,7 @@ export class FriendsSession{
   const c=this.courtyard,p=this.world?.crew.find(p=>p.id===id),now=performance.now();
   if(!this.prelobby||!this.gathering||!c||!p||!p.alive||!nearDrawingRoom(p.player.pos)||now-(this.pencilActions.get(id)??-1000)<250)return false;
   this.pencilActions.set(id,now);c.drawing??=createDrawing();
-  if(clear){if(id!=='host')return false;const sequence=c.drawing.sequence+1;c.drawing=createDrawing();c.drawing.sequence=sequence;}
+  if(clear){if(id!=='host')return false;c.drawing.ink=[];c.drawing.sequence++;for(const pencil of c.drawing.pencils)pencil.tip=null;}
   else if(!pencilAction(c.drawing,p))return false;
   this.updateLobby();return true;
  }

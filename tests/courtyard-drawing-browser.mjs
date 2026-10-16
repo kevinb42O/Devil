@@ -51,13 +51,47 @@ try{
  await guest.waitForFunction(()=>window.abyss.courtyard.drawing.ink.some(row=>row[0]===0));
  assert.ok(await host.evaluate(()=>window.abyss.courtyard.drawing.ink.length)>2);
  await host.evaluate(()=>window.__abyssTrainerAccess.set(0,-1.1));
+ // Inspect actual animated palm sockets, not the simulation's approximate hand positions.
+ await host.evaluate(async()=>{
+  const {GameRenderer}=await import('/src/renderer.ts');
+  const render=GameRenderer.prototype.render;
+  GameRenderer.prototype.render=function(...args){const result=render.apply(this,args);window.testRenderer=this;return result;};
+ });
+ await host.waitForFunction(()=>window.testRenderer?.emoteHands?.userData.holdingPencil);
+ const grips=await host.evaluate(async()=>{
+  const {Vector3}=await import('/node_modules/three/build/three.module.js');
+  const r=window.testRenderer;
+  return window.abyss.courtyard.drawing.pencils.map((p,i)=>{
+   const mesh=r.courtyard.scene.getObjectByName('giant-pencil-'+i);
+   const avatar=p.owner==='host'?r.emoteHands:r.crewModels.get(p.owner);
+   const index=avatar.getObjectByName('Index2R'),middle=avatar.getObjectByName('Middle2R');
+   const palm=index.getWorldPosition(new Vector3()).add(middle.getWorldPosition(new Vector3())).multiplyScalar(.5);
+   const point=mesh.worldToLocal(palm);
+   return {visible:mesh.visible,holding:avatar.userData.holdingPencil,radial:Math.hypot(point.x,point.z),height:point.y};
+  });
+ });
+ for(const grip of grips){assert.equal(grip.visible,true);assert.equal(grip.holding,true);assert.ok(grip.radial<.001,'shaft intersects the animated palm');assert.ok(grip.height>.6&&grip.height<3.15,'palm is on the pencil shaft');}
  mkdirSync('artifacts/drawing-court',{recursive:true});await host.screenshot({path:'artifacts/drawing-court/first-person.png'});
  // Render the exact replicated court from above to inspect all 64 squares and both pencils.
  await host.evaluate(async()=>{const {GameRenderer}=await import('/src/renderer.ts');const render=GameRenderer.prototype.render;GameRenderer.prototype.render=function(...args){const result=render.apply(this,args);if(this.courtyard.scene.visible){this.camera.position.set(81,30,24);this.camera.lookAt(81,0,2);this.renderer.render(this.courtyard.scene,this.camera);}return result;};});
  await host.waitForTimeout(200);await host.screenshot({path:'artifacts/drawing-court/board-overview.png'});
  await host.evaluate(()=>window.testPad.buttons[3].pressed=true);await host.waitForTimeout(150);await host.evaluate(()=>window.testPad.buttons[3].pressed=false);
- await guest.waitForFunction(()=>window.abyss.courtyard.drawing.ink.length===0&&window.abyss.courtyard.drawing.pencils.every(p=>!p.owner));
+ await guest.waitForFunction(()=>window.abyss.courtyard.drawing.ink.length===0&&window.abyss.courtyard.drawing.pencils.every(p=>p.owner));
+ await host.evaluate(()=>window.__abyssTrainerAccess.set(1.2,.3));
+ await host.waitForTimeout(150);
+ const idleGrip=await host.evaluate(async()=>{
+  const {Vector3}=await import('/node_modules/three/build/three.module.js');
+  const mesh=window.testRenderer.courtyard.scene.getObjectByName('giant-pencil-0');
+  const point=mesh.worldToLocal(new Vector3(...mesh.userData.grip));
+  return {radial:Math.hypot(point.x,point.z),height:point.y};
+ });
+ assert.ok(idleGrip.radial<.001);assert.ok(Math.abs(idleGrip.height-1.1)<.001,'idle pencil follows the palm too');
+ await guest.bringToFront();await guest.keyboard.press('KeyG');
+ await host.waitForFunction(()=>window.abyss.courtyard.drawing.pencils[1].owner===null);
+ await host.bringToFront();await host.evaluate(()=>window.testPad.buttons[2].pressed=true);
+ await host.waitForTimeout(150);await host.evaluate(()=>window.testPad.buttons[2].pressed=false);
+ await guest.waitForFunction(()=>window.abyss.courtyard.drawing.pencils.every(p=>p.owner===null));
  assert.deepEqual(errors,[]);
- console.log('Real WebRTC: exclusive pencils picked up with controller X and keyboard G, both clients draw shared ink, host reset reaches guest.');
+ console.log('Real WebRTC: exclusive pencils picked up with controller X and keyboard G, both clients draw shared ink, both animated hands grip their pencils, host reset keeps holders and reaches guest.');
  await host.evaluate(()=>window.session.close());await guest.evaluate(()=>window.session.close());
 }finally{await browser.close();await server.close();}

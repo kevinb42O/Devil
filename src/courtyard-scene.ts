@@ -104,6 +104,9 @@ export class CourtyardScene{
   sprite.position.set(FOOTBALL.x,4.7,FOOTBALL.goalZ[index]+(index?1:-1)*.2);sprite.scale.set(5.4,1.8,1);this.scene.add(sprite);this.plaques.set(id,sprite);
  }
  get diagnostics(){return {skullVisible:this.skull.visible,lightingVisible:this.skullLights.visible,lightPosition:this.skullLights.position.toArray(),scores:[0,1].map(i=>{const board=this.plaques.get('football-score-'+i);return board?{goals:board.userData.goals,position:board.position.toArray()}:null;})};}
+ updatePencilGrips(world:World,models:Map<string,THREE.Group>,local?:{id:string;model:THREE.Group}){
+  this.drawing.updateGrips(world,models,local);
+ }
  update(world:World,members:{id:string;ready:boolean;color?:string;loaded?:number}[],reduced=false){
   const c=world.courtyard;if(!c){this.skullLights.visible=false;return;}const t=world.tick/120;
   this.drawing.update(c.drawing,world);
