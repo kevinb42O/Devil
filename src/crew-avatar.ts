@@ -13,8 +13,9 @@ const colors=[0xcde98b,0x62cfff,0xffbd66,0xd994ff,0xee9eae,0xedda80];
 const pending=new Set<THREE.Group>();
 let template:THREE.Group|null=null,clips:THREE.AnimationClip[]=[],loading:Promise<void>|null=null,failed=false;
 let modelScale=1,floorOffset=0;
-type KickPose={charge:number;age:number;power:number};
-type AvatarState={leftFoot?:THREE.Bone;legEnd?:THREE.Bone;footBasePosition?:THREE.Vector3;footBaseRotation?:THREE.Quaternion;leftThigh?:THREE.Bone;leftShin?:THREE.Bone;legBases?:[THREE.Quaternion,THREE.Quaternion];anchor?:{bone:THREE.Bone;reference:THREE.Vector3;rootPosition:THREE.Vector3};head:THREE.Bone;dark?:THREE.SkinnedMesh;gold:boolean;crown?:THREE.Mesh;root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;leftUpper:THREE.Bone;leftLower:THREE.Bone;baseLeftUpper:THREE.Quaternion;baseLeftLower:THREE.Quaternion;leftRaise:number;rightRaise:number;fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[];shoulders?:THREE.Mesh[];muzzle:THREE.Object3D};
+type KickPose={charge:number;age:number;power:number;right?:boolean};
+type KickLeg={foot?:THREE.Bone;end?:THREE.Bone;thigh?:THREE.Bone;shin?:THREE.Bone;position?:THREE.Vector3;rotation?:THREE.Quaternion;bases?:[THREE.Quaternion,THREE.Quaternion]};
+type AvatarState={legs:KickLeg[];anchor?:{bone:THREE.Bone;reference:THREE.Vector3;rootPosition:THREE.Vector3};head:THREE.Bone;dark?:THREE.SkinnedMesh;gold:boolean;crown?:THREE.Mesh;root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;leftUpper:THREE.Bone;leftLower:THREE.Bone;baseLeftUpper:THREE.Quaternion;baseLeftLower:THREE.Quaternion;leftRaise:number;rightRaise:number;fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[];shoulders?:THREE.Mesh[];muzzle:THREE.Object3D};
 const states=new WeakMap<THREE.Group,AvatarState>();
 let originalDark:THREE.BufferGeometry|undefined,crownedDark:THREE.BufferGeometry|undefined,crownMount:THREE.Matrix4|undefined;
 const emoteFrame=new THREE.Matrix4(),emoteWorld=new THREE.Quaternion(),emoteRight=new THREE.Vector3(),emoteBack=new THREE.Vector3(),handDirection=new THREE.Vector3(),handLocal=new THREE.Quaternion(),fingerTarget=new THREE.Quaternion();
@@ -97,9 +98,8 @@ function attachDemon(model:THREE.Group){
  if(model.userData.firstPerson){const material=[...materials.values()].find(m=>m.name==='Demon_Main')!;shoulders=[leftUpper,upper].map(()=>{const joint=new THREE.Mesh(shoulderGeometry,material);joint.name='first-person-shoulder';joint.scale.set(.23,.2,.22);joint.frustumCulled=false;model.add(joint);return joint;});}
  const anchor=model.userData.firstPerson?{bone:root.getObjectByName('Neck') as THREE.Bone,reference:new THREE.Vector3(),rootPosition:root.position.clone()}:undefined;
  if(anchor){model.updateWorldMatrix(true,true);anchor.bone.getWorldPosition(anchor.reference);model.worldToLocal(anchor.reference);}
- const leftFoot=root.getObjectByName('FootL') as THREE.Bone|undefined,legEnd=root.getObjectByName('LowerLegL_end') as THREE.Bone|undefined;
- const leftThigh=root.getObjectByName('UpperLegL') as THREE.Bone|undefined,leftShin=root.getObjectByName('LowerLegL') as THREE.Bone|undefined;
- states.set(model,{leftFoot,legEnd,footBasePosition:leftFoot?.position.clone(),footBaseRotation:leftFoot?.quaternion.clone(),leftThigh,leftShin,legBases:leftThigh&&leftShin?[leftThigh.quaternion.clone(),leftShin.quaternion.clone()]:undefined,anchor,fingers,shoulders,head:root.getObjectByName('Head') as THREE.Bone,dark,gold:false,root,mixer,actions,upper,lower,lastTime:NaN,aim:0,leftUpper,leftLower,baseLeftUpper:leftUpper.quaternion.clone(),baseLeftLower:leftLower.quaternion.clone(),leftRaise:0,rightRaise:0,baseUpper:upper.quaternion.clone(),baseLower:lower.quaternion.clone(),muzzle:root.getObjectByName('Middle3R_end')!});
+ const legs:KickLeg[]=['L','R'].map(side=>{const foot=root.getObjectByName('Foot'+side) as THREE.Bone|undefined,thigh=root.getObjectByName('UpperLeg'+side) as THREE.Bone|undefined,shin=root.getObjectByName('LowerLeg'+side) as THREE.Bone|undefined;return {foot,end:root.getObjectByName('LowerLeg'+side+'_end') as THREE.Bone|undefined,thigh,shin,position:foot?.position.clone(),rotation:foot?.quaternion.clone(),bases:thigh&&shin?[thigh.quaternion.clone(),shin.quaternion.clone()]:undefined};});
+ states.set(model,{legs,anchor,fingers,shoulders,head:root.getObjectByName('Head') as THREE.Bone,dark,gold:false,root,mixer,actions,upper,lower,lastTime:NaN,aim:0,leftUpper,leftLower,baseLeftUpper:leftUpper.quaternion.clone(),baseLeftLower:leftLower.quaternion.clone(),leftRaise:0,rightRaise:0,baseUpper:upper.quaternion.clone(),baseLower:lower.quaternion.clone(),muzzle:root.getObjectByName('Middle3R_end')!});
  model.userData.avatarSource='quaternius-demon';updateHeadwear(model);
 }
 function withoutHalo(source:THREE.BufferGeometry){
@@ -192,11 +192,9 @@ export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grou
  state.leftUpper.quaternion.copy(state.baseLeftUpper);state.leftLower.quaternion.copy(state.baseLeftLower);
  for(const finger of state.fingers)finger.bone.quaternion.copy(finger.base);
  if(state.anchor)state.root.position.copy(state.anchor.rootPosition);
- if(state.legBases&&state.leftThigh&&state.leftShin){state.leftThigh.quaternion.copy(state.legBases[0]);state.leftShin.quaternion.copy(state.legBases[1]);}
- if(state.leftFoot&&state.footBasePosition&&state.footBaseRotation){state.leftFoot.position.copy(state.footBasePosition);state.leftFoot.quaternion.copy(state.footBaseRotation);}
+ for(const leg of state.legs){if(leg.bases&&leg.thigh&&leg.shin){leg.thigh.quaternion.copy(leg.bases[0]);leg.shin.quaternion.copy(leg.bases[1]);}if(leg.foot&&leg.position&&leg.rotation){leg.foot.position.copy(leg.position);leg.foot.quaternion.copy(leg.rotation);}}
  state.mixer.setTime(time);
- if(state.leftFoot&&state.footBasePosition&&state.footBaseRotation){state.footBasePosition.copy(state.leftFoot.position);state.footBaseRotation.copy(state.leftFoot.quaternion);}
- if(state.legBases&&state.leftThigh&&state.leftShin){state.legBases[0].copy(state.leftThigh.quaternion);state.legBases[1].copy(state.leftShin.quaternion);}
+ for(const leg of state.legs){if(leg.foot&&leg.position&&leg.rotation){leg.position.copy(leg.foot.position);leg.rotation.copy(leg.foot.quaternion);}if(leg.bases&&leg.thigh&&leg.shin){leg.bases[0].copy(leg.thigh.quaternion);leg.bases[1].copy(leg.shin.quaternion);}}
  if(state.anchor){
   // Jump/run clips contain their own root lift. Physics already moves the local
   // eye and body together, so cancel that extra lift at the collar. Preserve
@@ -243,15 +241,16 @@ export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grou
    finger.bone.quaternion.slerp(fingerTarget,weight);
   }
  }
- if(courtyard&&kick&&state.leftThigh&&state.leftShin){
+ const leg=state.legs[kick?.right?1:0];
+ if(courtyard&&kick&&leg.thigh&&leg.shin){
   const windup=.25+.75*kick.charge;let thigh=-.3*windup,shin=-1.1*windup;
   if(kick.charge===0&&kick.age>=0&&kick.age<.5){const strike=Math.min(1,kick.age/.13),settle=Math.max(0,1-(kick.age-.13)/.37),ease=strike*strike*(3-2*strike);thigh=(-.3+(1.1+.25*kick.power+.3)*ease)*settle;shin=(-1.1+1.02*ease)*settle;}
-  model.updateWorldMatrix(true,true);if(state.legEnd)state.legEnd.getWorldPosition(kickEndBefore);
-  for(const [bone,angle]of [[state.leftThigh,thigh],[state.leftShin,shin]] as const){
+  model.updateWorldMatrix(true,true);if(leg.end)leg.end.getWorldPosition(kickEndBefore);
+  for(const [bone,angle]of [[leg.thigh,thigh],[leg.shin,shin]] as const){
    bone.parent!.getWorldQuaternion(parentRotation);model.getWorldQuaternion(emoteWorld);handDirection.set(1,0,0).applyQuaternion(emoteWorld).applyQuaternion(parentRotation.invert()).normalize();aimRotation.setFromAxisAngle(handDirection,angle);bone.quaternion.premultiply(aimRotation);bone.updateWorldMatrix(false,true);
   }
-  // FootL is an independent deform bone in this rig, not a shin child.
-  if(state.leftFoot&&state.legEnd){const foot=state.leftFoot;state.legEnd.getWorldPosition(neckPosition);neckPosition.sub(kickEndBefore);foot.getWorldPosition(kickFootPosition).add(neckPosition);foot.parent!.worldToLocal(kickFootPosition);foot.position.copy(kickFootPosition);foot.parent!.getWorldQuaternion(parentRotation);model.getWorldQuaternion(emoteWorld);handDirection.set(1,0,0).applyQuaternion(emoteWorld).applyQuaternion(parentRotation.invert()).normalize();aimRotation.setFromAxisAngle(handDirection,thigh+shin);foot.quaternion.premultiply(aimRotation);foot.updateWorldMatrix(false,true);}
+  // Each foot is an independent deform bone, so move it with its shin endpoint.
+  if(leg.foot&&leg.end){const foot=leg.foot;leg.end.getWorldPosition(neckPosition);neckPosition.sub(kickEndBefore);foot.getWorldPosition(kickFootPosition).add(neckPosition);foot.parent!.worldToLocal(kickFootPosition);foot.position.copy(kickFootPosition);foot.parent!.getWorldQuaternion(parentRotation);model.getWorldQuaternion(emoteWorld);handDirection.set(1,0,0).applyQuaternion(emoteWorld).applyQuaternion(parentRotation.invert()).normalize();aimRotation.setFromAxisAngle(handDirection,thigh+shin);foot.quaternion.premultiply(aimRotation);foot.updateWorldMatrix(false,true);}
 
  }
  model.userData.footballKick=courtyard&&kick?{...kick}:null;

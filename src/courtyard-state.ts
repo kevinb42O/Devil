@@ -1,7 +1,7 @@
 /** Courtyard state is replicated independently of combat time and randomness. */
 export type Point={x:number;y:number;z:number};
 export type CourtyardEvent={id:number;tick:number;kind:'kick'|'bounce'|'goal'|'highfive'|'arrival'|'open'|'cancel';pos:Point;players:string[]};
-export type FootballKick={started:number;released:number;power:number};
+export type FootballKick={started:number;released:number;power:number;right?:boolean};
 export const KICK_CHARGE_TICKS=144;
 export type CourtyardState={generation:number;phase:'gathering'|'opening'|'open'|'collecting';phaseTick:number;participants:string[];committed:string[];events:CourtyardEvent[];sequence:number;kicks:Record<string,FootballKick>;skull:{pos:Point;vel:Point;rotation:Point;reset:number;goals:[number,number];resetAt:number;lastContact:Record<string,number>};lastRun?:{time:number;best:number;crew:string}};
 export const PIT={x:0,z:2.075,half:2,depth:-3,openingTicks:180};
@@ -51,7 +51,7 @@ export function courtyardFloor(x:number,z:number,c:CourtyardState){
 export function createCourtyard(generation:number,lastRun?:CourtyardState['lastRun']):CourtyardState{return {generation,phase:'gathering',phaseTick:0,participants:[],committed:[],events:[],sequence:0,kicks:{},skull:{pos:{x:FOOTBALL.x,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z},vel:{x:0,y:0,z:0},rotation:{x:0,y:0,z:0},reset:0,goals:[0,0],resetAt:0,lastContact:{}},lastRun};}
 export function courtyardEvent(c:CourtyardState,tick:number,kind:CourtyardEvent['kind'],pos:Point,players:string[]=[]){c.events.push({id:++c.sequence,tick,kind,pos:{...pos},players});if(c.events.length>24)c.events.shift();}
 export function resetSkull(c:CourtyardState,_players:{player:{pos:Point}}[]=[]){c.skull.pos={x:FOOTBALL.x,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z};c.skull.vel={x:0,y:0,z:0};c.skull.rotation={x:0,y:0,z:0};c.skull.reset++;c.skull.resetAt=0;c.skull.lastContact={};}
-export function footballKickPose(c:CourtyardState|undefined,id:string,tick:number){const k=c?.kicks[id];if(!k)return;const charge=k.started>=0?Math.min(1,Math.max(0,(tick-k.started)/KICK_CHARGE_TICKS)):0,age=(tick-k.released)/120;return charge>0||age>=0&&age<.5?{charge,age,power:k.power}:undefined;}
+export function footballKickPose(c:CourtyardState|undefined,id:string,tick:number){const k=c?.kicks[id];if(!k)return;const charge=k.started>=0?Math.min(1,Math.max(0,(tick-k.started)/KICK_CHARGE_TICKS)):0,age=(tick-k.released)/120;return charge>0||age>=0&&age<.5?{charge,age,power:k.power,right:k.right===true}:undefined;}
 
 export function validateCourtyard(value:unknown):value is CourtyardState{
  if(!value||typeof value!=='object')return false;const c=value as CourtyardState;

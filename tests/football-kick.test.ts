@@ -24,7 +24,8 @@ test('hold and release charges exactly once, stays bounded, and produces a stron
 test('right-click input charges and releases a football kick',()=>{
  const c=createCourtyard(1),p=body();p.input.fire=false;p.input.homing=true;
  stepFootballKicks(c,[p],1);p.input.homing=false;stepFootballKicks(c,[p],2);
- assert.equal(c.events.filter(e=>e.kind==='kick').length,1);assert.ok(c.skull.vel.z<0);
+ assert.equal(c.events.filter(e=>e.kind==='kick').length,1);assert.ok(c.skull.vel.z<0);assert.equal(footballKickPose(c,'host',2)!.right,true);
+ const left=createCourtyard(1),leftPlayer=body();stepFootballKicks(left,[leftPlayer],1);leftPlayer.input.fire=false;stepFootballKicks(left,[leftPlayer],2);assert.equal(footballKickPose(left,'host',2)!.right,false);
 });
 test('cancel, backwards facing and distant releases do not kick the ball',()=>{
  for(const mode of ['back','far']){const c=createCourtyard(1),p=body();stepFootballKicks(c,[p],1);p.input.fire=false;if(mode==='back')p.input.yaw=Math.PI;if(mode==='far')p.player.pos.x+=10;stepFootballKicks(c,[p],145);assert.deepEqual(c.skull.vel,{x:0,y:0,z:0});assert.equal(c.events.length,0);assert.equal(c.kicks.host.started,-1);}
