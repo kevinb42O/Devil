@@ -1,8 +1,8 @@
 import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
-const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+const chrome=['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','C:/Program Files/Google/Chrome/Application/chrome.exe'].find(existsSync);
+const browser=await chromium.launch({headless:true,...(chrome?{executablePath:chrome}:{})});
 try{
  const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.route('http://127.0.0.1:5173/music-test',r=>r.fulfill({contentType:'text/html',body:'<button id="unlock">Play</button>'}));
@@ -19,9 +19,13 @@ try{
  await page.evaluate(()=>{music.setVolume(0);music.setScene('menu');});
  await page.waitForTimeout(150);assert.ok(await page.evaluate(()=>music.diagnostics.tracks.every(t=>!t.playing)));
  await page.evaluate(()=>music.setVolume(1));await page.waitForFunction(()=>music.diagnostics.tracks.find(t=>t.name==='menutheme').volume>.6);
- // Confirm real loop wrap with the original recording, rather than just the loop flag.
+ // Confirm the complete recording loops, rather than a short preview clip.
+ assert.ok(await page.evaluate(()=>music.tracks.get('menutheme').duration>107),'the complete menu recording is available');
  await page.evaluate(()=>{const a=music.tracks.get('menutheme');a.currentTime=a.duration-.15;});
  await page.waitForFunction(()=>music.diagnostics.tracks.find(t=>t.name==='menutheme').time<2);
+ // Recover if a media backend ends a WAV despite its loop setting.
+ await page.evaluate(()=>{const a=music.tracks.get('menutheme');a.loop=false;a.currentTime=a.duration-.05;});
+ await page.waitForFunction(()=>{const track=music.diagnostics.tracks.find(t=>t.name==='menutheme');return track.playing&&track.time<2;});
  assert.deepEqual(await page.evaluate(()=>music.diagnostics.failed),[]);
  assert.deepEqual(errors,[]);
  console.log('Original music: gesture unlock, both recordings, crossfade, hidden/resume, mute, arena silence and loop wrap passed.');

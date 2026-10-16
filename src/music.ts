@@ -34,13 +34,27 @@ export class Music {
  }
  private track(name:string){
   let a=this.tracks.get(name);if(a)return a;
-  a=new Audio(ROOT+name+'.wav');a.loop=true;a.preload='none';
+  // Configure looping before assigning the source. Some mobile media backends only
+  // snapshot this property while initializing the stream.
+  a=new Audio();a.loop=true;a.preload='metadata';a.src=ROOT+name+'.wav';
   // iOS ignores HTMLMediaElement.volume. Route every stream through Web Audio
   // before playback so neither a new track nor a scene fade bypasses the mixer.
   const gain=this.context!.createGain();gain.gain.value=0;
   this.context!.createMediaElementSource(a).connect(gain);gain.connect(this.master!);
   this.gains.set(name,gain);
-  a.addEventListener('error',()=>this.failed.add(name));this.tracks.set(name,a);return a;
+  a.addEventListener('error',()=>this.failed.add(name));
+  // `loop` should prevent `ended`, but retain a recovery path for media
+  // implementations that stop WAV streams at EOF.
+  a.addEventListener('ended',()=>this.start(name,a!));
+  this.tracks.set(name,a);return a;
+ }
+ private start(name:string,a:HTMLAudioElement){
+  const desired=this.scene==='menu'?'menutheme':this.scene==='entrance'?'menuatmos':null;
+  if(name!==desired||this.hidden||this.volume===0||this.starting.has(name)||this.failed.has(name))return;
+  if(a.ended)a.currentTime=0;
+  this.starting.add(name);void a.play().then(()=>{
+   if(this.hidden||this.volume===0||this.scene==='silent')a.pause();
+  }).catch(()=>this.failed.add(name)).finally(()=>this.starting.delete(name));
  }
  update(dt:number){
   if(!this.unlocked||this.hidden)return;
@@ -52,11 +66,7 @@ export class Music {
    // Linear fades reach silence, allowing inactive streams to stop completely.
    const step=Math.max(0,dt)*1.3;
    gain.value=target>gain.value?Math.min(target,gain.value+step):Math.max(target,gain.value-step);
-   if(name===desired&&this.volume>0&&a.paused&&!this.starting.has(name)&&!this.failed.has(name)){
-    this.starting.add(name);void a.play().then(()=>{
-     if(this.hidden||this.volume===0||(this.scene==='silent'))a.pause();
-    }).catch(()=>this.failed.add(name)).finally(()=>this.starting.delete(name));
-   }
+   if(name===desired&&this.volume>0&&a.paused)this.start(name,a);
    if(gain.value===0&&(name!==desired||this.volume===0))a.pause();
   }
  }
