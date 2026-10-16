@@ -11,11 +11,11 @@ export function stick(x:number,y:number,deadzone:number):[number,number]{
  const scale=(Math.min(1,length)-deadzone)/(1-deadzone)/length;
  return [x*scale,y*scale];
 }
-export function controllerState(pad:Pick<Gamepad,'axes'|'buttons'>,deadzone:number){
+export function controllerState(pad:Pick<Gamepad,'axes'|'buttons'>,deadzone:number,courtyard=false){
  const held=(i:number)=>!!pad.buttons[i]&&(pad.buttons[i].pressed||pad.buttons[i].value>.5);
  const [strafe,vertical]=stick(pad.axes[0]??0,pad.axes[1]??0,deadzone);
  const [lookX,lookY]=stick(pad.axes[2]??0,pad.axes[3]??0,deadzone);
- return {forward:-vertical,strafe,lookX,lookY,jump:held(0),action:held(2),fire:held(7),homing:held(6),leftShoulder:held(4),rightShoulder:held(5),pause:held(9),back:held(1),up:held(12),down:held(13),left:held(14),right:held(15),descend:held(4),fast:held(10)};
+ return {forward:-vertical,strafe,lookX,lookY,jump:held(0),action:held(2),fire:held(courtyard?6:7),homing:held(courtyard?7:6),leftShoulder:held(4),rightShoulder:held(5),pause:held(9),back:held(1),up:held(12),down:held(13),left:held(14),right:held(15),descend:held(4),fast:held(10)};
 }
 
 /** Hold either arm independently; physical key codes are deliberately avoided

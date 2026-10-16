@@ -656,7 +656,7 @@ function pollController(dt:number){
  const pauseMessage=settings.controlScheme==='controller'?pad?'Your run is paused. Press Start / Options or Return to resume.':`${status} ${waitingForController?'The game will continue once detected.':'Then press Return to resume.'} You can also choose keyboard controls in Settings.`:'Your run is paused.';
  if(!friends&&$('pause').querySelector('p')!.textContent!==pauseMessage)$('pause').querySelector('p')!.textContent=pauseMessage;
  if(!pad){if(settings.controlScheme==='controller'&&mode==='playing'){paused();waitingForController=!friends;}previousPad=null;return;}
- const state=controllerState(pad,settings.controllerDeadzone),previous=previousPad;previousPad=state;
+ const state=controllerState(pad,settings.controllerDeadzone,!!friends?.prelobby),previous=previousPad;previousPad=state;
  // Establish a baseline so the detection button cannot activate menus or
  // become a held gameplay action. Connection waits resume on a later frame.
  if(activePadIndex!==pad.index){activePadIndex=pad.index;if(settings.controlScheme==='controller')clearInput();return;}
