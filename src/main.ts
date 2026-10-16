@@ -817,6 +817,26 @@ function init() {
    // Explicit production opt-in for the companion trainer. Keeping its helpers here means
    // the trainer can attach to Vite's hashed production modules as well as the dev server.
    (window as Window&{__abyssMemoryHelpers?:unknown}).__abyssMemoryHelpers={sweepArmor,armorBounds,segmentSphere,emergence:enemyEmergenceScale,spiderRadius:SPIDER_CRYSTAL_RADIUS,stats:ENEMY_STATS};
+   // Preserve a stable companion interface through production variable minification.
+   // The bridge can connect without pausing Chrome in the JavaScript debugger.
+   (window as Window&{__abyssTrainerAccess?:unknown}).__abyssTrainerAccess={
+    get:()=>({world,mode,entrance,courtyard:world?.courtyard,spectating:!!spectator.position,yaw,pitch,cameraFov:renderer.camera.fov,fire:sampledFire||input.fire,homing:sampledHoming||input.homing,canHoming:!!world?.homingUnlocked&&world.reserve>0,armorEnemies:world?.enemies.filter(e=>armorBounds(e)!==null),focused:document.hasFocus()&&!controlMenuRoot()&&(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||!!document.pointerLockElement)}),
+    set:(y:number,p:number)=>{yaw=y;pitch=p;input.yaw=y;input.pitch=p;},
+    project:(pos:{x:number;y:number;z:number},radius:number)=>{
+     const rect=$('game').getBoundingClientRect();if(rect.width<1||rect.height<1)return {box:null};
+     const vector=renderer.camera.position.clone().set(pos.x,pos.y,pos.z).project(renderer.camera);
+     if(!Number.isFinite(vector.x+vector.y+vector.z))return {box:null};
+     if(vector.z< -1||vector.z>1||Math.abs(vector.x)>1||Math.abs(vector.y)>1){
+      const point=renderer.camera.position.clone().set(pos.x,pos.y,pos.z).applyMatrix4(renderer.camera.matrixWorldInverse);
+      let dx=point.x,dy=-point.y;if(Math.hypot(dx,dy)<.001)dx=1;
+      const scale=Math.min(Math.max(1,rect.width/2-26)/Math.max(.001,Math.abs(dx)),Math.max(1,rect.height/2-26)/Math.max(.001,Math.abs(dy)));
+      return {box:null,arrow:{x:rect.width/2+dx*scale,y:rect.height/2+dy*scale,angle:Math.atan2(dy,dx)}};
+     }
+     const x=(vector.x+1)*rect.width/2,y=(1-vector.y)*rect.height/2,distance=renderer.camera.position.distanceTo(pos);
+     const r=Math.max(5,Math.min(100,radius*rect.height/(2*Math.tan(renderer.camera.fov*Math.PI/360)*Math.max(distance,.001))));
+     return {x,y,box:[x-r,y-r,r*2,r*2]};
+    }
+   };
    Object.defineProperty(window,'abyss',{configurable:true,get:()=>({mode,crewReplay:crewViewer?.diagnostics,crewRecording:friends?.replayDiagnostics,completedCrewReplay:friends?.completedReplay?{id:friends.completedReplay.id,ticks:friends.completedReplay.ticks}:null,menuRelics:renderer.menuRelics.diagnostics,sky:renderer.skyDiagnostics,mist:renderer.openingMist.diagnostics,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,courtyard:world?.courtyard,courtyardAssets:{loaded:renderer.courtyard.loaded,error:renderer.courtyard.error,presentation:renderer.courtyard.diagnostics},entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),cameraFeedback:renderer.cameraFeedback.diagnostics,movementMotion:renderer.movementMotion.diagnostics,handFeedback:renderer.originalWeapon.effectDiagnostics,enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,leftArm:!!p.input.leftArm,rightArm:!!p.input.rightArm,position:p.player.pos})),running:friends.running,prelobby:friends.prelobby}:null,audio:sound.diagnostics,menuAudio:menuAudio.diagnostics,music:music.diagnostics})});
   }
   updateControlHints();setupFriends();setupLeaderboard();

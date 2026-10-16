@@ -5,10 +5,31 @@ import { mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { createMemoryAim, resolveDamagePoint } from './targeting.mjs';
 import {desktopTelemetry} from './geometry.mjs';
+import {paintPageOverlay} from './page-overlay.mjs';
 
 export async function attachMemory(page) {
   await page.waitForFunction(()=>Object.getOwnPropertyDescriptor(window,'abyss')?.get, null, {timeout:60000});
   await page.waitForFunction(()=>!!window.__abyssMemoryHelpers, null, {timeout:60000});
+  if(await page.evaluate(()=>!!window.__abyssTrainerAccess)){
+    await page.evaluate(({factory,resolve})=>{
+      globalThis.__abyssMemoryAim?.stop();
+      const helpers=globalThis.__abyssMemoryHelpers;
+      const access={...globalThis.__abyssTrainerAccess,
+        maxHealth:(enemy,index)=>{const spec=helpers.stats[enemy.kind];return index.startsWith('crystal')?spec.hp/enemy.weakpoints.length:index.startsWith('segment')?spec.hp/spec.gems:spec.hp;},
+        radius:(enemy,index,base)=>index.startsWith('segment')?base:(enemy.kind==='spider'||enemy.kind==='spider2')?helpers.spiderRadius*enemy.size*helpers.emergence(enemy):index.startsWith('crystal')?base*helpers.emergence(enemy):base,
+        resolve:(enemy,pos,radius,state,homing,trajectory)=>resolvePoint(enemy,pos,radius,state,homing,helpers,trajectory)
+      };
+      const resolvePoint=(0,eval)('('+resolve+')');
+      globalThis.__abyssMemoryAim=(0,eval)('('+factory+')')(access);
+      globalThis.__abyssMemoryGetter=Object.getOwnPropertyDescriptor(window,'abyss').get;
+    },{factory:createMemoryAim.toString(),resolve:resolveDamagePoint.toString()});
+    return true;
+  }
+  // Legacy local development builds retain the scope-inspection fallback. Never
+  // repeatedly pause a production bundle whose variable names have been minified.
+  if(!['localhost','127.0.0.1','[::1]'].includes(new URL(page.url()).hostname)){
+    throw Error('Deploy the current game build to enable the production trainer interface.');
+  }
   const session=await page.context().newCDPSession(page);
   await session.send('Debugger.enable');
   const result=await session.send('Runtime.evaluate',{expression:'Object.getOwnPropertyDescriptor(window,"abyss").get'});
@@ -81,7 +102,7 @@ async function main(){
     running=false;
     if(closing)return;
     closing=true;
-    await page?.evaluate(()=>window.__abyssMemoryAim?.stop()).catch(()=>{});
+    await page?.evaluate(()=>{window.__abyssMemoryAim?.stop();document.getElementById('__abyssTrainerOverlay')?.remove();}).catch(()=>{});
     await context?.close().catch(()=>{});
     input.close();process.stdin.pause();
   };
@@ -119,6 +140,7 @@ async function main(){
           return {...state,connected:true,documentFocused:document.hasFocus(),viewport:{screenX,screenY,outerWidth,outerHeight,innerWidth,innerHeight,devicePixelRatio,
             rect:{left:rect.left,top:rect.top,width:rect.width,height:rect.height}}};
         },options);
+        if(process.platform==='win32')await page.evaluate(paintPageOverlay,{state:data,options,rect:data.viewport.rect});
         emit({...desktopTelemetry(data,control.displays),browserPid});
       }catch(error){
         attached=false;if(!running||page.isClosed())break;

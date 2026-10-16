@@ -2,6 +2,8 @@
 
 A native macOS and Windows companion for memory-based aim assistance and ESP. There is no screen detector, screenshot preview, automatic firing, invincibility, damage modification, or modifier key to hold.
 
+On Windows the ESP/HUD is drawn in a canvas inside the managed game page with `pointer-events: none`. The companion creates no desktop overlay window; only F7 settings uses a visible native window. Production connections use the game's stable trainer interface without pausing the JavaScript debugger.
+
 ## Launch and controls
 
 On macOS, double-click **Start Trainer.command**. On Windows, double-click **Start Trainer.bat**. Play in the **Chrome window the trainer opens**; that is the session attached to memory. The default address is **https://devil-green.vercel.app**. Use F7 to switch to a local development address when needed.
