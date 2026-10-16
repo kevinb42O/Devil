@@ -93,6 +93,9 @@ async function main(){
     const windowsChrome=['C:/Program Files/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'].find(path=>existsSync(path));
     context=await chromium.launchPersistentContext(profile,{
       headless:false,executablePath:process.env.CHROME_PATH||(process.platform==='darwin'?macChrome:windowsChrome),
+      // Playwright disables Chrome's sandbox unless this is explicit. Windows Chrome
+      // supports the normal sandbox and should not show its unsupported-flag banner.
+      chromiumSandbox:true,
       viewport:null,args:['--no-first-run','--no-default-browser-check'],timeout:60000,
       handleSIGTERM:false,handleSIGINT:false
     });

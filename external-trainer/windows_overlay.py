@@ -11,9 +11,15 @@ from tkinter import ttk
 from settings import PRESETS, preset
 
 user32=ctypes.windll.user32
-GWL_EXSTYLE=-20; WS_EX_LAYERED=0x80000; WS_EX_TRANSPARENT=0x20; WS_EX_TOOLWINDOW=0x80
-WM_HOTKEY=0x0312; WM_QUIT=0x0012
+GWL_EXSTYLE=-20; GWLP_WNDPROC=-4; GA_ROOT=2
+WS_EX_LAYERED=0x80000; WS_EX_TRANSPARENT=0x20; WS_EX_TOOLWINDOW=0x80
+WM_HOTKEY=0x0312; WM_QUIT=0x0012; WM_NCHITTEST=0x0084; HTTRANSPARENT=-1
 HOTKEYS={0x72:'key:99',0x73:'key:118',0x75:'preset',0x76:'menu',0x77:'key:100',0x78:'key:101',0x79:'quit'}
+LRESULT=ctypes.c_ssize_t
+WNDPROC=ctypes.WINFUNCTYPE(LRESULT,wintypes.HWND,wintypes.UINT,wintypes.WPARAM,wintypes.LPARAM)
+user32.GetAncestor.argtypes=[wintypes.HWND,wintypes.UINT];user32.GetAncestor.restype=wintypes.HWND
+user32.SetWindowLongPtrW.argtypes=[wintypes.HWND,ctypes.c_int,ctypes.c_void_p];user32.SetWindowLongPtrW.restype=ctypes.c_void_p
+user32.CallWindowProcW.argtypes=[ctypes.c_void_p,wintypes.HWND,wintypes.UINT,wintypes.WPARAM,wintypes.LPARAM];user32.CallWindowProcW.restype=LRESULT
 
 
 def enable_dpi_awareness():
@@ -58,8 +64,17 @@ class Overlay:
         self.canvas_window.geometry(f'{self.width}x{self.height}{self.left:+d}{self.top:+d}')
         self.canvas_window.configure(bg='#00ff00');self.canvas_window.wm_attributes('-topmost',True,'-transparentcolor','#00ff00')
         self.canvas=tk.Canvas(self.canvas_window,bg='#00ff00',highlightthickness=0);self.canvas.pack(fill='both',expand=True)
-        hwnd=self.canvas_window.winfo_id();style=user32.GetWindowLongW(hwnd,GWL_EXSTYLE)
+        hwnd=user32.GetAncestor(self.canvas_window.winfo_id(),GA_ROOT);style=user32.GetWindowLongW(hwnd,GWL_EXSTYLE)
         user32.SetWindowLongW(hwnd,GWL_EXSTYLE,style|WS_EX_LAYERED|WS_EX_TRANSPARENT|WS_EX_TOOLWINDOW)
+        # WS_EX_TRANSPARENT affects painting order, but does not reliably pass input
+        # through a Tk window. Returning HTTRANSPARENT from the top-level hit test does.
+        self._overlay_hwnd=hwnd;self._previous_wndproc=None
+        @WNDPROC
+        def hit_test(window,message,wparam,lparam):
+            if message==WM_NCHITTEST:return HTTRANSPARENT
+            return user32.CallWindowProcW(self._previous_wndproc,window,message,wparam,lparam)
+        self._hit_test=hit_test
+        self._previous_wndproc=user32.SetWindowLongPtrW(hwnd,GWLP_WNDPROC,ctypes.cast(self._hit_test,ctypes.c_void_p))
         self.hotkeys=WindowsHotkeys(engine.commands);self.hotkeys.start();self.hotkeys.ready.wait(2)
         engine.thread.start();self.tick()
         print('Windows memory overlay ready · F7 settings · F8 aim · F4 ESP',flush=True)
@@ -121,6 +136,9 @@ class Overlay:
     def close(self):
         if not self.engine.running:return
         self.engine.running=False;self.engine.armed=False;self.engine.terminate_bridge();self.hotkeys.close()
+        if self._previous_wndproc:
+            user32.SetWindowLongPtrW(self._overlay_hwnd,GWLP_WNDPROC,self._previous_wndproc)
+            self._previous_wndproc=None
         self.canvas_window.destroy();self.root.destroy()
 
 
