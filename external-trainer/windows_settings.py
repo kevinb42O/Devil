@@ -41,7 +41,7 @@ class SettingsForm:
         ttk.Button(header,text='Load preset',command=self.load_preset).pack(side='right')
         self.profile_picker=ttk.Combobox(header,textvariable=self.profile,values=['Custom',*PRESETS],state='readonly',width=15)
         self.profile_picker.pack(side='right',padx=8)
-        ttk.Label(frame,text='F7 closes this panel  ·  Aim is suspended while you edit',style='Muted.TLabel').pack(anchor='w',pady=(0,16))
+        ttk.Label(frame,text='F7 saves your changes and closes this panel  ·  Aim is suspended while you edit',style='Muted.TLabel').pack(anchor='w',pady=(0,16))
         self.tabs=ttk.Notebook(frame);self.tabs.pack(fill='both',expand=True)
         pages={};self.scroll_pages={}
         for name in ('Aim','ESP','Targets','Connection'):
@@ -87,7 +87,7 @@ class SettingsForm:
             button=ttk.Button(actions,text=label,command=command,width=7,style='Accent.TButton' if label=='Apply' else 'TButton')
             button.pack(side='left',padx=(0,8));self.buttons[label]=button
         ttk.Button(actions,text='Close',command=close,width=7).pack(side='right')
-        self.fill(engine.settings);self.refresh_status();self.notice.set('Your current settings are loaded. Changes take effect after Apply.')
+        self.fill(engine.settings);self.refresh_status();self.notice.set('Edit your settings, then press F7 to save and return to the game.')
 
     def scroll(self,event):
         if isinstance(event.widget,ttk.Combobox):return
@@ -143,7 +143,7 @@ class SettingsForm:
 
     def changed(self,*_):
         if not self.loading:
-            self.profile.set('Custom');self.notice.set('Unsaved changes. Apply to activate.')
+            self.profile.set('Custom');self.notice.set('Changes ready. Press F7 to save and close, or Apply to stay here.')
 
     def fill(self,settings):
         self.loading=True
@@ -172,16 +172,18 @@ class SettingsForm:
         try:
             settings=self.read_form();self.engine.update(asdict(settings));self.fill(settings)
             self.notice.set('Saved. Settings are active.')
-        except (ValueError,TypeError,OSError) as error:self.notice.set(str(error))
+            return True
+        except (ValueError,TypeError,OSError) as error:
+            self.notice.set('Could not save: '+str(error));return False
 
     def load_preset(self):
         try:
             if self.profile.get() not in PRESETS:raise ValueError('Choose a preset, then click Load preset.')
-            self.fill(preset(self.profile.get(),self.fields['game_url'].get()));self.notice.set('Preset loaded. Apply to activate.')
+            self.fill(preset(self.profile.get(),self.fields['game_url'].get()));self.notice.set('Preset loaded. Press F7 to save and close, or Apply to stay here.')
         except (ValueError,TypeError) as error:self.notice.set(str(error))
 
     def defaults(self):
-        self.fill(preset('Precision',self.engine.settings.game_url));self.notice.set('Defaults loaded. Apply to activate.')
+        self.fill(preset('Precision',self.engine.settings.game_url));self.notice.set('Defaults loaded. Press F7 to save and close, or Apply to stay here.')
 
     def reconnect(self):
         self.engine.reconnect();self.notice.set('Reconnecting to game memory.')
@@ -192,7 +194,7 @@ class SettingsForm:
 
     def import_path(self,path):
         settings=import_document(json.loads(Path(path).read_text(encoding='utf-8')))
-        self.fill(settings);self.notice.set('Imported. Apply to activate.')
+        self.fill(settings);self.notice.set('Imported. Press F7 to save and close, or Apply to stay here.')
 
     def export_path(self,path):
         data=export_document(self.read_form())

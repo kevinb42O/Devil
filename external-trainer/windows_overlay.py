@@ -46,13 +46,15 @@ class Overlay:
         self.engine=engine;self.quit_at=time.monotonic()+quit_after if quit_after else 0
         # Only the F7 settings dialog may create a visible native window. There is
         # deliberately no transparent Toplevel/Canvas covering the Windows desktop.
-        self.root=tk.Tk();self.root.withdraw();self.menu=None;self.closed=False
+        self.root=tk.Tk();self.root.withdraw();self.menu=None;self.closed=False;self.timer=None
         self.hotkeys=WindowsHotkeys(engine.commands);self.hotkeys.start();self.hotkeys.ready.wait(2)
         engine.thread.start();self.tick()
         print('Windows trainer ready - F7 settings - F8 aim - F4 ESP',flush=True)
 
     def settings(self):
         if self.menu and self.menu.winfo_exists():
+            if not self.form.apply():
+                self.menu.lift();self.menu.focus_force();return
             self.menu.destroy();self.menu=None;self.form=None;self.engine.suspended=False;return
         self.engine.suspended=True
         window=self.menu=tk.Toplevel(self.root);window.attributes('-topmost',True)
@@ -86,12 +88,13 @@ class Overlay:
         if self.closed:return
         if self.menu and self.menu.winfo_exists():self.form.refresh_status()
         if self.quit_at and time.monotonic()>=self.quit_at:self.close();return
-        if self.engine.running:self.root.after(33,self.tick)
+        if self.engine.running:self.timer=self.root.after(33,self.tick)
         else:self.close()
 
     def close(self):
         if self.closed:return
         self.closed=True;self.engine.running=False;self.engine.armed=False
+        if self.timer:self.root.after_cancel(self.timer);self.timer=None
         self.engine.terminate_bridge();self.hotkeys.close();self.root.destroy()
 
 

@@ -4,7 +4,7 @@ A native macOS and Windows companion for memory-based aim assistance and ESP. Th
 
 On Windows the ESP/HUD is drawn in a canvas inside the managed game page with `pointer-events: none`. The companion creates no desktop overlay window; only F7 settings uses a visible native window. Production connections use the game's stable trainer interface without pausing the JavaScript debugger.
 
-Windows F7 settings has mouse-operated Aim, ESP, Targets and Connection tabs, with validated Apply, staged presets/defaults, and JSON import/export. Apply saves the values shown in the form without resetting custom values. The ESP aim-cone indicator is enabled by default. Wide cones use a dashed screen-space indicator; 360° is labeled ALL DIRECTIONS because it also includes targets behind you.
+Windows F7 settings has mouse-operated Aim, ESP, Targets and Connection tabs, with validated saving, staged presets/defaults, and JSON import/export. Press F7, Close, or the window close button to save your edits and return to the game; Apply saves while keeping the menu open. Invalid values or failed saves keep the menu open with an error. Saving preserves the custom values shown in the form. The ESP aim-cone indicator is enabled by default. Wide cones use a dashed screen-space indicator; 360° is labeled ALL DIRECTIONS because it also includes targets behind you.
 
 ## Launch and controls
 
