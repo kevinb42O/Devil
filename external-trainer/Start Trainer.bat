@@ -6,6 +6,8 @@ title ABYSS Trainer
 rem Node's installer updates PATH for new Windows sessions. Prefer its canonical
 rem location too, so launching from an already-open Explorer session works now.
 if exist "C:\Program Files\nodejs\node.exe" set "PATH=C:\Program Files\nodejs;%PATH%"
+if exist "%LocalAppData%\Programs\Python\Python312\python.exe" set "PATH=%LocalAppData%\Programs\Python\Python312;%PATH%"
+if exist "C:\Program Files\Python312\python.exe" set "PATH=C:\Program Files\Python312;%PATH%"
 
 where node >nul 2>nul
 if errorlevel 1 goto :missing_node
