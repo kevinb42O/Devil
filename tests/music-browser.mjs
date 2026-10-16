@@ -23,8 +23,9 @@ try{
  assert.ok(await page.evaluate(()=>music.tracks.get('menutheme').duration>107),'the complete menu recording is available');
  await page.evaluate(()=>{const a=music.tracks.get('menutheme');a.currentTime=a.duration-.15;});
  await page.waitForFunction(()=>music.diagnostics.tracks.find(t=>t.name==='menutheme').time<2);
- // Recover if a media backend ends a WAV despite its loop setting.
- await page.evaluate(()=>{const a=music.tracks.get('menutheme');a.loop=false;a.currentTime=a.duration-.05;});
+ // The application owns the restart instead of relying on backend WAV looping.
+ assert.equal(await page.evaluate(()=>music.tracks.get('menutheme').loop),false);
+ await page.evaluate(()=>{const a=music.tracks.get('menutheme');a.currentTime=a.duration-.05;});
  await page.waitForFunction(()=>{const track=music.diagnostics.tracks.find(t=>t.name==='menutheme');return track.playing&&track.time<2;});
  assert.deepEqual(await page.evaluate(()=>music.diagnostics.failed),[]);
  assert.deepEqual(errors,[]);

@@ -34,17 +34,17 @@ export class Music {
  }
  private track(name:string){
   let a=this.tracks.get(name);if(a)return a;
-  // Configure looping before assigning the source. Some mobile media backends only
-  // snapshot this property while initializing the stream.
-  a=new Audio();a.loop=true;a.preload='metadata';a.src=ROOT+name+'.wav';
+  // Do not delegate WAV looping to the media backend: some browsers can honor a
+  // short embedded loop region instead of the complete recording. Restart only
+  // after the media element reaches the actual end of the file.
+  a=new Audio();a.loop=false;a.preload='metadata';a.src=ROOT+name+'.wav';
   // iOS ignores HTMLMediaElement.volume. Route every stream through Web Audio
   // before playback so neither a new track nor a scene fade bypasses the mixer.
   const gain=this.context!.createGain();gain.gain.value=0;
   this.context!.createMediaElementSource(a).connect(gain);gain.connect(this.master!);
   this.gains.set(name,gain);
   a.addEventListener('error',()=>this.failed.add(name));
-  // `loop` should prevent `ended`, but retain a recovery path for media
-  // implementations that stop WAV streams at EOF.
+  // This is the sole loop path, so a menu cycle always spans the entire source.
   a.addEventListener('ended',()=>this.start(name,a!));
   this.tracks.set(name,a);return a;
  }
