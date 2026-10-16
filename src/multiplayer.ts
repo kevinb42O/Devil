@@ -45,7 +45,7 @@ export class FriendsSession{
  private addLobbyCrew(id:string){
   if(!this.world||this.world.crew.length>=MAX_CREW_PLAYERS||this.world.crew.some(p=>p.id===id))return;
   const spawn=(this.world.courtyard?SPAWNS:Array.from({length:MAX_CREW_PLAYERS},(_,i)=>({...ENTRANCE_SPAWN,x:i%2?1.05:-1.05,z:Math.floor(i/2)*2}))).find(pos=>!this.world!.crew.some(p=>Math.hypot(p.player.pos.x-pos.x,p.player.pos.z-pos.z)<1));
-  this.world.addCrew(id);this.world.crew.at(-1)!.player.pos=spawn??{...ENTRANCE_SPAWN};
+  this.world.addCrew(id);this.world.crew.at(-1)!.player.pos={...(spawn??ENTRANCE_SPAWN)};
  }
  get connected(){return [...this.links.values()].filter(l=>l.state?.readyState==='open').length;}
  // The host reports the slowest peer so a healthy peer cannot hide a bad link.

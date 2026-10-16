@@ -4,7 +4,7 @@ import {FriendsSession,applySnapshot} from '../src/multiplayer';
 import {World,idleInput} from '../src/simulation';
 import {encodeState,decodeState,StateAssembler} from '../src/network-state';
 import {SnapshotTimeline} from '../src/network-presentation';
-import {createCourtyard,PIT,SPAWNS,FOOTBALL,courtyardCanOccupy,constrainCourtyard,COURTYARD_BOUNDS,COURTYARD_FLOOR_TILES,COURTYARD_SOLIDS,courtyardFloor,validateCourtyard} from '../src/courtyard-state';
+import {createCourtyard,PIT,SPAWNS,FOOTBALL,insidePit,courtyardCanOccupy,constrainCourtyard,COURTYARD_BOUNDS,COURTYARD_FLOOR_TILES,COURTYARD_SOLIDS,courtyardFloor,validateCourtyard} from '../src/courtyard-state';
 import {stepSkull,stepHighFives} from '../src/courtyard-physics';
 
 function setup(){
@@ -16,6 +16,21 @@ function ready(h:FriendsSession){for(const m of h.members){m.loaded=h.epoch;m.re
 function open(h:FriendsSession){ready(h);assert.equal(h.openPit(),true);for(let i=0;i<PIT.openingTicks;i++)h.step(idleInput());assert.equal(h.courtyard!.phase,'open');}
 function drop(h:FriendsSession,id:string){const p=h.world!.crew.find(p=>p.id===id)!;p.player.pos={x:0,y:PIT.depth-.1,z:PIT.z};p.player.vel={x:0,y:-1,z:0};h.step(idleInput());}
 
+test('courtyard movement never changes spawn templates; repeated post-death returns stay outside the pit',()=>{
+ const spawns=structuredClone(SPAWNS),h=setup();
+ try{
+  for(let cycle=0;cycle<3;cycle++){
+   assert.deepEqual(h.world!.crew[0].player.pos,spawns[0]);
+   for(const player of h.world!.crew){player.player.pos.x=0;player.player.pos.z=PIT.z;player.player.pos.y=-4;}
+   assert.deepEqual(SPAWNS,spawns,'moving a player must not move a shared spawn template');
+   h.world!.state='dead';h.running=true;h.prelobby=false;
+   h.returnToLobby();
+   assert.deepEqual(h.world!.crew.map(player=>player.player.pos),spawns.slice(0,2));
+   assert.ok(h.world!.crew.every(player=>player.alive&&player.player.grounded&&!insidePit(player.player.pos,.4)));
+   assert.equal(h.courtyard!.phase,'gathering');
+  }
+ }finally{h.close();}
+});
 test('gathering accepts unready players; loading, ready and clear cover gate host opening',()=>{
  const h=setup(),g=new FriendsSession('guest');try{
   assert.equal(h.prelobby,true);assert.ok(h.members.every(m=>!m.ready));assert.match(h.pitBlockedReason,/load/);assert.equal(h.openPit(),false);
