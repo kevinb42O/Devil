@@ -43,7 +43,7 @@ try{
   const ui=new CourtyardUI({room:()=>{}}),member={id:'host',ready:false,loaded:1};
   let opened=0;
   const session={prelobby:true,role:'host',localId:'host',epoch:1,members:[member],world:{tick:1},courtyard:{phase:'gathering',kicks:{},committed:[],participants:[]},checkingSkin:false,
-   get pitBlockedReason(){return member.ready?'':'Not ready';},setReady(value){member.ready=value;},openPit(){opened++;},markLoaded(){}};
+   get pitBlockedReason(){return member.ready?'':'Not ready';},setReady(value){member.ready=value;},openPit(){opened++;return true;},markLoaded(){}};
   const update=()=>ui.update(session,true,'controller',true,'');
   const check=(ok,message)=>{if(!ok)throw Error(message);};
   update();ui.controllerSelect(true,false,0);ui.controllerSelect(false,true,100);check(member.ready,'Select tap readies the player');

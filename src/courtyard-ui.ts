@@ -7,13 +7,14 @@ export class CourtyardUI{
  readonly root=document.createElement('section');private session:FriendsSession|null=null;private hold?:ReturnType<typeof setTimeout>;
  private loadedAt=0;private arm={left:false,right:false};
  private selectStarted:number|null=null;private selectCompleted=false;
+ private assetsReady=false;
  private selectMeter=document.createElement('div');
  constructor(actions:{room:()=>void}){
   this.root.id='courtyard-hud';this.root.hidden=true;
   this.root.innerHTML='<div class="courtyard-room"><button id="courtyard-room">ROOM & CREW</button><span class="courtyard-count"></span></div><div class="courtyard-wait" hidden><strong>Waiting for your crew</strong><p></p></div><div class="courtyard-toolbar"><div class="courtyard-message" role="status"></div><div class="courtyard-buttons"><button id="courtyard-ready">READY UP</button><button id="courtyard-open">HOLD TO OPEN PIT</button><button id="courtyard-cancel">CLOSE PIT</button></div></div><div class="courtyard-kick-charge" hidden><span>KICK</span><progress max="1" value="0" aria-label="Kick power"></progress></div><div class="courtyard-touch-arms"><button aria-label="Hold left arm up">LEFT HAND</button><button aria-label="Hold right arm up">RIGHT HAND</button></div>';
   document.body.append(this.root);this.button('room').onclick=actions.room;
   this.selectMeter.className='courtyard-select-charge';this.selectMeter.hidden=true;
-  this.selectMeter.innerHTML='<span>HOLD SELECT TO OPEN PIT · <b>5.0s</b></span><progress max="5" value="0" aria-label="Hold Select to open pit"></progress>';
+  this.selectMeter.innerHTML='<span>HOLD SELECT TO OPEN PIT · <b>5.0s</b></span><progress max="5" value="0" aria-label="Hold Select to open pit"></progress><div class="courtyard-select-reason" role="status"></div>';
   this.root.querySelector('.courtyard-toolbar')!.append(this.selectMeter);
   this.button('ready').onclick=()=>{const s=this.session,m=s?.members.find(m=>m.id===s.localId);if(s&&m)s.setReady(!m.ready);};
   const open=this.button('open');const release=()=>{if(this.hold)clearTimeout(this.hold);this.hold=undefined;open.classList.remove('is-holding');};
@@ -26,20 +27,26 @@ export class CourtyardUI{
  }
  resetSelect(){this.selectStarted=null;this.selectCompleted=false;this.selectMeter.hidden=true;}
  controllerSelect(held:boolean,wasHeld:boolean,now:number){
-  const s=this.session,ready=this.button('ready'),open=this.button('open');
+  const s=this.session,ready=this.button('ready');
   if(this.root.hidden||this.root.dataset.scheme!=='controller'||!s?.prelobby||s.courtyard?.phase!=='gathering'){this.resetSelect();return;}
   if(held&&!wasHeld){this.selectStarted=now;this.selectCompleted=false;}
   if(this.selectStarted===null)return;
   const elapsed=Math.max(0,now-this.selectStarted);
   if(!held){
-   if(!this.selectCompleted&&elapsed<5000&&!ready.hidden&&!ready.disabled)ready.click();
+   if(!this.selectCompleted&&elapsed<350&&!ready.hidden&&!ready.disabled)ready.click();
    this.resetSelect();return;
   }
-  const canOpen=!open.hidden&&!open.disabled&&s.role==='host';
-  this.selectMeter.hidden=!canOpen||this.selectCompleted;
+  // A long press also readies an unready host; short taps still toggle on release.
+  const host=s.role==='host',local=s.members.find(member=>member.id===s.localId);
+  if(host&&elapsed>=350&&!local?.ready&&!ready.disabled)s.setReady(true);
+  const blocked=!this.assetsReady?'Loading courtyard…':s.pitBlockedReason;
+  this.selectMeter.hidden=!host||this.selectCompleted;
+  this.selectMeter.querySelector('.courtyard-select-reason')!.textContent=blocked||'';
   this.selectMeter.querySelector('progress')!.value=Math.min(5,elapsed/1000);
   this.selectMeter.querySelector('b')!.textContent=(Math.max(0,5000-elapsed)/1000).toFixed(1)+'s';
-  if(elapsed>=5000&&!this.selectCompleted){this.selectCompleted=true;if(canOpen)s.openPit();this.selectMeter.hidden=true;}
+  if(elapsed>=5000&&!this.selectCompleted&&host&&!blocked&&s.openPit()){
+   this.selectCompleted=true;this.selectMeter.hidden=true;
+  }
  }
  async copyInvite(){
   const s=this.session;if(!s?.room)return;const url=new URL(location.href);url.search='';url.hash='';url.searchParams.set('crew',s.room);
@@ -49,7 +56,7 @@ export class CourtyardUI{
  button(id:string){return this.root.querySelector<HTMLButtonElement>('#courtyard-'+id)!;}
  get arms(){return {leftArm:this.arm.left,rightArm:this.arm.right};}
  update(s:FriendsSession|null,visible:boolean,scheme:ControlScheme,assetsReady:boolean,assetError:string){
-  this.session=s;this.root.hidden=!visible||!s?.prelobby;
+  this.session=s;this.assetsReady=assetsReady&&!assetError;this.root.hidden=!visible||!s?.prelobby;
   if(this.root.hidden||scheme!=='controller')this.resetSelect();
   if(this.root.hidden){this.arm={left:false,right:false};if(this.hold)clearTimeout(this.hold);this.hold=undefined;this.button('open').classList.remove('is-holding');}
   if(!s?.prelobby)return;
