@@ -8,6 +8,25 @@ from tkinter import ttk, filedialog
 from settings import Settings, KINDS, DISPLAY_NAMES, PRESETS, preset, import_document, export_document
 
 
+class ScrollablePage(ttk.Frame):
+    def __init__(self,parent):
+        super().__init__(parent)
+        self.canvas=tk.Canvas(self,background='#11171f',highlightthickness=0,borderwidth=0)
+        vertical=ttk.Scrollbar(self,orient='vertical',command=self.canvas.yview)
+        horizontal=ttk.Scrollbar(self,orient='horizontal',command=self.canvas.xview)
+        self.canvas.configure(yscrollcommand=vertical.set,xscrollcommand=horizontal.set)
+        self.rowconfigure(0,weight=1);self.columnconfigure(0,weight=1)
+        self.canvas.grid(row=0,column=0,sticky='nsew');vertical.grid(row=0,column=1,sticky='ns');horizontal.grid(row=1,column=0,sticky='ew')
+        self.content=ttk.Frame(self.canvas,padding=14)
+        self.item=self.canvas.create_window(0,0,anchor='nw',window=self.content)
+        self.content.bind('<Configure>',self.resize)
+        self.canvas.bind('<Configure>',self.resize)
+
+    def resize(self,event=None):
+        self.canvas.itemconfigure(self.item,width=max(self.canvas.winfo_width(),self.content.winfo_reqwidth()))
+        self.canvas.configure(scrollregion=self.canvas.bbox('all'))
+
+
 class SettingsForm:
     def __init__(self, window, engine, close):
         self.window=window;self.engine=engine;self.fields={};self.kind_fields={};self.loading=False
@@ -24,9 +43,12 @@ class SettingsForm:
         self.profile_picker.pack(side='right',padx=8)
         ttk.Label(frame,text='F7 closes this panel  ·  Aim is suspended while you edit',style='Muted.TLabel').pack(anchor='w',pady=(0,16))
         self.tabs=ttk.Notebook(frame);self.tabs.pack(fill='both',expand=True)
-        pages={}
+        pages={};self.scroll_pages={}
         for name in ('Aim','ESP','Targets','Connection'):
-            page=ttk.Frame(self.tabs,padding=14);self.tabs.add(page,text=name);pages[name]=page
+            page=ScrollablePage(self.tabs);self.tabs.add(page,text=name);pages[name]=page.content
+            self.scroll_pages[str(page)]=page
+        window.bind('<MouseWheel>',self.scroll)
+        window.bind('<Control-Return>',lambda event:self.apply())
         self.aim=pages['Aim'];self.esp=pages['ESP']
         aim=pages['Aim']
         self.choice(aim,'aim_mode','Aim behavior',['snap','smooth'])
@@ -55,11 +77,25 @@ class SettingsForm:
         ttk.Label(conn,textvariable=self.connection_status,wraplength=650).grid(column=0,row=2,columnspan=2,sticky='w',pady=16)
         ttk.Button(conn,text='Reconnect memory',command=self.reconnect).grid(column=0,row=3,sticky='w')
         self.notice=tk.StringVar(window)
-        ttk.Label(frame,textvariable=self.notice,wraplength=740,style='Notice.TLabel',padding=(12,10)).pack(fill='x',pady=(16,12))
-        actions=ttk.Frame(frame);actions.pack(fill='x')
-        for label,command in [('Apply',self.apply),('Defaults',self.defaults),('Import…',self.import_file),('Export…',self.export_file)]:ttk.Button(actions,text=label,command=command,style='Accent.TButton' if label=='Apply' else 'TButton').pack(side='left',padx=(0,8))
-        ttk.Button(actions,text='Close',command=close).pack(side='right')
+        # Reserve the footer BEFORE the expanding Notebook is allocated any space.
+        # Otherwise large fonts/DPI can consume the entire window and unmap Apply.
+        actions=ttk.Frame(frame);actions.pack(side='bottom',fill='x',before=self.tabs)
+        self.notice_label=ttk.Label(frame,textvariable=self.notice,wraplength=700,style='Notice.TLabel',padding=(12,10))
+        self.notice_label.pack(side='bottom',fill='x',pady=(12,10),before=self.tabs)
+        self.buttons={}
+        for label,command in [('Apply',self.apply),('Defaults',self.defaults),('Import…',self.import_file),('Export…',self.export_file)]:
+            button=ttk.Button(actions,text=label,command=command,width=7,style='Accent.TButton' if label=='Apply' else 'TButton')
+            button.pack(side='left',padx=(0,8));self.buttons[label]=button
+        ttk.Button(actions,text='Close',command=close,width=7).pack(side='right')
         self.fill(engine.settings);self.refresh_status();self.notice.set('Your current settings are loaded. Changes take effect after Apply.')
+
+    def scroll(self,event):
+        if isinstance(event.widget,ttk.Combobox):return
+        page=self.scroll_pages.get(self.tabs.select())
+        if page and event.delta:
+            canvas=page.canvas
+            if event.state&1:canvas.xview_scroll(-1 if event.delta>0 else 1,'units')
+            else:canvas.yview_scroll(-1 if event.delta>0 else 1,'units')
 
     def theme(self):
         style=ttk.Style(self.window);style.theme_use('clam')

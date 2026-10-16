@@ -16,10 +16,11 @@ class SettingsFormTests(unittest.TestCase):
         self.temp=tempfile.TemporaryDirectory()
         self.patch=patch.object(app,'ROOT',Path(self.temp.name));self.patch.start()
         self.engine=app.Engine()
-        self.root=tk.Tk();self.root.withdraw();self.window=tk.Toplevel(self.root)
+        self.root=tk.Tk();self.root.withdraw();self.original_scaling=self.root.tk.call('tk','scaling');self.window=tk.Toplevel(self.root)
         self.form=SettingsForm(self.window,self.engine,lambda:None)
 
     def tearDown(self):
+        self.root.tk.call('tk','scaling',self.original_scaling)
         self.root.destroy();self.patch.stop();self.temp.cleanup()
 
     def test_all_settings_and_presets_roundtrip(self):
@@ -73,6 +74,7 @@ class SettingsFormTests(unittest.TestCase):
     def test_form_controls_fit_inside_each_tab(self):
         self.window.update()
         def check(widget):
+            if isinstance(widget,tk.Canvas):return  # Tab contents intentionally scroll inside this viewport.
             for child in widget.winfo_children():
                 if child.winfo_ismapped():
                     self.assertLessEqual(child.winfo_x()+child.winfo_width(),widget.winfo_width()+2,str(child))
@@ -82,5 +84,41 @@ class SettingsFormTests(unittest.TestCase):
             self.window.geometry(geometry)
             for tab in self.form.tabs.tabs():
                 self.form.tabs.select(tab);self.window.update();check(self.window)
+
+    def test_apply_button_is_visible_at_windows_display_scales(self):
+        from tkinter import ttk
+        def buttons(widget):
+            result=[]
+            for child in widget.winfo_children():
+                if isinstance(child,ttk.Button) and child.cget('text')=='Apply':result.append(child)
+                result.extend(buttons(child))
+            return result
+        for scale in (1.333333,2,2.666667):
+            with self.subTest(scale=scale):
+                self.window.destroy();self.root.tk.call('tk','scaling',scale)
+                self.window=tk.Toplevel(self.root);self.form=SettingsForm(self.window,self.engine,lambda:None)
+                self.window.geometry('780x690');self.window.update()
+                button=buttons(self.window)[0]
+                self.assertTrue(button.winfo_ismapped(),'Apply button must remain visible')
+                self.assertTrue(self.form.notice_label.winfo_ismapped(),'Save result must remain visible')
+                for control in button.master.winfo_children():
+                    self.assertTrue(control.winfo_ismapped(),'All footer buttons must be visible')
+                    self.assertLessEqual(control.winfo_x()+control.winfo_width(),control.master.winfo_width()+2)
+                self.form.fields['fov'].set('95')
+                button.invoke()
+                self.assertEqual(self.engine.settings.fov,95)
+                self.assertEqual(app.Engine().settings.fov,95)
+
+    def test_apply_with_mouse_events_saves_current_fields(self):
+        self.window.update();button=self.form.buttons['Apply']
+        self.form.fields['fov'].set('87')
+        button.event_generate('<Enter>')
+        button.event_generate('<ButtonPress-1>',x=10,y=10)
+        self.window.update()
+        button.event_generate('<ButtonRelease-1>',x=10,y=10)
+        self.window.update()
+        self.assertEqual(self.engine.settings.fov,87)
+        self.assertEqual(app.Engine().settings.fov,87)
+        self.assertEqual(self.form.notice.get(),'Saved. Settings are active.')
 
 if __name__=='__main__':unittest.main()
