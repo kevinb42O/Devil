@@ -1,3 +1,4 @@
+import {nearbyTool,aimingClearButton,nearDrawingRoom,INK_COLORS,BRUSH_SIZES} from './courtyard-drawing';
 import {CourtyardUI} from './courtyard-ui';
 import {ARENA_START_DELAY_MS} from './crew-arrival-timing';
 import {HAND_LABELS,HAND_NAMES,HAND_THRESHOLDS,handProgress} from './weapon-levels';
@@ -359,7 +360,7 @@ function frame(now:number) {
   // Pointer-lock release can remove document focus while the replay is still
   // visible. Only visibility and explicit pause/menu state stop its clock.
   if(analysisActive&&deathAnalysis){if(!analysisSuspended&&!document.hidden&&!settingsOpen&&!profileOpen&&!leaderboardOpen)deathAnalysis.advance(dt);if(deathAnalysis.done)endDeathAnalysis();else updateDeathAnalysis();}
-  renderer.setCrewNames(friends?.members??[]);renderer.courtyardMembers=friends?.members??[];courtyardUI.update(friends,mode==='playing'&&!controlMenuRoot(),settings.controlScheme,renderer.courtyard.loaded&&renderer.crewAvatarLoaded&&renderer.originalEnemies.ready&&renderer.originalWeapon.ready,renderer.courtyard.error);updateCourtyardSounds();
+  renderer.setCrewNames(friends?.members??[]);renderer.courtyardMembers=friends?.members??[];courtyardUI.update(friends,mode==='playing'&&!controlMenuRoot(),settings.controlScheme,renderer.courtyard.loaded&&renderer.crewAvatarLoaded&&renderer.originalEnemies.ready&&renderer.originalWeapon.ready,renderer.courtyard.error,world??undefined);updateCourtyardSounds();
   // Frozen views show the completed tick; guests already have a sampled network view.
   const renderAlpha=friends?.role==='guest'||world?.state==='dead'||(!friends&&(mode==='paused'||settingsOpen))||(mode==='replay'&&replayPaused)?1:friends?.role==='host'?hostClock.alpha:Math.min(1,accumulator/STEP);
   const analysis=analysisActive?deathAnalysis:null;
@@ -667,6 +668,10 @@ function pollController(dt:number){
  yaw-=state.lookX*2.8*settings.controllerSensitivity*dt;
  const limit=spectator.position?Math.PI/2:1.5;pitch=Math.max(-limit,Math.min(limit,pitch-state.lookY*2.8*settings.controllerSensitivity*dt));
  courtyardUI.controllerSelect(state.select,previous?.select??true,performance.now());
+ if(friends?.prelobby){
+  const pen=world?.courtyard?.drawing?.pencils.find(p=>p.owner===friends!.localId);
+  if(pen){if(state.left&&!previous?.left)friends.drawingStyle({color:((pen.color??0)+INK_COLORS.length-1)%INK_COLORS.length});if(state.right&&!previous?.right)friends.drawingStyle({color:((pen.color??0)+1)%INK_COLORS.length});if(state.up&&!previous?.up)friends.drawingStyle({width:BRUSH_SIZES[Math.min(3,BRUSH_SIZES.indexOf(pen.width??8)+1)]});if(state.down&&!previous?.down)friends.drawingStyle({width:BRUSH_SIZES[Math.max(0,BRUSH_SIZES.indexOf(pen.width??8)-1)]});}
+ }
  if(friends?.prelobby&&state.action&&!previous?.action)friends.pencilAction();
  if(friends?.prelobby&&state.clearDrawing&&!previous?.clearDrawing)friends.pencilAction(true);
  if(!spectator.position){const jump=state.jump&&!blockedPadJump,fire=state.fire&&!blockedPadFire,homing=state.homing&&!blockedPadHoming;if(jump!==padJump){buttonEdges.push({button:'jump',held:jump});padJump=jump;}if(fire!==padFire){buttonEdges.push({button:'fire',held:fire});padFire=fire;}if(homing!==padHoming){buttonEdges.push({button:'homing',held:homing});padHoming=homing;}}
@@ -759,7 +764,15 @@ async function joinLobby(room:PublicLobby){$('friends-status').textContent=`Join
 function returnCrewLobby(){if(friends?.role!=='host')return;crewReplayRequest++;crewReplayDownloading=false;crewViewer.dispose();spectator.reset();friends.returnToLobby();if(leaderboardConfigured())void refreshRankings();}
 
 function setupFriends(){
- window.addEventListener('keydown',e=>{if((e.code==='KeyG'||e.code==='KeyT')&&!e.repeat&&friends?.prelobby&&mode==='playing'&&!controlMenuRoot()&&!(e.target instanceof HTMLInputElement)&&!(e.target instanceof HTMLTextAreaElement)&&!(e.target instanceof HTMLSelectElement)){e.preventDefault();if(!friends.pencilAction(e.code==='KeyT'))notice(e.code==='KeyT'?'ONLY THE HOST CAN CLEAR THE BOARD FROM THE DRAWING COURT':'MOVE NEXT TO A FREE PENCIL TO PICK IT UP');}});
+ window.addEventListener('keydown',e=>{
+  if(friends?.prelobby&&mode==='playing'&&!controlMenuRoot()&&!e.repeat&&world?.courtyard&&nearDrawingRoom(world.player.pos)&&!(e.target instanceof HTMLInputElement)&&!(e.target instanceof HTMLTextAreaElement)&&!(e.target instanceof HTMLSelectElement)){
+   const pen=world.courtyard.drawing?.pencils.find(p=>p.owner===friends!.localId);
+   if(e.code==='KeyH'){e.preventDefault();friends.drawingStyle({grid:!world.courtyard.drawing?.grid});return;}
+   if(pen&&/^Digit[1-8]$/.test(e.code)){e.preventDefault();friends.drawingStyle({color:Number(e.code.slice(-1))-1});return;}
+   if(pen&&(e.code==='BracketLeft'||e.code==='BracketRight')){e.preventDefault();friends.drawingStyle({width:BRUSH_SIZES[Math.max(0,Math.min(3,BRUSH_SIZES.indexOf(pen.width??8)+(e.code==='BracketRight'?1:-1)))]});return;}
+  }
+ });
+ window.addEventListener('keydown',e=>{if((e.code==='KeyG'||e.code==='KeyT'||e.code==='KeyE'&&!!world?.courtyard&&nearDrawingRoom(world.player.pos))&&!e.repeat&&friends?.prelobby&&mode==='playing'&&!controlMenuRoot()&&!(e.target instanceof HTMLInputElement)&&!(e.target instanceof HTMLTextAreaElement)&&!(e.target instanceof HTMLSelectElement)){e.preventDefault();if(!friends.pencilAction(e.code==='KeyT'))notice(e.code==='KeyT'?'ONLY THE HOST CAN CLEAR THE BOARD FROM THE DRAWING COURT':'MOVE NEXT TO A FREE PENCIL OR ERASER · E / G / LEFT CLICK');}});
  $('player-skin-ascendant').onclick=()=>{prefersAscendant=true;saveStore('abyss-player-skin','ascendant');void syncPreferredSkin(true);};
  for(const color of PLAYER_COLORS){
   const button=document.createElement('button');button.type='button';button.dataset.color=color.id;button.className='player-color-swatch';button.title=color.name;button.setAttribute('aria-label',color.name);button.style.setProperty('--swatch',color.hex);
@@ -811,7 +824,14 @@ function init() {
   window.addEventListener('keydown',e=>{if(mode==='crew-replay'){if(e.code==='Escape'){e.preventDefault();crewViewer.close();}return;}if(e.code==='Escape'){if(friends?.prelobby&&mode==='playing'&&!controlMenuRoot()){e.preventDefault();paused();friendsOpen=true;showPanels();roster();return;}if(analysisActive){e.preventDefault();endDeathAnalysis();return;}if(friends?.running&&mode==='playing'){e.preventDefault();return;}if(profileOpen||settingsOpen||leaderboardOpen||historyOpen||friendsOpen){e.preventDefault();closeControlMenu();return;}if(mode==='playing'){e.preventDefault();paused();return;}}if(analysisActive&&e.code==='Space'){e.preventDefault();analysisSuspended=!analysisSuspended;updateDeathAnalysis();return;}if(e.target instanceof HTMLInputElement||e.target instanceof HTMLTextAreaElement||e.target instanceof HTMLSelectElement)return;if(e.code==='KeyF'&&friends?.prelobby&&mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='mobile'&&settings.controlScheme!=='controller'){e.preventDefault();if(!e.repeat&&!courtyardUI.button('ready').hidden&&!courtyardUI.button('ready').disabled)courtyardUI.button('ready').click();return;}if(mode==='replay'&&e.code==='KeyM'){renderer.topDown=!renderer.topDown;return;}if(mode==='replay'&&(e.code==='ArrowLeft'||e.code==='ArrowRight')&&replay){sound.clear();world=seekReplay(replay.tick+(e.code==='ArrowLeft'?-1:1)*(e.ctrlKey?10:3)/STEP);accumulator=0;return;}if(!entrance&&!friends&&['Digit1','Digit2','Digit3','Digit4','Digit5','Digit6','Digit7','Numpad1','Numpad2','Numpad3','Numpad4','Numpad5','Numpad6','Numpad7'].includes(e.code)&&(mode==='playing'||mode==='paused')&&world&&!settingsOpen){e.preventDefault();if(e.repeat)return;const level=Number(e.code.slice(-1));world.level=level;world.stats.collected=HAND_THRESHOLDS[level-1];world.reserve=level>=4?190:level>=2?50:0;practice=true;recorder=null;world.emit('upgrade',world.player.pos,level);notice(`WEAPON ${level} · UNRANKED TEST RUN`,4);updateHud();return;}if(e.code==='Space'&&mode==='playing')e.preventDefault();if(e.code==='KeyR'&&mode==='dead'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!(e.target instanceof HTMLInputElement)){if(friends){if(friends.role==='host')returnCrewLobby();}else startRun(practice&&lastRun?lastRun.setup:DEFAULT_SETUP);return;}if(e.code==='Escape'&&leaderboardOpen){leaderboardOpen=false;showPanels();return;}if(e.code==='Escape'&&settingsOpen){settingsOpen=false;showPanels();return;}if(e.code==='Escape'&&settings.controlScheme==='controller'&&mode==='playing'){paused();return;}if(mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'){if(!pressedKeys.has(e.code))pressedKeys.set(e.code,e.key.toLowerCase());keys.add(e.code);keys.add(pressedKeys.get(e.code)!);if(e.code==='Space'&&!e.repeat&&!spectator.position)buttonEdges.push({button:'jump',held:true});}});
   window.addEventListener('keyup',e=>{const letter=pressedKeys.get(e.code);pressedKeys.delete(e.code);keys.delete(e.code);if(letter&&!Array.from(pressedKeys.values()).includes(letter))keys.delete(letter);if(mode==='playing'&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&e.code==='Space')buttonEdges.push({button:'jump',held:false});});
   document.addEventListener('mousemove',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||document.pointerLockElement!==$('game'))return;yaw-=e.movementX*.002*settings.sensitivity;const limit=spectator.position?Math.PI/2:1.5;pitch=Math.max(-limit,Math.min(limit,pitch-e.movementY*.002*settings.sensitivity));});
-  document.addEventListener('mousedown',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position||document.pointerLockElement!==$('game'))return;if(e.button===0)buttonEdges.push({button:'fire',held:true});if(e.button===2){buttonEdges.push({button:'homing',held:true});if(world&&!entrance&&!world.homingUnlocked)notice(`HOMING AWAKENS AT ${world.homingUnlockGems} GEMS`,1.5);}});
+  document.addEventListener('mousedown',e=>{
+   if(e.button===0&&e.target===$('game')&&friends?.prelobby&&mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&world?.courtyard?.drawing){
+    const d=world.courtyard.drawing;
+    if(aimingClearButton(world.player.pos,{yaw,pitch})||!d.pencils.some(p=>p.owner===friends!.localId)&&nearbyTool(d,world.player.pos)>=0){
+     if(friends.pencilAction())return;
+    }
+   }
+   if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position||document.pointerLockElement!==$('game'))return;if(e.button===0)buttonEdges.push({button:'fire',held:true});if(e.button===2){buttonEdges.push({button:'homing',held:true});if(world&&!entrance&&!world.homingUnlocked)notice(`HOMING AWAKENS AT ${world.homingUnlockGems} GEMS`,1.5);}});
   document.addEventListener('mouseup',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position)return;if(e.button===0)buttonEdges.push({button:'fire',held:false});if(e.button===2)buttonEdges.push({button:'homing',held:false});});
   $('game').addEventListener('click',()=>{if(friends&&mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&document.pointerLockElement!==$('game'))void captureMouse();});
   setupMobileControls();

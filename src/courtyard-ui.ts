@@ -1,8 +1,9 @@
+import type {World} from './simulation';
 import type {FriendsSession} from './multiplayer';
 import type {ControlScheme} from './controls';
 import './courtyard.css';
 import {footballKickPose} from './courtyard-state';
-import {nearDrawingRoom,MAX_INK} from './courtyard-drawing';
+import {nearDrawingRoom,nearbyTool,nearClearButton,MAX_INK,INK_COLORS,BRUSH_SIZES} from './courtyard-drawing';
 
 export class CourtyardUI{
  readonly root=document.createElement('section');private session:FriendsSession|null=null;private hold?:ReturnType<typeof setTimeout>;
@@ -16,8 +17,11 @@ export class CourtyardUI{
   this.root.innerHTML='<div class="courtyard-room"><button id="courtyard-room">ROOM & CREW</button><span class="courtyard-count"></span></div><div class="courtyard-wait" hidden><strong>Waiting for your crew</strong><p></p></div><div class="courtyard-toolbar"><div class="courtyard-message" role="status"></div><div class="courtyard-buttons"><button id="courtyard-ready">READY UP</button><button id="courtyard-open">HOLD TO OPEN PIT</button><button id="courtyard-cancel">CLOSE PIT</button></div></div><div class="courtyard-kick-charge" hidden><span>KICK</span><progress max="1" value="0" aria-label="Kick power"></progress></div><div class="courtyard-touch-arms"><button aria-label="Hold left arm up">LEFT HAND</button><button aria-label="Hold right arm up">RIGHT HAND</button></div>';
   document.body.append(this.root);this.button('room').onclick=actions.room;
   this.drawingPanel.className='courtyard-drawing-controls';this.drawingPanel.hidden=true;
-  this.drawingPanel.innerHTML='<strong>8 × 8 · TIC-TAC-TOE</strong><p class="drawing-help"></p><button id="courtyard-pencil">PICK UP PENCIL</button><button id="courtyard-drawing-clear">CLEAR BOARD</button>';
+  this.drawingPanel.innerHTML='<strong>FREE DRAW · SCRIBBLE COURT</strong><p class="drawing-help"></p><div class="drawing-palette"></div><button id="courtyard-brush-size">BRUSH SIZE</button><button id="courtyard-grid">SHOW 8×8 GRID</button><button id="courtyard-pencil">PICK UP PENCIL</button><button id="courtyard-drawing-clear">CLEAR BOARD</button>';
   this.root.append(this.drawingPanel);
+  INK_COLORS.forEach((color,i)=>{const button=document.createElement('button');button.textContent=String(i+1);button.title='Brush color '+(i+1);button.style.background='#'+color.toString(16).padStart(6,'0');button.onclick=()=>this.session?.drawingStyle({color:i});this.drawingPanel.querySelector('.drawing-palette')!.append(button);});
+  this.button('brush-size').onclick=()=>{const p=this.session?.courtyard?.drawing?.pencils.find(p=>p.owner===this.session?.localId);if(p)this.session?.drawingStyle({width:BRUSH_SIZES[(BRUSH_SIZES.indexOf(p.width??8)+1)%BRUSH_SIZES.length]});};
+  this.button('grid').onclick=()=>this.session?.drawingStyle({grid:!this.session.courtyard?.drawing?.grid});
   this.button('pencil').onclick=()=>this.session?.pencilAction();
   this.button('drawing-clear').onclick=()=>this.session?.pencilAction(true);
   this.selectMeter.className='courtyard-select-charge';this.selectMeter.hidden=true;
@@ -62,22 +66,26 @@ export class CourtyardUI{
  }
  button(id:string){return this.root.querySelector<HTMLButtonElement>('#courtyard-'+id)!;}
  get arms(){return {leftArm:this.arm.left,rightArm:this.arm.right};}
- update(s:FriendsSession|null,visible:boolean,scheme:ControlScheme,assetsReady:boolean,assetError:string){
+ update(s:FriendsSession|null,visible:boolean,scheme:ControlScheme,assetsReady:boolean,assetError:string,viewWorld?:World){
   this.session=s;this.assetsReady=assetsReady&&!assetError;this.root.hidden=!visible||!s?.prelobby;
   if(this.root.hidden||scheme!=='controller')this.resetSelect();
   if(this.root.hidden){this.arm={left:false,right:false};if(this.hold)clearTimeout(this.hold);this.hold=undefined;this.button('open').classList.remove('is-holding');}
   if(!s?.prelobby)return;
   const c=s.courtyard,local=s.members.find(m=>m.id===s.localId);if(!c)return;
-  const player=s.world?.crew?.find(p=>p.id===s.localId),d=c.drawing,pen=d?.pencils.find(p=>p.owner===s.localId);
+  const player=(viewWorld??s.world)?.crew?.find(p=>p.id===s.localId),d=c.drawing,pen=d?.pencils.find(p=>p.owner===s.localId);
   this.drawingPanel.hidden=!visible||!player||!nearDrawingRoom(player.player.pos);
-  const binding=scheme==='controller'?' [X / SQUARE]':scheme==='mobile'?'':' [G]';
-  this.button('pencil').textContent=(pen?'DROP PENCIL':'PICK UP PENCIL')+binding;
-  this.button('pencil').disabled=c.phase!=='gathering'||!pen&&!d?.pencils.some(p=>!p.owner&&player&&Math.hypot(p.pos.x-player.player.pos.x,p.pos.z-player.player.pos.z)<=2.8);
+  const wall=!!player&&nearClearButton(player.player.pos),eraser=pen===d?.pencils[2];
+  const binding=scheme==='controller'?' [X / SQUARE]':scheme==='mobile'?'':' [E / G / CLICK]';
+  this.button('pencil').textContent=(wall?'PRESS WALL CLEAR BUTTON':pen?(eraser?'DROP ERASER':'DROP PENCIL'):'PICK UP NEAREST TOOL')+binding;
+  this.button('pencil').disabled=c.phase!=='gathering'||!wall&&!pen&&(!d||!player||nearbyTool(d,player.player.pos)<0);
+  this.button('brush-size').disabled=!pen||eraser;this.button('brush-size').textContent='BRUSH '+(BRUSH_SIZES.indexOf(pen?.width??8)+1)+' / 4'+(scheme==='controller'?' · D-PAD ↑↓':' · [ / ]');
+  this.button('grid').textContent=d?.grid?'HIDE GRID [H]':'SHOW 8×8 GRID [H]';
+  this.drawingPanel.querySelectorAll<HTMLButtonElement>('.drawing-palette button').forEach((button,i)=>{button.disabled=!pen||eraser;button.style.outline=pen?.color===i?'2px solid white':'';});
   this.button('drawing-clear').hidden=s.role!=='host';this.button('drawing-clear').disabled=c.phase!=='gathering';this.button('drawing-clear').textContent='CLEAR BOARD'+(scheme==='controller'?' [Y / TRIANGLE]':scheme==='mobile'?'':' [T]');
-  this.drawingPanel.querySelector('.drawing-help')!.textContent=(d?.ink.length??0)>=MAX_INK?'Board full · Ask the host to clear it':pen?(scheme==='controller'?'Look down at a nearby square · Hold either trigger to draw':scheme==='mobile'?'Drag on the right side to aim and draw':'Look down at a nearby square · Hold either mouse button to draw'):'Two giant pencils wait beside the board. Draw Xs and Os freely with your friends.';
+  this.drawingPanel.querySelector('.drawing-help')!.textContent=(d?.ink.length??0)>=MAX_INK?'Board full · Use the eraser or the red wall button':pen?(scheme==='controller'?'Aim across the field · Hold either trigger to '+(eraser?'erase':'draw · D-pad ←→ colors, ↑↓ size'):scheme==='mobile'?'Drag on the right side to aim and '+(eraser?'erase':'draw'):'Aim across the field · Hold either mouse button to '+(eraser?'erase':'draw · 1–8 colors')):'Colors: 1–8 · Size: [ / ] · Grid: H. Pencils and a giant eraser wait beside the board. Walk close and press E / G, or left click. Red wall button clears all lines.';
   if(assetsReady&&local?.loaded!==s.epoch&&performance.now()-this.loadedAt>800){this.loadedAt=performance.now();s.markLoaded(s.epoch);}
   this.root.dataset.scheme=scheme;
-  const kick=footballKickPose(c,s.localId,s.world?.tick??0),meter=this.root.querySelector<HTMLElement>('.courtyard-kick-charge')!;meter.hidden=!kick||kick.charge<=0;this.root.querySelector<HTMLProgressElement>('.courtyard-kick-charge progress')!.value=kick?.charge??0;
+  const kick=footballKickPose(c,s.localId,viewWorld?.tick??s.world?.tick??0),meter=this.root.querySelector<HTMLElement>('.courtyard-kick-charge')!;meter.hidden=!kick||kick.charge<=0;this.root.querySelector<HTMLProgressElement>('.courtyard-kick-charge progress')!.value=kick?.charge??0;
   const count=s.members.filter(m=>m.ready&&m.loaded===s.epoch).length;
   this.root.querySelector('.courtyard-count')!.textContent=`${count} / ${s.members.length} ready`;
   const gathering=c.phase==='gathering',blocked=s.pitBlockedReason,ready=this.button('ready'),open=this.button('open');

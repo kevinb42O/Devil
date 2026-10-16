@@ -1,3 +1,5 @@
+import {packDrawing,unpackDrawing,type WireCourtyard} from './network-drawing';
+import type {DrawingState} from './courtyard-drawing';
 import {validateCourtyard} from './courtyard-state';
 import {projectileSocket} from './weapon-origin';
 import {MAX_CREW_PLAYERS} from './crew-config';
@@ -9,11 +11,11 @@ import {canonicalPosition,packIds,unpackIds,packPositions,unpackPositions,packPo
 import {shotLaunches} from './projectile-launch';
 import {packShotLaunch,unpackShotLaunch} from './network-shots';
 type WireCrew=Omit<ArenaSnapshot['crew'][number],'life'|'respawnAt'|'protectedUntil'>&{life?:number;respawnAt?:number;protectedUntil?:number};
-export type StateBaseline={time:number;projectiles:Map<number,Projectile>;enemies:Map<number,EnemyRow>};
+export type StateBaseline={drawing?:DrawingState;time:number;projectiles:Map<number,Projectile>;enemies:Map<number,EnemyRow>};
 const projectileFlags=(p:Projectile)=>(p.homing?1:0)|(((p.level??1)-1)<<1)|(p.kind==='shotgun'?16:0);
 type ShotRow=[owner:number,sequence:number,flags:number,energy:number,age:number,launch:number[],entries:number[]];
-export type WireState={version:typeof NETWORK_PROTOCOL_VERSION;frame:number;epoch:number;body:Omit<ArenaSnapshot,'projectiles'|'enemies'|'effects'|'crew'>&{enemies:(EnemyRow|EnemyDelta)[];crew:WireCrew[]};creatures:{ids:Uint8Array;positions:Uint8Array;relative:boolean};flight:{base:number;ids:Uint8Array;updates:unknown[][];shots:ShotRow[]}};
-export function snapshotBaseline(s:ArenaSnapshot):StateBaseline{return {time:s.time,projectiles:new Map(s.projectiles.map(p=>[p.id,structuredClone((({launch,...flight})=>flight)(p))])),enemies:new Map(s.enemies.map(e=>{const row=packEnemy(e),pos=canonicalPosition(e.pos);row[2].set([pos.x,pos.y,pos.z]);return [e.id,row];}))};}
+export type WireState={version:typeof NETWORK_PROTOCOL_VERSION;frame:number;epoch:number;body:Omit<ArenaSnapshot,'projectiles'|'enemies'|'effects'|'crew'|'courtyard'>&{courtyard?:WireCourtyard;enemies:(EnemyRow|EnemyDelta)[];crew:WireCrew[]};creatures:{ids:Uint8Array;positions:Uint8Array;relative:boolean};flight:{base:number;ids:Uint8Array;updates:unknown[][];shots:ShotRow[]}};
+export function snapshotBaseline(s:ArenaSnapshot):StateBaseline{return {drawing:s.courtyard?.drawing?{...s.courtyard.drawing,ink:s.courtyard.drawing.ink.slice()}:undefined,time:s.time,projectiles:new Map(s.projectiles.map(p=>[p.id,structuredClone((({launch,...flight})=>flight)(p))])),enemies:new Map(s.enemies.map(e=>{const row=packEnemy(e),pos=canonicalPosition(e.pos);row[2].set([pos.x,pos.y,pos.z]);return [e.id,row];}))};}
 export function flightPosition(p:Projectile,dt:number):Vec{
  const gravity=p.floorBounces&&!p.homing?TUNING.gravity:0;
  return {x:p.pos.x+p.vel.x*dt,y:p.pos.y+p.vel.y*dt-gravity*dt*(dt+STEP)/2,z:p.pos.z+p.vel.z*dt};
@@ -47,14 +49,15 @@ export function encodeState(s:ArenaSnapshot,frame:number,base:number,baseline?:S
  }
  const oldPositions=s.enemies.map(e=>{const old=baseline?.enemies.get(e.id)?.[2];return old?{x:old[0],y:old[1],z:old[2]}:undefined;});
  const relative=baseline?packPositionDeltas(s.enemies.map(e=>e.pos),oldPositions):null;
- return encodePacket({version:NETWORK_PROTOCOL_VERSION,frame,epoch:s.epoch,body:{...body,crew:s.crew.map(({life,respawnAt,protectedUntil,...p})=>({...p,life:life||undefined,respawnAt:respawnAt??undefined,protectedUntil:protectedUntil>s.time?protectedUntil:undefined})),enemies,gems:presentationPrecision(s.gems),rings:presentationPrecision(s.rings)},creatures:{ids:packIds(s.enemies.map(e=>e.id)),positions:relative??packPositions(s.enemies.map(e=>e.pos)),relative:!!relative},flight:{base:baseline?base:0,ids:packIds(projectiles.map(p=>p.id)),updates,shots}} satisfies WireState);
+ return encodePacket({version:NETWORK_PROTOCOL_VERSION,frame,epoch:s.epoch,body:{...body,courtyard:packDrawing(s.courtyard,baseline?.drawing),crew:s.crew.map(({life,respawnAt,protectedUntil,...p})=>({...p,life:life||undefined,respawnAt:respawnAt??undefined,protectedUntil:protectedUntil>s.time?protectedUntil:undefined})),enemies,gems:presentationPrecision(s.gems),rings:presentationPrecision(s.rings)},creatures:{ids:packIds(s.enemies.map(e=>e.id)),positions:relative??packPositions(s.enemies.map(e=>e.pos)),relative:!!relative},flight:{base:baseline?base:0,ids:packIds(projectiles.map(p=>p.id)),updates,shots}} satisfies WireState);
 }
 export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>):{frame:number;snapshot:ArenaSnapshot}|null{
  const w=decodePacket(data) as WireState;
  if(w?.version!==NETWORK_PROTOCOL_VERSION||!Number.isInteger(w.frame)||w.frame<1||!w.body||w.body.epoch!==w.epoch||!Array.isArray(w.body.crew)||w.body.crew.length>MAX_CREW_PLAYERS||!Array.isArray(w.body.enemies)||!Array.isArray(w.body.gems)||!Array.isArray(w.body.rings)||!Number.isFinite(w.body.serverNow)||!Number.isFinite(w.body.time)||!Number.isInteger(w.body.tick)||!w.flight||!Array.isArray(w.flight.updates)||!Array.isArray(w.flight.shots)||!w.creatures)throw Error('Invalid state');
- if(w.body.courtyard&&!validateCourtyard(w.body.courtyard))throw Error('Invalid courtyard');
  const ids=unpackIds(w.creatures.ids),projectileIds=unpackIds(w.flight.ids);
  const baseline=w.flight.base?baselines.get(w.flight.base):undefined;if(w.flight.base&&!baseline)return null;
+ const courtyard=unpackDrawing(w.body.courtyard,baseline?.drawing);
+ if(courtyard&&!validateCourtyard(courtyard))throw Error('Invalid courtyard');
  if(typeof w.creatures.relative!=='boolean'||w.creatures.relative&&!baseline)throw Error('Invalid relative poses');
  const oldPositions=ids.map(id=>{const old=baseline?.enemies.get(id)?.[2];return old?{x:old[0],y:old[1],z:old[2]}:undefined;});
  const positions=w.creatures.relative?unpackPositionDeltas(w.creatures.positions,oldPositions):unpackPositions(w.creatures.positions,ids.length);
@@ -80,7 +83,7 @@ export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>)
   for(let i=0;i<entries.length;i+=2){const id=entries[i],index=entries[i+1],{pos:origin,vel}=launches[index],pos={x:origin.x+vel.x*age,y:origin.y+vel.y*age,z:origin.z+vel.z*age};if(updates.has(id))throw Error('Duplicate shot identity');updates.set(id,{id,pos,previous:{...pos},vel,age,...(flags&16?{kind:'shotgun' as const}:{}),homing:false,level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces:0,shotKey:`${w.body.crew[owner].id}:${sequence}:${index}`});}
  }
  const projectiles:Projectile[]=[];for(const id of projectileIds){let p=updates.get(id);if(!p){const old=baseline?.projectiles.get(id);if(!old)return null;p={...old,age:old.age+elapsed,pos:flightPosition(old,elapsed),vel:{...old.vel,y:old.vel.y-(old.floorBounces&&!old.homing?TUNING.gravity*elapsed:0)}};p.previous={...p.pos};}projectiles.push(p);}
- return {frame:w.frame,snapshot:{...w.body,crew:w.body.crew.map(p=>({...p,life:p.life??0,respawnAt:p.respawnAt??null,protectedUntil:p.protectedUntil??0})),effects:[],enemies,projectiles}};
+ return {frame:w.frame,snapshot:{...w.body,courtyard,crew:w.body.crew.map(p=>({...p,life:p.life??0,respawnAt:p.respawnAt??null,protectedUntil:p.protectedUntil??0})),effects:[],enemies,projectiles}};
 }
 /** Normal frames expire quickly; paced large frames get a bounded transfer
  * window at 32 KB/s, below the sender budget, including startup/jitter slack. */

@@ -1,5 +1,5 @@
 import {createCourtyard,courtyardEvent,insidePit,pitIsOpen,PIT,SPAWNS,resetSkull,type CourtyardState} from './courtyard-state';
-import {createDrawing,pencilAction,stepDrawing,nearDrawingRoom} from './courtyard-drawing';
+import {createDrawing,pencilAction,stepDrawing,nearDrawingRoom,nearClearButton,INK_COLORS,BRUSH_SIZES} from './courtyard-drawing';
 import {stepSkull,stepHighFives} from './courtyard-physics';
 import {ARENA_START_DELAY_MS} from './crew-arrival-timing';
 import {verifyPodiumSkin} from './podium-skin-service';
@@ -67,11 +67,28 @@ export class FriendsSession{
   if(this.role==='guest')return !clear&&this.control({type:'drawing-action',generation:this.epoch});
   return this.applyPencilAction('host',clear);
  }
+ drawingStyle(style:{color?:number;width?:number;grid?:boolean}){
+  if(!this.prelobby||!this.gathering)return false;
+  if(this.role==='guest')return this.control({type:'drawing-style',generation:this.epoch,style});
+  return this.applyDrawingStyle('host',style);
+ }
+ private applyDrawingStyle(id:string,style:{color?:number;width?:number;grid?:boolean}){
+  const p=this.world?.crew.find(p=>p.id===id),d=this.courtyard?.drawing;
+  if(!this.prelobby||!this.gathering||!p?.alive||!d||!nearDrawingRoom(p.player.pos)||!style||typeof style!=='object')return false;
+  const tool=d.pencils.find(p=>p.owner===id);
+  if(style.color!==undefined&&(!Number.isInteger(style.color)||style.color<0||style.color>=INK_COLORS.length)||
+     style.width!==undefined&&!BRUSH_SIZES.includes(style.width)||
+     style.grid!==undefined&&typeof style.grid!=='boolean')return false;
+  if(tool){if(style.color!==undefined)tool.color=style.color;if(style.width!==undefined)tool.width=style.width;tool.tip=null;}
+  if(style.grid!==undefined)d.grid=style.grid;
+  return true;
+ }
  private applyPencilAction(id:string,clear=false){
   const c=this.courtyard,p=this.world?.crew.find(p=>p.id===id),now=performance.now();
   if(!this.prelobby||!this.gathering||!c||!p||!p.alive||!nearDrawingRoom(p.player.pos)||now-(this.pencilActions.get(id)??-1000)<250)return false;
   this.pencilActions.set(id,now);c.drawing??=createDrawing();
-  if(clear){if(id!=='host')return false;c.drawing.ink=[];c.drawing.sequence++;for(const pencil of c.drawing.pencils)pencil.tip=null;}
+  const wallButton=!clear&&nearClearButton(p.player.pos);
+  if(clear||wallButton){if(id!=='host'&&!wallButton)return false;c.drawing.ink=[];c.drawing.sequence++;for(const pencil of c.drawing.pencils)pencil.tip=null;}
   else if(!pencilAction(c.drawing,p))return false;
   this.updateLobby();return true;
  }
@@ -177,6 +194,7 @@ export class FriendsSession{
      // fixed-duration binary commands. Legacy samples use reliable controls.
      if(m.type==='sample'&&m.epoch===this.epoch&&this.world?.crew.some(p=>p.id===id&&p.alive&&p.life===(m.life??0))){const input=cleanInput(m.input);if(input){let b=this.inputBuffers.get(id);if(!b){b=new CrewInputBuffer();this.inputBuffers.set(id,b);}b.push(input);this.inputs.set(id,input);this.inputTimes.set(id,performance.now());}return;}
      if(m.type==='courtyard-loaded'&&this.prelobby&&m.generation===this.epoch){const member=this.members.find(p=>p.id===id);if(member&&member.loaded!==this.epoch){member.loaded=this.epoch;courtyardEvent(this.world!.courtyard!,this.world!.tick,'arrival',this.world!.crew.find(p=>p.id===id)!.player.pos,[id]);this.updateLobby();}return;}
+     if(m.type==='drawing-style'){if(m.generation===this.epoch)this.applyDrawingStyle(id,m.style);return;}
      if(m.type==='drawing-action'){if(m.generation===this.epoch)this.applyPencilAction(id);return;}
      if(m.type==='skin'){void this.applySkin(id,m.token).then(ok=>{if(!ok&&ch.readyState==='open')ch.send(JSON.stringify({type:'skin-rejected'}));});return;}const member=this.members.find(p=>p.id===id);if(member&&this.gathering&&m.type==='color'){this.clearSkin(id);if(isPlayerColor(m.color)){member.color=m.color;member.ready=false;this.updateLobby();}return;}if(member&&!this.running&&(m.type==='ready'||m.type==='hello')){if(m.type==='hello'&&this.gathering)member.color=isPlayerColor(m.color)?m.color:DEFAULT_PLAYER_COLOR;if(typeof m.name==='string')member.name=m.name.trim().slice(0,24)||'Wanderer';if(m.type==='ready'){if(this.prelobby&&m.generation!==this.epoch)return;const revision=m.revision??((member.readyRevision??0)+1);if(!Number.isSafeInteger(revision)||revision<1||revision<=(member.readyRevision??0))return;member.readyRevision=revision;member.ready=m.ready===true&&(!this.prelobby||member.loaded===this.epoch);if(!member.ready)this.cancelDescent();}this.updateLobby();}
     }else if(m.type==='skin-rejected'){this.clearSkin(this.localId);this.onChange();this.onError('Ascendant is reserved for the current solo top three. Choose a color or try verifying again.');}else if(m.type==='effects'&&m.epoch===this.epoch&&Array.isArray(m.events)){const effects:Effect[]=[];for(const e of m.events){if(!Number.isInteger(e.networkId)||this.seenEvents.has(e.networkId))continue;this.seenEvents.add(e.networkId);const predicted=e.shotKey&&this.predictedShots.has(e.shotKey);if(predicted)this.predictedShots.delete(e.shotKey);if(!predicted&&!(e.shooterId===this.localId&&(e.kind==='jump'||e.kind==='land')))effects.push(e);}while(this.seenEvents.size>2048)this.seenEvents.delete(this.seenEvents.values().next().value!);this.onEffects(effects);}
