@@ -28,7 +28,7 @@ export class CourtyardScene{
  }
  setSkull(model:THREE.Group){
   const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
-  model.position.sub(center);const fit=new THREE.Group();fit.add(model);const scale=.72/Math.max(size.x,size.y,size.z);fit.scale.setScalar(scale);
+  model.position.sub(center);const fit=new THREE.Group();fit.add(model);const scale=1/Math.max(size.x,size.y,size.z);fit.scale.setScalar(scale);
   // Share the existing mesh and texture; use courtyard lighting instead of the combat lighting shader.
   model.traverse(o=>{if(o instanceof THREE.Mesh){const original=o.material as THREE.MeshBasicMaterial;o.material=new THREE.MeshStandardMaterial({map:original.map,color:0xfff3dd,emissive:0xffe1b6,emissiveMap:original.map,emissiveIntensity:.32,roughness:.75,flatShading:true});}});
   this.skull.add(fit);this.hasSkull=true;

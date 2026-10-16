@@ -70,8 +70,8 @@ test('shared skull interpolates on courtyard ticks; resets are discrete',()=>{
 test('skull kicks are bounded, goals count once, pit entry resets, and valid snapshots stay bounded',()=>{
  const c=createCourtyard(1),body={id:'host',player:{pos:{x:FOOTBALL.x,y:1.7,z:FOOTBALL.z+.7},vel:{x:0,y:0,z:-100}},input:{yaw:0}};
  stepSkull(c,[body],1,1/120);assert.ok(c.skull.vel.z<0);assert.ok(Math.hypot(c.skull.vel.x,c.skull.vel.z)<=14);assert.equal(c.events[0].kind,'kick');
- c.skull.pos={x:FOOTBALL.x,y:.36,z:FOOTBALL.goalZ[0]-.35};c.skull.vel={x:0,y:0,z:-5};stepSkull(c,[],40,1/120);assert.equal(c.skull.goals[0],1);for(let i=41;i<100;i++)stepSkull(c,[],i,1/120);assert.equal(c.skull.goals[0],1);
- stepSkull(c,[],200,1/120);assert.equal(c.skull.resetAt,0);c.phase='open';c.skull.pos={x:0,y:-1,z:PIT.z};stepSkull(c,[],201,1/120);assert.deepEqual(c.skull.pos,{x:FOOTBALL.x,y:.36,z:FOOTBALL.z});assert.equal(c.skull.resetAt,0);assert.equal(validateCourtyard(c),true);
+ c.skull.pos={x:FOOTBALL.x,y:.5,z:FOOTBALL.goalZ[0]-.49};c.skull.vel={x:0,y:0,z:-5};stepSkull(c,[],40,1/120);assert.equal(c.skull.goals[0],1);for(let i=41;i<100;i++)stepSkull(c,[],i,1/120);assert.equal(c.skull.goals[0],1);
+ stepSkull(c,[],200,1/120);assert.equal(c.skull.resetAt,0);c.phase='open';c.skull.pos={x:0,y:-1,z:PIT.z};stepSkull(c,[],201,1/120);assert.deepEqual(c.skull.pos,{x:FOOTBALL.x,y:.5,z:FOOTBALL.z});assert.equal(c.skull.resetAt,0);assert.equal(validateCourtyard(c),true);
  c.events.push(...Array(25).fill(c.events[0]));assert.equal(validateCourtyard(c),false);
 });
 test('high-fives need raised facing hands and release to rearm; held poses cannot spam',()=>{

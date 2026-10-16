@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createCourtyard,FOOTBALL,KICK_CHARGE_TICKS,footballKickPose,validateCourtyard} from '../src/courtyard-state';
+import {createCourtyard,FOOTBALL,FOOTBALL_BALL_RADIUS,KICK_CHARGE_TICKS,footballKickPose,validateCourtyard} from '../src/courtyard-state';
 import {stepSkull,stepFootballKicks} from '../src/courtyard-physics';
 import {idleInput} from '../src/simulation';
 const body=()=>({id:'host',player:{pos:{x:FOOTBALL.x,y:1.7,z:FOOTBALL.z+1.1},vel:{x:0,y:0,z:0}},input:{...idleInput(),fire:true}});
 test('every touchline returns the out-of-bounds skull exactly to midfield without altering score',()=>{
- for(const pos of [{x:FOOTBALL.x-18.37,y:.36,z:2},{x:FOOTBALL.x+18.37,y:.36,z:2},{x:45,y:.36,z:FOOTBALL.z-25.37},{x:45,y:.36,z:FOOTBALL.z+25.37}]){
+ for(const pos of [{x:FOOTBALL.x-18.51,y:FOOTBALL_BALL_RADIUS,z:2},{x:FOOTBALL.x+18.51,y:FOOTBALL_BALL_RADIUS,z:2},{x:45,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z-25.51},{x:45,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z+25.51}]){
   const c=createCourtyard(1);c.skull.goals=[2,3];c.skull.pos=pos;c.skull.vel={x:1,y:0,z:0};stepSkull(c,[],1,1/120);
-  assert.deepEqual(c.skull.pos,{x:36,y:.36,z:2});assert.deepEqual(c.skull.vel,{x:0,y:0,z:0});assert.deepEqual(c.skull.goals,[2,3]);assert.equal(c.skull.reset,1);
+  assert.deepEqual(c.skull.pos,{x:36,y:FOOTBALL_BALL_RADIUS,z:2});assert.deepEqual(c.skull.vel,{x:0,y:0,z:0});assert.deepEqual(c.skull.goals,[2,3]);assert.equal(c.skull.reset,1);
  }
  const c=createCourtyard(1);c.skull.pos.x=FOOTBALL.x+18.2;stepSkull(c,[],1,1/120);assert.equal(c.skull.reset,0,'partially crossing a line remains in play');
 });

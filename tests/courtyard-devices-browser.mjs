@@ -25,7 +25,8 @@ try{
    await page.locator('#courtyard-room').tap();await page.locator('#friends').waitFor({state:'visible'});await page.locator('#friends-close').tap();await page.waitForFunction(()=>window.abyss.mode==='playing');
   }else{
    const press=async index=>{await page.evaluate(i=>window.testPad.buttons[i].pressed=true,index);await page.waitForTimeout(120);await page.evaluate(i=>window.testPad.buttons[i].pressed=false,index);await page.waitForTimeout(120);};
-   await page.evaluate(()=>window.testPad.buttons[7].pressed=true);await page.waitForFunction(()=>window.abyss.input.rightArm);await page.evaluate(()=>window.testPad.buttons[7].pressed=false);await page.waitForFunction(()=>!window.abyss.input.rightArm);
+   await page.evaluate(()=>window.testPad.buttons[4].pressed=true);await page.waitForFunction(()=>window.abyss.input.leftArm);await page.evaluate(()=>window.testPad.buttons[4].pressed=false);await page.waitForFunction(()=>!window.abyss.input.leftArm);
+   await page.evaluate(()=>window.testPad.buttons[5].pressed=true);await page.waitForFunction(()=>window.abyss.input.rightArm);await page.evaluate(()=>window.testPad.buttons[5].pressed=false);await page.waitForFunction(()=>!window.abyss.input.rightArm);
    await press(2);assert.equal(await page.locator('#courtyard-wave').count(),0);
    await press(9);await page.locator('#friends').waitFor({state:'visible'});await page.waitForFunction(()=>!!document.querySelector('.controller-focus'));
    await press(1);await page.locator('#friends').waitFor({state:'hidden'});await page.waitForFunction(()=>window.abyss.mode==='playing');

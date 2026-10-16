@@ -12,11 +12,11 @@ test('radial deadzone removes drift and preserves full diagonal direction',()=>{
  const [x,y]=stick(1,1,.15);assert.ok(Math.abs(Math.hypot(x,y)-1)<1e-10);assert.equal(x,y);
  assert.deepEqual(stick(NaN,0,.15),[0,0]);
 });
-test('standard controller maps movement, look, triggers, jump and pause',()=>{
- const buttons=Array.from({length:17},(_,i)=>({pressed:[0,6,7,9].includes(i),value:[0,6,7,9].includes(i)?1:0,touched:false}));
+test('standard controller maps movement, look, shoulders, triggers, courtyard action, jump and pause',()=>{
+ const buttons=Array.from({length:17},(_,i)=>({pressed:[0,2,4,5,6,7,9].includes(i),value:[0,2,4,5,6,7,9].includes(i)?1:0,touched:false}));
  const state=controllerState({axes:[0,-1,.8,-.4],buttons},.15);
  assert.equal(state.forward,1);assert.equal(state.strafe,0);assert.ok(state.lookX>0&&state.lookY<0);
- assert.ok(state.jump&&state.fire&&state.homing&&state.pause);assert.equal(state.back,false);
+ assert.ok(state.jump&&state.action&&state.leftShoulder&&state.rightShoulder&&state.fire&&state.homing&&state.pause);assert.equal(state.back,false);
 });
 
 import {World,STEP,TUNING,idleInput} from '../src/simulation';

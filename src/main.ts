@@ -103,7 +103,7 @@ let recorder:RunRecorder|null=null,replay:ReplayPlayer|null=null,lastRun:Recorde
 let friends:FriendsSession|null=null;let friendsOpen=false;const lobbyBrowser=new LobbyBrowser();let lobbyStarted=false;let lobbyCrewCount=1;let receivedEpoch=-1;
 const hostClock=new CrewClock();let hostClockWorker:Worker|null=null;
 const buttonEdges:{button:'fire'|'homing'|'jump';held:boolean}[]=[];let sampledFire=false,sampledHoming=false,sampledJump=false;let capturingMouse=false,captureTicket=0;
-let previousPad:ReturnType<typeof controllerState>|null=null;let activePadIndex:number|null=null;let padFire=false,padHoming=false,padJump=false;
+let previousPad:ReturnType<typeof controllerState>|null=null;let activePadIndex:number|null=null;let padFire=false,padHoming=false,padJump=false,padLeftShoulder=false,padRightShoulder=false;
 let waitingForController=false;
 let movement={forward:0,strafe:0,jump:false},controllerDown=false,controllerFast=false;
 let blockedPadJump=true,blockedPadFire=true,blockedPadHoming=true;
@@ -132,8 +132,15 @@ function syncSpectator(){
   if(local&&!local.alive){if(!spectator.position){spectator.start(local.player.pos);clearInput();}}else spectator.reset();
 }
 const courtyardUI=new CourtyardUI({room:()=>{paused();friendsOpen=true;showPanels();roster();}});
-function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padHoming,padFire);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
-function clearInput() {mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
+function courtyardAction(preferOpen=false){
+ const session=friends;if(!session?.prelobby||!entrance||mode!=='playing'||controlMenuRoot())return false;
+ const open=courtyardUI.button('open'),ready=courtyardUI.button('ready'),local=session.members.find(member=>member.id===session.localId);
+ if(!open.hidden&&!open.disabled&&(preferOpen||session.role==='host'&&local?.ready)){open.click();return true;}
+ if(!ready.hidden&&!ready.disabled){ready.click();return true;}
+ return false;
+}
+function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
+function clearInput() {mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
 function notice(text:string,seconds=2.5) {noticeText=text;noticeUntil=performance.now()+seconds*1000;}
 async function captureMouse() {
   if(settings.controlScheme==='mobile'){void enterMobileFullscreen();return;}
@@ -285,7 +292,7 @@ function advanceHost(now:number){
   const active=!document.hidden&&mode==='playing'&&!controlMenuRoot()&&!spectator.position;
   const move=settings.controlScheme==='qwerty'||settings.controlScheme==='azerty'?keyboardMovement(keys,settings.controlScheme):movement;
   if(active&&Date.now()>=friends!.startAt){const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}}
-  input={forward:active?move.forward:0,strafe:active?move.strafe:0,yaw,pitch,jump:active&&sampledJump,fire:active&&sampledFire&&!(friends!.prelobby&&settings.controlScheme==='controller'),homing:!active&&friends!.prelobby||active&&sampledHoming,...sampleEmotes(active)};
+  input={forward:active?move.forward:0,strafe:active?move.strafe:0,yaw,pitch,jump:active&&sampledJump,fire:active&&sampledFire,homing:!active&&friends!.prelobby||active&&sampledHoming,...sampleEmotes(active)};
   friends!.step({...input});syncSpectator();
  });
  // Network effects have already been captured by FriendsSession.step. Avoid
@@ -331,14 +338,14 @@ function frame(now:number) {
     const cameraActive=mode==='playing'&&!controlMenuRoot();
     if(cameraActive&&spectator.position)spectator.move(dt,yaw,pitch,movement.forward,movement.strafe,(movement.jump||keys.has('e')?1:0)-(controllerDown||keys.has('ControlLeft')||keys.has('ControlRight')||(settings.controlScheme==='qwerty'&&keys.has('q'))?1:0),controllerFast||keys.has('ShiftLeft')||keys.has('ShiftRight'));
     const active=cameraActive&&!spectator.position;input.forward=active?movement.forward:0;input.strafe=active?movement.strafe:0;input.jump=active&&movement.jump;input.yaw=yaw;input.pitch=pitch;
-    input.fire=active&&sampledFire&&!(friends.prelobby&&settings.controlScheme==='controller');input.homing=!active&&friends.prelobby||active&&sampledHoming;Object.assign(input,sampleEmotes(active));
+    input.fire=active&&sampledFire;input.homing=!active&&friends.prelobby||active&&sampledHoming;Object.assign(input,sampleEmotes(active));
     if(friends.role==='host')advanceHost(now);
     else {
      accumulator+=Math.min(.1,elapsed);let crewSteps=0;
      while(accumulator>=STEP&&world.state==='playing'&&crewSteps++<12){
       const edge=active&&Date.now()>=friends.startAt?buttonEdges[0]:undefined;
       const fire=edge?.button==='fire'?edge.held:sampledFire,homing=edge?.button==='homing'?edge.held:sampledHoming,jump=edge?.button==='jump'?edge.held:sampledJump;
-      input.fire=active&&fire&&!(friends.prelobby&&settings.controlScheme==='controller');input.homing=!active&&friends.prelobby||active&&homing;input.jump=active&&jump;
+      input.fire=active&&fire;input.homing=!active&&friends.prelobby||active&&homing;input.jump=active&&jump;
       if(active&&friends.predict(world,{...input})&&edge){buttonEdges.shift();sampledFire=fire;sampledHoming=homing;sampledJump=jump;}
       syncSpectator();accumulator-=STEP;
      }
@@ -663,10 +670,11 @@ function pollController(dt:number){
  }
  if(settings.controlScheme!=='controller'||mode!=='playing')return;
  if(friends?.prelobby&&state.pause&&!previous?.pause){paused();friendsOpen=true;showPanels();roster();focusControl($('friends-close'));return;}if(!friends&&state.pause&&!previous?.pause){paused();return;}
- movement={forward:state.forward,strafe:state.strafe,jump:state.jump&&!blockedPadJump};controllerDown=state.descend;controllerFast=state.fast;
+ movement={forward:state.forward,strafe:state.strafe,jump:state.jump&&!blockedPadJump};controllerDown=state.descend;controllerFast=state.fast;padLeftShoulder=state.leftShoulder;padRightShoulder=state.rightShoulder;
  yaw-=state.lookX*2.8*settings.controllerSensitivity*dt;
  const limit=spectator.position?Math.PI/2:1.5;pitch=Math.max(-limit,Math.min(limit,pitch-state.lookY*2.8*settings.controllerSensitivity*dt));
- if(!spectator.position){const jump=state.jump&&!blockedPadJump,fire=state.fire&&!blockedPadFire,homing=state.homing&&!blockedPadHoming;if(jump!==padJump){buttonEdges.push({button:'jump',held:jump});padJump=jump;}if(fire!==padFire){buttonEdges.push({button:'fire',held:fire});padFire=fire;}if(homing!==padHoming){buttonEdges.push({button:'homing',held:homing});padHoming=homing;}}
+ const courtyardButton=!!friends?.prelobby&&(state.action&&!previous?.action?courtyardAction(true):state.jump&&!previous?.jump&&courtyardAction());
+ if(!spectator.position){const jump=state.jump&&!blockedPadJump&&!courtyardButton,fire=state.fire&&!blockedPadFire,homing=state.homing&&!blockedPadHoming;if(jump!==padJump){buttonEdges.push({button:'jump',held:jump});padJump=jump;}if(fire!==padFire){buttonEdges.push({button:'fire',held:fire});padFire=fire;}if(homing!==padHoming){buttonEdges.push({button:'homing',held:homing});padHoming=homing;}}
 }
 
 function setupSettings() {

@@ -1,4 +1,4 @@
-import {courtyardEvent,resetSkull,courtyardFloor,insidePit,pitIsOpen,COURTYARD_SOLIDS,FOOTBALL,KICK_CHARGE_TICKS,constrainCourtyard,type CourtyardState,type Point} from './courtyard-state';
+import {courtyardEvent,resetSkull,courtyardFloor,insidePit,pitIsOpen,COURTYARD_SOLIDS,FOOTBALL,FOOTBALL_BALL_RADIUS,KICK_CHARGE_TICKS,constrainCourtyard,type CourtyardState,type Point} from './courtyard-state';
 type Body={id:string;player:{pos:Point;vel:Point};input:{yaw:number;pitch?:number;fire?:boolean;homing?:boolean;leftArm?:boolean;rightArm?:boolean}};
 /** Charge timing and contact are authoritative; client packets carry only held buttons. */
 export function stepFootballKicks(c:CourtyardState,players:Body[],tick:number){
@@ -34,30 +34,30 @@ export function stepSkull(c:CourtyardState,players:Body[],tick:number,dt:number)
  s.vel.y-=18*dt;s.pos.x+=s.vel.x*dt;s.pos.y+=s.vel.y*dt;s.pos.z+=s.vel.z*dt;
  let impact=0;
  for(const block of COURTYARD_SOLIDS){
-  const hx=block.w/2+.36,hz=block.d/2+.36,dx=s.pos.x-block.x,dz=s.pos.z-block.z;
-  if(Math.abs(dx)>=hx||Math.abs(dz)>=hz||s.pos.y-.36>=block.h||previous.y-.36>=block.h-.05)continue;
+  const hx=block.w/2+FOOTBALL_BALL_RADIUS,hz=block.d/2+FOOTBALL_BALL_RADIUS,dx=s.pos.x-block.x,dz=s.pos.z-block.z;
+  if(Math.abs(dx)>=hx||Math.abs(dz)>=hz||s.pos.y-FOOTBALL_BALL_RADIUS>=block.h||previous.y-FOOTBALL_BALL_RADIUS>=block.h-.05)continue;
   if(hx-Math.abs(dx)<hz-Math.abs(dz)){s.pos.x=block.x+Math.sign(dx||1)*hx;impact=Math.max(impact,Math.abs(s.vel.x));s.vel.x*=-.58;}else{s.pos.z=block.z+Math.sign(dz||1)*hz;impact=Math.max(impact,Math.abs(s.vel.z));s.vel.z*=-.58;}
  }
  // Crossbars block the skull without turning the goal mouth into a solid wall.
  for(const z of FOOTBALL.goalZ){const h=FOOTBALL.goalHeight,half=.48;
-  if(Math.abs(s.pos.x-FOOTBALL.x)>=FOOTBALL.goalHalfWidth+.36||Math.abs(s.pos.z-z)>=half||Math.abs(s.pos.y-h)>=half)continue;
+  if(Math.abs(s.pos.x-FOOTBALL.x)>=FOOTBALL.goalHalfWidth+FOOTBALL_BALL_RADIUS||Math.abs(s.pos.z-z)>=half||Math.abs(s.pos.y-h)>=half)continue;
   if(previous.y>=h+half){s.pos.y=h+half;impact=Math.max(impact,Math.abs(s.vel.y));s.vel.y=Math.abs(s.vel.y)*.58;}
   else if(previous.y<=h-half){s.pos.y=h-half;impact=Math.max(impact,Math.abs(s.vel.y));s.vel.y=-Math.abs(s.vel.y)*.58;}
   else {s.pos.z=z+Math.sign(previous.z-z||1)*half;impact=Math.max(impact,Math.abs(s.vel.z));s.vel.z*=-.58;}
  }
- const floor=courtyardFloor(s.pos.x,s.pos.z,c)+.36;
+ const floor=courtyardFloor(s.pos.x,s.pos.z,c)+FOOTBALL_BALL_RADIUS;
  if(s.pos.y<floor){impact=Math.max(impact,Math.abs(s.vel.y));s.pos.y=floor;s.vel.y=Math.abs(s.vel.y)>1?-s.vel.y*.28:0;const friction=Math.exp(-(s.pos.x>=14?.65:2.1)*dt);s.vel.x*=friction;s.vel.z*=friction;}
- const confined=constrainCourtyard(previous,s.pos,.36);
+ const confined=constrainCourtyard(previous,s.pos,FOOTBALL_BALL_RADIUS);
  for(const axis of ['x','z'] as const)if(confined[axis]!==s.pos[axis]){impact=Math.max(impact,Math.abs(s.vel[axis]));s.pos[axis]=confined[axis];s.vel[axis]*=-.62;}
  if(impact>2&&!c.events.some(e=>e.kind==='bounce'&&tick-e.tick<18))courtyardEvent(c,tick,'bounce',s.pos);
- s.rotation.x+=s.vel.z*dt/.36;s.rotation.z-=s.vel.x*dt/.36;s.rotation.y+=s.vel.y*dt*.2;
+ s.rotation.x+=s.vel.z*dt/FOOTBALL_BALL_RADIUS;s.rotation.z-=s.vel.x*dt/FOOTBALL_BALL_RADIUS;s.rotation.y+=s.vel.y*dt*.2;
  // A score requires the entire skull to cross from the pitch into the goal.
  for(const [i,goalZ] of FOOTBALL.goalZ.entries()){
-  const direction=i===0?-1:1,plane=goalZ+direction*.36;
-  if((previous.z-plane)*direction<=0&&(s.pos.z-plane)*direction>0&&Math.abs(s.pos.x-FOOTBALL.x)<FOOTBALL.goalHalfWidth-.36&&s.pos.y+.36<FOOTBALL.goalHeight){s.goals[i]++;s.resetAt=tick+105;courtyardEvent(c,tick,'goal',s.pos);break;}
+  const direction=i===0?-1:1,plane=goalZ+direction*FOOTBALL_BALL_RADIUS;
+  if((previous.z-plane)*direction<=0&&(s.pos.z-plane)*direction>0&&Math.abs(s.pos.x-FOOTBALL.x)<FOOTBALL.goalHalfWidth-FOOTBALL_BALL_RADIUS&&s.pos.y+FOOTBALL_BALL_RADIUS<FOOTBALL.goalHeight){s.goals[i]++;s.resetAt=tick+105;courtyardEvent(c,tick,'goal',s.pos);break;}
  }
  // Let a valid goal win first, then reset any ball fully beyond a touchline.
- if(!s.resetAt&&(Math.abs(s.pos.x-FOOTBALL.x)>FOOTBALL.width/2+.36||Math.abs(s.pos.z-FOOTBALL.z)>FOOTBALL.length/2+.36)){resetSkull(c,players);return;}
+ if(!s.resetAt&&(Math.abs(s.pos.x-FOOTBALL.x)>FOOTBALL.width/2+FOOTBALL_BALL_RADIUS||Math.abs(s.pos.z-FOOTBALL.z)>FOOTBALL.length/2+FOOTBALL_BALL_RADIUS)){resetSkull(c,players);return;}
  if(s.pos.y<-4||!Number.isFinite(s.pos.x))s.resetAt=tick+90;
  if(Math.hypot(s.vel.x,s.vel.y,s.vel.z)<.045)s.vel={x:0,y:0,z:0};
  if(pitIsOpen(c)&&insidePit(s.pos)&&s.pos.y<0)s.resetAt ||=tick+90;
