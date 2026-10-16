@@ -35,7 +35,9 @@ class WindowsHotkeys(threading.Thread):
                 if user32.RegisterHotKey(None,virtual_key,0,virtual_key):registered.append(virtual_key)
             self.ready.set();message=wintypes.MSG()
             while user32.GetMessageW(ctypes.byref(message),None,0,0)>0:
-                if message.message==WM_HOTKEY:self.commands.put(HOTKEYS.get(message.wParam,''))
+                if message.message==WM_HOTKEY:
+                    command=HOTKEYS.get(int(message.wParam))
+                    if command:self.commands.put(command)
         finally:
             for virtual_key in registered:user32.UnregisterHotKey(None,virtual_key)
             self.ready.set()
@@ -123,6 +125,10 @@ class Overlay:
 
 
 def run(engine, quit_after=0):
-    overlay=Overlay(engine,quit_after)
-    try:overlay.root.mainloop()
-    finally:engine.stop();overlay.hotkeys.close()
+    overlay=None
+    try:
+        overlay=Overlay(engine,quit_after)
+        overlay.root.mainloop()
+    finally:
+        engine.stop()
+        if overlay:overlay.hotkeys.close()

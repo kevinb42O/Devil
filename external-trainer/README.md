@@ -6,6 +6,8 @@ A native macOS and Windows companion for memory-based aim assistance and ESP. Th
 
 On macOS, double-click **Start Trainer.command**. On Windows, double-click **Start Trainer.bat**. Play in the **Chrome window the trainer opens**; that is the session attached to memory. The default address is **https://devil-green.vercel.app**. Use F7 to switch to a local development address when needed.
 
+The Windows launcher installs the trainer's browser bridge on its first run and leaves its console open if setup fails, so missing Node.js or Python is visible instead of looking like an immediate crash. Install Chrome, current Node.js LTS, and Python 3.9–3.12 with **Add Python to PATH** selected before launching it.
+
 The trainer starts with aim enabled. Fire either weapon normally to aim. Homing must actually be unlocked and have reserve; pressing an unavailable secondary weapon does not turn the camera.
 
 | Key | Action |

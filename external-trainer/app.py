@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 import tempfile
+import traceback
 
 ROOT = Path(__file__).resolve().parent
 
@@ -176,24 +177,29 @@ def main():
     engine = Engine(args.demo)
     if args.url:
         engine.settings = Settings.validated({**asdict(engine.settings),'game_url':args.url})
-    if sys.platform=='darwin':
-        from overlay import run
-    else:
-        from windows_overlay import run
-    if args.demo:
-        run(engine, quit_after=args.quit_after)
-        return
-    if sys.platform=='darwin':
-        import fcntl
-        with (ROOT / '.trainer.lock').open('a+') as lock:
-            try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-            except BlockingIOError:
-                print('The trainer is already running. F7 opens its settings.',flush=True)
-                return
-            lock.seek(0);lock.truncate();lock.write(str(__import__('os').getpid()));lock.flush()
+    try:
+        if sys.platform=='darwin':
+            from overlay import run
+        else:
+            from windows_overlay import run
+        if args.demo:
             run(engine, quit_after=args.quit_after)
-    else:
-        run(engine, quit_after=args.quit_after)
+            return
+        if sys.platform=='darwin':
+            import fcntl
+            with (ROOT / '.trainer.lock').open('a+') as lock:
+                try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+                except BlockingIOError:
+                    print('The trainer is already running. F7 opens its settings.',flush=True)
+                    return
+                lock.seek(0);lock.truncate();lock.write(str(__import__('os').getpid()));lock.flush()
+                run(engine, quit_after=args.quit_after)
+        else:
+            run(engine, quit_after=args.quit_after)
+    except Exception as error:
+        print('Trainer startup failed: '+str(error),file=sys.stderr,flush=True)
+        traceback.print_exc()
+        raise
 
 
 if __name__ == '__main__':
