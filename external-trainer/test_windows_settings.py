@@ -7,7 +7,7 @@ import unittest
 from unittest.mock import patch
 
 import app
-from settings import Settings, KINDS, PRESETS, preset
+from settings import Settings, KINDS, PRESETS, NUMERIC_RANGES, preset
 from windows_settings import SettingsForm
 
 
@@ -48,11 +48,11 @@ class SettingsFormTests(unittest.TestCase):
         self.assertEqual(self.engine.settings.fov,92)
         self.assertEqual(self.engine.settings.profile,'Custom')
 
-    def test_load_preset_and_defaults_are_staged_until_apply(self):
+    def test_load_preset_and_defaults_apply_immediately(self):
         before=self.engine.settings;self.form.profile.set('Smooth');self.form.load_preset()
-        self.assertEqual(self.engine.settings,before)
+        self.assertEqual(self.engine.settings,preset('Smooth'))
         self.assertEqual(self.form.read_form(),preset('Smooth'))
-        self.form.defaults();self.assertEqual(self.engine.settings,before)
+        self.form.defaults();self.assertEqual(self.engine.settings,preset('Precision'))
         self.assertEqual(self.form.read_form(),preset('Precision'))
 
     def test_invalid_values_and_failed_save_leave_live_settings_unchanged(self):
@@ -66,7 +66,7 @@ class SettingsFormTests(unittest.TestCase):
         self.form.fill(preset('Smooth'));file=Path(self.temp.name)/'export.json';self.form.export_path(file)
         self.form.defaults();self.form.import_path(file)
         self.assertEqual(self.form.read_form(),preset('Smooth'))
-        self.assertEqual(self.engine.settings,preset('Precision'))
+        self.assertEqual(self.engine.settings,preset('Smooth'))
         before=self.form.read_form();file.write_text('{}')
         with self.assertRaises(ValueError):self.form.import_path(file)
         self.assertEqual(self.form.read_form(),before)
@@ -119,6 +119,40 @@ class SettingsFormTests(unittest.TestCase):
         self.window.update()
         self.assertEqual(self.engine.settings.fov,87)
         self.assertEqual(app.Engine().settings.fov,87)
-        self.assertEqual(self.form.notice.get(),'Saved. Settings are active.')
+        self.assertIn('FOV 87',self.form.notice.get())
+
+    def test_named_preset_survives_reload_and_edits_update_it(self):
+        self.form.fields['fov'].set('85');self.form.controls['aim_mode'].set('smooth')
+        self.assertTrue(self.form.save_as('My smooth setup'))
+        self.assertEqual(self.engine.settings.profile,'My smooth setup')
+        self.assertEqual(app.Engine().settings.profile,'My smooth setup')
+        self.window.destroy();self.window=tk.Toplevel(self.root)
+        self.form=SettingsForm(self.window,app.Engine(),lambda:None)
+        self.assertIn('My smooth setup',self.form.library.names())
+        self.form.fields['fov'].set('92');self.form.apply()
+        self.form.profile.set('Precision');self.form.load_preset()
+        self.form.profile.set('My smooth setup');self.form.load_preset()
+        self.assertEqual(self.form.engine.settings.fov,92)
+        self.assertEqual(self.form.engine.settings.aim_mode,'smooth')
+        self.assertFalse(self.form.save_as('Precision'))
+
+    def test_sliders_sync_exact_inputs_and_autosave(self):
+        self.assertEqual(set(self.form.sliders),set(NUMERIC_RANGES))
+        self.form.sliders['fov'].set(83)
+        self.form.sliders['esp_opacity'].set(.43)
+        self.form.sliders['lock_ms'].set(310)
+        self.form.controls['aim_mode'].set('smooth')
+        self.root.after(500,self.root.quit);self.root.mainloop()
+        saved=app.Engine().settings
+        self.assertEqual(saved.fov,83)
+        self.assertEqual(saved.esp_opacity,.43)
+        self.assertEqual(saved.lock_ms,310)
+        self.assertEqual(saved.aim_mode,'smooth')
+        self.form.fields['fov'].set('112')
+        self.assertEqual(self.form.slider_values['fov'].get(),112)
+        for key,(low,high) in NUMERIC_RANGES.items():
+            for bound in (low,high):
+                self.form.sliders[key].set(bound)
+                self.assertEqual(getattr(self.form.read_form(),key),bound)
 
 if __name__=='__main__':unittest.main()

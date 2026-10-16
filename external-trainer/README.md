@@ -4,7 +4,11 @@ A native macOS and Windows companion for memory-based aim assistance and ESP. Th
 
 On Windows the ESP/HUD is drawn in a canvas inside the managed game page with `pointer-events: none`. The companion creates no desktop overlay window; only F7 settings uses a visible native window. Production connections use the game's stable trainer interface without pausing the JavaScript debugger.
 
-Windows F7 settings has mouse-operated Aim, ESP, Targets and Connection tabs, with validated saving, staged presets/defaults, and JSON import/export. Press F7, Close, or the window close button to save your edits and return to the game; Apply saves while keeping the menu open. Invalid values or failed saves keep the menu open with an error. Saving preserves the custom values shown in the form. The ESP aim-cone indicator is enabled by default. Wide cones use a dashed screen-space indicator; 360° is labeled ALL DIRECTIONS because it also includes targets behind you.
+Windows F7 settings has mouse-operated Aim, ESP, Targets and Connection tabs. Valid edits save automatically after a short typing pause. F7, Close, and the window close button also save before returning to the game. Invalid values or failed saves keep the menu open with an error. The save status shows your chosen aim mode and FOV; Connection shows what the running game has received. The ESP aim-cone indicator is enabled by default. Wide cones use a dashed screen-space indicator; 360° is labeled ALL DIRECTIONS because it also includes targets behind you.
+
+Use **Save as…** to give your current settings your own preset name. These presets live in `user-presets.json` and appear beside the built-in presets. Selecting one loads it immediately. Editing your named preset automatically updates it; built-in presets remain unchanged. Import/export includes your preset name.
+
+The Windows control studio groups tracking, selection, overlay layers, appearance, HUD and colors into panels. All numeric settings have sliders plus exact-value inputs that stay synchronized. Colors support both a picker and hex entry. Tabs scroll on smaller displays while save controls remain pinned. The in-game HUD displays the active preset, snap/smooth mode and FOV without capturing mouse input.
 
 ## Launch and controls
 
@@ -37,7 +41,7 @@ Screen Recording permission is **not used by the trainer**. The optional UI QA s
 | Survival | Prioritizes approaching threats instead of enforcing tower-first selection. |
 | Minimal | Precision aim with a quieter overlay: fewer points and reduced visual detail. |
 
-F6 applies a preset immediately. In F7 settings, choose a preset and click **Load preset** to review it, then **Apply**. A preset resets its options and target filters while preserving the game address. Manual changes become **Custom**. **Import** and **Export** save versioned JSON configurations locally. Imported files take effect only after Apply. Invalid values and failed saves leave the current runtime settings intact.
+F6 applies a built-in preset immediately. On Windows, selecting a preset, loading defaults, and importing settings apply immediately. On macOS, Load preset and Import stage changes until Apply. Presets preserve the managed game address. Manual edits of built-in presets become **Custom**; Windows can save those under your own name with **Save as…**. **Import** and **Export** use versioned JSON configurations. Invalid values and failed settings writes leave the current runtime settings intact.
 
 ## Aim settings
 

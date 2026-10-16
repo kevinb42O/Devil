@@ -20,14 +20,15 @@ from settings import Settings
 
 
 class Engine:
-    def __init__(self, demo=False):
+    def __init__(self, demo=False, config_root=None):
+        self.config_root=Path(config_root) if config_root is not None else ROOT
         self.lock = threading.RLock()
         self.commands = queue.Queue()
         self.settings = Settings()
         self.config_warning = None
         if not demo:
             try:
-                saved = json.loads((ROOT / 'settings.json').read_text())
+                saved = json.loads((self.config_root / 'settings.json').read_text())
                 self.settings = Settings.validated({k:v for k,v in saved.items() if k in asdict(self.settings)})
             except FileNotFoundError:
                 pass
@@ -46,6 +47,7 @@ class Engine:
         self.displays = []
         self.browser_pid = 0
         self.hotkey_warning = None
+        self.settings_revision = 0
         self.thread = threading.Thread(target=self.loop, daemon=True)
 
     def update(self, values):
@@ -55,12 +57,13 @@ class Engine:
             if not self.demo:
                 temp = None
                 try:
-                    with tempfile.NamedTemporaryFile(mode='w',dir=ROOT,prefix='.settings-',suffix='.tmp',delete=False) as saved:
+                    with tempfile.NamedTemporaryFile(mode='w',dir=self.config_root,prefix='.settings-',suffix='.tmp',delete=False) as saved:
                         temp=Path(saved.name);saved.write(json.dumps(asdict(candidate),indent=2))
-                    temp.replace(ROOT / 'settings.json')
+                    temp.replace(self.config_root / 'settings.json')
                 finally:
                     if temp and temp.exists():temp.unlink()
             self.settings = candidate
+            self.settings_revision += 1
             if self.settings.game_url != old_url:
                 self.reconnect_requested = True
                 self.terminate_bridge()
@@ -82,8 +85,12 @@ class Engine:
     def terminate_bridge(self):
         process=self.process
         if process and process.poll() is None:
-            try:process.terminate()
-            except ProcessLookupError:pass
+            # On Windows terminate() kills Node before its browser cleanup runs.
+            # Closing stdin requests graceful shutdown through the bridge's EOF handler.
+            try:
+                if process.stdin:process.stdin.close()
+                else:process.terminate()
+            except (BrokenPipeError,OSError,ValueError):pass
 
     def disconnected(self,message,error=False):
         with self.lock:
@@ -95,7 +102,7 @@ class Engine:
             try:
                 with self.lock:
                     message = dict(**asdict(self.settings), enabled=self.armed and not self.demo, suspended=self.suspended,
-                                   generation=self.reconnect_generation,displays=self.displays)
+                                   generation=self.reconnect_generation,displays=self.displays,settings_revision=self.settings_revision)
                 process.stdin.write(json.dumps(message)+'\n')
                 process.stdin.flush()
             except (BrokenPipeError, OSError, ValueError):
@@ -143,13 +150,13 @@ class Engine:
                 self.disconnected(str(error),True)
             finally:
                 if process:
-                    if process.poll() is None:
-                        process.terminate()
                     try:
                         process.wait(timeout=6)
                     except subprocess.TimeoutExpired:
-                        process.kill()
-                        process.wait()
+                        process.terminate()
+                        try:process.wait(timeout=2)
+                        except subprocess.TimeoutExpired:
+                            process.kill();process.wait()
                     for stream in (process.stdin,process.stdout):
                         if stream:
                             try:stream.close()
@@ -163,7 +170,7 @@ class Engine:
         self.armed = False
         self.running = False
         self.terminate_bridge()
-        self.thread.join(timeout=7)
+        self.thread.join(timeout=10)
 
 
 def main():

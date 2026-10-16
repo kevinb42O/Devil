@@ -1,6 +1,8 @@
 .venv/
 __pycache__/
 settings.json
+user-presets.json
+.presets-*.tmp
 *.log
 .chrome-profile/
 .trainer.lock

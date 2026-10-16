@@ -12,6 +12,9 @@ DISPLAY_NAMES={
     'squid':'Tower I','squid2':'Tower II','squid3':'Tower III','spider':'Spider I','spider2':'Spider II','egg':'Egg I','egg2':'Egg II',
 }
 
+NUMERIC_RANGES=dict(smooth_speed=(30,3600), fov=(1,360), max_distance=(1,336), switch_bias=(0,45),
+                    lock_ms=(0,2000), lead_limit=(0,3), esp_opacity=(.1,1), esp_scale=(.6,2), esp_max_targets=(1,500))
+
 
 @dataclass
 class Settings:
@@ -53,9 +56,8 @@ class Settings:
         defaults = asdict(cls())
         if not isinstance(values, dict) or set(values) - set(defaults):
             raise ValueError('Unknown or malformed setting')
-        ranges = dict(smooth_speed=(30,3600), fov=(1,360), max_distance=(1,336), switch_bias=(0,45),
-                      lock_ms=(0,2000), lead_limit=(0,3), esp_opacity=(.1,1), esp_scale=(.6,2), esp_max_targets=(1,500))
-        choices = dict(profile=('Custom','Precision','Smooth','Survival','Minimal'), aim_mode=('snap','smooth'),
+        ranges = NUMERIC_RANGES
+        choices = dict(aim_mode=('snap','smooth'),
                        selection=('crosshair','nearest','health','threat'), esp_style=('corners','box'),
                        hud_anchor=('top_left','top_right','bottom_left','bottom_right'))
         result = dict(defaults)
@@ -84,6 +86,8 @@ class Settings:
                     raise ValueError(key+' must use #RRGGBB')
                 value=value.upper()
             result[key]=value
+        if not result['profile'].strip() or len(result['profile'])>48 or any(ord(c)<32 for c in result['profile']):
+            raise ValueError('Preset name must contain 1–48 printable characters')
         parsed=urlparse(result['game_url'])
         try:parsed.port
         except ValueError:raise ValueError('Game address has an invalid port') from None

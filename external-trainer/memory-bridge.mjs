@@ -137,7 +137,7 @@ async function main(){
         const options={...control,enabled:!!control.enabled&&Date.now()-lastControl<500};
         const data=await page.evaluate(options=>{
           const state=window.__abyssMemoryAim.control(options),rect=document.querySelector('#game').getBoundingClientRect();
-          return {...state,connected:true,documentFocused:document.hasFocus(),viewport:{screenX,screenY,outerWidth,outerHeight,innerWidth,innerHeight,devicePixelRatio,
+          return {...state,connected:true,appliedSettings:{revision:options.settings_revision,fov:options.fov,aim_mode:options.aim_mode},documentFocused:document.hasFocus(),viewport:{screenX,screenY,outerWidth,outerHeight,innerWidth,innerHeight,devicePixelRatio,
             rect:{left:rect.left,top:rect.top,width:rect.width,height:rect.height}}};
         },options);
         if(process.platform==='win32')await page.evaluate(paintPageOverlay,{state:data,options,rect:data.viewport.rect});

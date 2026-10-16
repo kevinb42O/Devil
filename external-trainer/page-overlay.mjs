@@ -68,16 +68,27 @@ export function paintPageOverlay({state,options,rect}){
     ctx.restore();
   }
   if(options.hud_enabled!==false){
-    const width=Math.min(innerWidth-32,options.hud_compact===false?520:390),height=options.hud_compact===false?90:54;
+    const width=Math.min(innerWidth-32,options.hud_compact===false?480:390),height=options.hud_compact===false?122:82;
     const anchor=options.hud_anchor||'top_left';
     const x=anchor.endsWith('right')?innerWidth-width-16:16,y=anchor.startsWith('bottom')?innerHeight-height-16:16;
-    ctx.globalAlpha=1;ctx.fillStyle='#101519';ctx.fillRect(x,y,width,height);
-    ctx.fillStyle='#66E2DD';ctx.font='bold 12px sans-serif';
-    ctx.fillText(`ABYSS / ${state.active?'LOCKED':options.enabled?'AIM ON':'AIM OFF'} / ${options.profile||'Precision'}`,x+12,y+21);
-    ctx.fillStyle='#d9e3ec';ctx.font='11px sans-serif';ctx.fillText('F7 settings  F8 aim  F4 ESP  F3 HUD  F10 quit',x+12,y+41);
+    const accent=options.color_selected||'#66dfcf';
+    ctx.globalAlpha=1;ctx.lineWidth=1;ctx.fillStyle='rgba(8,17,27,.94)';ctx.strokeStyle='rgba(117,161,180,.28)';
+    ctx.shadowColor='rgba(0,0,0,.4)';ctx.shadowBlur=16;
+    ctx.beginPath();ctx.roundRect(x,y,width,height,10);ctx.fill();ctx.shadowBlur=0;ctx.stroke();
+    ctx.fillStyle=accent;ctx.fillRect(x+14,y+17,3,17);
+    ctx.font='600 13px "Segoe UI",sans-serif';ctx.fillText('A B Y S S',x+27,y+30);
+    ctx.textAlign='right';ctx.fillStyle=state.active?accent:'#a6b8cb';ctx.font='600 10px "Segoe UI",sans-serif';
+    ctx.fillText(options.suspended?'EDITING':state.active?'● TRACKING':options.enabled?'● ARMED':'○ DISABLED',x+width-15,y+29);ctx.textAlign='left';
+    ctx.font='11px "Segoe UI",sans-serif';ctx.fillStyle='#a2b6cb';
+    const profile=options.profile||'Precision';
+    ctx.fillText(`${profile.length>28?profile.slice(0,27)+'…':profile}  /  ${(options.aim_mode||'snap').toUpperCase()}  /  ${options.fov??360}°`,x+15,y+50);
+    ctx.font='10px "Segoe UI",sans-serif';ctx.fillStyle='#6f879e';
+    ctx.fillText('F7 Settings   F8 Aim   F4 ESP   F3 HUD   F10 Exit',x+15,y+69);
     if(options.hud_compact===false){
-      ctx.fillText(state.target?`${state.target.label||state.target.kind} / HP ${Math.round(state.target.health)} / ${(state.target.distance||0).toFixed(1)} u`:state.message||'Ready',x+12,y+61);
-      ctx.fillText(`${state.targets||0} targets / ${(state.averageMs||0).toFixed(2)} ms / ${state.aimApplications||0} aim updates`,x+12,y+79);
+      ctx.fillStyle='#d9e3ec';ctx.font='11px "Segoe UI",sans-serif';
+      ctx.fillText(state.target?`${state.target.label||state.target.kind} / HP ${Math.round(state.target.health)} / ${(state.target.distance||0).toFixed(1)} u`:state.message||'Ready',x+15,y+90);
+      ctx.fillStyle='#829bb2';ctx.font='10px "Segoe UI",sans-serif';
+      ctx.fillText(`${state.targets||0} targets / ${(state.averageMs||0).toFixed(2)} ms / ${state.aimApplications||0} aim updates`,x+15,y+108);
     }
   }
   clearTimeout(globalThis.__abyssOverlayTimeout);
