@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createCourtyard,FOOTBALL,FOOTBALL_BALL_RADIUS,KICK_CHARGE_TICKS,footballKickPose,validateCourtyard} from '../src/courtyard-state';
-import {stepSkull,stepFootballKicks} from '../src/courtyard-physics';
+import {stepSkull,stepFootballKicks,blockFootball} from '../src/courtyard-physics';
 import {idleInput} from '../src/simulation';
 const body=()=>({id:'host',player:{pos:{x:FOOTBALL.x,y:1.7,z:FOOTBALL.z+1.1},vel:{x:0,y:0,z:0}},input:{...idleInput(),fire:true}});
 test('every touchline returns the out-of-bounds skull exactly to midfield without altering score',()=>{
@@ -27,7 +27,42 @@ test('right-click input charges and releases a football kick',()=>{
  assert.equal(c.events.filter(e=>e.kind==='kick').length,1);assert.ok(c.skull.vel.z<0);assert.equal(footballKickPose(c,'host',2)!.right,true);
  const left=createCourtyard(1),leftPlayer=body();stepFootballKicks(left,[leftPlayer],1);leftPlayer.input.fire=false;stepFootballKicks(left,[leftPlayer],2);assert.equal(footballKickPose(left,'host',2)!.right,false);
 });
-test('cancel, backwards facing and distant releases do not kick the ball',()=>{
+test('walking dribbles on the ground without stacking launch impulses, even while charging',()=>{
+ const c=createCourtyard(1),p=body();p.player.vel.z=-3;
+ for(let tick=1;tick<=120;tick++){
+  p.player.pos.z=c.skull.pos.z+1;
+  stepSkull(c,[p],tick,1/120);
+  assert.ok(Math.abs(c.skull.vel.z)<4,'gentle touches keep the ball close');
+  assert.equal(c.skull.pos.y,FOOTBALL_BALL_RADIUS,'walking never launches the ball');
+ }
+});
+test('body blocks intercept fast passes from either direction without needing a kick',()=>{
+ for(const direction of [-1,1]){
+  const c=createCourtyard(1),p=body();p.player.pos={x:36,y:1.7,z:2};p.input.fire=false;
+  const previous={x:36,y:.5,z:2+direction*2};
+  c.skull.pos={x:36,y:.5,z:2-direction*2};c.skull.vel={x:0,y:0,z:-direction*24};
+  blockFootball(c,[p],previous,1/6);
+  assert.ok((c.skull.pos.z-2)*direction>.88,'ball stays on the incoming side');
+  assert.ok(c.skull.vel.z*direction>0,'body deflects the ball away');
+ }
+});
+test('a moving player can intercept while an overhead ball clears the body',()=>{
+ const c=createCourtyard(1),p=body();p.player.pos={x:36,y:1.7,z:2};p.player.vel.x=3;p.input.fire=false;
+ c.skull.pos={x:36,y:.5,z:2};c.skull.vel={x:0,y:0,z:-24};
+ blockFootball(c,[p],{x:36,y:.5,z:4},.1);
+ assert.ok(c.skull.pos.z>2.88,'moving defender blocks the pass');
+ c.skull.pos={x:36,y:3,z:0};c.skull.vel={x:0,y:0,z:-24};
+ blockFootball(c,[p],{x:36,y:3,z:4},1/6);
+ assert.equal(c.skull.pos.z,0,'high ball passes above the defender');
+});
+test('dribbling keeps the ball ahead at walking and full movement speed',()=>{
+ for(const speed of [3,11]){
+  const c=createCourtyard(1),p=body();p.player.vel.z=-speed;
+  for(let tick=1;tick<=240;tick++){p.player.pos.z-=speed/120;stepSkull(c,[p],tick,1/120);assert.ok(c.skull.pos.z<p.player.pos.z,'player does not run past the ball');}
+  assert.ok(c.skull.pos.z<FOOTBALL.z-speed*1.5,'ball follows the moving player down the pitch');
+ }
+});
+test('backwards facing and distant releases do not kick the ball',()=>{
  for(const mode of ['back','far']){const c=createCourtyard(1),p=body();stepFootballKicks(c,[p],1);p.input.fire=false;if(mode==='back')p.input.yaw=Math.PI;if(mode==='far')p.player.pos.x+=10;stepFootballKicks(c,[p],145);assert.deepEqual(c.skull.vel,{x:0,y:0,z:0});assert.equal(c.events.length,0);assert.equal(c.kicks.host.started,-1);}
 });
 test('kick pose expires, departures remove state, and snapshot validation rejects unbounded kick power',()=>{

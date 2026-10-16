@@ -1,5 +1,27 @@
 import {courtyardEvent,resetSkull,courtyardFloor,insidePit,pitIsOpen,COURTYARD_SOLIDS,FOOTBALL,FOOTBALL_BALL_RADIUS,KICK_CHARGE_TICKS,constrainCourtyard,type CourtyardState,type Point} from './courtyard-state';
 type Body={id:string;player:{pos:Point;vel:Point};input:{yaw:number;pitch?:number;fire?:boolean;homing?:boolean;leftArm?:boolean;rightArm?:boolean}};
+/** Sweep against the player's body so fast passes cannot jump through a defender. */
+export function blockFootball(c:CourtyardState,players:Body[],previous:Point,dt:number){
+ const s=c.skull,radius=FOOTBALL_BALL_RADIUS+.38;
+ for(const p of players){
+  const speed=Math.hypot(p.player.vel.x,p.player.vel.z),scale=speed>11?11/speed:1;
+  const vx=p.player.vel.x*scale,vz=p.player.vel.z*scale;
+  const ax=previous.x-p.player.pos.x+vx*dt,az=previous.z-p.player.pos.z+vz*dt;
+  const bx=s.pos.x-p.player.pos.x,bz=s.pos.z-p.player.pos.z,dx=bx-ax,dz=bz-az;
+  const a=dx*dx+dz*dz,b=2*(ax*dx+az*dz),start=ax*ax+az*az-radius*radius;
+  let t=0;
+  if(start>0){const discriminant=b*b-4*a*start;if(a<1e-10||discriminant<0)continue;t=(-b-Math.sqrt(discriminant))/(2*a);if(t<0||t>1)continue;}
+  const height=previous.y+(s.pos.y-previous.y)*t;
+  if(height+FOOTBALL_BALL_RADIUS<p.player.pos.y-1.7||height-FOOTBALL_BALL_RADIUS>p.player.pos.y+.15)continue;
+  let nx=ax+dx*t,nz=az+dz*t;const distance=Math.hypot(nx,nz);
+  if(distance>.0001){nx/=distance;nz/=distance;}else{nx=-Math.sin(p.input.yaw);nz=-Math.cos(p.input.yaw);}
+  const incoming=(s.vel.x-vx)*nx+(s.vel.z-vz)*nz;
+  if(incoming<0){s.vel.x-=incoming*1.25*nx;s.vel.z-=incoming*1.25*nz;}
+  const remaining=dt*(1-t);
+  s.pos.x=p.player.pos.x-vx*remaining+nx*(radius+.001)+s.vel.x*remaining;
+  s.pos.z=p.player.pos.z-vz*remaining+nz*(radius+.001)+s.vel.z*remaining;
+ }
+}
 /** Charge timing and contact are authoritative; client packets carry only held buttons. */
 export function stepFootballKicks(c:CourtyardState,players:Body[],tick:number){
  const ids=new Set(players.map(p=>p.id));for(const id of Object.keys(c.kicks))if(!ids.has(id))delete c.kicks[id];
@@ -9,9 +31,9 @@ export function stepFootballKicks(c:CourtyardState,players:Body[],tick:number){
   if(k.started<0)continue;
   k.power=Math.min(1,Math.max(0,(tick-k.started)/KICK_CHARGE_TICKS));k.started=-1;k.released=tick;
   const s=c.skull,dx=s.pos.x-p.player.pos.x,dz=s.pos.z-p.player.pos.z,d=Math.hypot(dx,dz),forward={x:-Math.sin(p.input.yaw),z:-Math.cos(p.input.yaw)};
-  if(s.resetAt||d>1.8||Math.abs(p.player.pos.y-1.7-s.pos.y)>1.2||d>.25&&(dx*forward.x+dz*forward.z)/d<.2)continue;
-  const speed=5+18*k.power,loft=Math.max(0,Math.min(.55,p.input.pitch??0));
-  s.vel={x:forward.x*speed+p.player.vel.x*.15,y:1+3*k.power+Math.sin(loft)*speed*.55,z:forward.z*speed+p.player.vel.z*.15};s.lastContact[p.id]=tick;
+  if(s.resetAt||d>2.2||Math.abs(p.player.pos.y-1.7-s.pos.y)>1.4||d>.4&&(dx*forward.x+dz*forward.z)/d<-.1)continue;
+  const speed=3.8+19*k.power,loft=Math.max(0,Math.min(.55,p.input.pitch??0));
+  s.vel={x:forward.x*speed+p.player.vel.x*.15,y:.2+3*k.power+Math.sin(loft)*speed*.55,z:forward.z*speed+p.player.vel.z*.15};s.lastContact[p.id]=tick;
   courtyardEvent(c,tick,'kick',s.pos,[p.id]);
  }
 }
@@ -23,14 +45,17 @@ export function stepSkull(c:CourtyardState,players:Body[],tick:number,dt:number)
  const previous={...s.pos};
  for(const p of players){
   const dx=s.pos.x-p.player.pos.x,dz=s.pos.z-p.player.pos.z,d=Math.hypot(dx,dz);
-  if((c.kicks[p.id]?.started??-1)>=0||d>.85||Math.abs(p.player.pos.y-1.7-s.pos.y)>.9||tick-(s.lastContact[p.id]??-1000)<20)continue;
+  if(d>1.2||Math.abs(p.player.pos.y-1.7-s.pos.y)>1.1||tick-(s.lastContact[p.id]??-1000)<8)continue;
   const nx=d>.01?dx/d:-Math.sin(p.input.yaw),nz=d>.01?dz/d:-Math.cos(p.input.yaw),approach=Math.max(0,p.player.vel.x*nx+p.player.vel.z*nz);
   if(approach<.25)continue;
-  const impulse=Math.min(11,1.5+approach*.9);s.vel.x+=nx*impulse;s.vel.z+=nz*impulse;s.vel.y=Math.min(3,.35+approach*.12);s.lastContact[p.id]=tick;
+  const target=Math.min(14,.6+approach*.98),along=s.vel.x*nx+s.vel.z*nz;
+  if(along>=target)continue;
+  const impulse=target-along;s.vel.x+=nx*impulse;s.vel.z+=nz*impulse;s.lastContact[p.id]=tick;
   courtyardEvent(c,tick,'kick',s.pos,[p.id]);
  }
  const speed=Math.hypot(s.vel.x,s.vel.z);if(speed>24){s.vel.x*=24/speed;s.vel.z*=24/speed;}
  s.vel.y-=18*dt;s.pos.x+=s.vel.x*dt;s.pos.y+=s.vel.y*dt;s.pos.z+=s.vel.z*dt;
+ blockFootball(c,players,previous,dt);
  let impact=0;
  for(const block of COURTYARD_SOLIDS){
   const hx=block.w/2+FOOTBALL_BALL_RADIUS,hz=block.d/2+FOOTBALL_BALL_RADIUS,dx=s.pos.x-block.x,dz=s.pos.z-block.z;

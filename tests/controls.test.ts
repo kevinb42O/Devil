@@ -18,6 +18,14 @@ test('standard controller maps movement, look, shoulders, triggers, courtyard ac
  assert.equal(state.forward,1);assert.equal(state.strafe,0);assert.ok(state.lookX>0&&state.lookY<0);
  assert.ok(state.jump&&state.action&&state.leftShoulder&&state.rightShoulder&&state.fire&&state.homing&&state.pause);assert.equal(state.back,false);
 });
+test('Select is independent from the jump button',()=>{
+ const buttons=Array.from({length:17},(_,i)=>({pressed:i===8,value:i===8?1:0,touched:false}));
+ const state=controllerState({axes:[],buttons},.15,true);
+ assert.equal(state.select,true);assert.equal(state.jump,false);
+ buttons[8].pressed=false;buttons[8].value=0;buttons[0].pressed=true;buttons[0].value=1;
+ const jumping=controllerState({axes:[],buttons},.15,true);
+ assert.equal(jumping.jump,true);assert.equal(jumping.select,false);
+});
 
 import {World,STEP,TUNING,idleInput} from '../src/simulation';
 test('partial analog movement scales speed instead of accelerating beyond full-stick speed',()=>{

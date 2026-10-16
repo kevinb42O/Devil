@@ -17,6 +17,8 @@ body[data-crew-courtyard=true] #crew-hud,body[data-crew-courtyard=true] #crew-lo
 #courtyard-hud .courtyard-wait strong{font:500 24px 'Barlow Condensed',sans-serif}
 #courtyard-hud .courtyard-wait p{font-size:12px;color:#c2b3a3}
 #courtyard-hud .courtyard-touch-arms{display:none}
+#courtyard-hud .courtyard-select-charge{width:260px;max-width:100%;padding:10px 14px;background:#18171bf2;border:1px solid #e8a37480;border-radius:4px;text-align:center;font-size:11px;color:#ffe5b8}
+#courtyard-hud .courtyard-select-charge progress{display:block;width:100%;height:12px;margin-top:8px;accent-color:#efb872}
 #courtyard-hud[data-scheme=mobile] .courtyard-touch-arms{position:absolute;left:12px;top:36%;display:flex;flex-direction:column;gap:8px}
 .courtyard-room-actions{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}.courtyard-room-actions button{font:500 11px 'DM Sans',sans-serif;padding:10px 14px;background:#261d19;border:1px solid #9c724445;color:#d7b999;border-radius:3px;cursor:pointer}
 @media(max-width:600px){#courtyard-hud .courtyard-room{left:12px;top:12px;gap:10px}#courtyard-hud .courtyard-toolbar{bottom:16px}#courtyard-hud .courtyard-message{font-size:11px;max-width:320px}}

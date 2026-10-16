@@ -132,15 +132,8 @@ function syncSpectator(){
   if(local&&!local.alive){if(!spectator.position){spectator.start(local.player.pos);clearInput();}}else spectator.reset();
 }
 const courtyardUI=new CourtyardUI({room:()=>{paused();friendsOpen=true;showPanels();roster();}});
-function courtyardAction(preferOpen=false){
- const session=friends;if(!session?.prelobby||!entrance||mode!=='playing'||controlMenuRoot())return false;
- const open=courtyardUI.button('open'),ready=courtyardUI.button('ready'),local=session.members.find(member=>member.id===session.localId);
- if(!open.hidden&&!open.disabled&&(preferOpen||session.role==='host'&&local?.ready)){open.click();return true;}
- if(!ready.hidden&&!ready.disabled){ready.click();return true;}
- return false;
-}
 function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
-function clearInput() {mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
+function clearInput() {courtyardUI.resetSelect();mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
 function notice(text:string,seconds=2.5) {noticeText=text;noticeUntil=performance.now()+seconds*1000;}
 async function captureMouse() {
   if(settings.controlScheme==='mobile'){void enterMobileFullscreen();return;}
@@ -599,7 +592,7 @@ function updateControlHints(){
  $('controller-settings').hidden=!controller;$('controller-status').hidden=!controller;$('mouse-sensitivity-setting').hidden=controller||mobile;$('mobile-sensitivity-setting').hidden=!mobile;$('control-bindings').hidden=mobile;
  $('control-hint').textContent=mobile?'MOBILE':controller?'CONTROLLER':settings.controlScheme==='azerty'?'ZQSD + MOUSE':'WASD + MOUSE';
  const rows=controller?[
-  ['LEFT STICK','Move'],['RIGHT STICK','Look'],['A / CROSS','Jump · time each hop'],['RT / R2','Tap burst / hold stream'],['LT / L2','Homing · attunement II'],['LT / L2 · RT / R2','Hold left / right arm up · courtyard only'],['START / OPTIONS','Pause / resume'],['D-PAD · A / CROSS','Navigate menus · select'],['B / CIRCLE','Back']
+  ['LEFT STICK','Move'],['RIGHT STICK','Look'],['A / CROSS','Jump · time each hop'],['SELECT / SHARE / VIEW','Tap ready · hold 5s to open pit · courtyard'],['RT / R2','Tap burst / hold stream'],['LT / L2','Homing · attunement II'],['LB / L1 · RB / R1','Hold left / right arm up · courtyard only'],['LT / L2 · RT / R2','Left / right foot kick · courtyard only'],['START / OPTIONS','Pause / resume'],['D-PAD · A / CROSS','Navigate menus · select'],['B / CIRCLE','Back']
  ]:[['1 2 3 4 5 6 7','Test weapons · makes run unranked'],[settings.controlScheme==='azerty'?'Z Q S D':'W A S D','Move'],['MOUSE','Look'],['SPACE','Jump · time each hop'],['LMB','Tap burst / hold stream'],['RMB','Homing · attunement II'],[settings.controlScheme==='azerty'?'A · E':'Q · E','Hold left / right arm up · courtyard only'],['ESC','Pause'],['R','Retry after death']];
  const list=$('control-bindings');list.replaceChildren();for(const [binding,action] of rows){const row=document.createElement('div'),key=document.createElement('kbd'),text=document.createElement('span');key.textContent=binding;text.textContent=action;row.append(key,text);list.append(row);}
 }
@@ -661,7 +654,7 @@ function pollController(dt:number){
  // become a held gameplay action. Connection waits resume on a later frame.
  if(activePadIndex!==pad.index){activePadIndex=pad.index;if(settings.controlScheme==='controller')clearInput();return;}
  if(!state.jump)blockedPadJump=false;if(!state.fire)blockedPadFire=false;if(!state.homing)blockedPadHoming=false;
- if(document.hidden||!document.hasFocus())return;
+ if(document.hidden||!document.hasFocus()){courtyardUI.resetSelect();return;}
  if(waitingForController&&settings.controlScheme==='controller'&&mode==='paused'&&!settingsOpen&&!profileOpen&&!leaderboardOpen&&!historyOpen&&!friendsOpen){resume();return;}
  if(mode==='crew-replay'){if(state.pause&&!previous?.pause)crewViewer.toggle();crewViewer.controllerMove(state,dt,settings.controllerSensitivity);if(crewViewer.camera!=='free'||crewViewer.root.contains(document.activeElement)||state.up||state.down||state.left||state.right||state.back)controllerMenu(state,previous);return;}
  if(controlMenuRoot()){
@@ -673,8 +666,8 @@ function pollController(dt:number){
  movement={forward:state.forward,strafe:state.strafe,jump:state.jump&&!blockedPadJump};controllerDown=state.descend;controllerFast=state.fast;padLeftShoulder=state.leftShoulder;padRightShoulder=state.rightShoulder;
  yaw-=state.lookX*2.8*settings.controllerSensitivity*dt;
  const limit=spectator.position?Math.PI/2:1.5;pitch=Math.max(-limit,Math.min(limit,pitch-state.lookY*2.8*settings.controllerSensitivity*dt));
- const courtyardButton=!!friends?.prelobby&&(state.action&&!previous?.action?courtyardAction(true):state.jump&&!previous?.jump&&courtyardAction());
- if(!spectator.position){const jump=state.jump&&!blockedPadJump&&!courtyardButton,fire=state.fire&&!blockedPadFire,homing=state.homing&&!blockedPadHoming;if(jump!==padJump){buttonEdges.push({button:'jump',held:jump});padJump=jump;}if(fire!==padFire){buttonEdges.push({button:'fire',held:fire});padFire=fire;}if(homing!==padHoming){buttonEdges.push({button:'homing',held:homing});padHoming=homing;}}
+ courtyardUI.controllerSelect(state.select,previous?.select??true,performance.now());
+ if(!spectator.position){const jump=state.jump&&!blockedPadJump,fire=state.fire&&!blockedPadFire,homing=state.homing&&!blockedPadHoming;if(jump!==padJump){buttonEdges.push({button:'jump',held:jump});padJump=jump;}if(fire!==padFire){buttonEdges.push({button:'fire',held:fire});padFire=fire;}if(homing!==padHoming){buttonEdges.push({button:'homing',held:homing});padHoming=homing;}}
 }
 
 function setupSettings() {

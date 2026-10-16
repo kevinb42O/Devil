@@ -38,5 +38,23 @@ try{
    if(pos(foot).distanceTo(neutral)>.005)throw Error('Kick pose must clear in combat');
   }
  });
- assert.deepEqual(errors,[]);console.log('Mouse buttons and LT/RT select matching feet in first/third person; combat retains RT fire / LT homing.');
+ await page.evaluate(async()=>{
+  const {CourtyardUI}=await import('/src/courtyard-ui.ts');
+  const ui=new CourtyardUI({room:()=>{}}),member={id:'host',ready:false,loaded:1};
+  let opened=0;
+  const session={prelobby:true,role:'host',localId:'host',epoch:1,members:[member],world:{tick:1},courtyard:{phase:'gathering',kicks:{},committed:[],participants:[]},checkingSkin:false,
+   get pitBlockedReason(){return member.ready?'':'Not ready';},setReady(value){member.ready=value;},openPit(){opened++;},markLoaded(){}};
+  const update=()=>ui.update(session,true,'controller',true,'');
+  const check=(ok,message)=>{if(!ok)throw Error(message);};
+  update();ui.controllerSelect(true,false,0);ui.controllerSelect(false,true,100);check(member.ready,'Select tap readies the player');
+  update();ui.controllerSelect(true,false,1000);ui.controllerSelect(true,true,3500);
+  const meter=ui.root.querySelector('.courtyard-select-charge');
+  check(!meter.hidden&&meter.querySelector('progress').value===2.5,'Visible halfway hold progress');
+  ui.controllerSelect(false,true,4000);check(opened===0,'Releasing before five seconds cancels opening');
+  member.ready=true;update();ui.controllerSelect(true,false,5000);ui.controllerSelect(true,true,9999);check(opened===0,'Never opens early');
+  ui.controllerSelect(true,true,10000);ui.controllerSelect(true,true,11000);ui.controllerSelect(false,true,11001);check(opened===1&&member.ready,'Five second hold opens exactly once without unreadying');
+  update();ui.controllerSelect(true,false,12000);ui.update(session,false,'controller',true,'');update();ui.controllerSelect(true,true,18000);check(opened===1,'Hiding menus cancels hold until a fresh press');
+  ui.controllerSelect(false,true,18001);session.role='guest';update();ui.controllerSelect(true,false,19000);ui.controllerSelect(true,true,24000);check(opened===1,'Guest cannot open the pit');
+ });
+ assert.deepEqual(errors,[]);console.log('Matching foot kicks and Select tap/5-second hold, visible progress, cancellation and host-only opening passed.');
 }finally{await browser.close();await server.close();}
