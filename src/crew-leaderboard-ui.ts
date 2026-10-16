@@ -14,7 +14,7 @@ import {replayLink} from './replay-sharing';
 const $=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const colors=CREW_COLORS;
 const seconds=(ms:number)=>(ms/1000).toFixed(3);
-type Hooks={session:()=>FriendsSession|null;mode:()=>string;watch:(run:RecordedCrewRun,onExit?:()=>void)=>void;solo:()=>void;history:()=>void};
+type Hooks={session:()=>FriendsSession|null;mode:()=>string;watch:(run:RecordedCrewRun,onExit?:()=>void)=>void;watchShared:(id:string,button:HTMLButtonElement)=>void;solo:()=>void;history:()=>void};
 function button(text:string,action:()=>unknown,id?:string){const b=document.createElement('button');b.type='button';b.textContent=text;if(id)b.id=id;b.onclick=()=>{const result=action();if(result instanceof Promise)void result.catch(e=>{$('crew-local-status').textContent=e.message;});};return b;}
 function nameChips(roster:CrewReplayMember[]){const names=document.createElement('div');names.className='crew-ranking-names';for(const [i,p]of roster.entries()){const n=document.createElement('span');n.textContent=p.name;n.style.setProperty('--member-color',p.color?playerColor(p.color).hex:colors[i]);n.title=p.host?'Host at the start of this run':`Player ${i+1}`;names.append(n);}return names;}
 export class CrewLeaderboardUI{
@@ -22,7 +22,7 @@ export class CrewLeaderboardUI{
  active=false;private size=2;private rows:CrewLeaderboardRow[]=[];private mine:CrewLeaderboardRow[]=[];private request=0;private debounce=0;private more:HTMLButtonElement;private preferences=readCrewPreferences();private coordinator:CrewRankingSession|null=null;private queue=new CrewPublicationQueue();private latest:StoredCrewReplay|null=null;private latestRaw:RecordedCrewRun|null=null;private resultKey='';private saving=0;private resultError='';private historyRequest=0;private saved=new Set<string>();
  constructor(private hooks:Hooks){
   const panel=$('leaderboard').querySelector('.panel')!,description=panel.querySelector('p')!;description.id='leaderboard-description';
-  this.rankingHistory=new LeaderboardHistory(panel.querySelector('.leaderboard-table')!);
+  this.rankingHistory=new LeaderboardHistory(panel.querySelector('.leaderboard-table')!,this.hooks.watchShared);
   const tabs=document.createElement('div');tabs.className='crew-board-tabs';tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','Leaderboard mode');
   for(const [id,label,crew]of [['leaderboard-solo','SOLO',false],['leaderboard-crew','MULTIPLAYER',true]] as const){const b=button(label,()=>this.select(crew),id);b.setAttribute('role','tab');b.setAttribute('aria-selected',String(!crew));tabs.append(b);}description.after(tabs);
   const filters=document.createElement('div');filters.id='crew-board-filters';filters.hidden=true;filters.className='crew-board-tabs';filters.setAttribute('aria-label','Party size');for(const n of RANKED_CREW_SIZES){const b=button(`${n} PLAYERS`,()=>{this.size=n;this.rankingHistory.configure(true,n);void this.rankingHistory.refresh();this.updateFilters();void this.refresh();},`crew-size-${n}`);filters.append(b);}tabs.after(filters);

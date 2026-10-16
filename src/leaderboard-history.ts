@@ -1,7 +1,6 @@
 import {loadLeaderboard} from './leaderboard';
 import {loadCrewHistory} from './crew-leaderboard';
 import {crewNames} from './crew-score';
-import {replayLink} from './replay-sharing';
 
 /** Historical boards never affect current-season bests, crowns or score uploads. */
 export class LeaderboardHistory {
@@ -9,7 +8,7 @@ export class LeaderboardHistory {
  private section=document.createElement('section');private version=document.createElement('select');
  private search=document.createElement('input');private status=document.createElement('p');
  private rows=document.createElement('tbody');private more=document.createElement('button');
- constructor(anchor:Element){
+ constructor(anchor:Element,private readonly watch:(id:string,button:HTMLButtonElement)=>void){
   this.section.id='leaderboard-history';this.section.className='leaderboard-history';
   const title=document.createElement('h3');title.textContent='PREVIOUS RANKINGS';
   const explanation=document.createElement('p');explanation.textContent='Earlier scores are preserved here. Each gameplay version has its own rankings; new runs enter the current leaderboard above.';
@@ -41,7 +40,7 @@ export class LeaderboardHistory {
    if(request!==this.request)return;
    for(const score of scores){const row=document.createElement('tr');
     for(const value of [score.rank,'roster' in score?crewNames(score.roster):score.player_name,(score.survival_ms/1000).toFixed(3),score.kills,score.gems]){const cell=document.createElement('td');cell.textContent=String(value);row.append(cell);}
-    const replay=document.createElement('td');if(score.replay_id){const link=document.createElement('a');link.href=replayLink(score.replay_id);link.textContent='WATCH';link.className='text-button';replay.append(link);}else replay.textContent='—';row.append(replay);this.rows.append(row);
+    const replay=document.createElement('td');if(score.replay_id){const watch=document.createElement('button');watch.type='button';watch.textContent='WATCH';watch.className='text-button';watch.setAttribute('aria-label',`Watch ${'roster' in score?crewNames(score.roster):score.player_name}'s replay`);watch.onclick=()=>this.watch(score.replay_id!,watch);replay.append(watch);}else replay.textContent='—';row.append(replay);this.rows.append(row);
    }
    this.offset+=scores.length;this.more.hidden=!crew||scores.length<100;
    this.status.textContent=this.offset?`${this.offset} previous ${crew?(this.offset===1?'party':'parties'):(this.offset===1?'player':'players')} · ${crew?size+' players · revision ':'rules '}${rules}`:`No published scores for ${crew?size+'-player crews in revision ':'solo rules '}${rules}. Other versions are available above.`;

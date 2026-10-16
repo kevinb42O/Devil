@@ -1,8 +1,8 @@
 import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {existsSync,mkdirSync} from 'node:fs';
-const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+const chrome=['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','C:/Program Files/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'].find(existsSync);
+const browser=await chromium.launch({headless:true,...(chrome?{executablePath:chrome}:{})});
 try{
  const context=await browser.newContext({viewport:{width:1280,height:900}}),page=await context.newPage(),errors=[],requests=[];
  page.on('pageerror',e=>errors.push(e.message));
@@ -16,7 +16,8 @@ try{
  await page.goto(process.env.GAME_URL||'http://127.0.0.1:5173');await page.waitForFunction(()=>window.abyss?.originalAssets&&!document.querySelector('#start').disabled);
  await page.click('#leaderboard-open');await page.locator('#leaderboard-history tbody').getByText('Historical champion',{exact:true}).waitFor();
  assert.equal(await page.locator('#leaderboard-rows').textContent(),'','current board stays separate');
- assert.ok((await page.locator('#leaderboard-history a').getAttribute('href')).endsWith('#replay=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'));
+ const replayRequest=page.waitForRequest(request=>new URL(request.url()).pathname.endsWith('/abyss_replay'));
+ await page.locator('#leaderboard-history').getByRole('button',{name:"Watch Historical champion's replay"}).click();await replayRequest;
  await page.selectOption('#leaderboard-history-version','5');await page.getByText('No published scores for solo rules 5.',{exact:false}).waitFor();
  await page.selectOption('#leaderboard-history-version','6');await page.locator('#leaderboard-history tbody').getByText('Historical champion',{exact:true}).waitFor();
  mkdirSync('artifacts/leaderboard-history',{recursive:true});await page.locator('#leaderboard-history').scrollIntoViewIfNeeded();await page.screenshot({path:'artifacts/leaderboard-history/desktop.png'});
