@@ -2,19 +2,13 @@ import { chromium } from '@playwright/test';
 import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import { mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { createMemoryAim, resolveDamagePoint } from './targeting.mjs';
 import {desktopTelemetry} from './geometry.mjs';
 
 export async function attachMemory(page) {
   await page.waitForFunction(()=>Object.getOwnPropertyDescriptor(window,'abyss')?.get, null, {timeout:60000});
-  await page.evaluate(async()=>{
-    const collision=await import('/src/projectile-collision.ts');
-    const simulation=await import('/src/simulation.ts');
-    const presentation=await import('/src/enemy-presentation.ts');
-    const kinds=await import('/src/enemy-kinds.ts');
-    window.__abyssMemoryHelpers={sweepArmor:collision.sweepArmor,armorBounds:collision.armorBounds,segmentSphere:simulation.segmentSphere,
-      emergence:presentation.enemyEmergenceScale,spiderRadius:presentation.SPIDER_CRYSTAL_RADIUS,stats:kinds.ENEMY_STATS};
-  });
+  await page.waitForFunction(()=>!!window.__abyssMemoryHelpers, null, {timeout:60000});
   const session=await page.context().newCDPSession(page);
   await session.send('Debugger.enable');
   const result=await session.send('Runtime.evaluate',{expression:'Object.getOwnPropertyDescriptor(window,"abyss").get'});
@@ -60,6 +54,7 @@ export async function attachMemory(page) {
           return {x,y,box:[x-r,y-r,r*2,r*2]};
         }
       };
+      if(!globalThis.__abyssMemoryHelpers)throw Error('The game was built without trainer support. Set VITE_TRAINER_ENABLED=true before deploying.');
       globalThis.__abyssMemoryAim=(${createMemoryAim.toString()})(access);
       globalThis.__abyssMemoryGetter=Object.getOwnPropertyDescriptor(window,'abyss').get;
       return {attached:true};
@@ -94,8 +89,10 @@ async function main(){
   process.on('SIGTERM',close);process.on('SIGINT',close);
   try{
     const profile=process.env.ABYSS_TRAINER_PROFILE||fileURLToPath(new URL('.chrome-profile/',import.meta.url));await mkdir(profile,{recursive:true});
+    const macChrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+    const windowsChrome=['C:/Program Files/Google/Chrome/Application/chrome.exe','C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'].find(path=>existsSync(path));
     context=await chromium.launchPersistentContext(profile,{
-      headless:false,executablePath:process.env.CHROME_PATH||'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+      headless:false,executablePath:process.env.CHROME_PATH||(process.platform==='darwin'?macChrome:windowsChrome),
       viewport:null,args:['--no-first-run','--no-default-browser-check'],timeout:60000,
       handleSIGTERM:false,handleSIGINT:false
     });

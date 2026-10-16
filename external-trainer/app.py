@@ -168,25 +168,31 @@ class Engine:
 def main():
     parser = argparse.ArgumentParser(description='Native external memory aimbot overlay')
     parser.add_argument('--demo', action='store_true')
-    parser.add_argument('--url', default=None, help='Game address (local development build)')
+    parser.add_argument('--url', default=None, help='Game address (defaults to the production deployment)')
     parser.add_argument('--quit-after', type=float, default=0, help=argparse.SUPPRESS)
     args = parser.parse_args()
-    if sys.platform != 'darwin':
-        parser.error('The native overlay currently requires macOS')
+    if sys.platform not in ('darwin','win32'):
+        parser.error('The native overlay currently supports macOS and Windows')
     engine = Engine(args.demo)
     if args.url:
         engine.settings = Settings.validated({**asdict(engine.settings),'game_url':args.url})
-    from overlay import run
+    if sys.platform=='darwin':
+        from overlay import run
+    else:
+        from windows_overlay import run
     if args.demo:
         run(engine, quit_after=args.quit_after)
         return
-    import fcntl
-    with (ROOT / '.trainer.lock').open('a+') as lock:
-        try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-        except BlockingIOError:
-            print('The trainer is already running. F7 opens its settings.',flush=True)
-            return
-        lock.seek(0);lock.truncate();lock.write(str(__import__('os').getpid()));lock.flush()
+    if sys.platform=='darwin':
+        import fcntl
+        with (ROOT / '.trainer.lock').open('a+') as lock:
+            try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+            except BlockingIOError:
+                print('The trainer is already running. F7 opens its settings.',flush=True)
+                return
+            lock.seek(0);lock.truncate();lock.write(str(__import__('os').getpid()));lock.flush()
+            run(engine, quit_after=args.quit_after)
+    else:
         run(engine, quit_after=args.quit_after)
 
 

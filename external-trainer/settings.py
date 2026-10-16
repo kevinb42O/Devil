@@ -15,7 +15,7 @@ DISPLAY_NAMES={
 
 @dataclass
 class Settings:
-    game_url: str = 'http://127.0.0.1:5173'
+    game_url: str = 'https://devil-green.vercel.app'
     profile: str = 'Precision'
     prediction: bool = True
     aim_mode: str = 'snap'

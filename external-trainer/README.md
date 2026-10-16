@@ -1,10 +1,10 @@
 # ABYSS / Memory Trainer
 
-A native macOS companion for memory-based aim assistance and ESP. There is no screen detector, screenshot preview, automatic firing, invincibility, damage modification, or modifier key to hold. All application files are kept in this directory; game source, assets, build configuration and package files are unchanged.
+A native macOS and Windows companion for memory-based aim assistance and ESP. There is no screen detector, screenshot preview, automatic firing, invincibility, damage modification, or modifier key to hold.
 
 ## Launch and controls
 
-Double-click **Start Trainer.command**. Play in the **Chrome window the trainer opens**; that is the session attached to memory. Start the existing game development server normally if needed. The default address is **http://127.0.0.1:5173**.
+On macOS, double-click **Start Trainer.command**. On Windows, double-click **Start Trainer.bat**. Play in the **Chrome window the trainer opens**; that is the session attached to memory. The default address is **https://devil-green.vercel.app**. Use F7 to switch to a local development address when needed.
 
 The trainer starts with aim enabled. Fire either weapon normally to aim. Homing must actually be unlocked and have reserve; pressing an unavailable secondary weapon does not turn the camera.
 
@@ -18,7 +18,7 @@ The trainer starts with aim enabled. Fire either weapon normally to aim. Homing 
 | F6 | Apply the next preset |
 | F10 | Quit and close the managed browser |
 
-Use Fn with these keys if your keyboard uses media controls. F7 and F10 are global. The other shortcuts apply to the managed game browser or trainer settings. The native input handler consumes reserved function keys so Chrome does not also open Find, focus the address bar, or enable caret browsing. Accessibility/Input Monitoring permission may be needed for the launcher. A warning appears if native key reservation is unavailable. Escape remains available for the game's normal pause/menu behavior.
+Use Fn with these keys if your keyboard uses media controls. All trainer shortcuts are global on Windows; macOS keeps F7 and F10 global and scopes the others to the managed browser or settings. The native input handler consumes reserved function keys so Chrome does not also open Find, focus the address bar, or enable caret browsing. macOS may require Accessibility/Input Monitoring permission; Windows uses the built-in global-hotkey API. Escape remains available for the game's normal pause/menu behavior.
 
 Screen Recording permission is **not used by the trainer**. The optional UI QA script captures only its own test windows.
 
@@ -64,7 +64,7 @@ Viewport coordinates account for browser page zoom, Retina density, display plac
 
 The trainer launches a dedicated persistent Chrome profile in `.chrome-profile/`. It uses the browser debugger to access live JavaScript game objects and module variables rather than searching OS byte offsets. It installs a temporary runtime adapter and adjusts yaw/pitch/input aim while attached. No game files are patched.
 
-This adapter targets this repository's **local development build**, using its existing `abyss` diagnostic getter. Production builds without that diagnostic surface are not supported. The normal browser profile, its tabs and its account state are separate from the managed profile.
+This adapter uses the game's opt-in trainer diagnostic surface. Development builds expose it automatically; production builds expose it only when built with `VITE_TRAINER_ENABLED=true`. The repository's production environment enables that flag, so redeploy the current build before using the Vercel address. The normal browser profile, its tabs and its account state are separate from the managed profile.
 
 **Reconnect memory** reattaches to the current browser session without restarting a run. If the managed browser was closed, reconnect opens it again. Changing the game address restarts the managed browser. A second launch is rejected while another trainer instance holds its lock.
 
@@ -74,7 +74,7 @@ Normal shutdown removes the temporary frame wrapper and input listeners. Page re
 
 ## Dependencies and validation
 
-Requires macOS, Chrome, Node.js and Python 3.9–3.12. The launcher installs pinned native Python dependencies in `.venv/` and uses the existing Playwright package or installs this trainer's package if needed. Settings are in `settings.json`; exported configurations are versioned JSON.
+Requires macOS or Windows, Chrome, Node.js and Python 3.9–3.12. Windows uses the standard-library Tk and Win32 APIs; macOS uses the pinned native Python dependencies. Settings are in `settings.json`; exported configurations are versioned JSON.
 
 ```sh
 npm test

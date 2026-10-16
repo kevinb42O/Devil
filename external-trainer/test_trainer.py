@@ -25,7 +25,7 @@ class SettingsTests(unittest.TestCase):
             (Path(tmp)/'settings.json').write_text(json.dumps(dict(colors='#ff0000',width=500,auto_fire=True)))
             engine=app.Engine()
             self.assertTrue(engine.armed)
-            self.assertEqual(engine.settings.game_url,'http://127.0.0.1:5173')
+            self.assertEqual(engine.settings.game_url,'https://devil-green.vercel.app')
             engine.update(dict(prediction=False))
             saved=json.loads((Path(tmp)/'settings.json').read_text())
             self.assertEqual(set(saved),set(asdict(Settings())))
