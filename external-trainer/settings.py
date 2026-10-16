@@ -37,7 +37,7 @@ class Settings:
     esp_lines: bool = True
     esp_prediction: bool = True
     esp_arrows: bool = True
-    esp_fov: bool = False
+    esp_fov: bool = True
     esp_opacity: float = .9
     esp_scale: float = 1.0
     esp_max_targets: int = 120

@@ -8,6 +8,7 @@ import tkinter as tk
 from tkinter import ttk
 
 from settings import PRESETS, preset
+from windows_settings import SettingsForm
 
 user32=ctypes.windll.user32
 WM_HOTKEY=0x0312; WM_QUIT=0x0012
@@ -52,33 +53,38 @@ class Overlay:
 
     def settings(self):
         if self.menu and self.menu.winfo_exists():
-            self.menu.destroy();self.menu=None;self.engine.suspended=False;return
+            self.menu.destroy();self.menu=None;self.form=None;self.engine.suspended=False;return
         self.engine.suspended=True
-        window=self.menu=tk.Toplevel(self.root);window.title('ABYSS / Trainer settings');window.geometry('510x235');window.attributes('-topmost',True)
-        url=tk.StringVar(value=self.engine.settings.game_url);profile=tk.StringVar(value=self.engine.settings.profile)
-        status=tk.StringVar(value='Use F7 to close. Changing the address restarts Chrome.')
-        ttk.Label(window,text='Managed game address').pack(anchor='w',padx=18,pady=(18,2));ttk.Entry(window,textvariable=url,width=66).pack(padx=18)
-        ttk.Label(window,text='Profile').pack(anchor='w',padx=18,pady=(14,2));ttk.Combobox(window,textvariable=profile,values=list(PRESETS),state='readonly').pack(anchor='w',padx=18)
-        def apply():
-            try:self.engine.update(asdict(preset(profile.get(),url.get())));status.set('Applied. Browser reconnecting when the address changed.')
-            except (ValueError,OSError) as error:status.set(str(error))
-        ttk.Button(window,text='Apply',command=apply).pack(anchor='w',padx=18,pady=14);ttk.Label(window,textvariable=status,wraplength=470).pack(anchor='w',padx=18)
+        window=self.menu=tk.Toplevel(self.root);window.attributes('-topmost',True)
+        self.form=SettingsForm(window,self.engine,self.settings)
         window.protocol('WM_DELETE_WINDOW',self.settings)
+        window.lift();window.focus_force()
 
     def command(self, command):
         if command=='quit':self.close();return
         if command=='menu':self.settings();return
         if command=='preset':
             names=list(PRESETS);name=names[(names.index(self.engine.settings.profile)+1)%len(names)] if self.engine.settings.profile in names else names[0]
-            self.engine.update(asdict(preset(name,self.engine.settings.game_url)));return
+            self.engine.update(asdict(preset(name,self.engine.settings.game_url)))
+            if self.menu and self.menu.winfo_exists():
+                self.form.fill(self.engine.settings);self.form.notice.set('Preset applied: '+name)
+            return
         if command=='key:100':self.engine.armed=not self.engine.armed
         elif command=='key:101':self.engine.armed=False
         elif command=='key:118':self.engine.update({'esp_enabled':not self.engine.settings.esp_enabled,'profile':'Custom'})
         elif command=='key:99':self.engine.update({'hud_enabled':not self.engine.settings.hud_enabled,'profile':'Custom'})
+        if command in ('key:118','key:99') and self.menu and self.menu.winfo_exists():
+            key='esp_enabled' if command=='key:118' else 'hud_enabled'
+            self.form.fields[key].set(getattr(self.engine.settings,key))
 
     def tick(self):
-        while not self.closed and not self.engine.commands.empty():self.command(self.engine.commands.get_nowait())
+        while not self.closed and not self.engine.commands.empty():
+            try:self.command(self.engine.commands.get_nowait())
+            except (ValueError,TypeError,OSError) as error:
+                if self.menu and self.menu.winfo_exists():self.form.notice.set(str(error))
+                else:print('Trainer command failed: '+str(error),flush=True)
         if self.closed:return
+        if self.menu and self.menu.winfo_exists():self.form.refresh_status()
         if self.quit_at and time.monotonic()>=self.quit_at:self.close();return
         if self.engine.running:self.root.after(33,self.tick)
         else:self.close()
