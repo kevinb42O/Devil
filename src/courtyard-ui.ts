@@ -2,6 +2,7 @@ import type {FriendsSession} from './multiplayer';
 import type {ControlScheme} from './controls';
 import './courtyard.css';
 import {footballKickPose} from './courtyard-state';
+import {nearDrawingRoom,MAX_INK} from './courtyard-drawing';
 
 export class CourtyardUI{
  readonly root=document.createElement('section');private session:FriendsSession|null=null;private hold?:ReturnType<typeof setTimeout>;
@@ -9,10 +10,16 @@ export class CourtyardUI{
  private selectStarted:number|null=null;private selectCompleted=false;
  private assetsReady=false;
  private selectMeter=document.createElement('div');
+ private drawingPanel=document.createElement('div');
  constructor(actions:{room:()=>void}){
   this.root.id='courtyard-hud';this.root.hidden=true;
   this.root.innerHTML='<div class="courtyard-room"><button id="courtyard-room">ROOM & CREW</button><span class="courtyard-count"></span></div><div class="courtyard-wait" hidden><strong>Waiting for your crew</strong><p></p></div><div class="courtyard-toolbar"><div class="courtyard-message" role="status"></div><div class="courtyard-buttons"><button id="courtyard-ready">READY UP</button><button id="courtyard-open">HOLD TO OPEN PIT</button><button id="courtyard-cancel">CLOSE PIT</button></div></div><div class="courtyard-kick-charge" hidden><span>KICK</span><progress max="1" value="0" aria-label="Kick power"></progress></div><div class="courtyard-touch-arms"><button aria-label="Hold left arm up">LEFT HAND</button><button aria-label="Hold right arm up">RIGHT HAND</button></div>';
   document.body.append(this.root);this.button('room').onclick=actions.room;
+  this.drawingPanel.className='courtyard-drawing-controls';this.drawingPanel.hidden=true;
+  this.drawingPanel.innerHTML='<strong>8 × 8 · TIC-TAC-TOE</strong><p class="drawing-help"></p><button id="courtyard-pencil">PICK UP PENCIL</button><button id="courtyard-drawing-clear">CLEAR BOARD</button>';
+  this.root.append(this.drawingPanel);
+  this.button('pencil').onclick=()=>this.session?.pencilAction();
+  this.button('drawing-clear').onclick=()=>this.session?.pencilAction(true);
   this.selectMeter.className='courtyard-select-charge';this.selectMeter.hidden=true;
   this.selectMeter.innerHTML='<span>HOLD SELECT TO OPEN PIT · <b>5.0s</b></span><progress max="5" value="0" aria-label="Hold Select to open pit"></progress><div class="courtyard-select-reason" role="status"></div>';
   this.root.querySelector('.courtyard-toolbar')!.append(this.selectMeter);
@@ -61,6 +68,13 @@ export class CourtyardUI{
   if(this.root.hidden){this.arm={left:false,right:false};if(this.hold)clearTimeout(this.hold);this.hold=undefined;this.button('open').classList.remove('is-holding');}
   if(!s?.prelobby)return;
   const c=s.courtyard,local=s.members.find(m=>m.id===s.localId);if(!c)return;
+  const player=s.world?.crew?.find(p=>p.id===s.localId),d=c.drawing,pen=d?.pencils.find(p=>p.owner===s.localId);
+  this.drawingPanel.hidden=!visible||!player||!nearDrawingRoom(player.player.pos);
+  const binding=scheme==='controller'?' [X / SQUARE]':scheme==='mobile'?'':' [G]';
+  this.button('pencil').textContent=(pen?'DROP PENCIL':'PICK UP PENCIL')+binding;
+  this.button('pencil').disabled=c.phase!=='gathering'||!pen&&!d?.pencils.some(p=>!p.owner&&player&&Math.hypot(p.pos.x-player.player.pos.x,p.pos.z-player.player.pos.z)<=2.8);
+  this.button('drawing-clear').hidden=s.role!=='host';this.button('drawing-clear').disabled=c.phase!=='gathering';this.button('drawing-clear').textContent='CLEAR BOARD'+(scheme==='controller'?' [Y / TRIANGLE]':scheme==='mobile'?'':' [T]');
+  this.drawingPanel.querySelector('.drawing-help')!.textContent=(d?.ink.length??0)>=MAX_INK?'Board full · Ask the host to clear it':pen?(scheme==='controller'?'Look down at a square · Hold either trigger to draw':scheme==='mobile'?'Drag on the right side to aim and draw':'Look down at a square · Hold either mouse button to draw'):'Two giant pencils wait beside the board. Draw Xs and Os freely with your friends.';
   if(assetsReady&&local?.loaded!==s.epoch&&performance.now()-this.loadedAt>800){this.loadedAt=performance.now();s.markLoaded(s.epoch);}
   this.root.dataset.scheme=scheme;
   const kick=footballKickPose(c,s.localId,s.world?.tick??0),meter=this.root.querySelector<HTMLElement>('.courtyard-kick-charge')!;meter.hidden=!kick||kick.charge<=0;this.root.querySelector<HTMLProgressElement>('.courtyard-kick-charge progress')!.value=kick?.charge??0;

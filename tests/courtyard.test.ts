@@ -113,7 +113,7 @@ test('centered aperture, rendered tiles and shaft collision agree; former hearth
 test('football room is connected through a wide passage; old obstacle course is clear',()=>{
  const c=createCourtyard(1);assert.equal(courtyardFloor(4.9,4.2,c),0);assert.equal(courtyardFloor(4.9,7,c),0);
  for(let x=0;x<=56;x+=.2)assert.equal(courtyardCanOccupy(x,PIT.z),true,`passage ${x}`);
- assert.equal(courtyardCanOccupy(10,8),false);assert.equal(courtyardCanOccupy(60,2),false);assert.equal(courtyardCanOccupy(14,-10),false);
+ assert.equal(courtyardCanOccupy(10,8),false);assert.equal(courtyardCanOccupy(60,2),true);assert.equal(courtyardCanOccupy(60,8),false);assert.equal(courtyardCanOccupy(14,-10),false);
  const w=new World(1,{schedule:false});w.addCrew('host');w.selectCrew('host');w.courtyard=c;w.player.pos={x:5,y:1.7,z:PIT.z};
  for(let i=0;i<360;i++)w.predictCrew('host',{...idleInput(),strafe:1},1/120,true);
  assert.ok(w.player.pos.x>20,'real predicted movement crosses both doorways');assert.equal(w.player.pos.y,1.7);assert.equal(w.state,'playing');

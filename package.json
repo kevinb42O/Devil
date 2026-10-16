@@ -81,6 +81,7 @@
     "test:twin-hand-bugs": "tsx --test tests/twin-hands-bugs.test.ts && node tests/twin-hands-bugs-browser.mjs",
     "test:twin-hands": "tsx --test tests/twin-hands.test.ts tests/twin-rules-sql.test.mjs && node tests/twin-hands-browser.mjs && node tests/twin-hands-transport-browser.mjs",
     "test:courtyard": "tsx --test tests/courtyard.test.ts tests/football-kick.test.ts tests/multiplayer-entrance.test.ts && node tests/courtyard-browser.mjs && node tests/courtyard-devices-browser.mjs",
+    "test:drawing-court": "tsx --test tests/courtyard-drawing.test.ts && node tests/courtyard-drawing-browser.mjs",
     "test:courtyard:six": "CREW_SIZE=6 COURTYARD_CYCLES=10 node tests/courtyard-browser.mjs",
     "test:football-feedback": "node tests/football-feedback-browser.mjs"
   },

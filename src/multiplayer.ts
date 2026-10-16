@@ -1,4 +1,5 @@
 import {createCourtyard,courtyardEvent,insidePit,pitIsOpen,PIT,SPAWNS,resetSkull,type CourtyardState} from './courtyard-state';
+import {createDrawing,pencilAction,stepDrawing,nearDrawingRoom} from './courtyard-drawing';
 import {stepSkull,stepHighFives} from './courtyard-physics';
 import {ARENA_START_DELAY_MS} from './crew-arrival-timing';
 import {verifyPodiumSkin} from './podium-skin-service';
@@ -60,6 +61,20 @@ export class FriendsSession{
  private socialContacts=new Set<string>();
  get gathering(){return !this.running&&(!this.world?.courtyard||this.world.courtyard.phase==='gathering');}
  get courtyard(){return this.world?.courtyard;}
+ private pencilActions=new Map<string,number>();
+ pencilAction(clear=false){
+  if(!this.prelobby||!this.gathering)return false;
+  if(this.role==='guest')return !clear&&this.control({type:'drawing-action',generation:this.epoch});
+  return this.applyPencilAction('host',clear);
+ }
+ private applyPencilAction(id:string,clear=false){
+  const c=this.courtyard,p=this.world?.crew.find(p=>p.id===id),now=performance.now();
+  if(!this.prelobby||!this.gathering||!c||!p||!p.alive||!nearDrawingRoom(p.player.pos)||now-(this.pencilActions.get(id)??-1000)<250)return false;
+  this.pencilActions.set(id,now);c.drawing??=createDrawing();
+  if(clear){if(id!=='host')return false;const sequence=c.drawing.sequence+1;c.drawing=createDrawing();c.drawing.sequence=sequence;}
+  else if(!pencilAction(c.drawing,p))return false;
+  this.updateLobby();return true;
+ }
  markLoaded(generation:number){if(!this.prelobby||generation!==this.epoch)return;if(this.role==='host'){const m=this.members[0];if(m.loaded!==generation){m.loaded=generation;this.updateLobby();}}else this.control({type:'courtyard-loaded',generation});}
  get courtyardPeerUnavailable(){return [...this.links.values()].some(l=>l.pc.connectionState==='disconnected'||l.pc.connectionState==='failed'||l.pc.connectionState==='closed');}
  get pitBlockedReason(){
@@ -162,6 +177,7 @@ export class FriendsSession{
      // fixed-duration binary commands. Legacy samples use reliable controls.
      if(m.type==='sample'&&m.epoch===this.epoch&&this.world?.crew.some(p=>p.id===id&&p.alive&&p.life===(m.life??0))){const input=cleanInput(m.input);if(input){let b=this.inputBuffers.get(id);if(!b){b=new CrewInputBuffer();this.inputBuffers.set(id,b);}b.push(input);this.inputs.set(id,input);this.inputTimes.set(id,performance.now());}return;}
      if(m.type==='courtyard-loaded'&&this.prelobby&&m.generation===this.epoch){const member=this.members.find(p=>p.id===id);if(member&&member.loaded!==this.epoch){member.loaded=this.epoch;courtyardEvent(this.world!.courtyard!,this.world!.tick,'arrival',this.world!.crew.find(p=>p.id===id)!.player.pos,[id]);this.updateLobby();}return;}
+     if(m.type==='drawing-action'){if(m.generation===this.epoch)this.applyPencilAction(id);return;}
      if(m.type==='skin'){void this.applySkin(id,m.token).then(ok=>{if(!ok&&ch.readyState==='open')ch.send(JSON.stringify({type:'skin-rejected'}));});return;}const member=this.members.find(p=>p.id===id);if(member&&this.gathering&&m.type==='color'){this.clearSkin(id);if(isPlayerColor(m.color)){member.color=m.color;member.ready=false;this.updateLobby();}return;}if(member&&!this.running&&(m.type==='ready'||m.type==='hello')){if(m.type==='hello'&&this.gathering)member.color=isPlayerColor(m.color)?m.color:DEFAULT_PLAYER_COLOR;if(typeof m.name==='string')member.name=m.name.trim().slice(0,24)||'Wanderer';if(m.type==='ready'){if(this.prelobby&&m.generation!==this.epoch)return;const revision=m.revision??((member.readyRevision??0)+1);if(!Number.isSafeInteger(revision)||revision<1||revision<=(member.readyRevision??0))return;member.readyRevision=revision;member.ready=m.ready===true&&(!this.prelobby||member.loaded===this.epoch);if(!member.ready)this.cancelDescent();}this.updateLobby();}
     }else if(m.type==='skin-rejected'){this.clearSkin(this.localId);this.onChange();this.onError('Ascendant is reserved for the current solo top three. Choose a color or try verifying again.');}else if(m.type==='effects'&&m.epoch===this.epoch&&Array.isArray(m.events)){const effects:Effect[]=[];for(const e of m.events){if(!Number.isInteger(e.networkId)||this.seenEvents.has(e.networkId))continue;this.seenEvents.add(e.networkId);const predicted=e.shotKey&&this.predictedShots.has(e.shotKey);if(predicted)this.predictedShots.delete(e.shotKey);if(!predicted&&!(e.shooterId===this.localId&&(e.kind==='jump'||e.kind==='land')))effects.push(e);}while(this.seenEvents.size>2048)this.seenEvents.delete(this.seenEvents.values().next().value!);this.onEffects(effects);}
    }catch{/* Malformed controls cannot advance simulation. */}
@@ -199,7 +215,7 @@ export class FriendsSession{
  }
  get waitingForHost(){return this.role==='guest'&&(this.running||this.prelobby)&&(performance.now()-this.lastState>1000||this.history.stalled||this.hostStalled);}
  get hostStalled(){return this.role==='guest'&&(this.running||this.prelobby)&&this.hostPlaying&&Date.now()>=this.startAt&&this.lastProgress>0&&performance.now()-this.lastProgress>500;}
- private neutralInput(id:string){const last=this.world?.crew.find(p=>p.id===id)?.input??this.inputs.get(id)??idleInput();return {...idleInput(),yaw:last.yaw,pitch:last.pitch,homing:this.prelobby};}
+ private neutralInput(id:string){const last=this.world?.crew.find(p=>p.id===id)?.input??this.inputs.get(id)??idleInput();return {...idleInput(),yaw:last.yaw,pitch:last.pitch,homing:false};}
 
  reconcile(w:World,s:ArenaSnapshot){
   const next=s.crew.find(p=>p.id===this.localId),changedLife=!!next&&next.life!==this.localLife;
@@ -223,7 +239,7 @@ export class FriendsSession{
  start(fromEntrance=false){if(this.skinChecks.size)return;if(this.role!=='host'||fromEntrance&&this.running)return;if(this.world?.courtyard){const c=this.world.courtyard;if(c.phase!=='collecting'||!c.participants.length||c.participants.length!==this.members.length||c.committed.length!==c.participants.length||!this.allReady||this.members.some(m=>m.loaded!==this.epoch))return;}if(fromEntrance&&!this.beforeArenaStart())return;if(!fromEntrance&&this.publicLobby&&!this.allReady&&!this.running)throw Error('Every player must be ready before starting.');this.resetReplay();const seed=crypto.getRandomValues(new Uint32Array(1))[0],crewIds=[...new Set([...(this.world?.crew.map(p=>p.id)??[]),...this.links.keys()])].filter(id=>id!=='host'&&this.links.get(id)?.state?.readyState==='open');this.startAt=Date.now()+ARENA_START_DELAY_MS;this.world=new World(seed);this.world.addCrew('host');this.world.selectCrew('host');for(const id of crewIds)this.world.addCrew(id);this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.epoch++;this.running=true;this.prelobby=false;this.crewRecorder=new CrewRunRecorder(seed,this.world,this.members,this.id,this.epoch,typeof navigator!=='undefined'&&navigator.maxTouchPoints>0?24*1024*1024:64*1024*1024);this.updateLobby();}
  enterPrelobby(){
   if(this.role!=='host'||this.running||this.prelobby)return;
-  this.resetReplay();this.prelobby=true;this.startAt=0;this.epoch++;this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.socialContacts.clear();
+  this.resetReplay();this.prelobby=true;this.startAt=0;this.epoch++;this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.socialContacts.clear();this.pencilActions.clear();
   this.world=new World(1,{schedule:false});this.world.courtyard=createCourtyard(this.epoch);this.addLobbyCrew('host');for(const [id,l]of this.links)if(l.state?.readyState==='open')this.addLobbyCrew(id);this.world.selectCrew('host');for(const m of this.members){m.ready=false;delete m.loaded;}this.updateLobby();
  }
  returnToLobby(){if(this.role!=='host')return;const w=this.world,last=this.courtyard?.lastRun??this.lastCourtyardSummary,crew=this.members.map(m=>m.id).sort().join('|');const summary=w&&this.running?{time:w.time,best:Math.max(w.time,last?.crew===crew?last.best:0),crew}:last;this.running=false;this.prelobby=false;this.enterPrelobby();this.world!.courtyard!.lastRun=summary;this.updateLobby();}
@@ -241,7 +257,10 @@ export class FriendsSession{
     this.lastCourtyardSummary=c.lastRun;this.start(true);if(!this.running)this.cancelDescent();return true;
    }
   }
-  const active=w.crew.filter(p=>!c.committed.includes(p.id));stepSkull(c,active.map(p=>({...p,input:{...p.input,fire:this.inputs.get(p.id)?.fire,homing:this.inputs.get(p.id)?.homing}})),w.tick,STEP);stepHighFives(c,active,w.tick,this.socialContacts);return false;
+  const active=w.crew.filter(p=>!c.committed.includes(p.id)),artists=active.map(p=>({...p,input:{...p.input,fire:this.inputs.get(p.id)?.fire,homing:this.inputs.get(p.id)?.homing}}));
+  c.drawing??=createDrawing();stepDrawing(c.drawing,artists,w.tick,c.phase==='gathering');
+  const holding=new Set(c.drawing.pencils.map(p=>p.owner).filter(Boolean));for(const id of holding)delete c.kicks[id!];
+  stepSkull(c,artists.filter(p=>!holding.has(p.id)),w.tick,STEP);stepHighFives(c,active,w.tick,this.socialContacts);return false;
  }
  step(input:Input){if(this.role==='host'&&this.world&&(this.running||this.prelobby)&&Date.now()>=this.startAt){
   const started=performance.now();this.inputs.set('host',input);const waiting=new Set<string>();

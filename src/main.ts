@@ -132,7 +132,7 @@ function syncSpectator(){
   if(local&&!local.alive){if(!spectator.position){spectator.start(local.player.pos);clearInput();}}else spectator.reset();
 }
 const courtyardUI=new CourtyardUI({room:()=>{paused();friendsOpen=true;showPanels();roster();}});
-function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
+function sampleEmotes(active:boolean){const holdingPencil=!!friends&&world?.courtyard?.drawing?.pencils.some(p=>p.owner===friends!.localId);const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(holdingPencil||emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
 function clearInput() {courtyardUI.resetSelect();mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
 function notice(text:string,seconds=2.5) {noticeText=text;noticeUntil=performance.now()+seconds*1000;}
 async function captureMouse() {
@@ -285,7 +285,7 @@ function advanceHost(now:number){
   const active=!document.hidden&&mode==='playing'&&!controlMenuRoot()&&!spectator.position;
   const move=settings.controlScheme==='qwerty'||settings.controlScheme==='azerty'?keyboardMovement(keys,settings.controlScheme):movement;
   if(active&&Date.now()>=friends!.startAt){const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}}
-  input={forward:active?move.forward:0,strafe:active?move.strafe:0,yaw,pitch,jump:active&&sampledJump,fire:active&&sampledFire,homing:!active&&friends!.prelobby||active&&sampledHoming,...sampleEmotes(active)};
+  input={forward:active?move.forward:0,strafe:active?move.strafe:0,yaw,pitch,jump:active&&sampledJump,fire:active&&sampledFire,homing:active&&sampledHoming,...sampleEmotes(active)};
   friends!.step({...input});syncSpectator();
  });
  // Network effects have already been captured by FriendsSession.step. Avoid
@@ -331,14 +331,14 @@ function frame(now:number) {
     const cameraActive=mode==='playing'&&!controlMenuRoot();
     if(cameraActive&&spectator.position)spectator.move(dt,yaw,pitch,movement.forward,movement.strafe,(movement.jump||keys.has('e')?1:0)-(controllerDown||keys.has('ControlLeft')||keys.has('ControlRight')||(settings.controlScheme==='qwerty'&&keys.has('q'))?1:0),controllerFast||keys.has('ShiftLeft')||keys.has('ShiftRight'));
     const active=cameraActive&&!spectator.position;input.forward=active?movement.forward:0;input.strafe=active?movement.strafe:0;input.jump=active&&movement.jump;input.yaw=yaw;input.pitch=pitch;
-    input.fire=active&&sampledFire;input.homing=!active&&friends.prelobby||active&&sampledHoming;Object.assign(input,sampleEmotes(active));
+    input.fire=active&&sampledFire;input.homing=active&&sampledHoming;Object.assign(input,sampleEmotes(active));
     if(friends.role==='host')advanceHost(now);
     else {
      accumulator+=Math.min(.1,elapsed);let crewSteps=0;
      while(accumulator>=STEP&&world.state==='playing'&&crewSteps++<12){
       const edge=active&&Date.now()>=friends.startAt?buttonEdges[0]:undefined;
       const fire=edge?.button==='fire'?edge.held:sampledFire,homing=edge?.button==='homing'?edge.held:sampledHoming,jump=edge?.button==='jump'?edge.held:sampledJump;
-      input.fire=active&&fire;input.homing=!active&&friends.prelobby||active&&homing;input.jump=active&&jump;
+      input.fire=active&&fire;input.homing=active&&homing;input.jump=active&&jump;
       if(active&&friends.predict(world,{...input})&&edge){buttonEdges.shift();sampledFire=fire;sampledHoming=homing;sampledJump=jump;}
       syncSpectator();accumulator-=STEP;
      }
@@ -667,6 +667,8 @@ function pollController(dt:number){
  yaw-=state.lookX*2.8*settings.controllerSensitivity*dt;
  const limit=spectator.position?Math.PI/2:1.5;pitch=Math.max(-limit,Math.min(limit,pitch-state.lookY*2.8*settings.controllerSensitivity*dt));
  courtyardUI.controllerSelect(state.select,previous?.select??true,performance.now());
+ if(friends?.prelobby&&state.action&&!previous?.action)friends.pencilAction();
+ if(friends?.prelobby&&state.clearDrawing&&!previous?.clearDrawing)friends.pencilAction(true);
  if(!spectator.position){const jump=state.jump&&!blockedPadJump,fire=state.fire&&!blockedPadFire,homing=state.homing&&!blockedPadHoming;if(jump!==padJump){buttonEdges.push({button:'jump',held:jump});padJump=jump;}if(fire!==padFire){buttonEdges.push({button:'fire',held:fire});padFire=fire;}if(homing!==padHoming){buttonEdges.push({button:'homing',held:homing});padHoming=homing;}}
 }
 
@@ -757,6 +759,7 @@ async function joinLobby(room:PublicLobby){$('friends-status').textContent=`Join
 function returnCrewLobby(){if(friends?.role!=='host')return;crewReplayRequest++;crewReplayDownloading=false;crewViewer.dispose();spectator.reset();friends.returnToLobby();if(leaderboardConfigured())void refreshRankings();}
 
 function setupFriends(){
+ window.addEventListener('keydown',e=>{if((e.code==='KeyG'||e.code==='KeyT')&&!e.repeat&&friends?.prelobby&&mode==='playing'&&!controlMenuRoot()&&!(e.target instanceof HTMLInputElement)&&!(e.target instanceof HTMLTextAreaElement)&&!(e.target instanceof HTMLSelectElement)){e.preventDefault();if(!friends.pencilAction(e.code==='KeyT'))notice(e.code==='KeyT'?'ONLY THE HOST CAN CLEAR THE BOARD FROM THE DRAWING COURT':'MOVE NEXT TO A FREE PENCIL TO PICK IT UP');}});
  $('player-skin-ascendant').onclick=()=>{prefersAscendant=true;saveStore('abyss-player-skin','ascendant');void syncPreferredSkin(true);};
  for(const color of PLAYER_COLORS){
   const button=document.createElement('button');button.type='button';button.dataset.color=color.id;button.className='player-color-swatch';button.title=color.name;button.setAttribute('aria-label',color.name);button.style.setProperty('--swatch',color.hex);

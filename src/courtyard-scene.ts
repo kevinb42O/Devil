@@ -4,14 +4,17 @@ import {loadEntranceEnvironment} from './entrance-environment';
 import {PIT,COURTYARD_FLOOR_TILES,FOOTBALL,FOOTBALL_PASSAGE,pitIsOpen} from './courtyard-state';
 import type {World} from './simulation';
 import {TILE_SIZE} from './arena';
+import {CourtyardDrawingScene} from './courtyard-drawing-scene';
+import {DRAWING_ROOM,DRAWING_PASSAGE} from './courtyard-drawing';
 
-/** Downloaded final meshes; the only generated geometry is transient social feedback. */
+/** Shared courtyard architecture, football props and the interactive drawing court. */
 export class CourtyardScene{
  readonly scene=new THREE.Scene();readonly ready:Promise<void>;private propsLoaded=false;private hasSkull=false;error='';
  get loaded(){return this.propsLoaded&&this.hasSkull;}
  private hatch=new THREE.Group();private skull=new THREE.Group();private skullLights=new THREE.Group();
  private shaft:THREE.PointLight;private sparks:THREE.Points;
  private plaques=new Map<string,THREE.Sprite>();private goalScore='';
+ private drawing=new CourtyardDrawingScene();
  constructor(){
   this.scene.background=new THREE.Color(0x090b11);this.scene.fog=new THREE.FogExp2(0x090b11,.008);
   this.scene.add(new THREE.HemisphereLight(0xc7b8a4,0x301623,1.65));
@@ -22,6 +25,7 @@ export class CourtyardScene{
   const key=new THREE.PointLight(0xffe3b8,7,2.8,2),fill=new THREE.PointLight(0xb8d9ff,3,2.4,2);
   key.position.set(.65,1,.85);fill.position.set(-.7,.45,-.65);this.skullLights.add(key,fill);this.skullLights.visible=false;
   this.scene.add(this.hatch,this.skull,this.skullLights);
+  this.scene.add(this.drawing.root);
   this.ready=this.load().then(()=>{this.propsLoaded=true;}).catch(e=>{this.error='Courtyard assets could not load. Reload to retry.';throw e;});
   // Loading failure is surfaced in the courtyard HUD; avoid an unhandled rejection at menu startup.
   void this.ready.catch(()=>{});
@@ -37,6 +41,7 @@ export class CourtyardScene{
   const matrices:THREE.Matrix4[]=[];
   const tiles=[...COURTYARD_FLOOR_TILES];for(let x=9;x<=59;x+=2)for(let z=-28;z<=32;z+=2){if(x<14&&(z<FOOTBALL_PASSAGE.minZ-1||z>FOOTBALL_PASSAGE.maxZ+1))continue;if(x>FOOTBALL.x-18&&x<FOOTBALL.x+18&&z>FOOTBALL.z-25&&z<FOOTBALL.z+25)continue;tiles.push({x,z});}
   for(const {x,z} of tiles){const m=new THREE.Matrix4().makeScale(2/TILE_SIZE,1,2/TILE_SIZE);m.setPosition(x,0,z);matrices.push(m);}
+  for(let x=59;x<=95;x+=2)for(let z=-13;z<=19;z+=2){if(x<DRAWING_ROOM.minX&&(z<DRAWING_PASSAGE.minZ||z>DRAWING_PASSAGE.maxZ))continue;const m=new THREE.Matrix4().makeScale(2/TILE_SIZE,1,2/TILE_SIZE);m.setPosition(x,0,z);matrices.push(m);}
   const floor=new THREE.InstancedMesh(geometry,new THREE.MeshStandardMaterial({map,color:0xaaa29a,roughness:.95}),matrices.length);for(let i=0;i<matrices.length;i++)floor.setMatrixAt(i,matrices[i]);this.scene.add(floor);
  }
  private async load(){
@@ -61,6 +66,7 @@ export class CourtyardScene{
   place('altar-stone',3.3,-.025,-4.6,.85,1.125,.85);
   place('candle-multiple',3.3,1.1,-4.6,.45,.35,.4);
   this.label('football-wayfinding','FOOTBALL →',new THREE.Vector3(6.5,2.8,PIT.z),2,.35);
+  this.label('drawing-wayfinding','8 × 8 TIC-TAC-TOE →',new THREE.Vector3(57.5,2.8,2),5,.5);
   const textureLoader=new THREE.TextureLoader(manager);
   const [pitchAsset,goalAsset,grass,normal,net]=await Promise.all([
    loader.loadAsync('/models/football/pitch.glb'),loader.loadAsync('/models/football/goal.glb'),
@@ -100,6 +106,7 @@ export class CourtyardScene{
  get diagnostics(){return {skullVisible:this.skull.visible,lightingVisible:this.skullLights.visible,lightPosition:this.skullLights.position.toArray(),scores:[0,1].map(i=>{const board=this.plaques.get('football-score-'+i);return board?{goals:board.userData.goals,position:board.position.toArray()}:null;})};}
  update(world:World,members:{id:string;ready:boolean;color?:string;loaded?:number}[],reduced=false){
   const c=world.courtyard;if(!c){this.skullLights.visible=false;return;}const t=world.tick/120;
+  this.drawing.update(c.drawing,world);
   const opening=c.phase==='gathering'?0:c.phase==='opening'?Math.max(0,Math.min(1,(world.tick-c.phaseTick)/PIT.openingTicks)):1;
   this.hatch.visible=opening<1;
   this.skull.position.set(c.skull.pos.x,c.skull.pos.y,c.skull.pos.z);this.skull.rotation.set(c.skull.rotation.x,c.skull.rotation.y,c.skull.rotation.z);this.skull.visible=!c.skull.resetAt;this.skullLights.position.copy(this.skull.position);this.skullLights.visible=this.skull.visible;
