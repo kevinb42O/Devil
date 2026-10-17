@@ -1,12 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {HIDE_SOLIDS,HIDE_SPOTS,HIDE_ROOM,constrainHideSolids} from '../src/courtyard-hide-and-seek';
-import {courtyardCanOccupy,createCourtyard,COURTYARD_CAMERA_BLOCKERS} from '../src/courtyard-state';
+import {HIDE_SOLIDS,HIDE_SPOTS,HIDE_ROOM,HIDE_FLOORS,HIDE_ROOFS,constrainHideSolids} from '../src/courtyard-hide-and-seek';
+import {courtyardCanOccupy,createCourtyard,COURTYARD_CAMERA_BLOCKERS,COURTYARD_FLOOR_TILES} from '../src/courtyard-state';
 import {World,idleInput} from '../src/simulation';
 import {FriendsSession,applySnapshot} from '../src/multiplayer';
 import {encodeState,decodeState} from '../src/network-state';
 
 const free=(x:number,z:number)=>courtyardCanOccupy(x,z)&&!HIDE_SOLIDS.some(s=>Math.abs(x-s.x)<s.w/2+.24&&Math.abs(z-s.z)<s.d/2+.24);
+test('entrance floor has exactly one surface across both thresholds and roof slabs do not overlap',()=>{
+ const floors=[...HIDE_FLOORS,...COURTYARD_FLOOR_TILES.map(p=>({...p,w:2,d:2}))];
+ for(let x=-19.93;x< -5.9;x+=.17)for(let z=-1.87;z<5.9;z+=.23){
+  assert.equal(floors.filter(f=>Math.abs(x-f.x)<f.w/2&&Math.abs(z-f.z)<f.d/2).length,1,`floor ownership at ${x},${z}`);
+ }
+ const [room,passage]=HIDE_ROOFS;
+ assert.ok(Math.min(room.x+room.w/2,passage.x+passage.w/2)-Math.max(room.x-room.w/2,passage.x-passage.w/2)<=1e-8);
+ assert.ok(Math.abs(room.x+room.w/2-(passage.x-passage.w/2))<1e-8,'ceiling join must remain closed');
+});
 test('all 30 full-height hiding spots connect to spawn and the six zones',()=>{
  assert.equal(HIDE_SPOTS.length,30);assert.equal(new Set(HIDE_SPOTS.map(p=>p.zone)).size,6);
  // A .5m flood fill tests actual body clearance through both passage bends and all loops.

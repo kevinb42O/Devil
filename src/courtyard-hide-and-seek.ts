@@ -2,6 +2,16 @@
 export type HideBlock={x:number;z:number;w:number;d:number;h:number};
 export const HIDE_ROOM={minX:-82,maxX:-18,minZ:-26,maxZ:30};
 export const HIDE_PASSAGE={minX:-18,maxX:-6.3,minZ:-2,maxZ:6};
+/** The existing courtyard tiles reach x=-8. Each floor surface has one owner. */
+export const HIDE_FLOORS=[
+ {x:-50,z:2,w:64,d:56,h:.16},
+ {x:-13,z:2,w:10,d:8,h:.16},
+];
+/** Roof slabs meet at x=-17.3 instead of overlapping above the passage mouth. */
+export const HIDE_ROOFS=[
+ {x:-50,z:2,w:65.4,d:57.4,h:.45},
+ {x:-11.625,z:2,w:11.35,d:8.7,h:.45},
+];
 export function inHideRoom(x:number,z:number){return x>=HIDE_ROOM.minX&&x<=HIDE_ROOM.maxX&&z>=HIDE_ROOM.minZ&&z<=HIDE_ROOM.maxZ;}
 export function inHideWing(x:number,z:number){return inHideRoom(x,z)||x>=HIDE_PASSAGE.minX&&x<=HIDE_PASSAGE.maxX&&z>=HIDE_PASSAGE.minZ&&z<=HIDE_PASSAGE.maxZ;}
 const box=(x:number,z:number,w:number,d:number,h=4.8):HideBlock=>({x,z,w,d,h});
@@ -44,7 +54,9 @@ export const HIDE_PARTITIONS=[
 export const HIDE_WALLS=[
  box(-82.35,2,.7,56.7,8),box(-50,-26.35,64,.7,8),box(-50,30.35,64,.7,8),
  box(-17.65,-14,.7,24,8),box(-17.65,18,.7,24,8),
- box(-12.15,-2.35,12.4,.7,8),box(-12.15,6.35,12.4,.7,8),
+ // Butt into the room's east wall and the courtyard's west wall without
+ // duplicate coplanar end strips on their inner faces.
+ box(-12.1,-2.35,10.4,.7,8),box(-12.1,6.35,10.4,.7,8),
  // Split the original west courtyard wall around the new opening.
  box(-6.6,-4.175,.6,4.35,7),box(-6.6,8.25,.6,4.5,7),
 ];

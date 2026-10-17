@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createCourtyardSign} from './courtyard-sign';
-import {HIDE_WALLS,HIDE_PARTITIONS,HIDE_COVER,HIDE_PROPS,HIDE_ISLANDS,HIDE_ZONES,HIDE_GATEPOSTS,hideLocal,type HideBlock} from './courtyard-hide-and-seek';
+import {HIDE_WALLS,HIDE_PARTITIONS,HIDE_COVER,HIDE_PROPS,HIDE_ISLANDS,HIDE_ZONES,HIDE_GATEPOSTS,HIDE_FLOORS,HIDE_ROOFS,hideLocal,type HideBlock} from './courtyard-hide-and-seek';
 
 /** An enclosed lantern-lit repository. All cover is built from the physics layout. */
 export class CourtyardHideAndSeekScene{
@@ -74,9 +74,9 @@ export class CourtyardHideAndSeekScene{
   this.cubes('repository-walls',[...HIDE_WALLS,...HIDE_PARTITIONS],this.stone);
   for(const zone of HIDE_ZONES){const material=this.stone.clone();material.color.setHex(zone.color);material.emissive.setHex(zone.color);material.emissiveIntensity=.09;const blocks=HIDE_ISLANDS.flatMap((island,i)=>island.zone===zone.id?HIDE_COVER.slice(i*3,i*3+3):[]);this.cubes('repository-cover-'+zone.id,blocks,material);}
   // Continuous roof, including the passage. No walkable upper level or open seams.
-  this.cubes('repository-vault',[{x:-50,z:2,w:65.4,d:57.4,h:.45},{x:-12.15,z:2,w:12.4,d:8.7,h:.45}],new THREE.MeshStandardMaterial({color:0x252b30,roughness:1}),8);
+  this.cubes('repository-vault',HIDE_ROOFS,new THREE.MeshStandardMaterial({color:0x252b30,roughness:1}),8);
   const floorMap=this.stoneTexture();floorMap.repeat.set(25,22);
-  this.cubes('repository-floor',[{x:-50,z:2,w:64,d:56,h:.16},{x:-12.15,z:2,w:12.3,d:8,h:.16}],new THREE.MeshStandardMaterial({map:floorMap,color:0x85817b,roughness:.95}),-.16);
+  this.cubes('repository-floor',HIDE_FLOORS,new THREE.MeshStandardMaterial({map:floorMap,color:0x85817b,roughness:.95}),-.16);
   const caps=[...HIDE_PARTITIONS,...HIDE_COVER].map(b=>({...b,w:b.w+.12,d:b.d+.12,h:.16}));
   this.cubes('repository-coping',caps,this.trim,4.8);
   this.cubes('repository-arch-posts',HIDE_GATEPOSTS,this.trim);
