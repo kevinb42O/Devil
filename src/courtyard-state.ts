@@ -1,3 +1,4 @@
+import {inHideWing,HIDE_SOLIDS} from './courtyard-hide-and-seek';
 import {createDrawing,validateDrawing,DRAWING_ROOM,DRAWING_PASSAGE,type DrawingState} from './courtyard-drawing';
 import {BASKETBALL,createBasketball,validateBasketball,type BasketballState} from './courtyard-basketball';
 /** Courtyard state is replicated independently of combat time and randomness. */
@@ -12,7 +13,7 @@ export const FOOTBALL_BALL_RADIUS=.5;
 export const FOOTBALL={x:36,z:2,width:36,length:50,goalHalfWidth:4.5,goalHeight:3.4,goalDepth:3,goalZ:[-20.35,24.35] as readonly number[]};
 export const FOOTBALL_ROOM={minX:14,maxX:58,minZ:-28,maxZ:32};
 export const FOOTBALL_PASSAGE={minX:6.3,maxX:14,minZ:PIT.z-3,maxZ:PIT.z+3};
-export const COURTYARD_SOLIDS=[{x:3.3,z:-4.6,w:.85,d:.85,h:1.1},...FOOTBALL.goalZ.flatMap((z,i)=>{
+export const COURTYARD_SOLIDS=[...HIDE_SOLIDS,{x:3.3,z:-4.6,w:.85,d:.85,h:1.1},...FOOTBALL.goalZ.flatMap((z,i)=>{
  const back=z+(i?1:-1)*FOOTBALL.goalDepth;
  return [{x:FOOTBALL.x-4.38,z,w:.24,d:.24,h:3.4},{x:FOOTBALL.x+4.38,z,w:.24,d:.24,h:3.4},
  {x:FOOTBALL.x,z:back,w:9,d:.12,h:3.4},{x:FOOTBALL.x-4.44,z:(z+back)/2,w:.12,d:3,h:3.4},{x:FOOTBALL.x+4.44,z:(z+back)/2,w:.12,d:3,h:3.4}];
@@ -20,7 +21,7 @@ export const COURTYARD_SOLIDS=[{x:3.3,z:-4.6,w:.85,d:.85,h:1.1},...FOOTBALL.goal
 export const COURTYARD_CAMERA_BOUNDS={halfWidth:96,frontZ:-28,backZ:32};
 /** Both simulation and prediction use this connected union, including body radius. */
 export function courtyardContains(x:number,z:number){
- return x>=BASKETBALL.minX&&x<=BASKETBALL.maxX&&z>=BASKETBALL.minZ&&z<=BASKETBALL.maxZ||x>=DRAWING_ROOM.minX&&x<=DRAWING_ROOM.maxX&&z>=DRAWING_ROOM.minZ&&z<=DRAWING_ROOM.maxZ||x>=DRAWING_PASSAGE.minX&&x<=DRAWING_PASSAGE.maxX&&z>=DRAWING_PASSAGE.minZ&&z<=DRAWING_PASSAGE.maxZ||x>=-COURTYARD_BOUNDS.halfWidth&&x<=COURTYARD_BOUNDS.halfWidth&&z>=COURTYARD_BOUNDS.frontZ&&z<=COURTYARD_BOUNDS.backZ||x>=FOOTBALL_PASSAGE.minX&&x<=FOOTBALL_PASSAGE.maxX&&z>=FOOTBALL_PASSAGE.minZ&&z<=FOOTBALL_PASSAGE.maxZ||x>=FOOTBALL_ROOM.minX&&x<=FOOTBALL_ROOM.maxX&&z>=FOOTBALL_ROOM.minZ&&z<=FOOTBALL_ROOM.maxZ;
+ return inHideWing(x,z)||x>=BASKETBALL.minX&&x<=BASKETBALL.maxX&&z>=BASKETBALL.minZ&&z<=BASKETBALL.maxZ||x>=DRAWING_ROOM.minX&&x<=DRAWING_ROOM.maxX&&z>=DRAWING_ROOM.minZ&&z<=DRAWING_ROOM.maxZ||x>=DRAWING_PASSAGE.minX&&x<=DRAWING_PASSAGE.maxX&&z>=DRAWING_PASSAGE.minZ&&z<=DRAWING_PASSAGE.maxZ||x>=-COURTYARD_BOUNDS.halfWidth&&x<=COURTYARD_BOUNDS.halfWidth&&z>=COURTYARD_BOUNDS.frontZ&&z<=COURTYARD_BOUNDS.backZ||x>=FOOTBALL_PASSAGE.minX&&x<=FOOTBALL_PASSAGE.maxX&&z>=FOOTBALL_PASSAGE.minZ&&z<=FOOTBALL_PASSAGE.maxZ||x>=FOOTBALL_ROOM.minX&&x<=FOOTBALL_ROOM.maxX&&z>=FOOTBALL_ROOM.minZ&&z<=FOOTBALL_ROOM.maxZ;
 }
 export function courtyardCanOccupy(x:number,z:number,radius=.22){
  return courtyardContains(x,z)&&[[radius,0],[-radius,0],[0,radius],[0,-radius],[radius*.707,radius*.707],[-radius*.707,radius*.707],[radius*.707,-radius*.707],[-radius*.707,-radius*.707]].every(([dx,dz])=>courtyardContains(x+dx,z+dz));
@@ -42,7 +43,7 @@ export const FOOTBALL_WALLS=[
  wall(6.6,(-6.35+FOOTBALL_PASSAGE.minZ)/2,.6,FOOTBALL_PASSAGE.minZ+6.35),wall(6.6,(5.8+FOOTBALL_PASSAGE.maxZ)/2,.6,5.8-FOOTBALL_PASSAGE.maxZ),
  wall(6,17.25,.6,13.5),wall(9.85,24.3,7.7,.6),wall(10,5.5,7.4,.6),
 ];
-export const COURTYARD_CAMERA_BLOCKERS=[...FOOTBALL_WALLS,...COURTYARD_SOLIDS,wall(-6.6,2.075,.6,16.85),wall(0,-6.65,12.6,.6),wall(0,10.8,12.6,.6)];
+export const COURTYARD_CAMERA_BLOCKERS=[...FOOTBALL_WALLS,...COURTYARD_SOLIDS,wall(0,-6.65,12.6,.6),wall(0,10.8,12.6,.6)];
 export const SPAWNS=[{x:0,y:1.7,z:8},{x:-2.5,y:1.7,z:6.5},{x:2.5,y:1.7,z:6.5},{x:-3,y:1.7,z:8.5},{x:3,y:1.7,z:8.5},{x:0,y:1.7,z:10}];
 /** Tile centers aligned to the same four-meter aperture as physics and the hatch. */
 export const COURTYARD_FLOOR_TILES=Array.from({length:8},(_,i)=>-7+i*2).flatMap(x=>Array.from({length:11},(_,i)=>PIT.z-9+i*2).filter(z=>Math.abs(x-PIT.x)>=PIT.half||Math.abs(z-PIT.z)>=PIT.half).map(z=>({x,z})));

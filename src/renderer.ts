@@ -1,3 +1,4 @@
+import {inHideWing,constrainHideSolids} from './courtyard-hide-and-seek';
 import {basketballPose} from './courtyard-basketball';
 import {CourtyardScene} from './courtyard-scene';
 import {isPlayerSkin,isPodiumRank,PODIUM_METALS,type PlayerSkin,type PodiumRank} from './player-skins';
@@ -126,7 +127,7 @@ export class GameRenderer {
   private crewSkins=new Map<string,{skin:PlayerSkin;rank:PodiumRank}>();
   private crewMuzzlePosition=new THREE.Vector3();
   setCrewNames(members:{id:string;name:string;color?:string;skin?:string;skinRank?:number}[]){this.crewNames=new Map(members.map(p=>[p.id,p.name]));this.crewColors=new Map(members.map(p=>[p.id,playerColor(p.color).id]));this.crewSkins.clear();for(const p of members)if(isPlayerSkin(p.skin)&&isPodiumRank(p.skinRank))this.crewSkins.set(p.id,{skin:p.skin,rank:p.skinRank});}
-  get crewPresentation(){return [...this.crewModels].map(([id,model])=>({id,color:model.userData.playerColor,skin:model.userData.playerSkin,skinRank:model.userData.skinRank,skinTime:model.userData.skinTime?.value,name:model.userData.playerName,position:model.position.toArray(),label:model.children.some(c=>c.name==='crew-name')}));}
+  get crewPresentation(){return [...this.crewModels].map(([id,model])=>({id,color:model.userData.playerColor,skin:model.userData.playerSkin,skinRank:model.userData.skinRank,skinTime:model.userData.skinTime?.value,name:model.userData.playerName,position:model.position.toArray(),label:model.children.some(c=>c.name==='crew-name'&&c.visible)}));}
   private updateCrewName(model:THREE.Group,name:string){
     const color=isPodiumRank(model.userData.skinRank)?PODIUM_METALS[model.userData.skinRank-1]:playerColor(model.userData.playerColor).hex;
     if(model.userData.playerName===name&&model.userData.labelColor===color)return;
@@ -141,7 +142,7 @@ export class GameRenderer {
   }
   private updateCrewModels(world:World|null,dt:number,crewInterpolated:boolean,scene:THREE.Scene,menu=false){
     const crewIds=new Set<string>();
-    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===p.id),basketballPose(world.courtyard?.basketball,p.id,world.tick,p));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
+    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===p.id),basketballPose(world.courtyard?.basketball,p.id,world.tick,p));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');const nameLabel=model.getObjectByName('crew-name');if(nameLabel)nameLabel.visible=!(world.courtyard&&inHideWing(p.player.pos.x,p.player.pos.z));}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
   }
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
@@ -325,6 +326,7 @@ export class GameRenderer {
         this.camera.position.z-=Math.cos(yaw)*neck.forward*fraction;
         this.camera.position.y-=neck.drop*fraction;
        }
+       if(world.courtyard){const limited=constrainHideSolids(world.player.pos,this.camera.position,.06);this.camera.position.x=limited.x;this.camera.position.z=limited.z;}
       }
       if(world.courtyard)this.courtyard.update(world,this.courtyardMembers,this.environmentMotionReduced);else this.entrance.update(t,this.camera.position);this.updateCrewModels(world,dt,crewInterpolated,entranceScene);
       if(bodyInput){

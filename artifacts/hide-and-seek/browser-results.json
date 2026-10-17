@@ -1,0 +1,292 @@
+{
+  "setup": {
+    "hideAndSeek": {
+      "loaded": true,
+      "spots": 30,
+      "islands": 15,
+      "models": 18
+    },
+    "skullVisible": true,
+    "lightingVisible": true,
+    "lightPosition": [
+      36,
+      0.5,
+      2
+    ],
+    "scores": [
+      {
+        "goals": [
+          0,
+          0
+        ],
+        "position": [
+          36,
+          4.7,
+          -20.55
+        ]
+      },
+      {
+        "goals": [
+          0,
+          0
+        ],
+        "position": [
+          36,
+          4.7,
+          24.55
+        ]
+      }
+    ]
+  },
+  "labels": {
+    "hidden": false,
+    "outside": true
+  },
+  "stats": [
+    {
+      "name": "entrance",
+      "calls": 133,
+      "triangles": 73991
+    },
+    {
+      "name": "arrival",
+      "calls": 95,
+      "triangles": 48937
+    },
+    {
+      "name": "crypts",
+      "calls": 56,
+      "triangles": 38489
+    },
+    {
+      "name": "stores",
+      "calls": 59,
+      "triangles": 59043
+    },
+    {
+      "name": "watchers",
+      "calls": 57,
+      "triangles": 38881
+    },
+    {
+      "name": "shrine",
+      "calls": 56,
+      "triangles": 37580
+    },
+    {
+      "name": "crooked-way",
+      "calls": 53,
+      "triangles": 37192
+    }
+  ],
+  "concealment": [
+    {
+      "id": "crypt-0-a",
+      "changed": 0,
+      "revealed": 86059
+    },
+    {
+      "id": "crypt-0-b",
+      "changed": 0,
+      "revealed": 99592
+    },
+    {
+      "id": "crypt-1-a",
+      "changed": 0,
+      "revealed": 86060
+    },
+    {
+      "id": "crypt-1-b",
+      "changed": 0,
+      "revealed": 99592
+    },
+    {
+      "id": "crypt-2-a",
+      "changed": 0,
+      "revealed": 86060
+    },
+    {
+      "id": "crypt-2-b",
+      "changed": 0,
+      "revealed": 99593
+    },
+    {
+      "id": "stores-0-a",
+      "changed": 0,
+      "revealed": 69208
+    },
+    {
+      "id": "stores-0-b",
+      "changed": 0,
+      "revealed": 68245
+    },
+    {
+      "id": "stores-1-a",
+      "changed": 0,
+      "revealed": 69208
+    },
+    {
+      "id": "stores-1-b",
+      "changed": 0,
+      "revealed": 68246
+    },
+    {
+      "id": "stores-2-a",
+      "changed": 0,
+      "revealed": 69208
+    },
+    {
+      "id": "stores-2-b",
+      "changed": 0,
+      "revealed": 68245
+    },
+    {
+      "id": "monuments-0-a",
+      "changed": 0,
+      "revealed": 86059
+    },
+    {
+      "id": "monuments-0-b",
+      "changed": 0,
+      "revealed": 99591
+    },
+    {
+      "id": "monuments-1-a",
+      "changed": 0,
+      "revealed": 69208
+    },
+    {
+      "id": "monuments-1-b",
+      "changed": 0,
+      "revealed": 68244
+    },
+    {
+      "id": "monuments-2-a",
+      "changed": 0,
+      "revealed": 86060
+    },
+    {
+      "id": "monuments-2-b",
+      "changed": 0,
+      "revealed": 99594
+    },
+    {
+      "id": "arrival-a",
+      "changed": 0,
+      "revealed": 69208
+    },
+    {
+      "id": "arrival-b",
+      "changed": 0,
+      "revealed": 68244
+    },
+    {
+      "id": "shrine-0-a",
+      "changed": 0,
+      "revealed": 86059
+    },
+    {
+      "id": "shrine-0-b",
+      "changed": 0,
+      "revealed": 99592
+    },
+    {
+      "id": "shrine-1-a",
+      "changed": 0,
+      "revealed": 86060
+    },
+    {
+      "id": "shrine-1-b",
+      "changed": 0,
+      "revealed": 99592
+    },
+    {
+      "id": "shrine-2-a",
+      "changed": 0,
+      "revealed": 86060
+    },
+    {
+      "id": "shrine-2-b",
+      "changed": 0,
+      "revealed": 99594
+    },
+    {
+      "id": "service-0-a",
+      "changed": 0,
+      "revealed": 69208
+    },
+    {
+      "id": "service-0-b",
+      "changed": 0,
+      "revealed": 68244
+    },
+    {
+      "id": "service-1-a",
+      "changed": 0,
+      "revealed": 69208
+    },
+    {
+      "id": "service-1-b",
+      "changed": 0,
+      "revealed": 68244
+    }
+  ],
+  "edgeChecks": {
+    "checks": [
+      {
+        "id": "crypt-0-a",
+        "changed": 0,
+        "raised": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      {
+        "id": "stores-0-a",
+        "changed": 0,
+        "raised": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      {
+        "id": "monuments-0-a",
+        "changed": 0,
+        "raised": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      {
+        "id": "arrival-a",
+        "changed": 0,
+        "raised": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      {
+        "id": "shrine-0-a",
+        "changed": 0,
+        "raised": {
+          "left": 1,
+          "right": 1
+        }
+      },
+      {
+        "id": "service-0-a",
+        "changed": 0,
+        "raised": {
+          "left": 1,
+          "right": 1
+        }
+      }
+    ],
+    "cameraClear": true
+  },
+  "sixPlayer": {
+    "players": 6,
+    "calls": 328,
+    "triangles": 208900
+  }
+}

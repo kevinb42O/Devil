@@ -27,7 +27,7 @@ def embed(data, archive, original):
     for image in doc.get('images', []):
         uri = image.get('uri', '')
         if uri and not uri.startswith('data:'):
-            path = str(Path(original).parent / uri)
+            path = (Path(original).parent / uri).as_posix().replace('\\', '/')
             payload = archive.read(path)
             image['uri'] = 'data:image/png;base64,' + base64.b64encode(payload).decode('ascii')
     encoded = json.dumps(doc, separators=(',', ':')).encode()

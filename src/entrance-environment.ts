@@ -24,12 +24,12 @@ export async function loadEntranceEnvironment(scene:THREE.Scene,multiplayer=fals
  place(piece(multiplayer?'wall_thin_straight_03':'wall_thin_gate_01'),0,-7.85,1.1,Math.PI/2);
  for(const side of [-1,1]){
   place(piece('wall_thin_straight_03'),side*8.15,-7.85,1.1,Math.PI/2);
-  if(!multiplayer||side<0)place(piece('wall_thin_straight_02'),side*7.65,1.7,.9,side<0?Math.PI:0);
-  if(!multiplayer||side<0)place(piece('tower_round'),side*12,-14,.8);
-  if(!multiplayer||side<0)place(piece('wall_thick_end_01'),side*7.6,10,.85);
+  if(!multiplayer)place(piece('wall_thin_straight_02'),side*7.65,1.7,.9,side<0?Math.PI:0);
+  if(!multiplayer)place(piece('tower_round'),side*12,-14,.8);
+  if(!multiplayer)place(piece('wall_thick_end_01'),side*7.6,10,.85);
   // Cliff shoulders and rubble continue beyond the courtyard walls.
-  for(let i=0;i<(multiplayer&&side>0?0:4);i++)place(rock.scene,side*(11.5+i*1.2),-9+i*6,2.4,side*(.4+i*.65),-.5);
-  for(let i=0;i<(multiplayer&&side>0?0:3);i++)place(rock.scene,side*(4.9+i*.25),-5+i*4,.25+i*.04,side*i*1.2,-.08);
+  for(let i=0;i<(multiplayer?0:4);i++)place(rock.scene,side*(11.5+i*1.2),-9+i*6,2.4,side*(.4+i*.65),-.5);
+  for(let i=0;i<(multiplayer?0:3);i++)place(rock.scene,side*(4.9+i*.25),-5+i*4,.25+i*.04,side*i*1.2,-.08);
  }
  if(multiplayer){
   for(const wall of FOOTBALL_WALLS){

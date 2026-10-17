@@ -1,3 +1,4 @@
+import {constrainHideSolids,HIDE_SOLIDS} from './courtyard-hide-and-seek';
 import {basketballDunkApproach} from './courtyard-basketball';
 import {courtyardFloor,COURTYARD_BOUNDS,constrainCourtyard,COURTYARD_SOLIDS,PIT,SPAWNS,insidePit,pitIsOpen,type CourtyardState} from './courtyard-state';
 import {validContact,type ProjectileContact} from './network-contacts';
@@ -27,6 +28,7 @@ export {TIMELINE};export type {EnemyKind};
 /** Fixed-step combat. Reference counts/timers are separated from unmeasured movement/AI tuning. */
 export const STEP=1/120;
 export const CREW_RESPAWN_DELAY=15,CREW_RESPAWN_PROTECTION=3;
+const hideSolidSet=new Set(HIDE_SOLIDS);
 export const TUNING={radius:arenaRadius(0),eyeHeight:1.7,speed:11,acceleration:100,airAcceleration:17,friction:8,gravity:26,jump:9,maxSpeed:18,projectileSpeed:70,gemLifetime:10,towerCrystalRadius:.63*CREATURE_SCALE_RATIO,towerDriftSpeed:.5};
 export type Vec={x:number;y:number;z:number};
 export type DeathSource={enemyId:number;kind:EnemyKind;segment:number;tick:number;time:number;player:Vec;contactBody:Vec};
@@ -271,7 +273,7 @@ export class World {
   const dunkId=this.courtyard&&this.crew.find(p=>p.player===this.player)?.id,approach=dunkId?basketballDunkApproach(this.courtyard?.basketball,dunkId,this.tick):undefined;
   if(approach){this.player.pos.x=approach.x;this.player.pos.z=approach.z;this.player.vel.x=this.player.vel.z=0;}
   const before=this.previousPlayerPosition,bounds=this.courtyard?COURTYARD_BOUNDS:ENTRANCE_COURTYARD;
-  if(this.courtyard){for(const s of COURTYARD_SOLIDS){const p=this.player;if(Math.abs(p.pos.x-s.x)<s.w/2+.22&&Math.abs(p.pos.z-s.z)<s.d/2+.22&&before.y-1.7<s.h-.18&&p.pos.y-1.7<s.h-.15){p.pos.x=before.x;p.pos.z=before.z;p.vel.x=p.vel.z=0;}}}
+  if(this.courtyard){const p=this.player,slide=constrainHideSolids(before,p.pos);if(slide.x!==p.pos.x)p.vel.x=0;if(slide.z!==p.pos.z)p.vel.z=0;p.pos.x=slide.x;p.pos.z=slide.z;for(const s of COURTYARD_SOLIDS){if(hideSolidSet.has(s))continue;const p=this.player;if(Math.abs(p.pos.x-s.x)<s.w/2+.22&&Math.abs(p.pos.z-s.z)<s.d/2+.22&&before.y-1.7<s.h-.18&&p.pos.y-1.7<s.h-.15){p.pos.x=before.x;p.pos.z=before.z;p.vel.x=p.vel.z=0;}}}
   if(this.courtyard&&pitIsOpen(this.courtyard)&&insidePit(before)&&before.y<1.45){
    const p=this.player,half=PIT.half-.24,x=clamp(p.pos.x,PIT.x-half,PIT.x+half),z=clamp(p.pos.z,PIT.z-half,PIT.z+half);
    if(x!==p.pos.x){p.pos.x=x;p.vel.x=0;}if(z!==p.pos.z){p.pos.z=z;p.vel.z=0;}

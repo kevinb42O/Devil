@@ -1,3 +1,4 @@
+import {CourtyardHideAndSeekScene} from './courtyard-hide-and-seek-scene';
 import {createCourtyardSign} from './courtyard-sign';
 import {CourtyardBasketballScene} from './courtyard-basketball-scene';
 import * as THREE from 'three';
@@ -18,6 +19,7 @@ export class CourtyardScene{
  private plaques=new Map<string,ReturnType<typeof createCourtyardSign>>();private goalScore='';
  private drawing=new CourtyardDrawingScene();
  private basketball=new CourtyardBasketballScene();
+ private hideAndSeek=new CourtyardHideAndSeekScene();
  constructor(){
   this.scene.background=new THREE.Color(0x090b11);this.scene.fog=new THREE.FogExp2(0x090b11,.008);
   this.scene.add(new THREE.HemisphereLight(0xc7b8a4,0x301623,1.65));
@@ -28,7 +30,7 @@ export class CourtyardScene{
   const key=new THREE.PointLight(0xffe3b8,7,2.8,2),fill=new THREE.PointLight(0xb8d9ff,3,2.4,2);
   key.position.set(.65,1,.85);fill.position.set(-.7,.45,-.65);this.skullLights.add(key,fill);this.skullLights.visible=false;
   this.scene.add(this.hatch,this.skull,this.skullLights);
-  this.scene.add(this.drawing.root,this.basketball.root);
+  this.scene.add(this.drawing.root,this.basketball.root,this.hideAndSeek.root);
   this.ready=this.load().then(()=>{this.propsLoaded=true;}).catch(e=>{this.error='Courtyard assets could not load. Reload to retry.';throw e;});
   // Loading failure is surfaced in the courtyard HUD; avoid an unhandled rejection at menu startup.
   void this.ready.catch(()=>{});
@@ -59,7 +61,7 @@ export class CourtyardScene{
    const bounds=new THREE.Box3().setFromObject(root),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
    model.position.sub(new THREE.Vector3(center.x,bounds.min.y,center.z));root.scale.set(w/Math.max(.001,size.x),h/Math.max(.001,size.y),d/Math.max(.001,size.z));root.position.set(x,y,z);parent.add(root);return root;
   };
-  await Promise.all([loadEntranceEnvironment(this.scene,true),this.basketball.load()]);
+  await Promise.all([loadEntranceEnvironment(this.scene,true),this.basketball.load(),this.hideAndSeek.load()]);
   // Existing authored game tiles are instanced around the aperture by setFloor.
   for(const x of [PIT.x-2.2,PIT.x+2.2]){place('template-wall',x,-8,PIT.z,.4,8,4.8);place('stone-wall',x,.01,PIT.z,.3,.12,4.8);}
   for(const z of [PIT.z-2.2,PIT.z+2.2]){place('template-wall',0,-8,z,4,8,.4);place('stone-wall',0,.01,z,4.6,.12,.3);}
@@ -107,11 +109,12 @@ export class CourtyardScene{
   const plaque=createCourtyardSign(id,5.4,1.8,map);plaque.userData.goals=[...goals];
   plaque.position.set(FOOTBALL.x,4.7,FOOTBALL.goalZ[index]+(index?1:-1)*.2);plaque.rotation.y=index?Math.PI:0;this.scene.add(plaque);this.plaques.set(id,plaque);
  }
- get diagnostics(){return {skullVisible:this.skull.visible,lightingVisible:this.skullLights.visible,lightPosition:this.skullLights.position.toArray(),scores:[0,1].map(i=>{const board=this.plaques.get('football-score-'+i);return board?{goals:board.userData.goals,position:board.position.toArray()}:null;})};}
+ get diagnostics(){return {hideAndSeek:this.hideAndSeek.diagnostics,skullVisible:this.skull.visible,lightingVisible:this.skullLights.visible,lightPosition:this.skullLights.position.toArray(),scores:[0,1].map(i=>{const board=this.plaques.get('football-score-'+i);return board?{goals:board.userData.goals,position:board.position.toArray()}:null;})};}
  updatePencilGrips(world:World,models:Map<string,THREE.Group>,local?:{id:string;model:THREE.Group}){
   this.drawing.updateGrips(world,models,local);
  }
  update(world:World,members:{id:string;name?:string;ready:boolean;color?:string;loaded?:number}[],reduced=false){
+  this.hideAndSeek.update(world.tick/120,reduced);
   const c=world.courtyard;if(!c){this.skullLights.visible=false;return;}const t=world.tick/120;
   this.drawing.update(c.drawing,world);
   this.basketball.update(c.basketball,world,members);
