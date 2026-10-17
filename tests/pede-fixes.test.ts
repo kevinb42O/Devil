@@ -1,3 +1,4 @@
+import {CREATURE_SCALE_RATIO} from '../src/enemy-presentation.ts';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {World,STEP,v,idleInput,distance} from '../src/simulation.ts';
@@ -8,10 +9,10 @@ import {createRun,RunRecorder,ReplayPlayer} from '../src/replay.ts';
 
 test('standing beneath visible pede armor no longer hits the oversized downward sphere',()=>{
  for(const size of [1,1.5,2]){
-  const player=v(0,1.7,0),body=v(0,2.2+.19*size,0),forward=v(0,0,1);
-  assert.equal(touchesPlayer(body,body,player,player,.8*size),true,'reproduces old invisible contact');
+  const player=v(0,1.7,0),body=v(0,2.2+.19*CREATURE_SCALE_RATIO*size,0),forward=v(0,0,1);
+  assert.equal(touchesPlayer(body,body,player,player,.8*CREATURE_SCALE_RATIO*size),true,'reproduces old invisible contact');
   assert.equal(touchesPede(body,body,forward,forward,player,player,size),false,'clearance below the actual underside is safe');
-  const touching=v(0,body.y+.43*size,0);
+  const touching=v(0,body.y+.43*CREATURE_SCALE_RATIO*size,0);
   assert.equal(touchesPede(body,body,forward,forward,touching,touching,size),true,'armor contact remains lethal');
  }
 });
@@ -19,7 +20,7 @@ test('standing beneath visible pede armor no longer hits the oversized downward 
 test('pede armor offsets rotate with the rendered segment and fast contacts still sweep',()=>{
  const body=v(0,5,0),upward=v(0,1,0);
  const center=pedeContactCenter(body,upward,1);
- assert.ok(Math.abs(center.y-5)<1e-9);assert.ok(Math.abs(center.z+.43)<1e-9);
+ assert.ok(Math.abs(center.y-5)<1e-9);assert.ok(Math.abs(center.z+.43*CREATURE_SCALE_RATIO)<1e-9);
  assert.equal(touchesPede(body,body,upward,upward,center,center,1),true);
  assert.equal(touchesPede(v(-5,1.3,0),v(5,1.3,0),v(0,0,1),v(0,0,1),v(0,1.7,0),v(0,1.7,0),1),true);
  assert.equal(touchesPede(body,body,v(0,0,1),v(0,0,1),v(0,5,1.8),v(0,5,1.8),1,true),true,'visible head nose has contact');

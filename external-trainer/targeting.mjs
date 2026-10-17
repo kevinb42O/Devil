@@ -50,8 +50,17 @@ export function createMemoryAim(access, environment = globalThis) {
     entries=[];chosen=null;
     if(!running){physical=0;return;}
     const origin=w.player.pos,next=new Map(),dt=w.time-lastTime,points=[];
+    const canSelect=enabled&&!fault&&!suspended&&focus&&fresh;
     const excluded=new Set(String(config.excluded_kinds).split(',').map(k=>k.trim()).filter(Boolean));
     const homing=secondary,speed=homing?42:70;
+    const halfFov=config.fov*Math.PI/360;
+    const direction=point=>{
+      const x=point.x-origin.x,y=point.y-origin.y,z=point.z-origin.z;
+      const aim={yaw:Math.atan2(-x,-z),pitch:Math.atan2(y,Math.hypot(x,z))};
+      const angle=Math.acos(clamp(Math.sin(aim.pitch)*Math.sin(state.pitch)+Math.cos(aim.pitch)*Math.cos(state.pitch)*Math.cos(wrap(aim.yaw-state.yaw)),-1,1));
+      return {aim,angle};
+    };
+    const compare=(a,b)=>a.entry.priority-b.entry.priority||a.entry.score-b.entry.score||a.entry.id.localeCompare(b.entry.id);
     let enemyActive=true;
     const add=(e,pos,index,tier,radius,health,eligible=true)=>{
       radius=access.radius?access.radius(e,index,radius):radius;
@@ -72,27 +81,19 @@ export function createMemoryAim(access, environment = globalThis) {
       const label=kindLabel(e.kind)+(index.startsWith('crystal')?' · CRYSTAL '+(Number(index.slice(7))+1):index.startsWith('segment')?' · SEGMENT '+(Number(index.slice(7))+1):'');
       const entry={id,enemy:e.id,kind:e.kind,priority,category:tier===0?'tower':tier===1?'weak':'enemy',pos:copy(pos),predicted:copy(pos),radius,index,health,maxHealth,distance,label,aimable:false};
       entries.push(entry);
-      if(!eligible||!enemyActive||excluded.has(e.kind)||distance>Math.min(config.max_distance,speed===42?336:196))return;
-      let aimPoint=pos;
-      if(access.resolve){aimPoint=access.resolve(e,pos,radius,state,homing);if(!aimPoint)return;}
-      else if(access.visible&&!access.visible(e,pos,radius,state,homing))return;
-      let predicted=config.prediction?intercept(origin,aimPoint,velocity,speed):copy(aimPoint);
-      // Leading a visible edge can move the firing ray back into tower armor.
-      // Validate that ray too; fall back to the already verified damage point.
-      if(config.prediction&&access.resolve&&e.weakpoints?.length&&
-          !access.resolve(e,pos,radius,state,homing,predicted))predicted=copy(aimPoint);
+      if(!canSelect||!eligible||!enemyActive||excluded.has(e.kind)||distance>Math.min(config.max_distance,speed===42?336:196))return;
+      // The aim circle gates expensive geometry queries, not just the final snap.
+      // ESP still receives entries outside the circle without any armor checks.
+      if(direction(pos).angle>halfFov+1e-9)return;
+      const predicted=config.prediction?intercept(origin,pos,velocity,speed):copy(pos);
       if(!Number.isFinite(predicted.x+predicted.y+predicted.z))return;
-      const aim={yaw:Math.atan2(origin.x-predicted.x,origin.z-predicted.z),pitch:Math.atan2(predicted.y-origin.y,Math.hypot(predicted.x-origin.x,predicted.z-origin.z))};
-      if(Math.abs(aim.pitch)>1.5)return;
-      const dy=wrap(aim.yaw-state.yaw);
-      const angle=Math.acos(clamp(Math.sin(aim.pitch)*Math.sin(state.pitch)+Math.cos(aim.pitch)*Math.cos(state.pitch)*Math.cos(dy),-1,1));
-      if(angle>config.fov*Math.PI/360+1e-9)return;
+      const {aim,angle}=direction(predicted);
       const playerVelocity=w.player.vel||{x:0,y:0,z:0};
       const closing=Math.max(2,-((pos.x-origin.x)*(velocity.x-playerVelocity.x)+(pos.y-origin.y)*(velocity.y-playerVelocity.y)+(pos.z-origin.z)*(velocity.z-playerVelocity.z))/Math.max(.001,distance));
       let score=config.selection==='nearest'?distance:config.selection==='health'?health:config.selection==='threat'?Math.max(0,distance-e.radius-.35)/closing:angle;
       const bias=config.switch_bias*Math.PI/180;
       if(id===selectedId&&config.selection!=='nearest')score-=config.selection==='crosshair'?bias:Math.abs(score)*Math.min(.4,bias);
-      Object.assign(entry,{predicted,aim,score,angle,aimable:true});points.push(entry);
+      Object.assign(entry,{predicted,aim,score,angle,aimable:true});points.push({entry,e,velocity});
     };
     for(const e of w.enemies){
       if(e.hp<=0)continue;
@@ -103,12 +104,37 @@ export function createMemoryAim(access, environment = globalThis) {
     }
     // Loose pickups (world.gems) are deliberately never candidates or ESP entries.
     previous=next;lastTime=w.time;
-    points.sort((a,b)=>a.priority-b.priority||a.score-b.score||a.id.localeCompare(b.id));
-    chosen=points[0]||null;
-    const locked=points.find(p=>p.id===selectedId);
-    if(config.selection!=='nearest'&&locked&&chosen&&locked.priority===chosen.priority&&started-selectedAt<config.lock_ms)chosen=locked;
+    const verified=new Map();
+    const verify=candidate=>{
+      if(verified.has(candidate))return verified.get(candidate);
+      const {entry,e,velocity}=candidate;
+      let aimPoint=entry.pos;
+      if(access.resolve)aimPoint=access.resolve(e,entry.pos,entry.radius,state,homing);
+      else if(access.visible&&!access.visible(e,entry.pos,entry.radius,state,homing))aimPoint=null;
+      if(aimPoint){
+        let predicted=config.prediction?intercept(origin,aimPoint,velocity,speed):copy(aimPoint);
+        // An exposed crystal edge may be clear while its predicted ray hits armor.
+        if(config.prediction&&access.resolve&&e.weakpoints?.length&&
+            !access.resolve(e,entry.pos,entry.radius,state,homing,predicted))predicted=copy(aimPoint);
+        const {aim,angle}=direction(predicted);
+        if(Number.isFinite(predicted.x+predicted.y+predicted.z)&&Math.abs(aim.pitch)<=1.5&&angle<=halfFov+1e-9){
+          Object.assign(entry,{predicted,aim,angle});
+          if(config.selection==='crosshair')entry.score=angle-(entry.id===selectedId?config.switch_bias*Math.PI/180:0);
+          verified.set(candidate,entry);return entry;
+        }
+      }
+      entry.aimable=false;verified.set(candidate,null);return null;
+    };
+    points.sort(compare);
+    if(config.selection==='crosshair'){
+      // Resolved crystal edges can change angular ordering. Other selection scores
+      // are geometry-independent, so only check candidates until the best clear one.
+      const clear=points.filter(candidate=>verify(candidate));clear.sort(compare);chosen=clear[0]?.entry??null;
+    }else for(const candidate of points){chosen=verify(candidate);if(chosen)break;}
+    const locked=points.find(p=>p.entry.id===selectedId);
+    if(config.selection!=='nearest'&&locked&&chosen&&locked.entry.priority===chosen.priority&&started-selectedAt<config.lock_ms)chosen=verify(locked)||chosen;
     if(chosen?.id!==selectedId){selectedAt=started;selectedId=chosen?.id??null;}
-    const canAim=enabled&&!fault&&!suspended&&focus&&firing&&fresh;
+    const canAim=canSelect&&firing;
     if(canAim&&chosen){
       let {yaw,pitch}=chosen.aim;
       if(config.aim_mode==='smooth'){
@@ -167,7 +193,15 @@ export function resolveDamagePoint(enemy, center, radius, state, homing, helpers
     if(t===null)return false;
     for(const blocker of state.armorEnemies||world.enemies){
       if(blocker.hp<=0||(world.active&&!world.active(blocker)))continue;
-      if(helpers.armorBounds&&helpers.armorBounds(blocker)===null)continue;
+      if(helpers.armorBounds){
+        const bounds=helpers.armorBounds(blocker);if(bounds===null)continue;
+        // Conservative horizontal cylinder around the complete animated armor.
+        // Most towers are nowhere near this ray; skip their mesh/BVH entirely.
+        const dx=(point.x-origin.x)*t,dz=(point.z-origin.z)*t,length=dx*dx+dz*dz;
+        const along=length?Math.max(0,Math.min(1,((blocker.pos.x-origin.x)*dx+(blocker.pos.z-origin.z)*dz)/length)):0;
+        const x=origin.x+dx*along-blocker.pos.x,z=origin.z+dz*along-blocker.pos.z;
+        if(x*x+z*z>(bounds+.0001)**2)continue;
+      }
       if(helpers.sweepArmor(blocker,origin,origin,point,t,world.time,world.spawnFixesEnabled))return false;
     }
     return true;

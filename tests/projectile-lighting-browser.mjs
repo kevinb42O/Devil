@@ -28,13 +28,13 @@ try{
    const gl=renderer.renderer.getContext(),pixels=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
    renderer.projectileLighting.glow.visible=false;renderer.composer.render();renderer.originalWeapon.render(renderer.renderer,false);
    const callsWithoutGlow=renderer.renderer.info.render.calls-calls;const floorLit=sample(.7,0,-8);
-   const without=new Uint8Array(pixels.length);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,without);let glowPixelGain=0;for(let i=0;i<pixels.length;i+=4)glowPixelGain+=Math.max(0,pixels[i+1]-without[i+1]);
+   const without=new Uint8Array(pixels.length);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,without);let glowPixelGain=0;for(let i=0;i<pixels.length;i+=4)glowPixelGain+=Math.max(0,pixels[i]-without[i]);
    renderer.render(world,0,0,0,false);
    return {quality,dark,lit,floorLit,extraGlowDraws:calls-callsWithoutGlow,glowPixelGain,...renderer.projectileLighting.diagnostics};
   },quality));
   await page.locator('#light-test').screenshot({path:`artifacts/projectile-light-${quality}.png`});
  }
- for(const r of results){assert.ok(r.floorLit[1]>r.dark[1]+3&&r.floorLit[1]<r.dark[1]+35,JSON.stringify(r));assert.ok(r.floorLit[1]-r.dark[1]>r.floorLit[0]-r.dark[0],JSON.stringify(r));assert.ok(r.glowPixelGain>1000,JSON.stringify(r));assert.equal(r.count,12);assert.equal(r.extraGlowDraws,1);}
+ for(const r of results){assert.ok(r.floorLit[0]>r.dark[0]+3&&r.floorLit[0]<r.dark[0]+35,JSON.stringify(r));assert.ok(r.floorLit[0]-r.dark[0]>r.floorLit[1]-r.dark[1],JSON.stringify(r));assert.ok(r.glowPixelGain>1000,JSON.stringify(r));assert.equal(r.count,12);assert.equal(r.extraGlowDraws,1);}
  await page.evaluate(async()=>{
   const {renderer,world,v}=window.lightFixture;const {idleInput,STEP}=await import('/src/simulation.ts');
   renderer.clear();world.projectiles=[];world.effects=[];world.level=1;world.player.pos=v(0,1.7,0);

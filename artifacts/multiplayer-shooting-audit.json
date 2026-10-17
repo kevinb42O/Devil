@@ -1,0 +1,64 @@
+{
+  "note": "Synthetic application payload bytes; excludes transport headers. Effect workload is four players continuously hitting one durable enemy. Effects and inputs are isolated path comparisons, not total connection bandwidth. Snapshot body encoding is unchanged apart from contact ownership/acknowledgement metadata.",
+  "inputs": {
+    "held": {
+      "before": {
+        "packets": 200,
+        "bytes": 87696,
+        "KBps": 17.5392
+      },
+      "after": {
+        "packets": 202,
+        "bytes": 36734,
+        "KBps": 7.3468
+      }
+    },
+    "fourTapsPerSecond": {
+      "before": {
+        "packets": 200,
+        "bytes": 87696,
+        "KBps": 17.5392
+      },
+      "after": {
+        "packets": 240,
+        "bytes": 43480,
+        "KBps": 8.696
+      }
+    }
+  },
+  "effects": [
+    {
+      "level": 1,
+      "players": 4,
+      "seconds": 2,
+      "contacts": 146,
+      "previousEffectKBpsPerGuest": 52.2935,
+      "currentEffectKBpsPerGuest": 27.852,
+      "addedKBpsPerGuest": -24.4415
+    },
+    {
+      "level": 4,
+      "players": 4,
+      "seconds": 2,
+      "contacts": 2325,
+      "previousEffectKBpsPerGuest": 424.028,
+      "currentEffectKBpsPerGuest": 209.666,
+      "addedKBpsPerGuest": -214.362
+    },
+    {
+      "level": 7,
+      "players": 4,
+      "seconds": 2,
+      "contacts": 4240,
+      "previousEffectKBpsPerGuest": 823.782,
+      "currentEffectKBpsPerGuest": 408.396,
+      "addedKBpsPerGuest": -415.386
+    }
+  ],
+  "contacts": {
+    "singleContactBytes": 105,
+    "batch24Bytes": 1517,
+    "singleContactKBpsAt100HitsPerSecond": 10.5,
+    "note": "Additional guest-to-host payload, excluding headers, acknowledgements and retries. Includes armor impacts and absorption; misses send no contact. Batching depends on contacts produced together."
+  }
+}

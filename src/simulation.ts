@@ -1,4 +1,6 @@
+import {basketballDunkApproach} from './courtyard-basketball';
 import {courtyardFloor,COURTYARD_BOUNDS,constrainCourtyard,COURTYARD_SOLIDS,PIT,SPAWNS,insidePit,pitIsOpen,type CourtyardState} from './courtyard-state';
+import {validContact,type ProjectileContact} from './network-contacts';
 import {HAND_THRESHOLDS,STREAM_COUNTS,BURST_COUNTS,collectedLevel} from './weapon-levels';
 import {MAX_CREW_PLAYERS} from './crew-config';
 import {UPGRADE_PULSE,upgradePulseRadius} from './upgrade-pulse-tuning';
@@ -11,7 +13,7 @@ import {updateCentipede as updateLegacyCentipede} from './legacy-centipede-motio
 import {initializeCentipede,updateCentipede,type CentipedeMotion} from './centipede-motion';
 import {armorBounds,sweepArmor} from './projectile-collision';
 import {touchesPlayer} from './player-contact';
-import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,LEVIATHAN_HOVER_HEIGHT,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,crystalToEnemy,enemyEmergenceScale,towerOutletHeight,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
+import {CREATURE_SCALE_RATIO,SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,LEVIATHAN_HOVER_HEIGHT,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,crystalToEnemy,enemyEmergenceScale,towerOutletHeight,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
 import {arenaRadius,floorHeight,sweepFloor,sweepFloorLegacy} from './arena';
 import {constrainEnemyFloor,enemyFloorHeight} from './enemy-floor';
 import {originalSpawnRadius,originalTowerSpawnHeight,nextPerimeterSpawnAngle,pedeSpawnPosition,thornSpawnPosition,THORN_SPAWN_DEPTH} from './spawn-placement';
@@ -25,7 +27,7 @@ export {TIMELINE};export type {EnemyKind};
 /** Fixed-step combat. Reference counts/timers are separated from unmeasured movement/AI tuning. */
 export const STEP=1/120;
 export const CREW_RESPAWN_DELAY=15,CREW_RESPAWN_PROTECTION=3;
-export const TUNING={radius:arenaRadius(0),eyeHeight:1.7,speed:11,acceleration:100,airAcceleration:17,friction:8,gravity:26,jump:9,maxSpeed:18,projectileSpeed:70,gemLifetime:10,towerCrystalRadius:.63,towerDriftSpeed:.5};
+export const TUNING={radius:arenaRadius(0),eyeHeight:1.7,speed:11,acceleration:100,airAcceleration:17,friction:8,gravity:26,jump:9,maxSpeed:18,projectileSpeed:70,gemLifetime:10,towerCrystalRadius:.63*CREATURE_SCALE_RATIO,towerDriftSpeed:.5};
 export type Vec={x:number;y:number;z:number};
 export type DeathSource={enemyId:number;kind:EnemyKind;segment:number;tick:number;time:number;player:Vec;contactBody:Vec};
 export const v=(x=0,y=0,z=0):Vec=>({x,y,z});
@@ -46,6 +48,30 @@ type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;deathSource?:DeathSource;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
 export class World {
+ /** Only arena guests use contact ownership. Solo and historical replays keep
+  * the original host collision path. Pending reports may precede fire inputs. */
+ contactOwners:string[]=[];predictedContacts:ProjectileContact[]=[];lastContactInputs:ProjectileContact[]=[];
+ private incomingContacts:ProjectileContact[]=[];
+ private pendingContacts=new Map<string,{contact:ProjectileContact;expires:number}>();
+ private contactSources=new Map<string,{level:number;energy:number;homing:boolean;kind?:'shotgun';expires:number}>();
+ private predictedTargetHistory=new Map<number,{pos:Vec;targets:Vec[]}>();
+ private contactReceipts=new Map<string,{ack:number;done:Set<number>}>();private predictHealth=false;
+ contactAcknowledged(owner:string){return this.contactReceipts.get(owner)?.ack??0;}
+ private acknowledgeContact(c:ProjectileContact){
+  if(!c.serial)return;const owner=c.shotKey.split(':')[0];let receipt=this.contactReceipts.get(owner);if(!receipt){receipt={ack:0,done:new Set()};this.contactReceipts.set(owner,receipt);}
+  if(c.serial<=receipt.ack)return;receipt.done.add(c.serial);while(receipt.done.delete(receipt.ack+1))receipt.ack++;
+ }
+ resetPredictedFlight(){this.predictedTargetHistory.clear();this.predictedContacts=[];}
+ queueContacts(contacts:ProjectileContact[]){
+  const live=new Set(this.projectiles.map(p=>p.shotKey));
+  for(const c of contacts){if(!validContact(c))continue;const [owner,sequence]=c.shotKey.split(':');
+   if(c.serial&&(c.serial<=this.contactAcknowledged(owner)||this.contactReceipts.get(owner)?.done.has(c.serial)))continue;
+   if(!c.serial&&(this.crew.find(p=>p.id===owner)?.shotSequence??0)>=Number(sequence)&&!live.has(c.shotKey)&&!this.contactSources.has(c.shotKey))continue;
+   if(this.contactOwners.includes(owner)&&!this.pendingContacts.has(c.shotKey)&&!this.incomingContacts.some(p=>p.shotKey===c.shotKey)&&this.incomingContacts.length+this.pendingContacts.size<8192){
+    const {damage,killed,...contact}=c;this.incomingContacts.push({...contact,pos:{x:Math.fround(c.pos.x),y:Math.fround(c.pos.y),z:Math.fround(c.pos.z)},direction:{x:Math.fround(c.direction.x),y:Math.fround(c.direction.y),z:Math.fround(c.direction.z)}});
+   }
+  }
+ }
  courtyard?:CourtyardState;
  crew:CrewPlayer[]=[];private activeCrew:CrewPlayer|null=null;
  addCrew(id:string){if(this.crew.some(p=>p.id===id)||this.crew.length>=MAX_CREW_PLAYERS)return;const i=this.crew.length;this.crew.push({id,player:{pos:v((i%2)*4-2,TUNING.eyeHeight,10-Math.floor(i/2)*4),vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0},input:idleInput(),alive:true,cause:'',respawnAt:null,life:0,protectedUntil:0,primary:channel(),secondary:channel(),wasJump:false,lastShotTick:-1,shotSequence:0,shotSeed:this.shotRngSeed,level:1,reserve:0});}
@@ -53,7 +79,11 @@ export class World {
  private useCrew(p:CrewPlayer){this.activeCrew=p;this.player=p.player;this.primary=p.primary;this.secondary=p.secondary;this.wasJump=p.wasJump;this.lastShotTick=p.lastShotTick;this.level=p.level;this.reserve=p.reserve;}
  stepCrew(inputs:Map<string,Input>,dt=STEP,waiting=new Set<string>()){
   if(this.state!=='playing')return;this.playerStarts.clear();this.tick++;this.time+=dt;this.radius=arenaRadius(this.time);
+  this.lastContactInputs=this.incomingContacts.splice(0);for(const contact of this.lastContactInputs)this.pendingContacts.set(contact.shotKey,{contact,expires:this.tick+600});
   for(const p of this.crew){if(!p.alive||waiting.has(p.id))continue;p.input=combatInput(inputs.get(p.id)??idleInput());this.useCrew(p);this.move(p.input,dt);p.wasJump=this.wasJump;if(p.alive)this.weapon(p.input);p.lastShotTick=this.lastShotTick;p.level=this.level;p.reserve=this.reserve;}
+  // Reports already received this tick must kill their target before enemy
+  // contact/AI runs, including reports that arrived before the fire command.
+  this.applyClientContacts();
   const alive=this.crew.filter(p=>p.alive);if(!alive.length){this.state='dead';this.cause='CREW LOST';return;}this.useCrew(alive[0]);
   this.advanceWorld(dt);this.updateGems(idleInput(),dt);this.selectCrew(this.crew[0].id);
   if(!this.crew.some(p=>p.alive)){this.state='dead';this.cause='CREW LOST';return;}
@@ -95,6 +125,10 @@ export class World {
     p.player={pos:spawn,vel:v(),grounded:true,landedAt:-1000,hopPulse:0,jumpBuffer:0};
     p.input={...idleInput(),yaw:target.input.yaw,pitch:target.input.pitch};
     p.primary=channel();p.secondary=channel();p.wasJump=false;p.lastShotTick=-1;
+    // A guest can have predicted up to two salvos per unacknowledged command
+    // before dying. Reserve a gap so a new life never reuses those identities;
+    // old in-flight daggers and their delayed reports keep their original keys.
+    if(this.contactOwners.includes(p.id))p.shotSequence+=1024;
     p.alive=true;p.cause='';p.deathSource=undefined;p.respawnAt=null;p.life++;p.protectedUntil=this.time+CREW_RESPAWN_PROTECTION;
     break;
    }
@@ -103,16 +137,31 @@ export class World {
 
  // Prediction runs only the local controller; shared enemies, pickups and damage
  // are advanced exclusively by the host. Reconciliation uses this same path.
- predictCrew(id:string,input:Input,dt=STEP,entrance=false){
+ predictCrew(id:string,input:Input,dt=STEP,entrance=false,targets?:Enemy[],advanceFlight=true){
   const p=this.crew.find(p=>p.id===id);if(!p?.alive||this.state!=='playing')return;
   if(entrance){this.tick++;if(this.courtyard?.committed.includes(id))return;this.useCrew(p);p.input={...input,fire:false,homing:false};this.stepEntrance(p.input,dt);p.wasJump=this.wasJump;this.selectCrew(id);return;}
   this.tick++;this.time+=dt;this.radius=arenaRadius(this.time);this.useCrew(p);
   p.input=combatInput(input);this.prediction=true;this.move(input,dt);
   // Predicted falling is visual only; the host confirms death.
   p.alive=true;p.cause='';this.effects=this.effects.filter(e=>e.kind!=='death');
-  for(const dagger of this.projectiles)if(dagger.id<0){dagger.previous={...dagger.pos};dagger.age+=dt;dagger.pos.x+=dagger.vel.x*dt;dagger.pos.y+=dagger.vel.y*dt;dagger.pos.z+=dagger.vel.z*dt;}this.projectiles=this.projectiles.filter(p=>p.id>=0||p.age<(p.homing?8:2.8));
-  this.weapon(input);this.prediction=false;
+  const authoritativeEnemies=this.enemies;if(targets)this.enemies=targets;
+  // Advance both unconfirmed and acknowledged local daggers with the real
+  // swept collision/homing code. Remote projectiles remain snapshot driven.
+  this.weapon(input);if(advanceFlight)this.predictProjectiles(id,dt);
+  this.enemies=authoritativeEnemies;this.prediction=false;
   p.wasJump=this.wasJump;p.lastShotTick=this.lastShotTick;p.level=this.level;p.reserve=this.reserve;this.selectCrew(id);
+ }
+ /** Flight runs independently of controller reconciliation, including while a
+  * guest is spectating, dead, or has released/focused away from the controls. */
+ predictProjectiles(id:string,dt=STEP,targets?:Enemy[],predictHealth=false){
+  if(!this.projectiles.some(p=>p.shotKey?.startsWith(`${id}:`))){this.predictedTargetHistory.clear();return;}
+  const authoritativeEnemies=this.enemies,wasPrediction=this.prediction,wasHealth=this.predictHealth;this.prediction=true;this.predictHealth=predictHealth;if(targets)this.enemies=targets;
+  for(const e of this.enemies){const before=this.predictedTargetHistory.get(e.id);if(before)this.projectileTargetStarts.set(e,before);}
+  const remote=this.projectiles.filter(d=>!d.shotKey?.startsWith(`${id}:`));this.projectiles=this.projectiles.filter(d=>d.shotKey?.startsWith(`${id}:`));
+  try{this.updateProjectiles(dt);}finally{
+   this.predictedTargetHistory=this.projectiles.length?new Map(this.enemies.map(e=>[e.id,{pos:{...e.pos},targets:e.segments.length?e.segments.map(s=>({...s.pos})):e.weakpoints.length?e.weakpoints.map(s=>crystalToEnemy(e,this.player.pos,s.local)):[{...this.weakPoint(e)}]}])):new Map();
+   this.projectiles.push(...remote);this.enemies=authoritativeEnemies;this.prediction=wasPrediction;this.predictHealth=wasHealth;
+  }
  }
  private prediction=false;
  // Kept outside checkpoint options so revision-18 checkpoint digests stay exact.
@@ -151,10 +200,11 @@ export class World {
  constructor(seed=80421,options:WorldOptions={}){this.rng=this.shotRngSeed=seed>>>0||1;this.stats.upgradeTimes=Array(options.legacyHands?4:7).fill(0);this.options=options;this.schedule=options.legacySpawnRules?legacySurvivalSchedule():survivalSchedule();if(!options.legacySpawnRules){this.spawnRng=seed>>>0||1;this.spawnAngle=this.spawnRandom()*Math.PI*2;}this.nextEvent=this.schedule.next();}
  /** Complete simulation state at a tick boundary; transport snapshots are not checkpoints. */
  captureCrewCheckpoint(){
-  return structuredClone({version:1 as const,options:this.options,scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
+  return structuredClone({...(this.contactOwners.length?{contacts:{owners:this.contactOwners,pending:[...this.pendingContacts.values()],incoming:this.incomingContacts,sources:[...this.contactSources],receipts:[...this.contactReceipts].map(([id,r])=>[id,r.ack,[...r.done]] as const)}}:{}),version:1 as const,options:this.options,scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
  }
  static restoreCrewCheckpoint(value:CrewCheckpoint,legacyShotgun=false,legacyHands=false){
   const s=structuredClone(value),w=new World(s.shotRngSeed,s.options);w.replayLegacyShotgun=legacyShotgun;w.replayLegacyHands=legacyHands;
+  if(s.contacts){w.contactOwners=s.contacts.owners;w.contactReceipts=new Map((s.contacts.receipts??[]).map(([id,ack,done])=>[id,{ack,done:new Set(done)}]));w.contactSources=new Map(s.contacts.sources??[]);w.incomingContacts=s.contacts.incoming;w.pendingContacts=new Map(s.contacts.pending.map(p=>[p.contact.shotKey,p]));}
   Object.assign(w,{rng:s.rng,shotRngSeed:s.shotRngSeed,spawnRng:s.spawnRng,spawnAngle:s.spawnAngle,nextId:s.nextId,bloodSequence:s.bloodSequence,time:s.time,tick:s.tick,state:s.state,cause:s.cause,radius:s.radius,wave:s.wave,stats:s.stats,crew:s.crew,enemies:s.enemies,projectiles:s.projectiles,gems:s.gems,rings:s.rings,delayed:s.delayed,detonations:s.detonations});
   for(let i=0;i<s.scheduleCursor;i++)w.nextEvent=w.schedule.next();w.scheduleCursor=s.scheduleCursor;
   w.upgradePulses=s.upgradePulses.map(p=>({...p,hit:new Set(p.hit)}));
@@ -168,7 +218,7 @@ export class World {
  emit(kind:Effect['kind'],pos:Vec,amount?:number,enemy?:EnemyKind,enemyId?:number){this.effects.push({kind,pos:{...pos},amount,enemy,enemyId,level:this.level,shooterId:kind==='jump'||kind==='land'||kind==='death'||kind==='pickup'?this.activeCrew?.id:undefined});if(kind==='death')this.effects[this.effects.length-1].deathCause=this.activeCrew?.cause??this.cause;if(kind==='upgrade')this.beginUpgradePulse(pos,this.level,this.activeCrew?.id);}
  spawn(kind:EnemyKind,pos:Vec,announce=true):Enemy{
   const spec=ENEMY_STATS[kind];const size=isSpider(kind)?SPIDER_SIZE*(kind==='spider2'?2:1):kind==='gigapede'?1.5:kind==='ghostpede'?2:1;
-  const e:Enemy={id:this.nextId++,kind,pos:{...pos},hp:spec.hp,radius:spec.radius*(isSpider(kind)?SPIDER_SIZE:1),gems:this.options.legacySpawnFixes&&isSpider(kind)?5:spec.gems,age:0,phase:isSquid(kind)||isSpider(kind)?Math.atan2(pos.x,pos.z):this.random()*Math.PI*2,nextSpawn:3,eaten:0,segments:[],weakpoints:[],vel:v(),headExposure:isSpider(kind)?0:1,lastHit:-99,duckUntil:0,pendingDuck:false,nextMove:3,orbitSpeed:0,radialOffset:3.8*size,facingYaw:Math.atan2(pos.x,pos.z)+Math.PI,eggCooldown:0,target:{...pos},status:'emerging',statusUntil:0,activeAt:kind==='leviathan'?8.533333333:kind==='orb'?6.683333333:isPede(kind)||kind==='thorn'?3:.6,nextBeckon:kind==='leviathan'?13.533333333:kind==='orb'?6.683333333:Infinity,size};
+  const e:Enemy={id:this.nextId++,kind,pos:{...pos},hp:spec.hp,radius:spec.radius*(isSpider(kind)?SPIDER_SIZE:1)*(isSquid(kind)||isSpider(kind)||isPede(kind)?CREATURE_SCALE_RATIO:1),gems:this.options.legacySpawnFixes&&isSpider(kind)?5:spec.gems,age:0,phase:isSquid(kind)||isSpider(kind)?Math.atan2(pos.x,pos.z):this.random()*Math.PI*2,nextSpawn:3,eaten:0,segments:[],weakpoints:[],vel:v(),headExposure:isSpider(kind)?0:1,lastHit:-99,duckUntil:0,pendingDuck:false,nextMove:3,orbitSpeed:0,radialOffset:3.8*size,facingYaw:Math.atan2(pos.x,pos.z)+Math.PI,eggCooldown:0,target:{...pos},status:'emerging',statusUntil:0,activeAt:kind==='leviathan'?8.533333333:kind==='orb'?6.683333333:isPede(kind)||kind==='thorn'?3:.6,nextBeckon:kind==='leviathan'?13.533333333:kind==='orb'?6.683333333:Infinity,size};
   const points=kind==='squid'?[SQUID_I_GEM]:kind==='squid2'?SQUID_II_GEMS:kind==='squid3'?SQUID_III_GEMS:kind==='leviathan'?LEVIATHAN_GEMS:[];
   if(this.options.legacyTowerOrbit)e.towerSpinDirection=1;
   e.weakpoints=points.map(local=>({local:{...local},hp:spec.hp/points.length}));
@@ -218,6 +268,8 @@ export class World {
  /** Move on the entrance platform without advancing survival or combat. */
  stepEntrance(input:Input,dt=STEP){
   this.move({...input,fire:false,homing:false},dt,this.courtyard?(x,z)=>courtyardFloor(x,z,this.courtyard!):entranceFloor,!this.courtyard);
+  const dunkId=this.courtyard&&this.crew.find(p=>p.player===this.player)?.id,approach=dunkId?basketballDunkApproach(this.courtyard?.basketball,dunkId,this.tick):undefined;
+  if(approach){this.player.pos.x=approach.x;this.player.pos.z=approach.z;this.player.vel.x=this.player.vel.z=0;}
   const before=this.previousPlayerPosition,bounds=this.courtyard?COURTYARD_BOUNDS:ENTRANCE_COURTYARD;
   if(this.courtyard){for(const s of COURTYARD_SOLIDS){const p=this.player;if(Math.abs(p.pos.x-s.x)<s.w/2+.22&&Math.abs(p.pos.z-s.z)<s.d/2+.22&&before.y-1.7<s.h-.18&&p.pos.y-1.7<s.h-.15){p.pos.x=before.x;p.pos.z=before.z;p.vel.x=p.vel.z=0;}}}
   if(this.courtyard&&pitIsOpen(this.courtyard)&&insidePit(before)&&before.y<1.45){
@@ -330,8 +382,8 @@ export class World {
     if(legacyStream||this.options.legacyWideStream){const t=segmentSphere(this.player.pos,end,point,radius);if(t!==null)aimDistance=Math.min(aimDistance,Math.max(.6,t*aimRange));}
     else aimDistance=Math.min(aimDistance,sphereAimDistance(this.player.pos,forward,point,radius,aimRange));
    };
-   if(e.segments.length){for(const p of e.segments)test(p.pos,.53*e.size);}
-   else if(e.weakpoints.length){for(const p of e.weakpoints)if(p.hp>0)test(crystalToEnemy(e,this.player.pos,p.local),(e.kind==='leviathan'?.6:TUNING.towerCrystalRadius)*enemyEmergenceScale(e));}
+   if(e.segments.length){for(const p of e.segments)test(p.pos,.53*CREATURE_SCALE_RATIO*e.size);}
+   else if(e.weakpoints.length){for(const p of e.weakpoints)if(p.hp>0)test(crystalToEnemy(e,this.player.pos,p.local),(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:TUNING.towerCrystalRadius)*enemyEmergenceScale(e));}
    else test(this.weakPoint(e),isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size*enemyEmergenceScale(e):e.radius);
   }
   if(!legacyStream&&!this.options.legacyWideStream){const floor=(this.options.legacyRicochet?sweepFloorLegacy:sweepFloor)(this.player.pos,end,this.time);if(floor)aimDistance=Math.min(aimDistance,Math.max(.6,floor.t*aimRange));}
@@ -594,7 +646,7 @@ export class World {
     if(e.hp<=0||!this.active(e)||pulse.hit.has(e.id))continue;
     // Respect segmented/crystal health: one live target per enemy per wave.
     const points=e.weakpoints.length?e.weakpoints.map((s,i)=>({pos:crystalToEnemy(e,this.player.pos,s.local),hp:s.hp,index:i,weak:true,r:TUNING.towerCrystalRadius})):
-     e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false,r:.53*e.size})):
+     e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false,r:.53*CREATURE_SCALE_RATIO*e.size})):
      [{pos:this.weakPoint(e),hp:e.hp,index:-1,weak:false,r:e.radius}];
     const point=points.find(p=>{
      if(p.hp<=0||Math.abs(p.pos.y-pulse.pos.y)>UPGRADE_PULSE.verticalReach+p.r)return false;
@@ -631,19 +683,21 @@ export class World {
  private explode(pos:Vec,exclude?:{entity:number;segment:number}){
   this.emit('explosion',pos);for(const e of this.enemies){if(e.hp<=0||!this.active(e))continue;
    const points=e.weakpoints.length?e.weakpoints.map((s,i)=>({pos:crystalToEnemy(e,this.player.pos,s.local),hp:s.hp,index:i,weak:true})):e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false})):[{pos:this.weakPoint(e),hp:e.hp,index:-1,weak:false}];
-   for(const p of points)if(p.hp>0&&!(exclude?.entity===e.id&&exclude.segment===p.index)&&distance(pos,p.pos)<1.9)this.damageEnemy(e,e.kind==='leviathan'||e.kind==='orb'?1:10,p.pos,p.index,p.weak);
+   for(const p of points)if(p.hp>0&&!(exclude?.entity===e.id&&exclude.segment===p.index)&&distance(pos,p.pos)<1.9*(isSquid(e.kind)?CREATURE_SCALE_RATIO:1))this.damageEnemy(e,e.kind==='leviathan'||e.kind==='orb'?1:10,p.pos,p.index,p.weak);
   }
  }
  private updateProjectiles(dt:number){
-  for(const explosion of this.detonations.filter(x=>x.tick<=this.tick))this.explode(explosion.pos,explosion.exclude);this.detonations=this.detonations.filter(x=>x.tick>this.tick);
-  if(!this.projectiles.length){this.enemies=this.enemies.filter(e=>e.hp>0);this.projectileTargetStarts.clear();return;}
+  if(!this.prediction)this.applyClientContacts();
+  if(!this.prediction){for(const explosion of this.detonations.filter(x=>x.tick<=this.tick))this.explode(explosion.pos,explosion.exclude);this.detonations=this.detonations.filter(x=>x.tick>this.tick);}
+  if(!this.projectiles.length){if(!this.prediction)this.enemies=this.enemies.filter(e=>e.hp>0);this.projectileTargetStarts.clear();return;}
   // Build damage targets once per tick; query only cells touched by each swept dagger.
   // Target health stays live because an earlier dagger can destroy a crystal this tick.
   type Target={e:Enemy;pos:Vec;r:number;i:number;weak:boolean;armor?:boolean;absorb?:boolean;previous?:Vec;stamp?:number};
   const cells=new Map<string,Target[]>(),cellSize=4;
-  for(const e of this.enemies){
+  const needsCollisionGrid=this.prediction||this.projectiles.some(p=>!p.shotKey||!this.contactOwners.includes(p.shotKey.split(':')[0]));
+  for(const e of needsCollisionGrid?this.enemies:[]){
    if(e.hp<=0||!this.active(e))continue;
-   const targets:Target[]=e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*e.size,i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:crystalToEnemy(e,this.player.pos,s.local),r:(e.kind==='leviathan'?.6:TUNING.towerCrystalRadius)*enemyEmergenceScale(e),i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size*enemyEmergenceScale(e):e.radius,i:-1,weak:false}];
+   const targets:Target[]=e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*CREATURE_SCALE_RATIO*e.size,i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:crystalToEnemy(e,this.player.pos,s.local),r:(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:TUNING.towerCrystalRadius)*enemyEmergenceScale(e),i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size*enemyEmergenceScale(e):e.radius,i:-1,weak:false}];
    // Destroyed tower crystals disappear; the surviving armor still blocks shots.
    for(let i=targets.length-1;i>=0;i--)if(targets[i].weak&&e.weakpoints[targets[i].i].hp<=0)targets.splice(i,1);
    if(e.kind==='ghostpede'){
@@ -665,6 +719,8 @@ export class World {
   const homingTargets=this.projectiles.some(p=>p.homing)?this.enemies.filter(e=>!isEgg(e.kind)&&e.kind!=='orb'&&e.hp>0&&this.active(e)):[];
   const old=v(),relativeOld=v(),relativeEnd=v();let queryStamp=0;
   for(const p of this.projectiles){
+   const projectileEffects=this.effects.length,bouncesBefore=p.floorBounces??0;
+   const clientOwned=!this.prediction&&!!p.shotKey&&this.contactOwners.includes(p.shotKey.split(':')[0]);
    p.previous??={...p.pos};Object.assign(p.previous,p.pos);
    const lifetime=p.homing?8:2.8,ageBefore=p.age,flightDt=Math.min(dt,Math.max(0,lifetime-ageBefore));
    p.path=undefined;if(flightDt<=0)continue;p.age+=flightDt;p.energy??=p.homing?10:1;
@@ -680,7 +736,7 @@ export class World {
    for(let pass=0;pass<4&&p.age<99;pass++){
     let best:{e:Enemy;segment:number;weak:boolean;t:number;pos:Vec;dead:boolean;armor:boolean;absorb?:boolean;r:number;nx?:number;ny?:number;nz?:number}|undefined;
     const stamp=++queryStamp;
-    for(let x=Math.floor(Math.min(old.x,p.pos.x)/cellSize);x<=Math.floor(Math.max(old.x,p.pos.x)/cellSize);x++)for(let z=Math.floor(Math.min(old.z,p.pos.z)/cellSize);z<=Math.floor(Math.max(old.z,p.pos.z)/cellSize);z++)for(const target of cells.get(x+','+z)??[]){
+    if(!clientOwned)for(let x=Math.floor(Math.min(old.x,p.pos.x)/cellSize);x<=Math.floor(Math.max(old.x,p.pos.x)/cellSize);x++)for(let z=Math.floor(Math.min(old.z,p.pos.z)/cellSize);z<=Math.floor(Math.max(old.z,p.pos.z)/cellSize);z++)for(const target of cells.get(x+','+z)??[]){
      if(target.stamp===stamp)continue;target.stamp=stamp;const e=target.e;
      if(e.hp<=0||(target.absorb?!p.homing:p.homing&&e.kind==='ghostpede'))continue;
      const hp=target.i<0?e.hp:target.weak?e.weakpoints[target.i].hp:e.segments[target.i].hp,dead=hp<=0;
@@ -736,22 +792,69 @@ export class World {
     }
     if(!best)break;const {e,segment}=best;
     const contact=v(old.x+(p.pos.x-old.x)*best.t,old.y+(p.pos.y-old.y)*best.t,old.z+(p.pos.z-old.z)*best.t);
-    if(best.absorb){Object.assign(p.pos,contact);this.stats.homingEaten++;this.emit('eat',contact,undefined,'ghostpede');this.expireProjectile(p);break;}
+    if(this.prediction&&p.shotKey)this.predictedContacts.push({shotKey:p.shotKey,enemyId:e.id,segment,weak:best.weak,kind:best.absorb?'eat':(best.armor&&e.kind!=='thorn')||best.dead?'impact':'hit',pos:{...contact},direction:direction(v(),p.vel)});
+    if(best.absorb){Object.assign(p.pos,contact);if(!this.prediction)this.stats.homingEaten++;this.emit('eat',contact,undefined,'ghostpede');this.expireProjectile(p);break;}
     if((best.armor&&e.kind!=='thorn')||best.dead){
      Object.assign(p.pos,contact);this.emit('impact',contact,p.level,e.kind);
      const effect=this.effects[this.effects.length-1];if(p.kind)effect.projectileKind=p.kind;effect.direction=best.nx===undefined?direction(p.pos,old):v(best.nx,best.ny,best.nz);
      this.expireProjectile(p,{entity:e.id,segment});break;
     }
     Object.assign(p.pos,contact);
+    if(this.prediction){
+     // The session reports this contact. Shared health, gems, kills, RNG and
+     // detonations are merged by the host, never overwritten by a guest.
+     this.emit('hit',contact,undefined,e.kind,e.id);
+     const hit=this.effects[this.effects.length-1];hit.bloodless=best.weak||isSpider(e.kind)||segment>=0;
+     if(this.predictHealth){
+      const part=segment>=0?(best.weak?e.weakpoints:e.segments)[segment]:null,applied=Math.min(e.hp,part?.hp??e.hp,this.projectileDamage(p,e));
+      if(part)part.hp-=applied;e.hp-=applied;e.lastHit=this.time;
+      if(p.shotKey)this.predictedContacts[this.predictedContacts.length-1].damage=applied;
+      if(e.hp<=0){if(p.shotKey)this.predictedContacts[this.predictedContacts.length-1].killed=true;this.emit('kill',e.pos,e.radius,e.kind,e.id);const kill=this.effects[this.effects.length-1];kill.bloodless=hit.bloodless;kill.direction=direction(v(),p.vel);if(p.shotKey)kill.shotKey=`${p.shotKey}:kill:${e.id}`;}
+     }
+     hit.direction=direction(v(),p.vel);this.expireProjectile(p);break;
+    }
     const damage=p.homing?(e.kind==='leviathan'||e.kind==='orb'?1:e.kind==='squid3'&&p.level===3?30:p.energy):p.kind==='shotgun'?SHOTGUN_TUNING.damage:1;
     const effectStart=this.effects.length,applied=this.damageEnemy(e,damage,best.pos,segment,best.weak);
     if(applied>0){this.stats.hits++;Object.assign(this.effects[effectStart].pos,contact);const direction= v(p.vel.x,p.vel.y,p.vel.z);const speed=Math.max(.001,Math.hypot(direction.x,direction.y,direction.z));direction.x/=speed;direction.y/=speed;direction.z/=speed;for(let i=effectStart;i<this.effects.length;i++)this.effects[i].direction={...direction};}
     this.expireProjectile(p,{entity:e.id,segment});break;
    }
+   // Stable contact identities prevent a replayed prediction or the host's
+   // confirmation from playing the same impact twice. Kills stay authoritative.
+   let bounce=bouncesBefore;
+   for(let i=projectileEffects;i<this.effects.length;i++){const effect=this.effects[i];if(effect.kind==='kill')continue;
+    if(effect.kind==='ricochet')bounce++;
+    if(p.shotKey)effect.shotKey=`${p.shotKey}:${effect.kind}:${effect.kind==='ricochet'?bounce:effect.enemyId??''}`;
+   }
   }
-  let surviving=0;for(let i=0;i<this.projectiles.length;i++){const p=this.projectiles[i];if(p.age<(p.homing?8:2.8))this.projectiles[surviving++]=p;}this.projectiles.length=surviving;this.enemies=this.enemies.filter(e=>e.hp>0);this.projectileTargetStarts.clear();
+  let surviving=0;for(let i=0;i<this.projectiles.length;i++){const p=this.projectiles[i];if(p.age<(p.homing?8:2.8))this.projectiles[surviving++]=p;
+   else if(!this.prediction&&p.age<99&&p.shotKey&&this.contactOwners.includes(p.shotKey.split(':')[0]))this.contactSources.set(p.shotKey,{level:p.level??1,energy:p.energy??1,homing:p.homing,...(p.kind?{kind:p.kind}:{}),expires:this.tick+360});
+  }this.projectiles.length=surviving;if(!this.prediction)this.enemies=this.enemies.filter(e=>e.hp>0);this.projectileTargetStarts.clear();
  }
- private expireProjectile(p:Projectile,exclude?:{entity:number;segment:number}){p.age=99;if(p.homing&&(p.level??1)>=4)this.detonations.push({tick:this.tick+2,pos:{...p.pos},exclude});}
+ private applyClientContacts(){
+  for(const [key,source]of this.contactSources)if(source.expires<this.tick)this.contactSources.delete(key);
+  if(!this.pendingContacts.size)return;const shots=new Map(this.projectiles.filter(p=>p.shotKey&&p.age<99).map(p=>[p.shotKey!,p]));
+  for(const [key,pending]of this.pendingContacts){
+   if(pending.expires<this.tick){this.pendingContacts.delete(key);this.acknowledgeContact(pending.contact);continue;}
+   if(pending.contact.serial&&pending.contact.serial!==this.contactAcknowledged(key.split(':')[0])+1)continue;
+   const source=this.contactSources.get(key),p=shots.get(key)??(source?{...source,id:0,shotKey:key,pos:v(),vel:v(),age:0}:undefined);
+   if(!p){const [owner,sequence]=key.split(':');if((this.crew.find(p=>p.id===owner)?.shotSequence??0)>=Number(sequence)){this.pendingContacts.delete(key);this.acknowledgeContact(pending.contact);}continue;}
+   const c=pending.contact;this.pendingContacts.delete(key);this.contactSources.delete(key);
+   // A report consumes this physical dagger even if a teammate has already
+   // destroyed its target. Damage/gems/kills still operate on current shared HP.
+   Object.assign(p.pos,c.pos);const e=this.enemies.find(e=>e.id===c.enemyId),first=this.effects.length;
+   if(c.kind==='eat'){this.stats.homingEaten++;this.emit('eat',c.pos,undefined,'ghostpede');}
+   else if(c.kind==='impact'){this.emit('impact',c.pos,p.level,e?.kind);if(p.kind)this.effects[this.effects.length-1].projectileKind=p.kind;}
+   else if(e&&e.hp>0&&(c.segment<0||(c.weak?e.weakpoints:e.segments)[c.segment]?.hp>0)){
+    const damage=this.projectileDamage(p,e);
+    if(this.damageEnemy(e,damage,c.pos,c.segment,c.weak)>0)this.stats.hits++;
+   }
+   for(let i=first;i<this.effects.length;i++){const effect=this.effects[i];effect.direction={...c.direction};effect.level=p.level;effect.shotKey=`${key}:${effect.kind}:${effect.enemyId??''}`;}
+   this.acknowledgeContact(c);
+   this.expireProjectile(p,{entity:c.enemyId,segment:c.segment});
+  }
+ }
+ private projectileDamage(p:Pick<Projectile,'homing'|'level'|'energy'|'kind'>,e:Enemy){return p.homing?(e.kind==='leviathan'||e.kind==='orb'?1:e.kind==='squid3'&&p.level===3?30:p.energy??10):p.kind==='shotgun'?SHOTGUN_TUNING.damage:1;}
+ private expireProjectile(p:Projectile,exclude?:{entity:number;segment:number}){p.age=99;if(!this.prediction&&p.homing&&(p.level??1)>=4)this.detonations.push({tick:this.tick+2,pos:{...p.pos},exclude});}
  weakPoint(e:Enemy){const point=e.weakpoints.find(s=>s.hp>0);if(point)return crystalToEnemy(e,this.player.pos,point.local);const segment=e.segments.find(s=>s.hp>0);return segment?.pos??(isSpider(e.kind)?spiderLocalPoint(e,this.player.pos,SPIDER_GEM):e.kind==='thorn'?v(e.pos.x,3,e.pos.z):e.pos);}
  dropGems(pos:Vec,count:number){this.stats.released+=count;for(let i=0;i<count;i++)this.gems.push({id:this.nextId++,pos:{...pos},vel:v((this.random()-.5)*3,-2,(this.random()-.5)*3),age:0});}
  private updateGems(input:Input,dt:number){

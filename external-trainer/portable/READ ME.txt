@@ -1,0 +1,33 @@
+ABYSS TRAINER - WINDOWS x64
+==========================
+
+1. Install Google Chrome if it is not already installed.
+2. Extract the ENTIRE ZIP into a normal writable folder.
+3. Double-click Start Trainer.bat.
+4. Play in the Chrome window that the trainer opens.
+
+Keep Abyss Trainer.exe beside the _internal folder. Do not send only the EXE.
+Python and Node.js are included. No Python, Node, npm install or admin rights
+are required. Internet is needed for the game.
+
+F7: Settings
+F8: Toggle aim
+F9: Disable aim
+F4: Toggle ESP
+F3: Toggle HUD
+F6: Next preset
+F10: Quit trainer and close its Chrome window
+
+The default game is https://devil-green.vercel.app.
+Use F7 > Connection if you need a different address.
+
+This package is for the ABYSS browser game, not native Devil Daggers or Warband.
+It requires a game build with the trainer connection enabled.
+
+The package starts with default settings and a new, separate Chrome profile.
+Settings, custom presets and the .chrome-profile folder are created locally
+beside the EXE. Never redistribute your used .chrome-profile folder: it can
+contain saved accounts and browser sessions.
+
+For a startup problem, launch Start Trainer.bat and read the error.
+This is an unsigned personal build; only run it if you trust its sender.

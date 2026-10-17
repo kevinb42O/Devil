@@ -2,6 +2,7 @@ import {packDrawing,unpackDrawing,type WireCourtyard} from './network-drawing';
 import type {DrawingState} from './courtyard-drawing';
 import {validateCourtyard} from './courtyard-state';
 import {projectileSocket} from './weapon-origin';
+import {BURST_COUNTS,STREAM_COUNTS} from './weapon-levels';
 import {MAX_CREW_PLAYERS} from './crew-config';
 import {type ArenaSnapshot} from './multiplayer';
 import {STEP,TUNING,type Projectile,type Vec} from './simulation';
@@ -11,6 +12,7 @@ import {canonicalPosition,packIds,unpackIds,packPositions,unpackPositions,packPo
 import {shotLaunches} from './projectile-launch';
 import {packShotLaunch,unpackShotLaunch} from './network-shots';
 type WireCrew=Omit<ArenaSnapshot['crew'][number],'life'|'respawnAt'|'protectedUntil'>&{life?:number;respawnAt?:number;protectedUntil?:number};
+const MAX_SHOT_DAGGERS=Math.max(...BURST_COUNTS,...STREAM_COUNTS);
 export type StateBaseline={drawing?:DrawingState;time:number;projectiles:Map<number,Projectile>;enemies:Map<number,EnemyRow>};
 const projectileFlags=(p:Projectile)=>(p.homing?1:0)|(((p.level??1)-1)<<1)|(p.kind==='shotgun'?16:0);
 type ShotRow=[owner:number,sequence:number,flags:number,energy:number,age:number,launch:number[],entries:number[]];
@@ -35,7 +37,7 @@ export function encodeState(s:ArenaSnapshot,frame:number,base:number,baseline?:S
  for(const [key,group]of groups){
   const [ownerId,sequence]=key.split(':'),owner=s.crew.findIndex(c=>c.id===ownerId),spec=group[0].launch!,age=group[0].age,energy=group[0].energy??1,flags=projectileFlags(group[0]);
   const indices=group.map(p=>Number(p.shotKey!.split(':')[2])),count=Math.max(...indices)+1;
-  if(group.length<4||owner<0||count>96||indices.some(i=>!Number.isInteger(i)||i<0)){for(const p of group)updates.push(row(p,s.crew));continue;}
+  if(group.length<4||owner<0||count>MAX_SHOT_DAGGERS||indices.some(i=>!Number.isInteger(i)||i<0)){for(const p of group)updates.push(row(p,s.crew));continue;}
   const description=packShotLaunch(spec,1+((flags>>1)&7));if(!description){for(const p of group)updates.push(row(p,s.crew));continue;}
   const launches=shotLaunches(spec,count,TUNING.projectileSpeed),entries:number[]=[];
   for(let i=0;i<group.length;i++){
@@ -76,8 +78,8 @@ export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>)
  }
  for(const r of w.flight.shots){
   if(!Array.isArray(r)||r.length!==7)throw Error('Invalid shot');const [owner,sequence,flags,energy,age,description,entries]=r;
-  if(!Number.isInteger(owner)||!w.body.crew[owner]||!Number.isSafeInteger(sequence)||sequence<1||!Number.isInteger(flags)||flags<0||flags>30||((flags>>1)&7)>6||flags%2||!Number.isFinite(energy)||!Number.isFinite(age)||age<0||age>3||!Array.isArray(entries)||entries.length>192||entries.length%2)throw Error('Invalid shot launch');
-  let count=0;for(let i=0;i<entries.length;i+=2){if(!Number.isSafeInteger(entries[i])||entries[i]<0||!Number.isInteger(entries[i+1])||entries[i+1]<0||entries[i+1]>=96)throw Error('Invalid shot identity');count=Math.max(count,entries[i+1]+1);}
+  if(!Number.isInteger(owner)||!w.body.crew[owner]||!Number.isSafeInteger(sequence)||sequence<1||!Number.isInteger(flags)||flags<0||flags>30||((flags>>1)&7)>6||flags%2||!Number.isFinite(energy)||!Number.isFinite(age)||age<0||age>3||!Array.isArray(entries)||entries.length>MAX_SHOT_DAGGERS*2||entries.length%2)throw Error('Invalid shot launch');
+  let count=0;for(let i=0;i<entries.length;i+=2){if(!Number.isSafeInteger(entries[i])||entries[i]<0||!Number.isInteger(entries[i+1])||entries[i+1]<0||entries[i+1]>=MAX_SHOT_DAGGERS)throw Error('Invalid shot identity');count=Math.max(count,entries[i+1]+1);}
   const spec=unpackShotLaunch(description,1+((flags>>1)&7)),launches=shotLaunches(spec,count,TUNING.projectileSpeed);
   if(!!(flags&16)!==!!spec.shotgunCount||spec.shotgunCount&&count>spec.shotgunCount)throw Error('Invalid shotgun identity');
   for(let i=0;i<entries.length;i+=2){const id=entries[i],index=entries[i+1],{pos:origin,vel}=launches[index],pos={x:origin.x+vel.x*age,y:origin.y+vel.y*age,z:origin.z+vel.z*age};if(updates.has(id))throw Error('Duplicate shot identity');updates.set(id,{id,pos,previous:{...pos},vel,age,...(flags&16?{kind:'shotgun' as const}:{}),homing:false,level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces:0,shotKey:`${w.body.crew[owner].id}:${sequence}:${index}`});}

@@ -37,7 +37,7 @@ try{
    check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.flashTextures[level-1],'first firing flash survives slow frame '+level);
    check(weapon.effectDiagnostics.recoil>0,'recoil survives first frame');
    check(weapon.handMaterials[level-1].uniforms.upgradePower.value===0,'firing suppresses upgrade emission');
-   weapon.update(world,.1,false);check(weapon.effectDiagnostics.flashTime===0,'flash settles next frame');
+   weapon.update(world,.2,false);check(weapon.effectDiagnostics.flashTime===0,'flash settles after release');
    world.effects=[];sound.clear();
   }
   sound.update(world);await Promise.all([...sound.pending.values()]);

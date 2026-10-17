@@ -1,3 +1,5 @@
+import {createCourtyardSign} from './courtyard-sign';
+import {CourtyardBasketballScene} from './courtyard-basketball-scene';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {loadEntranceEnvironment} from './entrance-environment';
@@ -13,8 +15,9 @@ export class CourtyardScene{
  get loaded(){return this.propsLoaded&&this.hasSkull;}
  private hatch=new THREE.Group();private skull=new THREE.Group();private skullLights=new THREE.Group();
  private shaft:THREE.PointLight;private sparks:THREE.Points;
- private plaques=new Map<string,THREE.Sprite>();private goalScore='';
+ private plaques=new Map<string,ReturnType<typeof createCourtyardSign>>();private goalScore='';
  private drawing=new CourtyardDrawingScene();
+ private basketball=new CourtyardBasketballScene();
  constructor(){
   this.scene.background=new THREE.Color(0x090b11);this.scene.fog=new THREE.FogExp2(0x090b11,.008);
   this.scene.add(new THREE.HemisphereLight(0xc7b8a4,0x301623,1.65));
@@ -25,7 +28,7 @@ export class CourtyardScene{
   const key=new THREE.PointLight(0xffe3b8,7,2.8,2),fill=new THREE.PointLight(0xb8d9ff,3,2.4,2);
   key.position.set(.65,1,.85);fill.position.set(-.7,.45,-.65);this.skullLights.add(key,fill);this.skullLights.visible=false;
   this.scene.add(this.hatch,this.skull,this.skullLights);
-  this.scene.add(this.drawing.root);
+  this.scene.add(this.drawing.root,this.basketball.root);
   this.ready=this.load().then(()=>{this.propsLoaded=true;}).catch(e=>{this.error='Courtyard assets could not load. Reload to retry.';throw e;});
   // Loading failure is surfaced in the courtyard HUD; avoid an unhandled rejection at menu startup.
   void this.ready.catch(()=>{});
@@ -56,7 +59,7 @@ export class CourtyardScene{
    const bounds=new THREE.Box3().setFromObject(root),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
    model.position.sub(new THREE.Vector3(center.x,bounds.min.y,center.z));root.scale.set(w/Math.max(.001,size.x),h/Math.max(.001,size.y),d/Math.max(.001,size.z));root.position.set(x,y,z);parent.add(root);return root;
   };
-  await loadEntranceEnvironment(this.scene,true);
+  await Promise.all([loadEntranceEnvironment(this.scene,true),this.basketball.load()]);
   // Existing authored game tiles are instanced around the aperture by setFloor.
   for(const x of [PIT.x-2.2,PIT.x+2.2]){place('template-wall',x,-8,PIT.z,.4,8,4.8);place('stone-wall',x,.01,PIT.z,.3,.12,4.8);}
   for(const z of [PIT.z-2.2,PIT.z+2.2]){place('template-wall',0,-8,z,4,8,.4);place('stone-wall',0,.01,z,4.6,.12,.3);}
@@ -66,6 +69,7 @@ export class CourtyardScene{
   place('altar-stone',3.3,-.025,-4.6,.85,1.125,.85);
   place('candle-multiple',3.3,1.1,-4.6,.45,.35,.4);
   this.label('football-wayfinding','FOOTBALL →',new THREE.Vector3(6.5,2.8,PIT.z),2,.35);
+  this.label('basketball-wayfinding','BASKETBALL →',new THREE.Vector3(6,2.5,8),2.8,.45);
   this.label('drawing-wayfinding','8 × 8 TIC-TAC-TOE →',new THREE.Vector3(57.5,2.8,2),5,.5);
   const textureLoader=new THREE.TextureLoader(manager);
   const [pitchAsset,goalAsset,grass,normal,net]=await Promise.all([
@@ -91,7 +95,7 @@ export class CourtyardScene{
  private label(id:string,text:string,pos:THREE.Vector3,w:number,h:number){
   const old=this.plaques.get(id);if(old){old.material.map?.dispose();old.material.dispose();old.removeFromParent();}
   const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=160;const ctx=canvas.getContext('2d')!;ctx.font='500 38px "Barlow Condensed",sans-serif';ctx.textAlign='center';ctx.fillStyle='#e5c49c';ctx.shadowColor='#000';ctx.shadowBlur=10;ctx.fillText(text,512,92,980);
-  const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthWrite:false,toneMapped:false}));sprite.position.copy(pos);sprite.scale.set(w,h,1);this.scene.add(sprite);this.plaques.set(id,sprite);
+  const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;const plaque=createCourtyardSign(id,w,h,map);plaque.position.copy(pos);plaque.rotation.y=-Math.PI/2;this.scene.add(plaque);this.plaques.set(id,plaque);
  }
  private scoreLabel(index:number,goals:readonly number[]){
   const id='football-score-'+index,old=this.plaques.get(id);if(old){old.material.map?.dispose();old.material.dispose();old.removeFromParent();}
@@ -100,16 +104,17 @@ export class CourtyardScene{
   ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='500 28px "DM Sans",sans-serif';ctx.fillStyle='#b9c5bb';ctx.fillText('NORTH GOAL',204,55);ctx.fillText('SOUTH GOAL',564,55);
   ctx.font='600 112px "Barlow Condensed",sans-serif';ctx.fillStyle='#f4e8ca';ctx.fillText(String(goals[0]),204,163);ctx.fillText(String(goals[1]),564,163);ctx.font='500 58px "Barlow Condensed",sans-serif';ctx.fillStyle='#8b9a8f';ctx.fillText(':',384,156);
   const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map,transparent:true,depthWrite:false,toneMapped:false}));sprite.name=id;sprite.userData.goals=[...goals];
-  sprite.position.set(FOOTBALL.x,4.7,FOOTBALL.goalZ[index]+(index?1:-1)*.2);sprite.scale.set(5.4,1.8,1);this.scene.add(sprite);this.plaques.set(id,sprite);
+  const plaque=createCourtyardSign(id,5.4,1.8,map);plaque.userData.goals=[...goals];
+  plaque.position.set(FOOTBALL.x,4.7,FOOTBALL.goalZ[index]+(index?1:-1)*.2);plaque.rotation.y=index?Math.PI:0;this.scene.add(plaque);this.plaques.set(id,plaque);
  }
  get diagnostics(){return {skullVisible:this.skull.visible,lightingVisible:this.skullLights.visible,lightPosition:this.skullLights.position.toArray(),scores:[0,1].map(i=>{const board=this.plaques.get('football-score-'+i);return board?{goals:board.userData.goals,position:board.position.toArray()}:null;})};}
  updatePencilGrips(world:World,models:Map<string,THREE.Group>,local?:{id:string;model:THREE.Group}){
   this.drawing.updateGrips(world,models,local);
  }
- update(world:World,members:{id:string;ready:boolean;color?:string;loaded?:number}[],reduced=false){
+ update(world:World,members:{id:string;name?:string;ready:boolean;color?:string;loaded?:number}[],reduced=false){
   const c=world.courtyard;if(!c){this.skullLights.visible=false;return;}const t=world.tick/120;
   this.drawing.update(c.drawing,world);
+  this.basketball.update(c.basketball,world,members);
   const opening=c.phase==='gathering'?0:c.phase==='opening'?Math.max(0,Math.min(1,(world.tick-c.phaseTick)/PIT.openingTicks)):1;
   this.hatch.visible=opening<1;
   this.skull.position.set(c.skull.pos.x,c.skull.pos.y,c.skull.pos.z);this.skull.rotation.set(c.skull.rotation.x,c.skull.rotation.y,c.skull.rotation.z);this.skull.visible=!c.skull.resetAt;this.skullLights.position.copy(this.skull.position);this.skullLights.visible=this.skull.visible;

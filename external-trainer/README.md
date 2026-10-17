@@ -68,6 +68,8 @@ Loose pickups in `world.gems` are never scanned. A crystal's destroyed/released 
 
 ESP displays live enemies that are currently outside the aim cone, excluded from aiming, armored or not yet active. Unavailable targets are dimmed. Selection runs separately from ESP projection so hiding or simplifying the overlay does not reduce aim-update speed.
 
+The aim cone and range filter run before armor geometry checks. Distance, health and threat selection check candidates in score order and stop at the best clear target; crosshair selection accounts for the actual exposed crystal edge. ESP entries that have not been checked for occlusion are provisional. Disabled, suspended, unfocused or expired aim performs no armor checks, while ESP remains independent. Armor checks first discard towers that cannot intersect the firing ray.
+
 Viewport coordinates account for browser page zoom, Retina density, display placement and fullscreen dimensions. The overlay updates its bounds when the monitor layout changes.
 
 ## Connection and recovery

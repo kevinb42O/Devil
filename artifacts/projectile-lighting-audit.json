@@ -9,19 +9,19 @@
         255
       ],
       "lit": [
-        24,
-        51,
-        51,
+        44,
+        28,
+        49,
         255
       ],
       "floorLit": [
-        24,
-        51,
-        51,
+        44,
+        28,
+        49,
         255
       ],
       "extraGlowDraws": 1,
-      "glowPixelGain": 107225,
+      "glowPixelGain": 33505,
       "count": 12,
       "drawCalls": 1,
       "capacity": 256,
@@ -36,19 +36,19 @@
         255
       ],
       "lit": [
-        24,
-        51,
-        51,
+        44,
+        28,
+        49,
         255
       ],
       "floorLit": [
-        24,
-        51,
-        51,
+        44,
+        28,
+        49,
         255
       ],
       "extraGlowDraws": 1,
-      "glowPixelGain": 107229,
+      "glowPixelGain": 33513,
       "count": 12,
       "drawCalls": 1,
       "capacity": 256,
@@ -73,8 +73,8 @@
   "menuUploadFree": true,
   "resumedCount": 6000,
   "emptyUploadFree": true,
-  "updateMedianMs": 3.099999964237213,
-  "updateP95Ms": 7.099999964237213,
+  "updateMedianMs": 1.2000000178813934,
+  "updateP95Ms": 1.5999999940395355,
   "strafe": {
     "checks": 3,
     "maxCenterError": 0,

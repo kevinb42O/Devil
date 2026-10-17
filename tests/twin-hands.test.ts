@@ -36,10 +36,12 @@ test('six-person upgrades celebrate for everyone but create one collector damage
  assert.ok(w.crew.every(p=>p.level===5));assert.equal(w.effects.filter(e=>e.kind==='upgrade').length,6);assert.equal(w.effects.filter(e=>e.sharedWave).length,1);assert.equal(w.captureCrewCheckpoint().upgradePulses.length,before+1);assert.equal(w.effects.find(e=>e.sharedWave)?.shooterId,'p2');
  w.effects=[];w.collect();assert.equal(w.effects.length,0);
 });
-test('network reproduces both origins, sparse pellet 95, homing and delta baselines',()=>{
+test('network reproduces both origins, sparse final pellets, homing and delta baselines',()=>{
  const session=new FriendsSession('host');try{session.running=true;for(const level of [5,6,7])for(const burst of [false,true]){
   const w=new World(42,{schedule:false});session.world=w;w.addCrew('host');w.crew[0].level=level;(w as any).useCrew(w.crew[0]);w.shoot(idleInput(),burst,false);
   const full=structuredClone(w.projectiles),count=full.length,spec=full[0].launch!,packed=packShotLaunch(spec,level)!;assert.ok(packed);assert.deepEqual(shotLaunches(unpackShotLaunch(packed,level),count,70),shotLaunches(spec,count,70));
+  const complete=decodeState(encodeState(session.snapshot()!,1,0),new Map())!;assert.equal(complete.snapshot.projectiles.length,count,'full dense salvos survive transport');
+  assert.equal(complete.snapshot.projectiles.at(-1)!.shotKey,full.at(-1)!.shotKey,'final pellet identity survives transport');
   w.projectiles=full.filter((_,i)=>[0,1,2,3,count-1].includes(i));const first=decodeState(encodeState(session.snapshot()!,1,0),new Map())!;
   for(const p of first.snapshot.projectiles){const q=full.find(q=>q.id===p.id)!;assert.equal(p.level,level);assert.equal(p.kind,q.kind);assert.equal(p.socket,q.socket);assert.ok(Math.hypot(p.pos.x-q.pos.x,p.pos.y-q.pos.y,p.pos.z-q.pos.z)<1e-9);assert.ok(Math.hypot(p.vel.x-q.vel.x,p.vel.y-q.vel.y,p.vel.z-q.vel.z)<1e-9);}
   const send=snapshotBaseline(session.snapshot()!),receive=snapshotBaseline(first.snapshot);w.time+=.05;for(const p of w.projectiles){p.age+=.05;p.pos=v(p.pos.x+p.vel.x*.05,p.pos.y+p.vel.y*.05,p.pos.z+p.vel.z*.05);}const second=decodeState(encodeState(session.snapshot()!,2,1,send),new Map([[1,receive]]))!;assert.ok(second.snapshot.projectiles.every(p=>p.level===level));

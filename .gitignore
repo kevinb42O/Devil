@@ -12,3 +12,6 @@ test-results/
 
 # Supabase CLI local cache
 supabase/.temp/
+
+# Temporary environments and intermediates from portable trainer packaging
+/output/trainer-portable/build-*/

@@ -1,0 +1,53 @@
+{
+  "visibility": [
+    {
+      "quality": "low",
+      "time": 0,
+      "visiblePixels": 33224,
+      "meanRedGain": 25.76550084276427,
+      "drawCalls": 65
+    },
+    {
+      "quality": "low",
+      "time": 90,
+      "visiblePixels": 32799,
+      "meanRedGain": 24.173297966401414,
+      "drawCalls": 65
+    },
+    {
+      "quality": "low",
+      "time": 300,
+      "visiblePixels": 31802,
+      "meanRedGain": 23.669045971951448,
+      "drawCalls": 65
+    },
+    {
+      "quality": "high",
+      "time": 0,
+      "visiblePixels": 33270,
+      "meanRedGain": 25.750916741809437,
+      "drawCalls": 78
+    },
+    {
+      "quality": "high",
+      "time": 90,
+      "visiblePixels": 32775,
+      "meanRedGain": 24.15106025934401,
+      "drawCalls": 78
+    },
+    {
+      "quality": "high",
+      "time": 300,
+      "visiblePixels": 31789,
+      "meanRedGain": 23.643618861870458,
+      "drawCalls": 78
+    }
+  ],
+  "weapon": {
+    "peak": 0.04,
+    "recovered": 0.0022009288022562883,
+    "stream": 0.009,
+    "aimUnchanged": true,
+    "trajectoriesUnchanged": true
+  }
+}

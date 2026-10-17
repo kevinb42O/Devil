@@ -1,3 +1,4 @@
+import {CREATURE_SCALE_RATIO} from '../src/enemy-presentation.ts';
 import {floorHeight} from '../src/arena.ts';
 import {SPIDER_GEM,spiderLocalPoint,localToEnemy} from '../src/enemy-presentation.ts';
 import { test } from 'node:test';
@@ -34,7 +35,7 @@ test('tower crystals accept edge shots within the enlarged radius',()=>{
    const point=w.weakPoint(e),outward=v(point.x-e.pos.x,0,point.z-e.pos.z),length=Math.hypot(outward.x,outward.z);
    outward.x/=length;outward.z/=length;
    // Approach the exposed face, avoiding the armored tower behind the crystal.
-   w.projectiles.push({id:901,pos:v(point.x+outward.x,point.y+offset,point.z+outward.z),vel:v(-outward.x*240,0,-outward.z*240),age:0,homing:false});
+   w.projectiles.push({id:901,pos:v(point.x+outward.x,point.y+offset*CREATURE_SCALE_RATIO,point.z+outward.z),vel:v(-outward.x*240,0,-outward.z*240),age:0,homing:false});
    const hp=e.hp;(w as any).updateProjectiles(STEP);
    assert.equal(e.hp,hp-(offset===.55?1:0),`${kind}: offset ${offset}`);
   }

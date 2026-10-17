@@ -15,3 +15,31 @@ High-quality arena GPU median was 9.4–10.6 ms with mist and 3.8 ms without it.
 Replacing the current sky with the saved baseline sky while disabling mist showed no consistent GPU improvement. This comparison isolates the sky only; it is not a complete comparison with an earlier checkout.
 
 No gameplay or graphics defaults were changed during the investigation.
+
+## Trainer slowdown fix — 16 October 2026
+
+The trainer previously performed armor queries for every eligible target before
+applying its FOV filter, including when aim was disabled. Dense scenes amplified
+this work with each additional enemy and armored tower. Resolution scaling then
+reduced image quality without addressing that CPU cost.
+
+The fix applies the aim circle before geometry queries, checks distance/health/threat
+candidates in order until a clear target is found, and culls armor that cannot
+intersect the firing ray. Disabled/suspended/unfocused/expired aim does no armor
+queries. Crosshair selection still ranks resolved damage points. New runs also
+reset adaptive resolution and its counters.
+
+Run `node --import tsx tools/profile-trainer.ts` for the controlled CPU comparison
+with revision `146f872`. Results are in `trainer-profile.json`. At 60° FOV, median
+scan cost fell from 132.0 to 2.4 ms for 600 skulls and 8 towers, and from 627.5 to
+3.2 ms for 1,500 skulls and 20 towers. Selected targets matched the reference in
+these fixtures. These are target-scan timings, not complete game frame rates.
+
+Regression coverage includes early FOV culling, disabled aim, blocked-target
+fallback, held locks, crosshair ordering and primary/homing hits on all three tower
+types. Another 576 geometry queries matched the unculled reference, with mesh
+queries reduced from 1,547 to 479. Browser checks covered a real kill, reconnect,
+reload, clean detach, and resolution recovery from 0.625 to 1.25 pixel ratio.
+
+Restart the trainer to load the updated injected adapter. The game-side resolution
+reset requires serving the updated game build.

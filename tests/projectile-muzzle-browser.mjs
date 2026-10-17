@@ -1,7 +1,7 @@
 import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
-const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+const browser=await chromium.launch({headless:true,...(process.platform==='darwin'?{executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'}:{})});
 try{
  const page=await browser.newPage({viewport:{width:640,height:480}}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -25,7 +25,7 @@ try{
    weapon.update(world,.5,false,camera,0);check(weapon.effectDiagnostics.recoil<kick*.001,'hand kick recovers promptly');
    check(world.projectiles.every((p,i)=>p.pos.x===before[i].x&&p.pos.y===before[i].y&&p.pos.z===before[i].z),'visual clearance never moves physical shots');handChecks++;
   }
-  weapon.clear();world.projectiles=[];weapon.update(world,0,false,camera);
+  weapon.clear();world.projectiles=[];world.player.pos=v(0,0,0);weapon.update(world,0,false,camera);
   const canvas=document.createElement('canvas'),renderer=new T.WebGLRenderer({canvas,antialias:false});renderer.setSize(640,480);renderer.setClearColor(0);
   const pixels=new Uint8Array(640*480*4),countPixels=()=>{const gl=renderer.getContext();gl.readPixels(0,0,640,480,gl.RGBA,gl.UNSIGNED_BYTE,pixels);let n=0;for(let i=0;i<pixels.length;i+=4)if(pixels[i]+pixels[i+1]+pixels[i+2]>0)n++;return n;};
   const sampleMesh=distance=>{world.projectiles=Array.from({length:60},(_,id)=>({id,pos:v(0,0,-distance),vel:v(0,0,-70),age:0,homing:false,level:3}));weapon.update(world,0,false,camera);renderer.render(scene,camera);return countPixels();};

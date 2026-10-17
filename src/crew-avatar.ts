@@ -6,6 +6,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {clone as cloneSkeleton} from 'three/addons/utils/SkeletonUtils.js';
 import type {Input,Vec} from './simulation';
+import {basketballHoldOffset,type BasketballPose} from './courtyard-basketball';
 
 const shoulderGeometry=new THREE.IcosahedronGeometry(1,2);
 const fallbackGeometry=new THREE.CapsuleGeometry(.38,1.05,4,8);
@@ -182,8 +183,32 @@ function pointEmoteArm(model:THREE.Group,upper:THREE.Bone,lower:THREE.Bone,targe
   bone.quaternion.slerp(aimRotation,weight);bone.updateWorldMatrix(false,true);
  }
 }
+const shotShoulder=new THREE.Vector3(),shotElbow=new THREE.Vector3(),shotWrist=new THREE.Vector3(),shotTarget=new THREE.Vector3(),shotAxis=new THREE.Vector3(),shotPole=new THREE.Vector3(),shotBend=new THREE.Vector3();
+const shotEase=(n:number)=>{n=THREE.MathUtils.clamp(n,0,1);return n*n*(3-2*n);};
+/** Solve the two segments independently so the elbows bend around the held ball. */
+function basketballArm(model:THREE.Group,upper:THREE.Bone,lower:THREE.Bone,wrist:THREE.Object3D,target:THREE.Vector3,pole:THREE.Vector3,weight:number){
+ upper.getWorldPosition(shotShoulder);lower.getWorldPosition(shotElbow);wrist.getWorldPosition(shotWrist);
+ const a=shotShoulder.distanceTo(shotElbow),b=shotElbow.distanceTo(shotWrist);
+ shotTarget.copy(target);model.localToWorld(shotTarget);shotAxis.subVectors(shotTarget,shotShoulder);
+ const distance=THREE.MathUtils.clamp(shotAxis.length(),Math.abs(a-b)+.001,a+b-.003);shotAxis.normalize();
+ shotPole.copy(pole);model.localToWorld(shotPole);shotPole.sub(shotShoulder);shotPole.addScaledVector(shotAxis,-shotPole.dot(shotAxis)).normalize();
+ const along=(a*a-b*b+distance*distance)/(2*distance),height=Math.sqrt(Math.max(0,a*a-along*along));
+ shotBend.copy(shotShoulder).addScaledVector(shotAxis,along).addScaledVector(shotPole,height);
+ aim.subVectors(shotBend,shotShoulder).normalize();pointBone(upper,aim,weight);
+ lower.getWorldPosition(shotElbow);shotTarget.copy(shotShoulder).addScaledVector(shotAxis,distance);aim.subVectors(shotTarget,shotElbow).normalize();pointBone(lower,aim,weight);
+}
 /** Presentation only: sample simulation time so pause/seek never advance animation. */
-export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false,courtyard=false,weaponLevel=1,kick?:KickPose,holdingPencil=false){
+export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false,courtyard=false,weaponLevel=1,kick?:KickPose,holdingPencil=false,basketball?:BasketballPose|boolean){
+ const shot=typeof basketball==='boolean'?basketball?{holding:true,charge:0,gather:0,age:-1}:undefined:basketball,holdingBasketball=shot?.holding===true;
+ // Basketball hands remain readable without hiding the ball's release guide.
+ if(model.userData.firstPerson){
+  const faded=!!(courtyard&&shot);
+  for(const material of model.userData.avatarMaterials as THREE.MeshStandardMaterial[]){
+   const saved=material.userData.basketballOpacity as {opacity:number;transparent:boolean;depthWrite:boolean}|undefined;
+   if(faded&&!saved){material.userData.basketballOpacity={opacity:material.opacity,transparent:material.transparent,depthWrite:material.depthWrite};material.opacity=.28;material.transparent=true;material.depthWrite=false;material.needsUpdate=true;}
+   else if(!faded&&saved){Object.assign(material,saved);delete material.userData.basketballOpacity;material.needsUpdate=true;}
+  }
+ }
  if(model.userData.skinTime)model.userData.skinTime.value=time;
  const state=states.get(model);if(!state)return;
  const speed=Math.hypot(velocity.x,velocity.z),run=grounded?Math.min(1,speed/5):0;
@@ -253,6 +278,28 @@ export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grou
    if(/^Thumb[23]R$/.test(finger.bone.name))finger.bone.rotateX(.55);
   }
  }
+ if(courtyard&&shot){
+  model.updateWorldMatrix(true,true);
+  const ball=basketballHoldOffset(shot.gather),release=shot.holding?0:shotEase(shot.age/.12),guide=shot.holding?0:shotEase(shot.age/.2),weight=shot.dunkAge!==undefined?1-shotEase((shot.dunkAge-.55)/.35):shot.holding?1:1-shotEase((shot.age-.3)/.35);
+  const right=new THREE.Vector3(ball.x-.015,ball.y-.125,ball.z+.045).lerp(new THREE.Vector3(.14,.37,-.56),release);
+  const left=new THREE.Vector3(ball.x-.13,ball.y-.08,ball.z+.05).lerp(new THREE.Vector3(-.36,-.48,-.25),guide);
+  if(shot.dunkAge!==undefined&&shot.dunkTarget){
+   const target=shot.dunkTarget,slam=shotEase((shot.dunkAge-.26)/.14);right.set(target.x,target.y-.12-slam*.23,target.z+.025);left.set(target.x-.16,target.y-.08-slam*.35,target.z+.06);
+   if(shot.dunkAge>.4){const recover=shotEase((shot.dunkAge-.4)/.45);right.lerp(new THREE.Vector3(.36,-.55,-.3),recover);left.lerp(new THREE.Vector3(-.36,-.55,-.3),recover);}
+  }
+  basketballArm(model,state.upper,state.lower,state.root.getObjectByName('Middle1R')!,right,new THREE.Vector3(.28,-.6,-.08),weight);
+  basketballArm(model,state.leftUpper,state.leftLower,state.root.getObjectByName('Middle1L')!,left,new THREE.Vector3(-.48,-.4,-.03),weight);
+  // The shooting wrist folds after extension; the guide hand opens and drops away.
+  for(const isLeft of [false,true]){
+   const lower=isLeft?state.leftLower:state.lower,wrist=shot.dunkAge!==undefined?shotEase((shot.dunkAge-.24)/.14):shot.holding?0:shotEase((shot.age-.035)/.13);
+   handDirection.set(isLeft?.18:0,isLeft?.65:.65-.85*wrist,isLeft?-.75:-.75-.25*wrist).normalize().applyQuaternion(model.quaternion);
+   emoteBack.set(isLeft?-1:0,isLeft?0:-1,.2).normalize().applyQuaternion(model.quaternion);emoteRight.crossVectors(handDirection,emoteBack).normalize();emoteBack.crossVectors(emoteRight,handDirection).normalize();
+   emoteWorld.setFromRotationMatrix(emoteFrame.makeBasis(emoteRight,handDirection,emoteBack));lower.getWorldQuaternion(handLocal);handLocal.invert().multiply(emoteWorld);
+   for(const finger of state.fingers)if(finger.left===isLeft){fingerTarget.copy(finger.open);if(/1[LR]$/.test(finger.bone.name))fingerTarget.premultiply(handLocal);finger.bone.quaternion.slerp(fingerTarget,weight);if(/^(Index|Middle|Pinky)[23]/.test(finger.bone.name))finger.bone.rotateX(-(shot.holding?.48:isLeft?.12:.2)*weight);}
+  }
+  model.userData.basketballPose={...shot,right:right.toArray(),left:left.toArray(),weight};
+ }
+ model.userData.holdingBasketball=courtyard&&holdingBasketball;
  model.userData.holdingPencil=courtyard&&holdingPencil;
  const leg=state.legs[kick?.right?1:0];
  if(courtyard&&kick&&leg.thigh&&leg.shin){

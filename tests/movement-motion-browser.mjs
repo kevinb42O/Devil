@@ -28,7 +28,7 @@ try{
   for(let i=0;i<5;i++)draw(0);
   check(JSON.stringify(renderer.movementMotion.diagnostics)===frozen,'pause freezes movement state');check(renderer.camera.position.equals(frozenCamera),'paused camera is exact');check(JSON.stringify(weapon.effectDiagnostics.motionRotation)===hand,'paused arm rotation is exact');
   let sockets=0,maxError=0;
-  for(const fov of [75,90,115,145])for(const aspect of [16/9,9/16])for(let level=1;level<=4;level++){
+  for(const fov of [75,90,115,145])for(const aspect of [16/9,9/16])for(let level=1;level<=7;level++){
    w.level=level;renderer.configure({quality:'low',fov,screenShake:0,movementMotion:100,mist:false});tick(1/60,.45,.3);
    renderer.camera.aspect=aspect;renderer.camera.updateProjectionMatrix();weapon.resize(aspect*540,540);
    weapon.update(w,0,false,renderer.camera,1,renderer.feedbackWorldOffset,renderer.movementMotion.pose);
@@ -38,6 +38,15 @@ try{
     maxError=Math.max(error,maxError);check(error<1e-10,'actual swinging arm and translated camera preserve launch alignment');check(JSON.stringify(p)===before,'swing never mutates the physical dagger');sockets++;
    }
   }
+  // The imported arm and palm stay rigid. Rotation is anchored at the lower
+  // arm, so the base only follows intentional translation, never an orbit
+  // around the hand. Check the actual rendered parent transform.
+  const {HAND_POSE}=await import('/src/weapon-origin.ts');
+  const localBase=new T.Vector3(-.055,.19,.006),restBase=localBase.clone().applyQuaternion(weapon.restRotation);
+  const renderedBase=localBase.clone().applyQuaternion(weapon.pose.quaternion).add(weapon.pose.position);
+  const expectedBase=restBase.clone().add(new T.Vector3(HAND_POSE.x+weapon.motion.x,HAND_POSE.y+weapon.motion.y,HAND_POSE.z+weapon.recoil+weapon.motion.z));
+  check(renderedBase.distanceTo(expectedBase)<1e-10,'whole rigid arm rotates around its base');
+  check(weapon.pose.scale.equals(new T.Vector3(1,1,1)),'locomotion never stretches the arm mesh');
   w.level=1;renderer.configure({quality:'low',fov:90,screenShake:100,movementMotion:0,mist:false});renderer.effect({kind:'burst',pos:w.player.pos},w,0,0);draw(.02);
   check(magnitude(renderer.movementMotion.pose.arm)===0,'movement off disables swing');check(renderer.cameraFeedback.diagnostics.active.includes('burst'),'impact shake remains independent of movement setting');
   renderer.clear();renderer.configure({quality:'low',fov:90,screenShake:0,movementMotion:100,mist:false});w.player.vel=v(0,0,-11);w.player.grounded=true;for(let i=0;i<20;i++)tick(1/60);

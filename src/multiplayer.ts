@@ -1,5 +1,6 @@
 import {createCourtyard,courtyardEvent,insidePit,pitIsOpen,PIT,SPAWNS,resetSkull,type CourtyardState} from './courtyard-state';
 import {createDrawing,pencilAction,stepDrawing,nearDrawingRoom,nearClearButton,INK_COLORS,BRUSH_SIZES} from './courtyard-drawing';
+import {stepBasketball,basketballAction,nearBasketball,createBasketball} from './courtyard-basketball';
 import {stepSkull,stepHighFives} from './courtyard-physics';
 import {ARENA_START_DELAY_MS} from './crew-arrival-timing';
 import {verifyPodiumSkin} from './podium-skin-service';
@@ -15,11 +16,13 @@ import {World,STEP,idleInput,v,distance,type Input,type Effect,type Vec} from '.
 import {CommandBuffer,InputHistory,MAX_PENDING_INPUTS,inputRuns,InputPacer} from './network-input';
 import {encodeState,decodeState,fragmentState,StateAssembler,snapshotBaseline,stateAssemblyTimeout,type StateBaseline} from './network-state';
 import {encodePacket,decodePacket,NETWORK_PROTOCOL_VERSION} from './network-codec';
+import {encodeEffects,decodeEffects} from './network-effects';
+import {encodeContacts,decodeContacts,type ProjectileContact} from './network-contacts';
 import {SnapshotTimeline} from './network-presentation';
 import {MqttWsSignalingClient} from './signaling';
 const STATE_BYTES_PER_SECOND=192000,STATE_BURST_BYTES=256*1024;
 export type LobbyMember={id:string;name:string;ready:boolean;host:boolean;color?:PlayerColor;skin?:PlayerSkin;skinRank?:PodiumRank;readyRevision?:number;loaded?:number};
-export type ArenaSnapshot={members:LobbyMember[];lobbyName:string;serverNow:number;startAt:number;effects:Effect[];epoch:number;running:boolean;prelobby?:boolean;courtyard?:CourtyardState;time:number;tick:number;state:World['state'];cause:string;radius:number;wave:number;level:number;reserve:number;stats:World['stats'];enemies:World['enemies'];projectiles:World['projectiles'];gems:World['gems'];rings:World['rings'];crew:{id:string;player:World['player'];alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;yaw:number;pitch?:number;leftArm?:boolean;rightArm?:boolean;level:number;reserve:number;primary:CrewPlayerWireChannel;secondary:CrewPlayerWireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;ack:number;queuedInputs?:number}[]};
+export type ArenaSnapshot={clientHits?:boolean;members:LobbyMember[];lobbyName:string;serverNow:number;startAt:number;effects:Effect[];epoch:number;running:boolean;prelobby?:boolean;courtyard?:CourtyardState;time:number;tick:number;state:World['state'];cause:string;radius:number;wave:number;level:number;reserve:number;stats:World['stats'];enemies:World['enemies'];projectiles:World['projectiles'];gems:World['gems'];rings:World['rings'];crew:{id:string;player:World['player'];alive:boolean;cause:string;respawnAt:number|null;life:number;protectedUntil:number;yaw:number;pitch?:number;leftArm?:boolean;rightArm?:boolean;level:number;reserve:number;primary:CrewPlayerWireChannel;secondary:CrewPlayerWireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;ack:number;contactAck?:number;queuedInputs?:number}[]};
 type CrewPlayerWireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 type StateTransfer={frame:number;epoch:number;packets:ArrayBuffer[];next:number;baseline:StateBaseline;at:number;size:number};
 type Link={localIce?:RTCIceCandidateInit[];remoteIce?:Map<string,RTCIceCandidateInit|null>;signal?:string;replay?:CrewReplayTransfer;transfer?:StateTransfer;eventEpoch?:number;rttMs?:number;pongAt?:number;pc:RTCPeerConnection;state?:RTCDataChannel;input?:RTCDataChannel;updates?:RTCDataChannel;timer:ReturnType<typeof setTimeout>;assembler:StateAssembler;baselines:Map<number,StateBaseline>;ackFrame:number;sentEpoch:number;tokens:number;tokenAt:number;lastSend:number;sendInterval:number;events:Effect[];disconnectTimer?:ReturnType<typeof setTimeout>};
@@ -34,6 +37,10 @@ export class CrewInputBuffer {
  next(){const edge=this.edges.shift();if(edge)this.buttons=edge;return {...this.latest,...this.buttons};}
 }
 export class FriendsSession{
+ private contactSequence=0;private pendingDamage=new Map<number,ProjectileContact>();private seenDeaths=new Set<number>();
+ private contactSentAt=new Map<string,number>();
+ private clientHits=false;private localFlight=new Map<string,World['projectiles'][number]>();private endedShots=new Map<string,number>();private contactOutbox=new Map<string,ProjectileContact>();private flightAccumulator=0;private flightEpoch=-1;
+ private aimingScene?:{epoch:number;enemies:World['enemies']};
  readonly id=randomId();room='';name='Wanderer';color:PlayerColor=DEFAULT_PLAYER_COLOR;lobbyName='The First Circle';members:LobbyMember[]=[];startAt=0;private heartbeat?:ReturnType<typeof setInterval>;private publicLobby=false;role:'host'|'guest';links=new Map<string,Link>();inputs=new Map<string,Input>();private inputBuffers=new Map<string,CrewInputBuffer>();private commands=new Map<string,CommandBuffer>();private history=new InputHistory();private pacer=new InputPacer();private lastProgress=0;private progressTick=-1;private hostPlaying=false;private timeline=new SnapshotTimeline();private cameraOffset:Vec=v();private predictedShots=new Set<string>();private seenEvents=new Set<number>();private eventSequence=0;private networkTimer:ReturnType<typeof setInterval>;private lastBroadcast=0;private lastPing=0;private lastView=0;private lastState=0;private bytesSent=0;private bytesReceived=0;private rtt=0;private correction=0;private releasedSequence=-1;private localLife=0;private readyRevision=0;private pendingReady?:{revision:number;ready:boolean};private hostStepMs=0;private snapshotInterval=50;private rateAt=0;private rateSent=0;private rateReceived=0;private sendRate=0;private receiveRate=0;inputTimes=new Map<string,number>();world:World|null=null;epoch=0;running=false;prelobby=false;localId='host';closed=false;private sequence=0;private pendingEffects:Effect[]=[];private mqtt=new MqttWsSignalingClient();private joinTimer?:ReturnType<typeof setInterval>;private signalingTopic='';private earlyIce=new Map<string,RTCIceCandidateInit>();
  onCrewControl=(_peerId:string,_message:unknown)=>{};beforeArenaStart=()=>true;
  sendCrewControl(message:unknown,peerId?:string){if(!message||typeof message!=='object'||typeof (message as {type?:unknown}).type!=='string'||!(message as {type:string}).type.startsWith('crew-ranking:'))return false;const payload=JSON.stringify(message);if(payload.length>16000)return false;let sent=false;for(const [id,l]of this.links)if((!peerId||id===peerId)&&l.state?.readyState==='open')try{l.state.send(payload);this.bytesSent+=new TextEncoder().encode(payload).length;sent=true;}catch{}return sent;}
@@ -85,6 +92,7 @@ export class FriendsSession{
  }
  private applyPencilAction(id:string,clear=false){
   const c=this.courtyard,p=this.world?.crew.find(p=>p.id===id),now=performance.now();
+  if(!clear&&this.prelobby&&this.gathering&&c&&p?.alive&&nearBasketball(p.player.pos)&&now-(this.pencilActions.get(id)??-1000)>=250){this.pencilActions.set(id,now);return basketballAction(c.basketball??=createBasketball(),p,this.world!.tick);}
   if(!this.prelobby||!this.gathering||!c||!p||!p.alive||!nearDrawingRoom(p.player.pos)||now-(this.pencilActions.get(id)??-1000)<250)return false;
   this.pencilActions.set(id,now);c.drawing??=createDrawing();
   const wallButton=!clear&&nearClearButton(p.player.pos);
@@ -188,6 +196,7 @@ export class FriendsSession{
     if(m.type==='pong'&&Number.isFinite(m.at)){const now=performance.now();link.rttMs=Math.max(0,now-m.at);link.pongAt=now;this.rtt=link.rttMs;return;}
     if(this.role==='host'){
      if(!validPeerId(id))return;
+     if(m.type==='contacts'&&m.epoch===this.epoch&&this.running){this.world?.queueContacts(decodeContacts(m,id));return;}
      if(m.type==='ack'&&m.epoch===this.epoch&&Number.isInteger(m.frame)){if(m.frame===0)link.ackFrame=0;else if(link.baselines.has(m.frame)&&m.frame>link.ackFrame)link.ackFrame=m.frame;return;}
      if(m.type==='release'&&m.epoch===this.epoch&&(m.life??0)===this.world?.crew.find(p=>p.id===id)?.life){let commands=this.commands.get(id);if(!commands){commands=new CommandBuffer();this.commands.set(id,commands);}if(!commands.discardThrough(m.seq))return;this.inputs.set(id,this.neutralInput(id));this.inputTimes.set(id,-Infinity);this.inputBuffers.delete(id);return;}
      // Compatibility path for direct transport tests/tools: real gameplay uses
@@ -197,9 +206,19 @@ export class FriendsSession{
      if(m.type==='drawing-style'){if(m.generation===this.epoch)this.applyDrawingStyle(id,m.style);return;}
      if(m.type==='drawing-action'){if(m.generation===this.epoch)this.applyPencilAction(id);return;}
      if(m.type==='skin'){void this.applySkin(id,m.token).then(ok=>{if(!ok&&ch.readyState==='open')ch.send(JSON.stringify({type:'skin-rejected'}));});return;}const member=this.members.find(p=>p.id===id);if(member&&this.gathering&&m.type==='color'){this.clearSkin(id);if(isPlayerColor(m.color)){member.color=m.color;member.ready=false;this.updateLobby();}return;}if(member&&!this.running&&(m.type==='ready'||m.type==='hello')){if(m.type==='hello'&&this.gathering)member.color=isPlayerColor(m.color)?m.color:DEFAULT_PLAYER_COLOR;if(typeof m.name==='string')member.name=m.name.trim().slice(0,24)||'Wanderer';if(m.type==='ready'){if(this.prelobby&&m.generation!==this.epoch)return;const revision=m.revision??((member.readyRevision??0)+1);if(!Number.isSafeInteger(revision)||revision<1||revision<=(member.readyRevision??0))return;member.readyRevision=revision;member.ready=m.ready===true&&(!this.prelobby||member.loaded===this.epoch);if(!member.ready)this.cancelDescent();}this.updateLobby();}
-    }else if(m.type==='skin-rejected'){this.clearSkin(this.localId);this.onChange();this.onError('Ascendant is reserved for the current solo top three. Choose a color or try verifying again.');}else if(m.type==='effects'&&m.epoch===this.epoch&&Array.isArray(m.events)){const effects:Effect[]=[];for(const e of m.events){if(!Number.isInteger(e.networkId)||this.seenEvents.has(e.networkId))continue;this.seenEvents.add(e.networkId);const predicted=e.shotKey&&this.predictedShots.has(e.shotKey);if(predicted)this.predictedShots.delete(e.shotKey);if(!predicted&&!(e.shooterId===this.localId&&(e.kind==='jump'||e.kind==='land')))effects.push(e);}while(this.seenEvents.size>2048)this.seenEvents.delete(this.seenEvents.values().next().value!);this.onEffects(effects);}
+    }else if(m.type==='skin-rejected'){this.clearSkin(this.localId);this.onChange();this.onError('Ascendant is reserved for the current solo top three. Choose a color or try verifying again.');}else if(m.type==='effects')this.receiveEffects(m);
    }catch{/* Malformed controls cannot advance simulation. */}
   };
+ }
+ private receiveEffects(message:unknown){
+  const batch=decodeEffects(message);if(!batch||batch.epoch!==this.epoch)return;const effects:Effect[]=[];
+  for(const e of batch.events){if(this.seenEvents.has(e.networkId!))continue;this.seenEvents.add(e.networkId!);const predicted=e.shotKey&&this.predictedShots.has(e.shotKey);
+   if(this.clientHits&&e.kind==='ricochet'&&e.shotKey?.startsWith(`${this.localId}:`))continue;
+   if(e.kind==='kill'&&e.enemyId!==undefined){if(this.seenDeaths.has(e.enemyId))continue;this.seenDeaths.add(e.enemyId);}
+   if(e.shotKey?.startsWith(`${this.localId}:`))this.rememberShotEffect(e.shotKey);
+   if(!predicted&&!(e.shooterId===this.localId&&(e.kind==='jump'||e.kind==='land')))effects.push(e);
+  }
+  while(this.seenEvents.size>2048)this.seenEvents.delete(this.seenEvents.values().next().value!);this.onEffects(effects);
  }
  private receiveCommands(id:string,data:ArrayBuffer){
   if(!validPeerId(id)||(!this.running&&!this.prelobby)||data.byteLength>20000)return;
@@ -211,7 +230,7 @@ export class FriendsSession{
  }
  private receiveState(link:Link,data:ArrayBuffer){
   try{const bytes=link.assembler.push(data,performance.now());if(!bytes)return;const decoded=decodeState(bytes,link.baselines);if(!decoded){this.control({type:'ack',epoch:this.epoch,frame:0});return;}const {frame,snapshot}=decoded;if(frame<=link.assembler.last)return;
-   if(snapshot.epoch!==this.epoch){this.resetReplay();this.history.reset();this.pacer.reset();this.lastProgress=0;this.progressTick=-1;this.localLife=0;this.releasedSequence=-1;this.pendingReady=undefined;this.timeline.reset();this.predictedShots.clear();this.seenEvents.clear();this.cameraOffset=v();this.lastState=0;this.snapshotInterval=50;link.baselines.clear();}
+   if(snapshot.epoch!==this.epoch){this.resetReplay();this.history.reset();this.pacer.reset();this.lastProgress=0;this.progressTick=-1;this.localLife=0;this.releasedSequence=-1;this.pendingReady=undefined;this.timeline.reset();this.flightAccumulator=0;this.lastView=0;this.localFlight.clear();this.endedShots.clear();this.contactOutbox.clear();this.aimingScene=undefined;this.predictedShots.clear();this.seenEvents.clear();this.cameraOffset=v();this.lastState=0;this.snapshotInterval=50;link.baselines.clear();}
    link.baselines.set(frame,snapshotBaseline(snapshot));while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);link.assembler.accept(frame);
    const local=snapshot.members.find(p=>p.id===this.localId);if(this.pendingReady&&local){if((local.readyRevision??0)>=this.pendingReady.revision)this.pendingReady=undefined;else local.ready=this.pendingReady.ready;}
    const changed=this.running!==snapshot.running||this.prelobby!==!!snapshot.prelobby||JSON.stringify(this.members)!==JSON.stringify(snapshot.members);this.running=snapshot.running;this.world??=new World(1,{schedule:false});this.world.courtyard=snapshot.courtyard;this.world.tick=snapshot.tick;this.prelobby=!!snapshot.prelobby;this.epoch=snapshot.epoch;this.members=snapshot.members??[];this.lobbyName=snapshot.lobbyName;this.startAt=snapshot.time>0||!snapshot.startAt?0:Date.now()+Math.max(0,snapshot.startAt-snapshot.serverNow-this.rtt/2);const receivedAt=performance.now();if(this.lastState)this.snapshotInterval=this.snapshotInterval*.8+(receivedAt-this.lastState)*.2;this.lastState=receivedAt;this.hostPlaying=(snapshot.running||!!snapshot.prelobby)&&snapshot.state==='playing';if(snapshot.tick!==this.progressTick){this.progressTick=snapshot.tick;this.lastProgress=receivedAt;}this.timeline.push(snapshot,this.lastState);this.control({type:'ack',epoch:this.epoch,frame});if(changed)this.onChange();this.onSnapshot(snapshot);
@@ -219,30 +238,92 @@ export class FriendsSession{
  }
  private pumpNetwork(){
   if(this.closed)return;for(const l of this.links.values())l.replay?.pump();const now=performance.now();if(now-this.rateAt>=1000){const elapsed=(now-this.rateAt)/1000;this.sendRate=(this.bytesSent-this.rateSent)/elapsed;this.receiveRate=(this.bytesReceived-this.rateReceived)/elapsed;this.rateSent=this.bytesSent;this.rateReceived=this.bytesReceived;this.rateAt=now;}if(now-this.lastPing>=1000){this.lastPing=now;this.control({type:'ping',at:now});}
-  if(!this.running&&!this.prelobby)return;if(this.role==='host'){for(const link of this.links.values())this.drainState(link,now);if(now-this.lastBroadcast>=50){this.lastBroadcast=now-(now-this.lastBroadcast)%50;this.broadcast();}}else this.flushInputs();
+  if(!this.running&&!this.prelobby)return;if(this.role==='host'){for(const link of this.links.values())this.drainState(link,now);if(now-this.lastBroadcast>=50){this.lastBroadcast=now-(now-this.lastBroadcast)%50;this.broadcast();}}else{this.flushInputs();this.flushContacts();}
  }
  private flushInputs(){
   if(!this.history.commands.length)return;const packet=encodePacket({epoch:this.epoch,life:this.localLife,runs:inputRuns(this.history.commands)});
   for(const link of this.links.values())if(link.input?.readyState==='open'&&link.input.bufferedAmount<8000)try{link.input.send(packet.buffer as ArrayBuffer);this.bytesSent+=packet.byteLength;}catch{/* Retry outstanding commands on the next pump. */}
  }
+ private flushContacts(){
+  if(!this.clientHits)return;
+  while(this.contactOutbox.size){
+   if(![...this.links.values()].some(l=>l.state?.readyState==='open'&&l.state.bufferedAmount<16000))break;
+   const now=performance.now(),retry=Math.max(500,this.rtt*1.5),contacts=[...this.contactOutbox.values()].filter(c=>!this.contactSentAt.has(c.shotKey)||now-this.contactSentAt.get(c.shotKey)!>=retry).slice(0,24);
+   if(!contacts.length||!this.control(JSON.parse(encodeContacts(this.epoch,contacts))))break;for(const c of contacts)this.contactSentAt.set(c.shotKey,now);
+  }
+ }
+ private rememberLocalFlight(w:World){
+  if(!this.clientHits){w.predictedContacts=[];return;}
+  const now=performance.now();
+  for(const c of w.predictedContacts){if(this.endedShots.has(c.shotKey))continue;c.serial=++this.contactSequence;if(c.kind==='hit'&&(c.damage??0)>0)this.pendingDamage.set(c.serial,c);this.endedShots.set(c.shotKey,now);this.contactOutbox.set(c.shotKey,c);}
+  w.predictedContacts=[];
+  const live=new Map(w.projectiles.filter(p=>p.shotKey?.startsWith(`${this.localId}:`)&&!this.endedShots.has(p.shotKey)).map(p=>[p.shotKey!,p]));
+  for(const key of this.localFlight.keys())if(!live.has(key)&&!this.endedShots.has(key))this.endedShots.set(key,now);
+  this.localFlight=live;
+  for(const [key,at]of this.endedShots)if(now-at>15000)this.endedShots.delete(key);
+  this.flushContacts();
+ }
+ private rememberShotEffect(key:string){this.predictedShots.add(key);while(this.predictedShots.size>4096)this.predictedShots.delete(this.predictedShots.values().next().value!);}
+ private freshPredictedEffects(effects:Effect[]){return effects.filter(effect=>{if(effect.shotKey&&this.predictedShots.has(effect.shotKey))return false;if(effect.kind==='kill'&&effect.enemyId!==undefined){if(this.seenDeaths.has(effect.enemyId))return false;this.seenDeaths.add(effect.enemyId);}if(effect.shotKey)this.rememberShotEffect(effect.shotKey);return true;});}
  predict(w:World,input:Input):boolean{
   if(this.role!=='guest'||(!this.running&&!this.prelobby)||Date.now()<this.startAt||this.waitingForHost)return false;
   const local=w.crew.find(p=>p.id===this.localId);if(!local?.alive||w.state!=='playing'||!this.pacer.next(input))return false;
-  const command=this.history.record(input);if(!command)return false;w.predictCrew(this.localId,command.input,STEP,this.prelobby);
-  for(const effect of w.effects)if(effect.shotKey)this.predictedShots.add(effect.shotKey);while(this.predictedShots.size>512)this.predictedShots.delete(this.predictedShots.values().next().value!);return true;
+  const previous=local.input,command=this.history.record(input);if(!command)return false;
+  // Button edges must not spend another network batch waiting on this machine.
+  // Outstanding commands still travel together, preserving order after loss.
+  if(input.fire!==previous.fire||input.homing!==previous.homing||input.jump!==previous.jump)this.flushInputs();
+  const effectsStart=w.effects.length;w.predictCrew(this.localId,command.input,STEP,this.prelobby,this.aimingScene?.epoch===this.epoch?this.aimingScene.enemies:undefined,!this.clientHits);
+  this.rememberLocalFlight(w);
+  w.effects.splice(effectsStart,w.effects.length-effectsStart,...this.freshPredictedEffects(w.effects.slice(effectsStart)));return true;
  }
  get waitingForHost(){return this.role==='guest'&&(this.running||this.prelobby)&&(performance.now()-this.lastState>1000||this.history.stalled||this.hostStalled);}
  get hostStalled(){return this.role==='guest'&&(this.running||this.prelobby)&&this.hostPlaying&&Date.now()>=this.startAt&&this.lastProgress>0&&performance.now()-this.lastProgress>500;}
  private neutralInput(id:string){const last=this.world?.crew.find(p=>p.id===id)?.input??this.inputs.get(id)??idleInput();return {...idleInput(),yaw:last.yaw,pitch:last.pitch,homing:false};}
 
  reconcile(w:World,s:ArenaSnapshot){
+  this.clientHits=s.clientHits===true;
+  if(this.flightEpoch!==s.epoch){this.flightEpoch=s.epoch;this.flightAccumulator=0;this.lastView=0;this.localFlight.clear();this.endedShots.clear();this.contactOutbox.clear();this.contactSentAt.clear();this.pendingDamage.clear();this.seenDeaths.clear();this.contactSequence=0;this.aimingScene=undefined;w.resetPredictedFlight();}
+  const contactAck=s.crew.find(p=>p.id===this.localId)?.contactAck??0;
+  for(const [key,c]of this.contactOutbox)if(c.serial&&c.serial<=contactAck){this.contactOutbox.delete(key);this.contactSentAt.delete(key);}
+  for(const [serial,c]of this.pendingDamage)if(serial<=contactAck){this.pendingDamage.delete(serial);if(c.killed&&s.enemies.some(e=>e.id===c.enemyId&&e.hp>0))this.seenDeaths.delete(c.enemyId);}
   const next=s.crew.find(p=>p.id===this.localId),changedLife=!!next&&next.life!==this.localLife;
   if(changedLife){this.localLife=next!.life;this.history.reset();this.pacer.reset();this.releasedSequence=-1;this.predictedShots.clear();this.cameraOffset=v();}
   this.pacer.update(next?.queuedInputs??0);
   const before={x:w.player.pos.x+this.cameraOffset.x,y:w.player.pos.y+this.cameraOffset.y,z:w.player.pos.z+this.cameraOffset.z};this.history.acknowledge(s.crew.find(p=>p.id===this.localId)?.ack??0);applySnapshot(w,s,this.localId);if(!w.crew.find(p=>p.id===this.localId)?.alive||w.state==='dead')this.history.commands=[];
-  for(const command of this.history.commands)w.predictCrew(this.localId,command.input,STEP,this.prelobby);w.effects=[];this.correction=distance(before,w.player.pos);this.cameraOffset=!changedLife&&this.correction<2&&w.crew.find(p=>p.id===this.localId)?.alive?v(before.x-w.player.pos.x,before.y-w.player.pos.y,before.z-w.player.pos.z):v();
+  w.effects=[];for(const command of this.history.commands)w.predictCrew(this.localId,command.input,STEP,this.prelobby,undefined,!this.clientHits);
+  if(this.clientHits){
+   // Movement/cooldown replay cannot rewind a shooter's actual dagger flight,
+   // resurrect a consumed dagger, or invent fresh contact reports.
+   const owned=new Map(w.projectiles.filter(p=>p.shotKey?.startsWith(`${this.localId}:`)).map(p=>[p.shotKey!,p]));
+   for(const [key,p]of this.localFlight)owned.set(key,p);for(const key of this.endedShots.keys())owned.delete(key);
+   w.projectiles=[...w.projectiles.filter(p=>!p.shotKey?.startsWith(`${this.localId}:`)),...owned.values()];this.localFlight=owned;
+  }
+  w.predictedContacts=[];
+  const contacts=this.freshPredictedEffects(w.effects.filter(e=>!!e.shotKey&&(!this.clientHits||e.kind==='shot'||e.kind==='burst')));w.effects=[];if(contacts.length)this.onEffects(contacts);
+  this.correction=distance(before,w.player.pos);this.cameraOffset=!changedLife&&this.correction<2&&w.crew.find(p=>p.id===this.localId)?.alive?v(before.x-w.player.pos.x,before.y-w.player.pos.y,before.z-w.player.pos.z):v();
  }
- presentation(w:World,now:number){if(this.role!=='guest')return w;const dt=this.lastView?Math.min(.1,(now-this.lastView)/1000):0;this.lastView=now;const decay=Math.exp(-20*dt);this.cameraOffset.x*=decay;this.cameraOffset.y*=decay;this.cameraOffset.z*=decay;return this.timeline.view(w,this.localId,now,this.cameraOffset);}
+ presentation(w:World,now:number){
+  if(this.role!=='guest')return w;const dt=this.lastView?Math.max(0,Math.min(.1,(now-this.lastView)/1000)):0;this.lastView=now;
+  const decay=Math.exp(-20*dt);this.cameraOffset.x*=decay;this.cameraOffset.y*=decay;this.cameraOffset.z*=decay;
+  const presented=this.timeline.view(w,this.localId,now,this.cameraOffset),view=presented===w?Object.create(w) as World:presented;this.aimingScene={epoch:this.epoch,enemies:view.enemies};
+  if(this.clientHits){
+   const latest=new Map(w.enemies.map(e=>[e.id,e]));
+   // Interpolate positions, but use current shared health plus only the local
+   // damage absent from this snapshot's acknowledgement. Never mutate samples.
+   view.enemies=view.enemies.flatMap(e=>{const current=latest.get(e.id);return !current||this.seenDeaths.has(e.id)?[]:[{...e,hp:current.hp,lastHit:current.lastHit,weakpoints:e.weakpoints.map((p,i)=>({...p,hp:current.weakpoints[i]?.hp??p.hp})),segments:e.segments.map((p,i)=>({...p,hp:current.segments[i]?.hp??p.hp}))}];});
+   const enemies=new Map(view.enemies.map(e=>[e.id,e]));
+   for(const c of this.pendingDamage.values()){const e=enemies.get(c.enemyId);if(!e)continue;const part=c.segment>=0?(c.weak?e.weakpoints:e.segments)[c.segment]:null,damage=Math.min(e.hp,part?.hp??e.hp,c.damage??0);if(part)part.hp-=damage;e.hp-=damage;e.lastHit=w.time;}
+   view.enemies=view.enemies.filter(e=>e.hp>0);this.aimingScene={epoch:this.epoch,enemies:view.enemies};
+  }
+  if(this.clientHits&&!this.prelobby&&w.state==='playing'&&(this.localFlight.size||this.contactOutbox.size)){
+   const first=w.effects.length;this.flightAccumulator+=dt;
+   while(this.flightAccumulator>=STEP){w.predictProjectiles(this.localId,STEP,view.enemies,true);this.flightAccumulator-=STEP;}
+   const contacts=this.freshPredictedEffects(w.effects.slice(first));w.effects.length=first;this.rememberLocalFlight(w);if(contacts.length)this.onEffects(contacts);
+   view.projectiles=[...view.projectiles.filter(p=>!p.shotKey?.startsWith(`${this.localId}:`)),...w.projectiles.filter(p=>p.shotKey?.startsWith(`${this.localId}:`))];
+   view.enemies=view.enemies.filter(e=>e.hp>0);
+  }else this.flightAccumulator=0;
+  return view;
+ }
  releaseControls(){if(this.role==='guest'){const seq=this.history.lastSequence;if(seq===this.releasedSequence)return;if(this.control({type:'release',epoch:this.epoch,life:this.localLife,seq}))this.releasedSequence=seq;}}
  get diagnostics(){return {updateHz:Math.round(1000/(this.role==='host'?Math.max(50,...[...this.links.values()].map(l=>l.sendInterval)):this.snapshotInterval)),hostStepMs:Number(this.hostStepMs.toFixed(2)),sendKBps:Number((this.sendRate/1000).toFixed(1)),receiveKBps:Number((this.receiveRate/1000).toFixed(1)),rttMs:Math.round(this.rtt),snapshotAgeMs:this.lastState?Math.round(performance.now()-this.lastState):0,pendingInputs:this.history.commands.length,predictionStalled:this.history.stalled,hostStalled:this.hostStalled,hostQueue:this.pacer.queued,correction:this.correction,interpolationMs:Math.round(this.timeline.delay*1000),bytesSent:this.bytesSent,bytesReceived:this.bytesReceived,queuedBytes:[...this.links.values()].reduce((n,l)=>n+(l.updates?.bufferedAmount??0)+(l.input?.bufferedAmount??0)+(l.state?.bufferedAmount??0),0)};}
  // Forward late ICE candidates and replay them when a lost handshake is retried.
@@ -254,7 +335,7 @@ export class FriendsSession{
  private parse(raw:string,type:'offer'|'answer'){if(raw.length>100000)throw Error('Connection code is too large.');let s:Signal;try{s=JSON.parse(raw.trim());}catch{throw Error('Paste the complete connection code.');}if(s.version!==NETWORK_PROTOCOL_VERSION)throw Error('This lobby uses a different game build. Reload every player’s browser.');if(!validPeerId(s.id)||typeof s.room!=='string'||s.description?.type!==type||typeof s.description.sdp!=='string')throw Error('Invalid connection code.');return s;}
  async answer(raw:string){if(this.role!=='guest'||this.links.size)throw Error('Leave the current room before joining another.');const s=this.parse(raw,'offer');this.room=s.room;this.localId=s.id;const l=this.makeLink(s.id);l.remoteIce=new Map(this.earlyIce);this.earlyIce.clear();await l.pc.setRemoteDescription(s.description);await this.applyIce(l);return JSON.stringify({...s,description:await this.description(l,'answer')});}
  async accept(raw:string){const s=this.parse(raw,'answer');if(this.role!=='host'||s.room!==this.room)throw Error('Answer belongs to another room.');const l=this.links.get(s.id);if(!l)throw Error('Invitation expired. Create a new offer.');if(l.pc.signalingState==='have-local-offer'){await l.pc.setRemoteDescription(s.description);await this.applyIce(l);}}
- start(fromEntrance=false){if(this.skinChecks.size)return;if(this.role!=='host'||fromEntrance&&this.running)return;if(this.world?.courtyard){const c=this.world.courtyard;if(c.phase!=='collecting'||!c.participants.length||c.participants.length!==this.members.length||c.committed.length!==c.participants.length||!this.allReady||this.members.some(m=>m.loaded!==this.epoch))return;}if(fromEntrance&&!this.beforeArenaStart())return;if(!fromEntrance&&this.publicLobby&&!this.allReady&&!this.running)throw Error('Every player must be ready before starting.');this.resetReplay();const seed=crypto.getRandomValues(new Uint32Array(1))[0],crewIds=[...new Set([...(this.world?.crew.map(p=>p.id)??[]),...this.links.keys()])].filter(id=>id!=='host'&&this.links.get(id)?.state?.readyState==='open');this.startAt=Date.now()+ARENA_START_DELAY_MS;this.world=new World(seed);this.world.addCrew('host');this.world.selectCrew('host');for(const id of crewIds)this.world.addCrew(id);this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.epoch++;this.running=true;this.prelobby=false;this.crewRecorder=new CrewRunRecorder(seed,this.world,this.members,this.id,this.epoch,typeof navigator!=='undefined'&&navigator.maxTouchPoints>0?24*1024*1024:64*1024*1024);this.updateLobby();}
+ start(fromEntrance=false){if(this.skinChecks.size)return;if(this.role!=='host'||fromEntrance&&this.running)return;if(this.world?.courtyard){const c=this.world.courtyard;if(c.phase!=='collecting'||!c.participants.length||c.participants.length!==this.members.length||c.committed.length!==c.participants.length||!this.allReady||this.members.some(m=>m.loaded!==this.epoch))return;}if(fromEntrance&&!this.beforeArenaStart())return;if(!fromEntrance&&this.publicLobby&&!this.allReady&&!this.running)throw Error('Every player must be ready before starting.');this.resetReplay();const seed=crypto.getRandomValues(new Uint32Array(1))[0],crewIds=[...new Set([...(this.world?.crew.map(p=>p.id)??[]),...this.links.keys()])].filter(id=>id!=='host'&&this.links.get(id)?.state?.readyState==='open');this.startAt=Date.now()+ARENA_START_DELAY_MS;this.world=new World(seed);this.world.addCrew('host');this.world.selectCrew('host');for(const id of crewIds)this.world.addCrew(id);this.world.contactOwners=crewIds.slice();this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.epoch++;this.running=true;this.prelobby=false;this.crewRecorder=new CrewRunRecorder(seed,this.world,this.members,this.id,this.epoch,typeof navigator!=='undefined'&&navigator.maxTouchPoints>0?24*1024*1024:64*1024*1024);this.updateLobby();}
  enterPrelobby(){
   if(this.role!=='host'||this.running||this.prelobby)return;
   this.resetReplay();this.prelobby=true;this.startAt=0;this.epoch++;this.inputs.clear();this.inputBuffers.clear();this.commands.clear();this.inputTimes.clear();this.pendingEffects=[];this.socialContacts.clear();this.pencilActions.clear();
@@ -278,6 +359,9 @@ export class FriendsSession{
   const active=w.crew.filter(p=>!c.committed.includes(p.id)),artists=active.map(p=>({...p,input:{...p.input,fire:this.inputs.get(p.id)?.fire,homing:this.inputs.get(p.id)?.homing}}));
   c.drawing??=createDrawing();stepDrawing(c.drawing,artists,w.tick,c.phase==='gathering');
   const holding=new Set(c.drawing.pencils.map(p=>p.owner).filter(Boolean));for(const id of holding)delete c.kicks[id!];
+  stepBasketball(c,artists.filter(p=>!holding.has(p.id)),w.tick,STEP);
+  for(const ball of c.basketball?.balls??[])if(ball.owner)holding.add(ball.owner);
+  for(const p of artists)if(nearBasketball(p.player.pos)){holding.add(p.id);delete c.kicks[p.id];}
   stepSkull(c,artists.filter(p=>!holding.has(p.id)),w.tick,STEP);stepHighFives(c,active,w.tick,this.socialContacts);return false;
  }
  step(input:Input){if(this.role==='host'&&this.world&&(this.running||this.prelobby)&&Date.now()>=this.startAt){
@@ -287,7 +371,7 @@ export class FriendsSession{
   const replayTowers=recording?this.world.enemies.filter(e=>e.kind.startsWith('squid')&&e.hp>0):[];const resolvedInputs=new Map([...this.inputs].map(([id,input])=>[id,{...input}]));const start=this.world.effects.length;if(this.running)this.world.stepCrew(this.inputs,STEP,waiting);else if(this.stepCourtyard(waiting))return;for(const p of this.world.crew){const old=lives.get(p.id);if(old&&(old.life!==p.life||old.alive&&!p.alive)){this.inputs.delete(p.id);this.inputBuffers.delete(p.id);this.commands.delete(p.id);this.inputTimes.delete(p.id);}}if(recording&&this.crewRecorder){try{this.crewRecorder.record(this.world,resolvedInputs,waiting,before,start,performance.now()-started,replayTowers);this.replayError=this.crewRecorder.error;if(this.world.state==='dead'&&!this.completedReplay){this.completedReplay=this.crewRecorder.finish(this.world);if(this.completedReplay)this.onReplayReady(this.completedReplay);}}catch{this.replayError='Team replay recording failed. The run results are still available.';this.crewRecorder=null;}}this.startAt=0;this.pendingEffects.push(...this.world.effects.slice(start).map(e=>({...e,networkId:++this.eventSequence})));if(this.pendingEffects.length>1024)this.pendingEffects.splice(0,this.pendingEffects.length-1024);this.hostStepMs=this.hostStepMs*.9+(performance.now()-started)*.1;
  }}
  sendInput(input:Input){this.control({type:'sample',epoch:this.epoch,life:this.localLife,input});}
- snapshot():ArenaSnapshot|null{const w=this.world;if(!w)return null;return {members:this.members.filter(p=>p.host||this.links.get(p.id)?.state?.readyState==='open'),lobbyName:this.lobbyName,serverNow:Date.now(),startAt:this.startAt,effects:this.pendingEffects,epoch:this.epoch,running:this.running,prelobby:this.prelobby||undefined,courtyard:this.prelobby?w.courtyard:undefined,time:w.time,tick:w.tick,state:w.state,cause:w.cause,radius:w.radius,wave:w.wave,level:w.level,reserve:w.reserve,stats:w.stats,enemies:w.enemies,projectiles:w.projectiles,gems:w.gems,rings:w.rings,crew:w.crew.map(p=>({id:p.id,player:p.player,alive:p.alive,cause:p.cause,respawnAt:p.respawnAt,life:p.life,protectedUntil:p.protectedUntil,yaw:p.input.yaw,pitch:p.input.pitch||undefined,leftArm:this.prelobby&&p.input.leftArm||undefined,rightArm:this.prelobby&&p.input.rightArm||undefined,level:p.level,reserve:p.reserve,primary:p.primary,secondary:p.secondary,wasJump:p.wasJump,lastShotTick:p.lastShotTick,shotSequence:p.shotSequence,shotSeed:p.shotSeed,ack:this.commands.get(p.id)?.acknowledged??0,queuedInputs:this.commands.get(p.id)?.size||undefined}))};}
+ snapshot():ArenaSnapshot|null{const w=this.world;if(!w)return null;return {clientHits:w.contactOwners.length?true:undefined,members:this.members.filter(p=>p.host||this.links.get(p.id)?.state?.readyState==='open'),lobbyName:this.lobbyName,serverNow:Date.now(),startAt:this.startAt,effects:this.pendingEffects,epoch:this.epoch,running:this.running,prelobby:this.prelobby||undefined,courtyard:this.prelobby?w.courtyard:undefined,time:w.time,tick:w.tick,state:w.state,cause:w.cause,radius:w.radius,wave:w.wave,level:w.level,reserve:w.reserve,stats:w.stats,enemies:w.enemies,projectiles:w.projectiles,gems:w.gems,rings:w.rings,crew:w.crew.map(p=>({id:p.id,player:p.player,alive:p.alive,cause:p.cause,respawnAt:p.respawnAt,life:p.life,protectedUntil:p.protectedUntil,yaw:p.input.yaw,pitch:p.input.pitch||undefined,leftArm:this.prelobby&&p.input.leftArm||undefined,rightArm:this.prelobby&&p.input.rightArm||undefined,level:p.level,reserve:p.reserve,primary:p.primary,secondary:p.secondary,wasJump:p.wasJump,lastShotTick:p.lastShotTick,shotSequence:p.shotSequence,shotSeed:p.shotSeed,ack:this.commands.get(p.id)?.acknowledged??0,contactAck:w.contactAcknowledged(p.id)||undefined,queuedInputs:this.commands.get(p.id)?.size||undefined}))};}
  private refillStateBudget(link:Link,now:number){link.tokens=Math.min(STATE_BURST_BYTES,link.tokens+(now-link.tokenAt)*STATE_BYTES_PER_SECOND/1000);link.tokenAt=now;}
  private cacheStateBaseline(link:Link,frame:number,baseline:StateBaseline){link.baselines.set(frame,baseline);while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);}
  private rememberState(link:Link,frame:number,baseline:StateBaseline,now:number){
@@ -309,7 +393,7 @@ export class FriendsSession{
  private flushEffects(link:Link){
   if(link.sentEpoch!==this.epoch||link.state?.readyState!=='open')return;
   while(link.events.length&&link.state.bufferedAmount<16000){
-   const events=link.events.slice(0,24),message=JSON.stringify({type:'effects',epoch:this.epoch,events});
+   const events=link.events.slice(0,24),message=encodeEffects(this.epoch,events);
    try{link.state.send(message);}catch{return;}link.events.splice(0,events.length);this.bytesSent+=new TextEncoder().encode(message).length;
   }
  }

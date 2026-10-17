@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "clients": 2,
+  "controls": [
+    "keyboard",
+    "controller",
+    "mobile"
+  ],
+  "errors": [],
+  "missing": []
+}

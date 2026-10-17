@@ -17,6 +17,7 @@ export class SnapshotTimeline{
  const fraction=clock(b)>clock(a)?Math.max(0,Math.min(1,(target-clock(a))/(clock(b)-clock(a)))):1;
  const view=Object.create(world) as World;
  if(latest.s.courtyard){const current=latest.s.courtyard;view.courtyard={...current,skull:{...current.skull}};if(a.courtyard&&b.courtyard&&a.courtyard.skull.reset===b.courtyard.skull.reset){view.courtyard.skull.pos=mixPosition(a.courtyard.skull.pos,b.courtyard.skull.pos,fraction);view.courtyard.skull.rotation=mixPosition(a.courtyard.skull.rotation,b.courtyard.skull.rotation,fraction);}}
+ if(view.courtyard?.basketball){const current=view.courtyard.basketball;view.courtyard.basketball={...current,balls:current.balls.map((ball,i)=>{const old=a.courtyard?.basketball?.balls[i],next=b.courtyard?.basketball?.balls[i];return old&&next&&!ball.owner&&!old.owner&&!next.owner&&old.released===ball.released&&next.released===ball.released?{...ball,pos:mixPosition(old.pos,next.pos,fraction),rotation:mixPosition(old.rotation,next.rotation,fraction)}:ball;})};}
  view.time=latest.s.prelobby?0:Math.max(a.time,Math.min(target,b.time));
  const olderEnemies=new Map(a.enemies.map(e=>[e.id,e]));view.enemies=b.enemies.map(e=>{const old=olderEnemies.get(e.id);return old?{...e,pos:mixPosition(old.pos,e.pos,fraction),age:old.age+(e.age-old.age)*fraction,segments:e.segments.map((part,i)=>({...part,pos:old.segments[i]?mixPosition(old.segments[i].pos,part.pos,fraction):part.pos}))}:e;});
  if(world.enemyFloorEnabled)view.enemies=view.enemies.map(e=>{const safe={...e,pos:{...e.pos},vel:{...e.vel}};constrainEnemyFloor(safe,view.time);return safe;});
@@ -25,7 +26,7 @@ export class SnapshotTimeline{
  view.player=view.crew.find(p=>p.id===localId)?.player??world.player;
  // Full projectile positions are unnecessary between updates. Ordinary flight
  // is ballistic; homing/bounces have a shorter extrapolation horizon.
- view.projectiles=world.projectiles.map(p=>{if(p.id<0)return p;const local=p.shotKey?.startsWith(`${localId}:`);const sampleTime=local?world.time:target;const dt=Math.max(-Math.min(.2,p.age),Math.min(p.homing||p.floorBounces? .05:.15,sampleTime-latest.s.time));const pos=flightPosition(p,dt);return {...p,pos,previous:pos,path:undefined,age:Math.max(0,p.age+dt)};});
+ view.projectiles=world.projectiles.map(p=>{if(p.id<0||p.shotKey?.startsWith(`${localId}:`))return p;const dt=Math.max(-Math.min(.2,p.age),Math.min(p.homing||p.floorBounces? .05:.15,target-latest.s.time));const pos=flightPosition(p,dt);return {...p,pos,previous:pos,path:undefined,age:Math.max(0,p.age+dt)};});
  return view;
  }
 }

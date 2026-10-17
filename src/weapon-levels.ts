@@ -2,8 +2,10 @@
 export const HAND_THRESHOLDS=[0,10,70,200,350,550,800] as const;
 export const HAND_LABELS=['I','II','III','IV','V','VI','VII'] as const;
 export const HAND_NAMES=['AWAKENED','KINDLED','ASCENDANT','UNBOUND','TWINFLAME','DOMINION','ECLIPSE'] as const;
-export const STREAM_COUNTS=[1,2,4,8,10,12,14] as const;
-export const BURST_COUNTS=[10,20,40,60,72,84,96] as const;
+/** Dense primary salvos fill the widened cones; every dagger deals damage. */
+export const STREAM_COUNTS=[1,6,16,24,32,40,48] as const;
+/** Upgraded shotguns deliver three times the pellets in the same compact pattern. */
+export const BURST_COUNTS=[10,60,120,180,216,252,288] as const;
 export const COMBAT_REVISION=20;
 export function handIndex(level:number){return Math.max(0,Math.min(6,Math.round(level)-1));}
 export function collectedLevel(gems:number,max=7){let level=1;while(level<max&&gems>=HAND_THRESHOLDS[level])level++;return level;}

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {World, idleInput, STEP,segmentSphere} from '../src/simulation.ts';
-import {sweepArmor} from '../src/projectile-collision.ts';
+import {sweepArmor,armorBounds} from '../src/projectile-collision.ts';
 import {createMemoryAim,resolveDamagePoint} from './targeting.mjs';
 
 for(const kind of ['squid','squid2','squid3'] as const){
@@ -17,14 +17,14 @@ for(const kind of ['squid','squid2','squid3'] as const){
       const state={world,mode:'playing',focused:true,yaw:0,pitch:0,fire:!secondary,homing:secondary};
       // Damage fixtures start on a shootable side. Hidden crystals are tested
       // separately below for both weapons; homing no longer bypasses armor.
-      for(let i=0;i<72&&!resolveDamagePoint(e,world.weakPoint(e),.63,state,secondary,{sweepArmor,segmentSphere});i++){
+      for(let i=0;i<72&&!resolveDamagePoint(e,world.weakPoint(e),.63,state,secondary,{sweepArmor,armorBounds,segmentSphere});i++){
         world.player.pos={x:e.pos.x+Math.sin(i*Math.PI/36)*14,y:1.7,z:e.pos.z+Math.cos(i*Math.PI/36)*14};
       }
       const environment={performance:{now:()=>world.time*1000}};
       const adapter=createMemoryAim({
         get:()=>state,
         set:(yaw:number,pitch:number)=>{input.yaw=state.yaw=yaw;input.pitch=state.pitch=pitch;},
-        resolve:(enemy:any,pos:any,radius:number,state:any,homing:boolean,trajectory?:any)=>resolveDamagePoint(enemy,pos,radius,state,homing,{sweepArmor,segmentSphere},trajectory)
+        resolve:(enemy:any,pos:any,radius:number,state:any,homing:boolean,trajectory?:any)=>resolveDamagePoint(enemy,pos,radius,state,homing,{sweepArmor,armorBounds,segmentSphere},trajectory)
       },environment);
       let sawAttached=false;
       for(let tick=0;tick<1440&&world.stats.released===0;tick++){
@@ -57,7 +57,7 @@ for(const kind of ['squid','squid2','squid3'] as const){
       tower.age=12;tower.phase=Math.PI;tower.facingYaw=Math.PI;tower.status='idle';
       tower.weakpoints.forEach((p,i)=>{if(i)p.hp=0;});
       const state={world,mode:'playing',focused:true,yaw:0,pitch:0,fire:!homing,homing};
-      const helpers={sweepArmor,segmentSphere};
+      const helpers={sweepArmor,armorBounds,segmentSphere};
       const resolve=(enemy:any,pos:any,radius:number,state:any,homing:boolean,trajectory?:any)=>resolveDamagePoint(enemy,pos,radius,state,homing,helpers,trajectory);
       let hidden:any=null,visible:any=null;
       // Inspect real mesh collision from positions all around the tower.
@@ -98,8 +98,30 @@ for(const kind of ['squid','squid2','squid3'] as const){
       const hit=segmentSphere(world.player.pos,target.pos,target.pos,target.radius);
       if(hit===null||!sweepArmor(tower,world.player.pos,world.player.pos,target.pos,hit,world.time,world.spawnFixesEnabled))continue;
       blocked++;
-      for(const homing of [false,true])assert.equal(resolveDamagePoint(target,target.pos,target.radius,state,homing,{sweepArmor,segmentSphere}),null);
+      for(const homing of [false,true])assert.equal(resolveDamagePoint(target,target.pos,target.radius,state,homing,{sweepArmor,armorBounds,segmentSphere}),null);
     }
     assert(blocked>0,'must test a real intervening armor intersection');
   });
 }
+
+test('armor broad phase matches full mesh queries across tower motion, emergence and ray directions',()=>{
+  const world=new World(913,{schedule:false,invulnerable:true});
+  const target=world.spawn('skull',{x:0,y:1.7,z:-15});target.age=12;
+  const towers=(['squid','squid2','squid3'] as const).map((kind,i)=>world.spawn(kind,{x:(i-1)*9,y:i===0?3.3:5.2,z:0}));
+  let queries=0,fullSweeps=0,culledSweeps=0,blocked=0;
+  const full={segmentSphere,sweepArmor:(...args:Parameters<typeof sweepArmor>)=>{fullSweeps++;return sweepArmor(...args);}};
+  const culled={segmentSphere,armorBounds,sweepArmor:(...args:Parameters<typeof sweepArmor>)=>{culledSweeps++;return sweepArmor(...args);}};
+  for(const age of [.15,.6,1.2,12])for(const time of [0,9,21])for(let i=0;i<48;i++){
+    world.time=time;
+    for(const tower of towers){tower.age=age;tower.phase=i*.23;tower.facingYaw=i*.17;}
+    const angle=i*Math.PI/24;
+    world.player.pos={x:Math.sin(angle)*24,y:1.7+i%5,z:Math.cos(angle)*24};
+    target.pos={x:-Math.sin(angle)*24,y:1.7+i%11,z:-Math.cos(angle)*24};
+    const expected=resolveDamagePoint(target,target.pos,target.radius,{world},false,full);
+    const actual=resolveDamagePoint(target,target.pos,target.radius,{world},false,culled);
+    assert.deepEqual(actual,expected,`age=${age}, time=${time}, ray=${i}`);
+    queries++;if(expected===null)blocked++;
+  }
+  assert(blocked>0);assert(culledSweeps<fullSweeps*.6,'unrelated armor must be culled before mesh traversal');
+  console.log(JSON.stringify({armorQueries:queries,blocked,fullSweeps,culledSweeps}));
+});

@@ -4,6 +4,7 @@ import {FriendsSession,applySnapshot,validPeerId} from '../src/multiplayer';
 import {World,idleInput} from '../src/simulation';
 import {encodeState,decodeState,snapshotBaseline,fragmentState,StateAssembler,stateAssemblyTimeout} from '../src/network-state';
 import {encodePacket,NETWORK_PROTOCOL_VERSION} from '../src/network-codec';
+import {decodeEffects} from '../src/network-effects';
 import {canonicalPosition} from '../src/network-packed';
 const setup=()=>{const s=new FriendsSession('host');s.running=true;s.world=new World(42,{schedule:false});s.world.addCrew('host');s.world.addCrew('guest');s.world.selectCrew('host');return s;};
 function transport(host:FriendsSession){
@@ -78,7 +79,7 @@ test('reliable effects flush independently of congestion, tokens and an unfinish
    if(blocked==='budget')link.tokens=0;
    if(blocked==='transfer')link.transfer={frame:5,epoch:host.epoch,packets:fragmentState(new Uint8Array(300000),5),next:0,baseline:snapshotBaseline(host.snapshot()!),at:performance.now(),size:300000};
    (host as any).pendingEffects=[{kind:'death',pos:{x:0,y:0,z:0},networkId:1}];host.broadcast();
-   assert.equal(controls.length,1);assert.equal(JSON.parse(controls[0]).events[0].networkId,1);assert.equal(link.events.length,0);host.broadcast();assert.equal(controls.length,1);
+   assert.equal(controls.length,1);assert.equal(decodeEffects(JSON.parse(controls[0]))!.events[0].networkId,1);assert.equal(link.events.length,0);host.broadcast();assert.equal(controls.length,1);
    if(blocked==='queue')assert.equal(packets.length,0);
   }finally{host.close();}
  }
@@ -90,7 +91,7 @@ test('effect send failures retain events and new epochs establish lifecycle stat
   link.state.send=send;host.broadcast();assert.equal(controls.length,1);assert.equal(link.events.length,0);
   host.epoch++;let failures=1;link.state.send=(data:unknown)=>{if(data instanceof ArrayBuffer&&failures-- >0)throw Error('lifecycle retry');send(data);};
   (host as any).pendingEffects=[{kind:'death',pos:{x:0,y:0,z:0},networkId:2}];host.broadcast();assert.equal(link.events.length,1);assert.equal(controls.length,1);
-  host.broadcast();assert.equal(controls.length,2);assert.equal(JSON.parse(controls[1]).epoch,host.epoch);assert.equal(JSON.parse(controls[1]).events[0].networkId,2);assert.ok(packets.length>0);
+  host.broadcast();assert.equal(controls.length,2);assert.equal(decodeEffects(JSON.parse(controls[1]))!.epoch,host.epoch);assert.equal(decodeEffects(JSON.parse(controls[1]))!.events[0].networkId,2);assert.ok(packets.length>0);
  }finally{host.close();}
 });
 test('returning to the lobby cancels an unfinished lossy transfer',()=>{

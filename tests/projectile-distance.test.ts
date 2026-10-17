@@ -5,6 +5,7 @@ import {daggerLaunch,shotLaunches,type ShotLaunch} from '../src/projectile-launc
 import {packShotLaunch,unpackShotLaunch} from '../src/network-shots.ts';
 import {HAND_MUZZLES,weaponMuzzle} from '../src/weapon-origin.ts';
 import {STREAM_RADIUS,WEAPON_PRESENTATION} from '../src/weapon-tuning.ts';
+import {STREAM_COUNTS} from '../src/weapon-levels.ts';
 import {sweepArmor} from '../src/projectile-collision.ts';
 import {floorHeight,sweepFloor} from '../src/arena.ts';
 const tick=(w:World)=>(w as any).updateProjectiles(STEP);
@@ -16,18 +17,34 @@ function planeHit(s:ShotLaunch,p:ReturnType<typeof daggerLaunch>,range:number){
  return v(dot(at,right),dot(at,up),range);
 }
 
-test('beam radii and outer spread stay unchanged while spread rotates with the aim',()=>{
- assert.deepEqual(STREAM_RADIUS.slice(0,4),[.008,.01,.012,.015]);
- assert.deepEqual(WEAPON_PRESENTATION.slice(0,4).map(p=>p.streamSpread),[.045,.07,.11,.155]);
+test('wider travelling cones keep compact launch radii and rotate with the aim',()=>{
+ assert.deepEqual(STREAM_RADIUS,[.008,.01,.012,.015,.015,.015,.015]);
+ assert.deepEqual(WEAPON_PRESENTATION.map(p=>p.streamSpread),[.045,.14,.22,.31,.34,.37,.4]);
  for(const burst of [false,true])for(const focused of [false,true]){
   for(let i=0;i<250;i++){
    const points=[];
    for(const pitch of [0,Math.PI/3,Math.PI/2,-Math.PI/2]){
-    const pos=v(2,100,3),yaw=.8,s:ShotLaunch={pos,muzzles:HAND_MUZZLES[3].map((_,j)=>weaponMuzzle(pos,yaw,pitch,4,j)),yaw,pitch,spread:burst?.32:.155,aimDistance:196,radius:burst?null:.015,camera:false,cone:true,focused,seed:1};
+    const pos=v(2,100,3),yaw=.8,s:ShotLaunch={pos,muzzles:HAND_MUZZLES[3].map((_,j)=>weaponMuzzle(pos,yaw,pitch,4,j)),yaw,pitch,spread:burst?.32:WEAPON_PRESENTATION[3].streamSpread,aimDistance:196,radius:burst?null:.015,camera:false,cone:true,focused,seed:1};
     const p=daggerLaunch(s,3,i/250,((i*79)%250)/250,70);points.push(planeHit(s,p,40));
    }
    for(const point of points)assert.ok(Math.hypot(point.x-points[0].x,point.y-points[0].y)<1e-10,'same footprint at any pitch');
   }
+ }
+});
+
+test('hand II through VII roughly double or exceed the travelling diameter without moving bullet spawns',()=>{
+ const oldSpreads=[.045,.07,.11,.155,.155,.155,.155];
+ for(let level=2;level<=7;level++){
+  const pos=v(0,10,0),s:ShotLaunch={pos,muzzles:HAND_MUZZLES[level-1].map((_,i)=>weaponMuzzle(pos,0,0,level,i)),yaw:0,pitch:0,spread:WEAPON_PRESENTATION[level-1].streamSpread,aimDistance:196,radius:STREAM_RADIUS[level-1],camera:false,cone:true,focused:true,dual:level>=5,seed:71};
+  const old={...s,spread:oldSpreads[level-1]};
+  // A matched outer pair measures the cone diameter independently of muzzle parallax.
+  const diameter=(spec:ShotLaunch)=>{
+   const a=planeHit(spec,daggerLaunch(spec,3,0,1,70),12);
+   const b=planeHit(spec,daggerLaunch(spec,3,.5,1,70),12);
+   return Math.hypot(a.x-b.x,a.y-b.y);
+  };
+  assert.deepEqual(daggerLaunch(s,3,.2,.8,70).pos,daggerLaunch(old,3,.2,.8,70).pos,'launch position stays identical');
+  assert.ok(diameter(s)>diameter(old)*1.95,`hand ${level} has at least roughly twice the diameter at 12m`);
  }
 });
 
@@ -46,7 +63,7 @@ test('upgrades improve distant small-target throughput without narrowing the out
      }
     }
    }
-   const dps=hits/total*[20,40,80,120*8/9][level-1];assert.ok(dps>previousDps,`${range}: hand ${level} improves throughput ${dps} > ${previousDps}`);previousDps=dps;
+   const dps=hits/total*STREAM_COUNTS[level-1]*(level>=4?120/9:20);assert.ok(dps>previousDps,`${range}: hand ${level} improves throughput ${dps} > ${previousDps}`);previousDps=dps;
    assert.ok(maxOuterRadius>range*Math.tan(WEAPON_PRESENTATION[level-1].streamSpread)*.95,'outer beam retains its envelope');
   }
  }

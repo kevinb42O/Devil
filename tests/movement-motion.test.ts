@@ -12,7 +12,7 @@ test('movement preference is independent, bounded, and tolerates old or corrupt 
 });
 test('stationary players have no invented idle bob or arm oscillation',()=>{
  const m=motion(),p=player();frames(m,p,600);
- assert.deepEqual(m.pose,{arm:{x:0,y:0,z:0},rotation:{x:0,y:0,z:0},camera:{x:0,y:0,z:0}});assert.equal(m.diagnostics.phase,0);
+ assert.deepEqual(m.pose,{arm:{x:0,y:0,z:0},rotation:{x:0,y:0,z:0},camera:{x:0,y:0,z:0},counterSwing:0});assert.equal(m.diagnostics.phase,0);
 });
 test('gait phase follows travelled ground distance at 30, 60 and 144 fps',()=>{
  const samples=[];
@@ -90,4 +90,34 @@ test('capped rendering time cannot slow the gait relative to simulated travel',(
   const m=motion(),p=player();m.update(p,0,0,1/60);m.update(p,direction*.04,0,1/60);
   assert.ok(m.pose.arm.x*direction>0);assert.ok(m.pose.rotation.y*direction<0);
  }
+});
+
+test('forward and backward travel have distinct depth and whole-arm pitch',()=>{
+ for(const direction of [-1,1]){
+  const m=motion(),p=player();p.grounded=false;p.vel.z=-11*direction;frames(m,p,120);
+  assert.ok(m.pose.arm.z*direction>.01);assert.ok(m.pose.rotation.x*direction>.02);
+ }
+});
+
+test('takeoff dips the hand and landing compresses then rebounds with impact speed',()=>{
+ const sample=(speed:number)=>{
+  const m=motion(),p=player();frames(m,p,1);p.grounded=false;p.vel.y=9;frames(m,p,8);
+  assert.ok(m.pose.arm.y<-.015,'takeoff has visible downward arm lag');
+  p.vel.y=-speed;frames(m,p,45);p.grounded=true;p.vel.y=0;
+  const ys=[];for(let i=0;i<60;i++){frames(m,p,1);ys.push(m.pose.arm.y);}
+  assert.ok(Math.min(...ys.slice(0,12))<-.005,'landing compresses');
+  assert.ok(Math.max(...ys.slice(12,45))>0,'landing rebounds');
+  frames(m,p,240);assert.deepEqual(m.pose.arm,{x:0,y:0,z:0});
+  return Math.min(...ys);
+ };
+ assert.ok(sample(12)<sample(4),'harder falls produce deeper compression');
+});
+
+test('jump and landing response agrees across display rates',()=>{
+ const samples=[];
+ for(const fps of [30,60,144]){
+  const m=motion(),p=player();frames(m,p,1,1/fps);p.grounded=false;p.vel.y=-9;frames(m,p,fps/2,1/fps);
+  p.grounded=true;p.vel.y=0;frames(m,p,Math.round(fps/6),1/fps);samples.push({...m.pose.arm});
+ }
+ for(const p of samples)assert.ok(Math.abs(p.y-samples[0].y)<.004,'landing timing is consistent');
 });

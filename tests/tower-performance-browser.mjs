@@ -4,7 +4,7 @@ import {existsSync} from 'node:fs';
 import {mkdir,writeFile} from 'node:fs/promises';
 await mkdir('artifacts',{recursive:true});
 const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
-const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:existsSync(chrome)?{executablePath:chrome}:{})});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720},deviceScaleFactor:2}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
@@ -49,6 +49,13 @@ try{
   return{simulationTickMs,renderMedianMs:frames[10],renderP95Ms:frames[19],pixelRatio:renderer.renderer.getPixelRatio(),emptyUploadFree};
  });
  assert.ok(performanceResult.emptyUploadFree);assert.deepEqual(errors,[]);
- const result={rotationRadiansInFiveSeconds:after.map((a,i)=>a.yaw-before[i]),...performanceResult};
+ const resolution=await page.evaluate(()=>{
+  const {renderer}=window.towerFixture,full=renderer.renderer.getPixelRatio();
+  for(let i=0;i<900;i++)renderer.trackFrame(1/30);
+  const degraded=renderer.renderer.getPixelRatio();renderer.clear();
+  return {full,degraded,reset:renderer.renderer.getPixelRatio()};
+ });
+ assert.ok(resolution.degraded<resolution.full);assert.equal(resolution.reset,resolution.full,'new runs restore full configured resolution');
+ const result={rotationRadiansInFiveSeconds:after.map((a,i)=>a.yaw-before[i]),...performanceResult,resolution};
  await writeFile('artifacts/tower-performance.json',JSON.stringify(result,null,2));console.log('Tower rotation and performance browser passed:',JSON.stringify(result));
 }finally{await browser.close();}

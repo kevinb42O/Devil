@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """External native overlay and browser-memory trainer. No screen capture."""
 import argparse
+import os
 from dataclasses import asdict
 import json
 from pathlib import Path
@@ -13,7 +14,8 @@ import time
 import tempfile
 import traceback
 
-ROOT = Path(__file__).resolve().parent
+RESOURCE_ROOT = Path(__file__).resolve().parent
+ROOT = Path(sys.executable).resolve().parent if getattr(sys, 'frozen', False) else RESOURCE_ROOT
 
 
 from settings import Settings
@@ -118,12 +120,15 @@ class Engine:
             self.reconnect_requested = False
             process = None
             try:
-                node = shutil.which('node')
+                bundled_node = RESOURCE_ROOT / 'runtime' / 'node.exe'
+                node = str(bundled_node) if bundled_node.is_file() else shutil.which('node')
                 if not node:
                     raise RuntimeError('Node.js is required for the browser-memory connection')
-                process = subprocess.Popen([node, str(ROOT / 'memory-bridge.mjs'), self.settings.game_url],
+                bridge_env = os.environ.copy()
+                bridge_env.setdefault('ABYSS_TRAINER_PROFILE', str(ROOT / '.chrome-profile'))
+                process = subprocess.Popen([node, str(RESOURCE_ROOT / 'memory-bridge.mjs'), self.settings.game_url],
                     cwd=ROOT, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                    text=True, bufsize=1)
+                    text=True, bufsize=1, env=bridge_env)
                 self.process = process
                 writer = threading.Thread(target=self.send_controls, args=(process,), daemon=True)
                 writer.start()

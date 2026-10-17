@@ -1,10 +1,11 @@
 import {createDrawing,validateDrawing,DRAWING_ROOM,DRAWING_PASSAGE,type DrawingState} from './courtyard-drawing';
+import {BASKETBALL,createBasketball,validateBasketball,type BasketballState} from './courtyard-basketball';
 /** Courtyard state is replicated independently of combat time and randomness. */
 export type Point={x:number;y:number;z:number};
 export type CourtyardEvent={id:number;tick:number;kind:'kick'|'bounce'|'goal'|'highfive'|'arrival'|'open'|'cancel';pos:Point;players:string[]};
 export type FootballKick={started:number;released:number;power:number;right?:boolean};
 export const KICK_CHARGE_TICKS=144;
-export type CourtyardState={drawing?:DrawingState;generation:number;phase:'gathering'|'opening'|'open'|'collecting';phaseTick:number;participants:string[];committed:string[];events:CourtyardEvent[];sequence:number;kicks:Record<string,FootballKick>;skull:{pos:Point;vel:Point;rotation:Point;reset:number;goals:[number,number];resetAt:number;lastContact:Record<string,number>};lastRun?:{time:number;best:number;crew:string}};
+export type CourtyardState={basketball?:BasketballState;drawing?:DrawingState;generation:number;phase:'gathering'|'opening'|'open'|'collecting';phaseTick:number;participants:string[];committed:string[];events:CourtyardEvent[];sequence:number;kicks:Record<string,FootballKick>;skull:{pos:Point;vel:Point;rotation:Point;reset:number;goals:[number,number];resetAt:number;lastContact:Record<string,number>};lastRun?:{time:number;best:number;crew:string}};
 export const PIT={x:0,z:2.075,half:2,depth:-3,openingTicks:180};
 export const COURTYARD_BOUNDS={halfWidth:6.3,frontZ:-6.35,backZ:10.5};
 export const FOOTBALL_BALL_RADIUS=.5;
@@ -15,11 +16,11 @@ export const COURTYARD_SOLIDS=[{x:3.3,z:-4.6,w:.85,d:.85,h:1.1},...FOOTBALL.goal
  const back=z+(i?1:-1)*FOOTBALL.goalDepth;
  return [{x:FOOTBALL.x-4.38,z,w:.24,d:.24,h:3.4},{x:FOOTBALL.x+4.38,z,w:.24,d:.24,h:3.4},
  {x:FOOTBALL.x,z:back,w:9,d:.12,h:3.4},{x:FOOTBALL.x-4.44,z:(z+back)/2,w:.12,d:3,h:3.4},{x:FOOTBALL.x+4.44,z:(z+back)/2,w:.12,d:3,h:3.4}];
-})];
+}),{x:BASKETBALL.x,z:BASKETBALL.boardZ+.93,w:1.1,d:1.5,h:.4},{x:BASKETBALL.x,z:BASKETBALL.boardZ+.9,w:.26,d:.3,h:2.6}];
 export const COURTYARD_CAMERA_BOUNDS={halfWidth:96,frontZ:-28,backZ:32};
 /** Both simulation and prediction use this connected union, including body radius. */
 export function courtyardContains(x:number,z:number){
- return x>=DRAWING_ROOM.minX&&x<=DRAWING_ROOM.maxX&&z>=DRAWING_ROOM.minZ&&z<=DRAWING_ROOM.maxZ||x>=DRAWING_PASSAGE.minX&&x<=DRAWING_PASSAGE.maxX&&z>=DRAWING_PASSAGE.minZ&&z<=DRAWING_PASSAGE.maxZ||x>=-COURTYARD_BOUNDS.halfWidth&&x<=COURTYARD_BOUNDS.halfWidth&&z>=COURTYARD_BOUNDS.frontZ&&z<=COURTYARD_BOUNDS.backZ||x>=FOOTBALL_PASSAGE.minX&&x<=FOOTBALL_PASSAGE.maxX&&z>=FOOTBALL_PASSAGE.minZ&&z<=FOOTBALL_PASSAGE.maxZ||x>=FOOTBALL_ROOM.minX&&x<=FOOTBALL_ROOM.maxX&&z>=FOOTBALL_ROOM.minZ&&z<=FOOTBALL_ROOM.maxZ;
+ return x>=BASKETBALL.minX&&x<=BASKETBALL.maxX&&z>=BASKETBALL.minZ&&z<=BASKETBALL.maxZ||x>=DRAWING_ROOM.minX&&x<=DRAWING_ROOM.maxX&&z>=DRAWING_ROOM.minZ&&z<=DRAWING_ROOM.maxZ||x>=DRAWING_PASSAGE.minX&&x<=DRAWING_PASSAGE.maxX&&z>=DRAWING_PASSAGE.minZ&&z<=DRAWING_PASSAGE.maxZ||x>=-COURTYARD_BOUNDS.halfWidth&&x<=COURTYARD_BOUNDS.halfWidth&&z>=COURTYARD_BOUNDS.frontZ&&z<=COURTYARD_BOUNDS.backZ||x>=FOOTBALL_PASSAGE.minX&&x<=FOOTBALL_PASSAGE.maxX&&z>=FOOTBALL_PASSAGE.minZ&&z<=FOOTBALL_PASSAGE.maxZ||x>=FOOTBALL_ROOM.minX&&x<=FOOTBALL_ROOM.maxX&&z>=FOOTBALL_ROOM.minZ&&z<=FOOTBALL_ROOM.maxZ;
 }
 export function courtyardCanOccupy(x:number,z:number,radius=.22){
  return courtyardContains(x,z)&&[[radius,0],[-radius,0],[0,radius],[0,-radius],[radius*.707,radius*.707],[-radius*.707,radius*.707],[radius*.707,-radius*.707],[-radius*.707,-radius*.707]].every(([dx,dz])=>courtyardContains(x+dx,z+dz));
@@ -38,7 +39,8 @@ export const FOOTBALL_WALLS=[
  wall(62,-1.3,8,.6),wall(62,5.3,8,.6),wall(66,-7.5,.6,13),wall(66,12.5,.6,15),
  wall(81,-14.3,30.6,.6),wall(81,20.3,30.6,.6),wall(96.3,3,.6,34.6),
  wall(10.15,FOOTBALL_PASSAGE.minZ-.3,7.7,.6),wall(10.15,FOOTBALL_PASSAGE.maxZ+.3,7.7,.6),
- wall(6.6,(-6.35+FOOTBALL_PASSAGE.minZ)/2,.6,FOOTBALL_PASSAGE.minZ+6.35),wall(6.6,(10.5+FOOTBALL_PASSAGE.maxZ)/2,.6,10.5-FOOTBALL_PASSAGE.maxZ),
+ wall(6.6,(-6.35+FOOTBALL_PASSAGE.minZ)/2,.6,FOOTBALL_PASSAGE.minZ+6.35),wall(6.6,(5.8+FOOTBALL_PASSAGE.maxZ)/2,.6,5.8-FOOTBALL_PASSAGE.maxZ),
+ wall(6,17.25,.6,13.5),wall(9.85,24.3,7.7,.6),wall(10,5.5,7.4,.6),
 ];
 export const COURTYARD_CAMERA_BLOCKERS=[...FOOTBALL_WALLS,...COURTYARD_SOLIDS,wall(-6.6,2.075,.6,16.85),wall(0,-6.65,12.6,.6),wall(0,10.8,12.6,.6)];
 export const SPAWNS=[{x:0,y:1.7,z:8},{x:-2.5,y:1.7,z:6.5},{x:2.5,y:1.7,z:6.5},{x:-3,y:1.7,z:8.5},{x:3,y:1.7,z:8.5},{x:0,y:1.7,z:10}];
@@ -51,13 +53,14 @@ export function courtyardFloor(x:number,z:number,c:CourtyardState){
  for(let i=COURTYARD_SOLIDS.length-1;i>=0;i--){const s=COURTYARD_SOLIDS[i];if(Math.abs(x-s.x)<s.w/2&&Math.abs(z-s.z)<s.d/2)return s.h;}
  return 0;
 }
-export function createCourtyard(generation:number,lastRun?:CourtyardState['lastRun']):CourtyardState{return {drawing:createDrawing(),generation,phase:'gathering',phaseTick:0,participants:[],committed:[],events:[],sequence:0,kicks:{},skull:{pos:{x:FOOTBALL.x,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z},vel:{x:0,y:0,z:0},rotation:{x:0,y:0,z:0},reset:0,goals:[0,0],resetAt:0,lastContact:{}},lastRun};}
-export function courtyardEvent(c:CourtyardState,tick:number,kind:CourtyardEvent['kind'],pos:Point,players:string[]=[]){c.events.push({id:++c.sequence,tick,kind,pos:{...pos},players});if(c.events.length>24)c.events.shift();}
+export function createCourtyard(generation:number,lastRun?:CourtyardState['lastRun']):CourtyardState{return {basketball:createBasketball(),drawing:createDrawing(),generation,phase:'gathering',phaseTick:0,participants:[],committed:[],events:[],sequence:0,kicks:{},skull:{pos:{x:FOOTBALL.x,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z},vel:{x:0,y:0,z:0},rotation:{x:0,y:0,z:0},reset:0,goals:[0,0],resetAt:0,lastContact:{}},lastRun};}
+export {courtyardEvent} from './courtyard-events';
 export function resetSkull(c:CourtyardState,_players:{player:{pos:Point}}[]=[]){c.skull.pos={x:FOOTBALL.x,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z};c.skull.vel={x:0,y:0,z:0};c.skull.rotation={x:0,y:0,z:0};c.skull.reset++;c.skull.resetAt=0;c.skull.lastContact={};}
 export function footballKickPose(c:CourtyardState|undefined,id:string,tick:number){const k=c?.kicks[id];if(!k)return;const charge=k.started>=0?Math.min(1,Math.max(0,(tick-k.started)/KICK_CHARGE_TICKS)):0,age=(tick-k.released)/120;return charge>0||age>=0&&age<.5?{charge,age,power:k.power,right:k.right===true}:undefined;}
 
 export function validateCourtyard(value:unknown):value is CourtyardState{
  if(!value||typeof value!=='object')return false;const c=value as CourtyardState;
+ if(c.basketball!==undefined&&!validateBasketball(c.basketball))return false;
  if(c.drawing!==undefined&&!validateDrawing(c.drawing))return false;
  const finite=(p:Point)=>p&&[p.x,p.y,p.z].every(Number.isFinite);
  const ids=(a:string[])=>Array.isArray(a)&&a.length<=6&&new Set(a).size===a.length&&a.every(s=>typeof s==='string'&&s.length<=64);

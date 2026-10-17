@@ -46,10 +46,10 @@ export class ProjectileLighting {
     }`,
    fragmentShader:`varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;varying float glowPellet;
     void main(){if(glowDistance<mix(${(PROJECTILE_HAND_CLEARANCE+.25).toFixed(2)},.8,glowPellet))discard;vec2 p=(glowUV-.5)*2.;float edge=max(0.,1.-dot(p,p));
-     float halo=edge*edge*.16;
+     float halo=edge*edge*.075;
      float core=pow(max(0.,1.-length(p)*4.),2.);
      float brightness=max(glowColor.r,max(glowColor.g,glowColor.b));
-     gl_FragColor=vec4(glowColor*halo+mix(glowColor,vec3(brightness),.22)*core*1.8,1.);
+     gl_FragColor=vec4(glowColor*halo+mix(glowColor,vec3(brightness),.12)*core*.85,1.);
     }`});
   this.glow=new THREE.Mesh(geometry,material);this.glow.name='projectile-glow-batch';this.glow.frustumCulled=false;this.glow.visible=false;scene.add(this.glow);this.allocate();
  }

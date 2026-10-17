@@ -1,3 +1,4 @@
+import {attachEnemySurfaceLight,ENEMY_SURFACE_FRAGMENT} from './enemy-surface-lighting';
 import {crystalImpactScale} from './impact-presentation';
 import * as THREE from 'three';
 import {EnvironmentLighting,ENVIRONMENT_FRAGMENT} from './environment-lighting';
@@ -6,6 +7,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {type Enemy, type EnemyKind} from './simulation';
 import {CREATURE_SCALE,SPIDER_SIZE,SPIDER_CRYSTAL_SCALE,SPIDER_HIT_FLASH_DURATION,towerPartOffset} from './enemy-presentation';
 import {ENEMY_KINDS,isPede} from './enemy-kinds';
+import {WORLD_SCALE} from './arena';
 const ROOT='/assets/original/devil-daggers/';
 const parts={
  squid:['minisquidcrest','minisquidcrestskull','minisquidhorns','minisquidjaw','minisquidjawskull','minisquidgem','squidarm'],
@@ -21,6 +23,7 @@ const parts={
  centipede:['pedehead','pedejaw','pedetail','pedetaillegs','pedebody','pedeweak','pedeleg1','pedeleg2','pedeleg3']
 };
 export class OriginalEnemies {
+ readonly surfaceLightStrength={value:1};
  ready=false;error='';loaded:Promise<void>;templates=new Map<EnemyKind,THREE.Group>();segmentTemplate=new THREE.Group();gemGeometry!:THREE.BufferGeometry;gemMaterial!:THREE.Material;tileGeometry!:THREE.BufferGeometry;
  private geometry=new Map<string,THREE.BufferGeometry>();private materials=new Map<string,THREE.MeshBasicMaterial>();
  private segmentTemplates=new Map<EnemyKind,THREE.Group>();
@@ -43,13 +46,13 @@ export class OriginalEnemies {
 localPosition=instanceMatrix*localPosition;
 #endif
 vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWorld.xyz*16.)/16.;vec4 mvPosition=viewMatrix*originalWorld;gl_Position=projectionMatrix*mvPosition;`);};
-   if(name!=='crystal')this.environment.attach(material);
+   if(name!=='crystal'){this.environment.attach(material);attachEnemySurfaceLight(material,this.surfaceLightStrength);}
    this.materials.set(name,material);
   })),Promise.all(names.map(async name=>{const response=await fetch(ROOT+`meshes/${name}.obj`);if(!response.ok)throw Error(`Original ${name} mesh missing`);const object=loader.parse(await response.text());object.traverse(o=>{if(o instanceof THREE.Mesh)this.geometry.set(name,o.geometry);});if(!this.geometry.has(name))throw Error(`No geometry in ${name}`);}))]);
   const armMap=this.materials.get('minisquidarm')!.map!;
-  this.armMaterial=new THREE.ShaderMaterial({uniforms:{map:{value:armMap},time:this.materialClock},vertexShader:`varying vec2 u;uniform float time;void main(){u=uv;vec3 p=position;float wave=clamp((-p.y-1.5)*.5,0.,1.)*.5;float curve=pow(max(0.,-p.y),2.1)*.07;vec3 off=wave*vec3(0.,0.,sin(curve-time*.7)*.6);p+=off;float angle=atan(p.z,p.x)-wave*curve*.35;float len=length(p.xz);p.x=sin(angle)*len;p.z=-cos(angle)*len;vec4 w=modelMatrix*vec4(p,1.);w.xyz=floor(w.xyz*16.)/16.;gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`uniform sampler2D map;varying vec2 u;void main(){vec4 c=texture2D(map,u);gl_FragColor=c;}`,side:THREE.DoubleSide,toneMapped:false});
+  this.armMaterial=new THREE.ShaderMaterial({uniforms:{map:{value:armMap},time:this.materialClock,enemySurfaceStrength:this.surfaceLightStrength},vertexShader:`varying vec3 armNormal,armWorld;varying vec2 u;uniform float time;void main(){u=uv;armNormal=normalize(mat3(modelMatrix)*normal);vec3 p=position;float wave=clamp((-p.y-1.5)*.5,0.,1.)*.5;float curve=pow(max(0.,-p.y),2.1)*.07;vec3 off=wave*vec3(0.,0.,sin(curve-time*.7)*.6);p+=off;float angle=atan(p.z,p.x)-wave*curve*.35;float len=length(p.xz);p.x=sin(angle)*len;p.z=-cos(angle)*len;vec4 w=modelMatrix*vec4(p,1.);armWorld=w.xyz;w.xyz=floor(w.xyz*16.)/16.;gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`uniform sampler2D map;varying vec2 u;varying vec3 armNormal,armWorld;${ENEMY_SURFACE_FRAGMENT}void main(){vec4 c=texture2D(map,u);gl_FragColor=c;}`,side:THREE.DoubleSide,toneMapped:false});
   this.environment.bindShader(this.armMaterial);
-  this.armMaterial.fragmentShader=this.armMaterial.fragmentShader.replace('void main()',`${ENVIRONMENT_FRAGMENT}\nvoid main()`).replace('gl_FragColor=c;','gl_FragColor=vec4(environmentLight(c.rgb,vec3(0.,.5,.5)),c.a);');
+  this.armMaterial.fragmentShader=this.armMaterial.fragmentShader.replace('void main()',`${ENVIRONMENT_FRAGMENT}\nvoid main()`).replace('gl_FragColor=c;','gl_FragColor=vec4(enemySurfaceLight(environmentLight(c.rgb,armNormal),armNormal,cameraPosition-armWorld),c.a);');
   const warpMap=this.materials.get('leviwarp')!.map!;warpMap.wrapS=warpMap.wrapT=THREE.RepeatWrapping;
   // Adapted from the original warpeye shader; animation parameter speed remains unmeasured.
   this.orbMaterial=new THREE.ShaderMaterial({uniforms:{map:{value:warpMap},time:this.materialClock},transparent:true,side:THREE.DoubleSide,toneMapped:false,vertexShader:`varying vec2 u;varying vec3 viewDir;uniform float time;void main(){u=position.yy*.03+vec2(time*.08,0.);vec4 w=modelMatrix*vec4(position,1.);w.xyz=floor(w.xyz*16.)/16.;viewDir=w.xyz-cameraPosition;gl_Position=projectionMatrix*viewMatrix*w;}`,fragmentShader:`uniform sampler2D map;uniform float time;varying vec2 u;varying vec3 viewDir;void main(){vec3 d=normalize(viewDir);vec2 hackuv=vec2(d.y/max(.001,length(d.xz))*.5+time,atan(d.z,d.x)/3.14159*3.);vec3 c=texture2D(map,hackuv).rgb;gl_FragColor=vec4(c,.65);}`});
@@ -74,7 +77,7 @@ vec4 originalWorld=modelMatrix*localPosition;originalWorld.xyz=floor(originalWor
   this.spiderCrystalMaterial=spiderMaterial(false);this.spiderHitMaterial=spiderMaterial(true);
   for(const kind of ENEMY_KINDS)this.templates.set(kind,this.build(kind));
   for(const kind of ['centipede','gigapede','ghostpede'] as const)this.segmentTemplates.set(kind,this.buildSegment(kind));
-  this.segmentTemplate=this.buildSegment();this.gemGeometry=this.geometry.get('gib')!.clone().scale(.55,.55,.55);this.gemMaterial=this.materials.get('crystal')!;this.tileGeometry=this.geometry.get('tile2')!.clone().translate(0,-2.1,0).scale(CREATURE_SCALE,CREATURE_SCALE,CREATURE_SCALE);
+  this.segmentTemplate=this.buildSegment();this.gemGeometry=this.geometry.get('gib')!.clone().scale(.55,.55,.55);this.gemMaterial=this.materials.get('crystal')!;this.tileGeometry=this.geometry.get('tile2')!.clone().translate(0,-2.1,0).scale(WORLD_SCALE,WORLD_SCALE,WORLD_SCALE);
   // Imported parts have fixed local transforms. Only the root and spider
   // animation pivots need to compose their local matrices each frame.
   for(const root of [...this.templates.values(),...this.segmentTemplates.values(),this.segmentTemplate])root.traverse(o=>{

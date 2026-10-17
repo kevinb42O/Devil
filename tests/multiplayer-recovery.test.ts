@@ -7,6 +7,7 @@ import {CrewClock} from '../src/crew-clock';
 import {encodePacket,decodePacket} from '../src/network-codec';
 import {encodeState,decodeState,snapshotBaseline,fragmentState,StateAssembler} from '../src/network-state';
 import {packIds,unpackIds,packPositions,unpackPositions} from '../src/network-packed';
+import {BURST_COUNTS,STREAM_COUNTS} from '../src/weapon-levels';
 const setup=()=>{const s=new FriendsSession('host');s.running=true;s.world=new World(42,{schedule:false});s.world.addCrew('host');s.world.addCrew('guest');s.world.selectCrew('host');return s;};
 const link=()=>({pc:{close(){}},state:{readyState:'open',bufferedAmount:0,send(){}},timer:0} as any);
 test('excess guest backlog drains during continuous input without skipping command numbers',()=>{
@@ -74,9 +75,9 @@ test('seeded shots reproduce surviving daggers and use explicit corrections for 
   // A removed dagger never reappears when reconstructing the rest of its burst.
   w.projectiles.splice(7,1);w.projectiles[0].pos.x+=1;
   const snapshot=host.snapshot()!,bytes=encodeState(snapshot,1,0),wire=decodePacket(bytes) as any,decoded=decodeState(bytes,new Map())!.snapshot;
-  assert.equal(wire.flight.shots.length,1);assert.equal(wire.flight.updates.length,1);assert.equal(decoded.projectiles.length,59);
-  for(let i=0;i<59;i++){const a=snapshot.projectiles[i],b=decoded.projectiles[i];assert.equal(b.shotKey,a.shotKey);assert.ok(Math.hypot(a.pos.x-b.pos.x,a.pos.y-b.pos.y,a.pos.z-b.pos.z)<.00001);assert.ok(Math.hypot(a.vel.x-b.vel.x,a.vel.y-b.vel.y,a.vel.z-b.vel.z)<.00001);}
-  const bad=structuredClone(wire);bad.flight.shots[0][6][1]=60;assert.throws(()=>decodeState(encodePacket(bad),new Map()));
+  assert.equal(wire.flight.shots.length,1);assert.equal(wire.flight.updates.length,1);assert.equal(decoded.projectiles.length,BURST_COUNTS[3]-1);
+  for(let i=0;i<decoded.projectiles.length;i++){const a=snapshot.projectiles[i],b=decoded.projectiles[i];assert.equal(b.shotKey,a.shotKey);assert.ok(Math.hypot(a.pos.x-b.pos.x,a.pos.y-b.pos.y,a.pos.z-b.pos.z)<.00001);assert.ok(Math.hypot(a.vel.x-b.vel.x,a.vel.y-b.vel.y,a.vel.z-b.vel.z)<.00001);}
+  const bad=structuredClone(wire);bad.flight.shots[0][6][1]=Math.max(...BURST_COUNTS,...STREAM_COUNTS);assert.throws(()=>decodeState(encodePacket(bad),new Map()));
  }finally{host.close();}
 });
 test('moving enemies delta changing velocity, phase, damage and rig data without mutating baselines',()=>{

@@ -1,19 +1,18 @@
 import {SHOTGUN_COLORS} from './weapon-tuning';
 import type {Projectile,Vec} from './simulation';
 /** Linear RGB shared by dagger meshes, halos, floor spill and launch effects.
- * Hand I: electric lime (distinct from orange gems), II: electric blue,
- * III: ice cyan, IV: arcane violet.
- * Homing accents stay in their hand's family, with a greener/pinker hue.
+ * Native textures: warm regular blades, cyan seeking III and magenta seeking IV.
  */
 export const PROJECTILE_COLORS = [
- [.22,1,.015], [.025,.12,1], [.025,.65,1], [.045,1,.58], [.5,.085,1], [1,.12,.55],
- [1,.16,.045], [1,.42,.13], [1,.025,.22], [1,.3,.48], [1,.86,.68], [.7,.42,1],
+ [1,.12,.025], [1,.2,.035], [1,.22,.025], [.025,.75,1], [1,.04,.025], [1,.025,.4],
+ [1,.04,.025], [1,.025,.4], [1,.04,.025], [1,.025,.4], [1,.04,.025], [1,.025,.4],
 ] as const;
 export function projectileStyleIndex(level:number,homing:boolean){
- return level>=5?6+(Math.min(7,level)-5)*2+(homing?1:0):level===1?0:level===2?(homing?3:1):level===3?(homing?3:2):(homing?5:4);
+ // Twin tiers inherit IV's native regular/seeking blades and their shared lighting.
+ return level===1?0:level===2?(homing?3:1):level===3?(homing?3:2):(homing?5:4);
 }
 export function shotgunStyleIndex(level:number,homing=false){
- return PROJECTILE_COLORS.length+(Math.max(1,Math.min(7,Math.floor(level)))-1)*2+(homing?1:0);
+ return PROJECTILE_COLORS.length+(Math.max(1,Math.min(4,Math.floor(level)))-1)*2+(homing?1:0);
 }
 /** One style selector keeps mesh, halo, and floor spill in agreement. */
 export function projectileVisualIndex(p:Pick<Projectile,'level'|'homing'|'kind'>,fallbackLevel=1){

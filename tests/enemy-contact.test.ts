@@ -1,3 +1,4 @@
+import {constrainEnemyFloor} from '../src/enemy-floor';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {World,STEP,TUNING,idleInput,v,distance} from '../src/simulation.ts';
@@ -21,6 +22,7 @@ test('running into every tower body at ground level is lethal in solo and crew',
 test('tower contact is bounded above the crown and outside the body',()=>{
  for(const kind of ['squid','squid2','squid3'] as const)for(const above of [false,true]){
   const w=new World(23,{schedule:false}),e=w.spawnAt(kind,0);e.age=2;e.nextSpawn=Infinity;e.pos.x=0;e.pos.z=0;
+  constrainEnemyFloor(e,w.time);
   w.player.pos=above?v(0,e.pos.y+e.radius+TUNING.eyeHeight+1,0):v(e.radius+1,TUNING.eyeHeight,0);
   w.step(idleInput());assert.equal(w.state,'playing',kind);
  }

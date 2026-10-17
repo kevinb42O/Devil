@@ -3,10 +3,11 @@ import {isSpider,isSkull,isPede} from './enemy-kinds';
 import {towerEmissionTick} from './tower-spawn';
 const v=(x:number,y:number,z:number):Vec=>({x,y,z});
 /** Coordinate mapping shared by the mesh rig and damage targets. Placement is prototype tuning. */
-export const CREATURE_SCALE=.62;
-// The imported Leviathan extends 5.77 units below its origin. At this height
-// its underside hovers at 2.23, just above the player's 1.7 eye height.
-export const LEVIATHAN_HOVER_HEIGHT=8;
+export const CREATURE_SCALE=1;
+/** Conversion from the prototype's baked collision and movement measurements. */
+export const CREATURE_SCALE_RATIO=CREATURE_SCALE/.62;
+// Preserve the Leviathan's 2.23-unit underside clearance as its rig grows.
+export const LEVIATHAN_HOVER_HEIGHT=8+5.77*(CREATURE_SCALE_RATIO-1);
 export const SPIDER_SIZE=1.65;
 export const SPIDER_CRYSTAL_SCALE=1.8;
 export const SPIDER_CRYSTAL_RADIUS=CREATURE_SCALE*SPIDER_CRYSTAL_SCALE*.5;
@@ -21,7 +22,7 @@ export function towerDeathPose(elapsed:number,sinkDepth:number){
 }
 export const TOWER_EJECTION_DURATION=.5;
 /** Crown outlets measured against the imported rigs, in world units. */
-export function towerOutletHeight(kind:Enemy['kind']){return kind==='squid3'?5:kind==='squid2'?2.5:1.1;}
+export function towerOutletHeight(kind:Enemy['kind']){return (kind==='squid3'?5:kind==='squid2'?2.5:1.1)*CREATURE_SCALE_RATIO;}
 /** Anticipation, held opening through the stream, then a soft closing motion. */
 export function towerSpitPulse(age:number,kind:Enemy['kind']='squid',originalCadence=false){
  if(originalCadence){

@@ -1,6 +1,6 @@
 import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
-const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
+const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:process.platform==='win32'?{channel:'chrome'}:{}),args:['--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows']});
 try{
  const host=await browser.newPage(),guest=await browser.newPage(),errors=[];
  for(const [page,role]of [[host,'host'],[guest,'guest']]){
@@ -34,8 +34,8 @@ try{
  await guest.evaluate(()=>clearInterval(window.predictionTimer));
  await guest.waitForFunction(()=>window.session.diagnostics.pendingInputs===0,{},{timeout:10000});
  const hostState=await host.evaluate(()=>{const p=window.session.world.crew[1];return {position:p.player.pos,shots:window.session.world.stats.shots,streaming:p.primary.streaming,ack:window.session.snapshot().crew[1].ack};});
- const guestState=await guest.evaluate(()=>({position:window.world.player.pos,snapshots:window.snapshots,maxPending:window.maxPending,network:window.session.diagnostics}));
- assert.ok(Math.hypot(hostState.position.x-guestState.position.x,hostState.position.z-guestState.position.z)<.1);assert.ok(hostState.shots>10);assert.equal(hostState.streaming,false);assert.ok(hostState.ack>200);assert.ok(guestState.maxPending<100);assert.ok(guestState.snapshots>10);assert.ok(guestState.network.rttMs>=100);
+ const guestState=await guest.evaluate(()=>({position:window.world.player.pos,snapshots:window.snapshots,maxPending:window.maxPending,sequence:window.session.history.lastSequence,network:window.session.diagnostics}));
+ assert.ok(Math.hypot(hostState.position.x-guestState.position.x,hostState.position.z-guestState.position.z)<.1);assert.ok(hostState.shots>10);assert.equal(hostState.streaming,false);assert.ok(hostState.ack>0);assert.equal(hostState.ack,guestState.sequence,'every accepted command must be acknowledged, including when stall recovery temporarily pauses prediction');assert.ok(guestState.maxPending<100);assert.ok(guestState.snapshots>10);assert.ok(guestState.network.rttMs>=100);
  // A restart must reset command numbering and prediction state; delayed old
  // epoch packets must not be allowed to move the new crew.
  await host.evaluate(()=>{clearInterval(window.hostTimer);window.session.start();window.session.startAt=0;window.session.broadcast();});

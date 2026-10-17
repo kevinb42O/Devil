@@ -1,17 +1,25 @@
 import baked from './projectile-colliders.json';
-import {enemyYaw,enemyEmergenceScale,towerPartOffset,CREATURE_SCALE} from './enemy-presentation';
+import {enemyYaw,enemyEmergenceScale,towerPartOffset,CREATURE_SCALE,CREATURE_SCALE_RATIO} from './enemy-presentation';
 import type {Enemy,Vec} from './simulation';
-const meshes=new Map(Object.entries(baked.meshes).map(([kind,m])=>[kind,{nodes:m.nodes,vertices:new Float32Array(m.vertices),indices:new Uint32Array(m.indices)}]));
+// BVH topology stays shared; resize bounds and vertices together from the .62 bake.
+const meshes=new Map(Object.entries(baked.meshes).map(([kind,m])=>[kind,{nodes:m.nodes.map(n=>n.map((v,i)=>i<6?v*CREATURE_SCALE_RATIO:v)),vertices:Float32Array.from(m.vertices,v=>v*CREATURE_SCALE_RATIO),indices:new Uint32Array(m.indices)}]));
 const colliders=new Map(Object.entries(baked.instances).map(([kind,instances])=>{
  const parts=instances.map(p=>({...p,mesh:meshes.get(p.name)!,c:Math.cos(p.yaw),s:Math.sin(p.yaw)}));
  let radius=0;
  for(const p of parts){
   const b=p.mesh.nodes[0],x=Math.max(Math.abs(b[0]),Math.abs(b[3]))*p.sx,z=Math.max(Math.abs(b[2]),Math.abs(b[5]))*p.sx;
-  radius=Math.max(radius,Math.hypot(x,z)+(p.wave ? .4 : 0));
+  radius=Math.max(radius,Math.hypot(x,z)+(p.wave ? .4*CREATURE_SCALE_RATIO : 0));
  }
  return [kind,{parts,radius}] as const;
 }));
 export const armorMesh=(e:Enemy)=>colliders.get(e.kind);
+/** Lowest animated armor point, relative to the same root used for damage. */
+export function armorBottom(e:Enemy,originalCadence=true){
+ const collider=armorMesh(e);if(!collider)return 0;
+ let bottom=Infinity;
+ for(const p of collider.parts){const b=p.mesh.nodes[0];bottom=Math.min(bottom,(p.flip?-b[4]:b[1])*p.sy+towerPartOffset(e,p.name,originalCadence)*CREATURE_SCALE);}
+ return bottom*enemyEmergenceScale(e);
+}
 export type ArmorHit={t:number;nx:number;ny:number;nz:number};
 // Shared scratch stack visits only BVH nodes overlapped by the segment.
 // Geometry is shared by all towers; queries allocate only on successful hits.
@@ -45,9 +53,9 @@ export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0,origina
 // Invert the native arm shader in mesh space. Its deformation preserves Y;
 // horizontal sweeps are exact, pitched sweeps use short curved-path chords.
 function ribbonInverse(x:number,y:number,z:number,time:number,out:Vec){
- const rawY=y/.62,wave=Math.max(0,Math.min(1,(-rawY-1.5)*.5))*.5,curve=Math.pow(Math.max(0,-rawY),2.1)*.07;
+ const rawY=y/CREATURE_SCALE,wave=Math.max(0,Math.min(1,(-rawY-1.5)*.5))*.5,curve=Math.pow(Math.max(0,-rawY),2.1)*.07;
  const theta=wave*curve*.35,c=Math.cos(theta),s=Math.sin(theta);
- out.x=-x*s-z*c;out.y=y;out.z=x*c-z*s-wave*Math.sin(curve-time*.7)*.6*.62;return out;
+ out.x=-x*s-z*c;out.y=y;out.z=x*c-z*s-wave*Math.sin(curve-time*.7)*.6*CREATURE_SCALE;return out;
 }
 const ribbonA={x:0,y:0,z:0},ribbonB={x:0,y:0,z:0};
 function traceRibbon(mesh:NonNullable<ReturnType<typeof meshes.get>>,x:number,y:number,z:number,dx:number,dy:number,dz:number,limit:number,time:number):ArmorHit|null{

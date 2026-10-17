@@ -195,3 +195,52 @@ test('armor-blocked predicted lead falls back to the verified crystal damage poi
   f.adapter.control({enabled:true,prediction:true});
   const s=f.adapter.step();assert.deepEqual(s.target.predicted,s.target.pos);
 });
+
+test('FOV rejects side and rear targets before geometry checks while keeping their ESP',()=>{
+  const checks=[];
+  const f=fixture([enemy(1),enemy(2,'skull',12,0),enemy(3,'skull',0,12)],{
+    resolve(e,p){checks.push(e.id);return p;}
+  });
+  f.adapter.control({enabled:true,fov:60});checks.length=0;
+  const s=f.adapter.step();
+  assert.deepEqual(checks,[1]);assert.equal(s.target.enemy,1);
+  assert.equal(s.candidates.length,3);
+  f.world.enemies.shift();checks.length=0;
+  assert.equal(f.adapter.step().target,null);assert.deepEqual(checks,[]);
+});
+
+test('disabled, suspended, unfocused and expired trainers never query armor',()=>{
+  for(const disable of [f=>f.adapter.control({enabled:false}),f=>f.adapter.control({enabled:true,suspended:true}),f=>{f.state.focused=false;},f=>f.advance(501)]){
+    let checks=0;const f=fixture([enemy(1)],{resolve(e,p){checks++;return p;}});
+    disable(f);checks=0;const s=f.adapter.step();
+    assert.equal(checks,0);assert.equal(s.active,false);assert.equal(s.target,null);
+    assert.equal(s.candidates.length,1,'independent ESP remains available');
+  }
+});
+
+test('nearest selection checks only the best candidates until a clear one is found',()=>{
+  const checks=[];
+  const f=fixture([enemy(1,'skull',0,-20),enemy(2,'skull',0,-4),enemy(3,'skull',0,-8)],{
+    resolve(e,p){checks.push(e.id);return e.id===2?null:p;}
+  });checks.length=0;
+  assert.equal(f.adapter.step().target.enemy,3);assert.deepEqual(checks,[2,3]);
+  assert.equal(f.adapter.snapshot().candidates.find(e=>e.enemy===2).aimable,false);
+});
+
+test('crosshair selection ranks the resolved crystal edges rather than their centers',()=>{
+  const a=tower(1),b=tower(2);a.pos={x:.5,y:1.7,z:-12};b.pos={x:3,y:1.7,z:-12};
+  a.weakpoints=a.weakpoints.slice(1);b.weakpoints=b.weakpoints.slice(1);
+  const f=fixture([a,b],{resolve(e,p){return {...p,x:e.id===1?4:0};}});
+  f.adapter.control({enabled:true,selection:'crosshair',switch_bias:0,lock_ms:0});
+  assert.equal(f.adapter.step().target.enemy,2);
+});
+
+test('lazy health selection preserves a valid held lock and drops a blocked lock',()=>{
+  let blocked=false;
+  const a=enemy(1),b=enemy(2);a.hp=2;b.hp=3;
+  const f=fixture([a,b],{resolve(e,p){return blocked&&e.id===1?null:p;}});
+  f.adapter.control({enabled:true,selection:'health',lock_ms:1000,switch_bias:0});
+  assert.equal(f.adapter.step().target.enemy,1);
+  b.hp=1;assert.equal(f.adapter.step().target.enemy,1);
+  blocked=true;assert.equal(f.adapter.step().target.enemy,2);
+});

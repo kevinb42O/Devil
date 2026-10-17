@@ -1,3 +1,4 @@
+import {nearBasketball,basketballCharge,canBasketballDunk} from './courtyard-basketball';
 import type {World} from './simulation';
 import type {FriendsSession} from './multiplayer';
 import type {ControlScheme} from './controls';
@@ -12,6 +13,7 @@ export class CourtyardUI{
  private assetsReady=false;
  private selectMeter=document.createElement('div');
  private drawingPanel=document.createElement('div');
+ private basketballPanel=document.createElement('div');
  constructor(actions:{room:()=>void}){
   this.root.id='courtyard-hud';this.root.hidden=true;
   this.root.innerHTML='<div class="courtyard-room"><button id="courtyard-room">ROOM & CREW</button><span class="courtyard-count"></span></div><div class="courtyard-wait" hidden><strong>Waiting for your crew</strong><p></p></div><div class="courtyard-toolbar"><div class="courtyard-message" role="status"></div><div class="courtyard-buttons"><button id="courtyard-ready">READY UP</button><button id="courtyard-open">HOLD TO OPEN PIT</button><button id="courtyard-cancel">CLOSE PIT</button></div></div><div class="courtyard-kick-charge" hidden><span>KICK</span><progress max="1" value="0" aria-label="Kick power"></progress></div><div class="courtyard-touch-arms"><button aria-label="Hold left arm up">LEFT HAND</button><button aria-label="Hold right arm up">RIGHT HAND</button></div>';
@@ -19,6 +21,9 @@ export class CourtyardUI{
   this.drawingPanel.className='courtyard-drawing-controls';this.drawingPanel.hidden=true;
   this.drawingPanel.innerHTML='<strong>FREE DRAW · SCRIBBLE COURT</strong><p class="drawing-help"></p><div class="drawing-palette"></div><button id="courtyard-brush-size">BRUSH SIZE</button><button id="courtyard-grid">SHOW 8×8 GRID</button><button id="courtyard-pencil">PICK UP PENCIL</button><button id="courtyard-drawing-clear">CLEAR BOARD</button>';
   this.root.append(this.drawingPanel);
+  this.basketballPanel.className='courtyard-basketball-controls';this.basketballPanel.hidden=true;
+  this.basketballPanel.innerHTML='<strong>COURTYARD HOOPS</strong><p class="basketball-help"></p><button id="courtyard-basketball-pickup">PICK UP BALL</button><p class="basketball-dunk-hint"></p><p class="basketball-personal-score"></p><progress max="1" value="0" aria-label="Basketball shot power"></progress><small class="basketball-credits">Ball: Poly by Google · <a href="/models/basketball/LICENSE.md" target="_blank" rel="noopener">CC BY 3.0 / Credits</a></small>';
+  this.root.append(this.basketballPanel);this.button('basketball-pickup').onclick=()=>this.session?.pencilAction();
   INK_COLORS.forEach((color,i)=>{const button=document.createElement('button');button.textContent=String(i+1);button.title='Brush color '+(i+1);button.style.background='#'+color.toString(16).padStart(6,'0');button.onclick=()=>this.session?.drawingStyle({color:i});this.drawingPanel.querySelector('.drawing-palette')!.append(button);});
   this.button('brush-size').onclick=()=>{const p=this.session?.courtyard?.drawing?.pencils.find(p=>p.owner===this.session?.localId);if(p)this.session?.drawingStyle({width:BRUSH_SIZES[(BRUSH_SIZES.indexOf(p.width??8)+1)%BRUSH_SIZES.length]});};
   this.button('grid').onclick=()=>this.session?.drawingStyle({grid:!this.session.courtyard?.drawing?.grid});
@@ -73,6 +78,14 @@ export class CourtyardUI{
   if(!s?.prelobby)return;
   const c=s.courtyard,local=s.members.find(m=>m.id===s.localId);if(!c)return;
   const player=(viewWorld??s.world)?.crew?.find(p=>p.id===s.localId),d=c.drawing,pen=d?.pencils.find(p=>p.owner===s.localId);
+  const basketball=c.basketball,ball=basketball?.balls.find(ball=>ball.owner===s.localId),onCourt=!!player&&nearBasketball(player.player.pos),tick=viewWorld?.tick??s.world?.tick??0;
+  this.basketballPanel.hidden=!visible||!onCourt;
+  this.button('basketball-pickup').textContent=(ball?'DROP BALL':'PICK UP NEAREST BALL')+(scheme==='controller'?' [X / SQUARE]':scheme==='mobile'?'':' [E]');
+  this.button('basketball-pickup').disabled=!ball&&!basketball?.balls.some(ball=>!ball.owner&&!!player&&Math.hypot(ball.pos.x-player.player.pos.x,ball.pos.z-player.player.pos.z)<1.65&&Math.hypot(ball.vel.x,ball.vel.y,ball.vel.z)<5);
+  this.basketballPanel.querySelector('.basketball-help')!.textContent=ball?(scheme==='controller'?'Right stick: aim · Hold LT / L2 to charge, release to shoot. RT / R2: dunk near the hoop.':scheme==='mobile'?'Aim up · Hold the right aiming area to charge, lift to shoot.':'Aim up · Hold left click to charge, release to shoot. Right click: dunk near the hoop.'):'Walk close to a loose ball and pick it up. Retrieve your ball after every shot. Everyone shoots at the same hoop.';
+  this.basketballPanel.querySelector('.basketball-dunk-hint')!.textContent=ball&&player?(canBasketballDunk(player)?(scheme==='controller'?'RT / R2 · SLAM DUNK':scheme==='mobile'?'DUNK READY':'RMB · SLAM DUNK'):'Move close and face the basket to dunk'):'';
+  const personal=basketball?.scores[s.localId];this.basketballPanel.querySelector('.basketball-personal-score')!.textContent=`${personal?.points??0} PTS · ${personal?.made??0} / ${personal?.attempts??0} SHOTS · 2 PTS / 3 BEYOND ARC`;
+  this.basketballPanel.querySelector('progress')!.value=basketballCharge(basketball,s.localId,tick);
   this.drawingPanel.hidden=!visible||!player||!nearDrawingRoom(player.player.pos);
   const wall=!!player&&nearClearButton(player.player.pos),eraser=pen===d?.pencils[2];
   const binding=scheme==='controller'?' [X / SQUARE]':scheme==='mobile'?'':' [E / G / CLICK]';
@@ -85,7 +98,7 @@ export class CourtyardUI{
   this.drawingPanel.querySelector('.drawing-help')!.textContent=(d?.ink.length??0)>=MAX_INK?'Board full · Use the eraser or the red wall button':pen?(scheme==='controller'?'Aim across the field · Hold either trigger to '+(eraser?'erase':'draw · D-pad ←→ colors, ↑↓ size'):scheme==='mobile'?'Drag on the right side to aim and '+(eraser?'erase':'draw'):'Aim across the field · Hold either mouse button to '+(eraser?'erase':'draw · 1–8 colors')):'Colors: 1–8 · Size: [ / ] · Grid: H. Pencils and a giant eraser wait beside the board. Walk close and press E / G, or left click. Red wall button clears all lines.';
   if(assetsReady&&local?.loaded!==s.epoch&&performance.now()-this.loadedAt>800){this.loadedAt=performance.now();s.markLoaded(s.epoch);}
   this.root.dataset.scheme=scheme;
-  const kick=footballKickPose(c,s.localId,viewWorld?.tick??s.world?.tick??0),meter=this.root.querySelector<HTMLElement>('.courtyard-kick-charge')!;meter.hidden=!kick||kick.charge<=0;this.root.querySelector<HTMLProgressElement>('.courtyard-kick-charge progress')!.value=kick?.charge??0;
+  const kick=footballKickPose(c,s.localId,viewWorld?.tick??s.world?.tick??0),meter=this.root.querySelector<HTMLElement>('.courtyard-kick-charge')!;meter.hidden=onCourt||!kick||kick.charge<=0;this.root.querySelector<HTMLProgressElement>('.courtyard-kick-charge progress')!.value=kick?.charge??0;
   const count=s.members.filter(m=>m.ready&&m.loaded===s.epoch).length;
   this.root.querySelector('.courtyard-count')!.textContent=`${count} / ${s.members.length} ready`;
   const gathering=c.phase==='gathering',blocked=s.pitBlockedReason,ready=this.button('ready'),open=this.button('open');

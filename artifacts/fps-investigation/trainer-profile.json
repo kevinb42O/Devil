@@ -1,0 +1,204 @@
+{
+  "reference": "146f872",
+  "node": "v24.19.0",
+  "results": [
+    {
+      "label": "before",
+      "enemies": 100,
+      "towers": 8,
+      "fov": 60,
+      "enabled": true,
+      "selected": "105:crystal0",
+      "medianMs": 32.082,
+      "p95Ms": 43.508,
+      "sweepsPerScan": 1163
+    },
+    {
+      "label": "before",
+      "enemies": 100,
+      "towers": 8,
+      "fov": 360,
+      "enabled": true,
+      "selected": "101:crystal0",
+      "medianMs": 44.578,
+      "p95Ms": 72.44,
+      "sweepsPerScan": 1163
+    },
+    {
+      "label": "before",
+      "enemies": 100,
+      "towers": 8,
+      "fov": 60,
+      "enabled": false,
+      "selected": "105:crystal0",
+      "medianMs": 51.336,
+      "p95Ms": 81.376,
+      "sweepsPerScan": 1163
+    },
+    {
+      "label": "after",
+      "enemies": 100,
+      "towers": 8,
+      "fov": 60,
+      "enabled": true,
+      "selected": "105:crystal0",
+      "medianMs": 0.644,
+      "p95Ms": 3.14,
+      "sweepsPerScan": 2
+    },
+    {
+      "label": "after",
+      "enemies": 100,
+      "towers": 8,
+      "fov": 360,
+      "enabled": true,
+      "selected": "101:crystal0",
+      "medianMs": 0.598,
+      "p95Ms": 4.11,
+      "sweepsPerScan": 2
+    },
+    {
+      "label": "after",
+      "enemies": 100,
+      "towers": 8,
+      "fov": 60,
+      "enabled": false,
+      "selected": null,
+      "medianMs": 0.133,
+      "p95Ms": 1.228,
+      "sweepsPerScan": 0
+    },
+    {
+      "label": "before",
+      "enemies": 600,
+      "towers": 8,
+      "fov": 60,
+      "enabled": true,
+      "selected": "605:crystal0",
+      "medianMs": 132.03,
+      "p95Ms": 151.79,
+      "sweepsPerScan": 4965
+    },
+    {
+      "label": "before",
+      "enemies": 600,
+      "towers": 8,
+      "fov": 360,
+      "enabled": true,
+      "selected": "601:crystal0",
+      "medianMs": 130.245,
+      "p95Ms": 138.98,
+      "sweepsPerScan": 4965
+    },
+    {
+      "label": "before",
+      "enemies": 600,
+      "towers": 8,
+      "fov": 60,
+      "enabled": false,
+      "selected": "605:crystal0",
+      "medianMs": 120.624,
+      "p95Ms": 125.345,
+      "sweepsPerScan": 4965
+    },
+    {
+      "label": "after",
+      "enemies": 600,
+      "towers": 8,
+      "fov": 60,
+      "enabled": true,
+      "selected": "605:crystal0",
+      "medianMs": 2.433,
+      "p95Ms": 3.557,
+      "sweepsPerScan": 2
+    },
+    {
+      "label": "after",
+      "enemies": 600,
+      "towers": 8,
+      "fov": 360,
+      "enabled": true,
+      "selected": "601:crystal0",
+      "medianMs": 1.651,
+      "p95Ms": 2.455,
+      "sweepsPerScan": 2
+    },
+    {
+      "label": "after",
+      "enemies": 600,
+      "towers": 8,
+      "fov": 60,
+      "enabled": false,
+      "selected": null,
+      "medianMs": 0.387,
+      "p95Ms": 0.429,
+      "sweepsPerScan": 0
+    },
+    {
+      "label": "before",
+      "enemies": 1500,
+      "towers": 20,
+      "fov": 60,
+      "enabled": true,
+      "selected": "1518:crystal0",
+      "medianMs": 627.534,
+      "p95Ms": 634.592,
+      "sweepsPerScan": 28937
+    },
+    {
+      "label": "before",
+      "enemies": 1500,
+      "towers": 20,
+      "fov": 360,
+      "enabled": true,
+      "selected": "1501:crystal0",
+      "medianMs": 633.34,
+      "p95Ms": 640.079,
+      "sweepsPerScan": 28937
+    },
+    {
+      "label": "before",
+      "enemies": 1500,
+      "towers": 20,
+      "fov": 60,
+      "enabled": false,
+      "selected": "1518:crystal0",
+      "medianMs": 629.513,
+      "p95Ms": 634.646,
+      "sweepsPerScan": 28937
+    },
+    {
+      "label": "after",
+      "enemies": 1500,
+      "towers": 20,
+      "fov": 60,
+      "enabled": true,
+      "selected": "1518:crystal0",
+      "medianMs": 3.181,
+      "p95Ms": 3.657,
+      "sweepsPerScan": 11
+    },
+    {
+      "label": "after",
+      "enemies": 1500,
+      "towers": 20,
+      "fov": 360,
+      "enabled": true,
+      "selected": "1501:crystal0",
+      "medianMs": 3.727,
+      "p95Ms": 4.605,
+      "sweepsPerScan": 2
+    },
+    {
+      "label": "after",
+      "enemies": 1500,
+      "towers": 20,
+      "fov": 60,
+      "enabled": false,
+      "selected": null,
+      "medianMs": 1.168,
+      "p95Ms": 1.515,
+      "sweepsPerScan": 0
+    }
+  ]
+}

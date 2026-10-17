@@ -83,6 +83,7 @@
     "test:courtyard": "tsx --test tests/courtyard.test.ts tests/football-kick.test.ts tests/multiplayer-entrance.test.ts && node tests/courtyard-browser.mjs && node tests/courtyard-devices-browser.mjs",
     "test:drawing-court": "tsx --test tests/courtyard-drawing.test.ts && node tests/courtyard-drawing-browser.mjs",
     "test:courtyard:six": "CREW_SIZE=6 COURTYARD_CYCLES=10 node tests/courtyard-browser.mjs",
+    "test:basketball": "tsx --test tests/courtyard-basketball.test.ts && node tests/courtyard-basketball-browser.mjs && node tests/basketball-polish-browser.mjs",
     "test:football-feedback": "node tests/football-feedback-browser.mjs"
   },
   "dependencies": {

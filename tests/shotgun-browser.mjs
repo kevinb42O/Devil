@@ -24,7 +24,7 @@ try{
    const colors=renderer.projectileLighting.glow.geometry.attributes.shotColor.array;
    return {quality,level,styleIndex,color:Array.from(colors.slice(0,3)),batches,alive:w.projectiles.length,allPellets:w.projectiles.every(p=>p.kind==='shotgun'),pelletShape:weapon.daggers[styleIndex].geometry.type,glowMatches:w.projectiles.every((_,i)=>profiles[i]===1),calls:renderer.renderer.info.render.calls,lighting:renderer.projectileLighting.diagnostics};
   },{quality,level});
-  assert.equal(result.alive,[10,20,40,60][level-1]);assert.equal(result.batches[result.styleIndex],result.alive);assert.ok(result.allPellets&&result.glowMatches);assert.equal(result.pelletShape,'OctahedronGeometry');assert.equal(result.lighting.drawCalls,1);
+  assert.equal(result.alive,[10,60,120,180][level-1]);assert.equal(result.batches[result.styleIndex],result.alive);assert.ok(result.allPellets&&result.glowMatches);assert.equal(result.pelletShape,'OctahedronGeometry');assert.equal(result.lighting.drawCalls,1);
   report.push(result);await page.locator('canvas').screenshot({path:`artifacts/shotgun/hand-${level}-${quality}.png`});
  }
  for(const quality of ['low','high'])assert.equal(new Set(report.filter(r=>r.quality===quality).map(r=>JSON.stringify(r.color))).size,4);

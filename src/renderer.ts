@@ -1,3 +1,4 @@
+import {basketballPose} from './courtyard-basketball';
 import {CourtyardScene} from './courtyard-scene';
 import {isPlayerSkin,isPodiumRank,PODIUM_METALS,type PlayerSkin,type PodiumRank} from './player-skins';
 import {playerColor} from './player-colors';
@@ -10,6 +11,7 @@ import {CameraFeedback} from './camera-feedback';
 import {MAX_CREW_PLAYERS} from './crew-config';
 import {UPGRADE_PULSE} from './upgrade-pulse-tuning';
 import {UpgradeGroundPulse} from './upgrade-ground-pulse';
+import {UpgradeScreenFlash} from './upgrade-screen-flash';
 import {MenuRelics} from './menu-relics';
 import {BloodRenderer} from './blood-renderer';
 import {PlayerDeathBurst} from './player-death-burst';
@@ -58,7 +60,8 @@ export class GameRenderer {
   private feedbackLife='';
   private feedbackTime=-Infinity;
   private movementClock:number|null=null;
-  resetFeedback(){this.courtyardNeck.clear();this.movementClock=null;this.movementMotion.clear();this.cameraFeedback.clear();this.feedbackWorldOffset.set(0,0,0);this.feedbackLife='';this.feedbackTime=-Infinity;this.originalWeapon?.resetMotion();}
+  readonly upgradeScreenFlash=new UpgradeScreenFlash();
+  resetFeedback(){this.upgradeScreenFlash.clear();this.courtyardNeck.clear();this.movementClock=null;this.movementMotion.clear();this.cameraFeedback.clear();this.feedbackWorldOffset.set(0,0,0);this.feedbackLife='';this.feedbackTime=-Infinity;this.originalWeapon?.resetMotion();}
   crewAvatarLoaded=false;readonly crewAvatarReady=loadCrewAvatar().then(()=>{this.crewAvatarLoaded=true;});
   private deathGhost:THREE.Group|null=null;
   private replayBody:THREE.Group|null=null;
@@ -138,7 +141,7 @@ export class GameRenderer {
   }
   private updateCrewModels(world:World|null,dt:number,crewInterpolated:boolean,scene:THREE.Scene,menu=false){
     const crewIds=new Set<string>();
-    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===p.id));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
+    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===p.id),basketballPose(world.courtyard?.basketball,p.id,world.tick,p));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
   }
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
@@ -219,7 +222,7 @@ export class GameRenderer {
     this.configure(settings);window.addEventListener('resize',()=>this.resize());this.resize();
   }
   get skyDiagnostics(){return this.sky.diagnostics;}
-  configure(settings:VisualSettings) {this.environmentMotionReduced=settings.skyMotion==='reduced';this.cameraFeedback.configure(settings.screenShake);this.movementMotion.configure(settings.movementMotion);this.originalWeapon.configureMotion(settings.movementMotion);this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
+  configure(settings:VisualSettings) {this.environmentMotionReduced=settings.skyMotion==='reduced';this.cameraFeedback.configure(settings.screenShake);this.movementMotion.configure(settings.movementMotion);this.originalWeapon.configureMotion(settings.movementMotion);this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=this.resizeCooldown=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
   resize() {
     const {width:w,height:h}=gameViewport();
     // Bound fill cost on Retina/4K displays; UI and the canvas keep their CSS size.
@@ -281,6 +284,7 @@ export class GameRenderer {
       }
     }
     this.originalWeapon.effect(weaponEffect,world,yaw,pitch,local);
+    if(effect.kind==='upgrade'&&local)this.upgradeScreenFlash.begin(effect.level??effect.amount??world.level);
     if(effect.kind==='upgrade'&&((effect.level??0)<5||!world.crew.length||effect.sharedWave))this.upgradePulse.begin(effect.pos,effect.level??effect.amount??world.level,world.time);
     this.blood.effect(effect,world);
   }
@@ -301,14 +305,14 @@ export class GameRenderer {
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
     if(!entrance||!world||!bodyInput||spectatorPosition||this.topDown)this.courtyardNeck.clear();
     this.crewReplayExternal=!!spectatorPosition;this.renderer.info.reset();if(menu){
-      this.resetFeedback();this.upgradePulse.clear();
+      this.resetFeedback();this.upgradePulse.clear();this.upgradeScreenFlash.clear();
       // The menu has its own scene; retire gameplay glows before the early return.
       this.projectileLighting.update(null,true,projectileAlpha,this.renderer.domElement.height);
       this.menuRelics.render(this.renderer,dt);return;
     }this.visualTime+=dt;const t=this.crewReplayMode&&world?world.time:this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
     if(entrance&&world){
       const entranceScene=world.courtyard?this.courtyard.scene:this.entrance.scene;
-      this.upgradePulse.clear();
+      this.upgradePulse.clear();this.upgradeScreenFlash.clear();
       samplePlayerPosition(world,projectileAlpha,this.camera.position);
       this.applyViewFeedback(world,yaw,pitch,dt,false,false,projectileAlpha);this.camera.rotation.set(pitch,yaw,0,'YXZ');
       if(bodyInput&&!spectatorPosition&&!this.topDown){
@@ -329,7 +333,7 @@ export class GameRenderer {
        samplePlayerPosition(world,projectileAlpha,hands.position);hands.rotation.set(0,yaw,0);
        const local=world.crew.find(p=>p.player===world.player),skin=local?this.crewSkins.get(local.id):undefined;
        setCrewAvatarColor(hands,local?this.crewColors.get(local.id):undefined);setCrewAvatarSkin(hands,skin?.skin,skin?.rank);
-       updateCrewAvatar(hands,bodyInput,world.player.vel,world.player.grounded,world.crew.length?world.tick*STEP:t,false,true,1,footballKickPose(world.courtyard,local?.id??'',world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===local?.id));
+       updateCrewAvatar(hands,bodyInput,world.player.vel,world.player.grounded,world.crew.length?world.tick*STEP:t,false,true,1,footballKickPose(world.courtyard,local?.id??'',world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===local?.id),basketballPose(world.courtyard?.basketball,local?.id??'',world.tick,local));
        hands.visible=true;
       }else if(this.emoteHands)this.emoteHands.visible=false;
       if(world.courtyard){
@@ -451,10 +455,12 @@ export class GameRenderer {
     this.openingMist.updateLights(this.camera,this.enemyLighting.aura,this.projectileLighting.glow);
     this.upgradePulse.update(dt,world?.time??0);
     this.composer.render();this.originalWeapon.render(this.renderer,menu||!!spectatorPosition||this.topDown);
+    this.upgradeScreenFlash.render(this.renderer,dt,!!spectatorPosition||this.topDown||world?.state!=='playing');
   }
   restoreReplayUpgrade(effect:Effect,world:World,age:number){
     const localId=world.crew.find(p=>p.player===world.player)?.id,local=effect.shooterId===localId;
     this.originalWeapon.effect(effect,world,0,0,local);if(local)this.originalWeapon.restoreReplayUpgradeAge(age);
+    if(local)this.upgradeScreenFlash.begin(effect.level??world.level,age);
     if(age<UPGRADE_PULSE.duration&&((effect.level??0)<5||!world.crew.length||effect.sharedWave)){this.upgradePulse.begin(effect.pos,effect.level??world.level,world.time-age);this.upgradePulse.update(0,world.time);this.upgradePulse.update(0,world.time);}
   }
   /** Restore large corpses directly when a seek skipped their removal frame. */
@@ -465,5 +471,9 @@ export class GameRenderer {
       const top=new THREE.Box3().setFromObject(model).max.y,floor=floorHeight(model.position.x,model.position.z,started),depth=Math.max(1,top-Math.max(-5,floor)+.5);if(towerDeathPose(world.time-started,depth).done)continue;this.scene.add(model);this.dyingTowers.set(e.id,{model,started,y:e.pos.y,yaw:model.rotation.y,direction:e.towerSpinDirection??-1,depth});
     }
   }
-  clear() {if(this.emoteHands){disposeCrewAvatar(this.emoteHands);this.emoteHands.removeFromParent();this.emoteHands=null;}this.resetFeedback();this.upgradePulse.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
+  clear() {
+    // A crowded run must not leave the next run at its degraded resolution.
+    this.slowFrames=this.fastFrames=this.resizeCooldown=0;
+    if(this.renderScale!==1){this.renderScale=1;this.resize();}
+    if(this.emoteHands){disposeCrewAvatar(this.emoteHands);this.emoteHands.removeFromParent();this.emoteHands=null;}this.resetFeedback();this.upgradePulse.clear();this.upgradeScreenFlash.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

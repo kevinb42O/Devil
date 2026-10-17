@@ -90,7 +90,8 @@ test('four level-IV shooters use substantially less bandwidth without dropping p
    if(tick%6!==5)continue;const snapshot=host.snapshot()!,encoded=encodeState(snapshot,frame+1,frame,base),decoded=decodeState(encoded,new Map(receiver?[[frame,receiver]]:[]))!;assert.equal(decoded.snapshot.projectiles.length,snapshot.projectiles.length);for(let i=0;i<snapshot.projectiles.length;i++)assert.ok(Math.hypot(decoded.snapshot.projectiles[i].pos.x-snapshot.projectiles[i].pos.x,decoded.snapshot.projectiles[i].pos.y-snapshot.projectiles[i].pos.y,decoded.snapshot.projectiles[i].pos.z-snapshot.projectiles[i].pos.z)<.001);
    binary+=fragmentState(encoded,frame+1).reduce((n,p)=>n+p.byteLength,0);const {serverNow,...legacyFields}=snapshot;const legacy={...legacyFields,projectiles:snapshot.projectiles.map(({shotKey,launch,...p})=>p),crew:snapshot.crew.map(({ack,shotSequence,shotSeed,wasJump,lastShotTick,...p})=>p)};json+=new TextEncoder().encode(JSON.stringify(JSON.stringify(legacy))).length;base=snapshotBaseline(snapshot);receiver=snapshotBaseline(decoded.snapshot);frame++;
   }
-  assert.ok(json/binary>20,`Only ${(json/binary).toFixed(1)}x reduction`);assert.ok(binary/2<100000,`State exceeds 100 KB/s budget: ${binary/2}`);
+  // Primary salvos now carry three times as many real daggers at hand IV.
+  assert.ok(json/binary>20,`Only ${(json/binary).toFixed(1)}x reduction`);assert.ok(binary/2<150000,`State exceeds 150 KB/s dense-stream budget: ${binary/2}`);
   console.log(`Level IV: ${(binary/2000).toFixed(1)} KB/s per guest including repair packets, ${(json/binary).toFixed(1)}x smaller than JSON.`);
  }finally{host.close();}
 });

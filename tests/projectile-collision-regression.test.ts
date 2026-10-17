@@ -1,3 +1,4 @@
+import {CREATURE_SCALE,CREATURE_SCALE_RATIO,SPIDER_CRYSTAL_RADIUS} from '../src/enemy-presentation.ts';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
@@ -34,7 +35,7 @@ test('attached crystal centers follow the rendered emergence root and accept sho
 test('emerging crystal radii shrink with the rendered root instead of hitting empty space',()=>{
  for(const kind of ['squid','squid2','squid3','spider2'] as const){
   const w=new World(1,{schedule:false}),e=w.spawn(kind,v(0,8,0));e.age=.6;e.headExposure=1;e.pos=v(0,8,0);
-  const center=w.weakPoint(e),fullRadius=kind==='spider2'?.62*1.8*.5*e.size:.63;
+  const center=w.weakPoint(e),fullRadius=kind==='spider2'?SPIDER_CRYSTAL_RADIUS*e.size:.63*CREATURE_SCALE_RATIO;
   const outside=v(center.x,center.y+fullRadius*.8,center.z),hp=e.hp;
   shot(w,outside,outside);tick(w);
   assert.equal(e.hp,hp,kind);assert.equal(w.projectiles.length,1,kind);
@@ -86,8 +87,8 @@ test('animated rigid armor contacts and normals agree with transformed render tr
   const root=new THREE.Group();root.position.set(e.pos.x,e.pos.y,e.pos.z);root.rotation.y=enemyYaw(e,w.player.pos);root.scale.setScalar(enemyEmergenceScale(e));
   for(const p of baked.instances[kind]){
    if(p.wave)continue;
-   const data=baked.meshes[p.name as keyof typeof baked.meshes],geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(data.vertices,3));geo.setIndex(data.indices);
-   const mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));mesh.rotation.set(p.flip?Math.PI:0,p.yaw,0,'YXZ');mesh.scale.set(p.sx,p.sy,p.sx);mesh.position.y=towerPartOffset(e,p.name,originalCadence)*.62;root.add(mesh);
+   const data=baked.meshes[p.name as keyof typeof baked.meshes],geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(data.vertices,3));geo.setIndex(data.indices);geo.scale(CREATURE_SCALE_RATIO,CREATURE_SCALE_RATIO,CREATURE_SCALE_RATIO);
+   const mesh=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({side:THREE.DoubleSide}));mesh.rotation.set(p.flip?Math.PI:0,p.yaw,0,'YXZ');mesh.scale.set(p.sx,p.sy,p.sx);mesh.position.y=towerPartOffset(e,p.name,originalCadence)*CREATURE_SCALE;root.add(mesh);
   }
   root.updateMatrixWorld(true);let hits=0,grazingNormals=0;
   for(let x=-1.973;x<=2;x+=.5)for(let z=-1.941;z<=2;z+=.5){

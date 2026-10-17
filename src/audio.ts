@@ -21,7 +21,7 @@ export class Sound{
  private loops=new Map<number|string,Voice>();
  private shots=new Set<Voice>();
  private volume=.55;private playbackRate=1;
- setPlaybackRate(rate:number){this.playbackRate=Math.max(.25,Math.min(2,rate));for(const v of [...this.loops.values(),...this.shots])v.source.playbackRate.value=this.playbackRate*v.rate;}
+ setPlaybackRate(rate:number){const next=Math.max(.25,Math.min(2,rate));if(next===this.playbackRate)return;this.playbackRate=next;for(const v of [...this.loops.values(),...this.shots])v.source.playbackRate.value=this.playbackRate*v.rate;}
  private loudness=new Map<string,number>();
  private loading:Promise<void>|null=null;
  private cooldowns=new Map<string,number>();

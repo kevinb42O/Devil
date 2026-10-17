@@ -1,0 +1,734 @@
+[
+  {
+    "quality": "low",
+    "level": 2,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 921594,
+        "hash": 3669230366,
+        "contrast": 5605592,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.25438016528925617,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 920393,
+        "hash": 2150968147,
+        "contrast": 2824996,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.13268595041322317,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 833514,
+        "hash": 1854826296,
+        "contrast": 1523626,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.015898760330578517,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 53416,
+        "hash": 3350164241,
+        "contrast": 175690,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 0,
+        "hash": 3682742297,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "low",
+    "level": 3,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 921600,
+        "hash": 572815843,
+        "contrast": 4358854,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.26388888888888884,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 921294,
+        "hash": 604640895,
+        "contrast": 1856206,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.1484375,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 913635,
+        "hash": 580078000,
+        "contrast": 1204170,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.027873263888888895,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 141574,
+        "hash": 1941165276,
+        "contrast": 245156,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 0,
+        "hash": 1801764630,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "low",
+    "level": 4,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 921598,
+        "hash": 796556391,
+        "contrast": 4301476,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.2701345636293733,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 920804,
+        "hash": 1182958170,
+        "contrast": 1817721,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.15910034602076126,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 903006,
+        "hash": 3171476065,
+        "contrast": 1206563,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.03740099961553252,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 421119,
+        "hash": 3725505850,
+        "contrast": 336550,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 0,
+        "hash": 2555193621,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "low",
+    "level": 5,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 921587,
+        "hash": 2294726839,
+        "contrast": 4533481,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.27574759945130317,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 920141,
+        "hash": 2411474983,
+        "contrast": 1850659,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.16888888888888892,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 911657,
+        "hash": 169354401,
+        "contrast": 1175208,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.047043895747599485,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 323752,
+        "hash": 1295437898,
+        "contrast": 342440,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 0,
+        "hash": 1390383282,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "low",
+    "level": 6,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 921573,
+        "hash": 311726447,
+        "contrast": 4269255,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.2808187134502924,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 919539,
+        "hash": 3830644035,
+        "contrast": 1836631,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.17789473684210522,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 882108,
+        "hash": 3757820606,
+        "contrast": 1188432,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.05660818713450292,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 477778,
+        "hash": 2083522681,
+        "contrast": 381059,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 0,
+        "hash": 236236478,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "low",
+    "level": 7,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 921554,
+        "hash": 1794838101,
+        "contrast": 5024106,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.28542222222222224,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 920574,
+        "hash": 120575229,
+        "contrast": 2424238,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.18619999999999998,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 858691,
+        "hash": 547892750,
+        "contrast": 1620526,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.06597222222222221,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 710024,
+        "hash": 3499124414,
+        "contrast": 620303,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 0,
+        "hash": 106074609,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "high",
+    "level": 2,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 921594,
+        "hash": 3669230366,
+        "contrast": 5605592,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.25438016528925617,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 920393,
+        "hash": 2150968147,
+        "contrast": 2824996,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.13268595041322317,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 833514,
+        "hash": 1854826296,
+        "contrast": 1523626,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.015898760330578517,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 53416,
+        "hash": 3350164241,
+        "contrast": 175690,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Kindled",
+        "duration": 0.88,
+        "changed": 0,
+        "hash": 3682742297,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "high",
+    "level": 3,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 921600,
+        "hash": 572815843,
+        "contrast": 4358854,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.26388888888888884,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 921294,
+        "hash": 604640895,
+        "contrast": 1856206,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.1484375,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 913635,
+        "hash": 580078000,
+        "contrast": 1204170,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.027873263888888895,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 141574,
+        "hash": 1941165276,
+        "contrast": 245156,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Ascendant",
+        "duration": 0.96,
+        "changed": 0,
+        "hash": 1801764630,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "high",
+    "level": 4,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 921598,
+        "hash": 796556391,
+        "contrast": 4301476,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.2701345636293733,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 920804,
+        "hash": 1182958170,
+        "contrast": 1817721,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.15910034602076126,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 903006,
+        "hash": 3171476065,
+        "contrast": 1206563,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.03740099961553252,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 421119,
+        "hash": 3725505850,
+        "contrast": 336550,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Unbound",
+        "duration": 1.02,
+        "changed": 0,
+        "hash": 2555193621,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "high",
+    "level": 5,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 921587,
+        "hash": 2294726839,
+        "contrast": 4533481,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.27574759945130317,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 920141,
+        "hash": 2411474983,
+        "contrast": 1850659,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.16888888888888892,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 911657,
+        "hash": 169354401,
+        "contrast": 1175208,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.047043895747599485,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 323752,
+        "hash": 1295437898,
+        "contrast": 342440,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Twinflame",
+        "duration": 1.08,
+        "changed": 0,
+        "hash": 1390383282,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "high",
+    "level": 6,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 921573,
+        "hash": 311726447,
+        "contrast": 4269255,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.2808187134502924,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 919539,
+        "hash": 3830644035,
+        "contrast": 1836631,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.17789473684210522,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 882108,
+        "hash": 3757820606,
+        "contrast": 1188432,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.05660818713450292,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 477778,
+        "hash": 2083522681,
+        "contrast": 381059,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Dominion",
+        "duration": 1.14,
+        "changed": 0,
+        "hash": 236236478,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  },
+  {
+    "quality": "high",
+    "level": 7,
+    "phases": [
+      {
+        "age": 0,
+        "power": 0.38,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 921554,
+        "hash": 1794838101,
+        "contrast": 5024106,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.16,
+        "power": 0.28542222222222224,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 920574,
+        "hash": 120575229,
+        "contrast": 2424238,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.36,
+        "power": 0.18619999999999998,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 858691,
+        "hash": 547892750,
+        "contrast": 1620526,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 0.7,
+        "power": 0.06597222222222221,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 710024,
+        "hash": 3499124414,
+        "contrast": 620303,
+        "extraCalls": 1,
+        "copies": 1
+      },
+      {
+        "age": 1.35,
+        "power": 0,
+        "style": "Eclipse",
+        "duration": 1.2,
+        "changed": 0,
+        "hash": 106074609,
+        "contrast": 0,
+        "extraCalls": 0,
+        "copies": 0
+      }
+    ]
+  }
+]

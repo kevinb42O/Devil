@@ -113,13 +113,13 @@ test('centered aperture, rendered tiles and shaft collision agree; former hearth
 test('football room is connected through a wide passage; old obstacle course is clear',()=>{
  const c=createCourtyard(1);assert.equal(courtyardFloor(4.9,4.2,c),0);assert.equal(courtyardFloor(4.9,7,c),0);
  for(let x=0;x<=56;x+=.2)assert.equal(courtyardCanOccupy(x,PIT.z),true,`passage ${x}`);
- assert.equal(courtyardCanOccupy(10,8),false);assert.equal(courtyardCanOccupy(60,2),true);assert.equal(courtyardCanOccupy(60,8),false);assert.equal(courtyardCanOccupy(14,-10),false);
+ assert.equal(courtyardCanOccupy(10,8),true); /* Direct basketball entrance. */assert.equal(courtyardCanOccupy(60,2),true);assert.equal(courtyardCanOccupy(60,8),false);assert.equal(courtyardCanOccupy(14,-10),false);
  const w=new World(1,{schedule:false});w.addCrew('host');w.selectCrew('host');w.courtyard=c;w.player.pos={x:5,y:1.7,z:PIT.z};
  for(let i=0;i<360;i++)w.predictCrew('host',{...idleInput(),strafe:1},1/120,true);
  assert.ok(w.player.pos.x>20,'real predicted movement crosses both doorways');assert.equal(w.player.pos.y,1.7);assert.equal(w.state,'playing');
  for(let i=0;i<600;i++)w.predictCrew('host',{...idleInput(),forward:1},1/120,true);
  assert.ok(w.player.pos.z>=-27.8);assert.equal(w.player.pos.y,1.7);
- assert.equal(constrainCourtyard({x:5,y:1.7,z:8},{x:10,y:1.7,z:8}).x,5);
+ assert.equal(constrainCourtyard({x:5,y:1.7,z:8},{x:10,y:1.7,z:8}).x,10);
 });
 test('football goals reject backwards crossings, wide shots and shots above the crossbar',()=>{
  for(const [pos,vel] of [[{x:FOOTBALL.x,y:.36,z:FOOTBALL.goalZ[0]-.4},{x:0,y:0,z:5}], [{x:FOOTBALL.x+6,y:.36,z:FOOTBALL.goalZ[0]-.35},{x:0,y:0,z:-5}], [{x:FOOTBALL.x,y:4,z:FOOTBALL.goalZ[0]-.35},{x:0,y:0,z:-5}]] as const){const c=createCourtyard(1);c.skull.pos={...pos};c.skull.vel={...vel};stepSkull(c,[],1,1/120);assert.deepEqual(c.skull.goals,[0,0]);}

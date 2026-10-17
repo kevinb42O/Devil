@@ -3,14 +3,15 @@ import assert from 'node:assert/strict';
 import {World,idleInput,v,STEP,TUNING} from '../src/simulation.ts';
 import {HAND_MUZZLES,HAND_TIP_MUZZLES,weaponMuzzle} from '../src/weapon-origin.ts';
 import {STREAM_RADIUS} from '../src/weapon-tuning.ts';
-test('stream radius fills multiple lanes at every hand without adding bullets',()=>{
+import {STREAM_COUNTS} from '../src/weapon-levels.ts';
+test('stream radius fills multiple lanes with the full primary salvo at every hand',()=>{
  let previousWidth=0;
  for(let level=1;level<=4;level++){
   const world=new World(71,{schedule:false});world.level=level;world.player.pos=v(0,5,0);
   const lanes=new Set<string>();let minX=Infinity,maxX=-Infinity,minY=Infinity,maxY=-Infinity;
   for(let salvo=0;salvo<100;salvo++){
    world.projectiles=[];world.effects=[];world.shoot(idleInput(),false,false);
-   assert.equal(world.projectiles.length,[1,2,4,8][level-1],'damage-bearing shot count stays unchanged');
+   assert.equal(world.projectiles.length,STREAM_COUNTS[level-1],'every primary dagger is damage-bearing');
    for(let i=0;i<world.projectiles.length;i++){
     const p=world.projectiles[i],socket=weaponMuzzle(world.player.pos,0,0,level,i);
     const x=p.pos.x-socket.x,y=p.pos.y-socket.y;
@@ -23,15 +24,15 @@ test('stream radius fills multiple lanes at every hand without adding bullets',(
   assert.ok(maxX-minX>previousWidth,'each upgrade has a wider physical stream');previousWidth=maxX-minX;
  }
 });
-test('wider stream preserves damage per bullet and close-target effectiveness',()=>{
+test('wider stream preserves damage per bullet and point-blank effectiveness',()=>{
  for(let level=1;level<=4;level++){
   const worlds=[new World(71,{schedule:false,legacyStreamRadius:true}),new World(71,{schedule:false})];
-  const targets=worlds.map(world=>{world.level=level;world.player.pos=v(0,5,0);const target=world.spawn('skull3',v(0,5,-4));target.age=2;target.hp=10000;return target;});
+  const targets=worlds.map(world=>{world.level=level;world.player.pos=v(0,5,0);const target=world.spawn('skull3',v(0,5,-1.5));target.age=2;target.hp=10000;return target;});
   for(const world of worlds){for(let salvo=0;salvo<30;salvo++)world.shoot(idleInput(),false,false);for(let tick=0;tick<60;tick++)(world as any).updateProjectiles(STEP);}
   const damage=10000-targets[1].hp;
   assert.equal(damage,worlds[1].stats.hits,'every primary bullet still deals exactly one damage');
   assert.ok(damage>=worlds[1].stats.shots*.95,'close crosshair targets retain at least 95% of the shot damage');
-  assert.ok(Math.abs(targets[0].hp-targets[1].hp)<=[1,2,4,8][level-1],'close-target damage differs by at most one stream salvo');
+  assert.ok(Math.abs(targets[0].hp-targets[1].hp)<=STREAM_COUNTS[level-1],'close-target damage differs by at most one stream salvo');
  }
 });
 test('physical stream expands toward aim as a cone rather than parallel or inward lanes',()=>{

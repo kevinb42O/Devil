@@ -1,12 +1,15 @@
-/** Combat spread and burst escalation. Spread values are port tuning, not measured native constants. */
+/** Combat spread and burst escalation. Spread values are port tuning, not measured native constants.
+ * Hand II onward doubles the travelling cone's diameter; twins widen further at each tier.
+ * Launch radii stay compact so the stream still starts at the fingertips.
+ */
 export const WEAPON_PRESENTATION = [
   {streamSpread:.045,burstSpread:.17,burstParticles:8,flameSize:.085,emberSize:.05},
-  {streamSpread:.07,burstSpread:.21,burstParticles:12,flameSize:.11,emberSize:.06},
-  {streamSpread:.11,burstSpread:.26,burstParticles:18,flameSize:.145,emberSize:.075},
-  {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
-  {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
-  {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
-  {streamSpread:.155,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
+  {streamSpread:.14,burstSpread:.21,burstParticles:12,flameSize:.11,emberSize:.06},
+  {streamSpread:.22,burstSpread:.26,burstParticles:18,flameSize:.145,emberSize:.075},
+  {streamSpread:.31,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
+  {streamSpread:.34,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
+  {streamSpread:.37,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
+  {streamSpread:.4,burstSpread:.32,burstParticles:24,flameSize:.185,emberSize:.09},
 ] as const;
 export const LEGACY_STREAM_SPREAD = [.022,.045,.085,.13] as const;
 
@@ -25,8 +28,21 @@ export const SHOTGUN_LAUNCH_SPEED = [10.8,12.6,15,17,17,17,17] as const;
 
 /** Camera-local clearance keeps launch meshes and bloom away from the hand. */
 export const PROJECTILE_HAND_CLEARANCE=1.15;
-/** Small individual blades; projectile trajectories supply the stream's width. */
-export const DAGGER_PRESENTATION={width:1.25,length:1.2} as const;
+/** Readable, broad native blades; the imported mesh is only ~0.2 units long. */
+export const DAGGER_PRESENTATION={width:3,length:2.4,shotgunScale:.85} as const;
+/** Presentation response only: no camera deflection or changes to damage/cadence. */
+export const WEAPON_FEEDBACK={flashDuration:.055,streamKick:.009,recovery:29,muzzleSpread:.7} as const;
+/** Camera-local hand pullback grows at every tier, including twins. No tilt. */
+export const SHOTGUN_FEEDBACK=[
+ {kick:.095,recovery:30,hold:.014},
+ {kick:.13,recovery:29,hold:.018},
+ {kick:.25,recovery:25,hold:.028},
+ {kick:.32,recovery:24,hold:.034},
+ {kick:.37,recovery:23,hold:.04},
+ {kick:.415,recovery:22,hold:.046},
+ {kick:.46,recovery:21,hold:.052},
+] as const;
+export function shotgunFeedback(level:number){return SHOTGUN_FEEDBACK[Math.max(0,Math.min(6,Math.round(level)-1))];}
 
 /** Sustained fire stays compact at the fingers; daggers carry the shot to the target.
  * Particle count rises gently with hand level without scaling a flame column.
@@ -46,14 +62,13 @@ export const RICOCHET_TUNING={retention:.65,verticalRetention:.55,minRiseSpeed:4
 
 /** A dense close-range packet, with a broad outer scatter at every hand. */
 export const SHOTGUN_TUNING={radius:.01,coreFraction:.8,coreSpread:.5,maxCoreSpread:.14,damage:2} as const;
-/** Linear RGB, primary/seeking pairs per hand: copper, gold, crimson, hot pink.
- * A separate palette preserves the beam's lime/blue/cyan/violet progression. */
+/** Native warm blades with cyan and magenta seeking accents, shared with stream light. */
 export const SHOTGUN_COLORS=[
- [1,.12,.025], [1,.24,.08],
- [1,.55,.025], [1,.85,.12],
- [1,.025,.045], [1,.16,.12],
- [1,.025,.42], [1,.22,.65],
- [1,.16,.045], [1,.42,.13],
- [1,.025,.22], [1,.3,.48],
- [1,.86,.68], [.7,.42,1],
+ [1,.12,.025], [1,.12,.025],
+ [1,.2,.035], [1,.2,.035],
+ [1,.22,.025], [.025,.75,1],
+ [1,.04,.025], [1,.025,.4],
+ [1,.04,.025], [1,.025,.4],
+ [1,.04,.025], [1,.025,.4],
+ [1,.04,.025], [1,.025,.4],
 ] as const;

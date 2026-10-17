@@ -1,0 +1,43 @@
+✔ stream radius fills multiple lanes with the full primary salvo at every hand (47.7631ms)
+✔ wider stream preserves damage per bullet and point-blank effectiveness (73.551ms)
+✔ physical stream expands toward aim as a cone rather than parallel or inward lanes (49.8665ms)
+✔ every hand launches compact bursts and streams throughout its circular firing area (5.0755ms)
+✔ under-hand origin follows horizontal and vertical aim using the camera basis (0.2284ms)
+✔ muzzle parallax converges on a close crosshair target instead of firing below it (0.9645ms)
+✔ projectile interpolation keeps the actual prior swept position without aliasing (0.4069ms)
+✔ each projectile has a distinct stable axial roll, including predicted and host shots (0.9958ms)
+✔ new emitters sit below and behind the original fingertips at every hand (0.2863ms)
+✔ moving the shooter never adds strafe, forward or jump momentum to a fired dagger (421.2629ms)
+✔ camera and projectiles share one render time through fast strafing, jumping and reversal (1.0243ms)
+✔ crew camera history follows the selected player and does not reuse another player position (1.6379ms)
+✔ all tower tiers stop swept primary and homing shots on armor at the exact contact (8.1576ms)
+✔ empty space near a tower remains traversable, with no giant invisible hit sphere (0.3348ms)
+✔ destroyed pede segments absorb shots without damage or ricochets (9.8952ms)
+✔ floor impacts retain a damped reflection and a bent interpolated flight path (0.4087ms)
+✔ damage impacts expire at contact and never create a ricochet after death (1.5205ms)
+✔ bent interpolation follows the contact instead of cutting through the obstacle (3.7787ms)
+Shotgun concentration: [{"range":3,"level":1,"hitPercent":100,"meanDamage":20,"oldDamage":9.6},{"range":3,"level":2,"hitPercent":99,"meanDamage":118.77,"oldDamage":46.96},{"range":3,"level":3,"hitPercent":93.2,"meanDamage":223.59,"oldDamage":62.75},{"range":3,"level":4,"hitPercent":88.8,"meanDamage":319.51,"oldDamage":62.5},{"range":5,"level":1,"hitPercent":91.5,"meanDamage":18.29,"oldDamage":4.33},{"range":5,"level":2,"hitPercent":87.6,"meanDamage":105.07,"oldDamage":17.81},{"range":5,"level":3,"hitPercent":81.8,"meanDamage":196.38,"oldDamage":23.21},{"range":5,"level":4,"hitPercent":71.2,"meanDamage":256.41,"oldDamage":23.12},{"range":25,"level":1,"hitPercent":7.9,"meanDamage":1.57,"oldDamage":0.13},{"range":25,"level":2,"hitPercent":5.2,"meanDamage":6.28,"oldDamage":0.67},{"range":25,"level":3,"hitPercent":3.4,"meanDamage":8.11,"oldDamage":0.99},{"range":25,"level":4,"hitPercent":2.9,"meanDamage":10.36,"oldDamage":1.08}]
+✔ shotgun launch stays compact and perpendicular to aim, including partial homing reserves (46.8244ms)
+✔ shotgun concentration improves each hand, with broad scatter and useful distant beam advantage (2363.7097ms)
+✔ shotgun circular footprint rotates with aim and grows naturally with distance (1.5421ms)
+✔ shotgun damage is two, beam remains one, and homing retains its damage (1.5132ms)
+✔ real close blasts kill small threats, damage exposed crystals and respect armor (11.9475ms)
+✔ beam launches and RNG remain identical with shotgun revision enabled or disabled (10.3849ms)
+✔ network preserves shotgun identity, partial salvos, homing and rebound corrections (9.049ms)
+✔ solo shotgun revision records, replays and seeks; revision 18 retains old bursts (646.5941ms)
+✔ old and new crew checkpoints preserve exact digests through playback and seeks (43.1003ms)
+✔ new thresholds upgrade exactly once and reserve spending never downgrades (7.5186ms)
+✔ paired primary and homing use one budget with symmetric physical origins (7.5689ms)
+✔ new tiers keep IV cadence, homing priority and once-only shotgun floor launch (381.2373ms)
+✔ six-person upgrades celebrate for everyone but create one collector damage wave (4.1325ms)
+✔ network reproduces both origins, sparse final pellets, homing and delta baselines (42.7265ms)
+✔ solo V–VII recordings import, replay and seek with exact paired trajectories (188.8784ms)
+✔ new crew checkpoints retain dual routing across playback and seeking (91.4062ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4267.9605

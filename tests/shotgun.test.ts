@@ -4,6 +4,7 @@ import {World,v,idleInput,segmentSphere,STEP,type Projectile} from '../src/simul
 import {sweepArmor} from '../src/projectile-collision';
 import {weaponMuzzle} from '../src/weapon-origin';
 import {SHOTGUN_TUNING,WEAPON_PRESENTATION} from '../src/weapon-tuning';
+import {BURST_COUNTS} from '../src/weapon-levels';
 import {daggerLaunch,shotLaunches,type ShotLaunch} from '../src/projectile-launch';
 import {packShotLaunch,unpackShotLaunch} from '../src/network-shots';
 import {FriendsSession} from '../src/multiplayer';
@@ -24,7 +25,7 @@ test('shotgun launch stays compact and perpendicular to aim, including partial h
   const w=new World(71,{schedule:false});w.level=level;w.reserve=3;w.player.pos=v(10,20,30);
   const input={...idleInput(),yaw:1.3,pitch};w.shoot(input,true,homing);
   const center=weaponMuzzle(w.player.pos,input.yaw,pitch,level,0),forward=v(-Math.sin(input.yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(input.yaw)*Math.cos(pitch));
-  assert.equal(w.projectiles.length,homing?3:[10,20,40,60][level-1]);
+  assert.equal(w.projectiles.length,homing?3:BURST_COUNTS[level-1]);
   assert.equal(w.effects[0].projectileKind,'shotgun');assert.deepEqual(w.effects[0].muzzles,[center]);
   for(const p of w.projectiles){
    assert.equal(p.kind,'shotgun');const dx=p.pos.x-center.x,dy=p.pos.y-center.y,dz=p.pos.z-center.z;
@@ -51,7 +52,7 @@ test('shotgun concentration improves each hand, with broad scatter and useful di
      w.projectiles=[];w.shoot(idleInput(),false,false);beamHits+=contacts(w,range);
     }
    }
-   const shots=360,count=[10,20,40,60][level-1],fraction=hits/shots/count,damage=hits/shots*2;
+   const shots=360,count=BURST_COUNTS[level-1],fraction=hits/shots/count,damage=hits/shots*2;
    report.push({range,level,hitPercent:+(fraction*100).toFixed(1),meanDamage:+damage.toFixed(2),oldDamage:+(oldHits/shots).toFixed(2)});
    if(range<=5){assert.ok(fraction>=(range===3?.85:.45),JSON.stringify(report.at(-1)));assert.ok(damage>lastDamage);assert.ok(damage>oldHits/shots*1.5);}
    else{const beamDps=beamHits/shots*(level===4?120/9:20),shotgunDps=damage*2;assert.ok(beamDps>shotgunDps,JSON.stringify({level,beamDps,shotgunDps}));assert.ok(outer>range*Math.tan(WEAPON_PRESENTATION[level-1].burstSpread)*.85);}
@@ -81,7 +82,7 @@ test('shotgun damage is two, beam remains one, and homing retains its damage',()
   const p:Projectile={id:999,pos:v(0,10,0),vel:v(0,0,-70),age:0,homing,level:2,energy:homing?10:1,...(kind?{kind}:{})};w.projectiles=[p];
   for(let i=0;i<5;i++)tick(w);assert.equal(1000-e.hp,expected);
  }
- assert.deepEqual(PROJECTILE_COLORS[0],[.22,1,.015]);assert.equal(projectileVisualIndex({level:4,homing:false,kind:'shotgun'}),18);assert.equal(projectileVisualIndex({level:2,homing:true,kind:'shotgun'}),15);
+ assert.deepEqual(PROJECTILE_COLORS[0],[1,.12,.025]);assert.equal(projectileVisualIndex({level:4,homing:false,kind:'shotgun'}),18);assert.equal(projectileVisualIndex({level:2,homing:true,kind:'shotgun'}),15);
 });
 
 test('real close blasts kill small threats, damage exposed crystals and respect armor',()=>{
@@ -116,8 +117,8 @@ test('network preserves shotgun identity, partial salvos, homing and rebound cor
   // useCrew sets the active shooter, just as the host/predictor weapon step does.
   (w as any).useCrew(w.crew[0]);w.shoot(idleInput(),true,false);
   const full=structuredClone(w.projectiles),spec=full[0].launch!,packed=packShotLaunch(spec,4)!;
-  assert.ok(packed);assert.deepEqual(shotLaunches(unpackShotLaunch(packed,4),60,70),shotLaunches(spec,60,70));
-  w.projectiles=w.projectiles.filter((_,i)=>i<4||i===38); // Sparse indices, count must still be 60.
+  assert.ok(packed);assert.deepEqual(shotLaunches(unpackShotLaunch(packed,4),BURST_COUNTS[3],70),shotLaunches(spec,BURST_COUNTS[3],70));
+  w.projectiles=w.projectiles.filter((_,i)=>i<4||i===BURST_COUNTS[3]-1); // Preserve the full pattern with a sparse high index.
   const first=decodeState(encodeState(session.snapshot()!,1,0),new Map())!;
   for(const p of first.snapshot.projectiles){const original=full.find(x=>x.id===p.id)!;assert.equal(p.kind,'shotgun');assert.ok(Math.hypot(p.pos.x-original.pos.x,p.pos.y-original.pos.y,p.pos.z-original.pos.z)<1e-9);assert.ok(Math.hypot(p.vel.x-original.vel.x,p.vel.y-original.vel.y,p.vel.z-original.vel.z)<1e-9);}
   const sender=snapshotBaseline(session.snapshot()!),receiver=snapshotBaseline(first.snapshot);w.time+=.05;
@@ -125,7 +126,7 @@ test('network preserves shotgun identity, partial salvos, homing and rebound cor
   const second=decodeState(encodeState(session.snapshot()!,2,1,sender),new Map([[1,receiver]]))!;assert.ok(second.snapshot.projectiles.every(p=>p.kind==='shotgun'));
   w.projectiles=[{...full[0],floorBounces:1,vel:v(1,10,2)},{...full[1],homing:true,vel:v(0,0,-42),energy:10}];
   const corrected=decodeState(encodeState(session.snapshot()!,3,0),new Map())!;assert.ok(corrected.snapshot.projectiles.every(p=>p.kind==='shotgun'));assert.equal(corrected.snapshot.projectiles[0].floorBounces,1);assert.equal(corrected.snapshot.projectiles[1].homing,true);
-  assert.throws(()=>unpackShotLaunch([...packed.slice(0,10),61],4));
+  assert.throws(()=>unpackShotLaunch([...packed.slice(0,10),BURST_COUNTS[3]+1],4));
  }finally{session.close();}
 });
 

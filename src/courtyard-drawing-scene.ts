@@ -1,3 +1,4 @@
+import {createCourtyardSign} from './courtyard-sign';
 import * as THREE from 'three';
 import {DRAWING_BOARD,MAX_INK,INK_SCALE,INK_COLORS,CLEAR_BUTTON,pencilDock,drawingTarget,type DrawingState} from './courtyard-drawing';
 import {crewPencilGrip} from './crew-avatar';
@@ -73,7 +74,7 @@ export class CourtyardDrawingScene{
   const signCanvas=document.createElement('canvas');signCanvas.width=1024;signCanvas.height=256;
   const text=signCanvas.getContext('2d')!;text.fillStyle='#182827';text.fillRect(0,0,1024,256);text.textAlign='center';text.fillStyle='#f0dfb3';text.font='bold 68px sans-serif';text.fillText('THE SCRIBBLE COURT',512,86);text.font='30px sans-serif';text.fillText('FREE DRAW • 8 COLORS • OPTIONAL 8 × 8 GRID',512,146);text.fillText('PENCILS & ERASER • AIM AT THE FIELD • HOLD TO DRAW',512,205);
   const signMap=new THREE.CanvasTexture(signCanvas);signMap.colorSpace=THREE.SRGBColorSpace;
-  const sign=new THREE.Sprite(new THREE.SpriteMaterial({map:signMap}));sign.position.set(81,4.3,19);sign.scale.set(13,3.25,1);this.root.add(sign);
+  const sign=createCourtyardSign('drawing-court-wall-sign',13,3.25,signMap);sign.position.set(81,4.3,19.94);sign.rotation.y=Math.PI;this.root.add(sign);
   const lamp=new THREE.DirectionalLight(0xffefd0,2);lamp.position.set(81,18,8);lamp.target.position.set(81,0,2);this.root.add(lamp,lamp.target);
  }
  update(d:DrawingState|undefined,_world:World){

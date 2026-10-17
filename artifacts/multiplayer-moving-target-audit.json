@@ -1,0 +1,29 @@
+[
+  {
+    "addedRTT": 0,
+    "inputLoss": "none",
+    "localHits": 25,
+    "confirmedHits": 25,
+    "medianContactToHostMs": 5,
+    "maxHistoricalDistance": 1.4412546260980397,
+    "contactMessages": 25
+  },
+  {
+    "addedRTT": 150,
+    "inputLoss": "20% plus reordering",
+    "localHits": 25,
+    "confirmedHits": 25,
+    "medianContactToHostMs": 109,
+    "maxHistoricalDistance": 3.8884301395691634,
+    "contactMessages": 25
+  },
+  {
+    "addedRTT": 300,
+    "inputLoss": "20% plus reordering",
+    "localHits": 25,
+    "confirmedHits": 25,
+    "medianContactToHostMs": 179,
+    "maxHistoricalDistance": 5.305338491829514,
+    "contactMessages": 25
+  }
+]
