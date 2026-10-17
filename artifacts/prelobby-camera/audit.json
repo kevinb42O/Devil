@@ -1,8 +1,8 @@
 {
   "poses": 720,
   "maxNeckError": 1.0175362097255202e-15,
-  "minClearance": 0.29848928923733536,
-  "renderedClearance": 0.30040325673848794,
-  "airFrames": 98,
+  "minClearance": 0.4284892892373355,
+  "renderedClearance": 0.43040325673848795,
+  "airFrames": 106,
   "landings": 2
 }

@@ -1,0 +1,112 @@
+{
+  "tiers": [
+    {
+      "level": 1,
+      "shotgunTakes": [
+        "shot1alt1",
+        "shot1alt2",
+        "shot1alt3",
+        "shot1alt4"
+      ],
+      "peak": 0.6351007223129272,
+      "rms": 0.18093796818206817,
+      "stereoDifference": 0.00015318706517059185,
+      "presence": 0.4868316445698325,
+      "envelopeRatio": 1.1067563314412356
+    },
+    {
+      "level": 2,
+      "shotgunTakes": [
+        "shot2alt2",
+        "shot2alt3",
+        "shot2",
+        "shot2alt4",
+        "shot2alt1"
+      ],
+      "peak": 0.674214243888855,
+      "rms": 0.18107065382445514,
+      "stereoDifference": 0.00014674109222197388,
+      "presence": 0.41300242421273736,
+      "envelopeRatio": 1.105924694184791
+    },
+    {
+      "level": 3,
+      "shotgunTakes": [
+        "shot3alt2",
+        "shot3",
+        "shot3alt1",
+        "shot3alt3",
+        "shot3alt4"
+      ],
+      "peak": 0.6309419870376587,
+      "rms": 0.1803447456418548,
+      "stereoDifference": 0.0003182430556944655,
+      "presence": 0.6660554744528631,
+      "envelopeRatio": 1.0826668426961503
+    },
+    {
+      "level": 4,
+      "shotgunTakes": [
+        "shot4alt2",
+        "shot4alt3",
+        "shot4alt4",
+        "shot4alt5",
+        "shot4alt1",
+        "shot4"
+      ],
+      "peak": 0.6497011184692383,
+      "rms": 0.1802245830760163,
+      "stereoDifference": 0.0002804683018224159,
+      "presence": 0.6248193992930577,
+      "envelopeRatio": 1.0865475679064585
+    },
+    {
+      "level": 5,
+      "shotgunTakes": [
+        "shot5alt2",
+        "shot5alt1",
+        "shot5alt3",
+        "shot5",
+        "shot5alt4"
+      ],
+      "peak": 0.6588661074638367,
+      "rms": 0.18611694278151103,
+      "stereoDifference": 0.07141090923897955,
+      "presence": 0.23535330640540572,
+      "envelopeRatio": 1.0654106872405589
+    },
+    {
+      "level": 6,
+      "shotgunTakes": [
+        "shot6alt2",
+        "shot6alt1",
+        "shot6alt4",
+        "shot6",
+        "shot6alt3"
+      ],
+      "peak": 0.6585924029350281,
+      "rms": 0.17974338818649585,
+      "stereoDifference": 0.06984078446721596,
+      "presence": 0.1781240122791816,
+      "envelopeRatio": 1.0799362559980625
+    },
+    {
+      "level": 7,
+      "shotgunTakes": [
+        "shot7alt1",
+        "shot7alt4",
+        "shot7",
+        "shot7alt2",
+        "shot7alt3"
+      ],
+      "peak": 0.6557241082191467,
+      "rms": 0.18140361080573622,
+      "stereoDifference": 0.072187375122577,
+      "presence": 0.18046821425025392,
+      "envelopeRatio": 1.0731882147020604
+    }
+  ],
+  "failed": [],
+  "remoteSpatial": true,
+  "budget": true
+}

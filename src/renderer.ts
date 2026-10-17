@@ -13,6 +13,8 @@ import {MAX_CREW_PLAYERS} from './crew-config';
 import {UPGRADE_PULSE} from './upgrade-pulse-tuning';
 import {UpgradeGroundPulse} from './upgrade-ground-pulse';
 import {UpgradeScreenFlash} from './upgrade-screen-flash';
+import {EnemyDeaths,hasCreatureDeath} from './enemy-death';
+import {EnemyEmergence} from './enemy-emergence';
 import {MenuRelics} from './menu-relics';
 import {BloodRenderer} from './blood-renderer';
 import {PlayerDeathBurst} from './player-death-burst';
@@ -119,6 +121,8 @@ export class GameRenderer {
     this.deathMarker.visible=visible&&this.deathProjection.z>=-1&&this.deathProjection.z<=1&&Math.abs(this.deathProjection.x)<.94&&Math.abs(this.deathProjection.y)<.85;
     return this.deathMarker;
   }
+  private creatureDeaths:EnemyDeaths|null=null;
+  private lastSpiderlings=new Map<number,Enemy>();
   private dyingTowers=new Map<number,{model:THREE.Group;started:number;y:number;yaw:number;direction:number;depth:number}>();
   private crewModels=new Map<string,THREE.Group>();
   private crewReplayExternal=false;
@@ -148,6 +152,17 @@ export class GameRenderer {
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
 
   private emoteHands:THREE.Group|null=null;
+  localPlayerColor:string='crimson';
+  get combatHandDiagnostics(){return {source:this.emoteHands?.userData.avatarSource,visible:!!this.emoteHands?.visible&&this.emoteHands.parent===this.scene,gestures:this.emoteHands?.userData.emotes};}
+  private updateFirstPersonBody(world:World,input:Input,yaw:number,alpha:number,time:number,courtyard:boolean,scene:THREE.Scene){
+    this.emoteHands??=createCrewAvatar(0,false,true);
+    const hands=this.emoteHands;hands.visible=true;if(hands.parent!==scene)scene.add(hands);
+    samplePlayerPosition(world,alpha,hands.position);hands.rotation.set(0,yaw,0);
+    const local=world.crew.find(p=>p.player===world.player),skin=local?this.crewSkins.get(local.id):undefined;
+    setCrewAvatarColor(hands,local?this.crewColors.get(local.id):this.localPlayerColor);setCrewAvatarSkin(hands,skin?.skin,skin?.rank);
+    updateCrewAvatar(hands,input,world.player.vel,world.player.grounded,time,local?local.lastShotTick>=0&&(world.tick-local.lastShotTick)<18:false,courtyard,world.level,footballKickPose(world.courtyard,local?.id??'',world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===local?.id),basketballPose(world.courtyard?.basketball,local?.id??'',world.tick,local),courtyard?undefined:this.originalWeapon.handFeedback);
+  }
+
   readonly entrance:SinglePlayerEntrance;
  readonly courtyard=new CourtyardScene();
  courtyardMembers:{id:string;ready:boolean;color?:string;loaded?:number}[]=[];
@@ -160,6 +175,7 @@ export class GameRenderer {
   readonly menuRelics=new MenuRelics();
   readonly upgradePulse:UpgradeGroundPulse;
   private preview=new THREE.Group();private altar:THREE.Group;private visualTime=0;
+  readonly enemyEmergence=new EnemyEmergence(this.scene);
   private segmentBatches=new SegmentBatches(this.scene);
   private segmentNodes=new WeakMap<THREE.Group,{node:THREE.Object3D;weakPoints:THREE.Object3D[]}[]>();
   private sky=new AbyssSky();private gemLighting:GemLighting;
@@ -192,9 +208,9 @@ export class GameRenderer {
     this.scene.add(this.camera);this.camera.rotation.order='YXZ';
     this.playerLight.name='player-warm-light';this.playerLight.intensity=0;this.scene.add(this.playerLight);
     const loader=new THREE.TextureLoader();
-    const diffuse=loader.load('/assets/original/devil-daggers/textures/tile.png');diffuse.colorSpace=THREE.SRGBColorSpace;diffuse.minFilter=diffuse.magFilter=THREE.NearestFilter;diffuse.generateMipmaps=false;
+    const diffuse=loader.load('/assets/materials/rock_tile_floor/2k/textures/rock_tile_floor_diff_2k.jpg');diffuse.colorSpace=THREE.SRGBColorSpace;diffuse.magFilter=THREE.LinearFilter;diffuse.minFilter=THREE.LinearMipmapLinearFilter;diffuse.generateMipmaps=true;diffuse.anisotropy=Math.min(4,this.renderer.capabilities.getMaxAnisotropy());
     this.entrance=new SinglePlayerEntrance(diffuse);
-    const stone=new THREE.MeshBasicMaterial({map:diffuse,toneMapped:false});
+    const stone=new THREE.MeshBasicMaterial({map:diffuse,color:0x59616e,toneMapped:false});
     for(const tile of ARENA_TILES)this.tilePositions.push(new THREE.Vector3((tile.x-25)*TILE_SIZE,0,(tile.z-25)*TILE_SIZE));
     this.gemLighting=new GemLighting(this.scene,stone);
     this.environment.attach(stone);
@@ -211,7 +227,7 @@ export class GameRenderer {
     this.originalWeapon=new OriginalWeapon(this.scene,this.environment);
     this.altar=new THREE.Group();shape(this.altar,new THREE.CylinderGeometry(1.1,1.6,1.2,8),darkBone,[0,.6,0],[1,1,1]);shape(this.altar,new THREE.OctahedronGeometry(.38),greenCrystal,[0,2.7,0],[.55,2.2,.55]);this.altarLight.position.y=2;this.scene.add(this.altarLight);this.preview.add(this.altar);
     this.scene.add(this.preview);
-    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.courtyard.setSkull(this.originalEnemies.clone('skull'));this.courtyard.setFloor(this.originalEnemies.tileGeometry,diffuse);this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.entrance.setTileGeometry(this.originalEnemies.tileGeometry);this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});const bounds=new THREE.Box3();for(const mesh of meshes){mesh.geometry.computeBoundingBox();bounds.union(mesh.geometry.boundingBox!);}this.swarmBounds.set(kind,bounds.getBoundingSphere(new THREE.Sphere()));}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissive:0xff431a,emissiveIntensity:3,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
+    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.courtyard.setSkull(this.originalEnemies.clone('skull'));this.courtyard.setFloor(this.originalEnemies.tileGeometry,diffuse);this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.entrance.setTileGeometry(this.originalEnemies.tileGeometry);this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});const bounds=new THREE.Box3();for(const mesh of meshes){mesh.geometry.computeBoundingBox();bounds.union(mesh.geometry.boundingBox!);}this.swarmBounds.set(kind,bounds.getBoundingSphere(new THREE.Sphere()));}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({...((this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map?{map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map}:{}),emissive:0xff431a,emissiveIntensity:1.4,color:0xffa665,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
     this.composer=new EffectComposer(this.renderer);
     // Both ping-pong targets need scene depth because pass swaps vary with quality/fade.
     for(const target of [this.composer.renderTarget1,this.composer.renderTarget2])target.depthTexture=new THREE.DepthTexture(1,1);
@@ -306,11 +322,12 @@ export class GameRenderer {
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
     if(!entrance||!world||!bodyInput||spectatorPosition||this.topDown)this.courtyardNeck.clear();
     this.crewReplayExternal=!!spectatorPosition;this.renderer.info.reset();if(menu){
-      this.resetFeedback();this.upgradePulse.clear();this.upgradeScreenFlash.clear();
+      if(this.emoteHands)this.emoteHands.visible=false;
+      this.resetFeedback();this.enemyEmergence.clear();this.upgradePulse.clear();this.upgradeScreenFlash.clear();
       // The menu has its own scene; retire gameplay glows before the early return.
       this.projectileLighting.update(null,true,projectileAlpha,this.renderer.domElement.height);
       this.menuRelics.render(this.renderer,dt);return;
-    }this.visualTime+=dt;const t=this.crewReplayMode&&world?world.time:this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
+    }this.originalEnemies.setTime(world?.time??this.visualTime);this.visualTime+=dt;const t=this.crewReplayMode&&world?world.time:this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
     if(entrance&&world){
       const entranceScene=world.courtyard?this.courtyard.scene:this.entrance.scene;
       this.upgradePulse.clear();this.upgradeScreenFlash.clear();
@@ -329,15 +346,8 @@ export class GameRenderer {
        if(world.courtyard){const limited=constrainHideSolids(world.player.pos,this.camera.position,.06);this.camera.position.x=limited.x;this.camera.position.z=limited.z;}
       }
       if(world.courtyard)this.courtyard.update(world,this.courtyardMembers,this.environmentMotionReduced);else this.entrance.update(t,this.camera.position);this.updateCrewModels(world,dt,crewInterpolated,entranceScene);
-      if(bodyInput){
-       this.emoteHands??=createCrewAvatar(0,false,true);
-       const hands=this.emoteHands;hands.visible=true;if(hands.parent!==entranceScene)entranceScene.add(hands);
-       samplePlayerPosition(world,projectileAlpha,hands.position);hands.rotation.set(0,yaw,0);
-       const local=world.crew.find(p=>p.player===world.player),skin=local?this.crewSkins.get(local.id):undefined;
-       setCrewAvatarColor(hands,local?this.crewColors.get(local.id):undefined);setCrewAvatarSkin(hands,skin?.skin,skin?.rank);
-       updateCrewAvatar(hands,bodyInput,world.player.vel,world.player.grounded,world.crew.length?world.tick*STEP:t,false,true,1,footballKickPose(world.courtyard,local?.id??'',world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===local?.id),basketballPose(world.courtyard?.basketball,local?.id??'',world.tick,local));
-       hands.visible=true;
-      }else if(this.emoteHands)this.emoteHands.visible=false;
+      if(bodyInput&&!spectatorPosition&&!this.topDown)this.updateFirstPersonBody(world,bodyInput,yaw,projectileAlpha,world.crew.length?world.tick*STEP:t,true,entranceScene);
+      else if(this.emoteHands)this.emoteHands.visible=false;
       if(world.courtyard){
        const local=world.crew.find(p=>p.player===world.player);
        this.courtyard.updatePencilGrips(world,this.crewModels,bodyInput&&this.emoteHands?{id:local?.id??'',model:this.emoteHands}:undefined);
@@ -363,19 +373,23 @@ export class GameRenderer {
     if(menu) {
       this.camera.position.set(29+Math.sin(t*.04)*2,13,30);this.camera.lookAt(-10,2,0);this.altar.rotation.y=t*.2;
       this.preview.children.forEach((o,i)=>{if(i>0){o.rotation.y+=dt*(o.name.startsWith('squid')?-TOWER_SPIN_SPEED:.045);}});
-      for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const m of this.enemies.values())m.visible=false;for(const death of this.dyingTowers.values())death.model.visible=false;this.gemMesh.count=0;this.updateTiles(0);
+      for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const m of this.enemies.values())m.visible=false;for(const death of this.dyingTowers.values())death.model.visible=false;this.creatureDeaths?.hide();this.gemMesh.count=0;this.updateTiles(0);
     } else if(world) {
       if(spectatorPosition)this.camera.position.set(spectatorPosition.x,spectatorPosition.y,spectatorPosition.z);
       else samplePlayerPosition(world,projectileAlpha,this.camera.position);
       this.applyViewFeedback(world,yaw,pitch,dt,!!spectatorPosition||this.topDown||!!this.deathGhost?.visible||this.deathBurstActive,true,projectileAlpha);
       this.camera.rotation.set(pitch,yaw,0,'YXZ');if(this.topDown){const centerZ=this.crewReplayMode?14:0;this.camera.position.set(0,55,centerZ+.001);this.camera.lookAt(0,0,centerZ);}
       this.updateTiles(world.time);
+      this.enemyEmergence.update(world,this.camera);
       const fov=this.baseFov+(spectatorPosition?0:world.player.hopPulse*3);if(this.camera.fov!==fov){this.camera.fov=fov;this.camera.updateProjectionMatrix();}
       const ringIds=new Set<number>();for(const ring of world.rings){ringIds.add(ring.id);let mesh=this.beckons.get(ring.id);if(!mesh){mesh=new THREE.Mesh(new THREE.TorusGeometry(1,.035,4,64),new THREE.MeshBasicMaterial({color:0xff4422,transparent:true,opacity:.65}));mesh.rotation.x=Math.PI/2;this.beckons.set(ring.id,mesh);this.scene.add(mesh);}mesh.position.set(ring.pos.x,1,ring.pos.z);mesh.scale.setScalar(Math.max(.01,ring.radius));}for(const [id,mesh] of this.beckons)if(!ringIds.has(id)){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();this.beckons.delete(id);}
       this.camera.updateWorldMatrix(true,false);this.swarmProjection.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse);this.swarmFrustum.setFromProjectionMatrix(this.swarmProjection);
       const swarmCounts=new Map<EnemyKind,number>();
       const present=new Set<number>();
+      const spiderlings=new Map<number,Enemy>();
+      this.creatureDeaths??=new EnemyDeaths(this.scene);
       for(const e of world.enemies) {
+        if(e.kind==='spiderling'&&e.age>=0)spiderlings.set(e.id,e);
         if(isSkull(e.kind)||isEgg(e.kind)||e.kind==='spiderling'){
           let batch=this.swarmBatches.get(e.kind);if(!batch)continue;
           if(e.age<0)continue;
@@ -428,9 +442,17 @@ export class GameRenderer {
           const top=new THREE.Box3().setFromObject(model).max.y;
           const floor=floorHeight(model.position.x,model.position.z,world.time);
           this.dyingTowers.set(id,{model,started:world.time,y:model.position.y,yaw:model.rotation.y,direction:model.userData.towerSpinDirection??-1,depth:Math.max(1,top-Math.max(-5,floor)+.5)});
-        }else this.scene.remove(model);
+        }else if(hasCreatureDeath(model.name))this.creatureDeaths.begin(id,model,world.time);
+        else this.scene.remove(model);
         this.enemies.delete(id);
       }
+      for(const [id,e] of this.lastSpiderlings)if(!spiderlings.has(id)&&this.originalEnemies.ready){
+        const model=this.originalEnemies.clone('spiderling');model.position.set(e.pos.x,e.pos.y,e.pos.z);model.rotation.y=enemyYaw(e,world.player.pos);model.scale.setScalar(swarmEmergenceScale(e));
+        this.creatureDeaths.begin(id,model,world.time);
+      }
+      this.lastSpiderlings=spiderlings;
+      for(const id of spiderlings.keys())present.add(id);
+      this.creatureDeaths.update(world.time,present);
       for(const [id,death] of this.dyingTowers){
         const elapsed=world.time-death.started,pose=towerDeathPose(elapsed,death.depth);
         if(pose.done||elapsed<0||present.has(id)){this.scene.remove(death.model);this.dyingTowers.delete(id);continue;}
@@ -444,6 +466,11 @@ export class GameRenderer {
       this.replayBody.visible=true;this.replayBody.position.set(world.player.pos.x,world.player.pos.y,world.player.pos.z);this.replayBody.rotation.y=bodyInput.yaw;
       updateCrewAvatar(this.replayBody,bodyInput,world.player.vel,world.player.grounded,world.time,false,false,world.level);
     }else if(this.replayBody)this.replayBody.visible=false;
+    this.originalWeapon.update(world,dt,menu,this.topDown||spectatorPosition?undefined:this.camera,projectileAlpha,this.feedbackWorldOffset,this.movementMotion.pose);
+    const local=world?.crew.find(p=>p.player===world.player);
+    if(world&&world.state==='playing'&&local?.alive!==false&&!spectatorPosition&&!this.topDown&&!this.deathGhost?.visible&&!this.deathBurstActive){
+      this.updateFirstPersonBody(world,bodyInput??local?.input??{forward:0,strafe:0,yaw,pitch,jump:false,fire:false,homing:false},yaw,projectileAlpha,world.time,false,this.scene);
+    }else if(this.emoteHands)this.emoteHands.visible=false;
     this.updateFloorSide(this.camera.position.y);
     this.updateCrewDeaths(world,menu,dt);
     this.updateCrewModels(world,dt,crewInterpolated,this.scene,menu);
@@ -451,8 +478,9 @@ export class GameRenderer {
     this.enemyLighting.update(world,this.camera,menu,e=>this.enemyGlowSources.sources(e,world!.player.pos,this.camera,this.enemies.get(e.id)));
     this.segmentBatches.begin(this.camera);
     if(world&&!menu)for(const e of world.enemies)if(isPede(e.kind)){const model=this.enemies.get(e.id);if(model)this.segmentBatches.add(model);}
+    if(world&&!menu)this.creatureDeaths?.addSegments(model=>this.segmentBatches.add(model));
     this.segmentBatches.end();
-    this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,menu?t:world?.time??0,menu);this.originalWeapon.update(world,dt,menu,this.topDown||spectatorPosition?undefined:this.camera,projectileAlpha,this.feedbackWorldOffset,this.movementMotion.pose);
+    this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,menu?t:world?.time??0,menu);
     this.blood.update(world,menu,this.deathBurstActive?this.deathBloodTime:world?.crew.length?this.crewDeathTime:undefined,this.camera);this.projectileLighting.update(world,menu,projectileAlpha,this.renderer.domElement.height,this.originalWeapon.projectileView);this.openingMist.update(this.camera,world?.time??0);
     this.openingMist.updateLights(this.camera,this.enemyLighting.aura,this.projectileLighting.glow);
     this.upgradePulse.update(dt,world?.time??0);
@@ -474,8 +502,9 @@ export class GameRenderer {
     }
   }
   clear() {
+    this.creatureDeaths?.clear();this.lastSpiderlings.clear();
     // A crowded run must not leave the next run at its degraded resolution.
     this.slowFrames=this.fastFrames=this.resizeCooldown=0;
     if(this.renderScale!==1){this.renderScale=1;this.resize();}
-    if(this.emoteHands){disposeCrewAvatar(this.emoteHands);this.emoteHands.removeFromParent();this.emoteHands=null;}this.resetFeedback();this.upgradePulse.clear();this.upgradeScreenFlash.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
+    if(this.emoteHands){disposeCrewAvatar(this.emoteHands);this.emoteHands.removeFromParent();this.emoteHands=null;}this.resetFeedback();this.enemyEmergence.clear();this.upgradePulse.clear();this.upgradeScreenFlash.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

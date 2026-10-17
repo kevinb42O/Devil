@@ -14,11 +14,11 @@ export async function buildPwa(root='dist'){
  const hash=createHash('sha256');
  for(const path of shipped.sort()){hash.update(path);hash.update(await readFile(root+path));}
  const version=hash.digest('hex').slice(0,16);
- // The small football goal cue stays in core so the first offline goal has sound.
- // The sound archive is large. Cache it only on an explicit offline download,
- // or as sounds are used. Meshes, textures and the app shell install together.
- const core=shipped.filter(path=>!path.startsWith('/assets/original/devil-daggers/audio/')&&!path.startsWith('/assets/materials/')&&(!path.startsWith('/assets/audio/')||path==='/assets/audio/football-goal.mp3'));
- const audio=shipped.filter(path=>path.startsWith('/assets/original/devil-daggers/audio/')&&/\.(wav|ini)$/.test(path));
+ // Opening effects and the courtyard goal cue work on the first offline run.
+ // Cache the full replacement catalog on explicit download or as cues are used.
+ const openingAudio=['rapid1','shot1','shot1alt1','shot1alt2','shot1alt3','shot1alt4','weapon1-start','weapon1-stop','gibcollect','jump1','jump2','jump3','land','land2','death','fall','spawnminisquid','football-goal','crew-countdown','uihover','uiclick','uislider'].map(name=>`/assets/audio/remake/${name}.wav`);
+ const core=shipped.filter(path=>!path.startsWith('/assets/materials/')&&(!path.startsWith('/assets/audio/')||path.startsWith('/assets/audio/menu/')||openingAudio.includes(path)||path.endsWith('/manifest.json')||path.endsWith('/LICENSE.md')));
+ const audio=shipped.filter(path=>path.startsWith('/assets/audio/remake/')&&/\.(wav|m4a)$/.test(path)&&!core.includes(path));
  const offline=[...core,...audio];
  const bytes=(await Promise.all(offline.map(path=>stat(root+path)))).reduce((sum,info)=>sum+info.size,0);
  await writeFile(`${root}/offline-pack.json`,JSON.stringify({version,bytes,files:offline}));

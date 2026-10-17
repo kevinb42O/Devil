@@ -17,7 +17,21 @@ export type StateBaseline={drawing?:DrawingState;time:number;projectiles:Map<num
 const projectileFlags=(p:Projectile)=>(p.homing?1:0)|(((p.level??1)-1)<<1)|(p.kind==='shotgun'?16:0);
 type ShotRow=[owner:number,sequence:number,flags:number,energy:number,age:number,launch:number[],entries:number[]];
 export type WireState={version:typeof NETWORK_PROTOCOL_VERSION;frame:number;epoch:number;body:Omit<ArenaSnapshot,'projectiles'|'enemies'|'effects'|'crew'|'courtyard'>&{courtyard?:WireCourtyard;enemies:(EnemyRow|EnemyDelta)[];crew:WireCrew[]};creatures:{ids:Uint8Array;positions:Uint8Array;relative:boolean};flight:{base:number;ids:Uint8Array;updates:unknown[][];shots:ShotRow[]}};
-export function snapshotBaseline(s:ArenaSnapshot):StateBaseline{return {drawing:s.courtyard?.drawing?{...s.courtyard.drawing,ink:s.courtyard.drawing.ink.slice()}:undefined,time:s.time,projectiles:new Map(s.projectiles.map(p=>[p.id,structuredClone((({launch,...flight})=>flight)(p))])),enemies:new Map(s.enemies.map(e=>{const row=packEnemy(e),pos=canonicalPosition(e.pos);row[2].set([pos.x,pos.y,pos.z]);return [e.id,row];}))};}
+// Receive snapshots are immutable. Their packed rows and decoded flight already
+// form a baseline; sharing them avoids rebuilding the same world three times.
+const decodedBaselines=new WeakMap<ArenaSnapshot,StateBaseline>();
+export const decodedSnapshotBaseline=(s:ArenaSnapshot)=>decodedBaselines.get(s);
+export function snapshotBaseline(s:ArenaSnapshot):StateBaseline{
+ return {
+  drawing:s.courtyard?.drawing?{...s.courtyard.drawing,ink:s.courtyard.drawing.ink.slice()}:undefined,
+  time:s.time,
+  projectiles:new Map(s.projectiles.map(p=>[p.id,{
+   id:p.id,pos:{...p.pos},vel:{...p.vel},age:p.age,homing:p.homing,level:p.level,
+   kind:p.kind,socket:p.socket,energy:p.energy,floorBounces:p.floorBounces,shotKey:p.shotKey
+  }])),
+  enemies:new Map(s.enemies.map(e=>{const row=packEnemy(e),pos=canonicalPosition(e.pos);row[2].set([pos.x,pos.y,pos.z]);return [e.id,row];}))
+ };
+}
 export function flightPosition(p:Projectile,dt:number):Vec{
  const gravity=p.floorBounces&&!p.homing?TUNING.gravity:0;
  return {x:p.pos.x+p.vel.x*dt,y:p.pos.y+p.vel.y*dt-gravity*dt*(dt+STEP)/2,z:p.pos.z+p.vel.z*dt};
@@ -64,12 +78,12 @@ export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>)
  const oldPositions=ids.map(id=>{const old=baseline?.enemies.get(id)?.[2];return old?{x:old[0],y:old[1],z:old[2]}:undefined;});
  const positions=w.creatures.relative?unpackPositionDeltas(w.creatures.positions,oldPositions):unpackPositions(w.creatures.positions,ids.length);
  const elapsed=w.body.time-(baseline?.time??w.body.time);if(elapsed<0||elapsed>2)return null;
- const enemyUpdates=new Map(w.body.enemies.map(row=>[row[0],row])),enemies:ArenaSnapshot['enemies']=[];
+ const enemyUpdates=new Map(w.body.enemies.map(row=>[row[0],row])),enemies:ArenaSnapshot['enemies']=[],enemyBaseline=new Map<number,EnemyRow>();
  for(let i=0;i<ids.length;i++){
   const id=ids[i],update=enemyUpdates.get(id),old=baseline?.enemies.get(id);let packed:EnemyRow;
   if(update?.length===7)packed=update;
   else {if(!old)return null;packed=update?applyEnemyDelta(update,old,elapsed):[old[0],old[1],old[2].slice(),old[3],old[4],old[5],old[6]];if(!update)packed[2][4]+=elapsed;}
-  packed[2][0]=positions[i].x;packed[2][1]=positions[i].y;packed[2][2]=positions[i].z;enemies.push(unpackEnemy(packed));
+  packed[2][0]=positions[i].x;packed[2][1]=positions[i].y;packed[2][2]=positions[i].z;enemies.push(unpackEnemy(packed));enemyBaseline.set(id,packed);
  }
  const updates=new Map<number,Projectile>();for(const r of w.flight.updates){
   if(!Array.isArray(r)||r.length!==8||!Number.isInteger(r[0])||!(r[1] instanceof Float32Array)||r[1].length!==7||r.slice(2).some(v=>typeof v!=='number'||!Number.isFinite(v)))throw Error('Invalid flight');
@@ -85,7 +99,9 @@ export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>)
   for(let i=0;i<entries.length;i+=2){const id=entries[i],index=entries[i+1],{pos:origin,vel}=launches[index],pos={x:origin.x+vel.x*age,y:origin.y+vel.y*age,z:origin.z+vel.z*age};if(updates.has(id))throw Error('Duplicate shot identity');updates.set(id,{id,pos,previous:{...pos},vel,age,...(flags&16?{kind:'shotgun' as const}:{}),homing:false,level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces:0,shotKey:`${w.body.crew[owner].id}:${sequence}:${index}`});}
  }
  const projectiles:Projectile[]=[];for(const id of projectileIds){let p=updates.get(id);if(!p){const old=baseline?.projectiles.get(id);if(!old)return null;p={...old,age:old.age+elapsed,pos:flightPosition(old,elapsed),vel:{...old.vel,y:old.vel.y-(old.floorBounces&&!old.homing?TUNING.gravity*elapsed:0)}};p.previous={...p.pos};}projectiles.push(p);}
- return {frame:w.frame,snapshot:{...w.body,courtyard,crew:w.body.crew.map(p=>({...p,life:p.life??0,respawnAt:p.respawnAt??null,protectedUntil:p.protectedUntil??0})),effects:[],enemies,projectiles}};
+ const snapshot:ArenaSnapshot={...w.body,courtyard,crew:w.body.crew.map(p=>({...p,life:p.life??0,respawnAt:p.respawnAt??null,protectedUntil:p.protectedUntil??0})),effects:[],enemies,projectiles};
+ decodedBaselines.set(snapshot,{drawing:courtyard?.drawing,time:snapshot.time,enemies:enemyBaseline,projectiles:new Map(projectiles.map(p=>[p.id,p]))});
+ return {frame:w.frame,snapshot};
 }
 /** Normal frames expire quickly; paced large frames get a bounded transfer
  * window at 32 KB/s, below the sender budget, including startup/jitter slack. */

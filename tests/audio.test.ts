@@ -2,26 +2,37 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {SOUND_NAMES,entranceSounds} from '../src/audio.ts';
+import {SOUND_NAMES,entranceSounds,handUpgradeSound} from '../src/audio.ts';
+import {REMAKE_AUDIO,remakeAudioUrl} from '../src/remake-audio';
 import {World,STEP,idleInput,v} from '../src/simulation.ts';
-const ROOT=new URL('../assets/original/devil-daggers/audio/',import.meta.url);
-test('every imported original recording is intact PCM, and every runtime cue exists',()=>{
+const ROOT=new URL('../public/assets/audio/remake/',import.meta.url);
+test('every replacement cue has an intact licensed file and every runtime cue is covered',()=>{
  const manifest=JSON.parse(readFileSync(new URL('manifest.json',ROOT),'utf8'));
  const available=new Set<string>();
- for(const entry of manifest.files){
-  const data=readFileSync(new URL(entry.name+'.wav',ROOT));available.add(entry.name);
-  assert.equal(data.length,entry.bytes,entry.name);assert.equal(createHash('sha256').update(data).digest('hex'),entry.sha256,entry.name);
+ for(const [name,entry] of Object.entries(manifest) as [string,any][]){
+  const data=readFileSync(new URL(entry.file,ROOT));available.add(name);
+  assert.equal(data.length,entry.bytes,name);assert.equal(createHash('sha256').update(data).digest('hex'),entry.sha256,name);
+  assert.deepEqual(REMAKE_AUDIO[name],Object.fromEntries(['file','gain','loop','duration','role'].map(k=>[k,entry[k]])));
+  assert.equal(remakeAudioUrl(name),'/assets/audio/remake/'+entry.file);
+  assert.ok(['CC0-1.0','CC-BY-4.0','Sonniss-GDC-2026-08-27'].includes(entry.license));assert.ok(entry.gain>0&&entry.gain<=1);assert.ok(entry.duration>0);
+  if(!entry.file.endsWith('.wav')){assert.equal(data.toString('ascii',4,8),'ftyp');continue;}
   assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.toString('ascii',8,12),'WAVE');
   let format=false,samples=false;
-  for(let offset=12;offset+8<=data.length;){const name=data.toString('ascii',offset,offset+4),size=data.readUInt32LE(offset+4);assert.ok(offset+8+size<=data.length,entry.name+' truncated chunk');
-   if(name==='fmt '){assert.equal(data.readUInt16LE(offset+8),1,entry.name+' PCM');format=true;}
-   if(name==='data'){assert.ok(size>0,entry.name+' empty');samples=true;}
+  for(let offset=12;offset+8<=data.length;){const name=data.toString('ascii',offset,offset+4),size=data.readUInt32LE(offset+4);assert.ok(offset+8+size<=data.length,name+' truncated chunk');
+   if(name==='fmt '){assert.equal(data.readUInt16LE(offset+8),1,name+' PCM');format=true;}
+   if(name==='data'){assert.ok(size>0,name+' empty');samples=true;}
    offset+=8+size+(size%2);
   }
-  assert.ok(format&&samples,entry.name);
+  assert.ok(format&&samples,name);
  }
  for(const name of SOUND_NAMES)assert.ok(available.has(name),'missing runtime recording '+name);
- assert.equal(manifest.files.length,275);
+ for(const name of ['crew-countdown','crew-release-laugh','football-goal','uihover','uiclick','uislider','highscore1','menutheme','menuatmos'])assert.ok(available.has(name));
+ assert.ok(Object.keys(manifest).length>=SOUND_NAMES.length);
+ const sources=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/sources.json',import.meta.url),'utf8'));
+ const recipes=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/recipes.json',import.meta.url),'utf8'));
+ const files=new Set(sources.map((source:any)=>source.file));
+ for(const name of Object.keys(manifest)){assert.ok(recipes[name]?.sources.length>0,name+' has source attribution');for(const file of recipes[name].sources)assert.ok(files.has(file));}
+ for(const source of sources){assert.ok(['CC0-1.0','CC-BY-4.0','Sonniss-GDC-2026-08-27'].includes(source.license));const data=readFileSync(new URL('../'+source.file,import.meta.url));assert.equal(createHash('sha256').update(data).digest('hex'),source.sha256);}
 });
 test('audio stream state follows release, primary/homing priority and death at every hand',()=>{
  for(let level=1;level<=4;level++){
@@ -53,9 +64,45 @@ test('real falls retain soft and heavy landing cues',()=>{
   assert.deepEqual(w.effects.filter(e=>e.kind==='land').map(e=>e.amount),[amount]);
  }
 });
+test('buffered bunnyhops emit a distinct jump cue on every successful takeoff',()=>{
+ const w=new World(1,{schedule:false});w.startAt(0);const floor=w.player.pos.y;
+ w.step({...idleInput(),jump:true});w.effects=[];
+ let hops=0,landings=0;
+ for(let i=0;i<300&&hops<3;i++){
+  // Tap just before contact, so the jump buffer carries the tap to takeoff.
+  const jump=w.player.vel.y<-5&&w.player.pos.y<floor+.25;
+  w.step({...idleInput(),jump});
+  for(const e of w.effects){if(e.kind==='land')landings++;if(e.kind==='jump'){assert.equal(e.amount,3);hops++;}}
+  w.effects=[];
+ }
+ assert.equal(hops,3);assert.equal(landings,3);
+ const manifest=JSON.parse(readFileSync(new URL('manifest.json',ROOT),'utf8'));
+ assert.notEqual(manifest.jump3.sha256,manifest.jump1.sha256);
+ assert.ok(manifest.jump3.gain>manifest.jump1.gain);
+ for(const name of ['land','land2']){
+  assert.ok(manifest[name].duration<.25);
+  assert.ok(manifest[name].rms*manifest[name].gain<manifest.jump3.rms*manifest.jump3.gain*.6);
+ }
+});
 test('egg hatch and projectile ricochet emit positional sound events',()=>{
  const w=new World(4,{schedule:false}),egg=w.spawn('egg2',v(10,2,0));egg.age=10-STEP;w.step(idleInput());assert.ok(w.effects.some(e=>e.kind==='hatch'&&e.enemy==='egg2'));
  w.projectiles.push({id:999,pos:v(0,.2,0),vel:v(0,-50,0),age:0,homing:false});w.step(idleInput());assert.ok(w.effects.some(e=>e.kind==='ricochet'));
+});
+test('crystal destruction signals detachment once per socket and on spider death',()=>{
+ for(const kind of ['squid','squid2','squid3'] as const){
+  const w=new World(2,{schedule:false}),e=w.spawn(kind,v(5,4,0));w.effects=[];
+  w.damageEnemy(e,1,w.weakPoint(e),0,true);
+  assert.ok(!w.effects.some(e=>e.crystalBreak),'nonlethal hit is not a detach');w.effects=[];
+  w.damageEnemy(e,1000,w.weakPoint(e),0,true);
+  const breaks=w.effects.filter(e=>e.crystalBreak);
+  assert.equal(breaks.length,1);assert.equal(breaks[0].kind,'hit');assert.equal(breaks[0].enemyId,e.id);assert.equal(w.gems.length,1);
+  w.damageEnemy(e,1000,e.pos,0,true);assert.equal(w.effects.filter(e=>e.crystalBreak).length,1);
+  if(kind!=='squid')assert.ok(e.hp>0,'individual socket breaks before the whole tower dies');
+ }
+ for(const kind of ['spider','spider2','skull'] as const){
+  const w=new World(2,{schedule:false}),e=w.spawn(kind,v(5,4,0));w.effects=[];w.damageEnemy(e,10000);
+  assert.equal(w.effects.filter(e=>e.crystalBreak).length,kind==='skull'?0:1);
+ }
 });
 test('damage and death effects identify the enemy that made the sound',()=>{
  const w=new World(4,{schedule:false}),a=w.spawn('skull2',v(10,3,0)),b=w.spawn('skull2',v(15,3,0));w.effects=[];
@@ -74,7 +121,53 @@ test('centipede emergence cues occur at the ground crossing on each cycle',()=>{
  assert.ok(cues.every(c=>c.pos.y>=0&&c.pos.y<.3));assert.notDeepEqual(cues[0].pos,cues[1].pos);
 });
 
-test('solo dagger recordings follow the original best-time tiers',()=>{
+test('entrance replacement cues follow the existing best-time tiers',()=>{
  const thresholds=[0,60,120,250,500,1000];const suffixes=['','1bronze','2silver','3gold','4devil','5'];
  thresholds.forEach((time,i)=>{assert.deepEqual(entranceSounds(time),{call:'daggercall'+suffixes[i],collect:'daggercollect'+suffixes[i]});if(i)assert.equal(entranceSounds(time-.01).collect,'daggercollect'+suffixes[i-1]);});
+});
+test('every hand upgrade has its own long animal/creature performance',()=>{
+ const manifest=JSON.parse(readFileSync(new URL('manifest.json',ROOT),'utf8'));
+ const recipes=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/recipes.json',import.meta.url),'utf8'));
+ const primaries=new Set(),recordings=new Set();assert.equal(handUpgradeSound(1),'leveldown');
+ for(let hand=2;hand<=7;hand++){
+  const name=handUpgradeSound(hand),asset=manifest[name],recipe=recipes[name];
+  assert.equal(name,`levelup${hand}`);assert.ok(SOUND_NAMES.includes(name));assert.equal(asset.role,'upgrade');
+  assert.ok(asset.duration>=2.7&&asset.duration<=5.2,`${name} full transformation gesture`);
+  assert.ok(recipe.sources.includes(recipe.primarySource));primaries.add(recipe.primarySource);recordings.add(asset.sha256);
+ }
+ assert.equal(primaries.size,6,'each hand has a different lead vocal recording');assert.equal(recordings.size,6);
+ assert.ok(manifest.levelup7.duration>=5,'final hand has the longest transformation');
+});
+test('pickup recordings use the new absorption source at restrained gain',()=>{
+ const manifest=JSON.parse(readFileSync(new URL('manifest.json',ROOT),'utf8'));
+ const recipes=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/recipes.json',import.meta.url),'utf8'));
+ const sources=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/pro/selected-sources.json',import.meta.url),'utf8'));
+ const absorption=sources.find((s:any)=>s.name==='MAGElem_Water Spell Splash Attack Medium 2_RogueWaves_DruidMagic.wav').file;
+ const retired=sources.filter((s:any)=>s.name==='Harp_Glissando_10b.wav').map((s:any)=>s.file);
+ const bell=sources.find((s:any)=>s.name==='Enchanting_Bells_4.wav').file;
+ for(const name of ['gibcollect','gibcollect2','gibcollect3','gibcollectmagic','gibcollectmagic2','gibcollectmagic3']){
+  assert.ok(recipes[name].sources.includes(absorption));assert.ok(recipes[name].sources.includes(bell));assert.ok(recipes[name].sources.every((file:string)=>!retired.includes(file)));
+  assert.ok(manifest[name].gain<=.125);assert.ok(manifest[name].rms*manifest[name].gain*.55<.0085);
+ }
+});
+
+test('hand weapon recipes exclude firearm sources and preserve separate authored tiers',async()=>{
+ const {WEAPON_SOUNDS,weaponBank}=await import('../src/weapon-audio.ts');
+ const recipes=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/recipes.json',import.meta.url),'utf8'));
+ const sources=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/sources.json',import.meta.url),'utf8'));
+ const byFile=new Map(sources.map((s:any)=>[s.file,s.name]));
+ const manifest=JSON.parse(readFileSync(new URL('manifest.json',ROOT),'utf8'));
+ const hashes=new Set<string>();
+ for(const name of WEAPON_SOUNDS){
+  assert.ok(recipes[name].sources.length>0,name+' retains organic source attribution');
+  for(const path of recipes[name].sources)assert.doesNotMatch(String(byFile.get(path)),/GUN|Heavyweapon|SCIWeap|EXPLDsgn|LASRMisc/i,name+' must not use firearm or predesigned weapon samples');
+  assert.ok(!hashes.has(manifest[name].sha256),name+' must have its own authored waveform');hashes.add(manifest[name].sha256);
+ }
+ for(let level=1;level<=7;level++){
+  for(const name of weaponBank(level))assert.ok(manifest[name],name);
+  const vocals=recipes['rapid'+level].sources.filter((p:string)=>/lion|bear_pain|Banshee|MonsterPack|Monster Within|Gibbons/.test(String(byFile.get(p))));
+  assert.ok(vocals.length>=3,'hand '+level+' has foreground roar, chest and scream sources');
+  assert.ok(manifest['rapid'+level].duration>=24,'continuous stream has a long evolving field');
+  assert.ok(manifest['shot'+level].duration>=1,'pressure and air decay survive the attack');
+ }
 });

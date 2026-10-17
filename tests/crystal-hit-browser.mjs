@@ -39,7 +39,8 @@ try{
   }
   return samples;
  });
- for(const sample of result){assert.deepEqual(sample.phases,[true,false,true,false,false]);for(const field of ['isolated','retrigger','hidden','shared','sameProgram','sameTexture'])assert.equal(sample[field],true,`${sample.kind}: ${field}`);}
+ // Remake tower crystals retain their existing continuous 160 ms hit pulse.
+ for(const sample of result){assert.deepEqual(sample.phases,[true,true,true,true,false]);for(const field of ['isolated','retrigger','hidden','shared','sameProgram','sameTexture'])assert.equal(sample[field],true,`${sample.kind}: ${field}`);}
  assert.deepEqual(errors,[]);
- console.log('Attached crystals: real bullet hits, isolated two-pulse flicker, retrigger, destruction, and shared material/texture/shader verified across all tower tiers.');
+ console.log('Attached crystals: real bullet hits, isolated 160 ms pulse, retrigger, destruction, and shared material/texture/shader verified across all tower tiers.');
 }finally{await browser.close();}

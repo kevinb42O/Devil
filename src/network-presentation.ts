@@ -1,17 +1,28 @@
 import {type ArenaSnapshot} from './multiplayer';
 import {World,STEP,type Vec} from './simulation';
-import {mixPosition,flightPosition} from './network-state';
+import {mixPosition,flightPosition,decodedSnapshotBaseline} from './network-state';
 import {constrainEnemyFloor} from './enemy-floor';
 const angle=(a:number,b:number,t:number)=>a+Math.atan2(Math.sin(b-a),Math.cos(b-a))*t;
 /** Render a small adaptive distance behind the host; never delay the local
  * predicted controller. Samples are immutable and bounded by count and time. */
+type PresentationSample=Pick<ArenaSnapshot,'epoch'|'tick'|'time'|'prelobby'|'courtyard'|'enemies'|'gems'|'crew'>;
 export class SnapshotTimeline{
- private samples:{s:ArenaSnapshot;at:number}[]=[];delay=.06;private interval=.05;private jitter=0;
- push(s:ArenaSnapshot,at:number){const last=this.samples.at(-1);if(last&&s.epoch!==last.s.epoch)this.reset();else if(last){const interval=(at-last.at)/1000;this.jitter=this.jitter*.9+Math.abs(interval-this.interval)*.1;this.interval=this.interval*.9+interval*.1;this.delay=Math.min(.2,Math.max(.05,this.interval+2*this.jitter));}this.samples.push({s:structuredClone(s),at});while(this.samples.length>12)this.samples.shift();}
+ private samples:{s:PresentationSample;at:number}[]=[];delay=.06;private interval=.05;private jitter=0;
+ push(s:ArenaSnapshot,at:number){
+  const last=this.samples.at(-1);
+  if(last&&s.epoch!==last.s.epoch)this.reset();
+  else if(last){const interval=(at-last.at)/1000;this.jitter=this.jitter*.9+Math.abs(interval-this.interval)*.1;this.interval=this.interval*.9+interval*.1;this.delay=Math.min(.2,Math.max(.05,this.interval+2*this.jitter));}
+  // Flight is sampled from the current world. History only needs remote poses;
+  // decoded poses can be shared because prediction never advances them.
+  const {epoch,tick,time,prelobby,courtyard,enemies,gems,crew}=s;
+  const sample={epoch,tick,time,prelobby,courtyard,enemies,gems,crew};
+  this.samples.push({s:decodedSnapshotBaseline(s)?sample:structuredClone(sample),at});
+  while(this.samples.length>12)this.samples.shift();
+ }
  reset(){this.samples=[];this.delay=.06;this.interval=.05;this.jitter=0;}
  view(world:World,localId:string,now:number,offset:Vec):World{
  const latest=this.samples.at(-1);if(!latest)return world;
- const clock=(s:ArenaSnapshot)=>s.prelobby?s.tick*STEP:s.time;
+ const clock=(s:PresentationSample)=>s.prelobby?s.tick*STEP:s.time;
  const target=clock(latest.s)+Math.min(.12,Math.max(0,(now-latest.at)/1000))-this.delay;
  let a=this.samples[0].s,b=latest.s;for(const sample of this.samples){if(clock(sample.s)<=target)a=sample.s;if(clock(sample.s)>=target){b=sample.s;break;}}
  const fraction=clock(b)>clock(a)?Math.max(0,Math.min(1,(target-clock(a))/(clock(b)-clock(a)))):1;
@@ -22,7 +33,7 @@ export class SnapshotTimeline{
  const olderEnemies=new Map(a.enemies.map(e=>[e.id,e]));view.enemies=b.enemies.map(e=>{const old=olderEnemies.get(e.id);return old?{...e,pos:mixPosition(old.pos,e.pos,fraction),age:old.age+(e.age-old.age)*fraction,segments:e.segments.map((part,i)=>({...part,pos:old.segments[i]?mixPosition(old.segments[i].pos,part.pos,fraction):part.pos}))}:e;});
  if(world.enemyFloorEnabled)view.enemies=view.enemies.map(e=>{const safe={...e,pos:{...e.pos},vel:{...e.vel}};constrainEnemyFloor(safe,view.time);return safe;});
  const olderGems=new Map(a.gems.map(g=>[g.id,g]));view.gems=b.gems.map(g=>({...g,pos:olderGems.has(g.id)?mixPosition(olderGems.get(g.id)!.pos,g.pos,fraction):g.pos}));
- const olderCrew=new Map(a.crew.map(p=>[p.id,p]));view.crew=world.crew.map(p=>{if(p.id===localId)return {...p,player:{...p.player,pos:{x:p.player.pos.x+offset.x,y:p.player.pos.y+offset.y,z:p.player.pos.z+offset.z}}};const old=olderCrew.get(p.id),next=b.crew.find(c=>c.id===p.id);return next&&old&&old.life===next.life&&old.alive===next.alive&&next.life===p.life&&next.alive===p.alive?{...p,player:{...p.player,pos:mixPosition(old.player.pos,next.player.pos,fraction)},input:{...p.input,yaw:angle(old.yaw,next.yaw,fraction),pitch:(old.pitch??0)+((next.pitch??0)-(old.pitch??0))*fraction,fire:next.primary.wasHeld,homing:next.secondary.wasHeld,leftArm:!!b.prelobby&&next.leftArm===true,rightArm:!!b.prelobby&&next.rightArm===true}}:p;});
+ const olderCrew=new Map(a.crew.map(p=>[p.id,p]));view.crew=world.crew.map(p=>{if(p.id===localId)return {...p,player:{...p.player,pos:{x:p.player.pos.x+offset.x,y:p.player.pos.y+offset.y,z:p.player.pos.z+offset.z}}};const old=olderCrew.get(p.id),next=b.crew.find(c=>c.id===p.id);return next&&old&&old.life===next.life&&old.alive===next.alive&&next.life===p.life&&next.alive===p.alive?{...p,player:{...p.player,pos:mixPosition(old.player.pos,next.player.pos,fraction)},input:{...p.input,yaw:angle(old.yaw,next.yaw,fraction),pitch:(old.pitch??0)+((next.pitch??0)-(old.pitch??0))*fraction,fire:next.primary.wasHeld,homing:next.secondary.wasHeld,leftArm:next.leftArm===true,rightArm:next.rightArm===true}}:p;});
  view.player=view.crew.find(p=>p.id===localId)?.player??world.player;
  // Full projectile positions are unnecessary between updates. Ordinary flight
  // is ballistic; homing/bounces have a shorter extrapolation horizon.

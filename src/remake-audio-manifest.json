@@ -1,0 +1,1745 @@
+{
+  "skullclop1": {
+    "file": "skullclop1.wav",
+    "gain": 0.35,
+    "loop": false,
+    "duration": 0.35,
+    "role": "movement"
+  },
+  "spawnplayer": {
+    "file": "spawnplayer.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 1.2,
+    "role": "enemy-spawn"
+  },
+  "rapid1": {
+    "file": "rapid1.wav",
+    "gain": 0.07,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-stream"
+  },
+  "rapid2": {
+    "file": "rapid2.wav",
+    "gain": 0.07,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-stream"
+  },
+  "rapid3": {
+    "file": "rapid3.wav",
+    "gain": 0.07,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-stream"
+  },
+  "rapid4": {
+    "file": "rapid4.wav",
+    "gain": 0.07,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-stream"
+  },
+  "shot1": {
+    "file": "shot1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot2": {
+    "file": "shot2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot3alt1": {
+    "file": "shot3alt1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot3alt2": {
+    "file": "shot3alt2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot3alt3": {
+    "file": "shot3alt3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot3alt4": {
+    "file": "shot3alt4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot4alt1": {
+    "file": "shot4alt1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot4alt2": {
+    "file": "shot4alt2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot4alt3": {
+    "file": "shot4alt3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot4alt4": {
+    "file": "shot4alt4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot4alt5": {
+    "file": "shot4alt5.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "gibcollect": {
+    "file": "gibcollect.wav",
+    "gain": 0.12,
+    "loop": false,
+    "duration": 1.171979,
+    "role": "pickup"
+  },
+  "gibcollectmagic": {
+    "file": "gibcollectmagic.wav",
+    "gain": 0.125,
+    "loop": false,
+    "duration": 1.171979,
+    "role": "pickup"
+  },
+  "jump1": {
+    "file": "jump1.wav",
+    "gain": 0.18,
+    "loop": false,
+    "duration": 0.203396,
+    "role": "movement"
+  },
+  "jump2": {
+    "file": "jump2.wav",
+    "gain": 0.18,
+    "loop": false,
+    "duration": 0.222229,
+    "role": "movement"
+  },
+  "jump3": {
+    "file": "jump3.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.159438,
+    "role": "movement"
+  },
+  "land": {
+    "file": "land.wav",
+    "gain": 0.16,
+    "loop": false,
+    "duration": 0.133333,
+    "role": "movement"
+  },
+  "land2": {
+    "file": "land2.wav",
+    "gain": 0.23,
+    "loop": false,
+    "duration": 0.244458,
+    "role": "movement"
+  },
+  "death": {
+    "file": "death.wav",
+    "gain": 0.6,
+    "loop": false,
+    "duration": 1.372562,
+    "role": "player-death"
+  },
+  "fall": {
+    "file": "fall.wav",
+    "gain": 0.6,
+    "loop": false,
+    "duration": 1.372562,
+    "role": "player-death"
+  },
+  "leveldown": {
+    "file": "leveldown.wav",
+    "gain": 0.48,
+    "loop": false,
+    "duration": 1.117042,
+    "role": "upgrade"
+  },
+  "levelup2": {
+    "file": "levelup2.wav",
+    "gain": 0.59,
+    "loop": false,
+    "duration": 2.7,
+    "role": "upgrade"
+  },
+  "levelup3": {
+    "file": "levelup3.wav",
+    "gain": 0.62,
+    "loop": false,
+    "duration": 3.2,
+    "role": "upgrade"
+  },
+  "levelup4": {
+    "file": "levelup4.wav",
+    "gain": 0.64,
+    "loop": false,
+    "duration": 4.7,
+    "role": "upgrade"
+  },
+  "daggerdrone": {
+    "file": "daggerdrone.wav",
+    "gain": 0.12,
+    "loop": true,
+    "duration": 3.82,
+    "role": "homing-flight"
+  },
+  "daggerseek": {
+    "file": "daggerseek.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.170229,
+    "role": "homing-launch"
+  },
+  "magentadrone": {
+    "file": "magentadrone.wav",
+    "gain": 0.12,
+    "loop": true,
+    "duration": 3.82,
+    "role": "homing-flight"
+  },
+  "magentashot": {
+    "file": "magentashot.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 0.795458,
+    "role": "homing-launch"
+  },
+  "daggerhit1": {
+    "file": "daggerhit1.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.35,
+    "role": "armor-impact"
+  },
+  "daggercall": {
+    "file": "daggercall.wav",
+    "gain": 0.1,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "daggercollect": {
+    "file": "daggercollect.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 2.1,
+    "role": "entrance-pickup"
+  },
+  "daggercall1bronze": {
+    "file": "daggercall1bronze.wav",
+    "gain": 0.1,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "daggercollect1bronze": {
+    "file": "daggercollect1bronze.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 2.1,
+    "role": "entrance-pickup"
+  },
+  "daggercall2silver": {
+    "file": "daggercall2silver.wav",
+    "gain": 0.1,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "daggercollect2silver": {
+    "file": "daggercollect2silver.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 2.1,
+    "role": "entrance-pickup"
+  },
+  "daggercall3gold": {
+    "file": "daggercall3gold.wav",
+    "gain": 0.1,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "daggercollect3gold": {
+    "file": "daggercollect3gold.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 2.1,
+    "role": "entrance-pickup"
+  },
+  "daggercall4devil": {
+    "file": "daggercall4devil.wav",
+    "gain": 0.1,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "daggercollect4devil": {
+    "file": "daggercollect4devil.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 2.1,
+    "role": "entrance-pickup"
+  },
+  "daggercall5": {
+    "file": "daggercall5.wav",
+    "gain": 0.1,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "daggercollect5": {
+    "file": "daggercollect5.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 2.1,
+    "role": "entrance-pickup"
+  },
+  "chatterskull": {
+    "file": "chatterskull.wav",
+    "gain": 0.346265,
+    "loop": true,
+    "duration": 7.13,
+    "role": "enemy-chatter"
+  },
+  "chatterskull2": {
+    "file": "chatterskull2.wav",
+    "gain": 0.11219,
+    "loop": true,
+    "duration": 8.39,
+    "role": "enemy-chatter"
+  },
+  "chatterskull3": {
+    "file": "chatterskull3.wav",
+    "gain": 0.197707,
+    "loop": true,
+    "duration": 7.61,
+    "role": "enemy-chatter"
+  },
+  "chatterskull4": {
+    "file": "chatterskull4.wav",
+    "gain": 0.133905,
+    "loop": true,
+    "duration": 10.31,
+    "role": "enemy-chatter"
+  },
+  "chatterskullblack": {
+    "file": "chatterskullblack.wav",
+    "gain": 0.398566,
+    "loop": true,
+    "duration": 6.79,
+    "role": "enemy-chatter"
+  },
+  "chatterskull2black": {
+    "file": "chatterskull2black.wav",
+    "gain": 0.11581,
+    "loop": true,
+    "duration": 7.87,
+    "role": "enemy-chatter"
+  },
+  "chatterskull3black": {
+    "file": "chatterskull3black.wav",
+    "gain": 0.179532,
+    "loop": true,
+    "duration": 8.93,
+    "role": "enemy-chatter"
+  },
+  "chatterskull4black": {
+    "file": "chatterskull4black.wav",
+    "gain": 0.15953,
+    "loop": true,
+    "duration": 11.17,
+    "role": "enemy-chatter"
+  },
+  "chatterminisquid": {
+    "file": "chatterminisquid.wav",
+    "gain": 0.169316,
+    "loop": true,
+    "duration": 8.57,
+    "role": "enemy-chatter"
+  },
+  "chattersquid": {
+    "file": "chattersquid.wav",
+    "gain": 0.185874,
+    "loop": true,
+    "duration": 12.43,
+    "role": "enemy-chatter"
+  },
+  "chattersquidultra": {
+    "file": "chattersquidultra.wav",
+    "gain": 0.247818,
+    "loop": true,
+    "duration": 15.37,
+    "role": "enemy-chatter"
+  },
+  "chatterspider": {
+    "file": "chatterspider.wav",
+    "gain": 0.399548,
+    "loop": true,
+    "duration": 8.11,
+    "role": "enemy-chatter"
+  },
+  "chattergigaspider": {
+    "file": "chattergigaspider.wav",
+    "gain": 0.719908,
+    "loop": true,
+    "duration": 9.47,
+    "role": "enemy-chatter"
+  },
+  "chatterspiderling": {
+    "file": "chatterspiderling.wav",
+    "gain": 0.327437,
+    "loop": true,
+    "duration": 5.83,
+    "role": "enemy-chatter"
+  },
+  "chattercentipede": {
+    "file": "chattercentipede.wav",
+    "gain": 0.545436,
+    "loop": true,
+    "duration": 10.67,
+    "role": "enemy-chatter"
+  },
+  "chattercentipede2": {
+    "file": "chattercentipede2.wav",
+    "gain": 0.714073,
+    "loop": true,
+    "duration": 12.17,
+    "role": "enemy-chatter"
+  },
+  "chatterultrapede": {
+    "file": "chatterultrapede.wav",
+    "gain": 0.485389,
+    "loop": true,
+    "duration": 10.97,
+    "role": "enemy-chatter"
+  },
+  "chatterleviathan": {
+    "file": "chatterleviathan.wav",
+    "gain": 0.166476,
+    "loop": true,
+    "duration": 15.83,
+    "role": "enemy-chatter"
+  },
+  "eyearousedrone": {
+    "file": "eyearousedrone.wav",
+    "gain": 0.173054,
+    "loop": true,
+    "duration": 9.79,
+    "role": "enemy-chatter"
+  },
+  "chatterthorn": {
+    "file": "chatterthorn.wav",
+    "gain": 0.185669,
+    "loop": true,
+    "duration": 6.53,
+    "role": "enemy-chatter"
+  },
+  "eggdrone": {
+    "file": "eggdrone.wav",
+    "gain": 0.128039,
+    "loop": true,
+    "duration": 5.47,
+    "role": "enemy-chatter"
+  },
+  "eggdrone2": {
+    "file": "eggdrone2.wav",
+    "gain": 0.148203,
+    "loop": true,
+    "duration": 6.97,
+    "role": "enemy-chatter"
+  },
+  "spawnminisquid": {
+    "file": "spawnminisquid.wav",
+    "gain": 0.387898,
+    "loop": false,
+    "duration": 2.6,
+    "role": "enemy-spawn"
+  },
+  "spawnsquid": {
+    "file": "spawnsquid.wav",
+    "gain": 0.32959,
+    "loop": false,
+    "duration": 3.7,
+    "role": "enemy-spawn"
+  },
+  "spawnultrasquid": {
+    "file": "spawnultrasquid.wav",
+    "gain": 0.59733,
+    "loop": false,
+    "duration": 4.9,
+    "role": "enemy-spawn"
+  },
+  "spawnspider": {
+    "file": "spawnspider.wav",
+    "gain": 0.332342,
+    "loop": false,
+    "duration": 3.15,
+    "role": "enemy-spawn"
+  },
+  "spawngigaspider": {
+    "file": "spawngigaspider.wav",
+    "gain": 0.471616,
+    "loop": false,
+    "duration": 8.9,
+    "role": "enemy-spawn"
+  },
+  "spawncentipede": {
+    "file": "spawncentipede.wav",
+    "gain": 0.316256,
+    "loop": false,
+    "duration": 2.8,
+    "role": "enemy-spawn"
+  },
+  "spawncentipede2": {
+    "file": "spawncentipede2.wav",
+    "gain": 0.162155,
+    "loop": false,
+    "duration": 2.95,
+    "role": "enemy-spawn"
+  },
+  "spawnultrapede": {
+    "file": "spawnultrapede.wav",
+    "gain": 0.211289,
+    "loop": false,
+    "duration": 3.3,
+    "role": "enemy-spawn"
+  },
+  "spawnleviathan": {
+    "file": "spawnleviathan.wav",
+    "gain": 0.268982,
+    "loop": false,
+    "duration": 8.7,
+    "role": "enemy-spawn"
+  },
+  "eyearouse": {
+    "file": "eyearouse.wav",
+    "gain": 0.317923,
+    "loop": false,
+    "duration": 6.8,
+    "role": "enemy-spawn"
+  },
+  "thornemerge": {
+    "file": "thornemerge.wav",
+    "gain": 0.415714,
+    "loop": false,
+    "duration": 2.4,
+    "role": "enemy-spawn"
+  },
+  "spawnegg": {
+    "file": "spawnegg.wav",
+    "gain": 0.26178,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-spawn"
+  },
+  "killskull1": {
+    "file": "killskull1.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.730771,
+    "role": "enemy-death"
+  },
+  "killskull2": {
+    "file": "killskull2.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.747583,
+    "role": "enemy-death"
+  },
+  "killskull3": {
+    "file": "killskull3.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.875,
+    "role": "enemy-death"
+  },
+  "killskull4": {
+    "file": "killskull4.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.730771,
+    "role": "enemy-death"
+  },
+  "killskull5": {
+    "file": "killskull5.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.782188,
+    "role": "enemy-death"
+  },
+  "killsuperskull": {
+    "file": "killsuperskull.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.782188,
+    "role": "enemy-death"
+  },
+  "killsuperskull2": {
+    "file": "killsuperskull2.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.818188,
+    "role": "enemy-death"
+  },
+  "killsuperskull3": {
+    "file": "killsuperskull3.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.83675,
+    "role": "enemy-death"
+  },
+  "killskullblack1": {
+    "file": "killskullblack1.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.875,
+    "role": "enemy-death"
+  },
+  "killskullblack2": {
+    "file": "killskullblack2.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.747583,
+    "role": "enemy-death"
+  },
+  "killskullblack3": {
+    "file": "killskullblack3.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.747583,
+    "role": "enemy-death"
+  },
+  "killskullblack4": {
+    "file": "killskullblack4.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.875,
+    "role": "enemy-death"
+  },
+  "killsuperskullblack": {
+    "file": "killsuperskullblack.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.818188,
+    "role": "enemy-death"
+  },
+  "killsuperskull2black": {
+    "file": "killsuperskull2black.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.855687,
+    "role": "enemy-death"
+  },
+  "killminisquid": {
+    "file": "killminisquid.wav",
+    "gain": 0.68,
+    "loop": false,
+    "duration": 2.0,
+    "role": "enemy-death"
+  },
+  "killsquid": {
+    "file": "killsquid.wav",
+    "gain": 0.68,
+    "loop": false,
+    "duration": 2.0,
+    "role": "enemy-death"
+  },
+  "killultrasquid": {
+    "file": "killultrasquid.wav",
+    "gain": 0.68,
+    "loop": false,
+    "duration": 2.0,
+    "role": "enemy-death"
+  },
+  "killspider": {
+    "file": "killspider.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.855687,
+    "role": "enemy-death"
+  },
+  "killgigaspider": {
+    "file": "killgigaspider.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.764708,
+    "role": "enemy-death"
+  },
+  "killcentipede": {
+    "file": "killcentipede.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.747583,
+    "role": "enemy-death"
+  },
+  "killcentipede2": {
+    "file": "killcentipede2.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.855687,
+    "role": "enemy-death"
+  },
+  "ultrapedecrash": {
+    "file": "ultrapedecrash.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.855687,
+    "role": "enemy-death"
+  },
+  "killleviathan": {
+    "file": "killleviathan.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.875,
+    "role": "enemy-death"
+  },
+  "killeye": {
+    "file": "killeye.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.875,
+    "role": "enemy-death"
+  },
+  "killthorn": {
+    "file": "killthorn.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.818188,
+    "role": "enemy-death"
+  },
+  "eggburst": {
+    "file": "eggburst.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.875,
+    "role": "enemy-death"
+  },
+  "eggburst2": {
+    "file": "eggburst2.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.818188,
+    "role": "enemy-death"
+  },
+  "killspiderling1": {
+    "file": "killspiderling1.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.747583,
+    "role": "enemy-death"
+  },
+  "killspiderling2": {
+    "file": "killspiderling2.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.855687,
+    "role": "enemy-death"
+  },
+  "killspiderling3": {
+    "file": "killspiderling3.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.855687,
+    "role": "enemy-death"
+  },
+  "killspiderling4": {
+    "file": "killspiderling4.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.818188,
+    "role": "enemy-death"
+  },
+  "killspiderling5": {
+    "file": "killspiderling5.wav",
+    "gain": 0.45,
+    "loop": false,
+    "duration": 1.782188,
+    "role": "enemy-death"
+  },
+  "damagesquid": {
+    "file": "damagesquid.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damagesquid2": {
+    "file": "damagesquid2.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damagesquid3": {
+    "file": "damagesquid3.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damagespider": {
+    "file": "damagespider.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damagegigaspider": {
+    "file": "damagegigaspider.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damagecentipede": {
+    "file": "damagecentipede.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damagecentipede2": {
+    "file": "damagecentipede2.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damageultrapede": {
+    "file": "damageultrapede.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damageleviathan": {
+    "file": "damageleviathan.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "eyehit": {
+    "file": "eyehit.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "damagethorn": {
+    "file": "damagethorn.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 0.5,
+    "role": "enemy-damage"
+  },
+  "polarity1e": {
+    "file": "polarity1e.wav",
+    "gain": 0.035,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "polarity2w": {
+    "file": "polarity2w.wav",
+    "gain": 0.035,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "polarity3n": {
+    "file": "polarity3n.wav",
+    "gain": 0.035,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "polarity4s": {
+    "file": "polarity4s.wav",
+    "gain": 0.035,
+    "loop": true,
+    "duration": 7.82,
+    "role": "ambience"
+  },
+  "leviathanbeckon": {
+    "file": "leviathanbeckon.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 1.2,
+    "role": "enemy-spawn"
+  },
+  "leviathanbeckon2": {
+    "file": "leviathanbeckon2.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 1.2,
+    "role": "enemy-spawn"
+  },
+  "leviathantransmute": {
+    "file": "leviathantransmute.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 1.2,
+    "role": "enemy-spawn"
+  },
+  "magentadetonate1": {
+    "file": "magentadetonate1.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 2.1,
+    "role": "explosion"
+  },
+  "magentadetonate2": {
+    "file": "magentadetonate2.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 2.1,
+    "role": "explosion"
+  },
+  "magentadetonate3": {
+    "file": "magentadetonate3.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 2.1,
+    "role": "explosion"
+  },
+  "magentadetonate4": {
+    "file": "magentadetonate4.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 2.1,
+    "role": "explosion"
+  },
+  "magentadetonate5": {
+    "file": "magentadetonate5.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 2.1,
+    "role": "explosion"
+  },
+  "ricochet1": {
+    "file": "ricochet1.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochet2": {
+    "file": "ricochet2.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochet3": {
+    "file": "ricochet3.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochet4": {
+    "file": "ricochet4.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochet5": {
+    "file": "ricochet5.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagic1": {
+    "file": "ricochetmagic1.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagic2": {
+    "file": "ricochetmagic2.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagic3": {
+    "file": "ricochetmagic3.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagic4": {
+    "file": "ricochetmagic4.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagenta1": {
+    "file": "ricochetmagenta1.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagenta2": {
+    "file": "ricochetmagenta2.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagenta3": {
+    "file": "ricochetmagenta3.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagenta4": {
+    "file": "ricochetmagenta4.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "ricochetmagenta5": {
+    "file": "ricochetmagenta5.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "magicpierce1": {
+    "file": "magicpierce1.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "magicpierce2": {
+    "file": "magicpierce2.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "magicpierce3": {
+    "file": "magicpierce3.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "magicpierce4": {
+    "file": "magicpierce4.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "magicpierce5": {
+    "file": "magicpierce5.wav",
+    "gain": 0.24,
+    "loop": false,
+    "duration": 0.228583,
+    "role": "ricochet"
+  },
+  "spidereat1": {
+    "file": "spidereat1.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-feed"
+  },
+  "spidereat2": {
+    "file": "spidereat2.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-feed"
+  },
+  "spidereat3": {
+    "file": "spidereat3.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-feed"
+  },
+  "spidereat4": {
+    "file": "spidereat4.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-feed"
+  },
+  "spidereat5": {
+    "file": "spidereat5.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-feed"
+  },
+  "spidereat6": {
+    "file": "spidereat6.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-feed"
+  },
+  "eggbounce": {
+    "file": "eggbounce.wav",
+    "gain": 0.35,
+    "loop": false,
+    "duration": 0.35,
+    "role": "movement"
+  },
+  "ultrapedeeat": {
+    "file": "ultrapedeeat.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.85,
+    "role": "enemy-feed"
+  },
+  "burrowcentipede": {
+    "file": "burrowcentipede.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 1.5,
+    "role": "enemy-burrow"
+  },
+  "subchattercentipede": {
+    "file": "subchattercentipede.wav",
+    "gain": 0.272849,
+    "loop": true,
+    "duration": 12.79,
+    "role": "enemy-chatter"
+  },
+  "unburrowcentipede": {
+    "file": "unburrowcentipede.wav",
+    "gain": 0.54577,
+    "loop": false,
+    "duration": 2.2,
+    "role": "enemy-spawn"
+  },
+  "eyepacifydrone": {
+    "file": "eyepacifydrone.wav",
+    "gain": 0.146074,
+    "loop": true,
+    "duration": 7.43,
+    "role": "enemy-chatter"
+  },
+  "football-goal": {
+    "file": "football-goal.wav",
+    "gain": 0.22,
+    "loop": false,
+    "duration": 0.480125,
+    "role": "courtyard-goal"
+  },
+  "crew-countdown": {
+    "file": "crew-countdown.wav",
+    "gain": 1,
+    "loop": false,
+    "duration": 3.0,
+    "role": "countdown"
+  },
+  "uihover": {
+    "file": "uihover.wav",
+    "gain": 0.3,
+    "loop": false,
+    "duration": 0.13,
+    "role": "interface"
+  },
+  "uiclick": {
+    "file": "uiclick.wav",
+    "gain": 0.5,
+    "loop": false,
+    "duration": 0.13,
+    "role": "interface"
+  },
+  "uislider": {
+    "file": "uislider.wav",
+    "gain": 0.28,
+    "loop": false,
+    "duration": 0.13,
+    "role": "interface"
+  },
+  "highscore1": {
+    "file": "highscore1.wav",
+    "gain": 0.4,
+    "loop": false,
+    "duration": 2.5,
+    "role": "interface"
+  },
+  "menutheme": {
+    "file": "menutheme.m4a",
+    "gain": 0.65,
+    "loop": true,
+    "duration": 60,
+    "role": "menu-music"
+  },
+  "menuatmos": {
+    "file": "menuatmos.m4a",
+    "gain": 0.65,
+    "loop": true,
+    "duration": 60,
+    "role": "entrance-music"
+  },
+  "gibcollect2": {
+    "file": "gibcollect2.wav",
+    "gain": 0.12,
+    "loop": false,
+    "duration": 1.171979,
+    "role": "pickup"
+  },
+  "gibcollect3": {
+    "file": "gibcollect3.wav",
+    "gain": 0.12,
+    "loop": false,
+    "duration": 1.171979,
+    "role": "pickup"
+  },
+  "gibcollectmagic2": {
+    "file": "gibcollectmagic2.wav",
+    "gain": 0.125,
+    "loop": false,
+    "duration": 1.171979,
+    "role": "pickup"
+  },
+  "gibcollectmagic3": {
+    "file": "gibcollectmagic3.wav",
+    "gain": 0.125,
+    "loop": false,
+    "duration": 1.171979,
+    "role": "pickup"
+  },
+  "crystalbreak1": {
+    "file": "crystalbreak1.wav",
+    "gain": 0.65,
+    "loop": false,
+    "duration": 1.48,
+    "role": "crystal-break"
+  },
+  "crystalbreak2": {
+    "file": "crystalbreak2.wav",
+    "gain": 0.65,
+    "loop": false,
+    "duration": 1.48,
+    "role": "crystal-break"
+  },
+  "crystalbreak3": {
+    "file": "crystalbreak3.wav",
+    "gain": 0.65,
+    "loop": false,
+    "duration": 1.48,
+    "role": "crystal-break"
+  },
+  "gemchatter": {
+    "file": "gemchatter.wav",
+    "gain": 0.18,
+    "loop": true,
+    "duration": 4.22,
+    "role": "gem-chatter"
+  },
+  "levelup5": {
+    "file": "levelup5.wav",
+    "gain": 0.6,
+    "loop": false,
+    "duration": 3.4,
+    "role": "upgrade"
+  },
+  "levelup6": {
+    "file": "levelup6.wav",
+    "gain": 0.63,
+    "loop": false,
+    "duration": 4.7,
+    "role": "upgrade"
+  },
+  "levelup7": {
+    "file": "levelup7.wav",
+    "gain": 0.67,
+    "loop": false,
+    "duration": 5.0,
+    "role": "upgrade"
+  },
+  "shot1alt1": {
+    "file": "shot1alt1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot1alt2": {
+    "file": "shot1alt2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot1alt3": {
+    "file": "shot1alt3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot1alt4": {
+    "file": "shot1alt4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "weapon1-start": {
+    "file": "weapon1-start.wav",
+    "gain": 0.09,
+    "loop": false,
+    "duration": 0.15,
+    "role": "weapon-start"
+  },
+  "weapon1-stop": {
+    "file": "weapon1-stop.wav",
+    "gain": 0.06,
+    "loop": false,
+    "duration": 0.38,
+    "role": "weapon-release"
+  },
+  "weapon1-homing": {
+    "file": "weapon1-homing.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.22,
+    "role": "homing-launch"
+  },
+  "shot2alt1": {
+    "file": "shot2alt1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot2alt2": {
+    "file": "shot2alt2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot2alt3": {
+    "file": "shot2alt3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot2alt4": {
+    "file": "shot2alt4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "weapon2-start": {
+    "file": "weapon2-start.wav",
+    "gain": 0.09,
+    "loop": false,
+    "duration": 0.15,
+    "role": "weapon-start"
+  },
+  "weapon2-stop": {
+    "file": "weapon2-stop.wav",
+    "gain": 0.06,
+    "loop": false,
+    "duration": 0.38,
+    "role": "weapon-release"
+  },
+  "weapon2-homing": {
+    "file": "weapon2-homing.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.22,
+    "role": "homing-launch"
+  },
+  "shot3": {
+    "file": "shot3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "weapon3-start": {
+    "file": "weapon3-start.wav",
+    "gain": 0.09,
+    "loop": false,
+    "duration": 0.15,
+    "role": "weapon-start"
+  },
+  "weapon3-stop": {
+    "file": "weapon3-stop.wav",
+    "gain": 0.06,
+    "loop": false,
+    "duration": 0.38,
+    "role": "weapon-release"
+  },
+  "weapon3-homing": {
+    "file": "weapon3-homing.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.22,
+    "role": "homing-launch"
+  },
+  "shot4": {
+    "file": "shot4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "weapon4-start": {
+    "file": "weapon4-start.wav",
+    "gain": 0.09,
+    "loop": false,
+    "duration": 0.15,
+    "role": "weapon-start"
+  },
+  "weapon4-stop": {
+    "file": "weapon4-stop.wav",
+    "gain": 0.06,
+    "loop": false,
+    "duration": 0.38,
+    "role": "weapon-release"
+  },
+  "weapon4-homing": {
+    "file": "weapon4-homing.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.22,
+    "role": "homing-launch"
+  },
+  "shot5alt1": {
+    "file": "shot5alt1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot5alt2": {
+    "file": "shot5alt2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot5alt3": {
+    "file": "shot5alt3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot5alt4": {
+    "file": "shot5alt4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot5": {
+    "file": "shot5.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "rapid5": {
+    "file": "rapid5.wav",
+    "gain": 0.07,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-stream"
+  },
+  "weapon5-start": {
+    "file": "weapon5-start.wav",
+    "gain": 0.09,
+    "loop": false,
+    "duration": 0.15,
+    "role": "weapon-start"
+  },
+  "weapon5-stop": {
+    "file": "weapon5-stop.wav",
+    "gain": 0.06,
+    "loop": false,
+    "duration": 0.38,
+    "role": "weapon-release"
+  },
+  "weapon5-homing": {
+    "file": "weapon5-homing.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.22,
+    "role": "homing-launch"
+  },
+  "shot6alt1": {
+    "file": "shot6alt1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot6alt2": {
+    "file": "shot6alt2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot6alt3": {
+    "file": "shot6alt3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot6alt4": {
+    "file": "shot6alt4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot6": {
+    "file": "shot6.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "rapid6": {
+    "file": "rapid6.wav",
+    "gain": 0.07,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-stream"
+  },
+  "weapon6-start": {
+    "file": "weapon6-start.wav",
+    "gain": 0.09,
+    "loop": false,
+    "duration": 0.15,
+    "role": "weapon-start"
+  },
+  "weapon6-stop": {
+    "file": "weapon6-stop.wav",
+    "gain": 0.06,
+    "loop": false,
+    "duration": 0.38,
+    "role": "weapon-release"
+  },
+  "weapon6-homing": {
+    "file": "weapon6-homing.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.22,
+    "role": "homing-launch"
+  },
+  "shot7alt1": {
+    "file": "shot7alt1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot7alt2": {
+    "file": "shot7alt2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot7alt3": {
+    "file": "shot7alt3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot7alt4": {
+    "file": "shot7alt4.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "shot7": {
+    "file": "shot7.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 1.22,
+    "role": "weapon-burst"
+  },
+  "rapid7": {
+    "file": "rapid7.wav",
+    "gain": 0.07,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-stream"
+  },
+  "weapon7-start": {
+    "file": "weapon7-start.wav",
+    "gain": 0.09,
+    "loop": false,
+    "duration": 0.15,
+    "role": "weapon-start"
+  },
+  "weapon7-stop": {
+    "file": "weapon7-stop.wav",
+    "gain": 0.06,
+    "loop": false,
+    "duration": 0.38,
+    "role": "weapon-release"
+  },
+  "weapon7-homing": {
+    "file": "weapon7-homing.wav",
+    "gain": 0.27,
+    "loop": false,
+    "duration": 1.22,
+    "role": "homing-launch"
+  },
+  "seekrapid1": {
+    "file": "seekrapid1.wav",
+    "gain": 0.06,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-homing-stream"
+  },
+  "seekrapid2": {
+    "file": "seekrapid2.wav",
+    "gain": 0.06,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-homing-stream"
+  },
+  "seekrapid3": {
+    "file": "seekrapid3.wav",
+    "gain": 0.06,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-homing-stream"
+  },
+  "seekrapid4": {
+    "file": "seekrapid4.wav",
+    "gain": 0.06,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-homing-stream"
+  },
+  "seekrapid5": {
+    "file": "seekrapid5.wav",
+    "gain": 0.06,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-homing-stream"
+  },
+  "seekrapid6": {
+    "file": "seekrapid6.wav",
+    "gain": 0.06,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-homing-stream"
+  },
+  "seekrapid7": {
+    "file": "seekrapid7.wav",
+    "gain": 0.06,
+    "loop": true,
+    "duration": 24.1,
+    "role": "weapon-homing-stream"
+  },
+  "spawnegg2": {
+    "file": "spawnegg2.wav",
+    "gain": 0.275645,
+    "loop": false,
+    "duration": 1.15,
+    "role": "enemy-spawn"
+  },
+  "unburrowgigapede": {
+    "file": "unburrowgigapede.wav",
+    "gain": 0.526501,
+    "loop": false,
+    "duration": 3.5,
+    "role": "enemy-spawn"
+  },
+  "unburrowghostpede": {
+    "file": "unburrowghostpede.wav",
+    "gain": 0.352759,
+    "loop": false,
+    "duration": 2.8,
+    "role": "enemy-spawn"
+  },
+  "crew-release-laugh": {
+    "file": "crew-release-laugh.wav",
+    "gain": 0.65,
+    "loop": false,
+    "duration": 6.865104,
+    "role": "arrival-laugh"
+  },
+  "crystalhit1": {
+    "file": "crystalhit1.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 0.735563,
+    "role": "crystal-hit"
+  },
+  "crystalhit2": {
+    "file": "crystalhit2.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 0.729979,
+    "role": "crystal-hit"
+  },
+  "crystalhit3": {
+    "file": "crystalhit3.wav",
+    "gain": 0.36,
+    "loop": false,
+    "duration": 0.72475,
+    "role": "crystal-hit"
+  }
+}

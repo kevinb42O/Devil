@@ -1,0 +1,56 @@
+{
+  "lighting": {
+    "near": [
+      255,
+      255,
+      255
+    ],
+    "softened": [
+      201,
+      34,
+      34
+    ],
+    "far": [
+      100,
+      17,
+      17
+    ],
+    "farSoftened": [
+      100,
+      17,
+      17
+    ]
+  },
+  "poses": 48,
+  "tiers": [
+    {
+      "level": 1,
+      "tier": 1
+    },
+    {
+      "level": 2,
+      "tier": 2
+    },
+    {
+      "level": 3,
+      "tier": 3
+    },
+    {
+      "level": 4,
+      "tier": 4
+    },
+    {
+      "level": 5,
+      "tier": 5
+    },
+    {
+      "level": 6,
+      "tier": 6
+    },
+    {
+      "level": 7,
+      "tier": 7
+    }
+  ],
+  "errors": []
+}

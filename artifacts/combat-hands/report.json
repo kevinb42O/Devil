@@ -1,0 +1,76 @@
+{
+  "rig": {
+    "atRest": {
+      "source": "quaternius-demon",
+      "visible": true,
+      "gestures": {
+        "left": 0,
+        "right": 0
+      }
+    },
+    "raised": {
+      "source": "quaternius-demon",
+      "visible": true,
+      "gestures": {
+        "left": 0.9999938557876467,
+        "right": 0.9999938557876467
+      }
+    },
+    "released": {
+      "source": "quaternius-demon",
+      "visible": true,
+      "gestures": {
+        "left": 0.000006144174601983046,
+        "right": 0.000006144174601983046
+      }
+    },
+    "checks": 84
+  },
+  "feedback": [
+    {
+      "level": 1,
+      "recoilDistance": 0.128040867152246
+    },
+    {
+      "level": 2,
+      "recoilDistance": 0.1643887003112982
+    },
+    {
+      "level": 3,
+      "recoilDistance": 0.2722194810140186
+    },
+    {
+      "level": 4,
+      "recoilDistance": 0.32858630533547184
+    },
+    {
+      "level": 5,
+      "recoilDistance": 0.3673958646505812
+    },
+    {
+      "level": 6,
+      "recoilDistance": 0.4017989867614621
+    },
+    {
+      "level": 7,
+      "recoilDistance": 0.43607154534997844
+    }
+  ],
+  "visibility": {
+    "topDown": true,
+    "spectator": true,
+    "dead": true,
+    "alive": true
+  },
+  "bullets": {
+    "cases": 42,
+    "maxError": 0
+  },
+  "controls": [
+    "qwerty",
+    "azerty",
+    "controller",
+    "mobile"
+  ],
+  "errors": []
+}

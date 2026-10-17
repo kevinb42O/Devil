@@ -62,7 +62,7 @@ test('practice start skips previous events, preserves equal-time spawns, and ini
 });
 
 test('level IV splash damages adjacent weak points without double-damaging the direct target',()=>{
- const w=new World(1,{schedule:false});w.level=4;const spider=w.spawn('spider',v(0,3,20));spider.age=4;spider.headExposure=1;const point=w.weakPoint(spider);w.projectiles.push({id:500,pos:{...point},vel:v(),age:0,homing:true,level:4});
+ const w=new World(1,{schedule:false,legacyTowerArchitecture:true});w.level=4;const spider=w.spawn('spider',v(0,3,20));spider.age=4;spider.headExposure=1;const point=w.weakPoint(spider);w.projectiles.push({id:500,pos:{...point},vel:v(),age:0,homing:true,level:4});
  (w as any).updateProjectiles(STEP);assert.equal(spider.hp,15);w.tick+=2;(w as any).updateProjectiles(STEP);assert.equal(spider.hp,15,'own splash must not double generic 10-damage homing');
  const squid=w.spawn('squid2',v());squid.age=1;const first=w.weakPoint(squid);w.projectiles.push({id:501,pos:{...first},vel:v(),age:0,homing:true,level:4});(w as any).updateProjectiles(STEP);assert.equal(squid.hp,10);w.tick+=2;(w as any).updateProjectiles(STEP);assert.equal(squid.hp,0,'splash reaches the second crystal');
 });

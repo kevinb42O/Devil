@@ -1,0 +1,11 @@
+{
+  "file": "abyss-theme.m4a",
+  "title": "Dark Place",
+  "author": "SkyleTheFrench",
+  "duration": 54.857145833333334,
+  "license": "CC0-1.0",
+  "source": "https://opengameart.org/content/dark-place-loop",
+  "sourceSha256": "c78a433139ace4a050b5d4a1b9b94bcf1f04d059345c849c7c234a2fe0eda102",
+  "sha256": "564a8665ecdbda1c8de46c37d4081d0e66da61c2ac2e532c5c040b1f24aab2c1",
+  "processing": "Full recording; DC removal, RMS/peak mastering, 120 ms edge fades, AAC 192 kbit/s."
+}

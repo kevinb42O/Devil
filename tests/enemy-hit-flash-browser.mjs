@@ -29,6 +29,8 @@ try{
   world.enemies=[];
   const checks=[];
   for(const kind of ['spider','spider2','squid','squid2','squid3','centipede','gigapede','ghostpede','leviathan','orb','thorn']){
+   // Retire the previous tower's sinking corpse before testing another body.
+   renderer.clear();world.effects=[];world.gems=[];
    const e=world.spawn(kind,v(0,3,-12));e.age=20;draw();const model=renderer.enemies.get(e.id);
    let body;model.traverse(o=>{if(!body&&o.isMesh&&!o.name.includes('weak-point')&&o.name!=='spider-held-gem')body=o;});
    const original=body.material,segment=e.weakpoints.length?0:e.segments.length?0:-1,normalPixels=pixels();

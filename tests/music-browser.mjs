@@ -20,16 +20,17 @@ try{
  await page.waitForTimeout(150);assert.ok(await page.evaluate(()=>music.diagnostics.tracks.every(t=>!t.playing)));
  await page.evaluate(()=>music.setVolume(1));await page.waitForFunction(()=>music.diagnostics.tracks.find(t=>t.name==='menutheme').volume>.6);
  // Confirm the complete recording loops, rather than a short preview clip.
- assert.ok(await page.evaluate(()=>music.tracks.get('menutheme').duration>107),'the complete menu recording is available');
+ assert.ok(await page.evaluate(()=>music.tracks.get('menutheme').duration>50),'the complete menu recording is available');
+ assert.ok(await page.evaluate(()=>music.tracks.get('menutheme').src.endsWith('/assets/audio/menu/abyss-theme.m4a')),'menu plays the full musical theme');
  await page.evaluate(()=>{const a=music.tracks.get('menutheme');a.currentTime=a.duration-.15;});
  await page.waitForFunction(()=>music.diagnostics.tracks.find(t=>t.name==='menutheme').time<2);
- // The application owns the restart instead of relying on backend WAV looping.
+ // The application owns the restart instead of relying on backend media looping.
  assert.equal(await page.evaluate(()=>music.tracks.get('menutheme').loop),false);
  await page.evaluate(()=>{const a=music.tracks.get('menutheme');a.currentTime=a.duration-.05;});
  await page.waitForFunction(()=>{const track=music.diagnostics.tracks.find(t=>t.name==='menutheme');return track.playing&&track.time<2;});
  assert.deepEqual(await page.evaluate(()=>music.diagnostics.failed),[]);
  assert.deepEqual(errors,[]);
- console.log('Original music: gesture unlock, both recordings, crossfade, hidden/resume, mute, arena silence and loop wrap passed.');
+ console.log('Studio soundscapes: gesture unlock, both recordings, crossfade, hidden/resume, mute, arena silence and loop wrap passed.');
  await page.goto('http://127.0.0.1:5173');
  await page.click('#settings-open');await page.waitForFunction(()=>window.abyss.music.tracks.some(t=>t.name==='menutheme'&&t.time>.1));
  await page.locator('#musicVolume').evaluate(el=>{el.value='30';el.dispatchEvent(new Event('input',{bubbles:true}));});
@@ -38,7 +39,8 @@ try{
  await page.waitForFunction(()=>window.abyss.entrance&&window.abyss.music.tracks.some(t=>t.name==='menuatmos'&&t.time>.1));
  await page.waitForFunction(()=>window.abyss.audio.loops.includes('daggercall'));
  await page.keyboard.down('KeyW');await page.waitForFunction(()=>!window.abyss.entrance);await page.keyboard.up('KeyW');
- await page.waitForFunction(()=>window.abyss.audio.oneShotNames.includes('daggercollect'));
+ await page.waitForFunction(()=>window.abyss.audio.recent.includes('crew-countdown'));
+ await page.waitForFunction(()=>window.abyss.audio.recent.includes('spawnplayer'));
  assert.ok(await page.evaluate(()=>!window.abyss.audio.loops.some(n=>n.startsWith('daggercall'))));
  await page.waitForFunction(()=>window.abyss.music.scene==='silent'&&window.abyss.music.tracks.every(t=>!t.playing));
  await page.keyboard.press('Escape');await page.waitForFunction(()=>window.abyss.music.scene==='menu'&&window.abyss.music.tracks.some(t=>t.name==='menutheme'&&t.playing));await page.click('#quit');

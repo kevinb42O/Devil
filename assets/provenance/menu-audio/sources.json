@@ -1,0 +1,95 @@
+{
+  "author": "SFXMint",
+  "source": "https://sfxmint.com/sets/ui-soft",
+  "license": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "processing": "100 Hz high-pass, role-specific low-pass, silence trim, short decay, 3 ms attack, 18 ms fade, RMS/peak mastering; 48 kHz stereo. No synthesized layers.",
+  "selections": {
+    "uihover": {
+      "source": "https://sfxmint.com/dl/ui-hover-15.wav",
+      "title": "Subtle Interface Hover Tick 15",
+      "sourceSha256": "ede5f1c9f528c5b3a9293232e51c49116167b68dc41acfda67e932fa3bfb4b02",
+      "maxDuration": 0.055,
+      "lowpassHz": 2200,
+      "targetRms": 0.045
+    },
+    "uiclick": {
+      "source": "https://sfxmint.com/dl/ui-click-56.wav",
+      "title": "Wooden User Interface Click 56",
+      "sourceSha256": "e66ea6094535504268e10b87fb7b384a55273c1ced1b41d2c9466b92b2b2050b",
+      "maxDuration": 0.105,
+      "lowpassHz": 3400,
+      "targetRms": 0.075
+    },
+    "uiback": {
+      "source": "https://sfxmint.com/dl/ui-click-56.wav",
+      "title": "Wooden User Interface Click 56",
+      "sourceSha256": "e66ea6094535504268e10b87fb7b384a55273c1ced1b41d2c9466b92b2b2050b",
+      "maxDuration": 0.075,
+      "lowpassHz": 2100,
+      "targetRms": 0.065
+    },
+    "uislider": {
+      "source": "https://sfxmint.com/dl/ui-pop-57.wav",
+      "title": "Gentle Interface Pop 57",
+      "sourceSha256": "c99ae52f7084f4732ccdc416670a4dab73c0b22e92cc3edd6244a200a088a69a",
+      "maxDuration": 0.035,
+      "lowpassHz": 1800,
+      "targetRms": 0.04
+    },
+    "uitoggle": {
+      "source": "https://sfxmint.com/dl/ui-toggle-54.wav",
+      "title": "Soft Toggle Switch Flip 54 (No Reverb)",
+      "sourceSha256": "8e7d06d111fb6d3d8780329fc7e0fc4c4f688694799c83c11deb471b4a571444",
+      "maxDuration": 0.11,
+      "lowpassHz": 2800,
+      "targetRms": 0.065
+    },
+    "uicrown": {
+      "source": "https://sfxmint.com/dl/ui-click-56.wav",
+      "title": "Wooden User Interface Click 56",
+      "sourceSha256": "e66ea6094535504268e10b87fb7b384a55273c1ced1b41d2c9466b92b2b2050b",
+      "maxDuration": 0.125,
+      "lowpassHz": 3000,
+      "targetRms": 0.075
+    }
+  },
+  "output": {
+    "uihover": {
+      "file": "uihover-soft.wav",
+      "gain": 0.16,
+      "duration": 0.055,
+      "sha256": "9e6bebb874bde5d3a51a9a273dabc1987d43f22d367709fc524eb25ecd37ec87"
+    },
+    "uiclick": {
+      "file": "uiclick-soft.wav",
+      "gain": 0.32,
+      "duration": 0.105,
+      "sha256": "6f22124871cc7fba6a53008b255aaba95ee5aad6ff1f2693d5eb53ef962ffdcf"
+    },
+    "uiback": {
+      "file": "uiback-soft.wav",
+      "gain": 0.24,
+      "duration": 0.075,
+      "sha256": "1a311f526254c336f9a0a62d39440cdef004b8b24bf41979dd956c14f40748c1"
+    },
+    "uislider": {
+      "file": "uislider-soft.wav",
+      "gain": 0.12,
+      "duration": 0.035,
+      "sha256": "2728f67914c02c6636f4a03b940768902c67a5ddf3acdc4bf6cc3f91089ff27a"
+    },
+    "uitoggle": {
+      "file": "uitoggle-soft.wav",
+      "gain": 0.28,
+      "duration": 0.11,
+      "sha256": "b2c47bf5343ba7ae9a370df6a792454a7642c2d4a483c2c68a045eb8497c5f95"
+    },
+    "uicrown": {
+      "file": "uicrown-soft.wav",
+      "gain": 0.32,
+      "duration": 0.125,
+      "sha256": "71039620e313bab84b59bee1e2735798856b854fd15e431f3776b9450da3fb8c"
+    }
+  }
+}

@@ -75,3 +75,15 @@ test('killcam retains firing and aim pitch across pause and backward seek',()=>{
  clip.sample(4*STEP);assert.equal(clip.victimFiring,true);clip.sample(8*STEP);assert.equal(clip.victimFiring,false);
  clip.sample(2*STEP);assert.equal(clip.victimFiring,false);assert.equal(clip.victimPitch,0);
 });
+
+test('killcam retains primary and homing stream audio independently of visible firing',()=>{
+ const w=new World(7,{schedule:false,invulnerable:true}),h=new DeathHistory();w.level=4;w.reserve=100;
+ for(let i=0;i<30;i++)w.step({...idleInput(),fire:true});
+ h.capture(w,0,0,true,true);const primaryTime=w.time;
+ w.step({...idleInput(),fire:true,homing:true});h.capture(w,0,0,true,true);const homingTime=w.time;
+ w.step(idleInput());h.capture(w,0,0,true,false);
+ const clip=h.clip(null)!;
+ clip.sample(primaryTime-clip.start);assert.deepEqual(clip.victimWeaponAudio,{primary:true,homing:false});assert.equal(clip.victimFiring,true);
+ clip.sample(homingTime-clip.start);assert.deepEqual(clip.victimWeaponAudio,{primary:false,homing:true});assert.equal(clip.victimFiring,true);
+ clip.sample(clip.duration);assert.deepEqual(clip.victimWeaponAudio,{primary:false,homing:false});assert.equal(clip.victimFiring,false);
+});

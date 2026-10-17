@@ -1,0 +1,273 @@
+{
+  "inventory": [
+    {
+      "kind": "skull",
+      "name": "Cinder Wasp",
+      "triangles": 700,
+      "size": [
+        1.6499999016523361,
+        0.7622369304299355,
+        0.5190404176712036
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "skull2",
+      "name": "Iron Wasp",
+      "triangles": 699,
+      "size": [
+        2.1,
+        1.0185944080352785,
+        0.7383234947919846
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "skull3",
+      "name": "Veilwing",
+      "triangles": 699,
+      "size": [
+        2.2,
+        2.15869699716568,
+        1.7536930561065676
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "skull4",
+      "name": "Drake",
+      "triangles": 699,
+      "size": [
+        3.8,
+        1.6819242119789122,
+        1.7128458976745604
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "transmuted1",
+      "name": "Hollow Wasp",
+      "triangles": 860,
+      "size": [
+        1.6499999016523361,
+        1.2115242683339926,
+        0.5196763973286948
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "transmuted2",
+      "name": "Hollow Stinger",
+      "triangles": 859,
+      "size": [
+        2.1,
+        1.507426726632255,
+        0.7383234947919846
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "transmuted3",
+      "name": "Hollow Veilwing",
+      "triangles": 860,
+      "size": [
+        2.013852393627167,
+        2.2,
+        1.355785357952118
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "transmuted4",
+      "name": "Hollow Drake",
+      "triangles": 859,
+      "size": [
+        3.8,
+        2.62528019669002,
+        1.7128458976745604
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "squid",
+      "name": "Rift Obelisk",
+      "triangles": 636,
+      "size": [
+        4.970754404731337,
+        7.409999997615815,
+        5.608657423629049
+      ],
+      "weakpoints": 1
+    },
+    {
+      "kind": "squid2",
+      "name": "Twin Foundry",
+      "triangles": 792,
+      "size": [
+        8.742376599402533,
+        10.525000007152556,
+        9.07834141598685
+      ],
+      "weakpoints": 2
+    },
+    {
+      "kind": "squid3",
+      "name": "Crown Citadel",
+      "triangles": 980,
+      "size": [
+        11.598427202861618,
+        14.6400000166893,
+        12.70967787883285
+      ],
+      "weakpoints": 3
+    },
+    {
+      "kind": "spider",
+      "name": "Brood Weaver",
+      "triangles": 10076,
+      "size": [
+        17.288238525390625,
+        7.028429746627808,
+        12.436633586883545
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "spider2",
+      "name": "Armored Matriarch",
+      "triangles": 10460,
+      "size": [
+        34.57647705078125,
+        15.433770656585693,
+        24.87326717376709
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "egg",
+      "name": "Brood Capsule",
+      "triangles": 248,
+      "size": [
+        1.3259999752044678,
+        1.5600000619888306,
+        1.3259999752044678
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "egg2",
+      "name": "Armored Capsule",
+      "triangles": 248,
+      "size": [
+        1.6200000047683716,
+        1.9500000000000002,
+        1.6200000047683716
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "spiderling",
+      "name": "Skitter",
+      "triangles": 3300,
+      "size": [
+        1.676189124584198,
+        0.667542427778244,
+        1.205292522907257
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "centipede",
+      "name": "Iron Convoy",
+      "triangles": 8840,
+      "size": [
+        3.3016264438629155,
+        2.235276878219054,
+        3.8013594150543213
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "gigapede",
+      "name": "Gilded Convoy",
+      "triangles": 9160,
+      "size": [
+        4.9524396657943734,
+        3.5753140752631523,
+        5.702039122581483
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "ghostpede",
+      "name": "Hollow Convoy",
+      "triangles": 8840,
+      "size": [
+        6.603252887725831,
+        5.3694168336018055,
+        7.603915214538574
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "leviathan",
+      "name": "Astral Sovereign",
+      "triangles": 7646,
+      "size": [
+        21.00400845765607,
+        12.108798086643219,
+        18.400670957801513
+      ],
+      "weakpoints": 6
+    },
+    {
+      "kind": "orb",
+      "name": "Rift Heart",
+      "triangles": 3752,
+      "size": [
+        3.936166042089462,
+        7.185215009461468,
+        7.201748057413878
+      ],
+      "weakpoints": 0
+    },
+    {
+      "kind": "thorn",
+      "name": "Fracture Spire",
+      "triangles": 94,
+      "size": [
+        3.0752386052713683,
+        7,
+        3
+      ],
+      "weakpoints": 0
+    }
+  ],
+  "play": {
+    "enemies": 22,
+    "drawCalls": 190,
+    "triangles": 453446
+  },
+  "towerScale": [
+    {
+      "kind": "squid",
+      "crystalWorldHeight": 5.919022514522076
+    },
+    {
+      "kind": "squid2",
+      "crystalWorldHeight": 8.919052979201078
+    },
+    {
+      "kind": "squid3",
+      "crystalWorldHeight": 12.917107283994556
+    }
+  ],
+  "dense": {
+    "enemies": 1000,
+    "drawCalls": 10,
+    "triangles": 713651,
+    "cpuRenderMeanMs": 70.025
+  },
+  "oldModels": [],
+  "errors": []
+}

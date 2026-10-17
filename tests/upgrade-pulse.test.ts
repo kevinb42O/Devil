@@ -34,7 +34,7 @@ test('pulse respects inactive enemies and does not catch newly spawned enemies b
 });
 
 test('pulse damages one living weakpoint or segment without corrupting body health',()=>{
- const w=arena(),tower=w.spawn('squid2',v(3,0,0),false);tower.age=10;tower.status='idle';
+ const w=new World(42,{schedule:false,invulnerable:true,legacyTowerArchitecture:true}),tower=w.spawn('squid2',v(3,0,0),false);tower.age=10;tower.status='idle';w.player.pos=v(0,1.7,0);
  const pede=target(w,4);pede.segments=[{pos:v(4,1,0),hp:30},{pos:v(5,1,0),hp:30}];pede.hp=60;
  upgrade(w,3);wave(w,.5);wave(w,.9);
  assert.equal(tower.hp,10);assert.equal(tower.weakpoints.filter(p=>p.hp===0).length,1);

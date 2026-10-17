@@ -1,0 +1,86 @@
+{
+  "rapid1": {
+    "duration": 24.1,
+    "envelope95to5": 1.094679618435467,
+    "maxRhythmicSpur": 1.7651494823328973,
+    "spurHz": 24.609375
+  },
+  "seekrapid1": {
+    "duration": 24.1,
+    "envelope95to5": 1.0867337023133241,
+    "maxRhythmicSpur": 1.5493220892366244,
+    "spurHz": 10.9375
+  },
+  "rapid2": {
+    "duration": 24.1,
+    "envelope95to5": 1.1091031050088802,
+    "maxRhythmicSpur": 1.628032280708296,
+    "spurHz": 27.34375
+  },
+  "seekrapid2": {
+    "duration": 24.1,
+    "envelope95to5": 1.099228702947875,
+    "maxRhythmicSpur": 1.7008021093397943,
+    "spurHz": 13.28125
+  },
+  "rapid3": {
+    "duration": 24.1,
+    "envelope95to5": 1.0841644701635065,
+    "maxRhythmicSpur": 1.6023653189777949,
+    "spurHz": 12.890625
+  },
+  "seekrapid3": {
+    "duration": 24.1,
+    "envelope95to5": 1.0707513389814667,
+    "maxRhythmicSpur": 1.6123527798721675,
+    "spurHz": 12.890625
+  },
+  "rapid4": {
+    "duration": 24.1,
+    "envelope95to5": 1.0993480235591664,
+    "maxRhythmicSpur": 1.6578725017540923,
+    "spurHz": 8.59375
+  },
+  "seekrapid4": {
+    "duration": 24.1,
+    "envelope95to5": 1.0894134266638413,
+    "maxRhythmicSpur": 1.744380527945111,
+    "spurHz": 8.59375
+  },
+  "rapid5": {
+    "duration": 24.1,
+    "envelope95to5": 1.0751309993930154,
+    "maxRhythmicSpur": 1.6635095763475518,
+    "spurHz": 19.53125
+  },
+  "seekrapid5": {
+    "duration": 24.1,
+    "envelope95to5": 1.0675141421288357,
+    "maxRhythmicSpur": 1.928873335226338,
+    "spurHz": 25.0
+  },
+  "rapid6": {
+    "duration": 24.1,
+    "envelope95to5": 1.0872701067313582,
+    "maxRhythmicSpur": 2.0817249100714577,
+    "spurHz": 6.25
+  },
+  "seekrapid6": {
+    "duration": 24.1,
+    "envelope95to5": 1.078679814720633,
+    "maxRhythmicSpur": 2.095855453060506,
+    "spurHz": 6.25
+  },
+  "rapid7": {
+    "duration": 24.1,
+    "envelope95to5": 1.0863433228030064,
+    "maxRhythmicSpur": 1.6045620047691722,
+    "spurHz": 41.796875
+  },
+  "seekrapid7": {
+    "duration": 24.1,
+    "envelope95to5": 1.0797216000846122,
+    "maxRhythmicSpur": 1.5490370718413524,
+    "spurHz": 41.796875
+  }
+}

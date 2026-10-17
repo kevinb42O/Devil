@@ -1,0 +1,58 @@
+[
+  {
+    "hand": 1,
+    "previousLowBand": 0.9893,
+    "newLowBand": 0.6515,
+    "newVocalPresence": 0.3458,
+    "peak": 0.824406,
+    "rms": 0.205
+  },
+  {
+    "hand": 2,
+    "previousLowBand": 0.9904,
+    "newLowBand": 0.8252,
+    "newVocalPresence": 0.1502,
+    "peak": 0.688179,
+    "rms": 0.205
+  },
+  {
+    "hand": 3,
+    "previousLowBand": 0.6215,
+    "newLowBand": 0.3357,
+    "newVocalPresence": 0.6394,
+    "peak": 0.841247,
+    "rms": 0.205
+  },
+  {
+    "hand": 4,
+    "previousLowBand": 0.8609,
+    "newLowBand": 0.4195,
+    "newVocalPresence": 0.5789,
+    "peak": 0.737756,
+    "rms": 0.205
+  },
+  {
+    "hand": 5,
+    "previousLowBand": 0.8809,
+    "newLowBand": 0.4461,
+    "newVocalPresence": 0.5404,
+    "peak": 0.857878,
+    "rms": 0.205
+  },
+  {
+    "hand": 6,
+    "previousLowBand": 0.9771,
+    "newLowBand": 0.6045,
+    "newVocalPresence": 0.3769,
+    "peak": 0.733285,
+    "rms": 0.205
+  },
+  {
+    "hand": 7,
+    "previousLowBand": 0.5923,
+    "newLowBand": 0.5324,
+    "newVocalPresence": 0.4664,
+    "peak": 0.749796,
+    "rms": 0.205
+  }
+]

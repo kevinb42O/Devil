@@ -4,7 +4,8 @@
   "page": "https://freesound.org/people/Rosa-Orenes256/sounds/538422/",
   "license": "CC0-1.0",
   "download": "https://cdn.freesound.org/previews/538/538422_11966684-hq.mp3",
-  "file": "public/assets/audio/football-goal.mp3",
+  "file": "assets/_sources/remake-audio/football-goal.mp3",
   "sha256": "1bc56409d3439a16fd54bc8fa83affb7e2bc69519b15ac49979d924e895910bf",
-  "changes": "High-quality MP3 preview used unchanged; playback gain adjusted in the prelobby mixer."
+  "changes": "CC0 high-quality MP3 source preserved; replacement catalog trims silence, resamples to mono 24 kHz PCM and balances level. Runtime gain comes from the shared remake manifest.",
+  "runtime_file": "public/assets/audio/remake/football-goal.wav"
 }

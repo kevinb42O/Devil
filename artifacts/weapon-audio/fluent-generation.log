@@ -1,0 +1,8 @@
+Rebuilt 14 supernatural cues. No firearm samples. Original reference audio is not part of generation.
+1 {'peak': 0.719343, 'rms': 0.205, 'duration': 24.1, 'lowEnergy': 0.6515, 'medianHz': 363, 'presenceEnergy': 0.3452, 'energyTimes': [2.3991, 12.0903, 21.6912, 23.8531]}
+2 {'peak': 0.70429, 'rms': 0.205, 'duration': 24.1, 'lowEnergy': 0.7628, 'medianHz': 176, 'presenceEnergy': 0.2206, 'energyTimes': [2.3871, 11.9405, 21.6694, 23.8616]}
+3 {'peak': 0.695937, 'rms': 0.205, 'duration': 24.1, 'lowEnergy': 0.3066, 'medianHz': 1031, 'presenceEnergy': 0.6633, 'energyTimes': [2.4131, 12.0484, 21.6876, 23.8571]}
+4 {'peak': 0.690901, 'rms': 0.205, 'duration': 24.1, 'lowEnergy': 0.4225, 'medianHz': 797, 'presenceEnergy': 0.5765, 'energyTimes': [2.4146, 12.0539, 21.694, 23.8691]}
+5 {'peak': 0.777641, 'rms': 0.205, 'duration': 24.1, 'lowEnergy': 0.509, 'medianHz': 457, 'presenceEnergy': 0.4817, 'energyTimes': [2.3954, 12.0346, 21.6772, 23.8586]}
+6 {'peak': 0.737209, 'rms': 0.205, 'duration': 24.1, 'lowEnergy': 0.6267, 'medianHz': 258, 'presenceEnergy': 0.3606, 'energyTimes': [2.4006, 12.0293, 21.6891, 23.8621]}
+7 {'peak': 0.731401, 'rms': 0.205, 'duration': 24.1, 'lowEnergy': 0.5969, 'medianHz': 340, 'presenceEnergy': 0.4023, 'energyTimes': [2.4059, 12.0538, 21.6994, 23.8609]}

@@ -53,9 +53,10 @@ try{
  });
  for(const page of pages)await page.waitForFunction(()=>window.arrivalCues?.includes(0));
  for(const page of pages){
-  const cues=await page.evaluate(()=>window.arrivalCues);assert.equal(cues[0],6);assert.equal(cues.at(-1),0);assert.equal(new Set(cues).size,cues.length);
+  const cues=await page.evaluate(()=>window.arrivalCues);assert.equal(cues[0],4);assert.equal(cues.at(-1),0);assert.equal(new Set(cues).size,cues.length);
   const audio=await page.evaluate(()=>window.releaseAudio);
   assert.ok(audio.oneShotNames.includes('spawnplayer'),JSON.stringify(audio));
+  assert.ok(audio.oneShotNames.includes('crew-release-laugh'),JSON.stringify(audio));
   assert.ok(!audio.oneShotNames.includes('crew-countdown'),JSON.stringify(audio));
   assert.equal(await page.locator('.arrival-value').textContent(),'SURVIVE');
  }
@@ -86,7 +87,7 @@ try{
   arrival.reset();arrival.update(3,12000,9000,2);arrival.update(3,12000,11000,2);arrival.update(3,12100,11010,2);
   arrival.reset();arrival.element.remove();return {cues,hidden,lateHidden};
  });
- assert.deepEqual(edge,{cues:[5,4,3,0,3,1],hidden:true,lateHidden:true});
+ assert.deepEqual(edge,{cues:[4,3,0,3,1],hidden:true,lateHidden:true});
  assert.deepEqual(errors,[]);
  console.log('Crew arrival passed: real host/guest countdown, frozen simulation, single beat cues, countdown voice and spawn release, mobile layout, cleanup, cleared guest deadline, late joins and clock correction.');
 }finally{await browser.close();}

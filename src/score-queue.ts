@@ -1,5 +1,5 @@
 /** Durable best-score outbox. Gameplay never waits on the network. */
-export type ScoreCandidate={id:string;timeMs:number;kills:number;gems:number;rules:number};
+export type ScoreCandidate={id:string;timeMs:number;kills:number;gems:number;rules:number;ticket?:string};
 export type OwnScore={player_name:string;survival_ms:number;kills:number;gems:number;achieved_at:string;rank:number};
 export type PendingScore={score:ScoreCandidate;name:string};
 export function cleanNickname(name:string){const clean=name.trim();if(!clean||clean.length>24||/[\u0000-\u001f\u007f]/.test(clean))throw Error('Choose a nickname of 1–24 characters.');return clean;}

@@ -1,0 +1,23 @@
+{
+  "buffers": [
+    {
+      "name": "killminisquid",
+      "duration": 1.9999773242630385,
+      "lateRms": 0.09191452794972861,
+      "peak": 0.8802088499069214
+    },
+    {
+      "name": "killsquid",
+      "duration": 1.9999773242630385,
+      "lateRms": 0.06028244146975378,
+      "peak": 0.634740948677063
+    },
+    {
+      "name": "killultrasquid",
+      "duration": 1.9999773242630385,
+      "lateRms": 0.0723090458795599,
+      "peak": 0.6431264877319336
+    }
+  ],
+  "failed": []
+}

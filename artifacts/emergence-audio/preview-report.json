@@ -1,0 +1,26 @@
+{
+  "frames": 526,
+  "duration": 18.0252,
+  "events": [
+    {
+      "kind": "squid",
+      "sound": [
+        "spawnminisquid"
+      ]
+    },
+    {
+      "kind": "squid2",
+      "sound": [
+        "spawnsquid"
+      ]
+    },
+    {
+      "kind": "squid3",
+      "sound": [
+        "spawnultrasquid"
+      ]
+    }
+  ],
+  "bytes": 5157531,
+  "errors": []
+}

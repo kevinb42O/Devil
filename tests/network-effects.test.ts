@@ -14,6 +14,11 @@ test('large event/shot identities and leading zero shooter IDs remain exact',()=
  const e={...hit(0),networkId:16777217,enemyId:16777219,bloodId:16777221,shotKey:'00001234:16777217:01:hit:16777219'};
  const decoded=decodeEffects(JSON.parse(encodeEffects(0,[e])))!.events[0];assert.equal(decoded.networkId,e.networkId);assert.equal(decoded.enemyId,e.enemyId);assert.equal(decoded.bloodId,e.bloodId);assert.equal(decoded.shotKey,e.shotKey);
 });
+test('crystal detachment metadata reaches crew clients',()=>{
+ const event={...hit(0),enemy:'squid2' as const,bloodless:true,bloodSegment:true,crystalBreak:true};
+ const decoded=decodeEffects(JSON.parse(encodeEffects(2,[event])))!.events[0];
+ assert.equal(decoded.crystalBreak,true);assert.equal(decoded.enemyId,event.enemyId);assert.equal(decoded.bloodSegment,true);
+});
 test('effects decoder rejects malformed, oversized, nonfinite and corrupt batches',()=>{
  const packed=(value:unknown)=>({type:'effects',epoch:0,packed:btoa(String.fromCharCode(...encodePacket(value)))});
  assert.throws(()=>encodeEffects(0,Array.from({length:25},(_,i)=>hit(i))));assert.equal(decodeEffects({type:'other'}),null);

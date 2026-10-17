@@ -1,4 +1,4 @@
-/* Controls are the arena itself; there are no joystick/button overlays. */
+/* Movement and firing use the arena; optional hand gestures have small hold targets. */
 body[data-controls=mobile] #game{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 body[data-controls=mobile]{overscroll-behavior:none}
 body[data-controls=mobile] .panel{max-height:calc(var(--game-height) - 32px);max-width:calc(var(--game-width) - 32px)}
@@ -11,3 +11,8 @@ body[data-controls=mobile][data-mobile-rotated=true] #game{width:100%;height:100
 #timer:disabled{opacity:1;pointer-events:none}
 body[data-controls=mobile] #hud #timer{min-width:88px;min-height:44px;top:-10px;pointer-events:auto;touch-action:manipulation;cursor:pointer}
 body[data-controls=mobile] #hud #timer:disabled{pointer-events:none;cursor:default}
+
+#combat-gestures{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:15;display:flex;gap:12px;pointer-events:none}
+#combat-gestures[hidden]{display:none}
+#combat-gestures button{pointer-events:auto;touch-action:none;min-height:44px;padding:8px 14px;font-size:11px;background:#111b;opacity:.7}
+#combat-gestures button[aria-pressed=true]{opacity:1;border-color:#e7c693}

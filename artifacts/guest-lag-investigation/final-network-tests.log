@@ -1,0 +1,42 @@
+✔ decoded snapshots, interpolation history and delta baselines survive guest movement/fire unchanged (132.670375ms)
+✔ prediction visits only predicted flight and preserves authoritative flight and array identity (7.597334ms)
+✔ 600 seconds of snapshot replacement and prediction retain at most the current player pose (291.132708ms)
+✔ host flight baselines own immutable position/velocity without retaining render paths (0.300667ms)
+✔ excess guest backlog drains during continuous input without skipping command numbers (46.066333ms)
+✔ pacing keeps full normal rate and skipped prediction does not consume a tap (1.673209ms)
+✔ focus release and command timeout preserve processed aim when completing a burst (5.153834ms)
+✔ fresh packets with a stopped authoritative tick stall prediction, then recover on progress (4.133208ms)
+✔ render and worker wake-ups share exactly one bounded fixed-step clock (0.564791ms)
+✔ packed identities and presentation poses support removals, unsorted IDs and far coordinates (0.993458ms)
+✔ seeded shots reproduce surviving daggers and use explicit corrections for altered flight (3.371334ms)
+✔ moving enemies delta changing velocity, phase, damage and rig data without mutating baselines (3.61525ms)
+✔ quantized enemy residuals remain bounded through repeated acknowledged updates (29.162041ms)
+Level IV: 72.5 KB/s per guest including repair packets, 38.6x smaller than JSON.
+1,000-enemy poses: 5.1 KB per update; unchanged enemy metadata is omitted.
+✔ binary codec preserves controller precision and rejects corrupt/truncated data (1.839667ms)
+✔ numbered inputs repair loss/reordering without compressing holds or repeating actions (0.388292ms)
+✔ prediction immediately moves/jumps/fires, shares controller rules, and leaves world RNG and gems alone (5.912667ms)
+✔ replaying outstanding commands from an acknowledged snapshot preserves landing/cooldowns/dagger jumps (3.424291ms)
+✔ a pending jump tap survives binary snapshots and prediction replay without leaking to teammates (2.502916ms)
+✔ projectile deltas recover spawns/removals and gravity against acknowledged baselines (3.127917ms)
+✔ unordered fragmented state repairs packet loss, expires incomplete frames and ignores stale completions (11.138917ms)
+✔ remote interpolation never changes authoritative state or delays the local predicted player (1.277458ms)
+✔ four level-IV shooters use substantially less bandwidth without dropping projectiles (277.742083ms)
+✔ compact enemy state preserves all rigs, weakpoints and fields used by local aiming (2.705958ms)
+✔ congested peers receive current recovery state rather than a backlog of queued snapshots (2.512417ms)
+✔ restarting clears old reliable effects and projectile baselines before sending the new epoch (0.467875ms)
+✔ critical releases are reliable under a busy control channel and do not repeat endlessly (0.33575ms)
+✔ mixed game builds fail explicitly before creating an incompatible peer connection (0.476ms)
+✔ delayed releases cannot override controls that the host has already processed (1.276208ms)
+✔ a thousand moving enemies send poses without repeating unchanged metadata or losing damage/removals (32.678958ms)
+✔ unchanged held inputs compress into runs while the host retains exact tap/stream timing (3.707125ms)
+✔ guest countdown uses the host clock even when browser clocks differ by a minute (2.038667ms)
+✔ ready toggles preserve local intent until the matching host revision arrives (2.223833ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 795.954167

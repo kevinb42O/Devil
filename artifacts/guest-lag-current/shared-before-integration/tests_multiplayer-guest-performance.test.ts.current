@@ -1,0 +1,62 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {FriendsSession,applySnapshot} from '../src/multiplayer';
+import {World,idleInput,STEP,type Projectile} from '../src/simulation';
+import {encodeState,decodeState,snapshotBaseline,decodedSnapshotBaseline} from '../src/network-state';
+import {SnapshotTimeline} from '../src/network-presentation';
+const freeze=(value:any):any=>{if(value&&typeof value==='object'){Object.freeze(value);for(const child of Object.values(value))freeze(child);}return value;};
+function setup(){const host=new FriendsSession('host',[]);host.world!.addCrew('guest');return host;}
+
+test('decoded snapshots, interpolation history and delta baselines survive guest movement/fire unchanged',()=>{
+ const host=setup(),guest=new FriendsSession('guest',[]);try{
+  const h=host.world!,w=new World(1,{schedule:false}),timeline=new SnapshotTimeline();guest.localId='guest';h.crew[1].level=7;h.crew[1].reserve=200;
+  for(const kind of ['skull4','squid3','gigapede','spider2'] as const){const e=h.spawn(kind,{x:4,y:3,z:-12},false);e.age=10;}
+  h.projectiles=[{id:10000,pos:{x:2,y:8,z:3},vel:{x:1,y:2,z:-3},age:.1,homing:false,floorBounces:1}];
+  let sender=snapshotBaseline(host.snapshot()!),decoded=decodeState(encodeState(host.snapshot()!,1,0),new Map())!;
+  for(let frame=2;frame<=80;frame++){
+   const s=freeze(decoded.snapshot),saved=structuredClone(s),base=decodedSnapshotBaseline(s)!;assert.ok(base);
+   const savedBaseline=structuredClone(base);timeline.push(s,frame*50);guest.reconcile(w,s);
+   for(let i=0;i<12;i++)w.predictCrew('guest',{...idleInput(),fire:i<5,homing:i>=8,jump:i===3,pitch:-.2});
+   timeline.view(w,'guest',frame*50+20,{x:0,y:0,z:0});
+   assert.deepEqual(structuredClone(s),saved);assert.deepEqual(base,savedBaseline);
+   assert.notEqual(w.stats,s.stats);assert.notEqual(w.crew[1].player,s.crew[1].player);assert.equal(w.enemies,s.enemies);assert.notEqual(w.projectiles,s.projectiles);
+   assert.ok(!(timeline as any).samples.at(-1).s.projectiles,'history retains no projectile arrays');assert.ok((timeline as any).samples.length<=12);
+   h.time+=.05;h.tick+=6;h.enemies[0].pos.x+=.01;h.enemies[0].vel.x=.2;h.enemies[1].hp-=.01;
+   const p=h.projectiles[0];p.age+=.05;p.pos.x+=p.vel.x*.05;p.pos.y+=p.vel.y*.05-26*.05*(.05+STEP)/2;p.pos.z+=p.vel.z*.05;p.vel.y-=26*.05;
+   const source=host.snapshot()!,wire=encodeState(source,frame,frame-1,sender);decoded=decodeState(wire,new Map([[frame-1,base]]))!;assert.ok(decoded);
+   assert.ok(Math.abs(decoded.snapshot.enemies[0].pos.x-h.enemies[0].pos.x)<.002);assert.ok(Math.abs(decoded.snapshot.projectiles[0].pos.y-p.pos.y)<.002);sender=snapshotBaseline(source);
+  }
+ }finally{host.close();guest.close();}
+});
+
+test('current owner-based prediction advances local flight and preserves remote flight',()=>{
+ const w=new World(1,{schedule:false});w.addCrew('guest');w.selectCrew('guest');
+ const remote:Projectile[]=Array.from({length:6000},(_,i)=>({id:i+1,pos:{x:0,y:2,z:0},vel:{x:0,y:0,z:-70},age:.1,homing:false,shotKey:`host:1:${i}`}));
+ w.resetNetworkPrediction(remote);
+ const ordinary:Projectile={id:-1,pos:{x:0,y:2,z:0},vel:{x:0,y:0,z:-70},age:2.79,homing:false,shotKey:'guest:1:0'};
+ const homing:Projectile={id:-2,pos:{x:1,y:2,z:0},vel:{x:0,y:0,z:-42},age:1,homing:true,shotKey:'guest:2:0'};w.projectiles.push(ordinary,homing);
+ for(let i=0;i<20;i++)w.predictCrew('guest',idleInput());
+ assert.equal(w.projectiles.length,6001);assert.ok(w.projectiles.includes(homing));assert.ok(!w.projectiles.includes(ordinary));
+ assert.ok(Math.abs(homing.pos.z+42*20*STEP)<1e-8);assert.equal(remote[0].age,.1);assert.equal(remote[0].pos.z,0);
+ // Upstream now predicts by owner rather than negative ID; reordered arrays
+ // and acknowledged local shots must use the same full collision/flight path.
+ homing.id=6001;w.projectiles=[homing,...remote];const before=homing.pos.z;w.predictCrew('guest',idleInput());
+ assert.ok(Math.abs(homing.pos.z-before+42*STEP)<1e-8);assert.equal(remote[0].age,.1);
+});
+
+test('600 seconds of snapshot replacement and prediction retain at most the current player pose',()=>{
+ const host=setup(),guest=new FriendsSession('guest',[]);try{
+  guest.localId='guest';const s=host.snapshot()!,w=new World(1,{schedule:false});
+  for(let snapshot=0;snapshot<12000;snapshot++){guest.reconcile(w,s);for(let tick=0;tick<6;tick++)w.predictCrew('guest',idleInput());}
+  assert.equal((w as any).playerStarts.size,1);assert.equal(w.crew.length,2);assert.deepEqual(w.previousPlayerPosition,w.player.pos);
+  applySnapshot(w,s,'guest');assert.equal((w as any).playerStarts.size,0,'even a snapshot with no subsequent prediction releases old poses');
+ }finally{host.close();guest.close();}
+});
+
+test('host flight baselines own immutable position/velocity without retaining render paths',()=>{
+ const host=setup();try{
+  const p:Projectile={id:99,pos:{x:1,y:2,z:3},previous:{x:0,y:2,z:3},vel:{x:0,y:0,z:-70},age:0,homing:false,path:[{pos:{x:0,y:2,z:3},t:0}]};host.world!.projectiles=[p];
+  const baseline=snapshotBaseline(host.snapshot()!),flight=baseline.projectiles.get(99)!;p.pos.x=100;p.vel.z=0;p.age=1;
+  assert.equal(flight.pos.x,1);assert.equal(flight.vel.z,-70);assert.equal(flight.age,0);assert.equal(flight.path,undefined);assert.equal(flight.launch,undefined);
+ }finally{host.close();}
+});

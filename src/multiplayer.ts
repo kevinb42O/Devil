@@ -14,7 +14,7 @@ import {LOBBY_TOPIC,DISCOVERY_TOPIC,type PublicLobby} from './lobbies';
 import {randomId} from './id';
 import {World,STEP,idleInput,v,distance,type Input,type Effect,type Vec} from './simulation';
 import {CommandBuffer,InputHistory,MAX_PENDING_INPUTS,inputRuns,InputPacer} from './network-input';
-import {encodeState,decodeState,fragmentState,StateAssembler,snapshotBaseline,stateAssemblyTimeout,type StateBaseline} from './network-state';
+import {encodeState,decodeState,fragmentState,StateAssembler,snapshotBaseline,decodedSnapshotBaseline,stateAssemblyTimeout,type StateBaseline} from './network-state';
 import {encodePacket,decodePacket,NETWORK_PROTOCOL_VERSION} from './network-codec';
 import {encodeEffects,decodeEffects} from './network-effects';
 import {encodeContacts,decodeContacts,type ProjectileContact} from './network-contacts';
@@ -231,7 +231,7 @@ export class FriendsSession{
  private receiveState(link:Link,data:ArrayBuffer){
   try{const bytes=link.assembler.push(data,performance.now());if(!bytes)return;const decoded=decodeState(bytes,link.baselines);if(!decoded){this.control({type:'ack',epoch:this.epoch,frame:0});return;}const {frame,snapshot}=decoded;if(frame<=link.assembler.last)return;
    if(snapshot.epoch!==this.epoch){this.resetReplay();this.history.reset();this.pacer.reset();this.lastProgress=0;this.progressTick=-1;this.localLife=0;this.releasedSequence=-1;this.pendingReady=undefined;this.timeline.reset();this.flightAccumulator=0;this.lastView=0;this.localFlight.clear();this.endedShots.clear();this.contactOutbox.clear();this.aimingScene=undefined;this.predictedShots.clear();this.seenEvents.clear();this.cameraOffset=v();this.lastState=0;this.snapshotInterval=50;link.baselines.clear();}
-   link.baselines.set(frame,snapshotBaseline(snapshot));while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);link.assembler.accept(frame);
+   link.baselines.set(frame,decodedSnapshotBaseline(snapshot)!);while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);link.assembler.accept(frame);
    const local=snapshot.members.find(p=>p.id===this.localId);if(this.pendingReady&&local){if((local.readyRevision??0)>=this.pendingReady.revision)this.pendingReady=undefined;else local.ready=this.pendingReady.ready;}
    const changed=this.running!==snapshot.running||this.prelobby!==!!snapshot.prelobby||JSON.stringify(this.members)!==JSON.stringify(snapshot.members);this.running=snapshot.running;this.world??=new World(1,{schedule:false});this.world.courtyard=snapshot.courtyard;this.world.tick=snapshot.tick;this.prelobby=!!snapshot.prelobby;this.epoch=snapshot.epoch;this.members=snapshot.members??[];this.lobbyName=snapshot.lobbyName;this.startAt=snapshot.time>0||!snapshot.startAt?0:Date.now()+Math.max(0,snapshot.startAt-snapshot.serverNow-this.rtt/2);const receivedAt=performance.now();if(this.lastState)this.snapshotInterval=this.snapshotInterval*.8+(receivedAt-this.lastState)*.2;this.lastState=receivedAt;this.hostPlaying=(snapshot.running||!!snapshot.prelobby)&&snapshot.state==='playing';if(snapshot.tick!==this.progressTick){this.progressTick=snapshot.tick;this.lastProgress=receivedAt;}this.timeline.push(snapshot,this.lastState);this.control({type:'ack',epoch:this.epoch,frame});if(changed)this.onChange();this.onSnapshot(snapshot);
   }catch{/* Corrupt/incomplete updates expire; the next baseline repairs state. */}
@@ -257,7 +257,7 @@ export class FriendsSession{
   const now=performance.now();
   for(const c of w.predictedContacts){if(this.endedShots.has(c.shotKey))continue;c.serial=++this.contactSequence;if(c.kind==='hit'&&(c.damage??0)>0)this.pendingDamage.set(c.serial,c);this.endedShots.set(c.shotKey,now);this.contactOutbox.set(c.shotKey,c);}
   w.predictedContacts=[];
-  const live=new Map(w.projectiles.filter(p=>p.shotKey?.startsWith(`${this.localId}:`)&&!this.endedShots.has(p.shotKey)).map(p=>[p.shotKey!,p]));
+  const live=new Map(w.localProjectiles(this.localId).filter(p=>!this.endedShots.has(p.shotKey!)).map(p=>[p.shotKey!,p]));
   for(const key of this.localFlight.keys())if(!live.has(key)&&!this.endedShots.has(key))this.endedShots.set(key,now);
   this.localFlight=live;
   for(const [key,at]of this.endedShots)if(now-at>15000)this.endedShots.delete(key);
@@ -294,7 +294,7 @@ export class FriendsSession{
   if(this.clientHits){
    // Movement/cooldown replay cannot rewind a shooter's actual dagger flight,
    // resurrect a consumed dagger, or invent fresh contact reports.
-   const owned=new Map(w.projectiles.filter(p=>p.shotKey?.startsWith(`${this.localId}:`)).map(p=>[p.shotKey!,p]));
+   const owned=new Map(w.localProjectiles(this.localId).map(p=>[p.shotKey!,p]));
    for(const [key,p]of this.localFlight)owned.set(key,p);for(const key of this.endedShots.keys())owned.delete(key);
    w.projectiles=[...w.projectiles.filter(p=>!p.shotKey?.startsWith(`${this.localId}:`)),...owned.values()];this.localFlight=owned;
   }
@@ -317,9 +317,9 @@ export class FriendsSession{
   }
   if(this.clientHits&&!this.prelobby&&w.state==='playing'&&(this.localFlight.size||this.contactOutbox.size)){
    const first=w.effects.length;this.flightAccumulator+=dt;
-   while(this.flightAccumulator>=STEP){w.predictProjectiles(this.localId,STEP,view.enemies,true);this.flightAccumulator-=STEP;}
+   while(this.flightAccumulator>=STEP){w.predictProjectiles(this.localId,STEP,view.enemies,true,view);this.flightAccumulator-=STEP;}
    const contacts=this.freshPredictedEffects(w.effects.slice(first));w.effects.length=first;this.rememberLocalFlight(w);if(contacts.length)this.onEffects(contacts);
-   view.projectiles=[...view.projectiles.filter(p=>!p.shotKey?.startsWith(`${this.localId}:`)),...w.projectiles.filter(p=>p.shotKey?.startsWith(`${this.localId}:`))];
+   view.projectiles=[...view.projectiles.filter(p=>!p.shotKey?.startsWith(`${this.localId}:`)),...w.localProjectiles(this.localId)];
    view.enemies=view.enemies.filter(e=>e.hp>0);
   }else this.flightAccumulator=0;
   return view;
@@ -371,7 +371,7 @@ export class FriendsSession{
   const replayTowers=recording?this.world.enemies.filter(e=>e.kind.startsWith('squid')&&e.hp>0):[];const resolvedInputs=new Map([...this.inputs].map(([id,input])=>[id,{...input}]));const start=this.world.effects.length;if(this.running)this.world.stepCrew(this.inputs,STEP,waiting);else if(this.stepCourtyard(waiting))return;for(const p of this.world.crew){const old=lives.get(p.id);if(old&&(old.life!==p.life||old.alive&&!p.alive)){this.inputs.delete(p.id);this.inputBuffers.delete(p.id);this.commands.delete(p.id);this.inputTimes.delete(p.id);}}if(recording&&this.crewRecorder){try{this.crewRecorder.record(this.world,resolvedInputs,waiting,before,start,performance.now()-started,replayTowers);this.replayError=this.crewRecorder.error;if(this.world.state==='dead'&&!this.completedReplay){this.completedReplay=this.crewRecorder.finish(this.world);if(this.completedReplay)this.onReplayReady(this.completedReplay);}}catch{this.replayError='Team replay recording failed. The run results are still available.';this.crewRecorder=null;}}this.startAt=0;this.pendingEffects.push(...this.world.effects.slice(start).map(e=>({...e,networkId:++this.eventSequence})));if(this.pendingEffects.length>1024)this.pendingEffects.splice(0,this.pendingEffects.length-1024);this.hostStepMs=this.hostStepMs*.9+(performance.now()-started)*.1;
  }}
  sendInput(input:Input){this.control({type:'sample',epoch:this.epoch,life:this.localLife,input});}
- snapshot():ArenaSnapshot|null{const w=this.world;if(!w)return null;return {clientHits:w.contactOwners.length?true:undefined,members:this.members.filter(p=>p.host||this.links.get(p.id)?.state?.readyState==='open'),lobbyName:this.lobbyName,serverNow:Date.now(),startAt:this.startAt,effects:this.pendingEffects,epoch:this.epoch,running:this.running,prelobby:this.prelobby||undefined,courtyard:this.prelobby?w.courtyard:undefined,time:w.time,tick:w.tick,state:w.state,cause:w.cause,radius:w.radius,wave:w.wave,level:w.level,reserve:w.reserve,stats:w.stats,enemies:w.enemies,projectiles:w.projectiles,gems:w.gems,rings:w.rings,crew:w.crew.map(p=>({id:p.id,player:p.player,alive:p.alive,cause:p.cause,respawnAt:p.respawnAt,life:p.life,protectedUntil:p.protectedUntil,yaw:p.input.yaw,pitch:p.input.pitch||undefined,leftArm:this.prelobby&&p.input.leftArm||undefined,rightArm:this.prelobby&&p.input.rightArm||undefined,level:p.level,reserve:p.reserve,primary:p.primary,secondary:p.secondary,wasJump:p.wasJump,lastShotTick:p.lastShotTick,shotSequence:p.shotSequence,shotSeed:p.shotSeed,ack:this.commands.get(p.id)?.acknowledged??0,contactAck:w.contactAcknowledged(p.id)||undefined,queuedInputs:this.commands.get(p.id)?.size||undefined}))};}
+ snapshot():ArenaSnapshot|null{const w=this.world;if(!w)return null;return {clientHits:w.contactOwners.length?true:undefined,members:this.members.filter(p=>p.host||this.links.get(p.id)?.state?.readyState==='open'),lobbyName:this.lobbyName,serverNow:Date.now(),startAt:this.startAt,effects:this.pendingEffects,epoch:this.epoch,running:this.running,prelobby:this.prelobby||undefined,courtyard:this.prelobby?w.courtyard:undefined,time:w.time,tick:w.tick,state:w.state,cause:w.cause,radius:w.radius,wave:w.wave,level:w.level,reserve:w.reserve,stats:w.stats,enemies:w.enemies,projectiles:w.projectiles,gems:w.gems,rings:w.rings,crew:w.crew.map(p=>({id:p.id,player:p.player,alive:p.alive,cause:p.cause,respawnAt:p.respawnAt,life:p.life,protectedUntil:p.protectedUntil,yaw:p.input.yaw,pitch:p.input.pitch||undefined,leftArm:p.input.leftArm||undefined,rightArm:p.input.rightArm||undefined,level:p.level,reserve:p.reserve,primary:p.primary,secondary:p.secondary,wasJump:p.wasJump,lastShotTick:p.lastShotTick,shotSequence:p.shotSequence,shotSeed:p.shotSeed,ack:this.commands.get(p.id)?.acknowledged??0,contactAck:w.contactAcknowledged(p.id)||undefined,queuedInputs:this.commands.get(p.id)?.size||undefined}))};}
  private refillStateBudget(link:Link,now:number){link.tokens=Math.min(STATE_BURST_BYTES,link.tokens+(now-link.tokenAt)*STATE_BYTES_PER_SECOND/1000);link.tokenAt=now;}
  private cacheStateBaseline(link:Link,frame:number,baseline:StateBaseline){link.baselines.set(frame,baseline);while(link.baselines.size>32)link.baselines.delete(link.baselines.keys().next().value!);}
  private rememberState(link:Link,frame:number,baseline:StateBaseline,now:number){
@@ -429,4 +429,11 @@ export class FriendsSession{
  private drop(id:string){if(this.prelobby)this.cancelDescent();if(this.courtyard){delete this.courtyard.kicks[id];delete this.courtyard.skull.lastContact[id];}const l=this.links.get(id);if(!l)return;this.links.delete(id);this.clearSkin(id);clearTimeout(l.timer);if(l.disconnectTimer)clearTimeout(l.disconnectTimer);l.replay?.reset();l.pc.close();this.inputs.delete(id);this.inputBuffers.delete(id);this.commands.delete(id);this.inputTimes.delete(id);this.members=this.members.filter(p=>p.id!==id);const p=this.world?.crew.find(p=>p.id===id);if(p){if(this.running){p.alive=false;p.cause='DISCONNECTED';p.respawnAt=null;}else if(this.world)this.world.crew=this.world.crew.filter(p=>p.id!==id);}if(!this.closed)this.updateLobby();this.onChange();}
  close(){this.resetReplay();this.announce(true);this.closed=true;clearInterval(this.networkTimer);if(this.heartbeat)clearInterval(this.heartbeat);if(this.joinTimer)clearInterval(this.joinTimer);this.mqtt.close();this.earlyIce.clear();for(const id of [...this.links.keys()])this.drop(id);}
 }
-export function applySnapshot(w:World,s:ArenaSnapshot,localId:string){s=structuredClone(s);Object.assign(w,{courtyard:s.courtyard,time:s.time,tick:s.tick,state:s.state,cause:s.cause,radius:s.radius,wave:s.wave,level:s.level,reserve:s.reserve,stats:s.stats,enemies:s.enemies,projectiles:s.projectiles,gems:s.gems,rings:s.rings});w.crew=[];for(const p of s.crew){w.addCrew(p.id);Object.assign(w.crew[w.crew.length-1],p,{input:{...idleInput(),yaw:p.yaw,pitch:p.pitch??0,fire:p.primary.wasHeld,homing:p.secondary.wasHeld,...(s.prelobby?{leftArm:p.leftArm===true,rightArm:p.rightArm===true}:{})}});}const local=w.crew.find(p=>p.id===localId);if(local)w.selectCrew(localId);}
+export function applySnapshot(w:World,s:ArenaSnapshot,localId:string){
+ // Local acknowledged daggers are simulated by this guest. They must own their
+ // mutable flight; remote flight and shared health stay immutable snapshots.
+ if(decodedSnapshotBaseline(s)){
+  const {crew,stats,courtyard}=structuredClone({crew:s.crew,stats:s.stats,courtyard:s.courtyard});
+  s={...s,crew,stats,courtyard,projectiles:s.projectiles.map(p=>p.shotKey?.startsWith(`${localId}:`)?{...p,pos:{...p.pos},vel:{...p.vel},previous:p.previous?{...p.previous}:undefined,path:undefined}:p)};
+ }else s=structuredClone(s);
+ w.resetPredictionPoses();Object.assign(w,{courtyard:s.courtyard,time:s.time,tick:s.tick,state:s.state,cause:s.cause,radius:s.radius,wave:s.wave,level:s.level,reserve:s.reserve,stats:s.stats,enemies:s.enemies,projectiles:s.projectiles,gems:s.gems,rings:s.rings});w.crew=[];for(const p of s.crew){w.addCrew(p.id);Object.assign(w.crew[w.crew.length-1],p,{input:{...idleInput(),yaw:p.yaw,pitch:p.pitch??0,fire:p.primary.wasHeld,homing:p.secondary.wasHeld,...(p.leftArm?{leftArm:true}:{}),...(p.rightArm?{rightArm:true}:{})}});}const local=w.crew.find(p=>p.id===localId);if(local)w.selectCrew(localId);}

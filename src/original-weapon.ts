@@ -1,10 +1,11 @@
+import {goreGeometry,fragmentTexture} from './remake-geometry';
 import {HandRecoil} from './hand-recoil';
 import {HandFireAnimation} from './hand-fire-animation';
-import {TWIN_POSE,TWIN_COLORS,handIndex} from './weapon-levels';
+import {TWIN_POSE,handIndex} from './weapon-levels';
 import {MovementMotion,type MovementPose} from './movement-motion';
 import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex,projectileRoll,projectileVisualIndex,ALL_PROJECTILE_COLORS,shotgunStyleIndex} from './projectile-presentation';
 import * as THREE from 'three';
-import {EnvironmentLighting,ENVIRONMENT_FRAGMENT} from './environment-lighting';
+import {EnvironmentLighting} from './environment-lighting';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { type World, type Effect, type Projectile, type Vec } from './simulation';
 import {WEAPON_PRESENTATION,STREAM_PRESENTATION,DAGGER_PRESENTATION,PROJECTILE_HAND_CLEARANCE,WEAPON_FEEDBACK,shotgunFeedback} from './weapon-tuning';
@@ -28,31 +29,6 @@ const frag=`uniform sampler2D originalTexture;varying vec2 vUV;varying vec3 vNor
  fresnel*=min(1.,vParams.y);fresnel+=max(0.,vParams.y-1.);
  vec3 c=mix(vColor*vColor*.5,vRim*vRim*.5,fresnel);c=clamp(c*(texture2D(originalTexture,vUV).rgb+.5),0.,1.);
  gl_FragColor=vec4(c,vParams.x);}`;
-const handVert=`uniform mat3 handWorldRotation;varying vec3 vEnvironmentNormal;varying vec2 vUV;varying vec3 vHandPosition,vHandNormal; void main(){vUV=uv;vEnvironmentNormal=normalize(handWorldRotation*mat3(modelMatrix)*normal);vec4 p=modelViewMatrix*vec4(position,1.);vHandPosition=p.xyz;vHandNormal=normalize(normalMatrix*normal);p.xyz=floor(p.xyz*200.)/200.;gl_Position=projectionMatrix*p;}`;
-// Blend native skins for the blast envelope; stream uses crisp skin changes.
-const handFrag=`varying vec3 vEnvironmentNormal;uniform sampler2D originalTexture,idleTexture;uniform float fireMix;uniform float brightness,environmentWeight,upgradeAge,upgradePower;uniform vec3 upgradeTint;varying vec2 vUV;varying vec3 vHandPosition,vHandNormal;${ENVIRONMENT_FRAGMENT}\nvoid main(){
- vec3 skin=mix(texture2D(idleTexture,vUV).rgb,texture2D(originalTexture,vUV).rgb,fireMix);
- vec3 diffuse=skin;diffuse*=diffuse;diffuse=mix(diffuse,environmentLight(diffuse,mix(vec3(0.,.5,.5),normalize(vEnvironmentNormal),cosmicLight)),environmentWeight);
- vec3 color=sqrt(diffuse*brightness);
- if(upgradePower>0.){
-   float rim=pow(1.-abs(dot(normalize(vHandNormal),normalize(-vHandPosition))),2.);
-   float sweep=exp(-pow((vHandPosition.y-(-.65+upgradeAge*1.1))/.065,2.));
-   float core=exp(-upgradeAge*6.);
-   color+=upgradeTint*upgradePower*(.16+rim*.65+sweep*.75)+mix(upgradeTint,vec3(1.),.7)*core*.32;
- }
- gl_FragColor=vec4(color,1.);}`;
-// The overlay camera has an identity view: normalMatrix is the inverse-transpose
-// needed for the responsive pair's nonuniform projection transform.
-const twinVert=handVert.replace('mat3(modelMatrix)*normal','normalMatrix*normal');
-const twinFrag=handFrag.replace('uniform vec3 upgradeTint;', 'uniform vec3 upgradeTint,tierTint;uniform float tier,shotPower;')
- .replace('vec3 color=sqrt(diffuse*brightness);', `
- float detail=dot(skin,vec3(.2126,.7152,.0722));
- float channels=smoothstep(.42,.82,detail);
- float edge=pow(1.-abs(dot(normalize(vHandNormal),normalize(-vHandPosition))),2.8);
- vec3 core=mix(tierTint,vec3(1.,.94,.82),tier>6.5?.68:.14);
- vec3 stone=sqrt(diffuse)*vec3(.32,.35,.42);
- vec3 color=stone+core*channels*(.76+shotPower*.6)+tierTint*edge*(.16+(tier-5.)*.065+shotPower*.22);
- color*=sqrt(brightness);`);
 export class OriginalWeapon {
   private movement=new MovementMotion();
   private restRotation=new THREE.Quaternion().setFromEuler(new THREE.Euler(HAND_POSE.rotationX,HAND_POSE.rotationY,0));
@@ -76,6 +52,11 @@ export class OriginalWeapon {
   configureMotion(value:unknown){this.movement.configure(value);if(this.movement.diagnostics.intensity===0)this.resetMotion();}
   resetMotion(){this.movement.clear();this.counterSwing=0;this.motion.x=this.motion.y=this.motion.z=0;this.motionRotation.x=this.motionRotation.y=this.motionRotation.z=0;}
   get effectDiagnostics(){return {flashTime:this.flashTime,recoil:this.recoil,particles:this.fragments.length,upgradeTime:this.upgradeTime,upgradeDuration:HAND_UPGRADE_DURATION,motion:{...this.motion},motionRotation:{...this.motionRotation},visibleLevel:this.handModels.findIndex(hand=>hand.visible)+1,visibleHands:this.handModels.findIndex(hand=>hand.visible)>=4?2:1};}
+  get handFeedback(){
+    const level=this.handModels.findIndex(hand=>hand.visible)+1||this.lastLevel,upgradeAge=HAND_UPGRADE_DURATION-this.upgradeTime;
+    return {level,firePower:this.fireAnimation.level===level?this.fireAnimation.power:0,recoil:this.recoil,upgradeAge,upgradeTime:this.upgradeTime,
+      upgradePower:this.upgradeTime>0?Math.exp(-upgradeAge*2.2)*Math.min(1,this.upgradeTime/.35):0,motion:this.motion,motionRotation:this.motionRotation,counterSwing:this.counterSwing};
+  }
   ready=false;error='';loaded:Promise<void>;handScene=new THREE.Scene();handCamera=new THREE.PerspectiveCamera(HAND_VIEW_FOV,1,.01,3);
   private viewOffsets=HAND_MUZZLES.map(sockets=>sockets.map(()=>new THREE.Vector3()));
   private launchSockets=new Map<number,{socket:number;expires:number}>();
@@ -93,30 +74,12 @@ export class OriginalWeapon {
     const index=p.shotKey?Number(p.shotKey.slice(p.shotKey.lastIndexOf(':')+1)):0;
     return this.offsetLaunch(position,level,p.socket??(level>=5?projectileSocket(level,Number.isFinite(index)?index:0,p.kind==='shotgun'):p.kind==='shotgun'?0:this.launchSockets.get(p.id)?.socket??(Number.isFinite(index)?index%sockets.length:0)),p.age);
   };
-  private handWorldRotation={value:new THREE.Matrix3()};
-  private twinPoses:THREE.Group[][]=[];private handModels:THREE.Group[]=[];private handMaterials:THREE.ShaderMaterial[]=[];private handTextures:THREE.Texture[]=[];private flashTextures:THREE.Texture[]=[];private projection=new THREE.Group();private pose=new THREE.Group();private fireAnimation=new HandFireAnimation();private get flashTime(){return this.fireAnimation.remaining;}private upgradeTime=0;private freshUpgrade=false;private handRecoil=new HandRecoil();private get recoil(){return this.handRecoil.value;}
+  private twinPoses:THREE.Group[][]=[];private handModels:THREE.Group[]=[];private projection=new THREE.Group();private pose=new THREE.Group();private fireAnimation=new HandFireAnimation();private get flashTime(){return this.fireAnimation.remaining;}private upgradeTime=0;private freshUpgrade=false;private handRecoil=new HandRecoil();private get recoil(){return this.handRecoil.value;}
   private daggers:THREE.InstancedMesh[]=[];private batches=new Map<string,Batch>();private fragments:Fragment[]=[];private definitions:Record<string,Emitter>={};private dummy=new THREE.Object3D();private projectileVelocity=new THREE.Vector3();private lastLevel=1;private daggerCounts=new Uint32Array(ALL_PROJECTILE_COLORS.length);private daggerCursors=new Uint32Array(ALL_PROJECTILE_COLORS.length);
   constructor(private scene:THREE.Scene,private environment=new EnvironmentLighting()){this.handScene.add(this.projection);this.projection.add(this.pose);this.projection.scale.set(HAND_POSE.screenScale,HAND_POSE.screenScale,1);
     // Extend the visible arm forward without lowering the hand in the frame.
     this.projection.position.set(0,0,-HAND_VIEW_FORWARD);
     this.loaded=this.load().catch(e=>{this.error=String(e);console.error('Original weapon assets could not load:',e);});}
-  createCrewArm(level:number){
-    if(!this.ready)return null;
-    const index=handIndex(level);
-    const arm=this.handModels[index].clone(true);
-    if(level>=5){const materials=new Map<THREE.Material,THREE.ShaderMaterial>();arm.traverse(o=>{if(o instanceof THREE.Mesh){const source=o.material as THREE.ShaderMaterial;let m=materials.get(source);if(!m){m=source.clone();m.uniforms.fireMix.value=0;m.uniforms.shotPower.value=0;m.depthTest=m.depthWrite=true;this.environment.bindShader(m);m.uniforms.handWorldRotation={value:new THREE.Matrix3()};materials.set(source,m);}o.material=m;}});arm.visible=true;arm.name='crew-arm';arm.userData.level=level;return arm;}
-    const material=this.handMaterials[index].clone();
-    this.environment.bindShader(material);
-    material.uniforms.handWorldRotation={value:new THREE.Matrix3()};
-    material.uniforms.originalTexture.value=this.handTextures[index];material.uniforms.fireMix.value=0;
-    material.uniforms.brightness.value=1;material.uniforms.upgradePower.value=0;material.depthTest=true;material.depthWrite=true;
-    material.uniforms.environmentWeight.value=1;
-    arm.traverse(o=>{if(o instanceof THREE.Mesh)o.material=material;});
-    arm.visible=true;arm.name='crew-arm';arm.userData.level=index+1;arm.userData.material=material;
-    arm.rotation.set(HAND_POSE.rotationX,HAND_POSE.rotationY,0);
-    arm.position.set(.38,-.45,-.25);arm.scale.setScalar(1.6);
-    return arm;
-  }
   private async load() {
     const response=await fetch(ROOT+'manifest.json');if(!response.ok)throw Error('Original asset manifest missing');const manifest=await response.json();if(!manifest.ready)throw Error('Original assets are not ready');
     this.definitions=await (await fetch(ROOT+'emitters.json')).json();
@@ -131,29 +94,28 @@ export class OriginalWeapon {
     const mesh=async(name:string)=>{const r=await fetch(ROOT+`meshes/${name}.obj`);if(!r.ok)throw Error(`Original mesh ${name} missing`);return loader.parse(await r.text());};
     const effectNames=[...Array.from({length:8},(_,i)=>`flame${i+1}`),...Array.from({length:3},(_,i)=>`ember${i+1}`),...Array.from({length:4},(_,i)=>`blood${i+1}`),...Array.from({length:4},(_,i)=>`smokeblob${i+1}`)];
     // Fetch independent assets together instead of paying a round trip per effect.
-    const [hands,daggerModel,daggerMaps,emberTexture,effectModels,leftHand]=await Promise.all([
-      Promise.all((manifest.hands as {mesh:string;texture:string;flash:string}[]).map(async hand=>Promise.all([mesh(hand.mesh),texture(hand.texture),texture(hand.flash)]))),
+    const [daggerModel,daggerMaps,emberTexture,effectModels]=await Promise.all([
       mesh('dagger'),Promise.all(['dagger','dagger2','dagger3','dagger4','dagger5','dagger6'].map(texture)),
-      texture('emberflame'),Promise.all(effectNames.map(mesh)),mesh('hand4left'),
+      texture('emberflame'),Promise.all(effectNames.map(async name=>{
+        if(name.startsWith('blood'))return new THREE.Mesh(goreGeometry(Number(name.slice(5))),new THREE.MeshBasicMaterial());
+        if(name.startsWith('smokeblob'))return new THREE.Mesh(new THREE.IcosahedronGeometry(1,1),new THREE.MeshBasicMaterial());
+        return mesh(name);
+      })),
     ]);
-    for(const [model,map,flash] of hands) {
-      const material=new THREE.ShaderMaterial({uniforms:{originalTexture:{value:map},idleTexture:{value:map},fireMix:{value:0},brightness:{value:1},environmentWeight:{value:1},upgradeAge:{value:0},upgradePower:{value:0},upgradeTint:{value:new THREE.Vector3()}},vertexShader:handVert,fragmentShader:handFrag,depthTest:false,depthWrite:false,toneMapped:false});
-      this.environment.bindShader(material);
-      material.uniforms.handWorldRotation=this.handWorldRotation;
-      model.traverse(o=>{if(o instanceof THREE.Mesh)o.material=material;});model.visible=false;this.pose.add(model);this.handModels.push(model);this.handMaterials.push(material);this.handTextures.push(map);this.flashTextures.push(flash);
+    // Keep the measured launch transforms, without loading or drawing the old
+    // hand models. Bullet framing and launch offsets remain exactly as before.
+    for(let level=1;level<=4;level++){
+      const group=new THREE.Group();this.pose.add(group);this.handModels.push(group);
     }
-    // Keep I–IV on their original rig. New pairs use the native left geometry.
     for(let level=5;level<=7;level++){
       const group=new THREE.Group(),poses:THREE.Group[]=[];
-      const material=new THREE.ShaderMaterial({uniforms:{originalTexture:{value:this.handTextures[3]},idleTexture:{value:this.handTextures[3]},fireMix:{value:0},brightness:{value:1},environmentWeight:{value:1},upgradeAge:{value:0},upgradePower:{value:0},upgradeTint:{value:new THREE.Vector3()},tierTint:{value:new THREE.Vector3(...TWIN_COLORS[level-5])},tier:{value:level},shotPower:{value:0}},vertexShader:twinVert,fragmentShader:twinFrag,depthTest:false,depthWrite:false,toneMapped:false});
-      this.environment.bindShader(material);material.uniforms.handWorldRotation=this.handWorldRotation;
       for(let side=0;side<2;side++){
-        const pose=new THREE.Group(),model=(side===0?hands[3][0]:leftHand).clone(true);
+        const pose=new THREE.Group();
         pose.position.set((side===0?1:-1)*TWIN_POSE.spacing,TWIN_POSE.y,TWIN_POSE.z);
         pose.rotation.set(HAND_POSE.rotationX,HAND_POSE.rotationY,0);pose.scale.setScalar(TWIN_POSE.scale);
-        model.visible=true;model.traverse(o=>{if(o instanceof THREE.Mesh)o.material=material;});pose.add(model);group.add(pose);poses.push(pose);
+        group.add(pose);poses.push(pose);
       }
-      group.visible=false;this.projection.add(group);this.twinPoses.push(poses);this.handModels.push(group);this.handMaterials.push(material);this.handTextures.push(this.handTextures[3]);this.flashTextures.push(this.flashTextures[3]);
+      this.projection.add(group);this.twinPoses.push(poses);this.handModels.push(group);
       for(const suffix of ['', 'alt', 'ember', 'altember']){
         const source=this.definitions['rapid4'+suffix]??this.definitions.rapid4;
         const color=PROJECTILE_COLORS[projectileStyleIndex(level,suffix.startsWith('alt'))];
@@ -192,7 +154,7 @@ export class OriginalWeapon {
       const model=effectModels[index];let geometry:THREE.BufferGeometry|undefined;model.traverse(o=>{if(o instanceof THREE.Mesh)geometry=o.geometry.clone();});if(!geometry)continue;
       const capacity=1600,tint=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),rim=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3),3),params=new THREE.InstancedBufferAttribute(new Float32Array(capacity*4),4);
       geometry.setAttribute('effectColor',tint);geometry.setAttribute('effectRim',rim);geometry.setAttribute('effectParams',params);
-      const material=new THREE.ShaderMaterial({uniforms:{originalTexture:{value:emberTexture}},vertexShader:vert,fragmentShader:frag,transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,forceSinglePass:true});
+      const material=new THREE.ShaderMaterial({uniforms:{originalTexture:{value:/^(blood|smokeblob)/.test(name)?fragmentTexture():emberTexture}},vertexShader:vert,fragmentShader:frag,transparent:true,depthWrite:false,side:THREE.DoubleSide,toneMapped:false,forceSinglePass:true});
       const batch=new THREE.InstancedMesh(geometry,material,capacity);batch.count=0;batch.frustumCulled=false;this.scene.add(batch);this.batches.set(name,{mesh:batch,tint,rim,params});
     }
     this.ready=true;
@@ -293,7 +255,6 @@ export class OriginalWeapon {
   restoreReplayUpgradeAge(age:number){this.upgradeTime=Math.max(0,HAND_UPGRADE_DURATION-Math.max(0,age));this.freshUpgrade=false;}
   update(world:World|null,dt:number,menu:boolean,camera?:THREE.PerspectiveCamera,projectileAlpha=1,cameraOffset?:Vec,movementPose?:MovementPose) {
     if(!this.ready)return;this.pose.visible=!menu;const level=world?.level||this.lastLevel;
-    if(camera){camera.updateMatrixWorld(true);this.handWorldRotation.value.setFromMatrix4(camera.matrixWorld);}
     if(camera&&this.handCamera.aspect!==camera.aspect){this.handCamera.aspect=camera.aspect;this.handCamera.updateProjectionMatrix();}
     // An event arrived during this frame: show it once before advancing its
     // render clock, even if the frame took longer than the entire flash.
@@ -350,20 +311,7 @@ export class OriginalWeapon {
       }
     }
     for(const [id,launch] of this.launchSockets)if(!world||launch.expires<world.time)this.launchSockets.delete(id);
-    // Use each level's original firing skin for the shot, then return to idle.
-    const upgradeAge=HAND_UPGRADE_DURATION-this.upgradeTime;
-    const upgradePower=this.upgradeTime>0?Math.exp(-upgradeAge*2.2)*Math.min(1,this.upgradeTime/.35):0;
-    this.handModels.forEach((hand,i)=>{
-      const uniforms=this.handMaterials[i].uniforms,power=this.fireAnimation.level===level?this.fireAnimation.power:0,firing=power>0;
-      hand.visible=!menu&&i===level-1;
-      uniforms.originalTexture.value=firing?this.flashTextures[i]:this.handTextures[i];
-      uniforms.fireMix.value=power;
-      uniforms.brightness.value=1+power*.15+(firing?0:this.upgradeTime/HAND_UPGRADE_DURATION*.35);
-      uniforms.upgradeAge.value=upgradeAge;uniforms.upgradePower.value=firing?0:upgradePower;
-      uniforms.upgradeTint.value.fromArray(PROJECTILE_COLORS[projectileStyleIndex(level,false)]);
-      uniforms.environmentWeight.value=1-power;
-      if(i>=4)uniforms.shotPower.value=power;
-    });
+    this.handModels.forEach((hand,i)=>{hand.visible=!menu&&i===level-1;});
     const counts=this.daggerCounts,cursors=this.daggerCursors;counts.fill(0);cursors.fill(0);
     if(world&&!menu){
       for(const p of world.projectiles)counts[projectileVisualIndex(p,level)]++;
@@ -405,7 +353,8 @@ export class OriginalWeapon {
     }
     for(const [name,batch] of this.batches){batch.mesh.count=batchCounts.get(name)||0;if(!batch.mesh.count)continue;for(const attribute of [batch.mesh.instanceMatrix,batch.tint,batch.rim,batch.params]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,batch.mesh.count*attribute.itemSize);attribute.needsUpdate=true;}}
   }
-  render(renderer:THREE.WebGLRenderer,menu:boolean){if(!this.ready||menu)return;renderer.autoClear=false;renderer.clearDepth();renderer.render(this.handScene,this.handCamera);renderer.autoClear=true;}
+  // Launch transforms are retained for unchanged bullets; the crew rig renders the hands.
+  render(_renderer:THREE.WebGLRenderer,_menu:boolean){}
   clear(){this.resetMotion();this.launchSockets.clear();this.viewEnabled=false;this.fragments.length=0;for(const batch of this.daggers)batch.count=0;this.fireAnimation.clear();this.upgradeTime=0;this.freshUpgrade=false;this.handRecoil.clear();this.lastLevel=1;}
   preview(level:number){this.lastLevel=level;}
 }

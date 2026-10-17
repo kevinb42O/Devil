@@ -32,3 +32,10 @@ test('nicknames retain spaces and reject blank or control-character names',()=>{
 });
 
 test('expanded-rules pending score survives reload with its rules identity',async()=>{let saved:PendingScore|null=null;const q=new ScoreQueue(job=>saved=job,async()=>{throw Error('offline');});q.enqueue({...candidate(4000),rules:7},'Player');await q.flush();const sent:number[]=[];const restored=new ScoreQueue(job=>saved=job,async job=>{sent.push(job.score.rules);return confirmation(job.score.timeMs);},saved);await restored.flush();assert.deepEqual(sent,[7]);assert.equal(saved,null);});
+
+test('server-issued run ticket survives durable queue reload and retries',async()=>{
+ let saved:PendingScore|null=null;const ticket='11111111-1111-4111-8111-111111111111';
+ const first=new ScoreQueue(job=>saved=job,async()=>{throw Error('offline');});first.enqueue({...candidate(4000),rules:7,ticket},'Player');await first.flush();
+ let received='';const restored=new ScoreQueue(job=>saved=job,async job=>{received=job.score.ticket??'';return confirmation(job.score.timeMs);},saved);await restored.flush();
+ assert.equal(received,ticket);assert.equal(saved,null);
+});

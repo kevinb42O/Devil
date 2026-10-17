@@ -1,0 +1,38 @@
+{
+  "uihover": {
+    "file": "uihover-soft.wav",
+    "gain": 0.16,
+    "duration": 0.055,
+    "sha256": "9e6bebb874bde5d3a51a9a273dabc1987d43f22d367709fc524eb25ecd37ec87"
+  },
+  "uiclick": {
+    "file": "uiclick-soft.wav",
+    "gain": 0.32,
+    "duration": 0.105,
+    "sha256": "6f22124871cc7fba6a53008b255aaba95ee5aad6ff1f2693d5eb53ef962ffdcf"
+  },
+  "uiback": {
+    "file": "uiback-soft.wav",
+    "gain": 0.24,
+    "duration": 0.075,
+    "sha256": "1a311f526254c336f9a0a62d39440cdef004b8b24bf41979dd956c14f40748c1"
+  },
+  "uislider": {
+    "file": "uislider-soft.wav",
+    "gain": 0.12,
+    "duration": 0.035,
+    "sha256": "2728f67914c02c6636f4a03b940768902c67a5ddf3acdc4bf6cc3f91089ff27a"
+  },
+  "uitoggle": {
+    "file": "uitoggle-soft.wav",
+    "gain": 0.28,
+    "duration": 0.11,
+    "sha256": "b2c47bf5343ba7ae9a370df6a792454a7642c2d4a483c2c68a045eb8497c5f95"
+  },
+  "uicrown": {
+    "file": "uicrown-soft.wav",
+    "gain": 0.32,
+    "duration": 0.125,
+    "sha256": "71039620e313bab84b59bee1e2735798856b854fd15e431f3776b9450da3fb8c"
+  }
+}

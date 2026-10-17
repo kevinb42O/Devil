@@ -15,8 +15,8 @@ test('layout letters raise each arm independently without replacing movement',()
   const keys=new Set([left,'e',movement]);assert.deepEqual(courtyardEmotes(keys,scheme),{leftArm:true,rightArm:true});assert.equal(keyboardMovement(keys,scheme).strafe,-1);
   assert.deepEqual(courtyardEmotes(new Set([movement]),scheme),{leftArm:false,rightArm:false});
  }
- const pad={axes:[0,0,0,0],buttons:Array.from({length:16},()=>({pressed:false,value:0}))};pad.buttons[6].value=.8;pad.buttons[7].pressed=true;
- const state=controllerState(pad as any,.15);assert.deepEqual(courtyardEmotes(new Set(),'controller',state.homing,state.fire),{leftArm:true,rightArm:true});
+ const pad={axes:[0,0,0,0],buttons:Array.from({length:16},()=>({pressed:false,value:0}))};pad.buttons[4].value=.8;pad.buttons[5].pressed=true;
+ const state=controllerState(pad as any,.15);assert.deepEqual(courtyardEmotes(new Set(),'controller',state.leftShoulder,state.rightShoulder),{leftArm:true,rightArm:true});
  assert.deepEqual(courtyardEmotes(new Set(['a','q','e']),'mobile'),{leftArm:false,rightArm:false});
 });
 
@@ -35,7 +35,7 @@ test('guest holds and release survive commands, binary snapshots and interpolate
   const held={...idleInput(),leftArm:true,rightArm:true};host.world!.predictCrew('guest',held,undefined,true);assert.equal(host.world!.crew[1].input.leftArm,true);
   for(const member of host.members){member.ready=true;member.loaded=host.epoch;}
   const courtyard=host.world!.courtyard!;courtyard.phase='collecting';courtyard.participants=host.members.map(member=>member.id);courtyard.committed=[...courtyard.participants];
-  host.start(true);assert.equal(host.running,true);host.startAt=0;host.step(held);assert.equal(host.world!.crew[0].input.leftArm,undefined);assert.equal(host.snapshot()!.crew[0].leftArm,undefined);
-  host.world!.predictCrew('guest',held);assert.equal(host.world!.crew[1].input.rightArm,undefined);
+  host.start(true);assert.equal(host.running,true);host.startAt=0;host.step(held);assert.equal(host.world!.crew[0].input.leftArm,true);assert.equal(host.snapshot()!.crew[0].leftArm,true);
+  host.world!.predictCrew('guest',held);assert.equal(host.world!.crew[1].input.rightArm,true);
  }finally{host.close();}
 });

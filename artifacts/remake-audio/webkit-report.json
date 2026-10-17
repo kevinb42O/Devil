@@ -1,0 +1,17 @@
+{
+  "decoded": {
+    "source": "studio-horror",
+    "recent": [],
+    "loaded": 245,
+    "failed": [],
+    "oneShots": 0,
+    "oneShotNames": [],
+    "loops": []
+  },
+  "music": {
+    "duration": 60,
+    "playing": true
+  },
+  "errors": [],
+  "oldRequests": []
+}

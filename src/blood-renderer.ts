@@ -1,11 +1,11 @@
 import * as THREE from 'three';
-import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+import {goreGeometry} from './remake-geometry';
 import {BloodField,BLOOD_CAPACITY,BLOOD_SPAN} from './blood';
 import type {Effect,World} from './simulation';
 
-const BLOOD_VARIANTS=11,ROOT='/assets/original/devil-daggers/';
+const BLOOD_VARIANTS=11;
 
-/** Original textured gore meshes in fixed batches; stains stay in the floor pass. */
+/** Project-authored gore meshes in fixed batches; stains stay in the floor pass. */
 export class BloodRenderer {
  readonly field=new BloodField();
  readonly ready:Promise<void>;
@@ -42,7 +42,7 @@ export class BloodRenderer {
   // Hidden until the native assets load: no geometric placeholder gore.
   for(let i=0;i<BLOOD_VARIANTS;i++){
    const mesh=new THREE.InstancedMesh(new THREE.BufferGeometry(),material,BLOOD_CAPACITY);
-   mesh.name=`blood-native-${i+1}`;mesh.count=0;mesh.frustumCulled=false;
+   mesh.name=`blood-remake-${i+1}`;mesh.count=0;mesh.frustumCulled=false;
    mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);scene.add(mesh);this.meshes.push(mesh);
   }
   this.spray=new THREE.InstancedMesh(new THREE.PlaneGeometry(1,1),this.sprayMaterial,BLOOD_CAPACITY);
@@ -50,21 +50,8 @@ export class BloodRenderer {
   this.spray.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   this.ready=Promise.all([this.loadMask(),this.loadGore(material)]).then(()=>{}).catch(error=>console.warn('Blood assets unavailable:',error));
  }
- private async loadGore(material:THREE.MeshBasicMaterial){
-  const loader=new OBJLoader();
-  const [geometries,texture]=await Promise.all([
-   Promise.all(Array.from({length:BLOOD_VARIANTS},async(_,i)=>{
-    const response=await fetch(ROOT+`meshes/blood${i+1}.obj`);if(!response.ok)throw Error('Missing native blood mesh');
-    const model=loader.parse(await response.text());let geometry:THREE.BufferGeometry|undefined;
-    model.traverse(object=>{if(object instanceof THREE.Mesh)geometry=object.geometry;});
-    if(!geometry)throw Error('Empty native blood mesh');
-    geometry.computeBoundingSphere();const radius=geometry.boundingSphere!.radius;
-    geometry.center();geometry.scale(1/radius,1/radius,1/radius);return geometry;
-   })),new THREE.TextureLoader().loadAsync(ROOT+'textures/blood.png'),
-  ]);
-  texture.colorSpace=THREE.SRGBColorSpace;texture.minFilter=texture.magFilter=THREE.NearestFilter;texture.generateMipmaps=false;
-  material.map=texture;material.needsUpdate=true;
-  for(let i=0;i<BLOOD_VARIANTS;i++){this.meshes[i].geometry.dispose();this.meshes[i].geometry=geometries[i];}
+ private async loadGore(_material:THREE.MeshBasicMaterial){
+  for(let i=0;i<BLOOD_VARIANTS;i++){this.meshes[i].geometry.dispose();this.meshes[i].geometry=goreGeometry(i);}
   this.assetsReady=true;
  }
  private async loadMask(){

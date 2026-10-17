@@ -35,13 +35,13 @@ try{
  await page.locator('#offline-save').tap();
  await page.waitForFunction(()=>document.querySelector('#offline-status').textContent.startsWith('Game saved.'),null,{timeout:240000});
  const pack=await page.evaluate(async()=>await(await fetch('/offline-pack.json')).json());
- assert.ok(pack.files.some(path=>path.endsWith('/menutheme.wav')));
+ assert.ok(pack.files.some(path=>path.endsWith('/menutheme.m4a')));
  await context.setOffline(true);
  // A fresh document needs every dependency from the worker, not memory cache.
  await page.reload();await page.waitForFunction(()=>document.querySelector('#start')?.disabled===false);
  await page.waitForFunction(()=>!document.querySelector('#offline-save').disabled);
  await page.locator('#install-open').tap();await page.locator('#offline-status').filter({hasText:/Game saved/}).waitFor();
- const range=await page.evaluate(async()=>{const r=await fetch('/assets/original/devil-daggers/audio/menutheme.wav',{headers:{Range:'bytes=0-99'}});return {status:r.status,range:r.headers.get('content-range'),length:(await r.arrayBuffer()).byteLength};});
+ const range=await page.evaluate(async()=>{const r=await fetch('/assets/audio/remake/menutheme.m4a',{headers:{Range:'bytes=0-99'}});return {status:r.status,range:r.headers.get('content-range'),length:(await r.arrayBuffer()).byteLength};});
  assert.equal(range.status,206);assert.equal(range.length,100);assert.match(range.range,/^bytes 0-99\//);
  await page.locator('#install-close').tap();await page.locator('#start').tap();
  await page.waitForFunction(()=>document.querySelector('#menu').hidden);

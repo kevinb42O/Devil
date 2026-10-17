@@ -46,6 +46,8 @@
     "test:multiplayer-presentation": "node tests/multiplayer-presentation-browser.mjs",
     "test:multiplayer-spectator": "tsx --test tests/spectator.test.ts && node tests/multiplayer-spectator-flow-browser.mjs && node tests/multiplayer-spectator-controls-browser.mjs",
     "test:prelobby-camera": "tsx --test tests/courtyard-neck.test.ts && node tests/prelobby-camera-browser.mjs",
+    "test:remake-models": "node tests/remake-models-browser.mjs",
+    "test:combat-hands": "tsx --test tests/combat-gestures.test.ts && node tests/combat-hands-browser.mjs",
     "test:courtyard-emotes": "tsx --test tests/courtyard-emotes.test.ts tests/courtyard-neck.test.ts && node tests/courtyard-emotes-browser.mjs",
     "test:controls": "node tests/controls-browser.mjs && node tests/controls-edge-browser.mjs && node tests/controller-connection-browser.mjs",
     "test:preferences": "node tests/preferences-browser.mjs",
@@ -67,6 +69,7 @@
     "test:descent-performance": "node tests/descent-performance-browser.mjs",
     "test:multiplayer-recovery": "tsx --test tests/multiplayer-recovery.test.ts && node tests/multiplayer-host-clock-browser.mjs",
     "test:multiplayer-network-regressions": "tsx --test tests/multiplayer-network-regressions.test.ts && node tests/multiplayer-large-state-browser.mjs",
+    "test:multiplayer-guest-performance": "tsx --test tests/multiplayer-guest-performance.test.ts && node tests/multiplayer-guest-dense-browser.mjs",
     "test:multiplayer-soak": "node tests/multiplayer-soak-browser.mjs",
     "test:replay-sharing": "tsx --test tests/replay-file.test.ts tests/replay.test.ts tests/score-queue.test.ts && node tests/replay-sharing-browser.mjs",
     "test:mist": "tsx --test tests/mist-state.test.ts tests/mist-light-field.test.ts && node tests/mist-distance-edge-browser.mjs && node tests/opening-mist-browser.mjs && node tests/descent-mist-browser.mjs && node tests/mist-toggle-browser.mjs",
@@ -84,13 +87,15 @@
     "test:drawing-court": "tsx --test tests/courtyard-drawing.test.ts && node tests/courtyard-drawing-browser.mjs",
     "test:courtyard:six": "CREW_SIZE=6 COURTYARD_CYCLES=10 node tests/courtyard-browser.mjs",
     "test:basketball": "tsx --test tests/courtyard-basketball.test.ts && node tests/courtyard-basketball-browser.mjs && node tests/basketball-polish-browser.mjs",
-    "test:football-feedback": "node tests/football-feedback-browser.mjs"
+    "test:football-feedback": "node tests/football-feedback-browser.mjs",
+    "test:remake-audio": "tsx --test tests/audio.test.ts && node tests/audio-browser.mjs && node tests/remake-audio-browser.mjs && node tests/menu-audio-browser.mjs && node tests/music-browser.mjs && node tests/crew-arrival-browser.mjs"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.3.0",
     "@fontsource/dm-sans": "^5.3.0",
     "@fontsource/pirata-one": "^5.3.0",
     "@supabase/supabase-js": "2.117.3",
+    "meshoptimizer": "0.22.0",
     "three": "^0.180.0"
   },
   "devDependencies": {

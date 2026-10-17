@@ -1,0 +1,1393 @@
+{
+  "inventory": [
+    {
+      "kind": "skull",
+      "name": "Cinder Wasp",
+      "description": "Burnt umber cuticle, amber abdominal bands, smoked mica wings with radial veins.",
+      "parts": [
+        {
+          "part": "community-armabee",
+          "material": "enemy-surface-skull-body",
+          "role": "body",
+          "regions": [
+            0,
+            1,
+            4,
+            5,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "skull2",
+      "name": "Iron Wasp",
+      "description": "Gunmetal cuticle, bronze abdominal bands, worn nickel scutes and blue smoked wings.",
+      "parts": [
+        {
+          "part": "community-armabee-evolved",
+          "material": "enemy-surface-skull2-body",
+          "role": "body",
+          "regions": [
+            0,
+            1,
+            3,
+            6,
+            4,
+            5,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "skull3",
+      "name": "Veilwing",
+      "description": "Aubergine dermis, directional tension folds, dry pores and pale scar tissue.",
+      "parts": [
+        {
+          "part": "community-hywirl",
+          "material": "enemy-surface-skull3-body",
+          "role": "body",
+          "regions": [
+            0,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "skull4",
+      "name": "Drake",
+      "description": "Overlapping oxblood scales, pale ventral plates, wine membranes and striated ivory horns.",
+      "parts": [
+        {
+          "part": "community-dragon",
+          "material": "enemy-surface-skull4-body",
+          "role": "body",
+          "regions": [
+            2,
+            0,
+            1,
+            3,
+            4,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted1",
+      "name": "Hollow Wasp",
+      "description": "Ash pearl cuticle and silver abdominal bands over a cold jade spectral core.",
+      "parts": [
+        {
+          "part": "community-armabee",
+          "material": "enemy-surface-transmuted1-body",
+          "role": "body",
+          "regions": [
+            0,
+            1,
+            4,
+            5,
+            2
+          ]
+        },
+        {
+          "part": "hollow-halo",
+          "material": "enemy-surface-transmuted1-halo",
+          "role": "halo",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted2",
+      "name": "Hollow Stinger",
+      "description": "Violet steel scutes, platinum bands, opalescent wing membranes and luminous indigo joints.",
+      "parts": [
+        {
+          "part": "community-armabee-evolved",
+          "material": "enemy-surface-transmuted2-body",
+          "role": "body",
+          "regions": [
+            0,
+            1,
+            3,
+            6,
+            4,
+            5,
+            2
+          ]
+        },
+        {
+          "part": "hollow-halo",
+          "material": "enemy-surface-transmuted2-halo",
+          "role": "halo",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted3",
+      "name": "Hollow Veilwing",
+      "description": "Pearlescent spectral tissue, longitudinal folds and recessed luminous capillaries.",
+      "parts": [
+        {
+          "part": "community-ghost",
+          "material": "enemy-surface-transmuted3-body",
+          "role": "body",
+          "regions": [
+            4,
+            5,
+            0
+          ]
+        },
+        {
+          "part": "hollow-halo",
+          "material": "enemy-surface-transmuted3-halo",
+          "role": "halo",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "transmuted4",
+      "name": "Hollow Drake",
+      "description": "Frosted jade scales, pearl ventral armor, spectral blue membranes and bleached horns.",
+      "parts": [
+        {
+          "part": "community-dragon",
+          "material": "enemy-surface-transmuted4-body",
+          "role": "body",
+          "regions": [
+            2,
+            0,
+            1,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "part": "hollow-halo",
+          "material": "enemy-surface-transmuted4-halo",
+          "role": "halo",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "squid",
+      "name": "Rift Obelisk",
+      "description": "Carved masonry, engraved weathered metal and amber crystals.",
+      "parts": [
+        {
+          "part": "tower-foot",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-plinth",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-core",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-1-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-1-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-1-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-1-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-chimney",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust",
+          "material": "remake-tower-1-interior",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust-rim",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-brace",
+          "material": "remake-tower-1-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-crown-band",
+          "material": "remake-tower-1-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-1-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "weak-point-0",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "squid2",
+      "name": "Twin Foundry",
+      "description": "Carved masonry, engraved weathered metal and amber crystals.",
+      "parts": [
+        {
+          "part": "tower-foot",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-plinth",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-core",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-chimney",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust",
+          "material": "remake-tower-2-interior",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust-rim",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-chimney",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust",
+          "material": "remake-tower-2-interior",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust-rim",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-brace",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-crown-band",
+          "material": "remake-tower-2-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-2-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "weak-point-0",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-1",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "squid3",
+      "name": "Crown Citadel",
+      "description": "Carved masonry, engraved weathered metal and amber crystals.",
+      "parts": [
+        {
+          "part": "tower-foot",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-plinth",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-core",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-buttress",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-inlay",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-chimney",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust",
+          "material": "remake-tower-3-interior",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust-rim",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-chimney",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust",
+          "material": "remake-tower-3-interior",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust-rim",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-chimney",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust",
+          "material": "remake-tower-3-interior",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-exhaust-rim",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-brace",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-crown-band",
+          "material": "remake-tower-3-metal",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "tower-merlon",
+          "material": "remake-tower-3-stone",
+          "role": "tower",
+          "regions": []
+        },
+        {
+          "part": "weak-point-0",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-1",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-2",
+          "material": "remake-tower-crystal",
+          "role": "tower",
+          "regions": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "spider",
+      "name": "Brood Weaver",
+      "description": "Burnished chestnut chitin, bilateral ivory chevrons, fine pores and ringed legs.",
+      "parts": [
+        {
+          "part": "community-spider",
+          "material": "enemy-surface-spider-body",
+          "role": "body",
+          "regions": [
+            0,
+            5
+          ]
+        },
+        {
+          "part": "spider-held-gem",
+          "material": "enemy-surface-spider-jewel-green",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weaver-jaw",
+          "material": "enemy-surface-spider-bone",
+          "role": "bone",
+          "regions": [
+            3
+          ]
+        },
+        {
+          "part": "weaver-jaw",
+          "material": "enemy-surface-spider-bone",
+          "role": "bone",
+          "regions": [
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "spider2",
+      "name": "Armored Matriarch",
+      "description": "Midnight ceramic carapace, broad ivory dorsal markings and reinforced steel jaw plates.",
+      "parts": [
+        {
+          "part": "community-spider",
+          "material": "enemy-surface-spider2-body",
+          "role": "body",
+          "regions": [
+            0,
+            5
+          ]
+        },
+        {
+          "part": "spider-held-gem",
+          "material": "enemy-surface-spider2-jewel-green",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weaver-jaw",
+          "material": "enemy-surface-spider2-bone",
+          "role": "bone",
+          "regions": [
+            3
+          ]
+        },
+        {
+          "part": "weaver-jaw",
+          "material": "enemy-surface-spider2-bone",
+          "role": "bone",
+          "regions": [
+            3
+          ]
+        },
+        {
+          "part": "matriarch-plate",
+          "material": "enemy-surface-spider2-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "matriarch-plate",
+          "material": "enemy-surface-spider2-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "matriarch-plate",
+          "material": "enemy-surface-spider2-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "matriarch-plate",
+          "material": "enemy-surface-spider2-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "matriarch-plate",
+          "material": "enemy-surface-spider2-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "egg",
+      "name": "Brood Capsule",
+      "description": "Leathery olive egg case, longitudinal growth ribs, branching veins and a luminous green seam.",
+      "parts": [
+        {
+          "part": "capsule",
+          "material": "enemy-surface-egg-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "capsule-seam",
+          "material": "enemy-surface-egg-jewel-green",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "capsule-tip",
+          "material": "enemy-surface-egg-jewel-green",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "egg2",
+      "name": "Armored Capsule",
+      "description": "Armored malachite egg case, layered scutes, reinforced growth ribs and olive mineral flecks.",
+      "parts": [
+        {
+          "part": "capsule",
+          "material": "enemy-surface-egg2-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "capsule-seam",
+          "material": "enemy-surface-egg2-jewel-green",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "capsule-tip",
+          "material": "enemy-surface-egg2-jewel-green",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "spiderling",
+      "name": "Skitter",
+      "description": "Olive juvenile cuticle, amber joint bands and a narrow pale dorsal stripe.",
+      "parts": [
+        {
+          "part": "community-spider",
+          "material": "enemy-surface-spiderling-body",
+          "role": "body",
+          "regions": [
+            0,
+            5
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "centipede",
+      "name": "Iron Convoy",
+      "description": "Forged iron armor, directional machining, recessed panel seams and rubbed nickel edges.",
+      "parts": [
+        {
+          "part": "community-goleling",
+          "material": "enemy-surface-centipede-body",
+          "role": "body",
+          "regions": [
+            0,
+            2,
+            1,
+            4,
+            5
+          ]
+        },
+        {
+          "part": "convoy-head-ring",
+          "material": "enemy-surface-centipede-halo",
+          "role": "halo",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "convoy-segment-shell",
+          "material": "enemy-surface-centipede-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "segment-weak-point",
+          "material": "enemy-surface-centipede-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "convoy-fin",
+          "material": "enemy-surface-centipede-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "convoy-fin",
+          "material": "enemy-surface-centipede-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "gigapede",
+      "name": "Gilded Convoy",
+      "description": "Aged gilded armor, engraved lozenges, dark recesses and worn champagne-gold edges.",
+      "parts": [
+        {
+          "part": "community-goleling-evolved",
+          "material": "enemy-surface-gigapede-body",
+          "role": "body",
+          "regions": [
+            0,
+            2,
+            1,
+            4,
+            7,
+            5,
+            3
+          ]
+        },
+        {
+          "part": "convoy-head-ring",
+          "material": "enemy-surface-gigapede-halo",
+          "role": "halo",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "convoy-segment-shell",
+          "material": "enemy-surface-gigapede-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "segment-weak-point",
+          "material": "enemy-surface-gigapede-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "convoy-fin",
+          "material": "enemy-surface-gigapede-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "convoy-fin",
+          "material": "enemy-surface-gigapede-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "ghostpede",
+      "name": "Hollow Convoy",
+      "description": "Jade spectral armor, etched silver panels and cold luminous seams along the convoy.",
+      "parts": [
+        {
+          "part": "community-ghost",
+          "material": "enemy-surface-ghostpede-body",
+          "role": "body",
+          "regions": [
+            4,
+            5,
+            0
+          ]
+        },
+        {
+          "part": "convoy-head-ring",
+          "material": "enemy-surface-ghostpede-halo",
+          "role": "halo",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "convoy-segment-shell",
+          "material": "enemy-surface-ghostpede-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "segment-weak-point",
+          "material": "enemy-surface-ghostpede-jewel-green",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "convoy-fin",
+          "material": "enemy-surface-ghostpede-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "convoy-fin",
+          "material": "enemy-surface-ghostpede-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "leviathan",
+      "name": "Astral Sovereign",
+      "description": "Blue obsidian scales, broad aged-ivory chest plates, burgundy membranes and old gold fittings.",
+      "parts": [
+        {
+          "part": "community-dragon-evolved",
+          "material": "enemy-surface-leviathan-body",
+          "role": "body",
+          "regions": [
+            0,
+            2,
+            1,
+            3,
+            4,
+            5
+          ]
+        },
+        {
+          "part": "sovereign-ring",
+          "material": "enemy-surface-leviathan-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "weak-point-0",
+          "material": "enemy-surface-leviathan-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-1",
+          "material": "enemy-surface-leviathan-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-2",
+          "material": "enemy-surface-leviathan-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-3",
+          "material": "enemy-surface-leviathan-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-4",
+          "material": "enemy-surface-leviathan-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "weak-point-5",
+          "material": "enemy-surface-leviathan-jewel",
+          "role": "jewel",
+          "regions": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "orb",
+      "name": "Rift Heart",
+      "description": "Amethyst wraith tissue and a polished mineral heart with nested rifts and electrum orbit bands.",
+      "parts": [
+        {
+          "part": "community-ghost",
+          "material": "enemy-surface-orb-body",
+          "role": "body",
+          "regions": [
+            4,
+            5,
+            0
+          ]
+        },
+        {
+          "part": "rift-heart",
+          "material": "enemy-surface-orb-rift",
+          "role": "rift",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "rift-band",
+          "material": "enemy-surface-orb-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "rift-band",
+          "material": "enemy-surface-orb-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "rift-band",
+          "material": "enemy-surface-orb-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "thorn",
+      "name": "Fracture Spire",
+      "description": "Cleaved volcanic glass, long mineral strata, mica glints and fine ember-colored fracture lines.",
+      "parts": [
+        {
+          "part": "spire-base",
+          "material": "enemy-surface-thorn-metal",
+          "role": "metal",
+          "regions": [
+            7
+          ]
+        },
+        {
+          "part": "fracture-spire",
+          "material": "enemy-surface-thorn-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "fracture-spire",
+          "material": "enemy-surface-thorn-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "fracture-spire",
+          "material": "enemy-surface-thorn-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "fracture-spire",
+          "material": "enemy-surface-thorn-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "fracture-spire",
+          "material": "enemy-surface-thorn-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "fracture-spire",
+          "material": "enemy-surface-thorn-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        },
+        {
+          "part": "fracture-spire",
+          "material": "enemy-surface-thorn-shell",
+          "role": "shell",
+          "regions": [
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "feedback": {
+      "distinctHit": true,
+      "restored": true
+    },
+    "stableCoordinates": true,
+    "allKinds": 22,
+    "draws": 185
+  },
+  "performanceCheck": {
+    "enemies": 1000,
+    "textured": {
+      "draws": 10,
+      "triangles": 713651,
+      "medianMs": 6.600000023841858
+    },
+    "baseline": {
+      "draws": 10,
+      "triangles": 713651,
+      "medianMs": 3
+    }
+  },
+  "errors": []
+}

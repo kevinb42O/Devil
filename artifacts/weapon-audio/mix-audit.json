@@ -1,0 +1,97 @@
+{
+  "tiers": [
+    {
+      "level": 1,
+      "weapon": {
+        "rms": 0.005675504505628193,
+        "presence": 0.0019143919509453488
+      },
+      "arena": {
+        "rms": 0.005906239135273031,
+        "presence": 0.0044211836204263635
+      },
+      "threatBandAdvantageDB": 7.270153855249833,
+      "enemyGainsPreserved": true
+    },
+    {
+      "level": 2,
+      "weapon": {
+        "rms": 0.005679447193213674,
+        "presence": 0.0018267968402096663
+      },
+      "arena": {
+        "rms": 0.005906239136559207,
+        "presence": 0.004421183623281756
+      },
+      "threatBandAdvantageDB": 7.676966018424776,
+      "enemyGainsPreserved": true
+    },
+    {
+      "level": 3,
+      "weapon": {
+        "rms": 0.0056681740698131654,
+        "presence": 0.002845431519772288
+      },
+      "arena": {
+        "rms": 0.005906239134876886,
+        "presence": 0.004421183621106422
+      },
+      "threatBandAdvantageDB": 3.827808288520877,
+      "enemyGainsPreserved": true
+    },
+    {
+      "level": 4,
+      "weapon": {
+        "rms": 0.005676279943644729,
+        "presence": 0.0026231301991854468
+      },
+      "arena": {
+        "rms": 0.0059062391347672214,
+        "presence": 0.004421183618352194
+      },
+      "threatBandAdvantageDB": 4.53437409653511,
+      "enemyGainsPreserved": true
+    },
+    {
+      "level": 5,
+      "weapon": {
+        "rms": 0.005677166997144546,
+        "presence": 0.002367116321645166
+      },
+      "arena": {
+        "rms": 0.005906239134350946,
+        "presence": 0.004421183620086666
+      },
+      "threatBandAdvantageDB": 5.426379047601974,
+      "enemyGainsPreserved": true
+    },
+    {
+      "level": 6,
+      "weapon": {
+        "rms": 0.005678708138261103,
+        "presence": 0.0018189412101744303
+      },
+      "arena": {
+        "rms": 0.005906239134521189,
+        "presence": 0.004421183622494308
+      },
+      "threatBandAdvantageDB": 7.714397801707681,
+      "enemyGainsPreserved": true
+    },
+    {
+      "level": 7,
+      "weapon": {
+        "rms": 0.005679319422427336,
+        "presence": 0.0018026107635537457
+      },
+      "arena": {
+        "rms": 0.005906239137120063,
+        "presence": 0.0044211836236831914
+      },
+      "threatBandAdvantageDB": 7.792731855032725,
+      "enemyGainsPreserved": true
+    }
+  ],
+  "idleImpact": 0.19499999284744263,
+  "firingImpact": 0.035999998450279236
+}

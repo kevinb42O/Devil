@@ -1,0 +1,46 @@
+[
+  {
+    "id": "voiceover",
+    "page": "https://kenney.nl/assets/voiceover-pack",
+    "download": "https://kenney.nl/media/pages/assets/voiceover-pack/3f7f168698-1677589897/kenney_voiceover-pack.zip",
+    "file": "assets/_sources/remake-audio/kenney_voiceover-pack.zip",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "sha256": "a5194df2f05f7ec439a8d4c1a7c20ba12ffe700d363a0733ae6fa826846af458",
+    "bytes": 1851632,
+    "retrieved": "2026-10-17"
+  },
+  {
+    "id": "dark-place",
+    "page": "https://opengameart.org/content/dark-place-loop",
+    "download": "https://opengameart.org/sites/default/files/dark_place.ogg",
+    "file": "assets/_sources/remake-audio/dark_place.ogg",
+    "author": "SkyleTheFrench",
+    "license": "CC0-1.0",
+    "sha256": "c78a433139ace4a050b5d4a1b9b94bcf1f04d059345c849c7c234a2fe0eda102",
+    "bytes": 1758616,
+    "retrieved": "2026-10-17"
+  },
+  {
+    "id": "lost",
+    "page": "https://opengameart.org/content/lost-in-a-bad-place-horror-ambience-loop",
+    "download": "https://opengameart.org/sites/default/files/lost_2.ogg",
+    "file": "assets/_sources/remake-audio/lost.ogg",
+    "author": "congusbongus",
+    "license": "CC0-1.0",
+    "sha256": "ad9a9f39240ef5862d3a6dc5220893926c6873aa0e08a641dadf3f1c0acc2cd4",
+    "bytes": 2785640,
+    "retrieved": "2026-10-17"
+  },
+  {
+    "id": "creatures",
+    "page": "https://opengameart.org/content/80-cc0-creature-sfx",
+    "download": "https://opengameart.org/sites/default/files/80-CC0-creature-SFX_0.zip",
+    "file": "assets/_sources/remake-audio/creatures.zip",
+    "author": "rubberduck",
+    "license": "CC0-1.0",
+    "sha256": "5d4002eea42f278e76543bb36e8ddd2cb978588a13271984191d8228f5d26768",
+    "bytes": 1885648,
+    "retrieved": "2026-10-17"
+  }
+]

@@ -94,7 +94,7 @@ test('real close blasts kill small threats, damage exposed crystals and respect 
   const w=new World(1,{schedule:false}),e=w.spawn(kind,v(0,6,0));e.age=1;const point=w.weakPoint(e),dx=point.x-e.pos.x,dz=point.z-e.pos.z,len=Math.hypot(dx,dz);
   w.projectiles=[{id:901,pos:v(point.x+dx/len,point.y,point.z+dz/len),vel:v(-dx/len*240,0,-dz/len*240),age:0,homing:false,kind:'shotgun'}];const hp=e.hp;tick(w);assert.equal(e.hp,hp-2);
  }
- const w=new World(1,{schedule:false}),e=w.spawn('squid2',v(0,8,0));e.age=2;
+ const w=new World(1,{schedule:false,legacyTowerArchitecture:true}),e=w.spawn('squid2',v(0,8,0));e.age=2;
  const c=w.weakPoint(e),dx=c.x-e.pos.x,dz=c.z-e.pos.z,len=Math.hypot(dx,dz);
  w.damageEnemy(e,10,c,0,true);w.effects=[];
  const a=v(c.x+dx/len*2,c.y+.55,c.z+dz/len*2),b=v(c.x-dx/len*2,c.y+.55,c.z-dz/len*2);assert.ok(sweepArmor(e,w.player.pos,a,b));

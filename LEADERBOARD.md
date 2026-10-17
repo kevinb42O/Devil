@@ -4,7 +4,7 @@ The main menu and death screen offer **Public leaderboard**. Everyone can read t
 
 Supabase project: [devildaggers](https://supabase.com/dashboard/project/kfxycrnatgvvdxubpsmy), in LanternNetwork. The game remains a static Vite build; Supabase supplies shared storage and anonymous player sessions. No separate game backend server is required.
 
-Each browser gets an anonymous Supabase identity on its first publication. The saved nickname and publication preference are remembered locally. Its best time is retained per gameplay rules version; slower submissions cannot replace it. The public board keeps only the best time for each nickname (ignoring letter case and surrounding spaces), even across browser identities. Names are display labels, not verified accounts; people sharing a nickname share one public ranking. Underlying per-browser records are retained privately so this display rule is reversible. Clearing browser storage or using another device creates a new identity. Publishing sends the chosen name, survival time, kills and gems; it does not upload replay inputs.
+Each browser gets an anonymous Supabase identity on its first publication. The saved nickname and publication preference are remembered locally. Its best time is retained per gameplay rules version; slower submissions cannot replace it. The public board keeps only the best time for each nickname (ignoring letter case and surrounding spaces), even across browser identities. Names are display labels, not verified accounts; people sharing a nickname share one public ranking. Underlying per-browser records are retained privately so this display rule is reversible. Clearing browser storage or using another device creates a new identity. At arena entry, the client obtains a private server-issued run ticket tied to its anonymous identity. Publishing sends that ticket, the chosen name, survival time, kills and gems; replay uploads remain optional and separate.
 
 ## Deployment and database
 
@@ -12,7 +12,7 @@ Each browser gets an anonymous Supabase identity on its first publication. The s
 
 All migrations in `supabase/migrations/` have been applied through the project's SQL Editor. On a different project, run those migrations and enable **Authentication → Sign In / Providers → Allow anonymous sign-ins**. Rebuild after changing connection values.
 
-`abyss_scores` uses row-level security and denies direct table access to both public and authenticated clients. Public access goes through `abyss_leaderboard`, returning only display fields. `abyss_submit_score` requires an authenticated identity, derives ownership from `auth.uid()`, validates values, serializes concurrent submissions, and limits publication to once per ten seconds per identity. The browser never supplies an owner ID. `abyss_my_score` uses the authenticated caller’s saved nickname to return its best public score and rank across browser profiles. Anonymous visitors cannot call that lookup or the submission function. The public board highlights your own row, shows your public best separately even outside the top 100, and supports nickname search. Rankings select the best score per normalized nickname before limiting to the top 100, then sort by time descending, achievement time, and player ID for stable ties.
+`abyss_scores` uses row-level security and denies direct table access to both public and authenticated clients. Public access goes through `abyss_leaderboard`, returning only display fields. `abyss_begin_solo` registers an authenticated run when the solo arena starts. `abyss_submit_solo` derives ownership from `auth.uid()`, checks the ticket and elapsed server time, validates conservative statistic bounds, and publishes immediately in the same transaction. A consumed ticket accepts only identical retries. The former `abyss_submit_score` endpoint is disabled so old clients cannot bypass the ticket checks; refresh and start a new run after upgrading. The browser never supplies an owner ID. `abyss_my_score` uses the authenticated caller’s saved nickname to return its best public score and rank across browser profiles. Anonymous visitors cannot call that lookup or the submission function. The public board highlights your own row, shows your public best separately even outside the top 100, and supports nickname search. Rankings select the best score per normalized nickname before limiting to the top 100, then sort by time descending, achievement time, and player ID for stable ties.
 
 ## Reliable saving
 
@@ -20,7 +20,11 @@ Publication uses a durable best-score outbox (`abyss-pending-score` in localStor
 
 ## Limits
 
-This is a casual community leaderboard. The browser reports scores; the database does not replay or independently verify the run. A modified client can bypass game-side eligibility and invent a score. Anonymous identities and display names do not establish a person's identity or stop someone making additional accounts. Supabase's anonymous-signup rate limits also apply. Strong anti-cheat and account recovery need separate work.
+Scores publish immediately without a replay verifier, worker, moderation queue, or additional hosting. Server checks stop an instant fabricated long score, cross-account ticket use, edited retries, and extreme statistic outliers. In particular, runs longer than ten minutes with both zero kills and zero gems are rejected as an abuse heuristic; short zero-kill runs are allowed. Kills and gems are each limited to a deliberately generous 500 + 500 per whole second, in addition to the existing numeric bounds. These checks are conservative filters, not a mathematical proof of possible gameplay.
+
+The server allows two seconds of timing tolerance and a maximum 24-hour ticket lifetime for first submission. Ticket issuance is limited to 600 starts per identity per hour; storage is capped at 64,000 tickets, with slots older than seven days reused. Exact retries of a previously accepted ticket remain idempotent until its slot is reused. Old pending scores without a ticket cannot be published through the disabled endpoint; their local recordings and scores remain available.
+
+A modified client can still request a real ticket, wait the required time, and submit plausible invented statistics. It can also automate valid gameplay. Anonymous identities and display names do not establish a person's identity or stop additional accounts. Full run validation would require trusted simulation or authoritative gameplay; it is not enabled because immediate publication without a verifier was requested.
 
 ## Checks
 
@@ -79,3 +83,12 @@ Security advisors were rerun after deployment: zero errors; pre-existing warning
 - `npm run test:crew-leaderboard`: embedded Postgres ownership/membership/withdrawal, host/order/name changes, immutable results, exact replay attachment, share-before-publish, raw-table denial and combined quota; gameplay eligibility; board/history/cameras/cache/browser checks; host/guest publication and failure/reload/retry.
 - `npx tsx tests/crew-leaderboard-live.ts`: live precombat registration, independent confirmations, private metadata, immutable Storage upload, exact replay download/reconstruction and cross-owner denial. This shares only a temporary storage-only recording, never a test highscore, and removes its file/reservation afterward.
 - `npm test`, `npm run build`, `npm run test:crew-replay`, and existing solo sharing/champion and multiplayer spectator/respawn/recovery browser checks provide regression coverage.
+
+
+## Immediate score protection (17 October 2026)
+
+Migrations `20261017223000_verified_solo_scores.sql` and `20261017224500_instant_score_checks.sql` were applied to the live project. The first contained the incident and prepared a replay-verification inbox. The second supersedes that publication design: inbox and worker RPC access is revoked, and current solo scores use the immediate ticket-based path. No verification worker is needed or configured.
+
+The exact reported 5,020,208 ms record was marked `quarantined=true`. It is excluded from both solo leaderboard RPCs, personal ranks, replay-enabled rankings and podium eligibility. The record is retained in the score table; trusted administration can reverse quarantine. Existing other scores remain visible and were not retrospectively verified.
+
+Run `npx tsx --test tests/instant-score-sql.test.mjs tests/score-queue.test.ts tests/leaderboard.test.ts` and `npm run build`. SQL tests use a local PostgreSQL engine, apply the full migration sequence, and cover immediate visibility, ownership, server duration, single-use tickets, idempotent retries, bounds and rejected legacy submission paths. Never add service-role credentials to browser configuration.

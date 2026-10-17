@@ -1,0 +1,308 @@
+{
+  "crystalKinds": 5,
+  "gemVoiceLimit": 6,
+  "combinedGain": 0.04410000000000001,
+  "variants": [
+    {
+      "name": "gibcollect",
+      "rate": 1,
+      "gain": 0.06599999964237213
+    },
+    {
+      "name": "gibcollect3",
+      "rate": 1,
+      "gain": 0.06024948135018349
+    },
+    {
+      "name": "gibcollect2",
+      "rate": 1,
+      "gain": 0.05578017979860306
+    },
+    {
+      "name": "gibcollect",
+      "rate": 1,
+      "gain": 0.05217758193612099
+    },
+    {
+      "name": "gibcollect3",
+      "rate": 1,
+      "gain": 0.04919349402189255
+    },
+    {
+      "name": "gibcollect2",
+      "rate": 1,
+      "gain": 0.04666904732584953
+    },
+    {
+      "name": "gibcollect3",
+      "rate": 1,
+      "gain": 0.04449719190597534
+    },
+    {
+      "name": "gibcollect",
+      "rate": 1,
+      "gain": 0.042602818459272385
+    },
+    {
+      "name": "gibcollect2",
+      "rate": 1,
+      "gain": 0.04093146324157715
+    },
+    {
+      "name": "gibcollect",
+      "rate": 1,
+      "gain": 0.03944254294037819
+    },
+    {
+      "name": "gibcollect3",
+      "rate": 1,
+      "gain": 0.03810511901974678
+    },
+    {
+      "name": "gibcollect2",
+      "rate": 1,
+      "gain": 0.03689512237906456
+    },
+    {
+      "name": "gibcollect",
+      "rate": 1,
+      "gain": 0.035793524235486984
+    },
+    {
+      "name": "gibcollect3",
+      "rate": 1,
+      "gain": 0.03478505462408066
+    },
+    {
+      "name": "gibcollectmagic2",
+      "rate": 1,
+      "gain": 0.03526800498366356
+    },
+    {
+      "name": "gibcollectmagic3",
+      "rate": 1,
+      "gain": 0.03437500074505806
+    },
+    {
+      "name": "gibcollectmagic",
+      "rate": 1,
+      "gain": 0.0335465632379055
+    },
+    {
+      "name": "gibcollectmagic3",
+      "rate": 1,
+      "gain": 0.03277527540922165
+    },
+    {
+      "name": "gibcollectmagic",
+      "rate": 1,
+      "gain": 0.032054852694272995
+    },
+    {
+      "name": "gibcollectmagic2",
+      "rate": 1,
+      "gain": 0.03137993812561035
+    },
+    {
+      "name": "gibcollectmagic",
+      "rate": 1,
+      "gain": 0.030745934695005417
+    },
+    {
+      "name": "gibcollectmagic3",
+      "rate": 1,
+      "gain": 0.03014886938035488
+    },
+    {
+      "name": "gibcollectmagic2",
+      "rate": 1,
+      "gain": 0.02958528883755207
+    },
+    {
+      "name": "gibcollectmagic3",
+      "rate": 1,
+      "gain": 0.02905217744410038
+    },
+    {
+      "name": "gibcollectmagic",
+      "rate": 1,
+      "gain": 0.028546882793307304
+    },
+    {
+      "name": "gibcollectmagic2",
+      "rate": 1,
+      "gain": 0.02806706912815571
+    },
+    {
+      "name": "gibcollectmagic3",
+      "rate": 1,
+      "gain": 0.027610665187239647
+    },
+    {
+      "name": "gibcollectmagic",
+      "rate": 1,
+      "gain": 0.027175823226571083
+    }
+  ],
+  "surgePeak": 0.03786003217101097,
+  "rendered": [
+    {
+      "name": "gibcollect",
+      "rms": 0.0022062047872193763,
+      "peak": 0.03063894435763359,
+      "duration": 1.1719727891156462
+    },
+    {
+      "name": "gibcollect2",
+      "rms": 0.0022923448409217294,
+      "peak": 0.030826322734355927,
+      "duration": 1.1719727891156462
+    },
+    {
+      "name": "gibcollect3",
+      "rms": 0.0020761091569733354,
+      "peak": 0.03133154660463333,
+      "duration": 1.1719727891156462
+    },
+    {
+      "name": "gibcollectmagic",
+      "rms": 0.0023700866236139703,
+      "peak": 0.030728444457054138,
+      "duration": 1.1719727891156462
+    },
+    {
+      "name": "gibcollectmagic2",
+      "rms": 0.002384488929658271,
+      "peak": 0.03210350126028061,
+      "duration": 1.1719727891156462
+    },
+    {
+      "name": "gibcollectmagic3",
+      "rms": 0.0022728151958769103,
+      "peak": 0.03189357742667198,
+      "duration": 1.1719727891156462
+    },
+    {
+      "name": "crystalhit1",
+      "rms": 0.0032092547545103803,
+      "peak": 0.05217369645833969,
+      "duration": 0.7355555555555555
+    },
+    {
+      "name": "crystalhit2",
+      "rms": 0.003115240807758148,
+      "peak": 0.052045468240976334,
+      "duration": 0.7299773242630385
+    },
+    {
+      "name": "crystalhit3",
+      "rms": 0.003095992738568491,
+      "peak": 0.05174757540225983,
+      "duration": 0.7247392290249434
+    },
+    {
+      "name": "crystalbreak1",
+      "rms": 0.004565486905314271,
+      "peak": 0.08299759030342102,
+      "duration": 1.4799773242630385
+    },
+    {
+      "name": "crystalbreak2",
+      "rms": 0.004588518543326606,
+      "peak": 0.08461834490299225,
+      "duration": 1.4799773242630385
+    },
+    {
+      "name": "crystalbreak3",
+      "rms": 0.004675593126342028,
+      "peak": 0.08346530795097351,
+      "duration": 1.4799773242630385
+    },
+    {
+      "name": "gemchatter",
+      "rms": 0.003385203297415803,
+      "peak": 0.028098206967115402,
+      "duration": 4.219977324263039
+    }
+  ],
+  "spatial": [
+    {
+      "name": "gibcollect",
+      "nearRms": 0.0031116786731759417,
+      "distantRms": 0.0004445255451577862,
+      "outsideRms": 0
+    },
+    {
+      "name": "gibcollect2",
+      "nearRms": 0.003052393294382927,
+      "distantRms": 0.000436056204491572,
+      "outsideRms": 0
+    },
+    {
+      "name": "gibcollect3",
+      "nearRms": 0.0027518343442228294,
+      "distantRms": 0.00039311920914432327,
+      "outsideRms": 0
+    },
+    {
+      "name": "gibcollectmagic",
+      "nearRms": 0.003317024391414564,
+      "distantRms": 0.0004738606491552534,
+      "outsideRms": 0
+    },
+    {
+      "name": "gibcollectmagic2",
+      "nearRms": 0.003179070678937316,
+      "distantRms": 0.000454152974990658,
+      "outsideRms": 0
+    },
+    {
+      "name": "gibcollectmagic3",
+      "nearRms": 0.0030019308806687214,
+      "distantRms": 0.0004288472885087604,
+      "outsideRms": 0
+    },
+    {
+      "name": "crystalhit1",
+      "nearRms": 0.0033785633905513493,
+      "distantRms": 0.0009936951563227544,
+      "outsideRms": 0
+    },
+    {
+      "name": "crystalhit2",
+      "nearRms": 0.0032678379162013184,
+      "distantRms": 0.0009611288401920506,
+      "outsideRms": 0
+    },
+    {
+      "name": "crystalhit3",
+      "nearRms": 0.003226822551131171,
+      "distantRms": 0.0009490654968900206,
+      "outsideRms": 0
+    },
+    {
+      "name": "crystalbreak1",
+      "nearRms": 0.005858904952373564,
+      "distantRms": 0.001723207412597566,
+      "outsideRms": 0
+    },
+    {
+      "name": "crystalbreak2",
+      "nearRms": 0.0059011603144829994,
+      "distantRms": 0.0017356354585897679,
+      "outsideRms": 0
+    },
+    {
+      "name": "crystalbreak3",
+      "nearRms": 0.005983228462767383,
+      "distantRms": 0.0017597731530855404,
+      "outsideRms": 0
+    },
+    {
+      "name": "gemchatter",
+      "nearRms": 0.002575536437368931,
+      "distantRms": 0.00027254354184378326,
+      "outsideRms": 0
+    }
+  ]
+}

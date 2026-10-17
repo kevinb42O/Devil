@@ -18,7 +18,7 @@ try{
    world.shoot(idleInput(),burst,homing);const before=world.projectiles.map(p=>({...p.pos}));for(const e of world.effects)weapon.effect(e,world,0,0);
    weapon.update(world,0,false,camera,0);
    check(!weapon.handScene.getObjectByName('fingertip-flames'),'no attached flames');
-   check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.flashTextures[level-1],'firing uses the original hand flash skin');
+   check(!weapon.handScene.children.some(root=>{let mesh=false;root.traverse(o=>{if(o.isMesh)mesh=true;});return mesh;}),'legacy launch transforms load no old hand geometry');
    check(weapon.fragments.length<=world.effects[0].muzzles.length,'at most one launch spark per socket');
    check(weapon.fragments.every(f=>f.family.startsWith('ember')&&f.size===.025&&f.life<=.045&&world.effects[0].muzzles.some(m=>f.pos.distanceTo(new T.Vector3(m.x,m.y,m.z))<1e-9)),'small sparks share the physical emitters beneath the hand');
    const kick=weapon.effectDiagnostics.recoil;check(kick>0,'firing kicks the hand');

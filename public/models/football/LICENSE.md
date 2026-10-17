@@ -10,4 +10,5 @@ Goal net texture: soccerGoal by almaPerdida, CC0 1.0. https://opengameart.org/co
 Original download: https://opengameart.org/sites/default/files/soccergoal.zip. net.png used unchanged.
 
 Goal whistle: Referee whistle sound.wav by Rosa-Orenes256, CC0 1.0. https://freesound.org/people/Rosa-Orenes256/sounds/538422/
-High-quality MP3 preview used unchanged as /assets/audio/football-goal.mp3.
+CC0 MP3 source is preserved in assets/_sources/remake-audio/football-goal.mp3.
+Runtime uses the level-balanced PCM derivative /assets/audio/remake/football-goal.wav.

@@ -11,7 +11,7 @@ const shot=(w:World,a:Vec,b:Vec,homing=false)=>{const p={id:900+w.projectiles.le
 
 test('destroyed tower crystals stop blocking immediately, including later shots in one tick',()=>{
  for(const sameTick of [false,true]){
-  const w=new World(1,{schedule:false}),e=w.spawn('squid2',v(0,8,0));e.age=2;
+  const w=new World(1,{schedule:false,legacyTowerArchitecture:true}),e=w.spawn('squid2',v(0,8,0));e.age=2;
   const c=w.weakPoint(e),dx=c.x-e.pos.x,dz=c.z-e.pos.z,l=Math.hypot(dx,dz);
   if(sameTick)shot(w,c,c,true);else w.damageEnemy(e,10,c,0,true);
   const a=v(c.x+dx/l*2,c.y+.55,c.z+dz/l*2),b=v(c.x-dx/l*2,c.y+.55,c.z-dz/l*2),armor=sweepArmor(e,w.player.pos,a,b)!;
@@ -83,7 +83,7 @@ test('pede crystals use their own swept movement rather than only the enemy head
 
 test('animated rigid armor contacts and normals agree with transformed render triangles',()=>{
  for(const kind of ['squid2','squid3'] as const)for(const originalCadence of [false,true]){
-  const w=new World(1,{schedule:false}),e=w.spawn(kind,v(0,8,0));e.age=184/60;e.facingYaw=.7;
+  const w=new World(1,{schedule:false,legacyTowerArchitecture:true}),e=w.spawn(kind,v(0,8,0));e.age=184/60;e.facingYaw=.7;
   const root=new THREE.Group();root.position.set(e.pos.x,e.pos.y,e.pos.z);root.rotation.y=enemyYaw(e,w.player.pos);root.scale.setScalar(enemyEmergenceScale(e));
   for(const p of baked.instances[kind]){
    if(p.wave)continue;

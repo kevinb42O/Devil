@@ -1,0 +1,8 @@
+import {chromium} from '@playwright/test';
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',args:['--disable-features=WebRtcHideLocalIpsWithMdns']});
+try{
+ const pages=[];for(const role of ['host','guest']){const p=await browser.newPage();await p.route('**/rtc-diagnostic',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><body></body>'}));await p.goto('http://127.0.0.1:5173/rtc-diagnostic');await p.evaluate(async role=>{const {FriendsSession}=await import('/src/multiplayer.ts');window.s=new FriendsSession(role,[]);window.messages=[];window.s.onError=m=>window.messages.push(m);},role);pages.push(p);}
+ const offer=await pages[0].evaluate(()=>window.s.offer()),answer=await pages[1].evaluate(x=>window.s.answer(x),offer);await pages[0].evaluate(x=>window.s.accept(x),answer);
+ for(const p of pages)console.log(await p.evaluate(()=>({messages:window.messages,links:[...window.s.links.values()].map(l=>({state:l.pc.connectionState,ice:l.pc.iceConnectionState,gather:l.pc.iceGatheringState,localCandidates:(l.pc.localDescription.sdp.match(/a=candidate:/g)||[]).length,remoteCandidates:(l.pc.remoteDescription.sdp.match(/a=candidate:/g)||[]).length,channels:[l.state?.readyState,l.updates?.readyState,l.input?.readyState]}))})));
+ for(const p of pages){try{await p.waitForFunction(()=>window.s.connected===1,{},{timeout:12000});}catch{}console.log(await p.evaluate(()=>({messages:window.messages,links:[...window.s.links.values()].map(l=>({state:l.pc.connectionState,ice:l.pc.iceConnectionState,gather:l.pc.iceGatheringState,channels:[l.state?.readyState,l.updates?.readyState,l.input?.readyState]}))})));}
+}finally{await browser.close();}

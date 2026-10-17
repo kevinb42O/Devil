@@ -41,7 +41,7 @@ self.addEventListener('fetch',event=>{
   }
   const cached=await cache.match(key);
   if(cached){
-   // Safari streams music using byte ranges. A cached full WAV must become a
+   // Safari streams music using byte ranges. A cached full audio file must become a
    // 206 response, not a full 200 response, for seeking and looping to work.
    const range=request.headers.get('range');
    if(range){

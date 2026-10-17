@@ -9,7 +9,7 @@ try{
  page.on('pageerror',e=>errors.push(e.message));
  await page.route(url+'/',route=>route.fulfill({contentType:'text/html',body:'<!doctype html><title>Hand upgrade regression</title>'}));
  // Simulate a first visit on a slow connection, beyond the old 100 ms cutoff.
- await page.route('**/audio/levelup*.wav',async route=>{await new Promise(resolve=>setTimeout(resolve,250));await route.continue();});
+ await page.route('**/audio/remake/levelup*.wav',async route=>{await new Promise(resolve=>setTimeout(resolve,250));await route.continue();});
  await page.goto(url);
  const result=await page.evaluate(async()=>{
   const [T,{World,idleInput},{OriginalWeapon},{Sound}]=await Promise.all([import('/node_modules/.vite/deps/three.js'),import('/src/simulation.ts'),import('/src/original-weapon.ts'),import('/src/audio.ts')]);
@@ -27,16 +27,16 @@ try{
    check(sound.diagnostics.oneShotNames.includes('levelup'+level),'cold upgrade cue survives delayed decode '+level);
    weapon.update(world,.1,false);
    check(weapon.effectDiagnostics.visibleLevel===level,'mesh switches in upgrade frame '+level);
-   check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.handTextures[level-1],'old shot does not flash new hand '+level);
+   check(weapon.handFeedback.firePower===0,'old shot does not flash new hand '+level);
    check(weapon.effectDiagnostics.upgradeTime===weapon.effectDiagnostics.upgradeDuration,'first upgrade animation frame survives stall');
-   check(weapon.handMaterials[level-1].uniforms.brightness.value>1,'upgrade lights the idle hand');
+   check(weapon.handFeedback.upgradePower>0,'upgrade lights the idle hand');
    renderer.clear();weapon.render(renderer,false);screenshots.push(renderer.domElement.toDataURL());
    weapon.update(world,2,false);check(weapon.effectDiagnostics.upgradeTime===0,'upgrade animation settles');
    world.effects=[];world.shoot(idleInput(),true,false);weapon.effect(world.effects.at(-1),world,0,0);
    weapon.update(world,.1,false);
-   check(weapon.handMaterials[level-1].uniforms.originalTexture.value===weapon.flashTextures[level-1],'first firing flash survives slow frame '+level);
+   check(weapon.handFeedback.firePower>0,'first firing flash survives slow frame '+level);
    check(weapon.effectDiagnostics.recoil>0,'recoil survives first frame');
-   check(weapon.handMaterials[level-1].uniforms.upgradePower.value===0,'firing suppresses upgrade emission');
+   check(weapon.handFeedback.upgradePower===0,'firing suppresses upgrade emission');
    weapon.update(world,.2,false);check(weapon.effectDiagnostics.flashTime===0,'flash settles after release');
    world.effects=[];sound.clear();
   }

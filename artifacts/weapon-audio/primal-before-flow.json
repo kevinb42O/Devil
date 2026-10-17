@@ -1,0 +1,996 @@
+{
+  "shot1alt1": {
+    "peak": 0.76559,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6585,
+    "medianHz": 375,
+    "presenceEnergy": 0.3405,
+    "energyTimes": [
+      0.0266,
+      0.0937,
+      0.3294,
+      0.6833
+    ]
+  },
+  "shot1alt2": {
+    "peak": 0.764677,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6504,
+    "medianHz": 375,
+    "presenceEnergy": 0.3486,
+    "energyTimes": [
+      0.0269,
+      0.0953,
+      0.3307,
+      0.6825
+    ]
+  },
+  "shot1alt3": {
+    "peak": 0.715692,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6674,
+    "medianHz": 281,
+    "presenceEnergy": 0.3313,
+    "energyTimes": [
+      0.0205,
+      0.0889,
+      0.387,
+      0.7558
+    ]
+  },
+  "shot1alt4": {
+    "peak": 0.702532,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.624,
+    "medianHz": 410,
+    "presenceEnergy": 0.3748,
+    "energyTimes": [
+      0.0303,
+      0.1601,
+      0.4116,
+      0.7604
+    ]
+  },
+  "shot1": {
+    "peak": 0.729384,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6304,
+    "medianHz": 410,
+    "presenceEnergy": 0.3684,
+    "energyTimes": [
+      0.0275,
+      0.1552,
+      0.4039,
+      0.7365
+    ]
+  },
+  "rapid1": {
+    "peak": 0.824406,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.6515,
+    "medianHz": 363,
+    "presenceEnergy": 0.3458,
+    "energyTimes": [
+      0.7503,
+      4.1142,
+      7.313,
+      8.001
+    ]
+  },
+  "seekrapid1": {
+    "peak": 0.825192,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.5742,
+    "medianHz": 387,
+    "presenceEnergy": 0.4225,
+    "energyTimes": [
+      0.7326,
+      4.0851,
+      7.3114,
+      7.9897
+    ]
+  },
+  "weapon1-start": {
+    "peak": 0.718554,
+    "rms": 0.14,
+    "duration": 0.15,
+    "lowEnergy": 0.8494,
+    "medianHz": 234,
+    "presenceEnergy": 0.1505,
+    "energyTimes": [
+      0.0053,
+      0.0144,
+      0.0395,
+      0.0618
+    ]
+  },
+  "weapon1-stop": {
+    "peak": 0.643347,
+    "rms": 0.14,
+    "duration": 0.38,
+    "lowEnergy": 0.7262,
+    "medianHz": 375,
+    "presenceEnergy": 0.2735,
+    "energyTimes": [
+      0.0133,
+      0.0668,
+      0.1353,
+      0.2337
+    ]
+  },
+  "weapon1-homing": {
+    "peak": 0.733175,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6325,
+    "medianHz": 305,
+    "presenceEnergy": 0.3661,
+    "energyTimes": [
+      0.0207,
+      0.0927,
+      0.384,
+      0.7576
+    ]
+  },
+  "shot2alt1": {
+    "peak": 0.657348,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.748,
+    "medianHz": 281,
+    "presenceEnergy": 0.2421,
+    "energyTimes": [
+      0.0461,
+      0.2229,
+      0.6631,
+      0.9454
+    ]
+  },
+  "shot2alt2": {
+    "peak": 0.657381,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.8298,
+    "medianHz": 164,
+    "presenceEnergy": 0.1622,
+    "energyTimes": [
+      0.054,
+      0.1712,
+      0.6069,
+      0.9326
+    ]
+  },
+  "shot2alt3": {
+    "peak": 0.681901,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.7483,
+    "medianHz": 281,
+    "presenceEnergy": 0.2419,
+    "energyTimes": [
+      0.0455,
+      0.2223,
+      0.6629,
+      0.9452
+    ]
+  },
+  "shot2alt4": {
+    "peak": 0.619252,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.7472,
+    "medianHz": 281,
+    "presenceEnergy": 0.2429,
+    "energyTimes": [
+      0.0455,
+      0.2231,
+      0.6663,
+      0.9461
+    ]
+  },
+  "shot2": {
+    "peak": 0.587587,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.7974,
+    "medianHz": 164,
+    "presenceEnergy": 0.1945,
+    "energyTimes": [
+      0.0527,
+      0.2329,
+      0.6117,
+      0.9325
+    ]
+  },
+  "rapid2": {
+    "peak": 0.688179,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.8252,
+    "medianHz": 164,
+    "presenceEnergy": 0.1502,
+    "energyTimes": [
+      1.0023,
+      4.0127,
+      7.3101,
+      8.0327
+    ]
+  },
+  "seekrapid2": {
+    "peak": 0.774495,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.7573,
+    "medianHz": 164,
+    "presenceEnergy": 0.2138,
+    "energyTimes": [
+      0.9902,
+      4.0227,
+      7.3104,
+      8.0282
+    ]
+  },
+  "weapon2-start": {
+    "peak": 0.882715,
+    "rms": 0.14,
+    "duration": 0.15,
+    "lowEnergy": 0.7877,
+    "medianHz": 176,
+    "presenceEnergy": 0.2098,
+    "energyTimes": [
+      0.0035,
+      0.0093,
+      0.0333,
+      0.065
+    ]
+  },
+  "weapon2-stop": {
+    "peak": 0.594241,
+    "rms": 0.14,
+    "duration": 0.38,
+    "lowEnergy": 0.7884,
+    "medianHz": 164,
+    "presenceEnergy": 0.2084,
+    "energyTimes": [
+      0.0182,
+      0.0949,
+      0.1885,
+      0.2758
+    ]
+  },
+  "weapon2-homing": {
+    "peak": 0.62856,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6446,
+    "medianHz": 316,
+    "presenceEnergy": 0.3457,
+    "energyTimes": [
+      0.0508,
+      0.2222,
+      0.6393,
+      0.9385
+    ]
+  },
+  "shot3alt1": {
+    "peak": 0.848441,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2764,
+    "medianHz": 1266,
+    "presenceEnergy": 0.7027,
+    "energyTimes": [
+      0.0286,
+      0.2381,
+      0.5066,
+      0.7044
+    ]
+  },
+  "shot3alt2": {
+    "peak": 0.844397,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2705,
+    "medianHz": 1266,
+    "presenceEnergy": 0.7087,
+    "energyTimes": [
+      0.0327,
+      0.2379,
+      0.5082,
+      0.7041
+    ]
+  },
+  "shot3alt3": {
+    "peak": 0.848531,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2456,
+    "medianHz": 1301,
+    "presenceEnergy": 0.7329,
+    "energyTimes": [
+      0.024,
+      0.2386,
+      0.5089,
+      0.7053
+    ]
+  },
+  "shot3alt4": {
+    "peak": 0.846316,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2645,
+    "medianHz": 1266,
+    "presenceEnergy": 0.7144,
+    "energyTimes": [
+      0.0322,
+      0.2389,
+      0.5105,
+      0.7052
+    ]
+  },
+  "shot3": {
+    "peak": 0.841372,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2777,
+    "medianHz": 1254,
+    "presenceEnergy": 0.7017,
+    "energyTimes": [
+      0.0337,
+      0.2383,
+      0.5088,
+      0.704
+    ]
+  },
+  "rapid3": {
+    "peak": 0.841247,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.3357,
+    "medianHz": 1020,
+    "presenceEnergy": 0.6394,
+    "energyTimes": [
+      0.846,
+      4.1553,
+      7.302,
+      7.9918
+    ]
+  },
+  "seekrapid3": {
+    "peak": 0.853654,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.2902,
+    "medianHz": 1254,
+    "presenceEnergy": 0.6863,
+    "energyTimes": [
+      0.8522,
+      4.1576,
+      7.3013,
+      7.9806
+    ]
+  },
+  "weapon3-start": {
+    "peak": 0.9,
+    "rms": 0.118784,
+    "duration": 0.15,
+    "lowEnergy": 0.6219,
+    "medianHz": 82,
+    "presenceEnergy": 0.3766,
+    "energyTimes": [
+      0.0038,
+      0.0065,
+      0.0222,
+      0.045
+    ]
+  },
+  "weapon3-stop": {
+    "peak": 0.877488,
+    "rms": 0.14,
+    "duration": 0.38,
+    "lowEnergy": 0.3275,
+    "medianHz": 1113,
+    "presenceEnergy": 0.6653,
+    "energyTimes": [
+      0.0062,
+      0.0698,
+      0.2378,
+      0.2789
+    ]
+  },
+  "weapon3-homing": {
+    "peak": 0.847244,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.1956,
+    "medianHz": 1336,
+    "presenceEnergy": 0.782,
+    "energyTimes": [
+      0.0323,
+      0.2394,
+      0.5118,
+      0.6962
+    ]
+  },
+  "shot4alt1": {
+    "peak": 0.682417,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.3158,
+    "medianHz": 879,
+    "presenceEnergy": 0.6826,
+    "energyTimes": [
+      0.0403,
+      0.1657,
+      0.45,
+      0.6182
+    ]
+  },
+  "shot4alt2": {
+    "peak": 0.623486,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.3095,
+    "medianHz": 891,
+    "presenceEnergy": 0.6889,
+    "energyTimes": [
+      0.0415,
+      0.1676,
+      0.4541,
+      0.6284
+    ]
+  },
+  "shot4alt3": {
+    "peak": 0.672647,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.3559,
+    "medianHz": 855,
+    "presenceEnergy": 0.6426,
+    "energyTimes": [
+      0.0412,
+      0.1592,
+      0.4507,
+      0.6247
+    ]
+  },
+  "shot4alt4": {
+    "peak": 0.640776,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.293,
+    "medianHz": 891,
+    "presenceEnergy": 0.7054,
+    "energyTimes": [
+      0.0431,
+      0.1794,
+      0.4584,
+      0.6212
+    ]
+  },
+  "shot4alt5": {
+    "peak": 0.636356,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2907,
+    "medianHz": 891,
+    "presenceEnergy": 0.7077,
+    "energyTimes": [
+      0.0441,
+      0.1831,
+      0.4581,
+      0.6231
+    ]
+  },
+  "shot4": {
+    "peak": 0.630436,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.3194,
+    "medianHz": 879,
+    "presenceEnergy": 0.6791,
+    "energyTimes": [
+      0.0504,
+      0.1689,
+      0.4519,
+      0.6236
+    ]
+  },
+  "rapid4": {
+    "peak": 0.737756,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.4195,
+    "medianHz": 785,
+    "presenceEnergy": 0.5789,
+    "energyTimes": [
+      0.8477,
+      3.9436,
+      7.2885,
+      8.0469
+    ]
+  },
+  "seekrapid4": {
+    "peak": 0.737913,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.3806,
+    "medianHz": 902,
+    "presenceEnergy": 0.6177,
+    "energyTimes": [
+      0.842,
+      3.9354,
+      7.2904,
+      8.0486
+    ]
+  },
+  "weapon4-start": {
+    "peak": 0.836113,
+    "rms": 0.14,
+    "duration": 0.15,
+    "lowEnergy": 0.6709,
+    "medianHz": 270,
+    "presenceEnergy": 0.3283,
+    "energyTimes": [
+      0.0026,
+      0.0079,
+      0.0403,
+      0.0735
+    ]
+  },
+  "weapon4-stop": {
+    "peak": 0.606069,
+    "rms": 0.14,
+    "duration": 0.38,
+    "lowEnergy": 0.4578,
+    "medianHz": 656,
+    "presenceEnergy": 0.541,
+    "energyTimes": [
+      0.0211,
+      0.0788,
+      0.1828,
+      0.2701
+    ]
+  },
+  "weapon4-homing": {
+    "peak": 0.66217,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2757,
+    "medianHz": 914,
+    "presenceEnergy": 0.7227,
+    "energyTimes": [
+      0.0455,
+      0.1698,
+      0.4545,
+      0.6213
+    ]
+  },
+  "shot5alt1": {
+    "peak": 0.818932,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.5576,
+    "medianHz": 188,
+    "presenceEnergy": 0.4366,
+    "energyTimes": [
+      0.0355,
+      0.1512,
+      0.4198,
+      0.7374
+    ]
+  },
+  "shot5alt2": {
+    "peak": 0.828803,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.5611,
+    "medianHz": 188,
+    "presenceEnergy": 0.433,
+    "energyTimes": [
+      0.0335,
+      0.1563,
+      0.4165,
+      0.7329
+    ]
+  },
+  "shot5alt3": {
+    "peak": 0.8214,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.4557,
+    "medianHz": 773,
+    "presenceEnergy": 0.5378,
+    "energyTimes": [
+      0.0256,
+      0.2482,
+      0.4762,
+      0.7398
+    ]
+  },
+  "shot5alt4": {
+    "peak": 0.840452,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.5645,
+    "medianHz": 211,
+    "presenceEnergy": 0.4308,
+    "energyTimes": [
+      0.0264,
+      0.2357,
+      0.4405,
+      0.7441
+    ]
+  },
+  "shot5": {
+    "peak": 0.808848,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6896,
+    "medianHz": 176,
+    "presenceEnergy": 0.3064,
+    "energyTimes": [
+      0.0343,
+      0.1504,
+      0.4259,
+      0.7374
+    ]
+  },
+  "rapid5": {
+    "peak": 0.857878,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.4461,
+    "medianHz": 703,
+    "presenceEnergy": 0.5404,
+    "energyTimes": [
+      0.7986,
+      4.0708,
+      7.3409,
+      7.8575
+    ]
+  },
+  "seekrapid5": {
+    "peak": 0.866254,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.3665,
+    "medianHz": 1195,
+    "presenceEnergy": 0.62,
+    "energyTimes": [
+      0.7137,
+      4.0835,
+      7.3277,
+      7.8573
+    ]
+  },
+  "weapon5-start": {
+    "peak": 0.9,
+    "rms": 0.120676,
+    "duration": 0.15,
+    "lowEnergy": 0.3136,
+    "medianHz": 1078,
+    "presenceEnergy": 0.6861,
+    "energyTimes": [
+      0.0039,
+      0.0067,
+      0.0231,
+      0.0456
+    ]
+  },
+  "weapon5-stop": {
+    "peak": 0.849591,
+    "rms": 0.14,
+    "duration": 0.38,
+    "lowEnergy": 0.323,
+    "medianHz": 973,
+    "presenceEnergy": 0.6749,
+    "energyTimes": [
+      0.0061,
+      0.0504,
+      0.227,
+      0.3064
+    ]
+  },
+  "weapon5-homing": {
+    "peak": 0.823637,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.2791,
+    "medianHz": 1055,
+    "presenceEnergy": 0.7129,
+    "energyTimes": [
+      0.0239,
+      0.2629,
+      0.4842,
+      0.7471
+    ]
+  },
+  "shot6alt1": {
+    "peak": 0.698308,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6029,
+    "medianHz": 375,
+    "presenceEnergy": 0.3907,
+    "energyTimes": [
+      0.0439,
+      0.1747,
+      0.5501,
+      0.9847
+    ]
+  },
+  "shot6alt2": {
+    "peak": 0.705242,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6054,
+    "medianHz": 375,
+    "presenceEnergy": 0.3881,
+    "energyTimes": [
+      0.0451,
+      0.1747,
+      0.5488,
+      0.9845
+    ]
+  },
+  "shot6alt3": {
+    "peak": 0.714211,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.5988,
+    "medianHz": 375,
+    "presenceEnergy": 0.3947,
+    "energyTimes": [
+      0.0456,
+      0.178,
+      0.5506,
+      0.9848
+    ]
+  },
+  "shot6alt4": {
+    "peak": 0.719668,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6023,
+    "medianHz": 375,
+    "presenceEnergy": 0.3912,
+    "energyTimes": [
+      0.0433,
+      0.175,
+      0.5491,
+      0.9843
+    ]
+  },
+  "shot6": {
+    "peak": 0.70968,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6003,
+    "medianHz": 375,
+    "presenceEnergy": 0.3932,
+    "energyTimes": [
+      0.0455,
+      0.1761,
+      0.5508,
+      0.9852
+    ]
+  },
+  "rapid6": {
+    "peak": 0.733285,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.6045,
+    "medianHz": 270,
+    "presenceEnergy": 0.3769,
+    "energyTimes": [
+      0.8462,
+      4.0995,
+      7.2541,
+      7.9985
+    ]
+  },
+  "seekrapid6": {
+    "peak": 0.74212,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.5334,
+    "medianHz": 387,
+    "presenceEnergy": 0.4473,
+    "energyTimes": [
+      0.8551,
+      4.115,
+      7.2614,
+      7.9986
+    ]
+  },
+  "weapon6-start": {
+    "peak": 0.875778,
+    "rms": 0.14,
+    "duration": 0.15,
+    "lowEnergy": 0.7182,
+    "medianHz": 199,
+    "presenceEnergy": 0.2799,
+    "energyTimes": [
+      0.0041,
+      0.0132,
+      0.0377,
+      0.07
+    ]
+  },
+  "weapon6-stop": {
+    "peak": 0.612232,
+    "rms": 0.14,
+    "duration": 0.38,
+    "lowEnergy": 0.6335,
+    "medianHz": 340,
+    "presenceEnergy": 0.3631,
+    "energyTimes": [
+      0.0176,
+      0.0766,
+      0.1801,
+      0.269
+    ]
+  },
+  "weapon6-homing": {
+    "peak": 0.702931,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.5508,
+    "medianHz": 422,
+    "presenceEnergy": 0.4431,
+    "energyTimes": [
+      0.0433,
+      0.1784,
+      0.5481,
+      0.9763
+    ]
+  },
+  "shot7alt1": {
+    "peak": 0.782434,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6696,
+    "medianHz": 316,
+    "presenceEnergy": 0.3294,
+    "energyTimes": [
+      0.0396,
+      0.1304,
+      0.4172,
+      0.8004
+    ]
+  },
+  "shot7alt2": {
+    "peak": 0.753288,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6717,
+    "medianHz": 328,
+    "presenceEnergy": 0.3274,
+    "energyTimes": [
+      0.0379,
+      0.1327,
+      0.4194,
+      0.7975
+    ]
+  },
+  "shot7alt3": {
+    "peak": 0.733831,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.664,
+    "medianHz": 316,
+    "presenceEnergy": 0.3349,
+    "energyTimes": [
+      0.0353,
+      0.1288,
+      0.4464,
+      0.8643
+    ]
+  },
+  "shot7alt4": {
+    "peak": 0.762611,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6961,
+    "medianHz": 305,
+    "presenceEnergy": 0.3028,
+    "energyTimes": [
+      0.0367,
+      0.1271,
+      0.4479,
+      0.8644
+    ]
+  },
+  "shot7": {
+    "peak": 0.629191,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.674,
+    "medianHz": 352,
+    "presenceEnergy": 0.325,
+    "energyTimes": [
+      0.0449,
+      0.1752,
+      0.4747,
+      0.8407
+    ]
+  },
+  "rapid7": {
+    "peak": 0.749796,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.5324,
+    "medianHz": 445,
+    "presenceEnergy": 0.4664,
+    "energyTimes": [
+      0.796,
+      3.9968,
+      7.3131,
+      8.0524
+    ]
+  },
+  "seekrapid7": {
+    "peak": 0.764036,
+    "rms": 0.205,
+    "duration": 8.1,
+    "lowEnergy": 0.4684,
+    "medianHz": 668,
+    "presenceEnergy": 0.5302,
+    "energyTimes": [
+      0.7856,
+      3.999,
+      7.3088,
+      8.0452
+    ]
+  },
+  "weapon7-start": {
+    "peak": 0.651781,
+    "rms": 0.14,
+    "duration": 0.15,
+    "lowEnergy": 0.8361,
+    "medianHz": 129,
+    "presenceEnergy": 0.1637,
+    "energyTimes": [
+      0.0056,
+      0.0206,
+      0.0451,
+      0.0712
+    ]
+  },
+  "weapon7-stop": {
+    "peak": 0.665452,
+    "rms": 0.14,
+    "duration": 0.38,
+    "lowEnergy": 0.7447,
+    "medianHz": 316,
+    "presenceEnergy": 0.2546,
+    "energyTimes": [
+      0.0188,
+      0.0786,
+      0.1633,
+      0.2615
+    ]
+  },
+  "weapon7-homing": {
+    "peak": 0.746123,
+    "rms": 0.13,
+    "duration": 1.22,
+    "lowEnergy": 0.6575,
+    "medianHz": 316,
+    "presenceEnergy": 0.3414,
+    "energyTimes": [
+      0.0376,
+      0.1288,
+      0.4511,
+      0.8609
+    ]
+  }
+}

@@ -2,6 +2,7 @@ import {nearBasketball} from './courtyard-basketball';
 import {SoloUpgradeSlowdown} from './solo-upgrade-slowdown';
 import {nearbyTool,aimingClearButton,nearDrawingRoom,INK_COLORS,BRUSH_SIZES} from './courtyard-drawing';
 import {CourtyardUI} from './courtyard-ui';
+import {CombatGestures} from './combat-gestures';
 import {ARENA_START_DELAY_MS} from './crew-arrival-timing';
 import {HAND_LABELS,HAND_NAMES,HAND_THRESHOLDS,handProgress} from './weapon-levels';
 import {podiumSkinEligibility,PODIUM_METALS} from './player-skins';
@@ -47,7 +48,7 @@ import {CrownOfTheAbyss, crownBadge} from './champion';
 import {encodeReplay,decodeReplay,MAX_DECODED_BYTES} from './replay-file';
 import {shareReplay,ownReplays,removeSharedReplay,replayLink,linkedReplay,downloadReplay,retainPendingReplay,pendingReplay,clearPendingReplay} from './replay-sharing';
 import {DeathHistory,type DeathAnalysis,killerName} from './death-analysis';
-import {leaderboardConfigured,loadLeaderboard,loadOwnScore,publishCandidate,scoreCandidate,eligibleForLeaderboard} from './leaderboard';
+import {leaderboardConfigured,loadLeaderboard,loadOwnScore,publishCandidate,scoreCandidate,eligibleForLeaderboard,beginRankedRun} from './leaderboard';
 import {ScoreQueue,cleanNickname,type PendingScore,type OwnScore} from './score-queue';
 import { LobbyBrowser, type PublicLobby } from './lobbies';
 import { FriendsSession, type ArenaSnapshot } from './multiplayer';
@@ -66,6 +67,7 @@ const $ = <T extends HTMLElement=HTMLElement>(id:string)=>document.getElementByI
 $('game-version').textContent=`v${gameVersion}`;
 type Settings={sensitivity:number;mobileSensitivity:number;fov:number;volume:number;musicVolume:number;quality:string;skyMotion:'full'|'reduced';mist:boolean;screenShake:number;movementMotion:number;threatCues:boolean;controlScheme:ControlScheme;controllerSensitivity:number;controllerDeadzone:number};
 const touchDevice=navigator.maxTouchPoints>0&&matchMedia('(pointer:coarse)').matches;
+const combatGestures=new CombatGestures();
 const mobileControls=new MobileControls();let mobileFullscreen=false,mobileOrientationLocked=false;
 const defaultScreenShake=matchMedia('(prefers-reduced-motion: reduce)').matches?0:35;
 const defaults:Settings={sensitivity:1,mobileSensitivity:1,fov:90,volume:55,musicVolume:55,quality:touchDevice?'low':'high',skyMotion:matchMedia('(prefers-reduced-motion: reduce)').matches?'reduced':'full',mist:true,screenShake:defaultScreenShake,movementMotion:defaultScreenShake===0?0:60,threatCues:false,controlScheme:touchDevice?'mobile':'qwerty',controllerSensitivity:1,controllerDeadzone:.15};
@@ -103,6 +105,7 @@ let rankingRequest:Promise<void>|null=null;
 // Keep historical uploads under their original rules and out of the new board.
 const scoreQueue=new ScoreQueue(pending=>saveStore('abyss-pending-score-v7',pending),publishCandidate,readStore<PendingScore|null>('abyss-pending-score-v7',null));
 const legacyScoreQueue=new ScoreQueue(pending=>saveStore('abyss-pending-score',pending),publishCandidate,readStore<PendingScore|null>('abyss-pending-score',null));
+let soloScoreTicket:Promise<string|null>=Promise.resolve(null);const runScoreTickets=new WeakMap<RecordedRun,Promise<string|null>>();
 let recorder:RunRecorder|null=null,replay:ReplayPlayer|null=null,lastRun:RecordedRun|null=null;let practice=false,historyOpen=false,replayPaused=false;
 let friends:FriendsSession|null=null;let friendsOpen=false;const lobbyBrowser=new LobbyBrowser();let lobbyStarted=false;let lobbyCrewCount=1;let receivedEpoch=-1;
 const hostClock=new CrewClock();let hostClockWorker:Worker|null=null;
@@ -114,7 +117,7 @@ let blockedPadJump=true,blockedPadFire=true,blockedPadHoming=true;
 const format=(time:number)=>time.toFixed(3);
 const replayControlsVisibility=new ReplayControlsVisibility(()=>mode,()=>settings.controlScheme==='mobile');
 function updateBest() {$('best-menu').innerHTML=best?`${format(best)} <span>SECONDS</span>`:'— <span>SECONDS</span>';$('best-hud').textContent=format(best);}
-function showPanels() {if((!friends?.running&&!soloStartAt)||mode==='menu'||mode==='dead'||mode==='replay'||mode==='crew-replay')crewArrival.reset();else if(mode==='paused')crewArrival.element.hidden=true;document.body.dataset.crewCourtyard=String(!!friends?.prelobby);const previousMode=document.body.dataset.gameMode;document.body.dataset.gameMode=mode;if(previousMode==='menu'&&mode==='playing'&&entrance){const threshold=$('menu-threshold');threshold.classList.remove('is-crossing');void threshold.offsetWidth;threshold.classList.add('is-crossing');}updateConnectionMeter();if(!friends||mode!=='playing')$('respawn-status').hidden=true;music.setScene(analysisActive?'silent':entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu'||friends.prelobby;$('crew-lobby-controls').hidden=!friends||friends.running||mode==='menu';$('menu').hidden=mode!=='menu';crown.showCoronation(mode==='menu'&&!profileOpen&&!leaderboardOpen&&!friendsOpen&&!settingsOpen&&!historyOpen);$('hud').hidden=mode==='menu'||(entrance&&(settings.controlScheme!=='mobile'||!!friends?.prelobby));$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen||friendsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;if(mode==='crew-replay'){$('hud').hidden=true;$('crew-hud').hidden=true;$('connection-meter').hidden=true;}replayControlsVisibility.sync();updateCrewReplayActions();document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
+function showPanels() {if((!friends?.running&&!soloStartAt)||mode==='menu'||mode==='dead'||mode==='replay'||mode==='crew-replay')crewArrival.reset();else if(mode==='paused')crewArrival.element.hidden=true;document.body.dataset.crewCourtyard=String(!!friends?.prelobby);const previousMode=document.body.dataset.gameMode;document.body.dataset.gameMode=mode;if(previousMode==='menu'&&mode==='playing'&&entrance){const threshold=$('menu-threshold');threshold.classList.remove('is-crossing');void threshold.offsetWidth;threshold.classList.add('is-crossing');}updateConnectionMeter();if(!friends||mode!=='playing')$('respawn-status').hidden=true;music.setScene(entrance?'entrance':mode==='menu'||mode==='paused'||mode==='dead'?'menu':'silent');$<HTMLButtonElement>('timer').disabled=!!friends||settings.controlScheme!=='mobile'||mode!=='playing';$('player-profile').hidden=!profileOpen;$('leaderboard').hidden=!leaderboardOpen;$('friends').hidden=!friendsOpen;$('crew-hud').hidden=!friends||mode==='menu'||friends.prelobby;$('crew-lobby-controls').hidden=!friends||friends.running||mode==='menu';$('menu').hidden=mode!=='menu';crown.showCoronation(mode==='menu'&&!profileOpen&&!leaderboardOpen&&!friendsOpen&&!settingsOpen&&!historyOpen);$('hud').hidden=mode==='menu'||(entrance&&(settings.controlScheme!=='mobile'||!!friends?.prelobby));$('replay-controls').hidden=mode!=='replay';$('history').hidden=!historyOpen;$('pause').hidden=mode!=='paused'||settingsOpen||friendsOpen;$('death').hidden=mode!=='dead'||settingsOpen||analysisActive;$('death-analysis').hidden=!analysisActive;$('hud').hidden=analysisActive||$('hud').hidden;$('settings').hidden=!settingsOpen;if(mode==='crew-replay'){$('hud').hidden=true;$('crew-hud').hidden=true;$('connection-meter').hidden=true;}replayControlsVisibility.sync();updateCrewReplayActions();document.querySelectorAll('.controller-focus').forEach(el=>{if(!(el as HTMLElement).getClientRects().length)el.classList.remove('controller-focus');});}
 function crewRespawnStatus(player:World['crew'][number],time:number){
   if(player.respawnAt===null)return player.cause||'DEAD';
   const remaining=player.respawnAt-time;
@@ -136,8 +139,8 @@ function syncSpectator(){
   if(local&&!local.alive){if(!spectator.position){spectator.start(local.player.pos);clearInput();}}else spectator.reset();
 }
 const courtyardUI=new CourtyardUI({room:()=>{paused();friendsOpen=true;showPanels();roster();}});
-function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&entrance&&(emotes.leftArm||settings.controlScheme==='mobile'&&courtyardUI.arms.leftArm),rightArm:active&&entrance&&(emotes.rightArm||settings.controlScheme==='mobile'&&courtyardUI.arms.rightArm)};}
-function clearInput() {soloUpgradeSlowdown.clear();sound.setPlaybackRate(1);courtyardUI.resetSelect();mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
+function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&!spectator.position&&(emotes.leftArm||settings.controlScheme==='mobile'&&(entrance?courtyardUI.arms.leftArm:combatGestures.arms.leftArm)),rightArm:active&&!spectator.position&&(emotes.rightArm||settings.controlScheme==='mobile'&&(entrance?courtyardUI.arms.rightArm:combatGestures.arms.rightArm))};}
+function clearInput() {soloUpgradeSlowdown.clear();sound.setPlaybackRate(1);courtyardUI.resetSelect();combatGestures.reset();mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
 function notice(text:string,seconds=2.5) {noticeText=text;noticeUntil=performance.now()+seconds*1000;}
 async function captureMouse() {
   if(settings.controlScheme==='mobile'){void enterMobileFullscreen();return;}
@@ -147,7 +150,7 @@ async function captureMouse() {
   catch {if(ticket===captureTicket&&mode==='playing'){if(!friends?.prelobby)paused();notice(friends?'CLICK THE COURTYARD TO LOOK AROUND':'CLICK RETURN TO CAPTURE THE MOUSE');}}
   finally {if(ticket===captureTicket)capturingMouse=false;}
 }
-function startRun(setup:RunSetup=DEFAULT_SETUP) {music.unlock();soloStartAt=0;soloPausedAt=0;crewArrival.reset();
+function startRun(setup:RunSetup=DEFAULT_SETUP) {soloScoreTicket=Promise.resolve(null);music.unlock();soloStartAt=0;soloPausedAt=0;crewArrival.reset();
  watchRequest++;
   if(!renderer.originalEnemies.ready||!renderer.originalWeapon.ready)return;
   // Explicit Practice setups (including retries) take precedence over preview URLs.
@@ -164,6 +167,7 @@ function startRun(setup:RunSetup=DEFAULT_SETUP) {music.unlock();soloStartAt=0;so
 function enterArena(){
   if(!entranceRun)return;const {seed,setup}=entranceRun;
   entrance=false;entranceRun=null;world=createRun(seed,setup);recorder=new RunRecorder(seed,setup);
+  soloScoreTicket=!practice?beginRankedRun().catch(()=>null):Promise.resolve(null);
   yaw=0;pitch=0;clearInput();deathHistory.reset();deathHistory.capture(world,yaw,pitch,true,input.fire||input.homing);renderer.clear();sound.clear();soloStartAt=Date.now()+ARENA_START_DELAY_MS;soloArrivalEpoch++;crewArrival.reset();noticeUntil=0;showPanels();void sound.prepareCrewArrival();crewArrival.update(-soloArrivalEpoch,soloStartAt,Date.now(),1);
 }
 function resume() {music.unlock();if(!world||profileOpen||leaderboardOpen||historyOpen||friendsOpen)return;
@@ -183,7 +187,7 @@ function death() {
   const record=!friends&&!practice&&world.time>best;if(record){best=world.time;saveStore('abyss-survival-v3-best',best);}
   $('death-time').textContent=format(world.time);$('retry').hidden=!!friends&&friends.role==='guest';$('retry').innerHTML=friends?'RETURN TO COURTYARD <span>↗</span>':'DEFY IT AGAIN <span>↗</span>';$('death-cause').textContent=friends?'The crew fell. '+(friends.role==='host'?'Return to the courtyard to start again.':'Waiting for the host to restart.'):world.deathSource?`Killed by ${killerName(world.deathSource.kind)}.`:world.cause==='FALLEN'?'Fell into the abyss.':`Taken by ${world.cause.toLowerCase()}.`;$('death-title').textContent=world.cause==='FALLEN'?'LOST BELOW.':'CONSUMED.';
   $('new-best').hidden=!record;$('stat-kills').textContent=String(world.stats.kills);$('stat-gems').textContent=String(world.stats.collected);$('stat-accuracy').textContent=`${Math.round(world.stats.hits/Math.max(1,world.stats.shots)*100)}%`;
-  saveStore('abyss-last-run',{time:world.time,cause:world.cause,...world.stats});lastRun=friends?null:recorder?.finish(world)??null;$('watch-last').hidden=!lastRun;$('retry').hidden=!!friends&&friends.role==='guest';if(lastRun)void saveRun(lastRun).catch(()=>notice('REPLAY STORAGE UNAVAILABLE'));recorder=null;updateBest();showPanels();handleRunScore();
+  saveStore('abyss-last-run',{time:world.time,cause:world.cause,...world.stats});lastRun=friends?null:recorder?.finish(world)??null;$('watch-last').hidden=!lastRun;$('retry').hidden=!!friends&&friends.role==='guest';if(lastRun)runScoreTickets.set(lastRun,soloScoreTicket);if(lastRun)void saveRun(lastRun).catch(()=>notice('REPLAY STORAGE UNAVAILABLE'));recorder=null;updateBest();showPanels();handleRunScore();
   if(!friends&&!entrance){deathHistory.capture(world,yaw,pitch,true,input.fire||input.homing);deathAnalysis=deathHistory.clip(world.deathSource);$('watch-death').hidden=!deathAnalysis;if(deathAnalysis)startDeathAnalysis();}else $('watch-death').hidden=true;
 }
 function resetDeathAnalysis(release=false){
@@ -192,7 +196,7 @@ function resetDeathAnalysis(release=false){
 function startDeathAnalysis(){
  if(!deathAnalysis||friends||mode!=='dead')return;
  deathAnalysis=deathHistory.clip(world?.deathSource??null);if(!deathAnalysis)return;
- analysisActive=true;analysisSuspended=false;accumulator=0;noticeUntil=0;renderer.topDown=false;renderer.clear();sound.stopLoops();
+ analysisActive=true;analysisSuspended=false;accumulator=0;noticeUntil=0;renderer.topDown=false;renderer.clear();void sound.start();
  $('analysis-killer').textContent=deathAnalysis.source?killerName(deathAnalysis.source.kind):'THE ABYSS';
  $('analysis-subtitle').textContent=deathAnalysis.source?'THE HUNT THAT ENDED YOUR RUN':'YOUR FINAL DESCENT';
  $('analysis-length').textContent=`LAST ${deathAnalysis.duration.toFixed(1)} SECONDS`;
@@ -202,7 +206,7 @@ function startDeathAnalysis(){
  $('analysis-personal-best').hidden=$('new-best').hidden;
  document.exitPointerLock?.();showPanels();updateDeathAnalysis();
 }
-function endDeathAnalysis(){if(!analysisActive)return;analysisActive=false;analysisSuspended=false;renderer.setDeathGhost(null);renderer.clear();showPanels();}
+function endDeathAnalysis(){if(!analysisActive)return;analysisActive=false;analysisSuspended=false;sound.stopLoops();renderer.setDeathGhost(null);renderer.clear();showPanels();}
 function updateDeathAnalysis(){
  const a=deathAnalysis;if(!a)return;
  $('analysis-countdown').textContent=a.impact?'IMPACT':`${a.remaining.toFixed(1)}s`;
@@ -309,9 +313,11 @@ function updateCourtyardSounds(){
 }
 function frame(now:number) {
   sampleFrameRate(now);
+  renderer.localPlayerColor=preferredPlayerColor;
   const elapsed=Math.max(0,(now-last)/1000),dt=Math.min(.05,elapsed);last=now;
   music.update(dt);
   pollController(dt);
+  combatGestures.show(settings.controlScheme==='mobile'&&mode==='playing'&&!entrance&&!controlMenuRoot()&&!spectator.position);
   if(mode==='crew-replay'){crewViewer.frame(elapsed);requestAnimationFrame(frame);return;}
   const soloSlowActive=!friends&&mode==='playing'&&!entrance&&!controlMenuRoot()&&world?.state==='playing';
   const soloSimulationElapsed=soloSlowActive?soloUpgradeSlowdown.advance(Math.min(.1,elapsed)):Math.min(.1,elapsed);
@@ -352,9 +358,10 @@ function frame(now:number) {
      }
     }
     if(friends.role==='host')world.selectCrew('host');
+    sound.listener(spectator.position??world.player.pos,yaw,pitch);
     for(const effect of world.effects){renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);}world.effects=[];
     syncSpectator();
-    sound.listener(spectator.position??world.player.pos,yaw,pitch);if(cameraActive){if(entrance)sound.entrance(best,ENTRANCE_SEAL);else sound.update(world);}
+    if(cameraActive){if(entrance)sound.entrance(best,ENTRANCE_SEAL);else sound.update(world);}
     if(friends.running&&mode==='playing')crewArrival.update(friends.epoch,friends.startAt,Date.now(),world.crew.length);
     $('crew-hud').textContent=(entrance?`CREW COURTYARD · ${world.crew.length} PLAYERS\nJUMP INTO THE OPEN PIT TO DESCEND\n`:`FRIENDS · ${world.crew.length}/${MAX_CREW_PLAYERS} · ${friends.role==='host'?'HOST':'GUEST'}\n`)+world.crew.map((p,i)=>`${i+1}. ${p.id===friends!.localId?'YOU':friends!.members.find(m=>m.id===p.id)?.name??'FRIEND '+(i+1)} · ${p.alive?(entrance?'IN COURTYARD':'ALIVE'):p.cause==='DISCONNECTED'?'DISCONNECTED':world!.state==='playing'&&p.respawnAt!==null?crewRespawnStatus(p,world!.time):p.cause||'DEAD'}`).join('\n');
     if(entrance&&settings.controlScheme!=='mobile')$('crew-hud').textContent+=`\nHOLD ${settings.controlScheme==='controller'?'LT / L2 · RT / R2':settings.controlScheme==='azerty'?'A · E':'Q · E'} · LEFT / RIGHT ARM UP`;
@@ -366,13 +373,22 @@ function frame(now:number) {
   hudTime+=dt;if(hudTime>.05&&world){updateHud();hudTime=0;}
   // Pointer-lock release can remove document focus while the replay is still
   // visible. Only visibility and explicit pause/menu state stop its clock.
-  if(analysisActive&&deathAnalysis){if(!analysisSuspended&&!document.hidden&&!settingsOpen&&!profileOpen&&!leaderboardOpen)deathAnalysis.advance(dt);if(deathAnalysis.done)endDeathAnalysis();else updateDeathAnalysis();}
+  if(analysisActive&&deathAnalysis){
+   const running=!analysisSuspended&&!document.hidden&&!settingsOpen&&!profileOpen&&!leaderboardOpen;
+   if(running)deathAnalysis.advance(dt);
+   if(deathAnalysis.done)endDeathAnalysis();else{
+    updateDeathAnalysis();
+    // Follow the recorded scene and replay camera without stepping the final run.
+    if(running&&!deathAnalysis.impact){sound.listener(deathAnalysis.camera.position,deathAnalysis.camera.yaw,deathAnalysis.camera.pitch);sound.update(deathAnalysis.view,deathAnalysis.victimWeaponAudio);}
+    else sound.stopLoops();
+   }
+  }
   renderer.setCrewNames(friends?.members??[]);renderer.courtyardMembers=friends?.members??[];courtyardUI.update(friends,mode==='playing'&&!controlMenuRoot(),settings.controlScheme,renderer.courtyard.loaded&&renderer.crewAvatarLoaded&&renderer.originalEnemies.ready&&renderer.originalWeapon.ready,renderer.courtyard.error,world??undefined);updateCourtyardSounds();
   // Frozen views show the completed tick; guests already have a sampled network view.
   const renderAlpha=friends?.role==='guest'||world?.state==='dead'||(!friends&&(mode==='paused'||settingsOpen))||(mode==='replay'&&replayPaused)?1:friends?.role==='host'?hostClock.alpha:Math.min(1,accumulator/STEP);
   const analysis=analysisActive?deathAnalysis:null;
   renderer.setDeathGhost(analysis?.view.player.pos??null,analysis?.victimYaw,analysis?.impact,analysis?Math.max(0,analysis.elapsed-analysis.duration):0,analysis?.end);
-  renderer.render(analysis?.view??(world&&friends?friends.presentation(world,now):world),analysis?.camera.yaw??yaw,analysis?.camera.pitch??pitch,analysis?dt:friends?dt:(mode==='paused'||settingsOpen||document.hidden||mode==='replay'&&replayPaused)?0:dt*soloPresentationRate,mode==='menu',analysis?1:renderAlpha,analysis?.camera.position??spectator.position,friends?.role==='guest',entrance,analysis?{...idleInput(),yaw:analysis.victimYaw,pitch:analysis.victimPitch,fire:analysis.victimFiring}:mode==='replay'?replay?.lastInput:entrance?input:null);
+  renderer.render(analysis?.view??(world&&friends?friends.presentation(world,now):world),analysis?.camera.yaw??yaw,analysis?.camera.pitch??pitch,analysis?dt:friends?dt:(mode==='paused'||settingsOpen||document.hidden||mode==='replay'&&replayPaused)?0:dt*soloPresentationRate,mode==='menu',analysis?1:renderAlpha,analysis?.camera.position??spectator.position,friends?.role==='guest',entrance,analysis?{...idleInput(),yaw:analysis.victimYaw,pitch:analysis.victimPitch,fire:analysis.victimFiring}:mode==='replay'?replay?.lastInput:input);
   if(analysis){const marker=renderer.projectDeathMarker(analysis.killerPosition,analysis.killerVisible);$('analysis-marker').hidden=!marker.visible;$('analysis-marker').style.left=`${marker.x}%`;$('analysis-marker').style.top=`${marker.y}%`;}
   requestAnimationFrame(frame);
 }
@@ -419,8 +435,9 @@ function replayStatus(){
  $<HTMLButtonElement>('replay-upload-retry').hidden=!replayUploadError;$<HTMLButtonElement>('replay-upload-retry').disabled=replayUploadBusy;
 }
 async function queueScoreRun(run:RecordedRun,name:string){
+ const ticket=await runScoreTickets.get(run);
  try{await retainPendingReplay(run,name);}catch{replayUploadError='Your score can save, but replay storage is unavailable in this browser.';replayStatus();}
- scoreQueue.enqueue(scoreCandidate(run),name);await scoreQueue.flush();void uploadPendingBest(true);
+ scoreQueue.enqueue({...scoreCandidate(run),ticket:ticket??undefined},name);await scoreQueue.flush();void uploadPendingBest(true);
 }
 async function uploadPendingBest(manual=false){
  if(replayUploadBusy||(!manual&&Date.now()<replayRetryAt))return;replayUploadBusy=true;
@@ -463,7 +480,7 @@ function renderRunScore(){
  const timeMs=Math.round(lastRun.time*1000),confirmed=scoreQueue.confirmed;
  if(scoreQueue.pending){const pending=scoreQueue.pending;
   if(timeMs>pending.score.timeMs&&!runAutomatic&&runNickname){title.textContent='NEW BEST READY TO PUBLISH';status.textContent=`Publish ${format(lastRun.time)} seconds as ${runNickname}. It will replace the lower best waiting to save.`;button.hidden=false;button.disabled=false;button.textContent='PUBLISH NEW BEST';return;}
-  title.textContent=scoreQueue.busy?'PUBLISHING YOUR BEST…':scoreQueue.error?'BEST SAVED · CONNECTION PENDING':'BEST READY TO PUBLISH';
+  title.textContent=scoreQueue.busy?'PUBLISHING YOUR BEST…':scoreQueue.error?'BEST SAVED · PUBLICATION PENDING':'BEST READY TO PUBLISH';
   status.textContent=scoreQueue.error||`${pending.name} · ${format(pending.score.timeMs/1000)} seconds. You can retry the arena while it saves.`;
   if(pending.score.timeMs>timeMs)status.textContent+=` Your ${format(lastRun.time)}-second run did not beat that best.`;
   button.hidden=scoreQueue.busy;button.textContent='RETRY SAVE';return;
@@ -600,8 +617,8 @@ function updateControlHints(){
  $('controller-settings').hidden=!controller;$('controller-status').hidden=!controller;$('mouse-sensitivity-setting').hidden=controller||mobile;$('mobile-sensitivity-setting').hidden=!mobile;$('control-bindings').hidden=mobile;
  $('control-hint').textContent=mobile?'MOBILE':controller?'CONTROLLER':settings.controlScheme==='azerty'?'ZQSD + MOUSE':'WASD + MOUSE';
  const rows=controller?[
-  ['LEFT STICK','Move'],['RIGHT STICK','Look'],['A / CROSS','Jump · time each hop'],['SELECT / SHARE / VIEW','Tap ready · hold 5s to open pit · courtyard'],['RT / R2','Tap burst / hold stream'],['LT / L2','Homing · attunement II'],['LB / L1 · RB / R1','Hold left / right arm up · courtyard only'],['LT / L2 · RT / R2','Left / right foot kick · courtyard only'],['START / OPTIONS','Pause / resume'],['D-PAD · A / CROSS','Navigate menus · select'],['B / CIRCLE','Back']
- ]:[['1 2 3 4 5 6 7','Test weapons · makes run unranked'],[settings.controlScheme==='azerty'?'Z Q S D':'W A S D','Move'],['MOUSE','Look'],['SPACE','Jump · time each hop'],['LMB','Tap burst / hold stream'],['RMB','Homing · attunement II'],[settings.controlScheme==='azerty'?'A · E':'Q · E','Hold left / right arm up · courtyard only'],['ESC','Pause'],['R','Retry after death']];
+  ['LEFT STICK','Move'],['RIGHT STICK','Look'],['A / CROSS','Jump · time each hop'],['SELECT / SHARE / VIEW','Tap ready · hold 5s to open pit · courtyard'],['RT / R2','Tap burst / hold stream'],['LT / L2','Homing · attunement II'],['LB / L1 · RB / R1','Hold left / right arm up'],['LT / L2 · RT / R2','Left / right foot kick · courtyard only'],['START / OPTIONS','Pause / resume'],['D-PAD · A / CROSS','Navigate menus · select'],['B / CIRCLE','Back']
+ ]:[['1 2 3 4 5 6 7','Test weapons · makes run unranked'],[settings.controlScheme==='azerty'?'Z Q S D':'W A S D','Move'],['MOUSE','Look'],['SPACE','Jump · time each hop'],['LMB','Tap burst / hold stream'],['RMB','Homing · attunement II'],[settings.controlScheme==='azerty'?'A · E':'Q · E','Hold left / right arm up'],['ESC','Pause'],['R','Retry after death']];
  const list=$('control-bindings');list.replaceChildren();for(const [binding,action] of rows){const row=document.createElement('div'),key=document.createElement('kbd'),text=document.createElement('span');key.textContent=binding;text.textContent=action;row.append(key,text);list.append(row);}
 }
 function controlMenuRoot():HTMLElement|null {
@@ -614,6 +631,7 @@ function closeControlMenu(){
  if(profileOpen){profileOpen=false;showPanels();}else if(settingsOpen){settingsOpen=false;showPanels();}else if(leaderboardOpen){leaderboardOpen=false;showPanels();}else if(historyOpen){historyOpen=false;showPanels();}else if(friendsOpen){friendsOpen=false;if(friends?.prelobby&&world&&mode==='paused')resume();else showPanels();}else if(analysisActive)endDeathAnalysis();else if(mode==='replay')home();
 }
 function focusControl(element:HTMLElement){
+ music.unlock();
  menuAudio.unlock();
  document.querySelectorAll('.controller-focus').forEach(el=>el.classList.remove('controller-focus'));element.classList.add('controller-focus');element.focus();element.scrollIntoView({block:'nearest'});
 }
@@ -810,8 +828,9 @@ function init() {
   try {renderer=new GameRenderer($<HTMLCanvasElement>('game'),settings);}catch(error){$('error').hidden=false;$('error').textContent=`The arena could not initialize WebGL2. Enable hardware acceleration and use a current browser. ${error instanceof Error?error.message:''}`;return;}
   crewViewer=new CrewReplayViewer(renderer,sound,()=>settings.controlScheme,()=>settings.controlScheme==='mobile'?settings.mobileSensitivity:settings.sensitivity);setupCrewReplayActions();
   updateBest();showPanels();setupSettings();
-  document.addEventListener('pointerdown',()=>music.unlock());
-  document.addEventListener('keydown',()=>music.unlock());
+  document.addEventListener('pointerdown',()=>music.unlock(),{capture:true});
+  document.addEventListener('keydown',()=>music.unlock(),{capture:true});
+  document.addEventListener('click',()=>music.unlock(),{capture:true});
   setupMenuAudio(menuAudio,()=>settings.volume/100);
 
   const start=$<HTMLButtonElement>('start');start.disabled=true;void renderer.prepare().then(()=>{start.disabled=!(renderer.originalEnemies.ready&&renderer.originalWeapon.ready);if(start.disabled){$('error').hidden=false;$('error').textContent='The original game assets could not load. '+renderer.originalEnemies.error+' '+renderer.originalWeapon.error;}}).catch(error=>{$('error').hidden=false;$('error').textContent='The arena could not prepare its graphics. '+String(error);});
@@ -869,7 +888,7 @@ function init() {
      return {x,y,box:[x-r,y-r,r*2,r*2]};
     }
    };
-   Object.defineProperty(window,'abyss',{configurable:true,get:()=>({mode,soloUpgradeRate:soloUpgradeSlowdown.rate,crewReplay:crewViewer?.diagnostics,crewRecording:friends?.replayDiagnostics,completedCrewReplay:friends?.completedReplay?{id:friends.completedReplay.id,ticks:friends.completedReplay.ticks}:null,menuRelics:renderer.menuRelics.diagnostics,sky:renderer.skyDiagnostics,mist:renderer.openingMist.diagnostics,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,courtyard:world?.courtyard,courtyardAssets:{loaded:renderer.courtyard.loaded,error:renderer.courtyard.error,presentation:renderer.courtyard.diagnostics},entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),cameraFeedback:renderer.cameraFeedback.diagnostics,movementMotion:renderer.movementMotion.diagnostics,handFeedback:renderer.originalWeapon.effectDiagnostics,enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,leftArm:!!p.input.leftArm,rightArm:!!p.input.rightArm,position:p.player.pos})),running:friends.running,prelobby:friends.prelobby}:null,audio:sound.diagnostics,menuAudio:menuAudio.diagnostics,music:music.diagnostics})});
+   Object.defineProperty(window,'abyss',{configurable:true,get:()=>({mode,soloUpgradeRate:soloUpgradeSlowdown.rate,crewReplay:crewViewer?.diagnostics,crewRecording:friends?.replayDiagnostics,completedCrewReplay:friends?.completedReplay?{id:friends.completedReplay.id,ticks:friends.completedReplay.ticks}:null,menuRelics:renderer.menuRelics.diagnostics,sky:renderer.skyDiagnostics,mist:renderer.openingMist.diagnostics,deathHistory:deathHistory.diagnostics,deathSource:world?.deathSource,deathAnalysis:deathAnalysis?{active:analysisActive,remaining:deathAnalysis.remaining,duration:deathAnalysis.duration,impact:deathAnalysis.impact,viewTime:deathAnalysis.view.time,killerVisible:deathAnalysis.killerVisible,suspended:analysisSuspended}:null,entrance,courtyard:world?.courtyard,courtyardAssets:{loaded:renderer.courtyard.loaded,error:renderer.courtyard.error,presentation:renderer.courtyard.diagnostics},entranceSeal:{...ENTRANCE_SEAL},viewport:gameViewport(),controls:settings.controlScheme,input:{...input},yaw,pitch,time:world?.time,position:world?{...world.player.pos}:null,spectating:!!spectator.position,cameraPosition:renderer.camera.position.toArray(),cameraFeedback:renderer.cameraFeedback.diagnostics,movementMotion:renderer.movementMotion.diagnostics,combatHands:renderer.combatHandDiagnostics,handFeedback:renderer.originalWeapon.effectDiagnostics,enemies:world?.enemies.length,enemyKinds:world?.enemies.map(e=>e.kind),wave:world?.wave,projectiles:world?.projectiles.length,stats:world?{...world.stats}:null,drawCalls:renderer.renderer.info.render.calls,originalAssets:renderer.originalWeapon.ready,originalEnemies:renderer.originalEnemies.ready,enemyAssetError:renderer.originalEnemies.error,originalAssetError:renderer.originalWeapon.error,handLevel:world?.level,projectileRendering:renderer.originalWeapon.projectileDiagnostics,projectileLighting:renderer.projectileLighting.diagnostics,friends:friends?{network:friends.diagnostics,role:friends.role,members:friends.members,allReady:friends.allReady,connected:friends.connected,epoch:friends.epoch,crew:world?.crew.map(p=>({id:p.id,alive:p.alive,cause:p.cause,life:p.life,respawnAt:p.respawnAt,protectedUntil:p.protectedUntil,leftArm:!!p.input.leftArm,rightArm:!!p.input.rightArm,position:p.player.pos})),running:friends.running,prelobby:friends.prelobby}:null,audio:sound.diagnostics,menuAudio:menuAudio.diagnostics,music:music.diagnostics})});
   }
   updateControlHints();setupFriends();setupLeaderboard();
   crewBoard=new CrewLeaderboardUI({session:()=>friends,mode:()=>mode,watch:(run,onExit)=>watchCrewRun(run,0,onExit),watchShared,solo:()=>{renderRankings();renderPersonalRanking();void refreshRankings();},history:()=>void openHistory()});

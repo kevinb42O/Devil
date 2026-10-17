@@ -1,0 +1,67 @@
+{
+  "inventory": [
+    {
+      "kind": "centipede",
+      "view": "body",
+      "triangles": 89336,
+      "meshes": 68
+    },
+    {
+      "kind": "centipede",
+      "view": "head",
+      "triangles": 8840,
+      "meshes": 8
+    },
+    {
+      "kind": "centipede",
+      "view": "segment",
+      "triangles": 6708,
+      "meshes": 5
+    },
+    {
+      "kind": "gigapede",
+      "view": "body",
+      "triangles": 92056,
+      "meshes": 69
+    },
+    {
+      "kind": "gigapede",
+      "view": "head",
+      "triangles": 9160,
+      "meshes": 9
+    },
+    {
+      "kind": "gigapede",
+      "view": "segment",
+      "triangles": 6908,
+      "meshes": 5
+    },
+    {
+      "kind": "ghostpede",
+      "view": "body",
+      "triangles": 75920,
+      "meshes": 58
+    },
+    {
+      "kind": "ghostpede",
+      "view": "head",
+      "triangles": 8840,
+      "meshes": 8
+    },
+    {
+      "kind": "ghostpede",
+      "view": "segment",
+      "triangles": 6708,
+      "meshes": 5
+    }
+  ],
+  "gameplay": {
+    "segments": 85,
+    "draws": 61,
+    "triangles": 617122,
+    "segmentBatches": 15,
+    "maxAnchorError": 0,
+    "medianGpuSynchronizedMs": 6.5
+  },
+  "errors": []
+}

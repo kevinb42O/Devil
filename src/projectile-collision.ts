@@ -1,5 +1,8 @@
+import * as THREE from 'three';
+import {buildTowerStructure} from './tower-geometry';
 import baked from './projectile-colliders.json';
-import {enemyYaw,enemyEmergenceScale,towerPartOffset,CREATURE_SCALE,CREATURE_SCALE_RATIO} from './enemy-presentation';
+import {enemyYaw,enemyEmergenceScale,towerPartOffset,CREATURE_SCALE,CREATURE_SCALE_RATIO,towerRadius,towerFoundationPose,legacyTowerGeometry} from './enemy-presentation';
+import {towerFloorHeight} from './enemy-floor';
 import type {Enemy,Vec} from './simulation';
 // BVH topology stays shared; resize bounds and vertices together from the .62 bake.
 const meshes=new Map(Object.entries(baked.meshes).map(([kind,m])=>[kind,{nodes:m.nodes.map(n=>n.map((v,i)=>i<6?v*CREATURE_SCALE_RATIO:v)),vertices:Float32Array.from(m.vertices,v=>v*CREATURE_SCALE_RATIO),indices:new Uint32Array(m.indices)}]));
@@ -25,7 +28,14 @@ export type ArmorHit={t:number;nx:number;ny:number;nz:number};
 // Geometry is shared by all towers; queries allocate only on successful hits.
 const stack:number[]=[];
 export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0,originalCadence=true):ArmorHit|null{
+ if(e.kind.startsWith('squid')&&!legacyTowerGeometry(e))return sweepTowerStructure(e,player,a,b,limit,time,originalCadence);
  const collider=armorMesh(e);if(!collider)return null;
+ // A conservative horizontal cylinder rejects distant aim rays before mesh
+ // transforms/BVH traversal. Vertical articulation cannot leave this cylinder.
+ const sx=b.x-a.x,sz=b.z-a.z,horizontalLength2=sx*sx+sz*sz;
+ const along=horizontalLength2?Math.max(0,Math.min(limit,((e.pos.x-a.x)*sx+(e.pos.z-a.z)*sz)/horizontalLength2)):0;
+ const radius=collider.radius*enemyEmergenceScale(e)+.0001;
+ if((a.x+sx*along-e.pos.x)**2+(a.z+sz*along-e.pos.z)**2>radius*radius)return null;
  const yaw=enemyYaw(e,player),c=Math.cos(yaw),s=Math.sin(yaw),scale=enemyEmergenceScale(e);if(scale<.0001)return null;
  const ax=((a.x-e.pos.x)*c-(a.z-e.pos.z)*s)/scale,ay=(a.y-e.pos.y)/scale,az=((a.x-e.pos.x)*s+(a.z-e.pos.z)*c)/scale;
  const dx=((b.x-a.x)*c-(b.z-a.z)*s)/scale,dy=(b.y-a.y)/scale,dz=((b.x-a.x)*s+(b.z-a.z)*c)/scale;
@@ -48,6 +58,46 @@ export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0,origina
  const length=Math.hypot(normal.x,normal.y,normal.z)||1;
  const sign=normal.x*(b.x-a.x)+normal.y*(b.y-a.y)+normal.z*(b.z-a.z)>0?-1:1;
  return {t:closest,nx:normal.x/length*sign,ny:normal.y/length*sign,nz:normal.z/length*sign};
+}
+
+type TowerArmorPart={mesh:NonNullable<ReturnType<typeof meshes.get>>;motion:'fixed'|'foot'|'plinth'|'crown'};
+const towerArmor=new Map<Enemy['kind'],TowerArmorPart[]>();
+function towerArmorParts(kind:Enemy['kind']){
+ let parts=towerArmor.get(kind);if(parts)return parts;
+ parts=[];const root=new THREE.Group(),material=new THREE.MeshBasicMaterial();
+ buildTowerStructure(root,kind,()=>material);root.updateMatrixWorld(true);
+ root.traverse(part=>{
+  if(!(part instanceof THREE.Mesh))return;
+  const geometry=part.geometry.clone().applyMatrix4(part.matrixWorld);geometry.computeBoundingBox();
+  const box=geometry.boundingBox!,vertices=Float32Array.from(geometry.getAttribute('position').array),indices=geometry.index?Uint32Array.from(geometry.index.array):Uint32Array.from({length:vertices.length/3},(_,i)=>i);
+  const motion=part.parent?.name==='tower-foundation'?'foot':part.name==='tower-plinth'?'plinth':part.parent?.name==='warden-crest'?'crown':'fixed';
+  parts!.push({mesh:{vertices,indices,nodes:[[box.min.x,box.min.y,box.min.z,box.max.x,box.max.y,box.max.z,-1,0,indices.length/3]]},motion});
+  geometry.dispose();part.geometry.dispose();
+ });
+ material.dispose();towerArmor.set(kind,parts);return parts;
+}
+/** Trace the same triangles as the visible tower, including its telescoping foot
+ * and opening crown. Historical targets continue using their original BVH. */
+function sweepTowerStructure(e:Enemy,player:Vec,a:Vec,b:Vec,limit:number,time:number,originalCadence:boolean):ArmorHit|null{
+ const scale=enemyEmergenceScale(e);if(scale<.0001)return null;
+ const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z,length2=dx*dx+dz*dz;
+ const along=length2?Math.max(0,Math.min(limit,((e.pos.x-a.x)*dx+(e.pos.z-a.z)*dz)/length2)):0;
+ if((a.x+dx*along-e.pos.x)**2+(a.z+dz*along-e.pos.z)**2>(towerRadius(e.kind)*1.3*scale)**2)return null;
+ const yaw=enemyYaw(e,player),c=Math.cos(yaw),s=Math.sin(yaw);
+ const ax=((a.x-e.pos.x)*c-(a.z-e.pos.z)*s)/scale,ay=(a.y-e.pos.y)/scale,az=((a.x-e.pos.x)*s+(a.z-e.pos.z)*c)/scale;
+ const vx=(dx*c-dz*s)/scale,vy=dy/scale,vz=(dx*s+dz*c)/scale;
+ const bottom=(towerFloorHeight(e,time)-e.pos.y)/scale,foundation=towerFoundationPose(bottom);
+ let closest=limit,normal:ArmorHit|null=null;
+ for(const part of towerArmorParts(e.kind)){
+  const sy=part.motion==='foot'?foundation.footScale:1;
+  const offset=part.motion==='foot'?foundation.footY:part.motion==='plinth'?foundation.plinthY-.3:part.motion==='crown'?towerPartOffset(e,'crest',originalCadence):0;
+  const hit=trace(part.mesh,ax,(ay-offset)/sy,az,vx,vy/sy,vz,closest);if(!hit)continue;
+  closest=hit.t;normal={...hit,ny:hit.ny/sy};
+ }
+ if(!normal)return null;
+ const nx=normal.nx*c+normal.nz*s,ny=normal.ny,nz=-normal.nx*s+normal.nz*c,length=Math.hypot(nx,ny,nz)||1;
+ const sign=nx*dx+ny*dy+nz*dz>0?-1:1;
+ return {t:closest,nx:nx/length*sign,ny:ny/length*sign,nz:nz/length*sign};
 }
 
 // Invert the native arm shader in mesh space. Its deformation preserves Y;
@@ -103,4 +153,4 @@ function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:numb
 }
 
 // Conservative broad phase for the rotated mesh, once per enemy per tick.
-export function armorBounds(e:Enemy){return armorMesh(e)?.radius??null;}
+export function armorBounds(e:Enemy){return e.kind.startsWith('squid')&&!legacyTowerGeometry(e)?towerRadius(e.kind)*1.3:armorMesh(e)?.radius??null;}

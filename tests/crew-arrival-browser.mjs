@@ -11,29 +11,31 @@ try{
   await Promise.all([import('/src/crew-arrival.css'),import('/node_modules/@fontsource/pirata-one/latin-400.css'),import('/node_modules/@fontsource/dm-sans/latin-500.css')]);
   const [{CrewArrival},{Sound}]=await Promise.all([import('/src/crew-arrival.ts'),import('/src/audio.ts')]);
   const sound=new Sound();await sound.prepareCrewArrival();
-  // Verify the exact downloaded recording plays once, seeks for late guests,
-  // stops at zero, and is not resurrected by a pending decode after cleanup.
+  // Verify the licensed assembled countdown plays once, seeks for late guests,
+  // hands off to a reverberant laugh at zero, and is not resurrected by a pending decode after cleanup.
   const scheduled=[],originalStart=AudioBufferSourceNode.prototype.start;
   AudioBufferSourceNode.prototype.start=function(...args){scheduled.push({delay:args[0]-sound.context.currentTime,offset:args[1]});return originalStart.apply(this,args);};
-  sound.crewArrival(6,6000);await new Promise(resolve=>setTimeout(resolve,30));
+  sound.crewArrival(4,4000);await new Promise(resolve=>setTimeout(resolve,30));
   AudioBufferSourceNode.prototype.start=originalStart;
   const initial=sound.diagnostics;
-  sound.crewArrival(4,4000);await new Promise(resolve=>setTimeout(resolve,10));
+  sound.crewArrival(2,2000);await new Promise(resolve=>setTimeout(resolve,10));
   const repeated=sound.diagnostics;
   sound.crewArrival(0);const stopped=sound.diagnostics;
+  await new Promise(resolve=>setTimeout(resolve,950));
+  const laughTail=sound.diagnostics.oneShotNames.includes('crew-release-laugh');
   sound.clear();
   const starts=[],start=AudioBufferSourceNode.prototype.start;
   AudioBufferSourceNode.prototype.start=function(...args){starts.push(args);return start.apply(this,args);};
-  sound.crewArrival(3,2600);await new Promise(resolve=>setTimeout(resolve,30));
+  sound.crewArrival(1,600);await new Promise(resolve=>setTimeout(resolve,30));
   AudioBufferSourceNode.prototype.start=start;
   const lateOffset=starts[0]?.[1];sound.clear();
-  sound.crewArrival(5,5000);sound.clear();await new Promise(resolve=>setTimeout(resolve,30));
+  sound.crewArrival(3,3000);sound.clear();await new Promise(resolve=>setTimeout(resolve,30));
   const cancelled=sound.diagnostics;
   const cues=[],arrival=new CrewArrival((beat,remaining)=>{cues.push(beat);sound.crewArrival(beat,remaining);});
-  arrival.update(1,6000,0,2);arrival.update(1,6000,500,2);const settlingHidden=arrival.element.hidden;
-  arrival.update(1,6000,1000,2);arrival.update(1,6000,1500,2);arrival.update(1,6000,2000,2);arrival.update(1,6000,3000,2);arrival.update(1,6000,4000,2);arrival.update(1,6000,5000,2);
+  arrival.update(1,4000,0,2);arrival.update(1,4000,500,2);const settlingHidden=arrival.element.hidden;
+  arrival.update(1,4000,1000,2);arrival.update(1,4000,1500,2);arrival.update(1,4000,2000,2);arrival.update(1,4000,3000,2);
   // A guest's first live snapshot clears startAt.
-  arrival.update(1,0,6010,2);arrival.update(1,0,6020,2);
+  arrival.update(1,0,4010,2);arrival.update(1,0,4020,2);
   const audio=sound.diagnostics,release=arrival.element.textContent;
   arrival.update(1,0,6900,2);const hidden=arrival.element.hidden;
   arrival.reset();arrival.update(2,0,9000,2);const lateHidden=arrival.element.hidden;
@@ -45,16 +47,19 @@ try{
   for(let i=0;i<120;i++)arrival.update(5,20000,17500+i,2);
   const steadyMutations=mutations.takeRecords().length;mutations.disconnect();
   window.preview=arrival;await document.fonts.ready;
-  return {steadyMutations,cues,audio,release,hidden,lateHidden,staleHidden,settlingHidden,scheduled,initial,repeated,stopped,lateOffset,cancelled};
+  return {laughTail,steadyMutations,cues,audio,release,hidden,lateHidden,staleHidden,settlingHidden,scheduled,initial,repeated,stopped,lateOffset,cancelled};
  });
+ assert.ok(result.laughTail);
  assert.equal(result.steadyMutations,0,"holding a countdown number must not mutate or repaint the overlay every frame");
- assert.deepEqual(result.cues,[6,5,4,3,2,1,0,3,1,4,3]);
+ assert.deepEqual(result.cues,[4,3,2,1,0,3,1,4,3]);
  assert.ok(result.audio.oneShotNames.includes('spawnplayer'));
  assert.ok(!result.audio.oneShotNames.includes('daggercollect'));
  assert.equal(result.initial.oneShotNames.filter(n=>n==='crew-countdown').length,1);
  assert.equal(result.repeated.oneShotNames.filter(n=>n==='crew-countdown').length,1);
  assert.ok(!result.stopped.oneShotNames.includes('crew-countdown'));
  assert.ok(result.stopped.oneShotNames.includes('spawnplayer'));
+ assert.ok(result.stopped.oneShotNames.includes('crew-release-laugh'));
+ assert.ok(result.audio.oneShotNames.includes('crew-release-laugh'));
  assert.ok(result.lateOffset>=2.4&&result.lateOffset<2.6);
  assert.equal(result.cancelled.oneShots,0);
  assert.ok(result.release.includes('SURVIVE'));
@@ -71,5 +76,5 @@ try{
  await page.emulateMedia({reducedMotion:'reduce'});
  assert.equal(await page.locator('.arrival-value').evaluate(el=>getComputedStyle(el).animationName),'none');
  assert.deepEqual(errors,[]);
- console.log('Arrival presentation passed: countdown beats, exact countdown recording, late guest seeking, single spawn release, guest deadline clearing, clock corrections, stale cues, cleanup, mobile layout and reduced motion.');
+ console.log('Arrival presentation passed: countdown beats, licensed countdown recording, late guest seeking, single spawn release, guest deadline clearing, clock corrections, stale cues, cleanup, mobile layout and reduced motion.');
 }finally{await browser.close();}

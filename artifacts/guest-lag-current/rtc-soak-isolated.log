@@ -1,0 +1,2 @@
+15-second four-player WebRTC soak passed: sustained level-IV fire, movement/jumps, input blackout, latency, loss/reordering, FEC and full acknowledgement recovery. {"shots":6912,"maxHostQueue":61,"guests":[{"accepted":1705,"maxPending":112,"snapshots":268,"rttMs":138},{"accepted":1706,"maxPending":106,"snapshots":269,"rttMs":125},{"accepted":1705,"maxPending":95,"snapshots":267,"rttMs":132}]}
+Large WebRTC state passed: 6,000 projectiles, paced transfer, early reliable effects, ACK and restart cancellation. {"transferMs":1775}

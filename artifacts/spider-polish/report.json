@@ -1,0 +1,25 @@
+{
+  "report": [
+    {
+      "kind": "spider",
+      "triangles": 16668,
+      "targetError": 7.106294666405892e-15
+    },
+    {
+      "kind": "spider2",
+      "triangles": 18588,
+      "targetError": 7.17448075233818e-15
+    },
+    {
+      "kind": "spiderling",
+      "triangles": 3300,
+      "targetError": 0
+    }
+  ],
+  "gameplay": {
+    "calls": 28,
+    "triangles": 486058,
+    "cpuMeanMs": 219.30666666825613
+  },
+  "errors": []
+}

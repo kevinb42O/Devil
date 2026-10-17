@@ -15,3 +15,6 @@ supabase/.temp/
 
 # Temporary environments and intermediates from portable trainer packaging
 /output/trainer-portable/build-*/
+
+# Licensed studio originals are private working material, not a redistributable sound pack.
+/assets/_sources/studio-audio/

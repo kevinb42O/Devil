@@ -1,0 +1,194 @@
+[
+  {
+    "name": "chatterskull",
+    "seconds": 7.13,
+    "runtimeRMS": 0.010641,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1389
+  },
+  {
+    "name": "chatterskull2",
+    "seconds": 8.39,
+    "runtimeRMS": 0.01178,
+    "peak": 0.66589,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1786
+  },
+  {
+    "name": "chatterskull3",
+    "seconds": 7.61,
+    "runtimeRMS": 0.012541,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.4286
+  },
+  {
+    "name": "chatterskull4",
+    "seconds": 10.31,
+    "runtimeRMS": 0.01406,
+    "peak": 0.71581,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.0
+  },
+  {
+    "name": "chatterskullblack",
+    "seconds": 6.79,
+    "runtimeRMS": 0.01102,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.2794
+  },
+  {
+    "name": "chatterskull2black",
+    "seconds": 7.87,
+    "runtimeRMS": 0.01216,
+    "peak": 0.7081,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1519
+  },
+  {
+    "name": "chatterskull3black",
+    "seconds": 8.93,
+    "runtimeRMS": 0.0133,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.0
+  },
+  {
+    "name": "chatterskull4black",
+    "seconds": 11.17,
+    "runtimeRMS": 0.01482,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.0
+  },
+  {
+    "name": "chatterminisquid",
+    "seconds": 8.57,
+    "runtimeRMS": 0.01216,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.2674
+  },
+  {
+    "name": "chattersquid",
+    "seconds": 12.43,
+    "runtimeRMS": 0.014441,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.16
+  },
+  {
+    "name": "chattersquidultra",
+    "seconds": 15.37,
+    "runtimeRMS": 0.016341,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1429
+  },
+  {
+    "name": "chatterspider",
+    "seconds": 8.11,
+    "runtimeRMS": 0.012158,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1341
+  },
+  {
+    "name": "chattergigaspider",
+    "seconds": 9.47,
+    "runtimeRMS": 0.014441,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1368
+  },
+  {
+    "name": "chatterspiderling",
+    "seconds": 5.83,
+    "runtimeRMS": 0.009119,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1356
+  },
+  {
+    "name": "chattercentipede",
+    "seconds": 10.67,
+    "runtimeRMS": 0.013298,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.2243
+  },
+  {
+    "name": "chattercentipede2",
+    "seconds": 12.17,
+    "runtimeRMS": 0.015203,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.123
+  },
+  {
+    "name": "chatterultrapede",
+    "seconds": 10.97,
+    "runtimeRMS": 0.01444,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.2
+  },
+  {
+    "name": "chatterleviathan",
+    "seconds": 15.83,
+    "runtimeRMS": 0.01748,
+    "peak": 0.69202,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.0
+  },
+  {
+    "name": "eyearousedrone",
+    "seconds": 9.79,
+    "runtimeRMS": 0.012539,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.1735
+  },
+  {
+    "name": "chatterthorn",
+    "seconds": 6.53,
+    "runtimeRMS": 0.0114,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.4242
+  },
+  {
+    "name": "eggdrone",
+    "seconds": 5.47,
+    "runtimeRMS": 0.007979,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.5455
+  },
+  {
+    "name": "eggdrone2",
+    "seconds": 6.97,
+    "runtimeRMS": 0.0095,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.3286
+  },
+  {
+    "name": "subchattercentipede",
+    "seconds": 12.79,
+    "runtimeRMS": 0.00836,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.2031
+  },
+  {
+    "name": "eyepacifydrone",
+    "seconds": 7.43,
+    "runtimeRMS": 0.009501,
+    "peak": 0.76,
+    "seamStep": 0.0,
+    "silentWindowFraction": 0.2933
+  }
+]

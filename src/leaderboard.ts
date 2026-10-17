@@ -21,12 +21,25 @@ export async function loadOwnScore(rules=REPLAY_RULES_VERSION):Promise<OwnScore|
  const db=leaderboardDatabase();const {data:session,error:sessionError}=await db.auth.getSession();if(sessionError)throw Error('Your player session could not be loaded.');if(!session.session)return null;
  const {data,error}=await db.rpc('abyss_my_score',{p_rules:rules});if(error)throw Error('Your public best could not be loaded.');return data?.[0]??null;
 }
+/** Register as the arena starts; gameplay and publication never wait for a verifier. */
+export async function beginRankedRun():Promise<string|null>{
+ if(!leaderboardConfigured())return null;
+ const db=leaderboardDatabase(),{data,error}=await db.auth.getSession();if(error)throw error;
+ if(!data.session){const {error}=await db.auth.signInAnonymously();if(error)throw error;}
+ const {data:ticket,error:registrationError}=await db.rpc('abyss_begin_solo');if(registrationError)throw registrationError;
+ if(typeof ticket!=='string')throw Error('Run registration failed.');return ticket;
+}
 export async function publishCandidate(job:PendingScore):Promise<OwnScore>{
  const clean=cleanNickname(job.name),score=job.score;
  const db=leaderboardDatabase();const {data,error}=await db.auth.getSession();if(error)throw Error('Your player session is unavailable. Try again.');
  if(!data.session){const {error}=await db.auth.signInAnonymously();if(error)throw Error('Could not connect your player profile. Your score is saved here for retry.');}
- const {error:submissionError}=await db.rpc('abyss_submit_score',{p_name:clean,p_time_ms:score.timeMs,p_kills:score.kills,p_gems:score.gems,p_rules:score.rules});
- if(submissionError)throw Error(submissionError.message.includes('wait')?'The score service needs a few seconds. We will retry automatically.':'Could not reach the score service. Your best run is saved here for retry.');
+ if(score.rules!==REPLAY_RULES_VERSION)throw Error('Historical leaderboards are read-only. Start a current Survival run to publish.');
+ if(!score.ticket)throw Error('This run has no server ticket. Refresh the game and start a new Survival run to publish.');
+ const {error:submissionError}=await db.rpc('abyss_submit_solo',{p_ticket:score.ticket,p_name:clean,p_time_ms:score.timeMs,p_kills:score.kills,p_gems:score.gems});
+ if(submissionError){
+  if(submissionError.message.includes('duration')||submissionError.message.includes('sanity')||submissionError.message.includes('already been used')||submissionError.message.includes('registered run'))throw Error('This score did not pass the server checks. Start a new standard Survival run.');
+  throw Error('Could not reach the score service. Your best run is saved here for retry.');
+ }
  const confirmed=await loadOwnScore(score.rules);if(!confirmed)throw Error('Waiting for score confirmation. We will retry automatically.');return confirmed;
 }
 export async function publishScore(run:RecordedRun,name:string){

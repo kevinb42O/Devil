@@ -1,0 +1,25 @@
+{
+  "events": [
+    {
+      "phase": 0,
+      "at": 0.7158000000000002,
+      "kind": "tower-death"
+    },
+    {
+      "phase": 1,
+      "at": 3.9657,
+      "kind": "tower-death"
+    },
+    {
+      "phase": 2,
+      "at": 7.2655,
+      "kind": "tower-death"
+    },
+    {
+      "phase": 3,
+      "at": 10.5654,
+      "kind": "tower-death"
+    }
+  ],
+  "failed": []
+}

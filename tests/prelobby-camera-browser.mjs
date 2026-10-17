@@ -15,8 +15,8 @@ try{
   for(const speed of [0,4,11])for(const grounded of [true,false])for(const raised of [false,true])for(let i=0;i<60;i++){
    const time=i/60,input={...S.idleInput(),leftArm:raised,rightArm:raised};A.updateCrewAvatar(body,input,{x:speed,y:grounded?0:8,z:0},grounded,time,false,true);body.updateMatrixWorld(true);
    maxNeckError=Math.max(maxNeckError,body.getObjectByName('Neck').getWorldPosition(point).distanceTo(anchor));
-   for(const shoulder of body.children.filter(n=>n.name==='first-person-shoulder')){
-    const distance=shoulder.getWorldPosition(point).distanceTo(body.position)-.23-.05;minClearance=Math.min(minClearance,distance);
+   for(const shoulder of ['L','R'].map(side=>body.getObjectByName('UpperArm'+side))){
+    const distance=shoulder.getWorldPosition(point).distanceTo(body.position)-.1-.05;minClearance=Math.min(minClearance,distance);
     check(distance>.1,'jump/run pose entered local eye clearance');
    }
    poses++;
@@ -36,15 +36,15 @@ try{
    const pitch=frame<35?0:frame<75?-1.3:frame<100?.9:-.4,yaw=frame>85?(frame-85)*.12:0;
    renderer.render(world,yaw,pitch,1/60,false,frame%3/2,null,false,true,input);
    const model=renderer.emoteHands;model.updateMatrixWorld(true);
-   for(const joint of model.children.filter(n=>n.name==='first-person-shoulder')){
-    const distance=joint.getWorldPosition(point).distanceTo(renderer.camera.position)-.23-renderer.camera.near;
+   for(const joint of ['L','R'].map(side=>model.getObjectByName('UpperArm'+side))){
+    const distance=joint.getWorldPosition(point).distanceTo(renderer.camera.position)-.1-renderer.camera.near;
     renderedClearance=Math.min(renderedClearance,distance);check(distance>.08,'rendered jump/landing eye clips shoulder');
    }
    check(model.position.toArray().every(Number.isFinite),'body position finite');
   }
   check(airFrames>50&&landings>=2,'audit did not exercise repeated jumps and landings');
   // The courtyard body must stay safe during a pit fall and after returning to spawn.
-  for(const y of [1.7,0,-3,-7,1.7]){world.player.pos={x:0,y,z:0};world.playerStarts.clear();renderer.render(world,1.4,-1.5,1/60,false,1,null,false,true,S.idleInput());for(const joint of renderer.emoteHands.children.filter(n=>n.name==='first-person-shoulder')){renderer.emoteHands.updateMatrixWorld(true);check(joint.getWorldPosition(point).distanceTo(renderer.camera.position)>.3,'pit fall eye clips shoulder');}}
+  for(const y of [1.7,0,-3,-7,1.7]){world.player.pos={x:0,y,z:0};world.playerStarts.clear();renderer.render(world,1.4,-1.5,1/60,false,1,null,false,true,S.idleInput());for(const joint of ['L','R'].map(side=>renderer.emoteHands.getObjectByName('UpperArm'+side))){renderer.emoteHands.updateMatrixWorld(true);check(joint.getWorldPosition(point).distanceTo(renderer.camera.position)>.3,'pit fall eye clips shoulder');}}
   renderer.configure({quality:'low',fov:90,movementMotion:0,screenShake:0,mist:false});
   renderer.render(world,0,-1.3,1/60,false,1,null,false,false,S.idleInput());
   check(renderer.camera.position.distanceTo(new T.Vector3(world.player.pos.x,world.player.pos.y,world.player.pos.z))<1e-9,'prelobby camera offset leaked into combat');

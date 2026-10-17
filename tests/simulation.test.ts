@@ -31,7 +31,7 @@ test('squid body is protected while its crystal receives damage',()=>{
 test('tower crystals accept edge shots within the enlarged radius',()=>{
  for(const kind of ['squid','squid2','squid3'] as const){
   for(const offset of [.55,.7]){
-   const w=new World(1,{schedule:false}),e=w.spawn(kind,v(0,6,0));e.age=1;
+   const w=new World(1,{schedule:false,legacyTowerArchitecture:true}),e=w.spawn(kind,v(0,6,0));e.age=1;
    const point=w.weakPoint(e),outward=v(point.x-e.pos.x,0,point.z-e.pos.z),length=Math.hypot(outward.x,outward.z);
    outward.x/=length;outward.z/=length;
    // Approach the exposed face, avoiding the armored tower behind the crystal.

@@ -1,0 +1,2702 @@
+{
+  "skullclop1": {
+    "sources": [
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/c0c1fb7cfd99.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "spawnplayer": {
+    "sources": [
+      "assets/_sources/studio-audio/1ccc16cc6c5f.wav",
+      "assets/_sources/studio-audio/14955d004dd7.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "rapid1": {
+    "sources": [
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "rapid2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "rapid3": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "rapid4": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot1": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot3alt1": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot3alt2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 1."
+  },
+  "shot3alt3": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 2."
+  },
+  "shot3alt4": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 3."
+  },
+  "shot4alt1": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot4alt2": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 1."
+  },
+  "shot4alt3": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 2."
+  },
+  "shot4alt4": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 3."
+  },
+  "shot4alt5": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 4."
+  },
+  "gibcollect": {
+    "sources": [
+      "assets/_sources/studio-audio/32fd4ce8f87b.wav",
+      "assets/_sources/studio-audio/8a59438ec7b1.wav",
+      "assets/_sources/studio-audio/7eea79556816.wav"
+    ],
+    "changes": "Rounded liquid absorption from a recorded water spell, tiny mineral contact and one fixed recorded bell articulation at the same pitch across every pickup. Only the non-tonal liquid/contact takes vary. No randomized pitch or gain; deterministic overlap compensation. Diffuse stereo reverb: 850 ms reflection window, filtered 300\u20134800 Hz, wet level .55. No harp or generated tones."
+  },
+  "gibcollectmagic": {
+    "sources": [
+      "assets/_sources/studio-audio/32fd4ce8f87b.wav",
+      "assets/_sources/studio-audio/8a59438ec7b1.wav",
+      "assets/_sources/studio-audio/7eea79556816.wav"
+    ],
+    "changes": "Rounded liquid absorption from a recorded water spell, tiny mineral contact and one fixed recorded bell articulation at the same pitch across every pickup. Only the non-tonal liquid/contact takes vary. No randomized pitch or gain; deterministic overlap compensation. Diffuse stereo reverb: 850 ms reflection window, filtered 300\u20134800 Hz, wet level .55. No harp or generated tones."
+  },
+  "jump1": {
+    "sources": [
+      "assets/_sources/studio-audio/93693b506bdd.wav"
+    ],
+    "changes": "Immediate filtered air release with a short decay; successful bunnyhop uses a faster, brighter double rush and higher gain to distinguish the timing reward."
+  },
+  "jump2": {
+    "sources": [
+      "assets/_sources/studio-audio/93693b506bdd.wav"
+    ],
+    "changes": "Immediate filtered air release with a short decay; successful bunnyhop uses a faster, brighter double rush and higher gain to distinguish the timing reward."
+  },
+  "jump3": {
+    "sources": [
+      "assets/_sources/studio-audio/93693b506bdd.wav"
+    ],
+    "changes": "Immediate filtered air release with a short decay; successful bunnyhop uses a faster, brighter double rush and higher gain to distinguish the timing reward."
+  },
+  "land": {
+    "sources": [
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Single short stone contact, band limited to a warm body with exponential decay; no wood crack or loose rock tail. Heavy falls retain a longer, deeper contact."
+  },
+  "land2": {
+    "sources": [
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Single short stone contact, band limited to a warm body with exponential decay; no wood crack or loose rock tail. Heavy falls retain a longer, deeper contact."
+  },
+  "death": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "fall": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "leveldown": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/63d4428b0e05.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Organic body rupture, skin tension, low physical impact and air pressure; tier-specific weight. No tonal UI, hologram ping, bells or musical swell."
+  },
+  "levelup2": {
+    "sources": [
+      "assets/_sources/studio-audio/b42c9802ea67.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav"
+    ],
+    "changes": "Distinct recorded animal/monster performance for this hand; bespoke physical impact/rupture layers, full vocal gesture, gentle saturation and dark stereo reflections. No generated tones; later hands do not reuse a pitched earlier upgrade.",
+    "primarySource": "assets/_sources/studio-audio/b42c9802ea67.wav",
+    "identity": "serpent: splitting skin and a long pressure hiss"
+  },
+  "levelup3": {
+    "sources": [
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/1ccc16cc6c5f.wav",
+      "assets/_sources/studio-audio/14955d004dd7.wav"
+    ],
+    "changes": "Distinct recorded animal/monster performance for this hand; bespoke physical impact/rupture layers, full vocal gesture, gentle saturation and dark stereo reflections. No generated tones; later hands do not reuse a pitched earlier upgrade.",
+    "primarySource": "assets/_sources/studio-audio/b3ea07b37648.wav",
+    "identity": "bear: chest impact and a close guttural snarl"
+  },
+  "levelup4": {
+    "sources": [
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/63d4428b0e05.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Distinct recorded animal/monster performance for this hand; bespoke physical impact/rupture layers, full vocal gesture, gentle saturation and dark stereo reflections. No generated tones; later hands do not reuse a pitched earlier upgrade.",
+    "primarySource": "assets/_sources/studio-audio/0295b3870378.wav",
+    "identity": "maw: sustained tearing roar with a stone collapse"
+  },
+  "daggerdrone": {
+    "sources": [
+      "assets/_sources/studio-audio/a62bb7d327f4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggerseek": {
+    "sources": [
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/c5f747afa97e.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magentadrone": {
+    "sources": [
+      "assets/_sources/studio-audio/a62bb7d327f4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magentashot": {
+    "sources": [
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/c5f747afa97e.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggerhit1": {
+    "sources": [
+      "assets/_sources/studio-audio/81e7bee6b9bf.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercall": {
+    "sources": [
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercollect": {
+    "sources": [
+      "assets/_sources/studio-audio/e17092c623a7.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/f3042c7242b4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercall1bronze": {
+    "sources": [
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercollect1bronze": {
+    "sources": [
+      "assets/_sources/studio-audio/e17092c623a7.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/f3042c7242b4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercall2silver": {
+    "sources": [
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercollect2silver": {
+    "sources": [
+      "assets/_sources/studio-audio/e17092c623a7.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/f3042c7242b4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercall3gold": {
+    "sources": [
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercollect3gold": {
+    "sources": [
+      "assets/_sources/studio-audio/e17092c623a7.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/f3042c7242b4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercall4devil": {
+    "sources": [
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercollect4devil": {
+    "sources": [
+      "assets/_sources/studio-audio/e17092c623a7.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/f3042c7242b4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercall5": {
+    "sources": [
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "daggercollect5": {
+    "sources": [
+      "assets/_sources/studio-audio/e17092c623a7.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/f3042c7242b4.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "chatterskull": {
+    "sources": [
+      "assets/_sources/chatter-audio/insectoid.mp3",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "close brittle jaw chatter",
+    "articulationSeconds": [
+      0,
+      2.27875,
+      4.94393
+    ],
+    "rate": 1.04,
+    "spectralWindowHz": [
+      350,
+      8200
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/insectoid.mp3",
+    "sourceCutsSeconds": [
+      [
+        0.18,
+        1.42
+      ],
+      [
+        2.1,
+        1.35
+      ],
+      [
+        3.4,
+        0.96
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterskull2": {
+    "sources": [
+      "assets/_sources/chatter-audio/rodent.mp3",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "nasal rasp and agitated teeth",
+    "articulationSeconds": [
+      0,
+      1.99833,
+      4.01192,
+      6.41415
+    ],
+    "rate": 0.83,
+    "spectralWindowHz": [
+      230,
+      7600
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/rodent.mp3",
+    "sourceCutsSeconds": [
+      [
+        6.05,
+        1.12
+      ],
+      [
+        7.7,
+        0.68
+      ],
+      [
+        9.25,
+        0.85
+      ],
+      [
+        10.55,
+        1.1
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterskull3": {
+    "sources": [
+      "assets/_sources/chatter-audio/snarls.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "serrated breathy skull snarl",
+    "articulationSeconds": [
+      0,
+      1.93985,
+      4.58417
+    ],
+    "rate": 1.15,
+    "spectralWindowHz": [
+      200,
+      7200
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/snarls.mp3",
+    "sourceCutsSeconds": [
+      [
+        0.08,
+        1.18
+      ],
+      [
+        3.35,
+        0.93
+      ],
+      [
+        6.75,
+        0.93
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterskull4": {
+    "sources": [
+      "assets/_sources/chatter-audio/snarls.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "large hollow rasping throat",
+    "articulationSeconds": [
+      0,
+      3.42218,
+      7.07161
+    ],
+    "rate": 0.74,
+    "spectralWindowHz": [
+      100,
+      6500
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/snarls.mp3",
+    "sourceCutsSeconds": [
+      [
+        10.57,
+        1.25
+      ],
+      [
+        12.58,
+        1.38
+      ],
+      [
+        16.42,
+        1.24
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterskullblack": {
+    "sources": [
+      "assets/_sources/chatter-audio/insectoid.mp3",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "frantic narrow mandible chatter",
+    "articulationSeconds": [
+      0,
+      2.73872,
+      5.16873
+    ],
+    "rate": 1.23,
+    "spectralWindowHz": [
+      550,
+      9000
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/insectoid.mp3",
+    "sourceCutsSeconds": [
+      [
+        2.08,
+        1.25
+      ],
+      [
+        0.2,
+        1.36
+      ],
+      [
+        3.4,
+        1.02
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterskull2black": {
+    "sources": [
+      "assets/_sources/chatter-audio/rodent.mp3",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "strangled high nasal chitter",
+    "articulationSeconds": [
+      0,
+      1.90301,
+      4.22101
+    ],
+    "rate": 1.04,
+    "spectralWindowHz": [
+      330,
+      8500
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/rodent.mp3",
+    "sourceCutsSeconds": [
+      [
+        10.5,
+        1.2
+      ],
+      [
+        9.24,
+        0.86
+      ],
+      [
+        6.03,
+        1.18
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterskull3black": {
+    "sources": [
+      "assets/_sources/chatter-audio/snarls.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "broken throaty hiss and rasp",
+    "articulationSeconds": [
+      0,
+      2.51989,
+      4.43935
+    ],
+    "rate": 0.93,
+    "spectralWindowHz": [
+      160,
+      7800
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/snarls.mp3",
+    "sourceCutsSeconds": [
+      [
+        8.72,
+        1.03
+      ],
+      [
+        5.13,
+        0.95
+      ],
+      [
+        14.23,
+        1.5
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterskull4black": {
+    "sources": [
+      "assets/_sources/chatter-audio/snarls.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "deep choking jaw growl",
+    "articulationSeconds": [
+      0,
+      5.17914,
+      8.3546
+    ],
+    "rate": 0.62,
+    "spectralWindowHz": [
+      85,
+      6100
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/snarls.mp3",
+    "sourceCutsSeconds": [
+      [
+        14.22,
+        1.5
+      ],
+      [
+        1.57,
+        1.35
+      ],
+      [
+        10.57,
+        1.25
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterminisquid": {
+    "sources": [
+      "assets/_sources/chatter-audio/gurgles.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "small wet hollow throat",
+    "articulationSeconds": [
+      0,
+      2.79032,
+      5.24262
+    ],
+    "rate": 1.03,
+    "spectralWindowHz": [
+      180,
+      5800
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/gurgles.mp3",
+    "sourceCutsSeconds": [
+      [
+        0.93,
+        1.76
+      ],
+      [
+        5.37,
+        1.42
+      ],
+      [
+        9.82,
+        2.3
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chattersquid": {
+    "sources": [
+      "assets/_sources/chatter-audio/gurgles.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "resonant bubbling squid cavity",
+    "articulationSeconds": [
+      0,
+      6.01445,
+      8.43076
+    ],
+    "rate": 0.82,
+    "spectralWindowHz": [
+      100,
+      5300
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/gurgles.mp3",
+    "sourceCutsSeconds": [
+      [
+        14.57,
+        3.88
+      ],
+      [
+        25.97,
+        1.65
+      ],
+      [
+        30.62,
+        2.6
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chattersquidultra": {
+    "sources": [
+      "assets/_sources/chatter-audio/gurgles.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "enormous slow submerged throat",
+    "articulationSeconds": [
+      0,
+      8.30062
+    ],
+    "rate": 0.64,
+    "spectralWindowHz": [
+      65,
+      4700
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/gurgles.mp3",
+    "sourceCutsSeconds": [
+      [
+        37.0,
+        4.18
+      ],
+      [
+        52.5,
+        4.05
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterspider": {
+    "sources": [
+      "assets/_sources/chatter-audio/insectoid.mp3",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "dry close mandible flex and leg chatter",
+    "articulationSeconds": [
+      0,
+      2.7171,
+      5.97403
+    ],
+    "rate": 0.87,
+    "spectralWindowHz": [
+      300,
+      8800
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/insectoid.mp3",
+    "sourceCutsSeconds": [
+      [
+        0.18,
+        1.42
+      ],
+      [
+        2.08,
+        1.3
+      ],
+      [
+        3.4,
+        0.99
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chattergigaspider": {
+    "sources": [
+      "assets/_sources/chatter-audio/teeth-fast.wav",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "heavy hollow carapace ratchet",
+    "articulationSeconds": [
+      0,
+      3.42415,
+      6.49313
+    ],
+    "rate": 0.63,
+    "spectralWindowHz": [
+      130,
+      7000
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/teeth-fast.wav",
+    "sourceCutsSeconds": [
+      [
+        0.08,
+        1.32
+      ],
+      [
+        1.45,
+        1.23
+      ],
+      [
+        2.72,
+        1.3
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterspiderling": {
+    "sources": [
+      "assets/_sources/chatter-audio/insectoid.mp3",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "tiny fast scuttling mouth clicks",
+    "articulationSeconds": [
+      0,
+      1.93457,
+      3.78718
+    ],
+    "rate": 1.46,
+    "spectralWindowHz": [
+      850,
+      10500
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/insectoid.mp3",
+    "sourceCutsSeconds": [
+      [
+        3.38,
+        1.02
+      ],
+      [
+        0.18,
+        1.35
+      ],
+      [
+        2.1,
+        1.27
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chattercentipede": {
+    "sources": [
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "rolling articulated bone rattle",
+    "articulationSeconds": [
+      0,
+      3.23311,
+      6.51922
+    ],
+    "rate": 1.08,
+    "spectralWindowHz": [
+      250,
+      8500
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/teeth.wav",
+    "sourceCutsSeconds": [
+      [
+        0.15,
+        2.5
+      ],
+      [
+        3.05,
+        2.6
+      ],
+      [
+        6.05,
+        2.8
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chattercentipede2": {
+    "sources": [
+      "assets/_sources/chatter-audio/teeth-fast.wav",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "heavy grinding segmented carapace",
+    "articulationSeconds": [
+      0,
+      3.26158,
+      6.65204
+    ],
+    "rate": 0.72,
+    "spectralWindowHz": [
+      95,
+      6600
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/teeth-fast.wav",
+    "sourceCutsSeconds": [
+      [
+        0.1,
+        1.75
+      ],
+      [
+        2.0,
+        1.9
+      ],
+      [
+        0.65,
+        2.4
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterultrapede": {
+    "sources": [
+      "assets/_sources/chatter-audio/insectoid.mp3",
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "rasping spectral mandible shiver",
+    "articulationSeconds": [
+      0,
+      4.53289,
+      8.36147
+    ],
+    "rate": 0.68,
+    "spectralWindowHz": [
+      210,
+      8000
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/insectoid.mp3",
+    "sourceCutsSeconds": [
+      [
+        0.17,
+        1.44
+      ],
+      [
+        2.08,
+        1.35
+      ],
+      [
+        3.38,
+        1.04
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterleviathan": {
+    "sources": [
+      "assets/_sources/chatter-audio/snarls.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "vast chesty rasping leviathan breath",
+    "articulationSeconds": [
+      0,
+      3.77185,
+      8.03793,
+      11.40533
+    ],
+    "rate": 0.48,
+    "spectralWindowHz": [
+      55,
+      5400
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/snarls.mp3",
+    "sourceCutsSeconds": [
+      [
+        12.56,
+        1.4
+      ],
+      [
+        14.22,
+        1.5
+      ],
+      [
+        16.42,
+        1.25
+      ],
+      [
+        1.55,
+        1.4
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "eyearousedrone": {
+    "sources": [
+      "assets/_sources/chatter-audio/gurgles.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "restless wet searching mutter",
+    "articulationSeconds": [
+      0,
+      5.7745
+    ],
+    "rate": 1.18,
+    "spectralWindowHz": [
+      250,
+      7200
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/gurgles.mp3",
+    "sourceCutsSeconds": [
+      [
+        44.85,
+        4.85
+      ],
+      [
+        52.45,
+        4.1
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "chatterthorn": {
+    "sources": [
+      "assets/_sources/chatter-audio/snarls.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "thorny dry tearing exhalations",
+    "articulationSeconds": [
+      0,
+      1.71533,
+      4.14514
+    ],
+    "rate": 1.35,
+    "spectralWindowHz": [
+      600,
+      9400
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/snarls.mp3",
+    "sourceCutsSeconds": [
+      [
+        5.12,
+        0.99
+      ],
+      [
+        6.7,
+        0.98
+      ],
+      [
+        8.7,
+        1.1
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "eggdrone": {
+    "sources": [
+      "assets/_sources/chatter-audio/idle.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "restrained living shell breath",
+    "articulationSeconds": [
+      0,
+      2.54899
+    ],
+    "rate": 1.13,
+    "spectralWindowHz": [
+      320,
+      4900
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/idle.mp3",
+    "sourceCutsSeconds": [
+      [
+        0.78,
+        0.9
+      ],
+      [
+        2.1,
+        0.48
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "eggdrone2": {
+    "sources": [
+      "assets/_sources/chatter-audio/gurgles.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "swollen wet shell stirring",
+    "articulationSeconds": [
+      0,
+      1.4668,
+      3.45032
+    ],
+    "rate": 1.1,
+    "spectralWindowHz": [
+      180,
+      4600
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/gurgles.mp3",
+    "sourceCutsSeconds": [
+      [
+        1.92,
+        0.85
+      ],
+      [
+        5.35,
+        1.4
+      ],
+      [
+        26.0,
+        1.6
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "spawnminisquid": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG043.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/1f5c7dc9783f.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "tower I: dry split stone, short gravel lift, small settling fragments",
+    "addedReverb": false
+  },
+  "spawnsquid": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG056.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/emergence-DIG043.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "tower II: long masonry scrape, two heavy stone joints, cascading gravel",
+    "addedReverb": false
+  },
+  "spawnultrasquid": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG002.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/emergence-DIG056.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/1f5c7dc9783f.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "tower III: deep earth heave, three broad slab fractures, long falling rubble",
+    "addedReverb": false
+  },
+  "spawnspider": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG043.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/1f5c7dc9783f.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "spider: shell plates unfolding through granular soil with dry leg contacts",
+    "addedReverb": false
+  },
+  "spawngigaspider": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG002.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/emergence-DIG056.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "giga spider: slow ground displacement, heavy carapace flex, staggered leg purchase",
+    "addedReverb": false
+  },
+  "spawncentipede": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG002.wav",
+      "assets/_sources/studio-audio/1f5c7dc9783f.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "centipede approach: muffled sand and small tunnelling stones below the floor",
+    "addedReverb": false
+  },
+  "spawncentipede2": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG056.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "gigapede approach: dragging gravel and deep moving earth",
+    "addedReverb": false
+  },
+  "spawnultrapede": {
+    "sources": [
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "ghostpede arrival: cold broad air pressure with brittle shed shell",
+    "addedReverb": false
+  },
+  "spawnleviathan": {
+    "sources": [
+      "assets/_sources/studio-audio/cdc65a3170c1.wav",
+      "assets/_sources/studio-audio/5f2bc9dd8ad7.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "leviathan: deep water displacement, bodily pressure and distant colossal strain",
+    "addedReverb": false
+  },
+  "eyearouse": {
+    "sources": [
+      "assets/_sources/studio-audio/cdc65a3170c1.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "orb: wet membrane opening, inward air draw and slow organic weight",
+    "addedReverb": false
+  },
+  "thornemerge": {
+    "sources": [
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/emergence-DIG056.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "thorn: fibrous tear, sharp mineral split and grit shedding",
+    "addedReverb": false
+  },
+  "spawnegg": {
+    "sources": [
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "egg I: small wet release and a light shell flex",
+    "addedReverb": false
+  },
+  "killskull1": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskull2": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskull3": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskull4": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskull5": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killsuperskull": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killsuperskull2": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killsuperskull3": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskullblack1": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskullblack2": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskullblack3": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killskullblack4": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killsuperskullblack": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killsuperskull2black": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killminisquid": {
+    "sources": [
+      "assets/_sources/studio-audio/tower-beast-roar.mp3",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Lion-like final beast bellow from cylon8472 Beast Roar lvl2 (CC0), with recorded terminal breath and low stone settling. Three size-specific gestures; full-length mono body matched to TOWER_DEATH_DURATION, final 95 ms release, shared spatial arena reverb. No stock generic kill scream or looping roar."
+  },
+  "killsquid": {
+    "sources": [
+      "assets/_sources/studio-audio/tower-beast-roar.mp3",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Lion-like final beast bellow from cylon8472 Beast Roar lvl2 (CC0), with recorded terminal breath and low stone settling. Three size-specific gestures; full-length mono body matched to TOWER_DEATH_DURATION, final 95 ms release, shared spatial arena reverb. No stock generic kill scream or looping roar."
+  },
+  "killultrasquid": {
+    "sources": [
+      "assets/_sources/studio-audio/tower-beast-roar.mp3",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Lion-like final beast bellow from cylon8472 Beast Roar lvl2 (CC0), with recorded terminal breath and low stone settling. Three size-specific gestures; full-length mono body matched to TOWER_DEATH_DURATION, final 95 ms release, shared spatial arena reverb. No stock generic kill scream or looping roar."
+  },
+  "killspider": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killgigaspider": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killcentipede": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killcentipede2": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ultrapedecrash": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killleviathan": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killeye": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killthorn": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "eggburst": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "eggburst2": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killspiderling1": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killspiderling2": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killspiderling3": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killspiderling4": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "killspiderling5": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/0295b3870378.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagesquid": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagesquid2": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagesquid3": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagespider": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagegigaspider": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagecentipede": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagecentipede2": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damageultrapede": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damageleviathan": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "eyehit": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "damagethorn": {
+    "sources": [
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "polarity1e": {
+    "sources": [
+      "assets/_sources/studio-audio/53b145e7fd68.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "polarity2w": {
+    "sources": [
+      "assets/_sources/studio-audio/53b145e7fd68.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "polarity3n": {
+    "sources": [
+      "assets/_sources/studio-audio/53b145e7fd68.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "polarity4s": {
+    "sources": [
+      "assets/_sources/studio-audio/53b145e7fd68.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "leviathanbeckon": {
+    "sources": [
+      "assets/_sources/studio-audio/1ccc16cc6c5f.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "leviathanbeckon2": {
+    "sources": [
+      "assets/_sources/studio-audio/1ccc16cc6c5f.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "leviathantransmute": {
+    "sources": [
+      "assets/_sources/studio-audio/1ccc16cc6c5f.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magentadetonate1": {
+    "sources": [
+      "assets/_sources/studio-audio/f3f119dfc769.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magentadetonate2": {
+    "sources": [
+      "assets/_sources/studio-audio/f3f119dfc769.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magentadetonate3": {
+    "sources": [
+      "assets/_sources/studio-audio/f3f119dfc769.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magentadetonate4": {
+    "sources": [
+      "assets/_sources/studio-audio/f3f119dfc769.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magentadetonate5": {
+    "sources": [
+      "assets/_sources/studio-audio/f3f119dfc769.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochet1": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochet2": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochet3": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochet4": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochet5": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagic1": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagic2": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagic3": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagic4": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagenta1": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagenta2": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagenta3": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagenta4": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ricochetmagenta5": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magicpierce1": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magicpierce2": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magicpierce3": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magicpierce4": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "magicpierce5": {
+    "sources": [
+      "assets/_sources/studio-audio/cdf25122d9bb.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "spidereat1": {
+    "sources": [
+      "assets/_sources/studio-audio/50fcaca39702.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "spidereat2": {
+    "sources": [
+      "assets/_sources/studio-audio/50fcaca39702.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "spidereat3": {
+    "sources": [
+      "assets/_sources/studio-audio/50fcaca39702.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "spidereat4": {
+    "sources": [
+      "assets/_sources/studio-audio/50fcaca39702.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "spidereat5": {
+    "sources": [
+      "assets/_sources/studio-audio/50fcaca39702.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "spidereat6": {
+    "sources": [
+      "assets/_sources/studio-audio/50fcaca39702.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "eggbounce": {
+    "sources": [
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/c0c1fb7cfd99.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "ultrapedeeat": {
+    "sources": [
+      "assets/_sources/studio-audio/50fcaca39702.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "burrowcentipede": {
+    "sources": [
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/daa012ce7e17.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "subchattercentipede": {
+    "sources": [
+      "assets/_sources/chatter-audio/teeth.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "subterranean muffled bone rattle",
+    "articulationSeconds": [
+      0,
+      3.76392,
+      8.66643
+    ],
+    "rate": 0.85,
+    "spectralWindowHz": [
+      65,
+      1700
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/teeth.wav",
+    "sourceCutsSeconds": [
+      [
+        3,
+        2.8
+      ],
+      [
+        6,
+        2.9
+      ],
+      [
+        0.12,
+        2.6
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "unburrowcentipede": {
+    "sources": [
+      "assets/_sources/studio-audio/emergence-DIG043.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav",
+      "assets/_sources/studio-audio/db3e735650f8.wav",
+      "assets/_sources/studio-audio/emergence-DIG002.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "centipede surface: gravel break-through, rapid plate chatter, falling sand",
+    "addedReverb": false
+  },
+  "eyepacifydrone": {
+    "sources": [
+      "assets/_sources/chatter-audio/gurgles.mp3",
+      "assets/_sources/chatter-audio/tongue.wav"
+    ],
+    "changes": "CC0 recorded creature and mouth-foley performances; intact gestures, irregular rests, dry mono, restrained parallel saturation, peak-limited RMS calibration.",
+    "identity": "subdued wounded wet throat",
+    "articulationSeconds": [
+      0,
+      4.09593
+    ],
+    "rate": 0.93,
+    "spectralWindowHz": [
+      160,
+      4700
+    ],
+    "addedReverb": false,
+    "primarySource": "assets/_sources/chatter-audio/gurgles.mp3",
+    "sourceCutsSeconds": [
+      [
+        30.6,
+        2.65
+      ],
+      [
+        25.95,
+        1.7
+      ]
+    ],
+    "phrasing": "Intact recorded gestures and unequal natural rests; independent low mouth/bone layer; no periodic grain sequencing."
+  },
+  "football-goal": {
+    "sources": [
+      "assets/_sources/remake-audio/football-goal.mp3"
+    ],
+    "changes": "trimmed, layered, pitch/resample, short echo, level balanced"
+  },
+  "crew-countdown": {
+    "sources": [
+      "assets/_sources/crew-arrival/three.wav",
+      "assets/_sources/crew-arrival/two.wav",
+      "assets/_sources/crew-arrival/one.wav"
+    ],
+    "changes": "Trimmed real voice; lowered pitch, saturated throat double, dark stereo convolution reverb; countdown attacks at 0/1/2 seconds; release laugh has 3.8-second hall decay."
+  },
+  "uihover": {
+    "sources": [
+      "assets/_sources/studio-audio/3aedfbaa6a2d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "uiclick": {
+    "sources": [
+      "assets/_sources/studio-audio/f27ae427c56f.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "uislider": {
+    "sources": [
+      "assets/_sources/studio-audio/d590a1ba11b3.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "highscore1": {
+    "sources": [
+      "assets/_sources/studio-audio/e17092c623a7.wav",
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Selected real articulation/texture; trimmed, subtly varied, mixed and balanced at 48 kHz. No arcade-tone or oscillator layers."
+  },
+  "menutheme": {
+    "sources": [
+      "assets/_sources/studio-audio/a3ce142b8fa7.wav",
+      "assets/_sources/studio-audio/e17092c623a7.wav"
+    ],
+    "changes": "Project soundscape: layered studio stereo drones and swell recordings, level balanced, 60 seconds, AAC 192 kbit/s."
+  },
+  "menuatmos": {
+    "sources": [
+      "assets/_sources/studio-audio/53b145e7fd68.wav",
+      "assets/_sources/studio-audio/5f2bc9dd8ad7.wav",
+      "assets/_sources/studio-audio/34b4ea44236d.wav"
+    ],
+    "changes": "Project soundscape: layered studio stereo drones and swell recordings, level balanced, 60 seconds, AAC 192 kbit/s."
+  },
+  "gibcollect2": {
+    "sources": [
+      "assets/_sources/studio-audio/32fd4ce8f87b.wav",
+      "assets/_sources/studio-audio/8a59438ec7b1.wav",
+      "assets/_sources/studio-audio/7eea79556816.wav"
+    ],
+    "changes": "Rounded liquid absorption from a recorded water spell, tiny mineral contact and one fixed recorded bell articulation at the same pitch across every pickup. Only the non-tonal liquid/contact takes vary. No randomized pitch or gain; deterministic overlap compensation. Diffuse stereo reverb: 850 ms reflection window, filtered 300\u20134800 Hz, wet level .55. No harp or generated tones."
+  },
+  "gibcollect3": {
+    "sources": [
+      "assets/_sources/studio-audio/32fd4ce8f87b.wav",
+      "assets/_sources/studio-audio/8a59438ec7b1.wav",
+      "assets/_sources/studio-audio/7eea79556816.wav"
+    ],
+    "changes": "Rounded liquid absorption from a recorded water spell, tiny mineral contact and one fixed recorded bell articulation at the same pitch across every pickup. Only the non-tonal liquid/contact takes vary. No randomized pitch or gain; deterministic overlap compensation. Diffuse stereo reverb: 850 ms reflection window, filtered 300\u20134800 Hz, wet level .55. No harp or generated tones."
+  },
+  "gibcollectmagic2": {
+    "sources": [
+      "assets/_sources/studio-audio/32fd4ce8f87b.wav",
+      "assets/_sources/studio-audio/8a59438ec7b1.wav",
+      "assets/_sources/studio-audio/7eea79556816.wav"
+    ],
+    "changes": "Rounded liquid absorption from a recorded water spell, tiny mineral contact and one fixed recorded bell articulation at the same pitch across every pickup. Only the non-tonal liquid/contact takes vary. No randomized pitch or gain; deterministic overlap compensation. Diffuse stereo reverb: 850 ms reflection window, filtered 300\u20134800 Hz, wet level .55. No harp or generated tones."
+  },
+  "gibcollectmagic3": {
+    "sources": [
+      "assets/_sources/studio-audio/32fd4ce8f87b.wav",
+      "assets/_sources/studio-audio/8a59438ec7b1.wav",
+      "assets/_sources/studio-audio/7eea79556816.wav"
+    ],
+    "changes": "Rounded liquid absorption from a recorded water spell, tiny mineral contact and one fixed recorded bell articulation at the same pitch across every pickup. Only the non-tonal liquid/contact takes vary. No randomized pitch or gain; deterministic overlap compensation. Diffuse stereo reverb: 850 ms reflection window, filtered 300\u20134800 Hz, wet level .55. No harp or generated tones."
+  },
+  "crystalbreak1": {
+    "sources": [
+      "assets/_sources/studio-audio/95a3c1b85db2.wav",
+      "assets/_sources/studio-audio/3649b991e750.wav",
+      "assets/_sources/studio-audio/a5d9588b884f.wav",
+      "assets/_sources/studio-audio/ca504f4824f9.wav"
+    ],
+    "changes": "SKYES Audio 96 kHz glass fracture and fine shard recordings with Raconteur Sound 192 kHz crystal-glass resonance. Three edited articulations, softened 3.8 kHz presence, bright fine debris and a short naturally pitched crystal ring. Mono export preserves socket direction; shared arena sends supply stereo space. No ice crunch, oscillator, generated note or rising pickup jingle."
+  },
+  "crystalbreak2": {
+    "sources": [
+      "assets/_sources/studio-audio/95a3c1b85db2.wav",
+      "assets/_sources/studio-audio/3649b991e750.wav",
+      "assets/_sources/studio-audio/a5d9588b884f.wav",
+      "assets/_sources/studio-audio/ca504f4824f9.wav"
+    ],
+    "changes": "SKYES Audio 96 kHz glass fracture and fine shard recordings with Raconteur Sound 192 kHz crystal-glass resonance. Three edited articulations, softened 3.8 kHz presence, bright fine debris and a short naturally pitched crystal ring. Mono export preserves socket direction; shared arena sends supply stereo space. No ice crunch, oscillator, generated note or rising pickup jingle."
+  },
+  "crystalbreak3": {
+    "sources": [
+      "assets/_sources/studio-audio/95a3c1b85db2.wav",
+      "assets/_sources/studio-audio/3649b991e750.wav",
+      "assets/_sources/studio-audio/a5d9588b884f.wav",
+      "assets/_sources/studio-audio/ca504f4824f9.wav"
+    ],
+    "changes": "SKYES Audio 96 kHz glass fracture and fine shard recordings with Raconteur Sound 192 kHz crystal-glass resonance. Three edited articulations, softened 3.8 kHz presence, bright fine debris and a short naturally pitched crystal ring. Mono export preserves socket direction; shared arena sends supply stereo space. No ice crunch, oscillator, generated note or rising pickup jingle."
+  },
+  "gemchatter": {
+    "sources": [
+      "assets/_sources/studio-audio/7eea79556816.wav"
+    ],
+    "changes": "Recorded enchanting bells with diffuse stereo reverb: 1.45 s reflection window, filtered 300\u20134800 Hz, wet level .65. Circular convolution wraps the decay seamlessly into the loop. Quiet positional shimmer; no modulation or synthesized drone."
+  },
+  "levelup5": {
+    "sources": [
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/81e7bee6b9bf.wav",
+      "assets/_sources/studio-audio/cdf25122d9bb.wav"
+    ],
+    "changes": "Distinct recorded animal/monster performance for this hand; bespoke physical impact/rupture layers, full vocal gesture, gentle saturation and dark stereo reflections. No generated tones; later hands do not reuse a pitched earlier upgrade.",
+    "primarySource": "assets/_sources/studio-audio/91a4393e88cc.wav",
+    "identity": "hunter: sharp split-throat attack and answering shriek"
+  },
+  "levelup6": {
+    "sources": [
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/daa012ce7e17.wav",
+      "assets/_sources/studio-audio/1f5c7dc9783f.wav",
+      "assets/_sources/studio-audio/1ccc16cc6c5f.wav"
+    ],
+    "changes": "Distinct recorded animal/monster performance for this hand; bespoke physical impact/rupture layers, full vocal gesture, gentle saturation and dark stereo reflections. No generated tones; later hands do not reuse a pitched earlier upgrade.",
+    "primarySource": "assets/_sources/studio-audio/8a9eb1424221.wav",
+    "identity": "feral chorus: rising animal cries and a grinding body"
+  },
+  "levelup7": {
+    "sources": [
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ccc16cc6c5f.wav",
+      "assets/_sources/studio-audio/7d75645cf37e.wav"
+    ],
+    "changes": "Distinct recorded animal/monster performance for this hand; bespoke physical impact/rupture layers, full vocal gesture, gentle saturation and dark stereo reflections. No generated tones; later hands do not reuse a pitched earlier upgrade.",
+    "primarySource": "assets/_sources/studio-audio/b950a903463b.wav",
+    "identity": "apex: enormous descending beast bellow and chest rumble"
+  },
+  "shot1alt1": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot1alt2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 1."
+  },
+  "shot1alt3": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 2."
+  },
+  "shot1alt4": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 3."
+  },
+  "weapon1-start": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon1-stop": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon1-homing": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot2alt1": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot2alt2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 1."
+  },
+  "shot2alt3": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 2."
+  },
+  "shot2alt4": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 3."
+  },
+  "weapon2-start": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon2-stop": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon2-homing": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot3": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon3-start": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon3-stop": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon3-homing": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot4": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon4-start": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon4-stop": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon4-homing": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot5alt1": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot5alt2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 1."
+  },
+  "shot5alt3": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 2."
+  },
+  "shot5alt4": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 3."
+  },
+  "shot5": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "rapid5": {
+    "sources": [
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon5-start": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon5-stop": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon5-homing": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot6alt1": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot6alt2": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 1."
+  },
+  "shot6alt3": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 2."
+  },
+  "shot6alt4": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 3."
+  },
+  "shot6": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "rapid6": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon6-start": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon6-stop": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon6-homing": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot7alt1": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "shot7alt2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 1."
+  },
+  "shot7alt3": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 2."
+  },
+  "shot7alt4": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 3."
+  },
+  "shot7": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "rapid7": {
+    "sources": [
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon7-start": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon7-stop": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "weapon7-homing": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: foreground animal roar, chest double, screaming vocal phrases, dry snarl attack, original pressure synthesis, oversampled parallel saturation, presence shaping, selective de-essing and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "seekrapid1": {
+    "sources": [
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "CINDER: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "seekrapid2": {
+    "sources": [
+      "assets/_sources/studio-audio/14955d004dd7.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "FERAL: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "seekrapid3": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/eb94001cc783.wav"
+    ],
+    "changes": "HEX: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "seekrapid4": {
+    "sources": [
+      "assets/_sources/studio-audio/1736bf69810f.wav",
+      "assets/_sources/studio-audio/1ed8e0108312.wav",
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ABYSS: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "seekrapid5": {
+    "sources": [
+      "assets/_sources/studio-audio/1cafbddcb4d9.wav",
+      "assets/_sources/studio-audio/8a9eb1424221.wav",
+      "assets/_sources/studio-audio/91a4393e88cc.wav",
+      "assets/_sources/studio-audio/primal-lion-field.mp3"
+    ],
+    "changes": "RIFT: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "seekrapid6": {
+    "sources": [
+      "assets/_sources/studio-audio/508e8892a6cb.wav",
+      "assets/_sources/studio-audio/b3ea07b37648.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/cdc65a3170c1.wav"
+    ],
+    "changes": "TYRANT: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "seekrapid7": {
+    "sources": [
+      "assets/_sources/studio-audio/4efa4b8aa466.wav",
+      "assets/_sources/studio-audio/b950a903463b.wav",
+      "assets/_sources/studio-audio/primal-lion-designed.mp3"
+    ],
+    "changes": "ECLIPSE: continuous stochastic pressure and broad vocal colour; no grains, glottal pulses, phrase envelopes or frame-rate modulation; slow equal-power colour morphs, reduced localization-band energy and level control; oversampled mastering, presence shaping and short diffusion. No firearm/explosion/weapon recording. Source recordings are not Devil Daggers samples. Take 0."
+  },
+  "spawnegg2": {
+    "sources": [
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "egg II: swollen membrane release, double shell creak and heavy tissue",
+    "addedReverb": false
+  },
+  "unburrowgigapede": {
+    "sources": [
+      "assets/_sources/studio-audio/7d75645cf37e.wav",
+      "assets/_sources/studio-audio/194e8c3be097.wav",
+      "assets/_sources/studio-audio/emergence-DIG043.wav",
+      "assets/_sources/studio-audio/1f5c7dc9783f.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "gigapede surface: broad stone rupture, heavy body surge and long rubble trail",
+    "addedReverb": false
+  },
+  "unburrowghostpede": {
+    "sources": [
+      "assets/_sources/studio-audio/93693b506bdd.wav",
+      "assets/_sources/studio-audio/89480b16b9be.wav",
+      "assets/_sources/studio-audio/d4310530988d.wav"
+    ],
+    "changes": "Distinct layered real-world emergence gesture: earth displacement, material strain, break-through and settling debris; equalized layers, gentle pressure compression and mono HRTF-ready export. No string riser, oscillator, arcade cue or explosion.",
+    "identity": "ghostpede surface: rushing air, desiccated membrane and dispersed shell shards",
+    "addedReverb": false
+  },
+  "crew-release-laugh": {
+    "sources": [
+      "assets/_sources/crew-arrival/antumdeluge-evil-laugh.ogg"
+    ],
+    "changes": "Trimmed real voice; lowered pitch, saturated throat double, dark stereo convolution reverb; countdown attacks at 0/1/2 seconds; release laugh has 3.8-second hall decay."
+  },
+  "crystalhit1": {
+    "sources": [
+      "assets/_sources/studio-audio/56e09d6ecd7f.wav"
+    ],
+    "changes": "Single recorded small-glass contact, cut to the first 180 ms before scattered debris, with three subtle speed variations. Band limited 350\u20138000 Hz with a damped contact decay. Diffuse stereo reverb: 550 ms reflection window, wet level .42, gain .36. No ceramic, bell, oscillator or added musical layer; full fracture remains separate."
+  },
+  "crystalhit2": {
+    "sources": [
+      "assets/_sources/studio-audio/56e09d6ecd7f.wav"
+    ],
+    "changes": "Single recorded small-glass contact, cut to the first 180 ms before scattered debris, with three subtle speed variations. Band limited 350\u20138000 Hz with a damped contact decay. Diffuse stereo reverb: 550 ms reflection window, wet level .42, gain .36. No ceramic, bell, oscillator or added musical layer; full fracture remains separate."
+  },
+  "crystalhit3": {
+    "sources": [
+      "assets/_sources/studio-audio/56e09d6ecd7f.wav"
+    ],
+    "changes": "Single recorded small-glass contact, cut to the first 180 ms before scattered debris, with three subtle speed variations. Band limited 350\u20138000 Hz with a damped contact decay. Diffuse stereo reverb: 550 ms reflection window, wet level .42, gain .36. No ceramic, bell, oscillator or added musical layer; full fracture remains separate."
+  }
+}

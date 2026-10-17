@@ -1,14 +1,13 @@
 import * as THREE from 'three';
-import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+import {goreGeometry} from './remake-geometry';
 import {floorHeight} from './arena';
 import {bloodRandom,type BloodField} from './blood';
 import type {Vec} from './simulation';
 
 const VARIANTS=11,PER_VARIANT=16,COUNT=VARIANTS*PER_VARIANT,GRAVITY=18,STEP=1/120;
-const ROOT='/assets/original/devil-daggers/';
 type Fragment={offset:Vec;velocity:Vec;size:number;spin:number;landing:number;x:number;z:number;y:number};
 
-/** Original gore assets, sampled from replay time; no simulation or gameplay RNG. */
+/** Project-authored gore shapes, sampled from replay time; no simulation or gameplay RNG. */
 export class PlayerDeathBurst {
  readonly mesh:THREE.InstancedMesh;
  readonly ready:Promise<void>;
@@ -44,22 +43,10 @@ export class PlayerDeathBurst {
    fallback.dispose();this.assetsReady=template.assetsReady;
   }):this.load(material,fallback).catch(error=>console.warn('Death gore assets unavailable; using fallback:',error));
  }
- private async load(material:THREE.MeshStandardMaterial,fallback:THREE.BufferGeometry){
-  const loader=new OBJLoader(),textures=new THREE.TextureLoader();
-  const [geometries,map,splat]=await Promise.all([
-   Promise.all(Array.from({length:VARIANTS},async(_,i)=>{
-    const response=await fetch(ROOT+`meshes/blood${i+1}.obj`);if(!response.ok)throw Error('Blood mesh missing');
-    const model=loader.parse(await response.text());let geometry:THREE.BufferGeometry|undefined;
-    model.traverse(o=>{if(o instanceof THREE.Mesh)geometry=o.geometry;});
-    if(!geometry)throw Error('Empty blood mesh');
-    geometry.computeBoundingSphere();const radius=geometry.boundingSphere!.radius;
-    geometry.center();geometry.scale(1/radius,1/radius,1/radius);return geometry;
-   })),textures.loadAsync(ROOT+'textures/blood.png'),textures.loadAsync('/assets/effects/blood-splat.png'),
-  ]);
-  map.colorSpace=THREE.SRGBColorSpace;map.minFilter=map.magFilter=THREE.NearestFilter;map.generateMipmaps=false;
-  material.map=map;material.needsUpdate=true;
+ private async load(_material:THREE.MeshStandardMaterial,fallback:THREE.BufferGeometry){
+  const splat=await new THREE.TextureLoader().loadAsync('/assets/effects/blood-splat.png');
   splat.colorSpace=THREE.SRGBColorSpace;this.sprayMaterial.map=splat;this.sprayMaterial.needsUpdate=true;
-  for(let i=0;i<VARIANTS;i++)this.batches[i].geometry=geometries[i];
+  for(let i=0;i<VARIANTS;i++)this.batches[i].geometry=goreGeometry(i);
   fallback.dispose();this.assetsReady=true;
  }
  begin(position:Vec,time:number){

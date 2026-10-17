@@ -1,0 +1,27 @@
+{
+  "cuesAndTracks": 175,
+  "sourceRecordings": 46,
+  "audioBytes": 35597405,
+  "formerArchiveBytes": 502960648,
+  "unitTests": 559,
+  "unitFailures": 0,
+  "build": "passed",
+  "chromeDecode": "all 175 passed",
+  "webkitDecode": "all 175 passed",
+  "gameplayEnemyPaths": 22,
+  "uiMusicCountdown": "passed",
+  "offlineChromeAndWebKitInstall": "passed",
+  "offlineExtractedAudioEntries": [],
+  "productionExtractedAudioExists": false,
+  "preview": "synchronized game footage",
+  "bank": "studio-horror",
+  "professionalSourceRecordings": 40,
+  "studioLicense": "Sonniss GDC version 2.0 effective 2026-08-27",
+  "cc0Cues": [
+    "crew-countdown",
+    "football-goal"
+  ],
+  "enemySignatures": 22,
+  "spatialChecks": 88,
+  "spatialFailures": 0
+}

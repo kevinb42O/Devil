@@ -39,7 +39,7 @@ export class EnemyGlowSources {
     this.scale.setFromMatrixScale(n.matrixWorld);n.geometry.boundingBox!.getSize(this.size).multiply(this.scale);
     const radius=Math.max(this.size.x,this.size.y,this.size.z)*.5;
     pos.add(this.towardCamera.subVectors(camera.position,pos).normalize().multiplyScalar(radius+.035));
-    glow.size=Math.max(.45,Math.min(1.25,radius*3.2));
+    glow.size=n.name==='spider-held-gem'?Math.max(.18,Math.min(.45,radius*.6)):Math.max(.45,Math.min(1.25,radius*3.2));
    }
    output.length=count;return output;
   }

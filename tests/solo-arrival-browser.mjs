@@ -30,15 +30,16 @@ try{
  await page.evaluate(()=>window.crossSeal=true);
  await page.waitForFunction(()=>!!window.soloRelease,{},{timeout:20000});
  const result=await page.evaluate(()=>({cues:window.soloCues,arrival:window.soloArrival,release:window.soloRelease}));
- assert.deepEqual(result.cues,[6,5,4,3,2,1,0]);
- const settling=result.arrival.samples.filter(s=>s.remaining>5000);
+ assert.deepEqual(result.cues,[4,3,2,1,0]);
+ const settling=result.arrival.samples.filter(s=>s.remaining>3000);
  assert.ok(settling.length>0);assert.ok(settling.every(s=>s.hidden&&s.time===0));
  assert.ok(result.arrival.samples.filter(s=>s.remaining>0).every(s=>s.time===0));
- assert.ok(result.release.at-result.arrival.started>=5900);
+ assert.ok(result.release.at-result.arrival.started>=3900);
  assert.ok(result.release.audio.oneShotNames.includes('spawnplayer'));
+ assert.ok(result.release.audio.oneShotNames.includes('crew-release-laugh'));
  assert.ok(!result.release.audio.oneShotNames.includes('crew-countdown'));
  await page.waitForFunction(()=>window.abyss.time>.1);
  assert.match(await page.locator('.arrival-detail').textContent(),/KEEP MOVING/);
  assert.deepEqual(errors,[]);
- console.log('Solo arrival passed: seal crossing, silent one-second lead, five-second voice/visual countdown, frozen survival timer, spawn release and simulation resume.');
+ console.log('Solo arrival passed: seal crossing, silent one-second lead, three-second voice/visual countdown, frozen survival timer, spawn release and simulation resume.');
 }finally{await browser.close();}

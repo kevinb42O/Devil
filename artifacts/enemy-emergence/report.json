@@ -1,0 +1,228 @@
+{
+  "results": [
+    {
+      "kind": "squid",
+      "age": 0.35,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 2,
+      "debris": 34,
+      "dust": 38,
+      "draws": 47
+    },
+    {
+      "kind": "squid",
+      "age": 1.2,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 3,
+      "debris": 34,
+      "dust": 38,
+      "draws": 47
+    },
+    {
+      "kind": "squid",
+      "age": 4,
+      "exits": 1,
+      "cracks": 0,
+      "waves": 0,
+      "debris": 0,
+      "dust": 0,
+      "draws": 44
+    },
+    {
+      "kind": "squid2",
+      "age": 0.35,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 2,
+      "debris": 34,
+      "dust": 38,
+      "draws": 57
+    },
+    {
+      "kind": "squid2",
+      "age": 1.2,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 3,
+      "debris": 34,
+      "dust": 38,
+      "draws": 57
+    },
+    {
+      "kind": "squid2",
+      "age": 4,
+      "exits": 1,
+      "cracks": 0,
+      "waves": 0,
+      "debris": 0,
+      "dust": 0,
+      "draws": 54
+    },
+    {
+      "kind": "squid3",
+      "age": 0.35,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 2,
+      "debris": 34,
+      "dust": 38,
+      "draws": 70
+    },
+    {
+      "kind": "squid3",
+      "age": 1.2,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 3,
+      "debris": 34,
+      "dust": 38,
+      "draws": 69
+    },
+    {
+      "kind": "squid3",
+      "age": 4,
+      "exits": 1,
+      "cracks": 0,
+      "waves": 0,
+      "debris": 0,
+      "dust": 0,
+      "draws": 66
+    },
+    {
+      "kind": "centipede",
+      "age": 2.5,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 0,
+      "debris": 34,
+      "dust": 38,
+      "draws": 31
+    },
+    {
+      "kind": "centipede",
+      "age": 3.35,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 2,
+      "debris": 34,
+      "dust": 38,
+      "draws": 32
+    },
+    {
+      "kind": "centipede",
+      "age": 4.2,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 3,
+      "debris": 34,
+      "dust": 38,
+      "draws": 32
+    },
+    {
+      "kind": "centipede",
+      "age": 10,
+      "exits": 1,
+      "cracks": 0,
+      "waves": 0,
+      "debris": 0,
+      "dust": 0,
+      "draws": 27
+    },
+    {
+      "kind": "gigapede",
+      "age": 2.5,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 0,
+      "debris": 34,
+      "dust": 38,
+      "draws": 31
+    },
+    {
+      "kind": "gigapede",
+      "age": 3.35,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 2,
+      "debris": 34,
+      "dust": 38,
+      "draws": 32
+    },
+    {
+      "kind": "gigapede",
+      "age": 4.2,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 3,
+      "debris": 34,
+      "dust": 38,
+      "draws": 32
+    },
+    {
+      "kind": "gigapede",
+      "age": 10,
+      "exits": 1,
+      "cracks": 0,
+      "waves": 0,
+      "debris": 0,
+      "dust": 0,
+      "draws": 25
+    },
+    {
+      "kind": "ghostpede",
+      "age": 2.5,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 0,
+      "debris": 34,
+      "dust": 38,
+      "draws": 31
+    },
+    {
+      "kind": "ghostpede",
+      "age": 3.35,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 2,
+      "debris": 34,
+      "dust": 38,
+      "draws": 30
+    },
+    {
+      "kind": "ghostpede",
+      "age": 4.2,
+      "exits": 1,
+      "cracks": 45,
+      "waves": 3,
+      "debris": 34,
+      "dust": 38,
+      "draws": 31
+    },
+    {
+      "kind": "ghostpede",
+      "age": 10,
+      "exits": 1,
+      "cracks": 0,
+      "waves": 0,
+      "debris": 0,
+      "dust": 0,
+      "draws": 27
+    }
+  ],
+  "lifecycle": {
+    "initial": {
+      "exits": 1,
+      "cracks": 45,
+      "waves": 0,
+      "debris": 34,
+      "dust": 38
+    },
+    "repeatedBreach": true,
+    "backwardSeek": true,
+    "nullWorld": true,
+    "restart": true
+  },
+  "errors": []
+}

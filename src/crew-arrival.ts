@@ -15,7 +15,7 @@ export class CrewArrival {
  private reduced=matchMedia('(prefers-reduced-motion: reduce)');
  constructor(private cue:(beat:number,remainingMs:number)=>void){
   this.element=document.createElement('div');this.element.id='crew-arrival';this.element.hidden=true;
-  this.element.innerHTML='<div class="arrival-vignette"></div><div class="arrival-sigil" aria-hidden="true"><i></i><i></i><i></i></div><div class="arrival-copy"><p class="arrival-eyebrow">THE SEAL IS BROKEN</p><div class="arrival-value" role="status" aria-live="polite" aria-atomic="true"></div><p class="arrival-detail"></p><div class="arrival-beats" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>';
+  this.element.innerHTML='<div class="arrival-vignette"></div><div class="arrival-sigil" aria-hidden="true"><i></i><i></i><i></i></div><div class="arrival-copy"><p class="arrival-eyebrow">THE SEAL IS BROKEN</p><div class="arrival-value" role="status" aria-live="polite" aria-atomic="true"></div><p class="arrival-detail"></p><div class="arrival-beats" aria-hidden="true"><i></i><i></i><i></i></div></div>';
   this.orbitElement=this.element.querySelector('.arrival-sigil>i:nth-child(3)')!;
   this.value=this.element.querySelector('.arrival-value')!;this.detail=this.element.querySelector('.arrival-detail')!;
   document.body.append(this.element);
@@ -37,7 +37,7 @@ export class CrewArrival {
   if(startAt)this.deadline=startAt;
   const remaining=this.deadline-now;
   // Schedule the voice during the silent settling second. Its first sample
-  // and the visual five both begin at the same countdown boundary.
+  // and the visual three both begin at the same countdown boundary.
   if(remaining>CREW_COUNTDOWN_MS){
    if(!this.element.hidden)this.element.hidden=true;
    if(this.beat<0){this.beat=CREW_COUNTDOWN_SECONDS+1;if(!document.hidden)this.cue(this.beat,remaining);}

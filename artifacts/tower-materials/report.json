@@ -1,0 +1,90 @@
+{
+  "inventory": [
+    {
+      "kind": "squid",
+      "meshes": 21,
+      "finishes": [
+        {
+          "tier": 1,
+          "finish": "stone"
+        },
+        {
+          "tier": 1,
+          "finish": "metal"
+        },
+        {
+          "tier": 1,
+          "finish": "interior"
+        }
+      ],
+      "shared": true
+    },
+    {
+      "kind": "squid2",
+      "meshes": 31,
+      "finishes": [
+        {
+          "tier": 2,
+          "finish": "stone"
+        },
+        {
+          "tier": 2,
+          "finish": "metal"
+        },
+        {
+          "tier": 2,
+          "finish": "interior"
+        }
+      ],
+      "shared": true
+    },
+    {
+      "kind": "squid3",
+      "meshes": 44,
+      "finishes": [
+        {
+          "tier": 3,
+          "finish": "stone"
+        },
+        {
+          "tier": 3,
+          "finish": "metal"
+        },
+        {
+          "tier": 3,
+          "finish": "interior"
+        }
+      ],
+      "shared": true
+    }
+  ],
+  "gameChecks": {
+    "texturedDraws": 117,
+    "baselineDraws": 117,
+    "maximumCrystalError": 1.7763568394002505e-15
+  },
+  "crystalChecks": [
+    {
+      "kind": "squid",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    },
+    {
+      "kind": "squid2",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    },
+    {
+      "kind": "squid3",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    }
+  ],
+  "errors": []
+}

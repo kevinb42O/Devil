@@ -1,6 +1,7 @@
+import {remakeAudioUrl} from './remake-audio';
+import menuTheme from './menu-theme.json';
 export type MusicScene='menu'|'entrance'|'silent';
-const ROOT='/assets/original/devil-daggers/audio/';
-/** Stream the original long stereo recordings without decoding them on the game thread. */
+/** Stream the licensed stereo soundscapes without decoding them on the game thread. */
 export class Music {
  private tracks=new Map<string,HTMLAudioElement>();
  private gains=new Map<string,GainNode>();
@@ -12,7 +13,7 @@ export class Music {
  private volume=.55;
  private failed=new Set<string>();
  private starting=new Set<string>();
- get diagnostics(){return {scene:this.scene,unlocked:this.unlocked,hidden:this.hidden,failed:[...this.failed],tracks:[...this.tracks].map(([name,a])=>({name,playing:!a.paused,time:a.currentTime,volume:(this.gains.get(name)?.gain.value??0)*this.volume,ready:a.readyState}))};}
+ get diagnostics(){return {scene:this.scene,unlocked:this.unlocked,contextState:this.context?.state,hidden:this.hidden,failed:[...this.failed],tracks:[...this.tracks].map(([name,a])=>({name,playing:!a.paused,time:a.currentTime,volume:(this.gains.get(name)?.gain.value??0)*this.volume,ready:a.readyState}))};}
  setVolume(value:number){
   this.volume=Math.max(0,Math.min(1,value));
   if(this.master)this.master.gain.value=this.volume;
@@ -22,6 +23,7 @@ export class Music {
  setHidden(hidden:boolean){
   this.hidden=hidden;
   if(hidden)for(const [name,a] of this.tracks){a.pause();this.gains.get(name)!.gain.value=0;}
+  else if(this.unlocked)void this.context?.resume().catch(()=>{});
  }
  unlock(){
   if(this.hidden)return;
@@ -34,10 +36,10 @@ export class Music {
  }
  private track(name:string){
   let a=this.tracks.get(name);if(a)return a;
-  // Do not delegate WAV looping to the media backend: some browsers can honor a
+  // Do not delegate track looping to the media backend: some browsers can honor a
   // short embedded loop region instead of the complete recording. Restart only
   // after the media element reaches the actual end of the file.
-  a=new Audio();a.loop=false;a.preload='metadata';a.src=ROOT+name+'.wav';
+  a=new Audio();a.loop=false;a.preload='auto';a.src=name==='menutheme'?'/assets/audio/menu/'+menuTheme.file:remakeAudioUrl(name);
   // iOS ignores HTMLMediaElement.volume. Route every stream through Web Audio
   // before playback so neither a new track nor a scene fade bypasses the mixer.
   const gain=this.context!.createGain();gain.gain.value=0;

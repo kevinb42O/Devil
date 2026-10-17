@@ -1,0 +1,13 @@
+✔ live client-hit flight owns local daggers while decoded state/history/baselines remain immutable (958.737709ms)
+✔ cached owner flight avoids rescanning remote shots and invalidates for appends/replacements (7.771583ms)
+✔ 600 seconds of player replacement and prediction retain one pose, including snapshots with no subsequent movement (315.009125ms)
+✔ receive baselines retain decoded drawing ink across relative board updates (4.576042ms)
+✔ cached frame grids match uncached swept hits, homing, health and consumed bullets over changing poses (104.549417ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1965.33375
