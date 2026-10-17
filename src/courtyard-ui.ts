@@ -3,7 +3,7 @@ import type {World} from './simulation';
 import type {FriendsSession} from './multiplayer';
 import type {ControlScheme} from './controls';
 import './courtyard.css';
-import {footballKickPose} from './courtyard-state';
+import {footballKickPose,FOOTBALL_ROOM} from './courtyard-state';
 import {nearDrawingRoom,nearbyTool,nearClearButton,MAX_INK,INK_COLORS,BRUSH_SIZES} from './courtyard-drawing';
 
 export class CourtyardUI{
@@ -110,6 +110,8 @@ export class CourtyardUI{
   const below=c.committed.includes(s.localId),wait=this.root.querySelector<HTMLElement>('.courtyard-wait')!;wait.hidden=!below;
   wait.querySelector('p')!.textContent=s.members.filter(m=>!c.committed.includes(m.id)).map(m=>m.name).join(', ');
   const text=assetError||(!assetsReady?'Loading courtyard…':gathering?(local?.ready?(blocked||(s.role==='host'?'Crew ready · Open the pit when you’re ready':'Crew ready · Waiting for the host')):'Ready when you are'):c.phase==='opening'?'Pit unlocking…':below?`${c.committed.length} / ${c.participants.length} below`:'Pit open · Jump in');
-  const message=this.root.querySelector('.courtyard-message')!;if(message.textContent!==text)message.textContent=text;
+  const pos=player?.player.pos,onPitch=!!pos&&pos.x>=FOOTBALL_ROOM.minX&&pos.x<=FOOTBALL_ROOM.maxX&&pos.z>=FOOTBALL_ROOM.minZ&&pos.z<=FOOTBALL_ROOM.maxZ;
+  const help=onPitch&&gathering&&assetsReady&&!assetError?' · '+(scheme==='controller'?'Tap LT / RT to juggle · Hold to shoot':scheme==='mobile'?'Tap to juggle · Hold to shoot':'Tap left / right click to juggle · Hold to shoot'):'';
+  const message=this.root.querySelector('.courtyard-message')!,display=text+help;if(message.textContent!==display)message.textContent=display;
  }
 }

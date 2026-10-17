@@ -1,5 +1,18 @@
 import {courtyardEvent,resetSkull,courtyardFloor,insidePit,pitIsOpen,COURTYARD_SOLIDS,FOOTBALL,FOOTBALL_BALL_RADIUS,KICK_CHARGE_TICKS,constrainCourtyard,type CourtyardState,type Point} from './courtyard-state';
 type Body={id:string;player:{pos:Point;vel:Point};input:{yaw:number;pitch?:number;fire?:boolean;homing?:boolean;leftArm?:boolean;rightArm?:boolean}};
+const JUGGLE_TAP_TICKS=30,JUGGLE_BUFFER_TICKS=90;
+/** A soft touch returns toward the selected foot and always has the same gentle apex. */
+function juggleFootball(c:CourtyardState,p:Body,tick:number){
+ const k=c.kicks[p.id],s=c.skull,feet=p.player.pos.y-1.7;
+ const dx=s.pos.x-p.player.pos.x,dz=s.pos.z-p.player.pos.z,d=Math.hypot(dx,dz),fx=-Math.sin(p.input.yaw),fz=-Math.cos(p.input.yaw);
+ if(s.resetAt||d>2.5||s.pos.y<feet-.2||s.pos.y>feet+2.4||s.vel.y>0&&s.pos.y>feet+1||d>.4&&(dx*fx+dz*fz)/d<-.1)return;
+ const side=k.right?.16:-.16,targetX=p.player.pos.x+fx*1.3+Math.cos(p.input.yaw)*side,targetZ=p.player.pos.z+fz*1.3-Math.sin(p.input.yaw)*side;
+ let vx=(targetX-s.pos.x)*2.4+p.player.vel.x*.4,vz=(targetZ-s.pos.z)*2.4+p.player.vel.z*.4;
+ const speed=Math.hypot(vx,vz);if(speed>3){vx*=3/speed;vz*=3/speed;}
+ s.vel={x:vx,y:Math.sqrt(36*Math.max(.7,feet+3.1-s.pos.y)),z:vz};s.lastContact[p.id]=tick;
+ k.tapUntil=undefined;k.released=tick;k.power=.18;
+ courtyardEvent(c,tick,'kick',s.pos,[p.id]);
+}
 /** Sweep against the player's body so fast passes cannot jump through a defender. */
 export function blockFootball(c:CourtyardState,players:Body[],previous:Point,dt:number){
  const s=c.skull,radius=FOOTBALL_BALL_RADIUS+.38;
@@ -27,9 +40,12 @@ export function stepFootballKicks(c:CourtyardState,players:Body[],tick:number){
  const ids=new Set(players.map(p=>p.id));for(const id of Object.keys(c.kicks))if(!ids.has(id))delete c.kicks[id];
  for(const p of players){
   const k=c.kicks[p.id]??={started:-1,released:-1000,power:0},held=p.input.fire||p.input.homing;
-  if(held){if(k.started<0&&tick-k.released>=30){k.started=tick;k.right=p.input.homing===true&&!p.input.fire;}continue;}
+  if(k.tapUntil!==undefined){if(tick>k.tapUntil||c.skull.resetAt)k.tapUntil=undefined;else juggleFootball(c,p,tick);}
+  if(held){if(k.started<0&&tick-k.released>=18){k.started=tick;k.right=p.input.homing===true&&!p.input.fire;}continue;}
   if(k.started<0)continue;
   k.power=Math.min(1,Math.max(0,(tick-k.started)/KICK_CHARGE_TICKS));k.started=-1;k.released=tick;
+  if(k.power<=JUGGLE_TAP_TICKS/KICK_CHARGE_TICKS){k.tapUntil=tick+JUGGLE_BUFFER_TICKS;juggleFootball(c,p,tick);continue;}
+  k.tapUntil=undefined;
   const s=c.skull,dx=s.pos.x-p.player.pos.x,dz=s.pos.z-p.player.pos.z,d=Math.hypot(dx,dz),forward={x:-Math.sin(p.input.yaw),z:-Math.cos(p.input.yaw)};
   if(s.resetAt||d>2.2||Math.abs(p.player.pos.y-1.7-s.pos.y)>1.4||d>.4&&(dx*forward.x+dz*forward.z)/d<-.1)continue;
   const speed=3.8+19*k.power,loft=Math.max(0,Math.min(.55,p.input.pitch??0));

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import {createCourtyard,FOOTBALL,FOOTBALL_BALL_RADIUS,KICK_CHARGE_TICKS,footballKickPose,validateCourtyard} from '../src/courtyard-state';
 import {stepSkull,stepFootballKicks,blockFootball} from '../src/courtyard-physics';
 import {idleInput} from '../src/simulation';
+import {FriendsSession} from '../src/multiplayer';
+import {encodeState,decodeState} from '../src/network-state';
 const body=()=>({id:'host',player:{pos:{x:FOOTBALL.x,y:1.7,z:FOOTBALL.z+1.1},vel:{x:0,y:0,z:0}},input:{...idleInput(),fire:true}});
 test('every touchline returns the out-of-bounds skull exactly to midfield without altering score',()=>{
  for(const pos of [{x:FOOTBALL.x-18.51,y:FOOTBALL_BALL_RADIUS,z:2},{x:FOOTBALL.x+18.51,y:FOOTBALL_BALL_RADIUS,z:2},{x:45,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z-25.51},{x:45,y:FOOTBALL_BALL_RADIUS,z:FOOTBALL.z+25.51}]){
@@ -26,6 +28,54 @@ test('right-click input charges and releases a football kick',()=>{
  stepFootballKicks(c,[p],1);p.input.homing=false;stepFootballKicks(c,[p],2);
  assert.equal(c.events.filter(e=>e.kind==='kick').length,1);assert.ok(c.skull.vel.z<0);assert.equal(footballKickPose(c,'host',2)!.right,true);
  const left=createCourtyard(1),leftPlayer=body();stepFootballKicks(left,[leftPlayer],1);leftPlayer.input.fire=false;stepFootballKicks(left,[leftPlayer],2);assert.equal(footballKickPose(left,'host',2)!.right,false);
+});
+
+test('casual taps sustain a stationary juggle with either foot or alternating feet',()=>{
+ for(const mode of ['left','right','alternate'])for(const cadence of [24,48,72]){
+  const c=createCourtyard(1),p=body();let peak=0;
+  for(let tick=1;tick<=2400;tick++){
+   const right=mode==='right'||mode==='alternate'&&Math.floor((tick-1)/cadence)%2===1;
+   p.input.fire=(tick-1)%cadence===0&&!right;p.input.homing=(tick-1)%cadence===0&&right;
+   stepSkull(c,[p],tick,1/120);peak=Math.max(peak,c.skull.pos.y);
+   if(tick>2)assert.ok(c.skull.pos.y>FOOTBALL_BALL_RADIUS,`${mode} / ${cadence}: ball dropped at ${tick}`);
+   assert.ok(Math.hypot(c.skull.pos.x-p.player.pos.x,c.skull.pos.z-p.player.pos.z)<2.5,'no chasing needed');
+   assert.ok(c.skull.pos.y<3.2,'rapid taps never stack upward impulses');
+  }
+  assert.ok(peak>2.9,'touches lift the ball high enough to show off');assert.ok(c.sequence>20);assert.equal(validateCourtyard(c),true);
+ }
+});
+
+test('an early tap waits for the descending ball and animates the selected foot on contact',()=>{
+ const c=createCourtyard(1),p=body();p.input.fire=false;p.input.homing=true;c.skull.pos.y=3.05;c.skull.vel.y=.5;
+ stepSkull(c,[p],1,1/120);p.input.homing=false;stepSkull(c,[p],2,1/120);
+ assert.equal(c.events.length,0,'no remote touch while the ball is overhead');assert.ok(c.kicks.host.tapUntil!>2);
+ for(let tick=3;tick<=60;tick++)stepSkull(c,[p],tick,1/120);
+ assert.equal(c.events.filter(e=>e.kind==='kick').length,1);const touch=c.events.find(e=>e.kind==='kick')!;
+ assert.ok(touch.tick>2);assert.equal(footballKickPose(structuredClone(c),'host',touch.tick)!.right,true);assert.equal(c.kicks.host.tapUntil,undefined);
+});
+
+test('missed buffered taps expire and cannot touch distant or resetting balls',()=>{
+ for(const mode of ['far','reset','behind']){
+  const c=createCourtyard(1),p=body();if(mode==='far')p.player.pos.x+=10;if(mode==='behind')p.input.yaw=Math.PI;if(mode==='reset')c.skull.resetAt=500;
+  stepFootballKicks(c,[p],1);p.input.fire=false;
+  for(let tick=2;tick<=100;tick++)stepFootballKicks(c,[p],tick);
+  assert.equal(c.events.length,0);assert.equal(c.kicks.host.tapUntil,undefined);
+ }
+});
+
+test('juggle height, selected foot and buffered taps survive multiplayer snapshots',()=>{
+ const h=new FriendsSession('host');
+ try{
+  h.enterPrelobby();const c=h.courtyard!,p=body();p.input.fire=false;p.input.homing=true;c.skull.pos.y=3.05;
+  stepFootballKicks(c,[p],1);p.input.homing=false;stepFootballKicks(c,[p],2);
+  const pending=decodeState(encodeState(h.snapshot()!,1,0),new Map())!.snapshot.courtyard!;
+  assert.equal(pending.kicks.host.tapUntil,c.kicks.host.tapUntil);assert.equal(pending.kicks.host.right,true);
+  for(let tick=3;tick<=60;tick++)stepSkull(c,[p],tick,1/120);
+  const visible=decodeState(encodeState(h.snapshot()!,2,0),new Map())!.snapshot.courtyard!;
+  assert.ok(Math.abs(visible.skull.pos.y-c.skull.pos.y)<.01);assert.ok(visible.skull.vel.y>0);
+  assert.equal(footballKickPose(visible,'host',c.kicks.host.released)!.right,true);assert.equal(visible.events.at(-1)!.kind,'kick');
+  c.kicks.host.tapUntil=Infinity;assert.equal(validateCourtyard(c),false);
+ }finally{h.close();}
 });
 test('walking dribbles on the ground without stacking launch impulses, even while charging',()=>{
  const c=createCourtyard(1),p=body();p.player.vel.z=-3;

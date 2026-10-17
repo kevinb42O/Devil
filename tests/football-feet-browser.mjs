@@ -17,7 +17,7 @@ try{
   const {stepFootballKicks}=await import('/src/courtyard-physics.ts');
   const {controllerState}=await import('/src/controls.ts');
   await loadCrewAvatar();
-  for(const controller of [false,true])for(const firstPerson of [false,true])for(const right of [false,true]){
+  for(const controller of [false,true])for(const firstPerson of [false,true])for(const right of [false,true])for(const tap of [false,true]){
    const avatar=createCrewAvatar(0,false,firstPerson),input={forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:!right,homing:right};
    if(controller){const pad={axes:[0,0,0,0],buttons:Array.from({length:17},(_,i)=>({pressed:i===(right?7:6),value:i===(right?7:6)?1:0}))};const courtyard=controllerState(pad,.15,true),combat=controllerState(pad,.15);input.fire=courtyard.fire;input.homing=courtyard.homing;if(combat.fire!==right||combat.homing===right)throw Error('Combat triggers must retain RT fire / LT homing');}
    const c=createCourtyard(1),player={id:'host',player:{pos:{x:36,y:1.7,z:3.1},vel:{x:0,y:0,z:0}},input};
@@ -26,8 +26,10 @@ try{
    const pos=b=>{avatar.updateMatrixWorld(true);return b.getWorldPosition(b.position.clone());};
    updateCrewAvatar(avatar,input,player.player.vel,true,1,false,true);
    const neutral=pos(foot),otherNeutral=pos(other);
-   stepFootballKicks(c,[player],1);input.fire=false;input.homing=false;stepFootballKicks(c,[player],145);
-   const pose=footballKickPose(structuredClone(c),'host',145);
+   const releaseTick=tap?2:145;
+   stepFootballKicks(c,[player],1);input.fire=false;input.homing=false;stepFootballKicks(c,[player],releaseTick);
+   if(tap&&c.skull.vel.y<9)throw Error('A quick tap must lift the ball for juggling');
+   const pose=footballKickPose(structuredClone(c),'host',releaseTick);
    updateCrewAvatar(avatar,input,player.player.vel,true,1,false,true,1,{...pose,age:.13});
    const strike=pos(foot);
    if(strike.z>=neutral.z-.15)throw Error('Selected foot must strike forward: '+JSON.stringify({right,firstPerson,neutral,strike}));

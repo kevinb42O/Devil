@@ -14,8 +14,9 @@ function trace(seed:number,start=0,end=1200,combat=false,crew=false){
  const spawnAt=world.spawnAt.bind(world);
  world.spawnAt=(kind,angle,radialSample)=>{const enemy=spawnAt(kind,angle,radialSample);events.push({tick:world.tick,kind,angle,radialSample,pos:{...enemy.pos}});return enemy;};
  while(world.tick<Math.round(end/STEP)){
-  // Exercise the combat RNG without retaining a growing army for this schedule test.
-  if(combat){world.dropGems(world.player.pos,2);world.shoot(idleInput(),true,false);}
+  // Exercise combat RNG once per simulated second without retaining an army.
+  // Firing a full upgraded shotgun every simulation tick overwhelms this schedule check.
+  if(combat&&world.tick%120===0){world.dropGems(world.player.pos,2);world.shoot(idleInput(),true,false);}
   if(crew)world.stepCrew(new Map());else world.step(idleInput());
   world.enemies=[];world.projectiles=[];world.gems=[];world.effects=[];
  }

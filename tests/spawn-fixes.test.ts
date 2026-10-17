@@ -2,29 +2,29 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {World,STEP,idleInput,type EnemyKind} from '../src/simulation.ts';
 import {originalSpawnRadius} from '../src/spawn-placement.ts';
-import {towerEmissionTick,towerEntrancePose} from '../src/tower-spawn.ts';
+import {towerEmissionTick,towerEntrancePose,towerGameplayEntrancePose} from '../src/tower-spawn.ts';
+import {armorBottom} from '../src/projectile-collision.ts';
+import {towerFloorHeight,TOWER_FLOOR_CLEARANCE} from '../src/enemy-floor.ts';
 import {towerSpitPulse} from '../src/enemy-presentation.ts';
 import {createRun,RunRecorder,ReplayPlayer} from '../src/replay.ts';
 import reference from '../research/devil-daggers-v3/original-survival-replay-spawns.json';
 import emissions from '../research/devil-daggers-v3/original-tower-emissions.json';
 import enemyReference from '../research/devil-daggers-v3/reference-data.json';
 
-test('tower entrances preserve recorded travel while the large tower matches normal floor clearance',()=>{
+test('tower entrances preserve recorded travel while enlarged armor clears the floor',()=>{
  for(const replay of reference.replays)for(const kind of ['squid','squid2','squid3'] as const){
   const birth=replay.spawns.find(e=>e.kind===kind)!;
   const samples=replay.firstEnemyMotion.filter(e=>e.id===birth.id&&e.tick-birth.tick<=900);
   const world=new World(29,{schedule:false,invulnerable:true});world.startAt(birth.time);
   const tower=world.spawnAt(kind,birth.angle!,.5);tower.nextSpawn=Infinity;
-  const normal=kind==='squid3'?world.spawnAt('squid',birth.angle!,.5):null;
-  if(normal)normal.nextSpawn=Infinity;
   for(const sample of samples){
    while(world.tick<sample.tick*2)world.step(idleInput());
    const radius=Math.hypot(tower.pos.x,tower.pos.z),expected=Math.hypot(sample.position[0],sample.position[2])*.62;
    assert.ok(Math.abs(radius-expected)<.04,`${replay.source}: ${kind} at ${sample.tick}, error ${radius-expected}`);
-   if(normal){
-    assert.ok(Math.abs((tower.pos.y-2.812134)-(normal.pos.y-3.229219))<.001,'large and normal tower undersides share floor clearance');
-    assert.ok(Math.abs(towerEntrancePose(kind,(sample.tick-birth.tick)/60).height-sample.position[1]*.62)<.02,'original measurements remain available');
-   }else assert.ok(Math.abs(tower.pos.y-sample.position[1]*.62)<.02);
+   const age=(sample.tick-birth.tick)/60;
+   assert.ok(Math.abs(towerEntrancePose(kind,age).height-sample.position[1]*.62)<.02,'original height measurements remain available');
+   assert.ok(tower.pos.y>=towerGameplayEntrancePose(kind,age).height-.02,'floor clearance can lift the recorded entrance');
+   if(age>0)assert.ok(tower.pos.y+armorBottom(tower)>=towerFloorHeight(tower,world.time)+TOWER_FLOOR_CLEARANCE-1e-8,'enlarged armor stays above the full floor footprint');
   }
  }
 });
