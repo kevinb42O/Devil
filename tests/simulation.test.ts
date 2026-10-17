@@ -163,12 +163,13 @@ test('spatial projectile lookup agrees with exhaustive swept hits across cell bo
 
 test('all towers drift inward without orbiting and spin clockwise independently',()=>{
  for(const kind of ['squid','squid2','squid3'] as const){
-  const w=new World(1,{schedule:false,invulnerable:true}),e=w.spawn(kind,v(18,6,-24));e.nextSpawn=Infinity;
+  // Stay above the enlarged armor's floor clearance to isolate radial movement.
+  const w=new World(1,{schedule:false,invulnerable:true}),e=w.spawn(kind,v(18,60,-24));e.nextSpawn=Infinity;
   const initialTarget=localToEnemy(e,w.player.pos,e.weakpoints[0].local);if(kind==='squid')assert.ok((initialTarget.x-e.pos.x)*e.pos.x+(initialTarget.z-e.pos.z)*e.pos.z>0,'first gem faces outward');
   run(w,1200);assert.ok(Math.abs(Math.hypot(e.pos.x,e.pos.z)-25)<1e-8);
   assert.ok(Math.abs(e.pos.x*(-24)-e.pos.z*18)<1e-8,'translation stays on original radius');
-  assert.equal(e.pos.y,6);assert.ok(e.age>9.99);
+  assert.equal(e.pos.y,60);assert.ok(e.age>9.99);
   // Reaching the middle must never teleport back to the perimeter or overshoot.
-  e.pos=v(.01,6,0);run(w,120);assert.equal(e.pos.x,0);assert.equal(e.pos.z,0);
+  e.pos=v(.01,60,0);run(w,120);assert.equal(e.pos.x,0);assert.equal(e.pos.z,0);
  }
 });

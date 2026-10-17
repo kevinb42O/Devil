@@ -33,7 +33,8 @@ test('squid tiers emit their own distinct offspring in the recorded opening burs
  for(const [kind,count,skull] of [['squid',10,'skull2'],['squid2',10,'skull3'],['squid3',15,'skull4']] as const){const w=new World(1,{schedule:false});w.spawn(kind,v(20,5,20));step(w,423);assert.equal(w.enemies.filter(e=>e.kind==='skull').length,count);assert.equal(w.enemies.filter(e=>e.kind===skull).length,1);}
 });
 test('regular stream throughput remains exact over sustained firing at every hand',()=>{
- for(const [level,ticks,expected] of [[1,240,40],[2,240,80],[3,240,160],[4,270,240]]){
+ // Forty salvos at hands I–III; thirty at IV–VII, with denser upgraded packets.
+ for(const [level,ticks,expected] of [[1,240,40],[2,240,240],[3,240,640],[4,270,720],[5,270,960],[6,270,1200],[7,270,1440]]){
   const w=new World(1,{schedule:false});w.level=level;const input={...idleInput(),fire:true};step(w,120,input);const before=w.stats.shots;step(w,ticks,input);assert.equal(w.stats.shots-before,expected,'level '+level);
  }
 });
