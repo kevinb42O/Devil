@@ -1,0 +1,154 @@
+{
+  "reports": [
+    {
+      "id": "16-monument",
+      "frames": 88,
+      "duration": 3.0062999999761577,
+      "renderFps": 29.271862422478765,
+      "frameP95": 0.03340000000000055,
+      "buffer": [
+        1280,
+        720
+      ],
+      "rms": [
+        0.011641423242699622,
+        0.009488364287902909,
+        0.009931049710508948,
+        0.01041673028385777,
+        0.015826987726880994,
+        0.014274180524205935
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 65.793283,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "17-cathedral-fight",
+      "frames": 120,
+      "duration": 4.024999999988078,
+      "renderFps": 29.813664596361598,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1280,
+        720
+      ],
+      "rms": [
+        0.01479202814570804,
+        0.017101682442666893,
+        0.017924314716233743,
+        0.024882852231192625,
+        0.02681463481061171,
+        0.034885474477522986,
+        0.018906986104788387,
+        0.03023151118478809
+      ],
+      "kills": 10,
+      "hits": 33,
+      "shots": 916,
+      "collected": 353,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 63.258049,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet4",
+          "ricochet3",
+          "ricochet5",
+          "magentadetonate4",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet5",
+          "ricochet2",
+          "magentadetonate2",
+          "magentadetonate3",
+          "ricochet2",
+          "weapon5-stop",
+          "ricochet3",
+          "ricochet1",
+          "footstep-stone7",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet5",
+          "ricochet5",
+          "ricochet3",
+          "ricochet2",
+          "ricochet1",
+          "ricochet2",
+          "ricochet3",
+          "gibcollectmagic2",
+          "gibcollectmagic3",
+          "footstep-stone1",
+          "weapon5-start",
+          "ricochet2"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    }
+  ],
+  "errors": []
+}

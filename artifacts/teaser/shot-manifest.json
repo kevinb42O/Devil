@@ -1,0 +1,151 @@
+{
+  "title": "ABYSS / DAGGERS — DESCEND",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "revision": "8de2add36b1ed0a375760a99693bc93710bd3436",
+  "source": "Current working tree; cinematic cameras and scripted unranked invulnerable combat; normal weapons, enemy AI, collision and effects.",
+  "shots": [
+    {
+      "id": "01-threshold",
+      "duration": 3,
+      "start": 0,
+      "type": "gate"
+    },
+    {
+      "id": "02-cosmic",
+      "duration": 4,
+      "start": 8,
+      "type": "cosmic"
+    },
+    {
+      "id": "03-first-blood",
+      "duration": 5,
+      "start": 12,
+      "type": "combat",
+      "level": 2
+    },
+    {
+      "id": "04-cosmic-scale",
+      "duration": 4,
+      "start": 15,
+      "type": "scale"
+    },
+    {
+      "id": "05-rain-stone",
+      "duration": 3,
+      "start": 94,
+      "type": "surface"
+    },
+    {
+      "id": "06-storm-fight",
+      "duration": 5,
+      "start": 96,
+      "type": "combat",
+      "level": 3
+    },
+    {
+      "id": "07-storm-orbit",
+      "duration": 2,
+      "start": 100,
+      "type": "orbit"
+    },
+    {
+      "id": "08-veil",
+      "duration": 3,
+      "start": 175,
+      "type": "glide"
+    },
+    {
+      "id": "09-veil-fight",
+      "duration": 4,
+      "start": 180,
+      "type": "combat",
+      "level": 4
+    },
+    {
+      "id": "10-furnace",
+      "duration": 3,
+      "start": 300,
+      "type": "orbit"
+    },
+    {
+      "id": "11-fire-fight",
+      "duration": 5,
+      "start": 305,
+      "type": "combat",
+      "level": 5
+    },
+    {
+      "id": "12-serpent",
+      "duration": 3,
+      "start": 310,
+      "type": "creature"
+    },
+    {
+      "id": "13-fire-release",
+      "duration": 3,
+      "start": 315,
+      "type": "combat",
+      "level": 6
+    },
+    {
+      "id": "14-cathedral",
+      "duration": 5,
+      "start": 410,
+      "type": "cathedral"
+    },
+    {
+      "id": "15-limestone",
+      "duration": 3,
+      "start": 415,
+      "type": "surface"
+    },
+    {
+      "id": "16-monument",
+      "duration": 3,
+      "start": 425,
+      "type": "scale"
+    },
+    {
+      "id": "17-cathedral-fight",
+      "duration": 4,
+      "start": 420,
+      "type": "combat",
+      "level": 5
+    },
+    {
+      "id": "18-storm-hit",
+      "duration": 2,
+      "start": 110,
+      "type": "combat",
+      "level": 4
+    },
+    {
+      "id": "19-furnace-hit",
+      "duration": 2,
+      "start": 320,
+      "type": "combat",
+      "level": 7
+    },
+    {
+      "id": "20-last-stand",
+      "duration": 3,
+      "start": 430,
+      "type": "combat",
+      "level": 7
+    },
+    {
+      "id": "21-depth",
+      "duration": 1,
+      "start": 487,
+      "type": "depth"
+    },
+    {
+      "id": "22-title",
+      "duration": 5,
+      "start": 490,
+      "type": "title"
+    }
+  ]
+}

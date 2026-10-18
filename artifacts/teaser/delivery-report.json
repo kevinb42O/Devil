@@ -1,0 +1,211 @@
+{
+  "plannedDuration": 75,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "files": {
+    "abyss-daggers-teaser-master.mp4": {
+      "bytes": 174044357,
+      "decoded": true,
+      "summary": ": -15.9 LUFS       LRA:   7.7 LU  FTPK: -18.4 -19.4 dBFS  TPK:  -1.4  -1.4 dBFS\n[Parsed_ebur128_0 @ 0x130168580] t: 74.599979  TARGET:-23 LUFS    M: -27.0 S: -21.4     I: -15.9 LUFS       LRA:   7.7 LU  FTPK: -22.4 -22.3 dBFS  TPK:  -1.4  -1.4 dBFS\n[Parsed_ebur128_0 @ 0x130168580] t: 74.699979  TARGET:-23 LUFS    M: -29.1 S: -21.5     I: -15.9 LUFS       LRA:   7.7 LU  FTPK: -21.8 -22.9 dBFS  TPK:  -1.4  -1.4 dBFS\nframe= 2225 fps=232 q=-0.0 size=N/A time=00:01:14.16 bitrate=N/A speed=7.73x    \n[Parsed_ebur128_0 @ 0x130168580] t: 74.799979  TARGET:-23 LUFS    M: -30.2 S: -21.6     I: -15.9 LUFS       LRA:   7.7 LU  FTPK: -25.1 -27.5 dBFS  TPK:  -1.4  -1.4 dBFS\n[Parsed_ebur128_0 @ 0x130168580] t: 74.899979  TARGET:-23 LUFS    M: -33.2 S: -21.8     I: -15.9 LUFS       LRA:   7.7 LU  FTPK: -30.9 -33.7 dBFS  TPK:  -1.4  -1.4 dBFS\n[Parsed_ebur128_0 @ 0x130168580] t: 74.999979  TARGET:-23 LUFS    M: -35.7 S: -21.9     I: -15.9 LUFS       LRA:   7.7 LU  FTPK: -39.8 -41.3 dBFS  TPK:  -1.4  -1.4 dBFS\n[Parsed_ebur128_0 @ 0x130168580] Summary:\n\n  Integrated loudness:\n    I:         -15.9 LUFS\n    Threshold: -26.0 LUFS\n\n  Loudness range:\n    LRA:         7.7 LU\n    Threshold: -35.9 LUFS\n    LRA low:   -20.6 LUFS\n    LRA high:  -12.9 LUFS\n\n  True peak:\n    Peak:       -1.4 dBFS\n[out#0/null @ 0x12f604120] video:967KiB audio:14064KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\nframe= 2250 fps=234 q=-0.0 Lsize=N/A time=00:01:15.00 bitrate=N/A speed=7.79x    \n",
+      "decodedFrames": 2250,
+      "integratedLUFS": -15.9,
+      "truePeakDBFS": -1.4
+    },
+    "abyss-daggers-teaser-share.mp4": {
+      "bytes": 42178636,
+      "decoded": true,
+      "summary": "ebur128_0 @ 0x12190a460] t: 74.499979  TARGET:-23 LUFS    M: -25.6 S: -21.2     I: -16.0 LUFS       LRA:   7.6 LU  FTPK: -18.5 -19.6 dBFS  TPK:  -0.6  -1.2 dBFS\n[Parsed_ebur128_0 @ 0x12190a460] t: 74.599979  TARGET:-23 LUFS    M: -27.1 S: -21.4     I: -16.0 LUFS       LRA:   7.6 LU  FTPK: -22.4 -22.1 dBFS  TPK:  -0.6  -1.2 dBFS\n[Parsed_ebur128_0 @ 0x12190a460] t: 74.699979  TARGET:-23 LUFS    M: -29.1 S: -21.5     I: -16.0 LUFS       LRA:   7.6 LU  FTPK: -21.9 -22.8 dBFS  TPK:  -0.6  -1.2 dBFS\n[Parsed_ebur128_0 @ 0x12190a460] t: 74.799979  TARGET:-23 LUFS    M: -30.3 S: -21.7     I: -16.0 LUFS       LRA:   7.6 LU  FTPK: -25.1 -27.6 dBFS  TPK:  -0.6  -1.2 dBFS\n[Parsed_ebur128_0 @ 0x12190a460] t: 74.899979  TARGET:-23 LUFS    M: -33.2 S: -21.8     I: -16.0 LUFS       LRA:   7.7 LU  FTPK: -30.8 -33.9 dBFS  TPK:  -0.6  -1.2 dBFS\n[Parsed_ebur128_0 @ 0x12190a460] t: 74.999979  TARGET:-23 LUFS    M: -35.7 S: -22.0     I: -16.0 LUFS       LRA:   7.7 LU  FTPK: -39.6 -41.3 dBFS  TPK:  -0.6  -1.2 dBFS\n[Parsed_ebur128_0 @ 0x12190a460] Summary:\n\n  Integrated loudness:\n    I:         -16.0 LUFS\n    Threshold: -26.0 LUFS\n\n  Loudness range:\n    LRA:         7.7 LU\n    Threshold: -35.9 LUFS\n    LRA low:   -20.7 LUFS\n    LRA high:  -13.0 LUFS\n\n  True peak:\n    Peak:       -0.6 dBFS\n[out#0/null @ 0x120604290] video:967KiB audio:14064KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown\nframe= 2250 fps=507 q=-0.0 Lsize=N/A time=00:01:15.00 bitrate=N/A speed=16.9x    \n",
+      "decodedFrames": 2250,
+      "integratedLUFS": -16.0,
+      "truePeakDBFS": -0.6
+    }
+  },
+  "shots": [
+    {
+      "id": "01-threshold",
+      "duration": 3,
+      "start": 0,
+      "type": "gate",
+      "filmIn": 0,
+      "filmOut": 3
+    },
+    {
+      "id": "02-cosmic",
+      "duration": 4,
+      "start": 8,
+      "type": "cosmic",
+      "filmIn": 3,
+      "filmOut": 7
+    },
+    {
+      "id": "03-first-blood",
+      "duration": 5,
+      "start": 12,
+      "type": "combat",
+      "level": 2,
+      "filmIn": 7,
+      "filmOut": 12
+    },
+    {
+      "id": "04-cosmic-scale",
+      "duration": 4,
+      "start": 15,
+      "type": "scale",
+      "filmIn": 12,
+      "filmOut": 16
+    },
+    {
+      "id": "05-rain-stone",
+      "duration": 3,
+      "start": 94,
+      "type": "surface",
+      "filmIn": 16,
+      "filmOut": 19
+    },
+    {
+      "id": "06-storm-fight",
+      "duration": 5,
+      "start": 96,
+      "type": "combat",
+      "level": 3,
+      "filmIn": 19,
+      "filmOut": 24
+    },
+    {
+      "id": "07-storm-orbit",
+      "duration": 2,
+      "start": 100,
+      "type": "orbit",
+      "filmIn": 24,
+      "filmOut": 26
+    },
+    {
+      "id": "08-veil",
+      "duration": 3,
+      "start": 175,
+      "type": "glide",
+      "filmIn": 26,
+      "filmOut": 29
+    },
+    {
+      "id": "09-veil-fight",
+      "duration": 4,
+      "start": 180,
+      "type": "combat",
+      "level": 4,
+      "filmIn": 29,
+      "filmOut": 33
+    },
+    {
+      "id": "10-furnace",
+      "duration": 3,
+      "start": 300,
+      "type": "orbit",
+      "filmIn": 33,
+      "filmOut": 36
+    },
+    {
+      "id": "11-fire-fight",
+      "duration": 5,
+      "start": 305,
+      "type": "combat",
+      "level": 5,
+      "filmIn": 36,
+      "filmOut": 41
+    },
+    {
+      "id": "12-serpent",
+      "duration": 3,
+      "start": 310,
+      "type": "creature",
+      "filmIn": 41,
+      "filmOut": 44
+    },
+    {
+      "id": "13-fire-release",
+      "duration": 3,
+      "start": 315,
+      "type": "combat",
+      "level": 6,
+      "filmIn": 44,
+      "filmOut": 47
+    },
+    {
+      "id": "14-cathedral",
+      "duration": 5,
+      "start": 410,
+      "type": "cathedral",
+      "filmIn": 47,
+      "filmOut": 52
+    },
+    {
+      "id": "15-limestone",
+      "duration": 3,
+      "start": 415,
+      "type": "surface",
+      "filmIn": 52,
+      "filmOut": 55
+    },
+    {
+      "id": "16-monument",
+      "duration": 3,
+      "start": 425,
+      "type": "scale",
+      "filmIn": 55,
+      "filmOut": 58
+    },
+    {
+      "id": "17-cathedral-fight",
+      "duration": 4,
+      "start": 420,
+      "type": "combat",
+      "level": 5,
+      "filmIn": 58,
+      "filmOut": 62
+    },
+    {
+      "id": "18-storm-hit",
+      "duration": 2,
+      "start": 110,
+      "type": "combat",
+      "level": 4,
+      "filmIn": 62,
+      "filmOut": 64
+    },
+    {
+      "id": "19-furnace-hit",
+      "duration": 2,
+      "start": 320,
+      "type": "combat",
+      "level": 7,
+      "filmIn": 64,
+      "filmOut": 66
+    },
+    {
+      "id": "20-last-stand",
+      "duration": 3,
+      "start": 430,
+      "type": "combat",
+      "level": 7,
+      "filmIn": 66,
+      "filmOut": 69
+    },
+    {
+      "id": "21-depth",
+      "duration": 1,
+      "start": 487,
+      "type": "depth",
+      "filmIn": 69,
+      "filmOut": 70
+    },
+    {
+      "id": "22-title",
+      "duration": 5,
+      "start": 490,
+      "type": "title",
+      "filmIn": 70,
+      "filmOut": 75
+    }
+  ]
+}

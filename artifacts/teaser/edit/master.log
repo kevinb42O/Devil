@@ -1,0 +1,67 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser/edit/assembly.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:01:15.02, start: 0.000000, bitrate: 17996 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080, 17707 kb/s, SAR 1:1 DAR 16:9, 29.91 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 286 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> h264 (h264_videotoolbox))
+  Stream #0:1 -> #0:1 (aac (native) -> aac (native))
+Press [q] to stop, [?] for help
+Output #0, mp4, to '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser/abyss-daggers-teaser-master.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 20000 kb/s, 30 fps, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+  Stream #0:1(und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 320 kb/s (default)
+      Metadata:
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 aac
+frame=  131 fps=130 q=-0.0 size=    7168KiB time=00:00:02.81 bitrate=20852.5kbits/s speed=2.79x    
+frame=  225 fps=148 q=-0.0 size=   14336KiB time=00:00:05.84 bitrate=20091.4kbits/s speed=3.85x    
+frame=  330 fps=163 q=-0.0 size=   23296KiB time=00:00:09.45 bitrate=20193.4kbits/s speed=4.68x    
+frame=  433 fps=171 q=-0.0 size=   30208KiB time=00:00:12.45 bitrate=19862.8kbits/s speed=4.93x    
+frame=  528 fps=175 q=-0.0 size=   36608KiB time=00:00:15.12 bitrate=19827.2kbits/s speed=   5x    
+frame=  605 fps=171 q=-0.0 size=   45056KiB time=00:00:18.45 bitrate=20001.8kbits/s speed=5.23x    
+frame=  700 fps=173 q=-0.0 size=   52736KiB time=00:00:21.24 bitrate=20332.0kbits/s speed=5.27x    
+frame=  769 fps=169 q=-0.0 size=   59136KiB time=00:00:23.95 bitrate=20221.1kbits/s speed=5.28x    
+frame=  857 fps=170 q=-0.0 size=   64000KiB time=00:00:26.64 bitrate=19676.6kbits/s speed=5.28x    
+frame=  922 fps=166 q=-0.0 size=   70656KiB time=00:00:29.16 bitrate=19847.8kbits/s speed=5.25x    
+frame=  995 fps=164 q=-0.0 size=   77312KiB time=00:00:31.63 bitrate=20018.8kbits/s speed=5.22x    
+frame= 1075 fps=164 q=-0.0 size=   80128KiB time=00:00:34.24 bitrate=19170.8kbits/s speed=5.22x    
+frame= 1131 fps=160 q=-0.0 size=   83712KiB time=00:00:35.84 bitrate=19134.2kbits/s speed=5.07x    
+frame= 1203 fps=159 q=-0.0 size=   92416KiB time=00:00:38.08 bitrate=19881.1kbits/s speed=5.02x    
+frame= 1268 fps=157 q=-0.0 size=   96768KiB time=00:00:39.78 bitrate=19924.4kbits/s speed=4.92x    
+frame= 1299 fps=151 q=-0.0 size=   99584KiB time=00:00:41.23 bitrate=19782.9kbits/s speed= 4.8x    
+frame= 1356 fps=149 q=-0.0 size=  103168KiB time=00:00:43.09 bitrate=19612.1kbits/s speed=4.74x    
+frame= 1395 fps=145 q=-0.0 size=  105216KiB time=00:00:43.86 bitrate=19651.2kbits/s speed=4.56x    
+frame= 1457 fps=144 q=-0.0 size=  112896KiB time=00:00:46.52 bitrate=19877.2kbits/s speed= 4.6x    
+frame= 1547 fps=146 q=-0.0 size=  117248KiB time=00:00:49.25 bitrate=19499.0kbits/s speed=4.64x    
+frame= 1629 fps=147 q=-0.0 size=  122112KiB time=00:00:51.71 bitrate=19344.5kbits/s speed=4.65x    
+frame= 1729 fps=149 q=-0.0 size=  131072KiB time=00:00:55.23 bitrate=19440.6kbits/s speed=4.75x    
+frame= 1813 fps=150 q=-0.0 size=  135424KiB time=00:00:57.96 bitrate=19139.8kbits/s speed=4.78x    
+frame= 1909 fps=151 q=-0.0 size=  151552KiB time=00:01:02.08 bitrate=19998.6kbits/s speed=4.92x    
+frame= 2010 fps=153 q=-0.0 size=  156416KiB time=00:01:05.49 bitrate=19564.7kbits/s speed=4.99x    
+frame= 2112 fps=155 q=-0.0 size=  165888KiB time=00:01:08.94 bitrate=19709.5kbits/s speed=5.06x    
+frame= 2216 fps=157 q=-0.0 size=  167424KiB time=00:01:12.14 bitrate=19009.7kbits/s speed= 5.1x    
+[mp4 @ 0x143005600] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x1430054f0] video:167149KiB audio:2751KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.038432%
+frame= 2250 fps=153 q=-0.0 Lsize=  169965KiB time=00:01:14.96 bitrate=18573.0kbits/s speed=5.11x    
+[aac @ 0x141e55a60] Qavg: 31470.416

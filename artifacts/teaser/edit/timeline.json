@@ -1,0 +1,187 @@
+[
+  {
+    "id": "01-threshold",
+    "duration": 3,
+    "start": 0,
+    "type": "gate",
+    "filmIn": 0,
+    "filmOut": 3
+  },
+  {
+    "id": "02-cosmic",
+    "duration": 4,
+    "start": 8,
+    "type": "cosmic",
+    "filmIn": 3,
+    "filmOut": 7
+  },
+  {
+    "id": "03-first-blood",
+    "duration": 5,
+    "start": 12,
+    "type": "combat",
+    "level": 2,
+    "filmIn": 7,
+    "filmOut": 12
+  },
+  {
+    "id": "04-cosmic-scale",
+    "duration": 4,
+    "start": 15,
+    "type": "scale",
+    "filmIn": 12,
+    "filmOut": 16
+  },
+  {
+    "id": "05-rain-stone",
+    "duration": 3,
+    "start": 94,
+    "type": "surface",
+    "filmIn": 16,
+    "filmOut": 19
+  },
+  {
+    "id": "06-storm-fight",
+    "duration": 5,
+    "start": 96,
+    "type": "combat",
+    "level": 3,
+    "filmIn": 19,
+    "filmOut": 24
+  },
+  {
+    "id": "07-storm-orbit",
+    "duration": 2,
+    "start": 100,
+    "type": "orbit",
+    "filmIn": 24,
+    "filmOut": 26
+  },
+  {
+    "id": "08-veil",
+    "duration": 3,
+    "start": 175,
+    "type": "glide",
+    "filmIn": 26,
+    "filmOut": 29
+  },
+  {
+    "id": "09-veil-fight",
+    "duration": 4,
+    "start": 180,
+    "type": "combat",
+    "level": 4,
+    "filmIn": 29,
+    "filmOut": 33
+  },
+  {
+    "id": "10-furnace",
+    "duration": 3,
+    "start": 300,
+    "type": "orbit",
+    "filmIn": 33,
+    "filmOut": 36
+  },
+  {
+    "id": "11-fire-fight",
+    "duration": 5,
+    "start": 305,
+    "type": "combat",
+    "level": 5,
+    "filmIn": 36,
+    "filmOut": 41
+  },
+  {
+    "id": "12-serpent",
+    "duration": 3,
+    "start": 310,
+    "type": "creature",
+    "filmIn": 41,
+    "filmOut": 44
+  },
+  {
+    "id": "13-fire-release",
+    "duration": 3,
+    "start": 315,
+    "type": "combat",
+    "level": 6,
+    "filmIn": 44,
+    "filmOut": 47
+  },
+  {
+    "id": "14-cathedral",
+    "duration": 5,
+    "start": 410,
+    "type": "cathedral",
+    "filmIn": 47,
+    "filmOut": 52
+  },
+  {
+    "id": "15-limestone",
+    "duration": 3,
+    "start": 415,
+    "type": "surface",
+    "filmIn": 52,
+    "filmOut": 55
+  },
+  {
+    "id": "16-monument",
+    "duration": 3,
+    "start": 425,
+    "type": "scale",
+    "filmIn": 55,
+    "filmOut": 58
+  },
+  {
+    "id": "17-cathedral-fight",
+    "duration": 4,
+    "start": 420,
+    "type": "combat",
+    "level": 5,
+    "filmIn": 58,
+    "filmOut": 62
+  },
+  {
+    "id": "18-storm-hit",
+    "duration": 2,
+    "start": 110,
+    "type": "combat",
+    "level": 4,
+    "filmIn": 62,
+    "filmOut": 64
+  },
+  {
+    "id": "19-furnace-hit",
+    "duration": 2,
+    "start": 320,
+    "type": "combat",
+    "level": 7,
+    "filmIn": 64,
+    "filmOut": 66
+  },
+  {
+    "id": "20-last-stand",
+    "duration": 3,
+    "start": 430,
+    "type": "combat",
+    "level": 7,
+    "filmIn": 66,
+    "filmOut": 69
+  },
+  {
+    "id": "21-depth",
+    "duration": 1,
+    "start": 487,
+    "type": "depth",
+    "filmIn": 69,
+    "filmOut": 70
+  },
+  {
+    "id": "22-title",
+    "duration": 5,
+    "start": 490,
+    "type": "title",
+    "filmIn": 70,
+    "filmOut": 75
+  }
+]

@@ -44,6 +44,13 @@ export async function loadEntranceEnvironment(scene:THREE.Scene,multiplayer=fals
  place(piece('wall_thin_straight_01'),0,12,.95,Math.PI/2);
  place(rock.scene,-5,-21,3.3,.3,-1);
  if(!multiplayer)place(rock.scene,6,-23,4.1,-.7,-1);
+ if(!multiplayer){
+  // A quieter pair of wall lanterns gives the rear of the solo refuge a warm resting place.
+  for(const side of [-1,1]){
+   place(lantern.scene,side*5.1,10.9,1.1,Math.PI,2.0);
+   const glow=new THREE.PointLight(0xffb477,8,9,2);glow.position.set(side*5.1,2.35,10.5);scene.add(glow);
+  }
+ }
  const moon=new THREE.DirectionalLight(0x91a9c2,1.4);moon.position.set(-8,16,5);scene.add(moon);
  for(const side of [-1,1]){
   const pedestal=place(piece('wall_thick_end_01'),side*4.5,-6,.16);

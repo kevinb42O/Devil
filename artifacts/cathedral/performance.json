@@ -1,0 +1,41 @@
+{
+  "viewport": [
+    1280,
+    720
+  ],
+  "gpuTimerAvailable": true,
+  "results": [
+    {
+      "quality": "high",
+      "enabled": false,
+      "calls": 22,
+      "cpuMedianMs": 1,
+      "gpuMedianMs": 14.342,
+      "gpuSamples": 30
+    },
+    {
+      "quality": "high",
+      "enabled": true,
+      "calls": 24,
+      "cpuMedianMs": 0.800000011920929,
+      "gpuMedianMs": 16.81075,
+      "gpuSamples": 30
+    },
+    {
+      "quality": "low",
+      "enabled": false,
+      "calls": 9,
+      "cpuMedianMs": 0.800000011920929,
+      "gpuMedianMs": 5.841416,
+      "gpuSamples": 30
+    },
+    {
+      "quality": "low",
+      "enabled": true,
+      "calls": 11,
+      "cpuMedianMs": 1.199999988079071,
+      "gpuMedianMs": 6.404791,
+      "gpuSamples": 30
+    }
+  ]
+}

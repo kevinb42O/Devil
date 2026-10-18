@@ -1,0 +1,3399 @@
+{
+  "reports": [
+    {
+      "id": "01-threshold",
+      "frames": 92,
+      "duration": 3.019499999988079,
+      "renderFps": 30.468620632675346,
+      "frameP95": 0.03340000000000055,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.004073834026798474,
+        0.004803900389068879,
+        0.006677567678907129,
+        0.006876577924657204,
+        0.00905163746125758,
+        0.00906896584399005
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": []
+        },
+        "recent": [],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "02-cosmic",
+      "frames": 122,
+      "duration": 4.031400000023841,
+      "renderFps": 30.262439847020516,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.007859507072627017,
+        0.012575192152344093,
+        0.01150039478791917,
+        0.014278154521303453,
+        0.01419763074635688,
+        0.007955115443021429,
+        0.011125334111225424,
+        0.012462251352685161
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 12.044377,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "03-first-blood",
+      "frames": 149,
+      "duration": 5.0024000000000015,
+      "renderFps": 29.785702862625932,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.01905801739559417,
+        0.01833765627947964,
+        0.02141070888203807,
+        0.021026834895768013,
+        0.019410933307020112,
+        0.012963761832458802,
+        0.024794566230283,
+        0.02596908000299917,
+        0.03110584519742645,
+        0.02293364982166706
+      ],
+      "kills": 9,
+      "hits": 41,
+      "shots": 372,
+      "collected": 13,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 18.37678,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "footstep-stone8",
+          "weapon2-stop",
+          "ricochet2",
+          "daggerhit1",
+          "gibcollect2",
+          "ricochet5",
+          "ricochet5",
+          "footstep-stone12",
+          "ricochet2",
+          "gibcollect",
+          "weapon2-start",
+          "ricochet5",
+          "ricochet1",
+          "ricochet3",
+          "ricochet5",
+          "daggerhit1",
+          "killskull4",
+          "ricochet4",
+          "footstep-stone1",
+          "daggerhit1",
+          "killskull1",
+          "ricochet2",
+          "jump1",
+          "ricochet1",
+          "ricochet3",
+          "ricochet2",
+          "weapon2-stop",
+          "gibcollect3",
+          "ricochet5",
+          "weapon2-start",
+          "daggerhit1",
+          "ricochet5"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "04-cosmic-scale",
+      "frames": 122,
+      "duration": 4.025099999988081,
+      "renderFps": 30.309805967643356,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.015282986008075811,
+        0.015380179734084981,
+        0.018837187978887258,
+        0.019934917655842967,
+        0.01596563805700006,
+        0.017936637616865602,
+        0.013474950376853718,
+        0.013461095663072752
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "footstep-stone8",
+          "weapon2-stop",
+          "ricochet2",
+          "daggerhit1",
+          "gibcollect2",
+          "ricochet5",
+          "ricochet5",
+          "footstep-stone12",
+          "ricochet2",
+          "gibcollect",
+          "weapon2-start",
+          "ricochet5",
+          "ricochet1",
+          "ricochet3",
+          "ricochet5",
+          "daggerhit1",
+          "killskull4",
+          "ricochet4",
+          "footstep-stone1",
+          "daggerhit1",
+          "killskull1",
+          "ricochet2",
+          "jump1",
+          "ricochet1",
+          "ricochet3",
+          "ricochet2",
+          "weapon2-stop",
+          "gibcollect3",
+          "ricochet5",
+          "weapon2-start",
+          "daggerhit1",
+          "ricochet5"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "05-rain-stone",
+      "frames": 89,
+      "duration": 3.013199999988079,
+      "renderFps": 29.53670516406216,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.007209665539133427,
+        0.007421282543245179,
+        0.006897342460817805,
+        0.007784543602920366,
+        0.007099687403511691,
+        0.008078738585018829
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 46.047221,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "footstep-stone8",
+          "weapon2-stop",
+          "ricochet2",
+          "daggerhit1",
+          "gibcollect2",
+          "ricochet5",
+          "ricochet5",
+          "footstep-stone12",
+          "ricochet2",
+          "gibcollect",
+          "weapon2-start",
+          "ricochet5",
+          "ricochet1",
+          "ricochet3",
+          "ricochet5",
+          "daggerhit1",
+          "killskull4",
+          "ricochet4",
+          "footstep-stone1",
+          "daggerhit1",
+          "killskull1",
+          "ricochet2",
+          "jump1",
+          "ricochet1",
+          "ricochet3",
+          "ricochet2",
+          "weapon2-stop",
+          "gibcollect3",
+          "ricochet5",
+          "weapon2-start",
+          "daggerhit1",
+          "ricochet5"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "06-storm-fight",
+      "frames": 241,
+      "duration": 5.007000000011918,
+      "renderFps": 48.132614339809535,
+      "frameP95": 0.04989999999999418,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.019764168576668923,
+        0.010690872659487802,
+        0.02367912486224738,
+        0.012185317537935147,
+        0.018871252080463512,
+        0.02765942181201142,
+        0.019754356001768787,
+        0.019903688584829236,
+        0.020368100377956503,
+        0.017505863610568998
+      ],
+      "kills": 14,
+      "hits": 56,
+      "shots": 928,
+      "collected": 74,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 51.304218,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet5",
+          "ricochet3",
+          "daggerhit1",
+          "killskull2",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet3",
+          "ricochet4",
+          "gibcollectmagic2",
+          "ricochet1",
+          "ricochet2",
+          "footstep-wet8",
+          "ricochet3",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet3",
+          "ricochet1",
+          "ricochet1",
+          "jump1",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killskull5",
+          "ricochet5",
+          "weapon3-stop",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet4",
+          "ricochet1",
+          "weapon3-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "07-storm-orbit",
+      "frames": 105,
+      "duration": 2.0065999999880804,
+      "renderFps": 52.32731984482394,
+      "frameP95": 0.03330000000000291,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.008202036372993179,
+        0.009181461202842505,
+        0.009184968209249019,
+        0.010328941367069218
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet5",
+          "ricochet3",
+          "daggerhit1",
+          "killskull2",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet3",
+          "ricochet4",
+          "gibcollectmagic2",
+          "ricochet1",
+          "ricochet2",
+          "footstep-wet8",
+          "ricochet3",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet3",
+          "ricochet1",
+          "ricochet1",
+          "jump1",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killskull5",
+          "ricochet5",
+          "weapon3-stop",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet4",
+          "ricochet1",
+          "weapon3-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "08-veil",
+      "frames": 133,
+      "duration": 3.012300000000003,
+      "renderFps": 44.15230886697868,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.013997127713675268,
+        0.017673818973722437,
+        0.017223217958775586,
+        0.016690673141038073,
+        0.014290029066934017,
+        0.013892284255690534
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.333668,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet5",
+          "ricochet3",
+          "daggerhit1",
+          "killskull2",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet3",
+          "ricochet4",
+          "gibcollectmagic2",
+          "ricochet1",
+          "ricochet2",
+          "footstep-wet8",
+          "ricochet3",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet3",
+          "ricochet1",
+          "ricochet1",
+          "jump1",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killskull5",
+          "ricochet5",
+          "weapon3-stop",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet4",
+          "ricochet1",
+          "weapon3-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "09-veil-fight",
+      "frames": 102,
+      "duration": 4.018799999988078,
+      "renderFps": 25.380710659973772,
+      "frameP95": 0.08330000000000291,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.02316356490297285,
+        0.016767046214416877,
+        0.020499498252380694,
+        0.016159345690894094,
+        0.025832488776635448,
+        0.0368205492677209,
+        0.019110527094742587,
+        0.023185411370887348
+      ],
+      "kills": 10,
+      "hits": 48,
+      "shots": 696,
+      "collected": 203,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "daggerhit1",
+          "killsuperskull",
+          "daggerhit1",
+          "ricochet4",
+          "ricochet2",
+          "ricochet3",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet3",
+          "ricochet3",
+          "ricochet5",
+          "ricochet5",
+          "ricochet1",
+          "daggerhit1",
+          "footstep-stone9",
+          "footstep-wet9",
+          "weapon4-stop",
+          "daggerhit1",
+          "daggerhit1",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "ricochet3",
+          "ricochet2",
+          "ricochet3",
+          "footstep-stone3",
+          "footstep-wet3",
+          "weapon4-start",
+          "ricochet4",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull2"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "10-furnace",
+      "frames": 105,
+      "duration": 3.0048999999999944,
+      "renderFps": 34.942926553296346,
+      "frameP95": 0.0666999999999971,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.014953277544158318,
+        0.016714258842135905,
+        0.014182587773574512,
+        0.01483528640610805,
+        0.01345410267053153,
+        0.014701207135241427
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 62.29424,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "daggerhit1",
+          "killsuperskull",
+          "daggerhit1",
+          "ricochet4",
+          "ricochet2",
+          "ricochet3",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet3",
+          "ricochet3",
+          "ricochet5",
+          "ricochet5",
+          "ricochet1",
+          "daggerhit1",
+          "footstep-stone9",
+          "footstep-wet9",
+          "weapon4-stop",
+          "daggerhit1",
+          "daggerhit1",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "ricochet3",
+          "ricochet2",
+          "ricochet3",
+          "footstep-stone3",
+          "footstep-wet3",
+          "weapon4-start",
+          "ricochet4",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull2"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "11-fire-fight",
+      "frames": 89,
+      "duration": 5.007899999999994,
+      "renderFps": 17.771920365822023,
+      "frameP95": 0.1833000000000029,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.020438215216580412,
+        0.02067586514221765,
+        0.022078576767043716,
+        0.021748812510028893,
+        0.12096342530165759,
+        0.06513842101907906,
+        0.059898481049371885,
+        0.04093839908935462,
+        0.029273209408293976,
+        0.02989400652231916
+      ],
+      "kills": 15,
+      "hits": 42,
+      "shots": 944,
+      "collected": 351,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 70.499634,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet3",
+          "ricochet2",
+          "ricochet3",
+          "ricochet5",
+          "ricochet4",
+          "ricochet5",
+          "ricochet1",
+          "daggerhit1",
+          "killsuperskull",
+          "weapon5-stop",
+          "magentadetonate1",
+          "daggerhit1",
+          "killsuperskull2",
+          "ricochet4",
+          "ricochet1",
+          "ricochet3",
+          "ricochet5",
+          "ricochet5",
+          "gibcollectmagic2",
+          "ricochet1",
+          "ricochet5",
+          "ricochet1",
+          "ricochet3",
+          "ricochet5",
+          "ricochet5",
+          "ricochet1",
+          "weapon5-start",
+          "ricochet1",
+          "weapon5-start",
+          "weapon5-stop",
+          "ricochet2",
+          "ricochet3"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "12-serpent",
+      "frames": 67,
+      "duration": 3.043700000035766,
+      "renderFps": 22.012681932914774,
+      "frameP95": 0.08330000000000291,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.014145288219338484,
+        0.012025519030578719,
+        0.017299434606612166,
+        0.018773822645580716,
+        0.01880308052896213,
+        0.016442404578260784
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 73.561435,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet3",
+          "ricochet2",
+          "ricochet3",
+          "ricochet5",
+          "ricochet4",
+          "ricochet5",
+          "ricochet1",
+          "daggerhit1",
+          "killsuperskull",
+          "weapon5-stop",
+          "magentadetonate1",
+          "daggerhit1",
+          "killsuperskull2",
+          "ricochet4",
+          "ricochet1",
+          "ricochet3",
+          "ricochet5",
+          "ricochet5",
+          "gibcollectmagic2",
+          "ricochet1",
+          "ricochet5",
+          "ricochet1",
+          "ricochet3",
+          "ricochet5",
+          "ricochet5",
+          "ricochet1",
+          "weapon5-start",
+          "ricochet1",
+          "weapon5-start",
+          "weapon5-stop",
+          "ricochet2",
+          "ricochet3"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "13-fire-release",
+      "frames": 37,
+      "duration": 3.03710000003576,
+      "renderFps": 12.182674261487717,
+      "frameP95": 0.3333000000000029,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.017976312468361108,
+        0.01782797449313777,
+        0.018980089588569518,
+        0.029617196575776408,
+        0.02410258636986129,
+        0.05209902931767122
+      ],
+      "kills": 9,
+      "hits": 33,
+      "shots": 696,
+      "collected": 550,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 78.86223,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet1",
+          "ricochet3",
+          "ricochet4",
+          "daggerhit1",
+          "ricochet4",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet3",
+          "ricochet2",
+          "ricochet2",
+          "daggerhit1",
+          "killskull1",
+          "ricochet2",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killskull5",
+          "magentadetonate2",
+          "ricochet5",
+          "ricochet1",
+          "ricochet5",
+          "ricochet4",
+          "weapon6-stop",
+          "ricochet3",
+          "ricochet1",
+          "daggerhit1",
+          "killsuperskull",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet5",
+          "land",
+          "weapon6-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "14-cathedral",
+      "frames": 106,
+      "duration": 5.01810000003576,
+      "renderFps": 21.123532811072838,
+      "frameP95": 0.08330000000000291,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.014783517575837192,
+        0.013193535497988568,
+        0.019149319391093676,
+        0.01472624018767059,
+        0.014522709528767755,
+        0.012627441900912445,
+        0.009154427664960977,
+        0.008994694254979415,
+        0.014265678819938368,
+        0.026035065194370204
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 78.86223,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 53.052655,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet1",
+          "ricochet3",
+          "ricochet4",
+          "daggerhit1",
+          "ricochet4",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet3",
+          "ricochet2",
+          "ricochet2",
+          "daggerhit1",
+          "killskull1",
+          "ricochet2",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killskull5",
+          "magentadetonate2",
+          "ricochet5",
+          "ricochet1",
+          "ricochet5",
+          "ricochet4",
+          "weapon6-stop",
+          "ricochet3",
+          "ricochet1",
+          "daggerhit1",
+          "killsuperskull",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet5",
+          "land",
+          "weapon6-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "15-limestone",
+      "frames": 32,
+      "duration": 3.0932000000238475,
+      "renderFps": 10.345273503088482,
+      "frameP95": 0.3499000000000087,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.008417091550498967,
+        0.011960981260614947,
+        0.012421075902201154,
+        0.018521516088082404,
+        0.011805651340039688,
+        0.012503111837297359
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 78.86223,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 58.522059,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet1",
+          "ricochet3",
+          "ricochet4",
+          "daggerhit1",
+          "ricochet4",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet3",
+          "ricochet2",
+          "ricochet2",
+          "daggerhit1",
+          "killskull1",
+          "ricochet2",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killskull5",
+          "magentadetonate2",
+          "ricochet5",
+          "ricochet1",
+          "ricochet5",
+          "ricochet4",
+          "weapon6-stop",
+          "ricochet3",
+          "ricochet1",
+          "daggerhit1",
+          "killsuperskull",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet5",
+          "land",
+          "weapon6-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "16-monument",
+      "frames": 47,
+      "duration": 3.016100000000006,
+      "renderFps": 15.583037697689038,
+      "frameP95": 0.3,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.011955217435947497,
+        0.013474940485151802,
+        0.009740415472348808,
+        0.010672375497794373,
+        0.00939860318038038,
+        0.01088251731372504
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 78.86223,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 67.499812,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet1",
+          "ricochet3",
+          "ricochet4",
+          "daggerhit1",
+          "ricochet4",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet3",
+          "ricochet2",
+          "ricochet2",
+          "daggerhit1",
+          "killskull1",
+          "ricochet2",
+          "ricochet1",
+          "ricochet5",
+          "daggerhit1",
+          "killskull5",
+          "magentadetonate2",
+          "ricochet5",
+          "ricochet1",
+          "ricochet5",
+          "ricochet4",
+          "weapon6-stop",
+          "ricochet3",
+          "ricochet1",
+          "daggerhit1",
+          "killsuperskull",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet5",
+          "land",
+          "weapon6-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "17-cathedral-fight",
+      "frames": 60,
+      "duration": 4.0255,
+      "renderFps": 14.9049807477332,
+      "frameP95": 0.2833000000000029,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.021023152138366422,
+        0.011976946636157495,
+        0.016710776743915124,
+        0.03299407308586135,
+        0.05962767610824918,
+        0.050533925656010587,
+        0.041527237287021096,
+        0.05517828772900343
+      ],
+      "kills": 13,
+      "hits": 36,
+      "shots": 688,
+      "collected": 352,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 52.043904,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 78.86223,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 63.453588,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "daggerhit1",
+          "killskull3",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet1",
+          "magentadetonate3",
+          "ricochet1",
+          "ricochet4",
+          "ricochet5",
+          "magentadetonate4",
+          "ricochet2",
+          "ricochet3",
+          "ricochet4",
+          "footstep-stone2",
+          "ricochet2",
+          "ricochet1",
+          "magentadetonate1",
+          "gibcollectmagic2",
+          "magentadetonate3",
+          "ricochet1",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet4",
+          "gibcollectmagic3",
+          "magentadetonate4",
+          "weapon5-start",
+          "ricochet1",
+          "ricochet4",
+          "daggerhit1",
+          "killskull4",
+          "ricochet4",
+          "footstep-stone3"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "18-storm-hit",
+      "frames": 19,
+      "duration": 2.054300000000003,
+      "renderFps": 9.248892566811065,
+      "frameP95": 0.4000999999999913,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.017289586289143646,
+        0.019896702711686667,
+        0.02106715210461296,
+        0.01817881159427228
+      ],
+      "kills": 3,
+      "hits": 15,
+      "shots": 360,
+      "collected": 200,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 62.368922,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 78.86223,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 63.453588,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet2",
+          "daggerhit1",
+          "ricochet4",
+          "ricochet3",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "ricochet4",
+          "ricochet5",
+          "ricochet2",
+          "ricochet5",
+          "daggerhit1",
+          "ricochet5",
+          "daggerhit1",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet1",
+          "ricochet5",
+          "ricochet3",
+          "daggerhit1",
+          "daggerhit1",
+          "ricochet2",
+          "ricochet5",
+          "daggerhit1",
+          "ricochet2",
+          "ricochet3",
+          "ricochet3",
+          "ricochet1",
+          "ricochet3",
+          "ricochet2",
+          "ricochet1"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "19-furnace-hit",
+      "frames": 23,
+      "duration": 2.016,
+      "renderFps": 11.408730158730158,
+      "frameP95": 0.2833000000000175,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.023842387305571144,
+        0.021521277311272485,
+        0.019296835145301516,
+        0.02480953967314875
+      ],
+      "kills": 5,
+      "hits": 24,
+      "shots": 576,
+      "collected": 800,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 62.368922,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 82.146304,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 63.453588,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet1",
+          "ricochet3",
+          "daggerhit1",
+          "ricochet4",
+          "killsuperskull",
+          "ricochet2",
+          "ricochet3",
+          "ricochet5",
+          "ricochet4",
+          "ricochet5",
+          "ricochet4",
+          "ricochet2",
+          "ricochet4",
+          "ricochet2",
+          "daggerhit1",
+          "killskull4",
+          "ricochet1",
+          "daggerhit1",
+          "ricochet5",
+          "ricochet2",
+          "ricochet4",
+          "weapon7-stop",
+          "ricochet3",
+          "daggerhit1",
+          "ricochet3",
+          "daggerhit1",
+          "ricochet5",
+          "ricochet2",
+          "ricochet4",
+          "ricochet2",
+          "ricochet1",
+          "weapon7-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "20-last-stand",
+      "frames": 32,
+      "duration": 3.0425000000357687,
+      "renderFps": 10.517666392645454,
+      "frameP95": 0.26669999999998256,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.013290172788119569,
+        0.02015122312006482,
+        0.019183351344104215,
+        0.026144292315417237,
+        0.023486531851583062,
+        0.03941817234686982
+      ],
+      "kills": 8,
+      "hits": 30,
+      "shots": 832,
+      "collected": 800,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 62.368922,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 82.146304,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 72.542404,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet5",
+          "ricochet3",
+          "ricochet3",
+          "ricochet4",
+          "ricochet2",
+          "weapon7-start",
+          "weapon7-stop",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "ricochet4",
+          "ricochet2",
+          "ricochet5",
+          "ricochet4",
+          "ricochet2",
+          "ricochet3",
+          "ricochet5",
+          "ricochet2",
+          "ricochet4",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet1",
+          "ricochet3",
+          "weapon7-stop",
+          "ricochet2",
+          "ricochet3",
+          "weapon7-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "21-depth",
+      "frames": 11,
+      "duration": 1.070000000023836,
+      "renderFps": 10.280373831546688,
+      "frameP95": 0.40010000000000584,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.01587094743606242,
+        0.017386694634327137
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 62.368922,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 82.146304,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 72.542404,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "depth",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 34.112868,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet5",
+          "ricochet3",
+          "ricochet3",
+          "ricochet4",
+          "ricochet2",
+          "weapon7-start",
+          "weapon7-stop",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "ricochet4",
+          "ricochet2",
+          "ricochet5",
+          "ricochet4",
+          "ricochet2",
+          "ricochet3",
+          "ricochet5",
+          "ricochet2",
+          "ricochet4",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet1",
+          "ricochet3",
+          "weapon7-stop",
+          "ricochet2",
+          "ricochet3",
+          "weapon7-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "22-title",
+      "frames": 90,
+      "duration": 5.051500000035769,
+      "renderFps": 17.81649015131401,
+      "frameP95": 0.08339999999999417,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.011401473092017375,
+        0.016936749939200673,
+        0.014383653877141257,
+        0.01409386026405119,
+        0.013544745565918167,
+        0.02045400916187011,
+        0.021399699039920277,
+        0.010998855363206984,
+        0.007895534806148243,
+        0.011568063499873014
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "space",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 20.224879,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "ash",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 62.368922,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "veil",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 59.514739,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "furnace",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 82.146304,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 72.542404,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "depth",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 42.138776,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "ricochet5",
+          "ricochet3",
+          "ricochet3",
+          "ricochet4",
+          "ricochet2",
+          "weapon7-start",
+          "weapon7-stop",
+          "daggerhit1",
+          "killsuperskull",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "ricochet4",
+          "ricochet2",
+          "ricochet5",
+          "ricochet4",
+          "ricochet2",
+          "ricochet3",
+          "ricochet5",
+          "ricochet2",
+          "ricochet4",
+          "ricochet5",
+          "daggerhit1",
+          "killsuperskull",
+          "magentadetonate3",
+          "ricochet2",
+          "ricochet1",
+          "ricochet3",
+          "weapon7-stop",
+          "ricochet2",
+          "ricochet3",
+          "weapon7-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    }
+  ],
+  "errors": []
+}

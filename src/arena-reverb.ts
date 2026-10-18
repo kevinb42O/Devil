@@ -2,6 +2,7 @@
  * Continuous layers get less room than isolated, expressive events. */
 export function arenaReverbSend(role:string):{body:number;tail:number}{
  switch(role){
+  case 'footstep':return {body:.035,tail:0};
   case 'movement':return {body:.2,tail:.025};
   case 'armor-impact':case 'enemy-damage':case 'ricochet':return {body:.16,tail:.055};
   case 'crystal-hit':return {body:.07,tail:.015};

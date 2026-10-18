@@ -59,8 +59,8 @@
     }
   ],
   "gameChecks": {
-    "texturedDraws": 117,
-    "baselineDraws": 117,
+    "texturedDraws": 127,
+    "baselineDraws": 127,
     "maximumCrystalError": 1.7763568394002505e-15
   },
   "crystalChecks": [

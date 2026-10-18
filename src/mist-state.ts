@@ -5,9 +5,9 @@ type MistChapter={density:number;height:number;falloff:number;bank:number;smoke:
 const CHAPTERS:readonly MistChapter[]=[
   {density:.16,height:3.8,falloff:1.25,bank:0,smoke:0,shafts:0,clear:0,color:[.11,.14,.17]},
   {density:.13,height:13,falloff:.12,bank:1,smoke:0,shafts:0,clear:1,color:[.095,.135,.18]},
-  {density:.085,height:11,falloff:.16,bank:.8,smoke:0,shafts:0,clear:1,color:[.105,.065,.145]},
+  {density:.055,height:9,falloff:.22,bank:1,smoke:0,shafts:0,clear:1,color:[.052,.041,.078]},
   {density:.065,height:12,falloff:.38,bank:.25,smoke:1,shafts:0,clear:1,color:[.10,.027,.012]},
-  {density:.08,height:22,falloff:.095,bank:.3,smoke:0,shafts:1,clear:1,color:[.055,.038,.08]},
+  {density:.065,height:22,falloff:.095,bank:.22,smoke:0,shafts:1,clear:1,color:[.040,.033,.061]},
   {density:.065,height:10,falloff:.2,bank:.65,smoke:0,shafts:0,clear:1,color:[.003,.002,.007]},
 ];
 const COSMIC_COLOR=[.11,.085,.155] as const;

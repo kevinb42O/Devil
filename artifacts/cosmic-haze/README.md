@@ -1,0 +1,7 @@
+# Space nebula haze
+
+The space opening now uses a sculpted world-space nebula: separated billowing banks, eroded filaments, rising ribbons, a deep floor-connected veil, and cached directional shadow probes. Cyan, violet, and buried amber illumination vary through the volume. Foreground depth preserves silhouettes. The veil extends from the tile surfaces through eye height, with no camera-centered clearing. Its billows and the surrounding nebula rise using the platform descent distance, including the initial acceleration. Tile attachment updates every frame.
+
+`nebula-motion.mp4` is a 12-second in-engine capture with descent time accelerated 1.5× and a slow camera move. `before.png` records the preceding haze. The time and direction PNGs show the current volume. `walk-*.png` follows a frozen bank while walking through it. The film predates the floor attachment and descent synchronization fix.
+
+`node tests/cosmic-haze-browser.mjs` checks visible contribution, spatial contrast, pause, rewind, reduced motion, foreground occlusion, later chapter settings, per-frame tile attachment, descent synchronization, and optical depth from 40 cm to 8 m inside a controlled bank. It also records GPU timer queries where available; these are measurements on the current machine, not a guarantee for other hardware. The field is baked once and reused across renderers; each renderer owns its texture lifecycle.

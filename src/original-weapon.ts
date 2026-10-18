@@ -9,7 +9,7 @@ import {EnvironmentLighting} from './environment-lighting';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { type World, type Effect, type Projectile, type Vec } from './simulation';
 import {WEAPON_PRESENTATION,STREAM_PRESENTATION,DAGGER_PRESENTATION,PROJECTILE_HAND_CLEARANCE,WEAPON_FEEDBACK,shotgunFeedback} from './weapon-tuning';
-import {HAND_POSE,HAND_SOCKETS,HAND_MUZZLES,projectileSocket} from './weapon-origin';
+import {HAND_POSE,HAND_SOCKETS,HAND_MUZZLES,weaponMuzzle,projectileSocket} from './weapon-origin';
 const HAND_UPGRADE_DURATION=1.65;
 const ROOT='/assets/original/devil-daggers/';
 // Keep the first-person arm anchored to the screen as the world FOV changes.
@@ -58,6 +58,7 @@ export class OriginalWeapon {
       upgradePower:this.upgradeTime>0?Math.exp(-upgradeAge*2.2)*Math.min(1,this.upgradeTime/.35):0,motion:this.motion,motionRotation:this.motionRotation,counterSwing:this.counterSwing};
   }
   ready=false;error='';loaded:Promise<void>;handScene=new THREE.Scene();handCamera=new THREE.PerspectiveCamera(HAND_VIEW_FOV,1,.01,3);
+  private animatedTip=new THREE.Vector3();
   private viewOffsets=HAND_MUZZLES.map(sockets=>sockets.map(()=>new THREE.Vector3()));
   private launchSockets=new Map<number,{socket:number;expires:number}>();
   private viewLocalId:string|undefined;private viewEnabled=false;
@@ -253,7 +254,7 @@ export class OriginalWeapon {
   /** Project a measured fingertip through the exact overlay pose for browser alignment checks. */
   socketScreen(level:number,socket=0){this.handScene.updateMatrixWorld(true);const p=HAND_SOCKETS[level-1][socket],pose=level>=5?this.twinPoses[level-5][socket%2]:this.pose;return new THREE.Vector3(p.x,p.y,p.z).applyMatrix4(pose.matrixWorld).project(this.handCamera);}
   restoreReplayUpgradeAge(age:number){this.upgradeTime=Math.max(0,HAND_UPGRADE_DURATION-Math.max(0,age));this.freshUpgrade=false;}
-  update(world:World|null,dt:number,menu:boolean,camera?:THREE.PerspectiveCamera,projectileAlpha=1,cameraOffset?:Vec,movementPose?:MovementPose) {
+  update(world:World|null,dt:number,menu:boolean,camera?:THREE.PerspectiveCamera,projectileAlpha=1,cameraOffset?:Vec,movementPose?:MovementPose,preparePose?:()=>void,socketPosition?:(level:number,socket:number,out:THREE.Vector3)=>boolean) {
     if(!this.ready)return;this.pose.visible=!menu;const level=world?.level||this.lastLevel;
     if(camera&&this.handCamera.aspect!==camera.aspect){this.handCamera.aspect=camera.aspect;this.handCamera.updateProjectionMatrix();}
     // An event arrived during this frame: show it once before advancing its
@@ -296,13 +297,21 @@ export class OriginalWeapon {
         pose.position.addScaledVector(this.armBase,TWIN_POSE.scale).sub(this.pivotOffset);
       });
     }
+    // Feedback is current before the visible rig is posed and sampled.
+    preparePose?.();
     this.viewEnabled=!!camera&&!menu&&!!world;
     this.viewLocalId=world?.crew.find(p=>p.player===world.player)?.id;
     if(camera&&this.viewEnabled){
       camera.updateMatrixWorld(true);this.handScene.updateMatrixWorld(true);
       const tangent=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
       for(let l=0;l<HAND_MUZZLES.length;l++)for(let i=0;i<HAND_MUZZLES[l].length;i++){
-        const muzzle=HAND_MUZZLES[l][i],tip=this.socketScreen(l+1,i),offset=this.viewOffsets[l][i],depth=-muzzle.z;
+        const offset=this.viewOffsets[l][i];
+        if(socketPosition&&world&&socketPosition(l+1,i,this.animatedTip)){
+          const muzzle=weaponMuzzle(world.player.pos,camera.rotation.y,camera.rotation.x,l+1,i);
+          offset.set(this.animatedTip.x-muzzle.x,this.animatedTip.y-muzzle.y,this.animatedTip.z-muzzle.z);
+          continue;
+        }
+        const muzzle=HAND_MUZZLES[l][i],tip=this.socketScreen(l+1,i),depth=-muzzle.z;
         offset.set(tip.x*depth*tangent*camera.aspect-muzzle.x,tip.y*depth*tangent-muzzle.y,0);
         offset.applyQuaternion(camera.quaternion);
         // The camera may translate independently of the physical player. Keep

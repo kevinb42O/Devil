@@ -1,3 +1,9 @@
+import {Cathedral} from './cathedral';
+import {DescentPassage} from './descent-passage';
+import {VeilEnvironment} from './veil-environment';
+import {CosmicEnvironment} from './cosmic-environment';
+import {Furnace} from './furnace';
+import {StormRain} from './storm-rain';
 import {inHideWing,constrainHideSolids} from './courtyard-hide-and-seek';
 import {basketballPose} from './courtyard-basketball';
 import {CourtyardScene} from './courtyard-scene';
@@ -22,10 +28,12 @@ import {SinglePlayerEntrance} from './entrance';
 import {gameViewport} from './game-viewport';
 import * as THREE from 'three';
 import { OriginalWeapon } from './original-weapon';
-import {createCrewAvatar,setCrewAvatarColor,setCrewAvatarSkin,loadCrewAvatar,crewMuzzle,updateCrewAvatar,disposeCrewAvatar} from './crew-avatar';
+import {HAND_MUZZLES} from './weapon-origin';
+import {createCrewAvatar,setCrewAvatarColor,setCrewAvatarSkin,loadCrewAvatar,crewWeaponMuzzle,updateCrewAvatar,disposeCrewAvatar} from './crew-avatar';
 import { OriginalEnemies } from './original-enemies';
 import { AbyssSky } from './sky';
 import {EnvironmentLighting} from './environment-lighting';
+import {SceneLighting} from './scene-lighting';
 import {OpeningMist} from './opening-mist';
 import {SegmentBatches} from './segment-batches';
 import {EnemyHitFlash,enemyHitFlash} from './enemy-hit-flash';
@@ -152,6 +160,7 @@ export class GameRenderer {
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
 
   private emoteHands:THREE.Group|null=null;
+  private readonly combatMuzzle=(level:number,socket:number,out:THREE.Vector3)=>!!this.emoteHands?.visible&&crewWeaponMuzzle(this.emoteHands,out,level,socket);
   localPlayerColor:string='crimson';
   get combatHandDiagnostics(){return {source:this.emoteHands?.userData.avatarSource,visible:!!this.emoteHands?.visible&&this.emoteHands.parent===this.scene,gestures:this.emoteHands?.userData.emotes};}
   private updateFirstPersonBody(world:World,input:Input,yaw:number,alpha:number,time:number,courtyard:boolean,scene:THREE.Scene){
@@ -180,18 +189,21 @@ export class GameRenderer {
   private segmentNodes=new WeakMap<THREE.Group,{node:THREE.Object3D;weakPoints:THREE.Object3D[]}[]>();
   private sky=new AbyssSky();private gemLighting:GemLighting;
   private environment=new EnvironmentLighting();
+  private chapterLighting=new SceneLighting();
   readonly openingMist=new OpeningMist();
+  readonly stormRain:StormRain;
+  readonly veilEnvironment:VeilEnvironment;
+  readonly furnace:Furnace;
+  readonly cathedral:Cathedral;
+  readonly descentPassage:DescentPassage;
+  readonly cosmicEnvironment:CosmicEnvironment;
   private skyLight=new THREE.HemisphereLight(0xcad5bc,0x18100c,1.15);
   private moonLight=new THREE.DirectionalLight(0xe2e8cd,2.1);
   private rimLight=new THREE.DirectionalLight(0x729786,1.8);
   private infernalLight=new THREE.PointLight(0xe44920,90,45,2);
-  private nightSkyLight=new THREE.Color(0xcad5bc);private daySkyLight=new THREE.Color(0xdceeff);
-  private nightGroundLight=new THREE.Color(0x18100c);private dayGroundLight=new THREE.Color(0x858b91);
   private altarLight=new THREE.PointLight(0xcde98b,12,9);
   private environmentMotionReduced=false;
-  private cosmicSkyLight=new THREE.Color(0x7184b4);private cosmicGroundLight=new THREE.Color(0x151c36);
-  private cosmicKeyLight=new THREE.Color(0xadc4ff);private cosmicRimLight=new THREE.Color(0x937eaf);
-  private defaultMoonColor=new THREE.Color(0xe2e8cd);private defaultRimColor=new THREE.Color(0x729786);
+  private cosmicKeyLight=new THREE.Color(0xadc4ff);
   private playerLight=new THREE.PointLight(0xffb56b,24,11,2);
   private swarmFlashCopy=new THREE.Color();
   private enemyHitFlash=new EnemyHitFlash();
@@ -218,6 +230,14 @@ export class GameRenderer {
     this.projectileLighting=new ProjectileLighting(this.scene,stone);
     this.blood=new BloodRenderer(this.scene,stone);
     this.upgradePulse=new UpgradeGroundPulse(stone);
+    this.stormRain=new StormRain(this.scene,stone);
+    this.furnace=new Furnace(this.scene,stone);
+    this.cathedral=new Cathedral(this.scene,stone);
+    this.descentPassage=new DescentPassage(this.scene,stone);
+    this.cosmicEnvironment=new CosmicEnvironment(this.scene,stone);
+    this.veilEnvironment=new VeilEnvironment(this.scene,stone);
+    this.environment.uniforms.veilClouds=this.veilEnvironment.uniforms.veilClouds;
+    this.environment.uniforms.veilClock=this.veilEnvironment.uniforms.veilClock;
     this.deathBurst=new PlayerDeathBurst(this.scene,this.blood.field);
     for(let i=0;i<MAX_CREW_PLAYERS;i++)this.crewDeathBursts.push({burst:new PlayerDeathBurst(this.scene,this.blood.field,this.deathBurst),id:null,position:{x:0,y:0,z:0},started:0});
     this.tiles=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE_SIZE,.1,TILE_SIZE),stone,this.tilePositions.length);this.scene.add(this.tiles);
@@ -227,7 +247,7 @@ export class GameRenderer {
     this.originalWeapon=new OriginalWeapon(this.scene,this.environment);
     this.altar=new THREE.Group();shape(this.altar,new THREE.CylinderGeometry(1.1,1.6,1.2,8),darkBone,[0,.6,0],[1,1,1]);shape(this.altar,new THREE.OctahedronGeometry(.38),greenCrystal,[0,2.7,0],[.55,2.2,.55]);this.altarLight.position.y=2;this.scene.add(this.altarLight);this.preview.add(this.altar);
     this.scene.add(this.preview);
-    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.courtyard.setSkull(this.originalEnemies.clone('skull'));this.courtyard.setFloor(this.originalEnemies.tileGeometry,diffuse);this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.entrance.setTileGeometry(this.originalEnemies.tileGeometry);this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});const bounds=new THREE.Box3();for(const mesh of meshes){mesh.geometry.computeBoundingBox();bounds.union(mesh.geometry.boundingBox!);}this.swarmBounds.set(kind,bounds.getBoundingSphere(new THREE.Sphere()));}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({...((this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map?{map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map}:{}),emissive:0xff431a,emissiveIntensity:1.4,color:0xffa665,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
+    void this.originalEnemies.loaded.then(()=>{if(!this.originalEnemies.ready)return;this.courtyard.setSkull(this.originalEnemies.clone('skull'));this.courtyard.setFloor(this.originalEnemies.tileGeometry,diffuse);this.tiles.geometry.dispose();this.tiles.geometry=this.originalEnemies.tileGeometry;this.originalFloor=true;for(const kind of ENEMY_KINDS)if(isSkull(kind)||isEgg(kind)||kind==='spiderling'){const meshes=this.originalEnemies.createSwarmBatch(kind,128);for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(kind,{meshes,capacity:128});const bounds=new THREE.Box3();for(const mesh of meshes){mesh.geometry.computeBoundingBox();bounds.union(mesh.geometry.boundingBox!);}this.swarmBounds.set(kind,bounds.getBoundingSphere(new THREE.Sphere()));}this.scene.remove(this.gemMesh);this.gemMesh=new THREE.InstancedMesh(this.originalEnemies.gemGeometry,new THREE.MeshStandardMaterial({...((this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map?{map:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map,emissiveMap:(this.originalEnemies.gemMaterial as THREE.MeshBasicMaterial).map}:{}),emissive:0xff431a,emissiveIntensity:1.4,color:0xffa665,roughness:.4,toneMapped:false}),1200);this.gemMesh.frustumCulled=false;this.gemMesh.count=0;this.scene.add(this.gemMesh);for(const [kind,pos] of [['squid',[0,3.3,-11]],['skull',[5,2,-4]],['skull2',[9,2,0]],['spider',[27,2.7,25]]] as const){const model=this.originalEnemies.clone(kind);model.position.set(pos[0],pos[1],pos[2]);this.preview.add(model);}});
     this.composer=new EffectComposer(this.renderer);
     // Both ping-pong targets need scene depth because pass swaps vary with quality/fade.
     for(const target of [this.composer.renderTarget1,this.composer.renderTarget2])target.depthTexture=new THREE.DepthTexture(1,1);
@@ -239,7 +259,7 @@ export class GameRenderer {
     this.configure(settings);window.addEventListener('resize',()=>this.resize());this.resize();
   }
   get skyDiagnostics(){return this.sky.diagnostics;}
-  configure(settings:VisualSettings) {this.environmentMotionReduced=settings.skyMotion==='reduced';this.cameraFeedback.configure(settings.screenShake);this.movementMotion.configure(settings.movementMotion);this.originalWeapon.configureMotion(settings.movementMotion);this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=this.resizeCooldown=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
+  configure(settings:VisualSettings) {this.entrance.configure(settings.quality,settings.skyMotion==='reduced');this.descentPassage.configure(settings.quality,settings.skyMotion==='reduced');this.cathedral.configure(settings.quality,settings.skyMotion==='reduced');this.veilEnvironment.configure(settings.quality,settings.skyMotion==='reduced');this.cosmicEnvironment.configure(settings.quality,settings.skyMotion==='reduced');this.furnace.configure(settings.quality,settings.skyMotion==='reduced');this.stormRain.configure(settings.quality,settings.skyMotion==='reduced');this.environmentMotionReduced=settings.skyMotion==='reduced';this.cameraFeedback.configure(settings.screenShake);this.movementMotion.configure(settings.movementMotion);this.originalWeapon.configureMotion(settings.movementMotion);this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=this.resizeCooldown=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
   resize() {
     const {width:w,height:h}=gameViewport();
     // Bound fill cost on Retina/4K displays; UI and the canvas keep their CSS size.
@@ -259,16 +279,23 @@ export class GameRenderer {
     this.slowFrames=this.fastFrames=0;this.resizeCooldown=3;this.resize();
   }
   async prepare() {
-    await Promise.all([this.sky.ready,this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
+    await Promise.all([this.veilEnvironment.ready,this.furnace.ready,this.sky.ready,this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
+    this.entrance.sanctuary.setSpace(this.sky.cosmicTexture);
     if(!this.originalEnemies.ready||!this.originalWeapon.ready)return;
     // Compile the gameplay and hand materials while the menu is still visible.
     const body=createCrewAvatar(0),ghost=createCrewAvatar(0,true);
     body.position.set(1000,0,0);ghost.position.set(1000,0,0);this.scene.add(body,ghost);
+    const veilWasVisible=this.veilEnvironment.group.visible;this.veilEnvironment.group.visible=true;
+    const spaceWasVisible=this.cosmicEnvironment.group.visible;this.cosmicEnvironment.group.visible=true;
+    const cathedralWasVisible=this.cathedral.group.visible;this.cathedral.group.visible=true;
+    const passageWasVisible=this.descentPassage.group.visible;this.descentPassage.group.visible=true;
+    const rainWasVisible=this.stormRain.group.visible,fireWasVisible=this.furnace.group.visible;this.stormRain.group.visible=true;this.furnace.group.visible=true;
     try{
-      // Warm both floor variants so falling doesn't compile a shader mid-frame.
+      // Warm rain and both floor variants so falling doesn't compile a shader mid-frame.
       this.updateFloorSide(-Infinity);await this.renderer.compileAsync(this.scene,this.camera);
       this.updateFloorSide(Infinity);await this.renderer.compileAsync(this.scene,this.camera);
-    }finally{this.scene.remove(body,ghost);disposeCrewAvatar(body);disposeCrewAvatar(ghost);}
+    }finally{this.descentPassage.group.visible=passageWasVisible;this.cathedral.group.visible=cathedralWasVisible;this.veilEnvironment.group.visible=veilWasVisible;this.cosmicEnvironment.group.visible=spaceWasVisible;this.furnace.group.visible=fireWasVisible;this.stormRain.group.visible=rainWasVisible;this.scene.remove(body,ghost);disposeCrewAvatar(body);disposeCrewAvatar(ghost);}
+    await this.renderer.compileAsync(this.entrance.scene,this.camera);
     await this.originalWeapon.prewarm(this.renderer);
   }
   updateTiles(time:number) {let changed=false;this.tiles.instanceMatrix.clearUpdateRanges();for(let i=0;i<this.tilePositions.length;i++){const tile=ARENA_TILES[i],height=tileHeight(tile.x,tile.z,time)-(this.originalFloor?0:.05);if(this.tileHeights[i]===height)continue;this.tileHeights[i]=height;changed=true;this.dummy.position.copy(this.tilePositions[i]);this.dummy.position.y=height;this.dummy.rotation.set(0,0,0);this.dummy.scale.setScalar(1);this.dummy.updateMatrix();this.tiles.setMatrixAt(i,this.dummy.matrix);this.tiles.instanceMatrix.addUpdateRange(i*16,16);}if(changed)this.tiles.instanceMatrix.needsUpdate=true;}
@@ -293,11 +320,14 @@ export class GameRenderer {
       const model=this.crewModels.get(effect.shooterId),shooter=world.crew.find(p=>p.id===effect.shooterId);
       if(model&&shooter){
         updateCrewAvatar(model,shooter.input,shooter.player.vel,shooter.player.grounded,world.time,true,false,shooter.level);
-        if(crewMuzzle(model,this.crewMuzzlePosition)){
-          const muzzles=[{x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z}];
-          if(shooter.level>=5&&crewMuzzle(model,this.crewMuzzlePosition,true))muzzles.push({x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z});
-          weaponEffect={...effect,muzzles};
+        model.updateWorldMatrix(true,true);
+        const level=effect.level??shooter.level,count=effect.projectileKind==='shotgun'?(level>=5?2:1):HAND_MUZZLES[level-1].length;
+        const muzzles:Vec[]=[];
+        for(let socket=0;socket<count;socket++){
+          if(!crewWeaponMuzzle(model,this.crewMuzzlePosition,level,socket))break;
+          muzzles.push({x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z});
         }
+        if(muzzles.length===count)weaponEffect={...effect,muzzles};
       }
     }
     this.originalWeapon.effect(weaponEffect,world,yaw,pitch,local);
@@ -322,6 +352,7 @@ export class GameRenderer {
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
     if(!entrance||!world||!bodyInput||spectatorPosition||this.topDown)this.courtyardNeck.clear();
     this.crewReplayExternal=!!spectatorPosition;this.renderer.info.reset();if(menu){
+      this.descentPassage.group.visible=false;
       if(this.emoteHands)this.emoteHands.visible=false;
       this.resetFeedback();this.enemyEmergence.clear();this.upgradePulse.clear();this.upgradeScreenFlash.clear();
       // The menu has its own scene; retire gameplay glows before the early return.
@@ -329,6 +360,8 @@ export class GameRenderer {
       this.menuRelics.render(this.renderer,dt);return;
     }this.originalEnemies.setTime(world?.time??this.visualTime);this.visualTime+=dt;const t=this.crewReplayMode&&world?world.time:this.visualTime;this.preview.visible=menu;this.altarLight.intensity=menu?12:0;
     if(entrance&&world){
+      this.descentPassage.group.visible=false;
+      if(this.camera.far!==180){this.camera.far=180;this.camera.updateProjectionMatrix();}
       const entranceScene=world.courtyard?this.courtyard.scene:this.entrance.scene;
       this.upgradePulse.clear();this.upgradeScreenFlash.clear();
       samplePlayerPosition(world,projectileAlpha,this.camera.position);
@@ -355,19 +388,17 @@ export class GameRenderer {
       this.camera.updateWorldMatrix(true,false);
       if(!world.courtyard)this.entrance.updateFloorSide(this.camera.position.y);
       if(this.camera.fov!==this.baseFov){this.camera.fov=this.baseFov;this.camera.updateProjectionMatrix();}
-      this.openingMist.update(this.camera,world.time,true);
+      this.openingMist.update(this.camera,world.courtyard?world.time:t,true);
+      this.openingMist.setSanctuary(!world.courtyard);
+      if(!world.courtyard)this.openingMist.setHeat(0,t,31);
       const pass=this.composer.passes[0] as RenderPass;pass.scene=entranceScene;this.composer.render();pass.scene=this.scene;return;
     }
     const atmosphere=this.environment.update(world?.time??0,menu),day=this.environment.daylight;
-    this.skyLight.intensity=1.15+day*2;this.skyLight.color.lerpColors(this.nightSkyLight,this.daySkyLight,day);this.skyLight.groundColor.lerpColors(this.nightGroundLight,this.dayGroundLight,day);
-    this.moonLight.intensity=2.1+day*.8;this.rimLight.intensity=1.8+day*.3;this.infernalLight.intensity=90*(1-day*.9);
+    this.chapterLighting.update(atmosphere,menu,this.skyLight,this.moonLight,this.rimLight,this.infernalLight);
     const cosmic=atmosphere.cosmic;
-    this.skyLight.intensity*=1-cosmic*.65;
-    this.skyLight.color.lerp(this.cosmicSkyLight,cosmic);this.skyLight.groundColor.lerp(this.cosmicGroundLight,cosmic);
-    this.moonLight.color.copy(this.defaultMoonColor).lerp(this.cosmicKeyLight,cosmic);
-    this.rimLight.color.copy(this.defaultRimColor).lerp(this.cosmicRimLight,cosmic);
-    this.infernalLight.intensity*=1-cosmic;
-    this.moonLight.position.set(-12-day*.6,30-day*5.4,8-day*19.4);
+    // Keep the orbital landmarks intact when viewed from the far edge of the arena.
+    const viewDistance=cosmic>.001?320:180;
+    if(this.camera.far!==viewDistance){this.camera.far=viewDistance;this.camera.updateProjectionMatrix();}
     if(this.scene.fog instanceof THREE.FogExp2){this.scene.fog.color.setRGB(.08*day+atmosphere.furnace*.007,.12*day+atmosphere.furnace*.002,.17*day+atmosphere.cathedral*.007);this.scene.fog.density=.015-day*.006;}
     this.gemLighting.daylight=day;this.gemLighting.cosmic=atmosphere.cosmic;this.gemLighting.nebulaTime=this.environmentMotionReduced?0:Math.min(atmosphere.time,30);
     if(menu) {
@@ -466,11 +497,13 @@ export class GameRenderer {
       this.replayBody.visible=true;this.replayBody.position.set(world.player.pos.x,world.player.pos.y,world.player.pos.z);this.replayBody.rotation.y=bodyInput.yaw;
       updateCrewAvatar(this.replayBody,bodyInput,world.player.vel,world.player.grounded,world.time,false,false,world.level);
     }else if(this.replayBody)this.replayBody.visible=false;
-    this.originalWeapon.update(world,dt,menu,this.topDown||spectatorPosition?undefined:this.camera,projectileAlpha,this.feedbackWorldOffset,this.movementMotion.pose);
-    const local=world?.crew.find(p=>p.player===world.player);
-    if(world&&world.state==='playing'&&local?.alive!==false&&!spectatorPosition&&!this.topDown&&!this.deathGhost?.visible&&!this.deathBurstActive){
-      this.updateFirstPersonBody(world,bodyInput??local?.input??{forward:0,strafe:0,yaw,pitch,jump:false,fire:false,homing:false},yaw,projectileAlpha,world.time,false,this.scene);
-    }else if(this.emoteHands)this.emoteHands.visible=false;
+    this.originalWeapon.update(world,dt,menu,this.topDown||spectatorPosition?undefined:this.camera,projectileAlpha,this.feedbackWorldOffset,this.movementMotion.pose,()=>{
+      const local=world?.crew.find(p=>p.player===world.player);
+      if(world&&!menu&&world.state==='playing'&&local?.alive!==false&&!spectatorPosition&&!this.topDown&&!this.deathGhost?.visible&&!this.deathBurstActive){
+        this.updateFirstPersonBody(world,bodyInput??local?.input??{forward:0,strafe:0,yaw,pitch,jump:false,fire:false,homing:false},yaw,projectileAlpha,world.time,false,this.scene);
+        this.emoteHands!.updateWorldMatrix(true,true);
+      }else if(this.emoteHands)this.emoteHands.visible=false;
+    },this.combatMuzzle);
     this.updateFloorSide(this.camera.position.y);
     this.updateCrewDeaths(world,menu,dt);
     this.updateCrewModels(world,dt,crewInterpolated,this.scene,menu);
@@ -481,7 +514,18 @@ export class GameRenderer {
     if(world&&!menu)this.creatureDeaths?.addSegments(model=>this.segmentBatches.add(model));
     this.segmentBatches.end();
     this.gemLighting.update(world,this.camera,menu);this.sky.update(this.camera,menu?t:world?.time??0,menu);
+    this.cosmicEnvironment.setSky(this.sky.cosmicTexture);
+    this.cosmicEnvironment.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
+    this.furnace.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
+    this.cathedral.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
+    this.descentPassage.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
+    this.veilEnvironment.setSky(this.sky.veilTexture);
+    this.veilEnvironment.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
+    this.stormRain.setSky(this.sky.reflectionTexture,this.sky.reflectionTravel);
+    this.stormRain.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
+    this.stormRain.uniforms.rainWetness.value*=1-this.veilEnvironment.uniforms.veilAmount.value;
     this.blood.update(world,menu,this.deathBurstActive?this.deathBloodTime:world?.crew.length?this.crewDeathTime:undefined,this.camera);this.projectileLighting.update(world,menu,projectileAlpha,this.renderer.domElement.height,this.originalWeapon.projectileView);this.openingMist.update(this.camera,world?.time??0);
+    this.openingMist.setHeat(this.furnace.uniforms.furnaceHeat.value,world?.time??0,this.furnace.uniforms.furnaceRadius.value);
     this.openingMist.updateLights(this.camera,this.enemyLighting.aura,this.projectileLighting.glow);
     this.upgradePulse.update(dt,world?.time??0);
     this.composer.render();this.originalWeapon.render(this.renderer,menu||!!spectatorPosition||this.topDown);

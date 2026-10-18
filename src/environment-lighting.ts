@@ -1,3 +1,5 @@
+import {cathedralAt} from './cathedral-state';
+import {veilAt} from './veil-shading';
 import * as THREE from 'three';
 import {createDescentState,descentAt} from './descent';
 
@@ -17,17 +19,22 @@ vec3 environmentLight(vec3 surface,vec3 normal){
 }`;
 
 export class EnvironmentLighting {
-  readonly uniforms={cosmicLight:{value:0},environmentGain:{value:new THREE.Vector3(1,1,1)},environmentFill:{value:new THREE.Vector3()}};
+  readonly uniforms={veilClouds:{value:new THREE.Texture()},veilClock:{value:0},towerVeilAmount:{value:0},towerCathedralLight:{value:0},towerCathedralClosure:{value:0},cosmicLight:{value:0},environmentGain:{value:new THREE.Vector3(1,1,1)},environmentFill:{value:new THREE.Vector3()}};
   private state=createDescentState();
   daylight=0;
   update(time:number,menu=false){
-    const s=descentAt(time,this.state),day=menu?0:s.daylight,fire=menu?0:s.furnace,ribs=menu?0:s.cathedral;
+    const s=descentAt(time,this.state),day=menu?0:s.daylight,fire=menu?0:s.furnace*(1-Math.min(1,Math.max(0,(s.time-380)/30))),ribs=menu?0:cathedralAt(time).light;
     const cosmic=menu?0:s.cosmic;this.uniforms.cosmicLight.value=cosmic;
     this.daylight=day;
-    this.uniforms.environmentGain.value.set(1+day*1.6+fire*.12,1+day*1.7,1+day*1.8+ribs*.04);
+    const cathedral=cathedralAt(time);
+    this.uniforms.towerVeilAmount.value=menu?0:veilAt(time);
+    this.uniforms.towerCathedralLight.value=menu?0:cathedral.light;
+    this.uniforms.towerCathedralClosure.value=cathedral.closure;
+    this.uniforms.environmentGain.value.set(1+day*1.6+fire*.12-ribs*.10,1+day*1.7-ribs*.05,1+day*1.8+ribs*.09);
     this.uniforms.environmentFill.value.set(.025*day+.007*fire+.004*ribs,.032*day+.002*fire+.002*ribs,.042*day+.001*fire+.007*ribs);
     // Space removes the warm flat fill: darker stone with cold directional faces.
     const fill=this.uniforms.environmentFill.value;
+    fill.x+=fire*.018;fill.y+=fire*.0045;fill.z+=fire*.0007;
     fill.x+=(.001-fill.x)*cosmic;fill.y+=(.003-fill.y)*cosmic;fill.z+=(.012-fill.z)*cosmic;
     return s;
   }

@@ -13,6 +13,7 @@ const chatterRanges:Readonly<Record<string,number>>={
 // hook for authored exceptions without reapplying trims from the retired bank.
 export const CHATTER_TRIM:Readonly<Record<string,number>>=Object.fromEntries(Object.keys(chatterRanges).map(name=>[name,1]));
 export function hearingProfile(name:string,role?:string):HearingProfile{
+ if(role==='footstep')return {refDistance:2,maxDistance:20};
  if(role==='crystal-hit'||role==='crystal-break')return {refDistance:4,maxDistance:32};
  if(chatterRanges[name])return {refDistance:3,maxDistance:chatterRanges[name]};
  if(role==='gem-chatter')return {refDistance:2,maxDistance:18};

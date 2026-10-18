@@ -1,0 +1,56 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser/shots/16-monument.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso6iso2avc1mp41
+    creation_time   : 2026-10-18T00:10:26.000000Z
+  Duration: 00:00:02.91, start: 0.000000, bitrate: 8339 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080, 8026 kb/s, SAR 1:1 DAR 16:9, 26.78 fps, 30k tbr, 30k tbn (default)
+      Metadata:
+        creation_time   : 2026-10-18T00:10:26.000000Z
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : AVC1 Coding
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 327 kb/s (default)
+      Metadata:
+        creation_time   : 2026-10-18T00:10:26.000000Z
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+Input #1, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/public/assets/audio/environment/cathedral-1048b1a6f1.m4a':
+  Metadata:
+    major_brand     : M4A 
+    minor_version   : 0
+    compatible_brands: M4A mp42isom
+    creation_time   : 2026-10-17T22:54:40.000000Z
+    iTunSMPB        :  00000000 00000840 000003E0 000000000050BFE0 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+  Duration: 00:02:00.07, start: 0.047891, bitrate: 190 kb/s
+  Stream #1:0[0x1](eng): Audio: aac (LC) (mp4a / 0x6134706D), 44100 Hz, stereo, fltp, 188 kb/s (default)
+      Metadata:
+        creation_time   : 2026-10-17T22:54:40.000000Z
+        vendor_id       : [0][0][0][0]
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> h264 (h264_videotoolbox))
+  Stream #1:0 -> #0:1 (aac (native) -> aac (native))
+Press [q] to stop, [?] for help
+Output #0, mp4, to '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser/edit/16-monument.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso6iso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 24000 kb/s, 15360 tbn (default)
+      Metadata:
+        creation_time   : 2026-10-18T00:10:26.000000Z
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+  Stream #0:1(eng): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 320 kb/s (default)
+      Metadata:
+        creation_time   : 2026-10-17T22:54:40.000000Z
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 aac
+frame=   51 fps=0.0 q=-0.0 size=     768KiB time=00:00:01.45 bitrate=4337.2kbits/s speed=2.87x    
+[mp4 @ 0x138605130] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x138604ff0] video:2916KiB audio:96KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.131327%
+frame=   90 fps=0.0 q=-0.0 Lsize=    3016KiB time=00:00:02.96 bitrate=8329.1kbits/s speed=4.26x    
+[aac @ 0x1487587b0] Qavg: 51848.207

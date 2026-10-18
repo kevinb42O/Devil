@@ -1,0 +1,48 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser/shots/04-cosmic-scale.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso6iso2avc1mp41
+    creation_time   : 2026-10-18T00:03:13.000000Z
+  Duration: 00:00:04.01, start: 0.000000, bitrate: 23679 kb/s
+  Stream #0:0[0x1](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 163 kb/s (default)
+      Metadata:
+        creation_time   : 2026-10-18T00:03:13.000000Z
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+  Stream #0:1[0x2](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080, 23607 kb/s, SAR 1:1 DAR 16:9, 29.05 fps, 30 tbr, 30k tbn (default)
+      Metadata:
+        creation_time   : 2026-10-18T00:03:13.000000Z
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : AVC1 Coding
+Stream mapping:
+  Stream #0:1 -> #0:0 (h264 (native) -> h264 (h264_videotoolbox))
+  Stream #0:0 -> #0:1 (aac (native) -> aac (native))
+Press [q] to stop, [?] for help
+Output #0, mp4, to '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser/edit/04-cosmic-scale.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso6iso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 24000 kb/s, 15360 tbn (default)
+      Metadata:
+        creation_time   : 2026-10-18T00:03:13.000000Z
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+  Stream #0:1(und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 320 kb/s (default)
+      Metadata:
+        creation_time   : 2026-10-18T00:03:13.000000Z
+        handler_name    : SoundHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 aac
+frame=   13 fps=8.6 q=-0.0 size=    1280KiB time=00:00:00.40 bitrate=26215.4kbits/s speed=0.265x    
+frame=   40 fps= 20 q=-0.0 size=    3840KiB time=00:00:01.30 bitrate=24198.2kbits/s speed=0.644x    
+frame=   57 fps= 23 q=-0.0 size=    5376KiB time=00:00:01.86 bitrate=23593.2kbits/s speed=0.74x    
+frame=   72 fps= 24 q=-0.0 size=    6912KiB time=00:00:02.36 bitrate=23925.4kbits/s speed=0.782x    
+[mp4 @ 0x146305ea0] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x146309360] video:11493KiB audio:137KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.041406%
+frame=  120 fps= 35 q=-0.0 Lsize=   11635KiB time=00:00:03.96 bitrate=24028.2kbits/s speed=1.17x    
+[aac @ 0x146058d90] Qavg: 61154.840

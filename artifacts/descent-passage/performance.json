@@ -1,0 +1,51 @@
+{
+  "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1, Unspecified Version)",
+  "viewport": [
+    1280,
+    720
+  ],
+  "cases": [
+    {
+      "quality": "high",
+      "time": 8,
+      "onMs": 7.199999988079071,
+      "offMs": 6.100000023841858,
+      "overheadMs": 1.0999999642372131
+    },
+    {
+      "quality": "high",
+      "time": 64,
+      "onMs": 8.299999952316284,
+      "offMs": 6,
+      "overheadMs": 2.299999952316284
+    },
+    {
+      "quality": "high",
+      "time": 410,
+      "onMs": 9.399999976158142,
+      "offMs": 7.800000011920929,
+      "overheadMs": 1.5999999642372131
+    },
+    {
+      "quality": "low",
+      "time": 8,
+      "onMs": 6,
+      "offMs": 5.199999988079071,
+      "overheadMs": 0.800000011920929
+    },
+    {
+      "quality": "low",
+      "time": 64,
+      "onMs": 5.900000035762787,
+      "offMs": 5.400000035762787,
+      "overheadMs": 0.5
+    },
+    {
+      "quality": "low",
+      "time": 410,
+      "onMs": 6.5,
+      "offMs": 5.899999976158142,
+      "overheadMs": 0.6000000238418579
+    }
+  ]
+}

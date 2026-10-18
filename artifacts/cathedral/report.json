@@ -1,0 +1,54 @@
+{
+  "cold": {
+    "presence": 0,
+    "light": 0,
+    "closure": 0,
+    "visible": false,
+    "quality": "high",
+    "reduced": false,
+    "blocks": 826,
+    "dust": 1600,
+    "interactive": false
+  },
+  "full": {
+    "presence": 1,
+    "light": 1,
+    "closure": 0,
+    "visible": true,
+    "quality": "high",
+    "reduced": false,
+    "blocks": 826,
+    "dust": 1600,
+    "interactive": false
+  },
+  "low": {
+    "presence": 1,
+    "light": 1,
+    "closure": 0,
+    "visible": true,
+    "quality": "low",
+    "reduced": true,
+    "blocks": 413,
+    "dust": 500,
+    "interactive": false
+  },
+  "end": {
+    "presence": 0.22,
+    "light": 0,
+    "closure": 1,
+    "visible": true,
+    "quality": "low",
+    "reduced": true,
+    "blocks": 413,
+    "dust": 500,
+    "interactive": false
+  },
+  "pause": 0,
+  "rewind": 0,
+  "visible": 15.053084309895834,
+  "motion": 1.5879999457465277,
+  "parallax": 11.341031629774305,
+  "floor": 21.747093641493056,
+  "extraCalls": 2,
+  "errors": []
+}

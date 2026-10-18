@@ -996,5 +996,27 @@
     "author": "cylon8472",
     "retrieved": "2026-10-18",
     "library": "Freesound Beast Roar lvl2; MP3 mirror"
+  },
+  {
+    "file": "assets/_sources/footsteps/joseph-sardin-1318.wav",
+    "sha256": "2bf4901cf4e2e1352f34246fbaaed1bdec8b8362ae9dd36022abbeea35267b55",
+    "bytes": 8863310,
+    "retrieved": "2026-10-18",
+    "author": "Joseph SARDIN",
+    "name": "Fast Steps on Concrete (1318)",
+    "url": "https://bigsoundbank.com/fast-steps-on-concrete-s1318.html",
+    "download": "https://bigsoundbank.com/UPLOAD/bwf-en/1318.wav",
+    "license": "CC0-1.0"
+  },
+  {
+    "file": "assets/_sources/footsteps/joseph-sardin-0690.wav",
+    "sha256": "69b9672d3d4a62d930c404383c41112310be461b4ec0ee58fc1550a79ac2239b",
+    "bytes": 5036654,
+    "retrieved": "2026-10-18",
+    "author": "Joseph SARDIN",
+    "name": "Shoes in the Water (690)",
+    "url": "https://bigsoundbank.com/shoes-in-the-water-s0690.html",
+    "download": "https://bigsoundbank.com/UPLOAD/bwf-en/0690.wav",
+    "license": "CC0-1.0"
   }
 ]

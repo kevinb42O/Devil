@@ -1,0 +1,14 @@
+Furnace fire textures: adapted from two Mixkit Free Stock Video recordings.
+
+Mesmerizing close up of flames over a black background (52312)
+https://mixkit.co/free-stock-video/mesmerizing-close-up-of-flames-over-a-black-background-52312/
+
+Intense flames on black background (3758)
+https://mixkit.co/free-stock-video/intense-flames-on-black-background-3758/
+
+License: Mixkit Stock Video Free License
+https://mixkit.co/license/modal/videoFree/
+Terms: https://mixkit.co/terms/
+Accessed 2026-10-18. Attribution is not required by the selected license.
+
+Prepared into loop-crossfaded, padded, 64-frame WebP flipbooks for rendering inside the game. Original recordings are not distributed with the game. Saved license, source pages, processing metadata and SHA-256 hashes: assets/provenance/furnace/.

@@ -1,0 +1,684 @@
+[
+  {
+    "time": 0,
+    "peak": 0.007366220932453871,
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0.18,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.03483,
+            "gain": 0.09907861053943634,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "time": 35,
+    "peak": 0.011095436289906502,
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.081276,
+            "gain": 0.09500274807214737,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "ash",
+        "weight": 0.18,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 14.01161,
+            "gain": 0.0875367745757103,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "time": 80,
+    "peak": 0.012318285182118416,
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.15093,
+            "gain": 0.039934515953063965,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "ash",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 14.08127,
+            "gain": 0.05247087776660919,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "storm",
+        "weight": 0.095,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.037732,
+            "gain": 0.0730726420879364,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "time": 150,
+    "peak": 0.012318285182118416,
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.204245,
+            "gain": 0.020503081381320953,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "ash",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 14.131679,
+            "gain": 0.02693946659564972,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "storm",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.088236,
+            "gain": 0.05507645756006241,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "veil",
+        "weight": 0.18,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 24.009813,
+            "gain": 0.09907861053943634,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "time": 270,
+    "peak": 0.012519175186753273,
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.261828,
+            "gain": 0.009847721084952354,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "ash",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 14.192166,
+            "gain": 0.012939182110130787,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "storm",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.148661,
+            "gain": 0.02645350992679596,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "veil",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 24.067411,
+            "gain": 0.0648052915930748,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "furnace",
+        "weight": 0.18,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.030032,
+            "gain": 0.12575669586658478,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "time": 390,
+    "peak": 0.015104774385690689,
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.301859,
+            "gain": 0.006175405345857143,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "ash",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 14.229297,
+            "gain": 0.00811401754617691,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "storm",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.188662,
+            "gain": 0.016588686034083366,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "veil",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 24.107392,
+            "gain": 0.04063873738050461,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "furnace",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.06966,
+            "gain": 0.09924772381782532,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "cathedral",
+        "weight": 0.18,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 28.005805,
+            "gain": 0.0875367745757103,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "time": 480,
+    "peak": 0.015104774385690689,
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.351316,
+            "gain": 0.003170563606545329,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "ash",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 14.281651,
+            "gain": 0.00416587246581912,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "storm",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.23816,
+            "gain": 0.008516914211213589,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "veil",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 24.15691,
+            "gain": 0.02086462453007698,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "furnace",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.122033,
+            "gain": 0.05095543712377548,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "cathedral",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 28.058185,
+            "gain": 0.06408821791410446,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "depth",
+        "weight": 0.18,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 26.020462,
+            "gain": 0.11802003532648087,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "continuousTransitions": [
+      {
+        "outgoing": "space",
+        "incoming": "ash",
+        "middle": {
+          "time": 25.500000000000078,
+          "peak": 0.015839865431189537,
+          "outgoingRms": 0.009593757476586584,
+          "incomingRms": 0.006660660699755044
+        },
+        "after": {
+          "time": 31.000000000000156,
+          "rms": 0.012043299643241618,
+          "peak": 0.02003338187932968
+        }
+      },
+      {
+        "outgoing": "ash",
+        "incoming": "storm",
+        "middle": {
+          "time": 60.00000000000014,
+          "peak": 0.01578672043979168,
+          "outgoingRms": 0.00981845137385718,
+          "incomingRms": 0.0034343654281680813
+        },
+        "after": {
+          "time": 70.09999999999985,
+          "rms": 0.005642552658746557,
+          "peak": 0.008183644153177738
+        }
+      },
+      {
+        "outgoing": "storm",
+        "incoming": "veil",
+        "middle": {
+          "time": 135.09999999999943,
+          "peak": 0.013363812118768692,
+          "outgoingRms": 0.004849248040312205,
+          "incomingRms": 0.007061744025681444
+        },
+        "after": {
+          "time": 145.09999999999886,
+          "rms": 0.011764724809068417,
+          "peak": 0.015335812233388424
+        }
+      },
+      {
+        "outgoing": "veil",
+        "incoming": "furnace",
+        "middle": {
+          "time": 250.09999999999943,
+          "peak": 0.01846671663224697,
+          "outgoingRms": 0.008398367695211692,
+          "incomingRms": 0.010373098469359222
+        },
+        "after": {
+          "time": 260.1,
+          "rms": 0.014056797126496883,
+          "peak": 0.043923839926719666
+        }
+      },
+      {
+        "outgoing": "furnace",
+        "incoming": "cathedral",
+        "middle": {
+          "time": 371.0000000000023,
+          "peak": 0.021740537136793137,
+          "outgoingRms": 0.008282532995367563,
+          "incomingRms": 0.008068281144523452
+        },
+        "after": {
+          "time": 381.00000000000455,
+          "rms": 0.01480815465008328,
+          "peak": 0.021693654358386993
+        }
+      },
+      {
+        "outgoing": "cathedral",
+        "incoming": "depth",
+        "middle": {
+          "time": 463.1000000000023,
+          "peak": 0.02029278874397278,
+          "outgoingRms": 0.012158726261673029,
+          "incomingRms": 0.01033341144508391
+        },
+        "after": {
+          "time": 473.00000000000455,
+          "rms": 0.013613013509904128,
+          "peak": 0.01953062415122986
+        }
+      }
+    ]
+  }
+]

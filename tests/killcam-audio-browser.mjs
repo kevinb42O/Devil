@@ -26,6 +26,26 @@ try{
  assert.deepEqual(await page.evaluate(()=>({time:abyss.time,stats:abyss.stats})),final,'audio playback leaves the completed run untouched');
  await page.click('#watch-death');await page.waitForFunction(()=>abyss.audio.loops.length>0);
  await page.keyboard.press('Escape');await page.waitForFunction(()=>!abyss.deathAnalysis.active&&abyss.audio.loops.length===0);
+ // Reproduce the reported regression: die while the trigger is still held.
+ await page.click('#retry');await page.waitForFunction(()=>abyss.entrance);
+ await page.keyboard.down('KeyW');await page.waitForFunction(()=>!abyss.entrance);await page.keyboard.up('KeyW');
+ await page.mouse.down();await page.waitForFunction(()=>abyss.audio.loops.includes('rapid1'));
+ await page.keyboard.down('KeyW');
+ await page.waitForFunction(()=>abyss.deathAnalysis?.active,null,{timeout:20000});await page.keyboard.up('KeyW');
+ await page.mouse.up();
+ const weapon=name=>/^(?:seekrapid|rapid|weapon|shot|daggerdrone|magentadrone)/.test(name);
+ for(let i=0;i<8;i++){
+  const audio=await page.evaluate(()=>abyss.audio);
+  assert.ok(!audio.loops.some(weapon),'death must not restart the held shooting loop');
+  assert.ok(!audio.oneShotNames.some(weapon),'killcam must not trigger weapon onsets or release tails');
+  await page.waitForTimeout(100);
+ }
+ await page.click('#analysis-pause');await page.waitForFunction(()=>abyss.audio.loops.length===0);
+ await page.click('#analysis-pause');await page.waitForFunction(()=>abyss.audio.loops.length>0);
+ assert.ok(!(await page.evaluate(()=>abyss.audio.loops)).some(weapon),'resume must not restart recorded firing');
+ await page.keyboard.press('Escape');await page.waitForFunction(()=>!abyss.deathAnalysis.active&&abyss.audio.loops.length===0);
+ await page.click('#watch-death');await page.waitForFunction(()=>abyss.audio.loops.length>0);
+ assert.ok(!(await page.evaluate(()=>abyss.audio.loops)).some(weapon),'rewatch must not restart recorded firing');
  assert.deepEqual(errors,[]);
- console.log('Killcam audio passed: scene sounds, music, pause/resume, impact, results and rewatch/exit.');
+ console.log('Killcam audio passed: held-trigger death, no ghost firing, scene sounds, music, pause/resume, impact, results and rewatch/exit.');
 }finally{await browser.close();}

@@ -1,0 +1,25 @@
+{
+  "file": "real-flame-6e35ad224b.webp",
+  "url": "/assets/environment/furnace/real-flame-6e35ad224b.webp",
+  "columns": 8,
+  "rows": 8,
+  "frames": 64,
+  "fps": 12,
+  "cell": 256,
+  "inset": 4,
+  "bytes": 981456,
+  "sha256": "6e35ad224b235efbabd58bda728f3cdb8299ba6fe24bb9cb05ef40de2c417d61",
+  "source": {
+    "title": "Mesmerizing close up of flames over a black background",
+    "page": "https://mixkit.co/free-stock-video/mesmerizing-close-up-of-flames-over-a-black-background-52312/",
+    "download": "https://assets.mixkit.co/videos/52312/52312-720.mp4",
+    "file": "assets/_sources/furnace/mixkit-52312.mp4",
+    "sha256": "3d57f7577628b85bb3ae96b43bdd7421e15288fe6ec2a2663faf6d503bed87b9",
+    "license": "Mixkit Stock Video Free License",
+    "licenseURL": "https://mixkit.co/license/modal/videoFree/",
+    "retrieved": "2026-10-18",
+    "start": 3,
+    "end": 8.25,
+    "changes": "Selected 64 photographed flame frames, resized to padded 256px cells; 8-frame pre-roll crossfade makes the loop continuous. No raw stock video is shipped."
+  }
+}

@@ -1,3 +1,4 @@
+import {VEIL_RADIANCE,veilAt} from './veil-shading';
 import * as THREE from 'three';
 import {createDescentState,descentAt,DESCENT_CHAPTERS,type SkyMotion} from './descent';
 
@@ -8,17 +9,23 @@ export class AbyssSky {
   private time={value:0};
   private state=createDescentState();
   private uniforms={
-    time:this.time,menu:{value:1},octaves:{value:3},detail:{value:1},zenith:{value:new THREE.Vector3()},haze:{value:new THREE.Vector3()},cloudTint:{value:new THREE.Vector3()},
+    veilAmount:{value:0},veilClock:{value:0},veilClouds:{value:new THREE.Texture()},time:this.time,menu:{value:1},octaves:{value:3},detail:{value:1},zenith:{value:new THREE.Vector3()},haze:{value:new THREE.Vector3()},cloudTint:{value:new THREE.Vector3()},
     furnaceSky:{value:new THREE.Texture()},cathedralSky:{value:new THREE.Texture()},depthWeights:{value:new THREE.Vector2()},ashSky:{value:new THREE.Texture()},stormSky:{value:new THREE.Texture()},weatherWeights:{value:new THREE.Vector2()},galaxy:{value:new THREE.Texture()},cosmic:{value:0},cosmicTravel:{value:0},coverage:{value:0},daylight:{value:0},opening:{value:0},furnace:{value:0},cathedral:{value:0},crown:{value:0},travel:{value:0},furnaceHeight:{value:0},cathedralRise:{value:0},
   };
   private motion:SkyMotion='full';
   get diagnostics(){return {time:this.state.time,environmentTime:this.state.environmentTime,cosmic:this.state.cosmic,chapter:this.state.cosmic>.5?'The Cosmic Expanse':DESCENT_CHAPTERS[this.state.chapter].name,blend:this.state.blend,menu:this.uniforms.menu.value===1,motion:this.motion,octaves:this.uniforms.octaves.value,travel:this.uniforms.travel.value};}
+  get cosmicTexture(){return this.uniforms.galaxy.value;}
+  get veilTexture(){return this.uniforms.veilClouds.value;}
+  get reflectionTexture(){return this.uniforms.stormSky.value;}
+  get reflectionTravel(){return this.uniforms.travel.value;}
   configure(quality:string,motion:SkyMotion='full'){this.uniforms.octaves.value=quality==='low'?2:3;this.motion=motion;}
   constructor(){
     const material=new THREE.ShaderMaterial({
       uniforms:this.uniforms,side:THREE.BackSide,depthWrite:false,fog:false,toneMapped:false,
       vertexShader:`varying vec3 skyDirection;void main(){skyDirection=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_Position.z=gl_Position.w;}`,
       fragmentShader:`
+        ${VEIL_RADIANCE}
+        uniform float veilAmount;
         uniform float cosmic,cosmicTravel,time,menu,octaves,detail,coverage,daylight,opening,furnace,cathedral,crown,travel,furnaceHeight,cathedralRise;
         uniform sampler2D galaxy,ashSky,stormSky,furnaceSky,cathedralSky;
         uniform vec2 weatherWeights,depthWeights;
@@ -114,6 +121,7 @@ export class AbyssSky {
           vec3 d=normalize(skyDirection);
           if(menu>.5){gl_FragColor=vec4(abyss(d),1.);return;}
           if(cosmic>.99999){gl_FragColor=vec4(cosmos(d),1.);return;}
+          if(veilAmount>.99999){gl_FragColor=vec4(veilRadiance(d,0.),1.);return;}
           float weather=weatherWeights.x+weatherWeights.y;
           float depth=depthWeights.x+depthWeights.y;
           if(weather>.99999&&opening<.00001){
@@ -167,6 +175,7 @@ export class AbyssSky {
             color*=1.-clamp(column+arch*.8,0.,1.)*cathedral*.65*(1.-depthWeights.y);
           }
           if(crown>.001){float crownBand=exp(-abs(d.y-.76-.024*sin(az*5.))*65.);color+=vec3(.029,.009,.013)*crownBand*broken*crown;}
+          if(veilAmount>.001)color=mix(color,veilRadiance(d,0.),veilAmount);
           if(cosmic>.001)color=mix(color,cosmos(d),cosmic);
           // Keep the atmosphere below the bloom threshold.
           gl_FragColor=vec4(clamp(color,vec3(0.),vec3(.95)),1.);
@@ -183,6 +192,7 @@ export class AbyssSky {
       load(this.uniforms.galaxy,'/assets/environment/cosmic-galaxy-v1.png'),
       load(this.uniforms.ashSky,'/assets/environment/ash-sky-v1.png'),
       load(this.uniforms.stormSky,'/assets/environment/cloud-grave-v1.png'),
+      load(this.uniforms.veilClouds,'/assets/environment/veil-sky-v1.png'),
       load(this.uniforms.furnaceSky,'/assets/environment/furnace-sky-v1.png'),
       load(this.uniforms.cathedralSky,'/assets/environment/cathedral-sky-v1.png'),
     ]).then(()=>{});
@@ -193,7 +203,8 @@ export class AbyssSky {
   }
   update(camera:THREE.Camera,time:number,menu=false){
     this.mesh.position.copy(camera.position);descentAt(time,this.state);
-    const u=this.uniforms,s=this.state;u.menu.value=menu?1:0;this.time.value=this.motion==='reduced'?0:menu?time:s.environmentTime;
+    const u=this.uniforms,s=this.state;u.menu.value=menu?1:0;
+    u.veilAmount.value=menu?0:veilAt(time,this.state);u.veilClock.value=this.motion==='reduced'?0:Math.max(0,Math.min(133,time-126));this.time.value=this.motion==='reduced'?0:menu?time:s.environmentTime;
     u.weatherWeights.value.set(s.chapter===0?1-s.blend:0,s.chapter===0?s.blend:s.chapter===1?1-s.blend:0);
     u.depthWeights.value.set(s.chapter===2?s.blend:s.chapter===3?1-s.blend:0,s.chapter===3?s.blend:s.chapter===4?1-s.blend:0);
     u.cosmic.value=menu?0:s.cosmic;u.cosmicTravel.value=this.motion==='reduced'?0:s.cosmicTravel;

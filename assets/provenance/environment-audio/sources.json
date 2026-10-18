@@ -1,0 +1,118 @@
+[
+  {
+    "library": "344 Audio - Haunting Ambiences Vol. 2",
+    "url": "https://gamesounds.xyz/Sonniss.com%20-%20GDC%202021-2023%20-%20Game%20Audio%20Bundle/344%20Audio%20-%20Haunting%20Ambiences%20Vol.%202/Strong%20Wind%20Gusts%2C%20Arctic%2C%20Polar%2C%20Icy%2C%20Endless.wav",
+    "name": "Strong Wind Gusts, Arctic, Polar, Icy, Endless.wav",
+    "file": "assets/_sources/studio-audio/environment/wind.wav",
+    "sourceByteRange": [
+      2305026,
+      71425025
+    ],
+    "excerptOffsetSeconds": 4,
+    "excerptDuration": 120,
+    "license": "Sonniss GDC bundle v2 (2026-08-27)",
+    "licenseURL": "https://sonniss.com/gdc-bundle-license/",
+    "retrieved": "2026-10-18",
+    "sha256": "9495caa83488c99b8a43eb4cbf8150c8822948fe6a5226fdfdeb9304084af7ab"
+  },
+  {
+    "library": "344 Audio - Haunting Ambiences Vol. 2",
+    "url": "https://gamesounds.xyz/Sonniss.com%20-%20GDC%202021-2023%20-%20Game%20Audio%20Bundle/344%20Audio%20-%20Haunting%20Ambiences%20Vol.%202/Super%20Low%20Rumbles%2C%20Apocalypse%2C%20Underwater%2C%20Groans.wav",
+    "name": "Super Low Rumbles, Apocalypse, Underwater, Groans.wav",
+    "file": "assets/_sources/studio-audio/environment/rumble.wav",
+    "sourceByteRange": [
+      2305026,
+      71425025
+    ],
+    "excerptOffsetSeconds": 4,
+    "excerptDuration": 120,
+    "license": "Sonniss GDC bundle v2 (2026-08-27)",
+    "licenseURL": "https://sonniss.com/gdc-bundle-license/",
+    "retrieved": "2026-10-18",
+    "sha256": "819113afaecd7ef742d86cb573a716f6aa59be543cc10265f186f1801d7cf9a4"
+  },
+  {
+    "library": "Systematic Sound - Tonal Elements Obscurum \u2013 Dark Drones",
+    "url": "https://gamesounds.xyz/Sonniss.com%20-%20GDC%202021-2023%20-%20Game%20Audio%20Bundle/Systematic%20Sound%20-%20Tonal%20Elements%20Obscurum%20%E2%80%93%20Dark%20Drones/Dark%20Drone%20Intensive%20Electric%20Waves.wav",
+    "name": "Dark Drone Intensive Electric Waves.wav",
+    "file": "assets/_sources/studio-audio/environment/electric.wav",
+    "sourceByteRange": [
+      2304716,
+      71424715
+    ],
+    "excerptOffsetSeconds": 4,
+    "excerptDuration": 120,
+    "license": "Sonniss GDC bundle v2 (2026-08-27)",
+    "licenseURL": "https://sonniss.com/gdc-bundle-license/",
+    "retrieved": "2026-10-18",
+    "sha256": "a5ac3b53c18fba02babd529ecb9f6722d6ad56cd56a0480e5d9c6c0ae4e4eb7e"
+  },
+  {
+    "library": "Systematic Sound - Tonal Elements Obscurum \u2013 Dark Drones",
+    "url": "https://gamesounds.xyz/Sonniss.com%20-%20GDC%202021-2023%20-%20Game%20Audio%20Bundle/Systematic%20Sound%20-%20Tonal%20Elements%20Obscurum%20%E2%80%93%20Dark%20Drones/Dark%20Drone%20Deep%20Waves%20Of%20Darkness.wav",
+    "name": "Dark Drone Deep Waves Of Darkness.wav",
+    "file": "assets/_sources/studio-audio/environment/space.wav",
+    "sourceByteRange": [
+      2304716,
+      71424715
+    ],
+    "excerptOffsetSeconds": 4,
+    "excerptDuration": 120,
+    "license": "Sonniss GDC bundle v2 (2026-08-27)",
+    "licenseURL": "https://sonniss.com/gdc-bundle-license/",
+    "retrieved": "2026-10-18",
+    "sha256": "641fe17bdf38871344cba95ea636b4088147f4e8a283fc157b42852931894dab"
+  },
+  {
+    "library": "Justsoundeffects - Cinematic Drones",
+    "url": "https://gamesounds.xyz/Sonniss.com%20-%20GDC%202021-2023%20-%20Game%20Audio%20Bundle/Justsoundeffects%20-%20Cinematic%20Drones/DSGNDron_Mystery%20Bells_JSE_CD.wav",
+    "name": "DSGNDron_Mystery Bells_JSE_CD.wav",
+    "file": "assets/_sources/studio-audio/environment/bells.wav",
+    "sourceByteRange": [
+      2304656,
+      71424655
+    ],
+    "excerptOffsetSeconds": 4,
+    "excerptDuration": 120,
+    "license": "Sonniss GDC bundle v2 (2026-08-27)",
+    "licenseURL": "https://sonniss.com/gdc-bundle-license/",
+    "retrieved": "2026-10-18",
+    "sha256": "869d479463c0d7540606cf458efbc3a2900e7aa8d58e69dfaca1126a943d426b"
+  },
+  {
+    "library": "Justsoundeffects - Cinematic Drones",
+    "url": "https://gamesounds.xyz/Sonniss.com%20-%20GDC%202021-2023%20-%20Game%20Audio%20Bundle/Justsoundeffects%20-%20Cinematic%20Drones/DSGNDron_Slow%20Pulse%20Drone_JSE_CD.wav",
+    "name": "DSGNDron_Slow Pulse Drone_JSE_CD.wav",
+    "file": "assets/_sources/studio-audio/environment/pulse.wav",
+    "sourceByteRange": [
+      2304656,
+      71424655
+    ],
+    "excerptOffsetSeconds": 4,
+    "excerptDuration": 120,
+    "license": "Sonniss GDC bundle v2 (2026-08-27)",
+    "licenseURL": "https://sonniss.com/gdc-bundle-license/",
+    "retrieved": "2026-10-18",
+    "sha256": "3e9514fb75acc021ffa5e43372c5faf90b95f25536ccf323043c9c30f100cf2b"
+  },
+  {
+    "name": "Big branching fire #3",
+    "author": "Joseph SARDIN",
+    "url": "https://bigsoundbank.com/UPLOAD/bwf-en/0989.wav",
+    "page": "https://bigsoundbank.com/big-branching-fire-3-s0989.html",
+    "license": "CC0-1.0",
+    "file": "assets/_sources/studio-audio/environment/fire.wav",
+    "sha256": "a4c0b318fba2547ec794b9798b7962a4d72fa40bcf94eac5e1f24cf853b68c44",
+    "retrieved": "2026-10-18"
+  },
+  {
+    "name": "Rain and Thunder #2",
+    "author": "Joseph SARDIN",
+    "url": "https://bigsoundbank.com/UPLOAD/bwf-en/0740.wav",
+    "page": "https://bigsoundbank.com/rain-and-storm-2-s0740.html",
+    "license": "CC0-1.0",
+    "file": "assets/_sources/studio-audio/environment/thunder.wav",
+    "sha256": "36847b8eaf2107ea3a811e44081f3d988064400e18b6cc942230947371152933",
+    "retrieved": "2026-10-18"
+  }
+]

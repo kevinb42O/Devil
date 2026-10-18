@@ -1,0 +1,143 @@
+{
+  "reports": [
+    {
+      "file": "abyss-daggers-teaser-master.mp4",
+      "width": 1920,
+      "height": 1080,
+      "duration": 75,
+      "seeks": [
+        {
+          "time": 0.3,
+          "ready": 4,
+          "meanRGB": 47.804837962962964
+        },
+        {
+          "time": 8,
+          "ready": 4,
+          "meanRGB": 46.75231481481482
+        },
+        {
+          "time": 20,
+          "ready": 4,
+          "meanRGB": 58.30657407407407
+        },
+        {
+          "time": 34,
+          "ready": 4,
+          "meanRGB": 30.315
+        },
+        {
+          "time": 42,
+          "ready": 4,
+          "meanRGB": 24.384120370370372
+        },
+        {
+          "time": 49,
+          "ready": 4,
+          "meanRGB": 67.03944444444444
+        },
+        {
+          "time": 56,
+          "ready": 4,
+          "meanRGB": 38.702268518518515
+        },
+        {
+          "time": 60,
+          "ready": 4,
+          "meanRGB": 75.1005787037037
+        },
+        {
+          "time": 65,
+          "ready": 4,
+          "meanRGB": 49.00969907407407
+        },
+        {
+          "time": 68,
+          "ready": 4,
+          "meanRGB": 83.67715277777778
+        },
+        {
+          "time": 72.5,
+          "ready": 4,
+          "meanRGB": 12.577083333333333
+        },
+        {
+          "time": 74,
+          "ready": 4,
+          "meanRGB": 12.593217592592593
+        }
+      ],
+      "playedToEnd": true
+    },
+    {
+      "file": "abyss-daggers-teaser-share.mp4",
+      "width": 1920,
+      "height": 1080,
+      "duration": 75.008,
+      "seeks": [
+        {
+          "time": 0.3,
+          "ready": 4,
+          "meanRGB": 47.955162037037034
+        },
+        {
+          "time": 8,
+          "ready": 4,
+          "meanRGB": 46.893541666666664
+        },
+        {
+          "time": 20,
+          "ready": 4,
+          "meanRGB": 58.367847222222224
+        },
+        {
+          "time": 34,
+          "ready": 4,
+          "meanRGB": 30.36951388888889
+        },
+        {
+          "time": 42,
+          "ready": 4,
+          "meanRGB": 24.409699074074073
+        },
+        {
+          "time": 49,
+          "ready": 4,
+          "meanRGB": 67.15701388888888
+        },
+        {
+          "time": 56,
+          "ready": 4,
+          "meanRGB": 38.69715277777778
+        },
+        {
+          "time": 60,
+          "ready": 4,
+          "meanRGB": 75.14099537037038
+        },
+        {
+          "time": 65,
+          "ready": 4,
+          "meanRGB": 49.048680555555556
+        },
+        {
+          "time": 68,
+          "ready": 4,
+          "meanRGB": 83.71666666666667
+        },
+        {
+          "time": 72.5,
+          "ready": 4,
+          "meanRGB": 12.578055555555556
+        },
+        {
+          "time": 74,
+          "ready": 4,
+          "meanRGB": 12.594351851851853
+        }
+      ],
+      "playedToEnd": true
+    }
+  ],
+  "errors": []
+}

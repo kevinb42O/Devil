@@ -1,0 +1,50 @@
+{
+  "meteorDifference": 0.00010551697530864198,
+  "active": {
+    "amount": 1,
+    "clock": 8,
+    "visible": true,
+    "fragments": 180,
+    "dust": 700,
+    "meteors": true,
+    "reduced": false
+  },
+  "low": {
+    "amount": 1,
+    "clock": 0,
+    "visible": true,
+    "fragments": 72,
+    "dust": 220,
+    "meteors": false,
+    "reduced": true
+  },
+  "outside": {
+    "amount": 0,
+    "clock": 0,
+    "visible": false,
+    "fragments": 72,
+    "dust": 220,
+    "meteors": false,
+    "reduced": true
+  },
+  "difference": 7.185282021604938,
+  "motion": 2.4039581404320987,
+  "paused": 0,
+  "rewind": 0,
+  "reducedClock": 0,
+  "reducedDifference": 0,
+  "reducedHighMeteors": false,
+  "laterEnvironmentDifference": 0,
+  "extraCalls": 7,
+  "performance": {
+    "baseline": {
+      "calls": 50,
+      "medianMs": 1.100000023841858
+    },
+    "cosmic": {
+      "calls": 57,
+      "medianMs": 1
+    }
+  },
+  "errors": []
+}

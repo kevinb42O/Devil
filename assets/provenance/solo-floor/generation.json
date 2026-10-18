@@ -1,0 +1,12 @@
+{
+  "method": "Built-in image_gen.imagegen",
+  "created": "2026-10-18",
+  "file": "public/assets/materials/solo-sanctuary/sanctuary-basalt-c521541c.png",
+  "width": 1254,
+  "height": 1254,
+  "bytes": 4249459,
+  "sha256": "3d4bce8829f34139e524c8a8b519862d9f13395f7211d0259e157ee40edcab72",
+  "prompt": "Use case: photorealistic-natural. Asset type: a seamless physically based GAME MATERIAL BASE COLOR texture, square 2048x2048, edge-to-edge, for a premium moonlit medieval sanctuary floor. Primary request: an exquisitely detailed, natural midnight-grey basalt / blue-grey limestone stone surface, honed by centuries of footsteps, elegant and tactile. This is the surface of one continuous stone material BEFORE paving joints are cut in the engine. Photogrammetry-quality fine mineral grain, tiny silver-grey mica inclusions, subtle smoky blue slate layers, rare extremely fine muted warm calcite threads, minute shallow pits, worn satin high points and darker porous recesses. Restrained medium-dark charcoal grey base (base color average around RGB 90–115), delicate local value variation with some softly lighter mineral clouds. High-end physically believable material, refined and ancient, not distressed rubble. Composition: perfectly orthographic straight-down scan, uniform pixel scale, seamless tileable left/right and top/bottom, evenly detailed entire square, no hero feature or central motif. Lighting: flat cross-polarized neutral diffuse lighting, no directional light, no specular reflections, no highlights or baked shadows, no vignette, no perspective. No paving blocks, no grout, no borders, no text, no symbols, no runes, no glowing veins, no lava, no wet puddles, no objects. The game engine will add joints, bevels, roughness and real lantern/moon illumination. Output one square seamless albedo texture only.",
+  "processing": "Unmodified generated PNG copied into the project. Geometry, roughness and subtle relief are computed by the solo-floor renderer.",
+  "scope": "Single-player entrance only"
+}

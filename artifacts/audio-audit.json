@@ -1,6 +1,6 @@
 {
-  "totalDecoded": 249,
-  "used": 240,
+  "totalDecoded": 261,
+  "used": 252,
   "enemies": [
     {
       "kind": "skull",
@@ -13,7 +13,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killskull5"
+        "killskull2"
       ]
     },
     {
@@ -69,7 +69,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killskullblack2"
+        "killskullblack3"
       ]
     },
     {
@@ -230,7 +230,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killspiderling5"
+        "killspiderling1"
       ]
     },
     {
@@ -340,41 +340,46 @@
     {
       "level": 1,
       "source": "studio-horror",
+      "environment": {
+        "active": false,
+        "failed": [],
+        "beds": []
+      },
       "recent": [
-        "killskull3",
-        "killskull5",
         "killskull2",
-        "killskull5",
         "killskull4",
-        "killskull5",
-        "killskull1",
-        "killskull5",
-        "killskull4",
-        "killskull5",
         "killskull2",
         "killskull4",
         "killskull2",
         "killskull5",
         "killskull2",
-        "killskull1",
-        "killskull3",
+        "killskull4",
+        "killskull2",
+        "killskull5",
         "killskull4",
         "killskull1",
-        "killskull2",
-        "killskull3",
         "killskull5",
+        "killskull2",
+        "killskull4",
+        "killskull3",
         "killskull2",
         "killskull3",
         "killskull1",
-        "killskull5",
         "killskull4",
         "killskull1",
+        "killskull3",
+        "killskull5",
+        "killskull2",
+        "killskull1",
+        "killskull2",
+        "killskull1",
+        "killskull4",
         "jump3",
         "weapon1-start",
         "weapon1-stop",
         "shot1alt2"
       ],
-      "loaded": 240,
+      "loaded": 252,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
@@ -385,41 +390,46 @@
     {
       "level": 2,
       "source": "studio-horror",
+      "environment": {
+        "active": false,
+        "failed": [],
+        "beds": []
+      },
       "recent": [
-        "killskull5",
         "killskull2",
-        "killskull3",
         "killskull1",
-        "killskull5",
+        "killskull2",
+        "killskull1",
         "killskull4",
-        "killskull1",
         "jump3",
         "weapon1-start",
         "weapon1-stop",
         "shot1alt2",
         "weapon2-start",
+        "ricochet1",
+        "ricochet4",
+        "ricochet4",
+        "ricochet3",
+        "ricochet1",
+        "ricochet2",
+        "ricochet5",
+        "ricochet2",
+        "ricochet4",
+        "ricochet4",
+        "ricochet3",
+        "ricochet5",
+        "ricochet3",
         "ricochet4",
         "ricochet2",
         "ricochet4",
-        "ricochet5",
-        "ricochet1",
-        "ricochet3",
-        "ricochet1",
-        "ricochet5",
-        "ricochet4",
-        "ricochet5",
-        "ricochet3",
-        "ricochet4",
         "ricochet2",
-        "ricochet2",
-        "ricochet5",
-        "ricochet5",
         "ricochet3",
         "ricochet1",
+        "ricochet5",
         "weapon2-stop",
         "shot2"
       ],
-      "loaded": 240,
+      "loaded": 252,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
@@ -430,86 +440,96 @@
     {
       "level": 3,
       "source": "studio-horror",
+      "environment": {
+        "active": false,
+        "failed": [],
+        "beds": []
+      },
       "recent": [
-        "ricochet5",
         "ricochet4",
-        "ricochet2",
-        "ricochet3",
-        "ricochet2",
-        "ricochet2",
-        "ricochet1",
-        "ricochet2",
-        "ricochet4",
-        "ricochet2",
-        "ricochet5",
         "ricochet5",
         "ricochet3",
-        "ricochet1",
-        "ricochet4",
-        "ricochet3",
+        "ricochet5",
         "ricochet4",
         "ricochet5",
         "ricochet2",
         "ricochet4",
+        "ricochet4",
+        "ricochet5",
+        "ricochet2",
+        "ricochet5",
+        "ricochet5",
+        "ricochet2",
+        "ricochet5",
+        "ricochet2",
         "ricochet3",
+        "ricochet4",
+        "ricochet2",
+        "ricochet2",
+        "ricochet4",
+        "ricochet2",
+        "ricochet1",
+        "ricochet1",
+        "ricochet3",
+        "ricochet3",
+        "ricochet2",
         "ricochet4",
         "ricochet4",
         "ricochet3",
-        "ricochet3",
-        "ricochet1",
-        "ricochet4",
-        "ricochet3",
-        "ricochet1",
-        "ricochet1",
         "weapon3-stop",
-        "shot3"
+        "shot3alt3"
       ],
-      "loaded": 240,
+      "loaded": 252,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
-        "shot3"
+        "shot3alt3"
       ],
       "loops": []
     },
     {
       "level": 4,
       "source": "studio-horror",
+      "environment": {
+        "active": false,
+        "failed": [],
+        "beds": []
+      },
       "recent": [
-        "ricochet3",
-        "ricochet4",
-        "ricochet1",
-        "ricochet2",
-        "ricochet3",
-        "ricochet4",
-        "ricochet1",
-        "ricochet3",
-        "ricochet4",
-        "ricochet2",
-        "ricochet3",
         "ricochet1",
         "ricochet3",
         "ricochet5",
-        "ricochet4",
         "ricochet2",
         "ricochet4",
         "ricochet2",
-        "ricochet2",
-        "ricochet3",
-        "ricochet1",
-        "ricochet2",
-        "ricochet5",
-        "ricochet3",
-        "ricochet3",
         "ricochet5",
         "ricochet4",
+        "ricochet2",
+        "ricochet3",
+        "ricochet2",
+        "ricochet3",
+        "ricochet2",
+        "ricochet1",
+        "ricochet4",
+        "ricochet2",
+        "ricochet2",
+        "ricochet1",
+        "ricochet4",
+        "ricochet3",
         "ricochet5",
+        "ricochet2",
+        "ricochet4",
+        "ricochet4",
+        "ricochet4",
+        "ricochet3",
+        "ricochet4",
+        "ricochet3",
         "ricochet1",
-        "ricochet1",
+        "ricochet3",
         "weapon4-stop",
         "shot4alt2"
       ],
-      "loaded": 240,
+      "loaded": 252,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
@@ -521,138 +541,143 @@
   "rendered": [
     {
       "name": "rapid1",
-      "rms": 0.006931682072534404,
+      "rms": 0.006926936669309393,
       "tail": 0,
-      "peak": 0.02119024656713009
+      "peak": 0.021190419793128967
     },
     {
       "name": "seekrapid1",
-      "rms": 0.0059432587718301925,
+      "rms": 0.005934912128573464,
       "tail": 0,
-      "peak": 0.018876826390624046
+      "peak": 0.018803786486387253
     },
     {
       "name": "shot1",
-      "rms": 0.03941658253282633,
-      "tail": 0.020610330626368523,
-      "peak": 0.14364078640937805
+      "rms": 0.03937164800806523,
+      "tail": 0.020553117617964745,
+      "peak": 0.1435234397649765
     },
     {
       "name": "rapid2",
-      "rms": 0.0069794902750423635,
+      "rms": 0.006972952982954996,
       "tail": 0,
-      "peak": 0.020898791030049324
+      "peak": 0.020899059250950813
     },
     {
       "name": "seekrapid2",
-      "rms": 0.005975594894589109,
+      "rms": 0.005964470237612288,
       "tail": 0,
-      "peak": 0.018101876601576805
+      "peak": 0.01808890327811241
     },
     {
       "name": "shot2",
-      "rms": 0.03731453389208008,
-      "tail": 0.03606430068612099,
-      "peak": 0.11622762680053711
+      "rms": 0.037268284528377854,
+      "tail": 0.03604775294661522,
+      "peak": 0.11594890803098679
     },
     {
       "name": "rapid3",
-      "rms": 0.006943319096287995,
+      "rms": 0.006928875608961194,
       "tail": 0,
-      "peak": 0.021214086562395096
+      "peak": 0.021173754706978798
     },
     {
       "name": "seekrapid3",
-      "rms": 0.005944446459898002,
+      "rms": 0.005924421251355787,
       "tail": 0,
-      "peak": 0.018648916855454445
+      "peak": 0.01864009164273739
     },
     {
       "name": "shot3",
-      "rms": 0.037838897086911995,
-      "tail": 0.03282588720321655,
-      "peak": 0.1667032092809677
+      "rms": 0.03765109897045617,
+      "tail": 0.0325506366789341,
+      "peak": 0.16635724902153015
     },
     {
       "name": "rapid4",
-      "rms": 0.006915017768783269,
+      "rms": 0.006908634681055642,
       "tail": 0,
-      "peak": 0.021108264103531837
+      "peak": 0.021104102954268456
     },
     {
       "name": "seekrapid4",
-      "rms": 0.005928422341790599,
+      "rms": 0.005919771134886321,
       "tail": 0,
-      "peak": 0.018630601465702057
+      "peak": 0.018580423668026924
     },
     {
       "name": "shot4",
-      "rms": 0.03899628051737133,
-      "tail": 0.011948179453611374,
-      "peak": 0.12465216964483261
+      "rms": 0.03891752591183629,
+      "tail": 0.011928596533834934,
+      "peak": 0.12462089210748672
     },
     {
       "name": "rapid5",
-      "rms": 0.007133462712229081,
+      "rms": 0.0071286854854002175,
       "tail": 0,
-      "peak": 0.02067463845014572
+      "peak": 0.02066732943058014
     },
     {
       "name": "seekrapid5",
-      "rms": 0.0059997011032224355,
+      "rms": 0.005992649588596594,
       "tail": 0,
-      "peak": 0.01836976408958435
+      "peak": 0.01836317777633667
     },
     {
       "name": "shot5",
-      "rms": 0.043341844715037735,
-      "tail": 0.01446027122437954,
-      "peak": 0.12463198602199554
+      "rms": 0.04332156417496534,
+      "tail": 0.014414645731449127,
+      "peak": 0.12450806051492691
     },
     {
       "name": "rapid6",
-      "rms": 0.0067605980006974755,
+      "rms": 0.006755315625880986,
       "tail": 0,
-      "peak": 0.020743049681186676
+      "peak": 0.02069738134741783
     },
     {
       "name": "seekrapid6",
-      "rms": 0.005821843014142893,
+      "rms": 0.005812963962337743,
       "tail": 0,
-      "peak": 0.018666813150048256
+      "peak": 0.018628595396876335
     },
     {
       "name": "shot6",
-      "rms": 0.04403496247721056,
-      "tail": 0.037417300045490265,
-      "peak": 0.14025039970874786
+      "rms": 0.043967533623048005,
+      "tail": 0.03725931793451309,
+      "peak": 0.14003321528434753
     },
     {
       "name": "rapid7",
-      "rms": 0.007032658839703694,
+      "rms": 0.007029793577902154,
       "tail": 0,
-      "peak": 0.022340180352330208
+      "peak": 0.02233542501926422
     },
     {
       "name": "seekrapid7",
-      "rms": 0.0060168000688027995,
+      "rms": 0.006011879566261615,
       "tail": 0,
-      "peak": 0.019078655168414116
+      "peak": 0.019069993868470192
     },
     {
       "name": "shot7",
-      "rms": 0.037445241902861394,
-      "tail": 0.02099861018359661,
-      "peak": 0.12322693318128586
+      "rms": 0.03741308317727385,
+      "tail": 0.020976966246962547,
+      "peak": 0.1230810284614563
     }
   ],
   "final": {
     "source": "studio-horror",
+    "environment": {
+      "active": false,
+      "failed": [],
+      "beds": []
+    },
     "recent": [
       "daggerhit1",
       "eggburst2",
       "daggerhit1",
-      "killspiderling5",
+      "killspiderling1",
       "spawncentipede",
       "damagecentipede",
       "killcentipede",
@@ -679,10 +704,10 @@
       "damagesquid",
       "damagesquid2",
       "damagesquid3",
-      "crystalhit3",
+      "crystalhit2",
       "shot1alt4"
     ],
-    "loaded": 240,
+    "loaded": 252,
     "failed": [],
     "oneShots": 0,
     "oneShotNames": [],

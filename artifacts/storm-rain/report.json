@@ -1,0 +1,61 @@
+{
+  "dry": {
+    "rain": 0,
+    "wetness": 0,
+    "visible": false,
+    "streaks": true,
+    "instances": 7200,
+    "quality": "high",
+    "reduced": false,
+    "coverage": "entire-arena",
+    "skyReflection": true
+  },
+  "wet": {
+    "rain": 1,
+    "wetness": 1,
+    "visible": true,
+    "streaks": true,
+    "instances": 7200,
+    "quality": "high",
+    "reduced": false,
+    "coverage": "entire-arena",
+    "skyReflection": true
+  },
+  "low": {
+    "rain": 1,
+    "wetness": 1,
+    "visible": true,
+    "streaks": false,
+    "instances": 3000,
+    "quality": "low",
+    "reduced": true,
+    "coverage": "entire-arena",
+    "skyReflection": true
+  },
+  "outside": {
+    "rain": 0,
+    "wetness": 0,
+    "visible": false,
+    "streaks": false,
+    "instances": 3000,
+    "quality": "low",
+    "reduced": true,
+    "coverage": "entire-arena",
+    "skyReflection": true
+  },
+  "motion": 1.051846450617284,
+  "surface": 6.196931712962963,
+  "frozen": 0,
+  "rewind": 0,
+  "extraCalls": 3,
+  "performance": {
+    "baseline": {
+      "calls": 46,
+      "medianMs": 0.800000011920929
+    },
+    "rain": {
+      "calls": 49,
+      "medianMs": 0.5999999642372131
+    }
+  }
+}

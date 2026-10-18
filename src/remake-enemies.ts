@@ -41,7 +41,7 @@ export class RemakeEnemies{
  private towerMaterials=new Map<string,THREE.MeshStandardMaterial>();
  private towerMaterial(tier:number,finish:TowerFinish){
   const key=`${tier}-${finish}`;let material=this.towerMaterials.get(key);
-  if(!material){material=createTowerMaterial(tier,finish,this.environment,this.surfaceLightStrength);this.towerMaterials.set(key,material);}
+  if(!material){material=createTowerMaterial(tier,finish,this.environment);this.towerMaterials.set(key,material);}
   return material;
  }
  private crystal=new THREE.OctahedronGeometry(1,0);

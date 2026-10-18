@@ -1,0 +1,184 @@
+{
+  "frames": [
+    {
+      "name": "rain",
+      "diagnostics": {
+        "amount": 0,
+        "clock": 0,
+        "visible": false,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 29.605002344325186
+      },
+      "glError": 0
+    },
+    {
+      "name": "arrival",
+      "diagnostics": {
+        "amount": 0.5,
+        "clock": 9,
+        "visible": true,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 28.907502333931625
+      },
+      "glError": 0
+    },
+    {
+      "name": "veil",
+      "diagnostics": {
+        "amount": 1,
+        "clock": 54,
+        "visible": true,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 28.210002323538063
+      },
+      "glError": 0
+    },
+    {
+      "name": "hero",
+      "diagnostics": {
+        "amount": 1,
+        "clock": 54,
+        "visible": true,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 28.210002323538063
+      },
+      "glError": 0
+    },
+    {
+      "name": "floor",
+      "diagnostics": {
+        "amount": 1,
+        "clock": 54,
+        "visible": true,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 28.210002323538063
+      },
+      "glError": 0
+    },
+    {
+      "name": "tear",
+      "diagnostics": {
+        "amount": 1,
+        "clock": 54,
+        "visible": true,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 28.210002323538063
+      },
+      "glError": 0
+    },
+    {
+      "name": "rim",
+      "diagnostics": {
+        "amount": 1,
+        "clock": 54,
+        "visible": true,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 28.210002323538063
+      },
+      "glError": 0
+    },
+    {
+      "name": "late",
+      "diagnostics": {
+        "amount": 1,
+        "clock": 104,
+        "visible": true,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 27.435002311989663
+      },
+      "glError": 0
+    },
+    {
+      "name": "furnace",
+      "diagnostics": {
+        "amount": 0,
+        "clock": 133,
+        "visible": false,
+        "quality": "high",
+        "reduced": false,
+        "fragments": 160,
+        "monolithPieces": 30,
+        "platformRadius": 26.815002302750944
+      },
+      "glError": 0
+    }
+  ],
+  "checks": {
+    "paused": 0,
+    "rewind": 0,
+    "joins": [
+      {
+        "time": 126,
+        "difference": 0.04585281635802469
+      },
+      {
+        "time": 144,
+        "difference": 0.00830150462962963
+      },
+      {
+        "time": 241,
+        "difference": 0.008363425925925925
+      },
+      {
+        "time": 259,
+        "difference": 0.020613811728395062
+      }
+    ],
+    "extraCalls": 3,
+    "low": {
+      "amount": 1,
+      "clock": 0,
+      "visible": true,
+      "quality": "low",
+      "reduced": true,
+      "fragments": 64,
+      "monolithPieces": 30,
+      "platformRadius": 28.210002323538063
+    },
+    "reduced": {
+      "amount": 1,
+      "clock": 0,
+      "visible": true,
+      "quality": "low",
+      "reduced": true,
+      "fragments": 64,
+      "monolithPieces": 30,
+      "platformRadius": 27.900002318918705
+    },
+    "outside": {
+      "amount": 0,
+      "clock": 0,
+      "visible": false,
+      "quality": "low",
+      "reduced": true,
+      "fragments": 64,
+      "monolithPieces": 30,
+      "platformRadius": 26.815002302750944
+    }
+  },
+  "errors": []
+}

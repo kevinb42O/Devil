@@ -1,0 +1,35 @@
+Fast Steps on Concrete (sound 1318)
+Author: Joseph SARDIN / BigSoundBank (LaSonotheque)
+Source: https://bigsoundbank.com/fast-steps-on-concrete-s1318.html
+Original: https://bigsoundbank.com/UPLOAD/bwf-en/1318.wav
+Retrieved: 2026-10-18
+License: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+
+The author releases this recording under CC0, allowing use, modification,
+and redistribution, including commercial use, without attribution requirements.
+Credit is retained voluntarily. The source page is archived at
+assets/provenance/footsteps/bigsoundbank-1318.html.
+
+Game derivatives: footstep-stone1.wav through footstep-stone12.wav.
+Edits: individual step extraction, 110 Hz high-pass / 6.5 kHz low-pass,
+level calibration, main impact aligned at 8 ms, 200 ms gestures with release fades,
+mono 48 kHz 16-bit PCM. No unrelated recordings are mixed into these files.
+See tools/build-footstep-audio.py for reproducible mastering and exact slices.
+
+Wet-footstep bank: Shoes in the Water (sound 690)
+Author: Joseph SARDIN / BigSoundBank (LaSonotheque)
+Source: https://bigsoundbank.com/shoes-in-the-water-s0690.html
+Original: https://bigsoundbank.com/UPLOAD/bwf-en/0690.wav
+Retrieved: 2026-10-18
+License: CC0 1.0 Universal
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Game derivatives: footstep-wet1.wav through footstep-wet12.wav.
+Original mono 48 kHz / 16-bit recording preserved at
+assets/_sources/footsteps/joseph-sardin-0690.wav; source page archived at
+assets/provenance/footsteps/bigsoundbank-0690.html.
+Mastering: tools/build-wet-footstep-audio.py. Individual water/shoe contacts,
+110 Hz high-pass, 6.5 kHz low-pass, main impact aligned at 8 ms, 200 ms
+length and 40 ms fade. Same .015 catalog gain and .70 peak ceiling as the
+approved quiet dry bank. No baked reverb or unrelated sound sources.

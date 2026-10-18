@@ -2698,5 +2698,197 @@
       "assets/_sources/studio-audio/56e09d6ecd7f.wav"
     ],
     "changes": "Single recorded small-glass contact, cut to the first 180 ms before scattered debris, with three subtle speed variations. Band limited 350\u20138000 Hz with a damped contact decay. Diffuse stereo reverb: 550 ms reflection window, wet level .42, gain .36. No ceramic, bell, oscillator or added musical layer; full fracture remains separate."
+  },
+  "footstep-stone1": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 0.69,
+    "sourceStartSeconds": 0.688292
+  },
+  "footstep-stone2": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 1.94,
+    "sourceStartSeconds": 1.940979
+  },
+  "footstep-stone3": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 2.56,
+    "sourceStartSeconds": 2.560646
+  },
+  "footstep-stone4": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 3.17,
+    "sourceStartSeconds": 3.166437
+  },
+  "footstep-stone5": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 4.39,
+    "sourceStartSeconds": 4.38475
+  },
+  "footstep-stone6": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 4.99,
+    "sourceStartSeconds": 4.986271
+  },
+  "footstep-stone7": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 6.87,
+    "sourceStartSeconds": 6.864229
+  },
+  "footstep-stone8": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 8.67,
+    "sourceStartSeconds": 8.665625
+  },
+  "footstep-stone9": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 9.24,
+    "sourceStartSeconds": 9.234208
+  },
+  "footstep-stone10": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 9.85,
+    "sourceStartSeconds": 9.844146
+  },
+  "footstep-stone11": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 11.01,
+    "sourceStartSeconds": 11.006583
+  },
+  "footstep-stone12": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-1318.wav"
+    ],
+    "changes": "Individual real concrete shoe gesture; 110 Hz high-pass, 6.5 kHz low-pass, RMS/peak calibrated, main impact aligned at 8 ms, 200 ms gesture with 40 ms release fade, subdued gain. Dry mono for runtime HRTF and shared room sends.",
+    "sourcePeakSeconds": 11.63,
+    "sourceStartSeconds": 11.626646
+  },
+  "footstep-wet1": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 0.155,
+    "sourceStartSeconds": 0.147771
+  },
+  "footstep-wet2": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 0.83,
+    "sourceStartSeconds": 0.825771
+  },
+  "footstep-wet3": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 1.815,
+    "sourceStartSeconds": 1.807937
+  },
+  "footstep-wet4": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 2.64,
+    "sourceStartSeconds": 2.626604
+  },
+  "footstep-wet5": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 3.55,
+    "sourceStartSeconds": 3.543479
+  },
+  "footstep-wet6": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 4.405,
+    "sourceStartSeconds": 4.402146
+  },
+  "footstep-wet7": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 5.435,
+    "sourceStartSeconds": 5.431146
+  },
+  "footstep-wet8": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 6.37,
+    "sourceStartSeconds": 6.363396
+  },
+  "footstep-wet9": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 7.245,
+    "sourceStartSeconds": 7.243417
+  },
+  "footstep-wet10": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 8.205,
+    "sourceStartSeconds": 8.202708
+  },
+  "footstep-wet11": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 9.245,
+    "sourceStartSeconds": 9.239792
+  },
+  "footstep-wet12": {
+    "sources": [
+      "assets/_sources/footsteps/joseph-sardin-0690.wav"
+    ],
+    "changes": "Real shoe/water gesture; 110 Hz high-pass and 6.5 kHz low-pass; main impact aligned at 8 ms; 200 ms gesture with 40 ms fade; RMS and peak bounded to approved dry footstep level; no baked room reverb.",
+    "sourcePeakSeconds": 10.01,
+    "sourceStartSeconds": 10.008313
   }
 }

@@ -9,6 +9,9 @@
         "steps": 40,
         "time": 0,
         "entrance": true,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 0,
         "volumeSize": [
           320,
           180
@@ -28,8 +31,8 @@
         "pulse": 0.89,
         "lights": 0
       },
-      "meanDifference": 4.5296032262731485,
-      "fencedMs": 0.9000000059604645,
+      "meanDifference": 4.060923394097222,
+      "fencedMs": 1.600000023841858,
       "glError": 0,
       "calls": 79
     },
@@ -42,6 +45,9 @@
         "steps": 40,
         "time": 0,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 0,
         "volumeSize": [
           320,
           180
@@ -61,10 +67,10 @@
         "pulse": 0.89,
         "lights": 0
       },
-      "meanDifference": 6.712150245949074,
-      "fencedMs": 0.9000000059604645,
+      "meanDifference": 4.988676938657408,
+      "fencedMs": 5.800000011920929,
       "glError": 0,
-      "calls": 19
+      "calls": 26
     },
     {
       "quality": "high",
@@ -75,6 +81,9 @@
         "steps": 40,
         "time": 19,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 19,
         "volumeSize": [
           320,
           180
@@ -94,10 +103,10 @@
         "pulse": 0.999197976150786,
         "lights": 0
       },
-      "meanDifference": 5.173454499421296,
-      "fencedMs": 0.30000001192092896,
+      "meanDifference": 3.843205295138889,
+      "fencedMs": 4.800000011920929,
       "glError": 0,
-      "calls": 19
+      "calls": 26
     },
     {
       "quality": "high",
@@ -108,6 +117,9 @@
         "steps": 40,
         "time": 30,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 30,
         "volumeSize": [
           320,
           180
@@ -127,10 +139,10 @@
         "pulse": 0.7994717747516978,
         "lights": 0
       },
-      "meanDifference": 6.7851374421296295,
-      "fencedMs": 0.7999999821186066,
+      "meanDifference": 6.447641420717592,
+      "fencedMs": 3.699999988079071,
       "glError": 0,
-      "calls": 19
+      "calls": 29
     },
     {
       "quality": "high",
@@ -141,6 +153,9 @@
         "steps": 40,
         "time": 0,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 0,
         "volumeSize": [
           320,
           180
@@ -160,10 +175,10 @@
         "pulse": 0.89,
         "lights": 0
       },
-      "meanDifference": 9.683499348958334,
-      "fencedMs": 0.4000000059604645,
+      "meanDifference": 5.426834490740741,
+      "fencedMs": 4.600000023841858,
       "glError": 0,
-      "calls": 19
+      "calls": 26
     },
     {
       "quality": "low",
@@ -174,6 +189,9 @@
         "steps": 20,
         "time": 0,
         "entrance": true,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 0,
         "volumeSize": [
           320,
           180
@@ -193,8 +211,8 @@
         "pulse": 0.89,
         "lights": 0
       },
-      "meanDifference": 4.861799406828704,
-      "fencedMs": 0.20000001788139343,
+      "meanDifference": 4.287161458333333,
+      "fencedMs": 3.300000011920929,
       "glError": 0,
       "calls": 66
     },
@@ -207,6 +225,9 @@
         "steps": 20,
         "time": 0,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 0,
         "volumeSize": [
           320,
           180
@@ -226,10 +247,10 @@
         "pulse": 0.89,
         "lights": 0
       },
-      "meanDifference": 6.734798538773148,
-      "fencedMs": 0.30000001192092896,
+      "meanDifference": 4.951158130787037,
+      "fencedMs": 4,
       "glError": 0,
-      "calls": 6
+      "calls": 13
     },
     {
       "quality": "low",
@@ -240,6 +261,9 @@
         "steps": 20,
         "time": 19,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 19,
         "volumeSize": [
           320,
           180
@@ -259,10 +283,10 @@
         "pulse": 0.999197976150786,
         "lights": 0
       },
-      "meanDifference": 5.188178891782408,
-      "fencedMs": 0.29999998211860657,
+      "meanDifference": 3.8222623697916664,
+      "fencedMs": 6.199999988079071,
       "glError": 0,
-      "calls": 6
+      "calls": 13
     },
     {
       "quality": "low",
@@ -273,6 +297,9 @@
         "steps": 20,
         "time": 30,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 30,
         "volumeSize": [
           320,
           180
@@ -292,10 +319,10 @@
         "pulse": 0.7994717747516978,
         "lights": 0
       },
-      "meanDifference": 6.823526837384259,
-      "fencedMs": 0.20000001788139343,
+      "meanDifference": 6.420676359953704,
+      "fencedMs": 4.699999988079071,
       "glError": 0,
-      "calls": 6
+      "calls": 16
     },
     {
       "quality": "low",
@@ -306,6 +333,9 @@
         "steps": 20,
         "time": 0,
         "entrance": false,
+        "heat": 0,
+        "cosmic": 0,
+        "environmentTime": 0,
         "volumeSize": [
           320,
           180
@@ -325,15 +355,15 @@
         "pulse": 0.89,
         "lights": 0
       },
-      "meanDifference": 9.681015986689815,
-      "fencedMs": 0.19999998807907104,
+      "meanDifference": 5.424582248263889,
+      "fencedMs": 6.199999988079071,
       "glError": 0,
-      "calls": 6
+      "calls": 13
     }
   ],
   "depth": {
     "nearDifference": 0,
-    "farDifference": 6
+    "farDifference": 24
   },
   "reduced": {
     "enabled": true,
@@ -341,6 +371,9 @@
     "steps": 20,
     "time": 0,
     "entrance": false,
+    "heat": 0,
+    "cosmic": 0,
+    "environmentTime": 4,
     "volumeSize": [
       320,
       180

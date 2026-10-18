@@ -1,0 +1,212 @@
+{
+  "reports": [
+    {
+      "id": "06-storm-fight",
+      "frames": 146,
+      "duration": 5.005800000011921,
+      "renderFps": 29.166167245925188,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.020151797242900747,
+        0.01497457061871477,
+        0.025381129903799884,
+        0.016785085672504686,
+        0.017596406024156245,
+        0.011413307207755581,
+        0.0215213850453117,
+        0.021752851853359654,
+        0.017778753000886643,
+        0.015077422438506016
+      ],
+      "kills": 13,
+      "hits": 56,
+      "shots": 992,
+      "collected": 74,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 50.030023,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "gibcollectmagic2",
+          "ricochet5",
+          "daggerhit1",
+          "daggerhit1",
+          "ricochet4",
+          "killsuperskull",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet3",
+          "footstep-wet7",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "daggerhit1",
+          "ricochet1",
+          "ricochet4",
+          "daggerhit1",
+          "ricochet5",
+          "ricochet3",
+          "jump1",
+          "ricochet5",
+          "daggerhit1",
+          "ricochet3",
+          "ricochet4",
+          "weapon3-stop",
+          "ricochet1",
+          "ricochet2",
+          "daggerhit1",
+          "killsuperskull",
+          "daggerhit1",
+          "ricochet5",
+          "weapon3-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    },
+    {
+      "id": "14-cathedral",
+      "frames": 152,
+      "duration": 5.021999999988078,
+      "renderFps": 30.266825965822548,
+      "frameP95": 0.033400000000001456,
+      "buffer": [
+        1920,
+        1080
+      ],
+      "rms": [
+        0.01570376286865488,
+        0.012589236114930853,
+        0.016305115260094385,
+        0.014165550869535257,
+        0.012667543227688425,
+        0.011031342984223874,
+        0.009112193263804944,
+        0.010428250119121166,
+        0.01385972572966523,
+        0.02547975234955817
+      ],
+      "kills": 0,
+      "hits": 0,
+      "shots": 0,
+      "collected": 70,
+      "audio": {
+        "source": "studio-horror",
+        "environment": {
+          "active": false,
+          "failed": [],
+          "beds": [
+            {
+              "name": "storm",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 50.030023,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            },
+            {
+              "name": "cathedral",
+              "weight": 0,
+              "duration": 120,
+              "streams": [
+                {
+                  "playing": false,
+                  "time": 53.022803,
+                  "gain": 0,
+                  "ready": 4
+                },
+                {
+                  "playing": false,
+                  "time": 0,
+                  "gain": 0,
+                  "ready": 4
+                }
+              ]
+            }
+          ]
+        },
+        "recent": [
+          "gibcollectmagic2",
+          "ricochet5",
+          "daggerhit1",
+          "daggerhit1",
+          "ricochet4",
+          "killsuperskull",
+          "ricochet2",
+          "daggerhit1",
+          "ricochet3",
+          "footstep-wet7",
+          "ricochet2",
+          "ricochet3",
+          "ricochet1",
+          "daggerhit1",
+          "ricochet1",
+          "ricochet4",
+          "daggerhit1",
+          "ricochet5",
+          "ricochet3",
+          "jump1",
+          "ricochet5",
+          "daggerhit1",
+          "ricochet3",
+          "ricochet4",
+          "weapon3-stop",
+          "ricochet1",
+          "ricochet2",
+          "daggerhit1",
+          "killsuperskull",
+          "daggerhit1",
+          "ricochet5",
+          "weapon3-start"
+        ],
+        "loaded": 264,
+        "failed": [],
+        "oneShots": 0,
+        "oneShotNames": [],
+        "loops": []
+      }
+    }
+  ],
+  "errors": []
+}

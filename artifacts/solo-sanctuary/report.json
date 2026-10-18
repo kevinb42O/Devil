@@ -1,0 +1,50 @@
+{
+  "floorTop": -2.2649764286342133e-9,
+  "floorMean": 27.047602398406774,
+  "brightFraction": 0,
+  "pause": 0,
+  "motion": 2.18021240234375,
+  "rewind": 0,
+  "reducedMotion": 0,
+  "high": {
+    "floor": {
+      "texture": "/assets/materials/solo-sanctuary/sanctuary-basalt-c521541c.png",
+      "slabs": 165,
+      "bevelled": true,
+      "loaded": true,
+      "scope": "single-player-only"
+    },
+    "quality": "high",
+    "reduced": false,
+    "motes": 180,
+    "clock": 10,
+    "sky": "cosmic-expanse",
+    "spaceLoaded": true,
+    "scope": "single-player-only"
+  },
+  "low": {
+    "floor": {
+      "texture": "/assets/materials/solo-sanctuary/sanctuary-basalt-c521541c.png",
+      "slabs": 165,
+      "bevelled": true,
+      "loaded": true,
+      "scope": "single-player-only"
+    },
+    "quality": "low",
+    "reduced": true,
+    "motes": 70,
+    "clock": 0,
+    "sky": "cosmic-expanse",
+    "spaceLoaded": true,
+    "scope": "single-player-only"
+  },
+  "standardFloor": true,
+  "dedicatedTexture": 1254,
+  "slabs": 165,
+  "bevelled": true,
+  "propsMinX": 6.624999821186066,
+  "multiplayerDecor": false,
+  "time": 0,
+  "enemies": 0,
+  "errors": []
+}

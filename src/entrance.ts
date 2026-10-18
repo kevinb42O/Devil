@@ -1,37 +1,32 @@
 import * as THREE from 'three';
-import {GemLighting} from './gem-lighting';
-import {TILE_SIZE} from './arena';
+import {SoloSanctuary} from './solo-sanctuary';
+import {SoloFloor} from './solo-floor';
 import {loadEntranceEnvironment} from './entrance-environment';
 import {SVGLoader} from 'three/addons/loaders/SVGLoader.js';
-import {ENTRANCE_PLATFORM,ENTRANCE_SEAL} from './entrance-layout';
+import {ENTRANCE_SEAL} from './entrance-layout';
 /** A stone threshold suspended in darkness, lit by the ritual seal. */
 export class SinglePlayerEntrance {
   readonly scene=new THREE.Scene();
   readonly seal=new THREE.Group();
   readonly ready:Promise<void>;
-  private platform:THREE.InstancedMesh;
+  readonly sanctuary:SoloSanctuary;
+  readonly floor:SoloFloor;
+  private reduced=false;
   private halo:THREE.Mesh;
   private embers:THREE.Points;
   private light:THREE.PointLight;
   constructor(diffuse:THREE.Texture){
-    this.scene.background=new THREE.Color(0x07090c);
-    this.scene.fog=new THREE.FogExp2(0x07090c,.035);
-    this.scene.add(new THREE.HemisphereLight(0x72665a,0x130907,.55));
-    const stone=new THREE.MeshBasicMaterial({map:diffuse,toneMapped:false});
-    const floorLight=new GemLighting(this.scene,stone);
+    this.scene.background=new THREE.Color(0x080e18);
+    this.scene.fog=new THREE.FogExp2(0x080e18,.027);
+    this.scene.add(new THREE.HemisphereLight(0x839ab4,0x17120e,.48));
+    this.sanctuary=new SoloSanctuary(this.scene,diffuse);
     const center=new THREE.Vector3(ENTRANCE_SEAL.x,ENTRANCE_SEAL.y-.35,ENTRANCE_SEAL.z);
-    floorLight.setPlayerLight(center);
-    const {columns,rows}=ENTRANCE_PLATFORM,matrix=new THREE.Matrix4();
-    this.platform=new THREE.InstancedMesh(new THREE.BoxGeometry(TILE_SIZE,.1,TILE_SIZE),stone,columns*rows);
-    for(let z=0;z<rows;z++)for(let x=0;x<columns;x++){
-      matrix.makeTranslation((x-(columns-1)/2)*TILE_SIZE,-.05,(z-(rows-1)/2)*TILE_SIZE+ENTRANCE_PLATFORM.centerZ);
-      this.platform.setMatrixAt(z*columns+x,matrix);
-    }
-    this.scene.add(this.platform);
+
+    this.floor=new SoloFloor(this.scene);
     this.seal.position.set(ENTRANCE_SEAL.x,ENTRANCE_SEAL.y,ENTRANCE_SEAL.z);this.scene.add(this.seal);
     // Warm seal light reaches the gateway and brightens as the player approaches.
     this.light=new THREE.PointLight(0xffb56b,30,13,2);this.light.position.copy(center);this.scene.add(this.light);
-    const floorMark=new THREE.MeshBasicMaterial({color:0xd96130,transparent:true,opacity:.55,toneMapped:false,depthWrite:false});
+    const floorMark=new THREE.MeshBasicMaterial({color:0xd96130,transparent:true,opacity:.32,toneMapped:false,depthWrite:false});
     const ring=new THREE.Mesh(new THREE.RingGeometry(1.95,1.98,96),floorMark);ring.rotation.x=-Math.PI/2;ring.position.set(0,.03,ENTRANCE_SEAL.z);this.scene.add(ring);
     this.halo=new THREE.Mesh(new THREE.PlaneGeometry(5,5),new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,toneMapped:false,
       uniforms:{strength:{value:1}},vertexShader:'varying vec2 haloUV;void main(){haloUV=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
@@ -44,7 +39,7 @@ export class SinglePlayerEntrance {
     const sealReady=new SVGLoader().loadAsync('/ui/abyss-seal.svg').then(data=>{
       for(const path of data.paths){
         const style=path.userData!.style;
-        const material=new THREE.MeshStandardMaterial({color:0xff8754,emissive:0xff421c,emissiveIntensity:3.5,toneMapped:false,roughness:.4,metalness:.35,transparent:true,opacity:Number(style.opacity??1)});
+        const material=new THREE.MeshStandardMaterial({color:0xff8754,emissive:0xff421c,emissiveIntensity:2.0,toneMapped:false,roughness:.4,metalness:.35,transparent:true,opacity:Number(style.opacity??1)});
         for(const subpath of path.subPaths){
           const points=subpath.getPoints(96).map(p=>new THREE.Vector3((p.x-300)/180,(300-p.y)/180,0));
           if(points.length<2)continue;
@@ -53,14 +48,14 @@ export class SinglePlayerEntrance {
         }
       }
     });
-    this.ready=Promise.all([sealReady,loadEntranceEnvironment(this.scene)]).then(()=>{});
+    this.ready=Promise.all([sealReady,this.floor.ready,loadEntranceEnvironment(this.scene)]).then(()=>{});
   }
-  updateFloorSide(cameraY:number){
-    const material=this.platform.material as THREE.MeshBasicMaterial;
-    const side=cameraY<=0?THREE.DoubleSide:THREE.FrontSide;
-    if(material.side!==side){material.side=side;material.needsUpdate=true;}
-  }
+  updateFloorSide(cameraY:number){this.floor.updateSide(cameraY);}
+
+  configure(quality:string,reduced:boolean){this.reduced=reduced;this.sanctuary.configure(quality,reduced);}
+  get diagnostics(){return {floor:this.floor.diagnostics,...this.sanctuary.diagnostics};}
   update(time:number,position:{x:number;y:number;z:number}){
+    time=this.reduced?0:time;this.sanctuary.update(time,position);
     const near=1-THREE.MathUtils.clamp(Math.hypot(position.x,position.z-ENTRANCE_SEAL.z)/7,0,1);
     const pulse=1+Math.sin(time*1.8)*.05;
     this.light.intensity=(30+near*8)*pulse;
@@ -68,9 +63,5 @@ export class SinglePlayerEntrance {
     const positions=this.embers.geometry.getAttribute('position');
     for(let i=0;i<positions.count;i++)positions.setY(i,((i*.618%1)*4.5+time*.16)%4.5);
     positions.needsUpdate=true;
-  }
-  setTileGeometry(geometry:THREE.BufferGeometry){
-    this.platform.geometry.dispose();this.platform.geometry=geometry;
-    const matrix=new THREE.Matrix4();for(let i=0;i<this.platform.count;i++){this.platform.getMatrixAt(i,matrix);matrix.elements[13]=0;this.platform.setMatrixAt(i,matrix);}this.platform.instanceMatrix.needsUpdate=true;
   }
 }

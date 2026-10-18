@@ -1,9 +1,12 @@
 import * as THREE from 'three';
-import {ENVIRONMENT_FRAGMENT,EnvironmentLighting} from './environment-lighting';
+import {EnvironmentLighting} from './environment-lighting';
+import {CATHEDRAL_LIGHT_GLSL} from './cathedral-state';
+import {VEIL_RADIANCE} from './veil-shading';
 
 export type TowerFinish='stone'|'metal'|'interior';
 const SURFACE=/* glsl */`
-uniform float towerTier,towerFinish,towerSurfaceStrength;
+uniform float towerTier,towerFinish,towerCathedralLight,towerCathedralClosure,towerVeilAmount;
+varying vec3 vTowerWorld;
 varying vec3 vTowerP,vTowerNormal;
 varying vec2 vTowerUV;
 float towerHash(vec3 p){p=fract(p*.3183099+vec3(.17,.31,.73));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
@@ -88,29 +91,44 @@ normal=normalize(abs(towerDet)*normal-towerGradient*.022);
 
 /** Shared PBR materials: relief, roughness, oxidized metal and carved ornament
  * in one surface pass. No image downloads, texture allocations or new lights. */
-export function createTowerMaterial(tier:number,finish:TowerFinish,environment:EnvironmentLighting,strength:{value:number}){
+export function createTowerMaterial(tier:number,finish:TowerFinish,environment:EnvironmentLighting){
  const material=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.8,metalness:0,toneMapped:false});
  material.name=`remake-tower-${tier}-${finish}`;
  material.userData.towerSurface={tier,finish};
  material.onBeforeCompile=shader=>{
-  Object.assign(shader.uniforms,environment.uniforms,{towerTier:{value:tier},towerFinish:{value:finish==='stone'?0:finish==='metal'?1:2},towerSurfaceStrength:strength});
-  shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vTowerP,vTowerNormal;varying vec2 vTowerUV;')
+  Object.assign(shader.uniforms,environment.uniforms,{towerTier:{value:tier},towerFinish:{value:finish==='stone'?0:finish==='metal'?1:2}});
+  shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vTowerP,vTowerNormal,vTowerWorld;varying vec2 vTowerUV;')
    .replace('#include <begin_vertex>',`#include <begin_vertex>
     vTowerP=position*vec3(length(modelMatrix[0].xyz),length(modelMatrix[1].xyz),length(modelMatrix[2].xyz));
-    vTowerNormal=normal;vTowerUV=uv;`);
-  shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\n'+SURFACE+ENVIRONMENT_FRAGMENT)
+    vTowerNormal=normal;vTowerUV=uv;
+    vTowerWorld=(modelMatrix*vec4(transformed,1.)).xyz;`);
+  shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\n'+SURFACE+CATHEDRAL_LIGHT_GLSL+VEIL_RADIANCE)
    .replace('#include <color_fragment>','#include <color_fragment>\n'+COLOR)
    .replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\nroughnessFactor=clamp(towerRough,.25,1.);')
    .replace('#include <metalnessmap_fragment>','#include <metalnessmap_fragment>\nmetalnessFactor=towerMetal;')
    .replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n'+NORMAL)
-   .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+   .replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+    // The same world-space apertures illuminate the floor and the tower body.
+    // Add incident diffuse light, so stone stays non-emissive and metal retains
+    // its reduced diffuse response. No camera-facing readability rim.
     vec3 towerWorldNormal=inverseTransformDirection(normal,viewMatrix);
-    // A restrained environment fill keeps the stone readable in deep descent.
-    totalEmissiveRadiance+=environmentLight(towerAlbedo,towerWorldNormal)*.24;
-    float towerRim=pow(1.-abs(dot(normal,normalize(vViewPosition))),3.);
-    totalEmissiveRadiance+=vec3(.10,.031,.009)*towerRim*towerSurfaceStrength*(1.-towerMetal*.5);`);
+    if(towerVeilAmount>.001){
+     // Sample the very same sky texture and drift as the wet arena. Rough
+     // stone receives broad sky colour; metal reflects the torn cloud opening.
+     vec3 towerSky=veilRadiance(normalize(towerWorldNormal+vec3(0.,.6,0.)),6.);
+     reflectedLight.indirectDiffuse+=BRDF_Lambert(diffuseColor.rgb)*(1.-metalnessFactor)*towerSky*2.5*towerVeilAmount;
+     vec3 towerEye=normalize(cameraPosition-vTowerWorld);
+     vec3 towerReflection=reflect(-towerEye,towerWorldNormal);
+     vec3 towerFresnel=mix(vec3(.04),diffuseColor.rgb,metalnessFactor);
+     reflectedLight.indirectSpecular+=veilRadiance(towerReflection,2.+roughnessFactor*5.)*towerFresnel*(1.-roughnessFactor*.65)*towerVeilAmount;
+    }
+    if(towerCathedralLight>.001){
+    float towerShaft=cathedralShaft(vTowerWorld,towerCathedralClosure)*towerCathedralLight;
+    float towerFacing=max(0.,dot(towerWorldNormal,normalize(vec3(vTowerWorld.x,24.,vTowerWorld.z))));
+    reflectedLight.indirectDiffuse+=BRDF_Lambert(diffuseColor.rgb)*(1.-metalnessFactor)*vec3(.30,.285,.40)*towerShaft*towerFacing;
+    }`);
  };
- material.customProgramCacheKey=()=>`tower-carved-pbr-v1`;
+ material.customProgramCacheKey=()=>`tower-carved-pbr-v2`;
  return material;
 }
 

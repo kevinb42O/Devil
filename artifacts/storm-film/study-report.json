@@ -1,0 +1,70 @@
+{
+  "bytes": 7488678,
+  "frames": 443,
+  "shots": [
+    {
+      "title": "STORM / SURFACE STUDY",
+      "duration": 8.0081
+    }
+  ],
+  "audioStats": [
+    {
+      "shot": 0,
+      "elapsed": 0.6418000000000001,
+      "worldTime": 84.6418,
+      "rms": 0,
+      "rain": 1
+    },
+    {
+      "shot": 0,
+      "elapsed": 1.0084000000000002,
+      "worldTime": 85.0084,
+      "rms": 0.003998620275601719,
+      "rain": 1
+    },
+    {
+      "shot": 0,
+      "elapsed": 2.0083999999999995,
+      "worldTime": 86.0084,
+      "rms": 0.005352720380400056,
+      "rain": 1
+    },
+    {
+      "shot": 0,
+      "elapsed": 3.0083999999999995,
+      "worldTime": 87.0084,
+      "rms": 0.005204600414155949,
+      "rain": 1
+    },
+    {
+      "shot": 0,
+      "elapsed": 4.0084,
+      "worldTime": 88.0084,
+      "rms": 0.004421343264094544,
+      "rain": 1
+    },
+    {
+      "shot": 0,
+      "elapsed": 5.0083,
+      "worldTime": 89.0083,
+      "rms": 0.00429412369738973,
+      "rain": 1
+    },
+    {
+      "shot": 0,
+      "elapsed": 6.0082,
+      "worldTime": 90.0082,
+      "rms": 0.004409556545730679,
+      "rain": 1
+    },
+    {
+      "shot": 0,
+      "elapsed": 7.0082,
+      "worldTime": 91.0082,
+      "rms": 0.006003699207888781,
+      "rain": 1
+    }
+  ],
+  "audioFailures": [],
+  "errors": []
+}

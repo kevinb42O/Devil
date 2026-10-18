@@ -1,0 +1,60 @@
+{
+  "floorMotion": 0.7685691015089163,
+  "cold": {
+    "fire": 0,
+    "heat": 0,
+    "visible": false,
+    "loaded": true,
+    "quality": "high",
+    "reduced": false,
+    "emitters": 24,
+    "emberCount": 520,
+    "minimumFireRadius": 36.63392777790796,
+    "platformRadius": 27.435002311989663,
+    "interactive": false
+  },
+  "fire": {
+    "fire": 1,
+    "heat": 1,
+    "visible": true,
+    "loaded": true,
+    "quality": "high",
+    "reduced": false,
+    "emitters": 24,
+    "emberCount": 520,
+    "minimumFireRadius": 36.63392777790796,
+    "platformRadius": 26.350002295821906,
+    "interactive": false
+  },
+  "reduced": {
+    "fire": 1,
+    "heat": 1,
+    "visible": true,
+    "loaded": true,
+    "quality": "low",
+    "reduced": true,
+    "emitters": 16,
+    "emberCount": 180,
+    "minimumFireRadius": 36.63392777790796,
+    "platformRadius": 26.350002295821906,
+    "interactive": false
+  },
+  "end": {
+    "fire": 0,
+    "heat": 0,
+    "visible": false,
+    "loaded": true,
+    "quality": "low",
+    "reduced": true,
+    "emitters": 16,
+    "emberCount": 180,
+    "minimumFireRadius": 36.63392777790796,
+    "platformRadius": 24.490002268105744,
+    "interactive": false
+  },
+  "motion": 1.4310092592592594,
+  "visibleDifference": 7.54403125,
+  "frozen": 0,
+  "rewind": 0,
+  "extraCalls": 5
+}

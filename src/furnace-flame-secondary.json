@@ -1,0 +1,25 @@
+{
+  "file": "real-flame-0b33acf12d.webp",
+  "url": "/assets/environment/furnace/real-flame-0b33acf12d.webp",
+  "columns": 8,
+  "rows": 8,
+  "frames": 64,
+  "fps": 12,
+  "cell": 256,
+  "inset": 4,
+  "bytes": 806612,
+  "sha256": "0b33acf12df9ce3a6fbb4751219fd200e0ab06383a2d1b26807f8f2c41272e41",
+  "source": {
+    "title": "Intense flames on black background",
+    "page": "https://mixkit.co/free-stock-video/intense-flames-on-black-background-3758/",
+    "download": "https://assets.mixkit.co/videos/3758/3758-720.mp4",
+    "file": "assets/_sources/furnace/mixkit-3758.mp4",
+    "sha256": "07762ad10f6ca53442619b441a8c095b849141b0f66f3c7d55e63b90befa2eb0",
+    "license": "Mixkit Stock Video Free License",
+    "licenseURL": "https://mixkit.co/license/modal/videoFree/",
+    "retrieved": "2026-10-18",
+    "start": 3,
+    "end": 8.25,
+    "changes": "Selected 64 photographed flame frames, resized to padded 256px cells; 8-frame pre-roll crossfade makes the loop continuous. No raw stock video is shipped."
+  }
+}

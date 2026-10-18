@@ -4,13 +4,25 @@ import {createDescentState,descentAt,DESCENT_CHAPTERS} from '../src/descent';
 import {survivalSchedule} from '../src/survival';
 import {readFileSync} from 'node:fs';
 import {mistAt} from '../src/mist-state';
+import {veilAt} from '../src/veil-shading';
 
-test('the complete existing sky and mist curves survive the intro unchanged',()=>{
+test('the original sky curves and mist timing survive the intro with the Veil art revision',()=>{
   const baseline=JSON.parse(readFileSync(new URL('./fixtures/environment-before-cosmos.json',import.meta.url),'utf8'));
   for(const row of baseline){
     const sky=descentAt(row.time+30),mist=mistAt(row.time+30);
     for(const [key,value] of Object.entries(row.sky))if(key!=='time')assert.deepEqual(sky[key as keyof typeof sky],value,`sky ${row.time}: ${key}`);
-    for(const [key,value] of Object.entries(row.mist))if(key!=='time')assert.deepEqual(mist[key as keyof typeof mist],value,`mist ${row.time}: ${key}`);
+    const veil=veilAt(row.time+30);
+    // The Veil art pass intentionally clears and cools this chapter's medium.
+    // Retain the historical fixture and account only for those explicit deltas.
+    const deltas:Record<string,number>={density:.055-.085,height:9-11,falloff:.22-.16,bank:1-.8};
+    for(const [key,value] of Object.entries(row.mist))if(key!=='time'){
+      if(veil>0&&key in deltas){
+        assert.ok(Math.abs((mist[key as keyof typeof mist] as number)-(Number(value)+deltas[key]*veil))<1e-12,`mist ${row.time}: ${key}`);
+      }else if(veil>0&&key==='color'){
+        const old=[.105,.065,.145],revised=[.052,.041,.078];
+        for(let i=0;i<3;i++)assert.ok(Math.abs(mist.color[i]-((value as number[])[i]+(revised[i]-old[i])*veil))<1e-12,`mist ${row.time}: color ${i}`);
+      }else assert.deepEqual(mist[key as keyof typeof mist],value,`mist ${row.time}: ${key}`);
+    }
   }
 });
 

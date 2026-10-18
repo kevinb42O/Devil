@@ -18,7 +18,7 @@ let template:THREE.Group|null=null,clips:THREE.AnimationClip[]=[],loading:Promis
 let modelScale=1,floorOffset=0;
 type KickPose={charge:number;age:number;power:number;right?:boolean};
 type KickLeg={foot?:THREE.Bone;end?:THREE.Bone;thigh?:THREE.Bone;shin?:THREE.Bone;position?:THREE.Vector3;rotation?:THREE.Quaternion;bases?:[THREE.Quaternion,THREE.Quaternion]};
-type AvatarState={legs:KickLeg[];anchor?:{bone:THREE.Bone;reference:THREE.Vector3;rootPosition:THREE.Vector3};head:THREE.Bone;dark?:THREE.SkinnedMesh;gold:boolean;crown?:THREE.Mesh;root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;leftUpper:THREE.Bone;leftLower:THREE.Bone;baseLeftUpper:THREE.Quaternion;baseLeftLower:THREE.Quaternion;leftRaise:number;rightRaise:number;fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[];muzzle:THREE.Object3D};
+type AvatarState={combatTips?:(THREE.Object3D|undefined)[][];legs:KickLeg[];anchor?:{bone:THREE.Bone;reference:THREE.Vector3;rootPosition:THREE.Vector3};head:THREE.Bone;dark?:THREE.SkinnedMesh;gold:boolean;crown?:THREE.Mesh;root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;leftUpper:THREE.Bone;leftLower:THREE.Bone;baseLeftUpper:THREE.Quaternion;baseLeftLower:THREE.Quaternion;leftRaise:number;rightRaise:number;fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[];muzzle:THREE.Object3D};
 const states=new WeakMap<THREE.Group,AvatarState>();
 let originalDark:THREE.BufferGeometry|undefined,crownedDark:THREE.BufferGeometry|undefined,crownMount:THREE.Matrix4|undefined;
 const emoteFrame=new THREE.Matrix4(),emoteWorld=new THREE.Quaternion(),emoteRight=new THREE.Vector3(),emoteBack=new THREE.Vector3(),handDirection=new THREE.Vector3(),handLocal=new THREE.Quaternion(),fingerTarget=new THREE.Quaternion();
@@ -393,6 +393,24 @@ export function disposeCrewAvatar(model:THREE.Group){
 export function crewMuzzle(model:THREE.Group,out:THREE.Vector3,left=false):boolean{
  const state=states.get(model);if(!state)return false;
  const muzzle=left?state.root.getObjectByName('Middle3L_end'):state.muzzle;if(!muzzle)return false;muzzle.getWorldPosition(out);return true;
+}
+
+/** Animated combat fingertips. The demon has four fingers; its fifth lane
+ * sits between middle and pinky instead of referring to a missing ring bone.
+ * Twin sockets keep the simulation's interleaved right/left ordering. */
+const combatTip=new THREE.Vector3();
+export function crewWeaponMuzzle(model:THREE.Group,out:THREE.Vector3,level:number,socket=0):boolean{
+ const state=states.get(model);if(!state)return false;
+ state.combatTips??=['R','L'].map(side=>['Middle3','Index3','Middle3','Pinky3','Thumb2'].map(name=>state.root.getObjectByName(name+side+'_end')));
+ const side=level>=5?socket%2:0,finger=(level>=5?Math.floor(socket/2):socket)%5;
+ const tip=state.combatTips[side][finger];
+ if(!tip)return false;
+ tip.getWorldPosition(out);
+ if(finger===2){
+  const pinky=state.combatTips[side][3];if(!pinky)return false;
+  pinky.getWorldPosition(combatTip);out.lerp(combatTip,.5);
+ }
+ return true;
 }
 
 /** Palm socket sampled after animation, shared by first- and third-person bodies. */

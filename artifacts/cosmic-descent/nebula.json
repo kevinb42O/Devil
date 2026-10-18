@@ -5,9 +5,10 @@
       "mist": {
         "enabled": true,
         "strength": 0.21875000000000003,
-        "steps": 40,
+        "steps": 48,
         "time": 0,
         "entrance": false,
+        "heat": 0,
         "cosmic": 1,
         "environmentTime": 0,
         "volumeSize": [
@@ -29,18 +30,19 @@
         "pulse": 1,
         "lights": 6
       },
-      "floorRed": 21.446863636363638,
-      "floorBlue": 82.47568181818181,
-      "volumeDifference": 4.849925130208334
+      "floorRed": 52.24695454545454,
+      "floorBlue": 138.8864090909091,
+      "volumeDifference": 19.302884114583332
     },
     {
       "time": 8,
       "mist": {
         "enabled": true,
         "strength": 0.21875000000000003,
-        "steps": 40,
+        "steps": 48,
         "time": 0,
         "entrance": false,
+        "heat": 0,
         "cosmic": 1,
         "environmentTime": 0,
         "volumeSize": [
@@ -62,18 +64,19 @@
         "pulse": 1,
         "lights": 6
       },
-      "floorRed": 22.4735,
-      "floorBlue": 81.445,
-      "volumeDifference": 12.336232277199073
+      "floorRed": 52.101136363636364,
+      "floorBlue": 129.96304545454547,
+      "volumeDifference": 16.592041377314814
     },
     {
       "time": 16,
       "mist": {
         "enabled": true,
         "strength": 0.21875000000000003,
-        "steps": 40,
+        "steps": 48,
         "time": 0,
         "entrance": false,
+        "heat": 0,
         "cosmic": 1,
         "environmentTime": 0,
         "volumeSize": [
@@ -95,18 +98,19 @@
         "pulse": 1,
         "lights": 6
       },
-      "floorRed": 23.269272727272728,
-      "floorBlue": 80.47513636363637,
-      "volumeDifference": 20.12221535011574
+      "floorRed": 28.067681818181818,
+      "floorBlue": 112.61522727272727,
+      "volumeDifference": 17.99597366898148
     },
     {
       "time": 21,
       "mist": {
         "enabled": true,
         "strength": 0.21875000000000003,
-        "steps": 40,
+        "steps": 48,
         "time": 0,
         "entrance": false,
+        "heat": 0,
         "cosmic": 1,
         "environmentTime": 0,
         "volumeSize": [
@@ -128,18 +132,19 @@
         "pulse": 1,
         "lights": 6
       },
-      "floorRed": 23.747318181818184,
-      "floorBlue": 80.00445454545455,
-      "volumeDifference": 14.954186921296296
+      "floorRed": 38.19077272727273,
+      "floorBlue": 118.01159090909091,
+      "volumeDifference": 22.645877097800927
     },
     {
       "time": 25,
       "mist": {
         "enabled": true,
         "strength": 0.5445387517146776,
-        "steps": 40,
+        "steps": 48,
         "time": 0,
         "entrance": false,
+        "heat": 0,
         "cosmic": 0.5829903978052127,
         "environmentTime": 0,
         "volumeSize": [
@@ -161,9 +166,9 @@
         "pulse": 0.9541289437585734,
         "lights": 6
       },
-      "floorRed": 58.88709090909091,
-      "floorBlue": 74.05359090909091,
-      "volumeDifference": 18.60664894386574
+      "floorRed": 64.00172727272728,
+      "floorBlue": 133.1745909090909,
+      "volumeDifference": 43.49685872395833
     },
     {
       "time": 30,
@@ -173,6 +178,7 @@
         "steps": 40,
         "time": 0,
         "entrance": false,
+        "heat": 0,
         "cosmic": 0,
         "environmentTime": 0,
         "volumeSize": [
@@ -194,23 +200,23 @@
         "pulse": 0.89,
         "lights": 6
       },
-      "floorRed": 89.92881818181819,
-      "floorBlue": 61.66731818181818,
-      "volumeDifference": 5.593992332175926
+      "floorRed": 100.73545454545454,
+      "floorBlue": 80.11140909090909,
+      "volumeDifference": 4.858590494791667
     }
   ],
   "volumeMotion": [
     {
       "time": 0,
-      "elevation": 251.6889794266522
+      "elevation": 273.506885408713
     },
     {
       "time": 8,
-      "elevation": 287.33950039440066
+      "elevation": 307.64479290287437
     },
     {
       "time": 16,
-      "elevation": 434.2221932212104
+      "elevation": 332.6748011975908
     }
   ],
   "errors": []
