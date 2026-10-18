@@ -1,5 +1,5 @@
 {
-  "floorMotion": 1.2272976680384087,
+  "floorMotion": 1.4109799382716048,
   "deckGroundError": 1.7881393449270533e-9,
   "cold": {
     "fire": 0,
@@ -65,8 +65,8 @@
     "platformRadius": 24.490002268105744,
     "interactive": false
   },
-  "motion": 4.240498842592593,
-  "visibleDifference": 17.647612461419754,
+  "motion": 4.243904128086419,
+  "visibleDifference": 17.62824421296296,
   "frozen": 0,
   "rewind": 0,
   "extraCalls": 6

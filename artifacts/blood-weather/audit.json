@@ -59,13 +59,13 @@
   "fire": [
     {
       "enabled": false,
-      "red": 139997,
-      "luminance": 50992094.29801473
+      "red": 171138,
+      "luminance": 51721467.3112111
     },
     {
       "enabled": true,
-      "red": 183559,
-      "luminance": 53331905.03100758
+      "red": 230242,
+      "luminance": 54423542.056996435
     }
   ],
   "errors": []

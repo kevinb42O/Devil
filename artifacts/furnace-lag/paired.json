@@ -1,0 +1,81 @@
+{
+  "viewport": [
+    1280,
+    720
+  ],
+  "results": [
+    {
+      "mode": "normal",
+      "label": "before",
+      "cpuMs": 1.399999976158142,
+      "gpuMs": 43.16275
+    },
+    {
+      "mode": "normal",
+      "label": "after",
+      "cpuMs": 1.399999976158142,
+      "gpuMs": 83.672249
+    },
+    {
+      "mode": "normal",
+      "label": "after",
+      "cpuMs": 1.0999999642372131,
+      "gpuMs": 82.622541
+    },
+    {
+      "mode": "normal",
+      "label": "before",
+      "cpuMs": 1.2000000476837158,
+      "gpuMs": 111.135916
+    },
+    {
+      "mode": "blood",
+      "label": "before",
+      "cpuMs": 0.8999999761581421,
+      "gpuMs": 42.863666
+    },
+    {
+      "mode": "blood",
+      "label": "after",
+      "cpuMs": 1,
+      "gpuMs": 78.992749
+    },
+    {
+      "mode": "blood",
+      "label": "after",
+      "cpuMs": 0.9000000357627869,
+      "gpuMs": 74.296624
+    },
+    {
+      "mode": "blood",
+      "label": "before",
+      "cpuMs": 1.0999999642372131,
+      "gpuMs": 112.245291
+    },
+    {
+      "mode": "no-mist",
+      "label": "before",
+      "cpuMs": 1.100000023841858,
+      "gpuMs": 66.995291
+    },
+    {
+      "mode": "no-mist",
+      "label": "after",
+      "cpuMs": 1.0999999642372131,
+      "gpuMs": 59.726875
+    },
+    {
+      "mode": "no-mist",
+      "label": "after",
+      "cpuMs": 1.100000023841858,
+      "gpuMs": 74.010999
+    },
+    {
+      "mode": "no-mist",
+      "label": "before",
+      "cpuMs": 1,
+      "gpuMs": 91.582374
+    }
+  ],
+  "errors": []
+}

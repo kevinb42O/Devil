@@ -3,6 +3,7 @@ import {arenaRadius,floorHeight} from './arena';
 import {descentAt} from './descent';
 import flame from './furnace-flame-manifest.json';
 import secondary from './furnace-flame-secondary.json';
+import {FurnaceFloorCache,FURNACE_FLOOR_SPAN,FURNACE_NOISE} from './furnace-floor-cache';
 import {createFireNoise,FIRE_VOLUME_VERTEX,FIRE_VOLUME_FRAGMENT} from './furnace-fire';
 const ease=(v:number)=>{const x=Math.max(0,Math.min(1,v));return x*x*(3-2*x);};
 /** Stone heat leads the descent; decorative fire follows the furnace sky chapter. */
@@ -22,14 +23,14 @@ void main(){
  furnaceDistance=distance(p,furnaceCamera);
  gl_Position=projectionMatrix*viewMatrix*vec4(p,1.);
 }`;
-const NOISE=`float fHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-float fNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(fHash(i),fHash(i+vec2(1,0)),f.x),mix(fHash(i+vec2(0,1)),fHash(i+vec2(1,1)),f.x),f.y);}`;
+const NOISE=FURNACE_NOISE;
 /** Turbulent fire banks, deck fires, chimney smoke and outward ember currents. */
 export class Furnace {
  readonly group=new THREE.Group();readonly flames:THREE.Mesh;readonly smoke:THREE.Mesh;readonly embers:THREE.Mesh;readonly abyss:THREE.Mesh;readonly convection:THREE.Mesh;readonly deckFlames:THREE.Mesh;private emberOrigins=new Float32Array(520*4);private deckAnchors=new Float32Array(48*4);private convectionAnchors=new Float32Array(56*4);
  readonly ready:Promise<void>;
+ private floorCache=new FurnaceFloorCache();
  private fireNoise=createFireNoise();private reduced=false;private quality='high';private texture:THREE.Texture|null=null;private secondary:THREE.Texture|null=null;
- readonly uniforms={fireLights:{value:Array.from({length:8},()=>new THREE.Vector4())},fireNoise:{value:this.fireNoise},fireSteps:{value:40},furnaceClock:{value:0},furnaceFire:{value:0},furnaceHeat:{value:0},furnaceRadius:{value:31},furnaceCamera:{value:new THREE.Vector3()},furnaceRight:{value:new THREE.Vector3(1,0,0)},furnaceUp:{value:new THREE.Vector3(0,1,0)},furnaceAtlas:{value:new THREE.Texture()},furnaceSecondary:{value:new THREE.Texture()}};
+ readonly uniforms={furnaceFracture:{value:this.floorCache.target.texture},fireLights:{value:Array.from({length:8},()=>new THREE.Vector4())},fireNoise:{value:this.fireNoise},fireSteps:{value:40},furnaceClock:{value:0},furnaceFire:{value:0},furnaceHeat:{value:0},furnaceRadius:{value:31},furnaceCamera:{value:new THREE.Vector3()},furnaceRight:{value:new THREE.Vector3(1,0,0)},furnaceUp:{value:new THREE.Vector3(0,1,0)},furnaceAtlas:{value:new THREE.Texture()},furnaceSecondary:{value:new THREE.Texture()}};
  constructor(scene:THREE.Scene,floor:THREE.MeshBasicMaterial){
   this.group.name='furnace-surround';scene.add(this.group);
   const loader=new THREE.TextureLoader();
@@ -119,18 +120,7 @@ export class Furnace {
     varying vec3 heatedStonePosition,heatedStoneNormal;uniform float furnaceHeat,furnaceClock,furnaceRadius,furnaceFire;uniform vec4 fireLights[8];
     uniform sampler2D furnaceAtlas,furnaceSecondary;
     ${NOISE}
-    // World-space fractured basalt: stable seams with animated light beneath.
-    float furnaceCrack(vec2 p){
-     p+=vec2(fNoise(p*2.8),fNoise(p*2.8+31.))*.23;
-     p+=vec2(fNoise(p*13.),fNoise(p*13.+17.))*.055;
-     vec2 cell=floor(p),local=fract(p);float first=9.,second=9.;
-     for(int y=-1;y<=1;y++)for(int x=-1;x<=1;x++){
-      vec2 offset=vec2(float(x),float(y));vec2 id=cell+offset;
-      vec2 point=offset+vec2(fHash(id),fHash(id+47.))*.76+.12-local;
-      float d=dot(point,point);if(d<first){second=first;first=d;}else{second=min(second,d);}
-     }
-     return sqrt(second)-sqrt(first);
-    }
+    uniform sampler2D furnaceFracture;
     vec3 heatedReflection(vec2 uv,float frame){vec2 cell=vec2(mod(frame,8.),7.-floor(frame/8.));return texture2D(furnaceAtlas,(cell+mix(vec2(.025),vec2(.975),clamp(uv,0.,1.)))/8.).rgb;}`)
     .replace('#include <opaque_fragment>',`
      if(furnaceHeat>.001){
@@ -144,16 +134,14 @@ export class Furnace {
       float top=smoothstep(.4,.8,heatedStoneNormal.y);
       vec3 warmStone=outgoingLight*vec3(.48,.30,.25);
       outgoingLight=mix(outgoingLight,warmStone,furnaceHeat*.8*top);
-      float soot=fNoise(stone*1.7);
+      vec4 fracture=texture2D(furnaceFracture,stone/${FURNACE_FLOOR_SPAN.toFixed(6)}+.5);
+      float soot=fracture.a;
       outgoingLight*=mix(1.,.48+.38*soot,furnaceHeat*top*.85);
       float firelight=0.;
       for(int i=0;i<8;i++){vec2 delta=stone-fireLights[i].xy;firelight+=fireLights[i].z*exp(-dot(delta,delta)*fireLights[i].w);}
       outgoingLight+=vec3(.48,.10,.012)*firelight*furnaceFire*top*(.45+.55*grain);
-      float seam=furnaceCrack(stone*.58);
-      float seamAA=max(fwidth(seam)*.6,.002);
-      float fissure=(1.-smoothstep(.004,.024+seamAA,seam))*.024/(.024+seamAA*.5);
-      float halo=exp(-seam*12.);
-      float molten=.72+.28*sin(furnaceClock*1.9+fNoise(stone*.4)*8.);
+      float fissure=fracture.r,halo=fracture.g;
+      float molten=.72+.28*sin(furnaceClock*1.9+fracture.b*8.);
       outgoingLight*=1.-furnaceHeat*top*halo*.55;
       furnaceBloodRadiance=furnaceHeat*top*molten*(vec3(1.15,.12,.002)*fissure+vec3(.19,.018,.001)*halo);
       outgoingLight+=furnaceBloodRadiance;
@@ -183,8 +171,9 @@ export class Furnace {
      }
      #include <opaque_fragment>`);
   };
-  floor.customProgramCacheKey=()=>key+'-furnace-volumetric-light-v5-blood';
+  floor.customProgramCacheKey=()=>key+'-furnace-volumetric-light-v6-cached';
  }
+ prepare(renderer:THREE.WebGLRenderer){this.floorCache.prepare(renderer);}
  configure(quality:string,reduced:boolean){this.quality=quality;this.reduced=reduced;this.uniforms.fireSteps.value=quality==='high'?40:24;(this.deckFlames.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?48:28;(this.convection.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?56:24;for(const mesh of [this.flames,this.smoke])(mesh.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?24:16;(this.embers.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?520:180;}
  update(camera:THREE.Camera,time:number,enabled=true){
  const clock=this.reduced?0:Math.max(0,time-236);
@@ -210,5 +199,5 @@ export class Furnace {
  }this.convection.geometry.getAttribute('furnaceAnchor').needsUpdate=true;}
  const state=furnaceAt(time);this.uniforms.furnaceFire.value=enabled?state.fire:0;this.uniforms.furnaceHeat.value=enabled?state.heat:0;this.uniforms.furnaceClock.value=this.reduced?0:Math.max(0,time-236);this.uniforms.furnaceRadius.value=arenaRadius(time);this.uniforms.furnaceCamera.value.copy(camera.position);this.uniforms.furnaceRight.value.setFromMatrixColumn(camera.matrixWorld,0);this.uniforms.furnaceUp.value.setFromMatrixColumn(camera.matrixWorld,1);this.group.visible=enabled&&state.fire>.001;}
  get diagnostics(){return {fire:this.uniforms.furnaceFire.value,heat:this.uniforms.furnaceHeat.value,visible:this.group.visible,loaded:!!this.texture,quality:this.quality,reduced:this.reduced,emitters:(this.flames.geometry as THREE.InstancedBufferGeometry).instanceCount,fireTechnique:'ray-marched-volume',fireSteps:this.uniforms.fireSteps.value,deckEmitters:(this.deckFlames.geometry as THREE.InstancedBufferGeometry).instanceCount,emberCount:(this.embers.geometry as THREE.InstancedBufferGeometry).instanceCount,minimumFireRadius:Math.min(...FURNACE_EMITTERS.map(e=>Math.hypot(e.x,e.z)-e.width/2)),platformRadius:this.uniforms.furnaceRadius.value,interactive:false};}
- dispose(){const materials=new Set<THREE.Material>();for(const mesh of [this.flames,this.deckFlames,this.smoke,this.embers,this.abyss,this.convection]){mesh.geometry.dispose();materials.add(mesh.material as THREE.Material);}for(const material of materials)material.dispose();this.fireNoise.dispose();this.texture?.dispose();this.secondary?.dispose();this.group.removeFromParent();}
+ dispose(){this.floorCache.dispose();const materials=new Set<THREE.Material>();for(const mesh of [this.flames,this.deckFlames,this.smoke,this.embers,this.abyss,this.convection]){mesh.geometry.dispose();materials.add(mesh.material as THREE.Material);}for(const material of materials)material.dispose();this.fireNoise.dispose();this.texture?.dispose();this.secondary?.dispose();this.group.removeFromParent();}
 }

@@ -280,6 +280,7 @@ export class GameRenderer {
   }
   async prepare() {
     await Promise.all([this.veilEnvironment.ready,this.furnace.ready,this.sky.ready,this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
+    this.furnace.prepare(this.renderer);
     this.entrance.sanctuary.setSpace(this.sky.cosmicTexture);
     this.blood.setReflections(this.sky.cosmicTexture,this.sky.reflectionTexture);
     if(!this.originalEnemies.ready||!this.originalWeapon.ready)return;

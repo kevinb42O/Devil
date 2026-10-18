@@ -58,6 +58,10 @@ vec3 emission(float heat){
  return mix(c,white,smoothstep(.72,1.,heat));
 }
 void main(){
+ float cameraDistance=distance(furnaceCamera,fireOrigin);
+ float near=smoothstep(1.5,4.5,cameraDistance);
+ // Do not march volumes that the near-camera fade makes completely invisible.
+ if(near<.001)discard;
  vec3 ro=(furnaceCamera-fireOrigin)/fireScale;
  vec3 rd=normalize((fireWorld-furnaceCamera)/fireScale);
  vec3 safeRD=mix(vec3(.00001),rd,step(vec3(.00001),abs(rd)));
@@ -65,13 +69,16 @@ void main(){
  vec3 lo=min(a,b),hi=max(a,b);
  float begin=max(0.,max(lo.x,max(lo.y,lo.z))),end=min(hi.x,min(hi.y,hi.z));
  if(end<=begin)discard;
- float stepLength=(end-begin)/fireSteps;
+ // Distant banks and short silhouette rays need fewer samples than nearby full plumes.
+ float distanceBudget=mix(fireSteps,max(12.,fireSteps*.45),smoothstep(10.,55.,cameraDistance));
+ float steps=max(8.,ceil(distanceBudget*clamp((end-begin)*1.3,.4,1.)));
+ float stepLength=(end-begin)/steps;
  // Stable sub-step jitter avoids ray bands without temporal grain or pause drift.
  float jitter=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453);
  float t=furnaceClock*(.8+fireSeed*.3)+fireSeed*83.;
  vec3 radiance=vec3(0.);float transmittance=1.;
  for(int i=0;i<48;i++){
-  if(float(i)>=fireSteps||transmittance<.018)break;
+  if(float(i)>=steps||transmittance<.018)break;
   vec3 p=ro+rd*(begin+(float(i)+jitter)*stepLength);
   vec3 sampleFire=medium(p,t);
   float fuel=sampleFire.x*8.,soot=sampleFire.z*3.,extinction=fuel+soot;
@@ -82,7 +89,6 @@ void main(){
  }
  float opacity=1.-transmittance;
  if(opacity<.002)discard;
- float distanceFade=exp(-distance(furnaceCamera,fireOrigin)*.003);
- float near=smoothstep(1.5,4.5,distance(furnaceCamera,fireOrigin));
+ float distanceFade=exp(-cameraDistance*.003);
  gl_FragColor=vec4(radiance/max(opacity,.001),opacity*furnaceFire*distanceFade*near);
 }`;
