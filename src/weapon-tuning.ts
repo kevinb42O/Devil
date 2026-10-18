@@ -28,8 +28,10 @@ export const SHOTGUN_LAUNCH_SPEED = [10.8,12.6,15,17,17,17,17] as const;
 
 /** Camera-local clearance keeps launch meshes and bloom away from the hand. */
 export const PROJECTILE_HAND_CLEARANCE=1.15;
-/** Readable, broad native blades; the imported mesh is only ~0.2 units long. */
-export const DAGGER_PRESENTATION={width:3,length:2.4,shotgunScale:.85} as const;
+/** Slim shard dimensions in world units; collision radii remain independent. */
+export const DAGGER_PRESENTATION={width:.235,length:1.8,shotgunScale:1.3} as const;
+/** Trail attaches inside the shard's rear section as visual size changes. */
+export const PROJECTILE_TRAIL_OFFSET=DAGGER_PRESENTATION.length*(.17/.72);
 /** Presentation response only: no camera deflection or changes to damage/cadence. */
 export const WEAPON_FEEDBACK={flashDuration:.055,streamKick:.009,recovery:29,muzzleSpread:.7} as const;
 /** Camera-local hand pullback grows at every tier, including twins. No tilt. */

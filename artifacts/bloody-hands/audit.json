@@ -1,0 +1,47 @@
+{
+  "reports": [
+    {
+      "label": "clean",
+      "amount": 0,
+      "freshness": 0,
+      "tier": 5,
+      "red": 74187
+    },
+    {
+      "label": "spattered",
+      "amount": 0.27918367346938777,
+      "freshness": 1,
+      "tier": 5,
+      "red": 94985
+    },
+    {
+      "label": "soaked",
+      "amount": 1,
+      "freshness": 1,
+      "tier": 5,
+      "red": 285760
+    },
+    {
+      "label": "dried",
+      "amount": 1,
+      "freshness": 0.049787068367863944,
+      "tier": 5,
+      "red": 352336
+    },
+    {
+      "label": "tier-7",
+      "amount": 1,
+      "freshness": 0.049787068367863944,
+      "tier": 7,
+      "red": 346761
+    },
+    {
+      "label": "reset",
+      "amount": 0,
+      "freshness": 0,
+      "tier": 7,
+      "red": 0
+    }
+  ],
+  "errors": []
+}

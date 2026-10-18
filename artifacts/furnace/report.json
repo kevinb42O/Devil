@@ -1,5 +1,6 @@
 {
-  "floorMotion": 0.7685691015089163,
+  "floorMotion": 1.2272976680384087,
+  "deckGroundError": 1.7881393449270533e-9,
   "cold": {
     "fire": 0,
     "heat": 0,
@@ -8,6 +9,9 @@
     "quality": "high",
     "reduced": false,
     "emitters": 24,
+    "fireTechnique": "ray-marched-volume",
+    "fireSteps": 40,
+    "deckEmitters": 48,
     "emberCount": 520,
     "minimumFireRadius": 36.63392777790796,
     "platformRadius": 27.435002311989663,
@@ -21,6 +25,9 @@
     "quality": "high",
     "reduced": false,
     "emitters": 24,
+    "fireTechnique": "ray-marched-volume",
+    "fireSteps": 40,
+    "deckEmitters": 48,
     "emberCount": 520,
     "minimumFireRadius": 36.63392777790796,
     "platformRadius": 26.350002295821906,
@@ -34,6 +41,9 @@
     "quality": "low",
     "reduced": true,
     "emitters": 16,
+    "fireTechnique": "ray-marched-volume",
+    "fireSteps": 24,
+    "deckEmitters": 28,
     "emberCount": 180,
     "minimumFireRadius": 36.63392777790796,
     "platformRadius": 26.350002295821906,
@@ -47,14 +57,17 @@
     "quality": "low",
     "reduced": true,
     "emitters": 16,
+    "fireTechnique": "ray-marched-volume",
+    "fireSteps": 24,
+    "deckEmitters": 28,
     "emberCount": 180,
     "minimumFireRadius": 36.63392777790796,
     "platformRadius": 24.490002268105744,
     "interactive": false
   },
-  "motion": 1.4310092592592594,
-  "visibleDifference": 7.54403125,
+  "motion": 4.240498842592593,
+  "visibleDifference": 17.647612461419754,
   "frozen": 0,
   "rewind": 0,
-  "extraCalls": 5
+  "extraCalls": 6
 }

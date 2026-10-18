@@ -1,18 +1,23 @@
-import {sampleProjectile,ALL_PROJECTILE_COLORS,projectileVisualIndex} from './projectile-presentation';
-import {PROJECTILE_HAND_CLEARANCE} from './weapon-tuning';
+import {sampleProjectile} from './projectile-presentation';
+import {DAGGER_PRESENTATION,PROJECTILE_HAND_CLEARANCE,PROJECTILE_TRAIL_OFFSET} from './weapon-tuning';
+import {projectileTrail} from './projectile-trail';
+import {projectileChroma} from './projectile-chroma';
 import * as THREE from 'three';
 import {type World,type Projectile,type Vec} from './simulation';
 
 const FIELD_SIZE=128,FIELD_SPAN=160;
 
-/** One procedural glow draw and one fixed-size floor texture, independent of light count. */
+/** Two batched glow/trail draws and a fixed-size floor texture, independent of light count. */
 export class ProjectileLighting {
  readonly glow:THREE.Mesh<THREE.InstancedBufferGeometry,THREE.ShaderMaterial>;
+ readonly trail:THREE.Mesh<THREE.InstancedBufferGeometry,THREE.ShaderMaterial>;
  private capacity=256;
  private sample={x:0,y:0,z:0};
+ private velocity={x:0,y:0,z:0};
  private centers!:THREE.InstancedBufferAttribute;
  private colors!:THREE.InstancedBufferAttribute;
  private profiles!:THREE.InstancedBufferAttribute;
+ private travel!:THREE.InstancedBufferAttribute;
  private pixels=new Uint8Array(FIELD_SIZE*FIELD_SIZE*4);
  private field=new THREE.DataTexture(this.pixels,FIELD_SIZE,FIELD_SIZE);
  private active=false;
@@ -40,42 +45,61 @@ export class ProjectileLighting {
      // A centered, round light cannot acquire a false flight angle as the
      // camera strafes past it. The physical dagger supplies the silhouette.
      float pixelWorld=2.*max(.05,-center.z)/(projectionMatrix[1][1]*viewportHeight);
-     float width=max(mix(.32,.22,shotPellet),pixelWorld*mix(6.,4.,shotPellet));
+     float width=max(mix(.9,1.05,shotPellet),pixelWorld*mix(11.,12.,shotPellet));
      center.xy+=position.xy*width;
      gl_Position=projectionMatrix*center;
     }`,
    fragmentShader:`varying vec2 glowUV;varying vec3 glowColor;varying float glowDistance;varying float glowPellet;
-    void main(){if(glowDistance<mix(${(PROJECTILE_HAND_CLEARANCE+.25).toFixed(2)},.8,glowPellet))discard;vec2 p=(glowUV-.5)*2.;float edge=max(0.,1.-dot(p,p));
-     float halo=edge*edge*.075;
-     float core=pow(max(0.,1.-length(p)*4.),2.);
+    void main(){if(glowDistance<mix(${(PROJECTILE_HAND_CLEARANCE+.25).toFixed(2)},.8,glowPellet))discard;vec2 p=(glowUV-.5)*2.;float radius=length(p);if(radius>1.)discard;
+     float edge=1.-smoothstep(.65,1.,radius);
+     float halo=exp(-radius*radius*6.)*edge*.095;
+     float corona=exp(-radius*radius*35.)*.18;
+     float core=exp(-radius*radius*180.);
      float brightness=max(glowColor.r,max(glowColor.g,glowColor.b));
-     gl_FragColor=vec4(glowColor*halo+mix(glowColor,vec3(brightness),.12)*core*.85,1.);
+     gl_FragColor=vec4(glowColor*(halo+corona)+mix(glowColor,vec3(brightness),.45)*core*.9,1.);
     }`});
-  this.glow=new THREE.Mesh(geometry,material);this.glow.name='projectile-glow-batch';this.glow.frustumCulled=false;this.glow.visible=false;scene.add(this.glow);this.allocate();
+  this.glow=new THREE.Mesh(geometry,material);this.glow.name='projectile-glow-batch';this.glow.frustumCulled=false;this.glow.visible=false;
+  this.trail=projectileTrail(geometry);this.glow.add(this.trail);scene.add(this.glow);this.allocate();
  }
  private allocate(){
   const geometry=this.glow.geometry;
   this.centers=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity*3),3).setUsage(THREE.DynamicDrawUsage);
   this.colors=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity*3),3).setUsage(THREE.DynamicDrawUsage);
   this.profiles=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity),1).setUsage(THREE.DynamicDrawUsage);
+  this.travel=new THREE.InstancedBufferAttribute(new Float32Array(this.capacity*3),3).setUsage(THREE.DynamicDrawUsage);
   geometry.setAttribute('shotPellet',this.profiles);geometry.setAttribute('shotCenter',this.centers);geometry.setAttribute('shotColor',this.colors);
+  const trail=this.trail.geometry;
+  trail.setAttribute('shotPellet',this.profiles);trail.setAttribute('shotCenter',this.centers);trail.setAttribute('shotColor',this.colors);trail.setAttribute('shotTravel',this.travel);
  }
  update(world:World|null,menu:boolean,alpha:number,height:number,projectileView?:(p:Projectile,position:Vec)=>Vec){
   const shots=world&&!menu?world.projectiles:[],count=shots.length;
   this.glow.visible=count>0;this.glow.geometry.instanceCount=count;this.glow.material.uniforms.viewportHeight.value=height;
+  this.trail.geometry.instanceCount=count;this.trail.material.uniforms.viewportHeight.value=height;
   if(!count){if(this.active)this.clear();return;}
   if(count>this.capacity){while(this.capacity<count)this.capacity*=2;
    // Replace the geometry too: Three caches its maximum instance count after
    // the first draw, so simply resizing attributes would still truncate it.
    const previous=this.glow.geometry,geometry=new THREE.InstancedBufferGeometry();
    geometry.index=previous.index;geometry.attributes.position=previous.attributes.position;geometry.attributes.uv=previous.attributes.uv;geometry.instanceCount=count;
-   previous.dispose();this.glow.geometry=geometry;this.allocate();
+   previous.dispose();this.glow.geometry=geometry;
+   this.trail.geometry.dispose();const trailGeometry=new THREE.InstancedBufferGeometry();
+   trailGeometry.index=geometry.index;trailGeometry.setAttribute('position',geometry.attributes.position);trailGeometry.setAttribute('uv',geometry.attributes.uv);
+   this.trail.geometry=trailGeometry;trailGeometry.instanceCount=count;
+   this.allocate();
   }
-  this.active=true;this.pixels.fill(0);alpha=Math.max(0,Math.min(1,alpha));
+  this.active=true;this.pixels.fill(0);alpha=Math.max(0,Math.min(1,alpha));const chroma=projectileChroma(world!);
   for(let i=0;i<count;i++){
-   const p=shots[i],position=sampleProjectile(p,alpha,this.sample);
+   const p=shots[i],position=sampleProjectile(p,alpha,this.sample,this.velocity);
    const {x,y,z}=position;
-   const color=ALL_PROJECTILE_COLORS[projectileVisualIndex(p,world!.level)];this.profiles.setX(i,p.kind==='shotgun'?1:0);
+   const speed=Math.hypot(this.velocity.x,this.velocity.y,this.velocity.z);
+   let length=Math.min(p.kind==='shotgun'?1.2:2.1,speed*.026,speed*Math.max(0,p.age));
+   // A ribbon cannot extend through a floor or armor contact after a bounce.
+   // Limit it to the currently displayed segment of the swept path.
+   if(p.path?.length){let start=p.previous??p.pos;for(const point of p.path){if(point.t>alpha)break;start=point.pos;}
+    length=Math.min(length,Math.max(0,Math.hypot(x-start.x,y-start.y,z-start.z)-PROJECTILE_TRAIL_OFFSET*(p.kind==='shotgun'?DAGGER_PRESENTATION.shotgunScale:1)));}
+   const scale=speed>0?length/speed:0;
+   this.travel.setXYZ(i,this.velocity.x*scale,this.velocity.y*scale,this.velocity.z*scale);
+   const color=chroma.color(p,world!.level);this.profiles.setX(i,p.kind==='shotgun'?1:0);
    if(projectileView)projectileView(p,position);
    this.centers.setXYZ(i,position.x,position.y,position.z);this.colors.setXYZ(i,color[0],color[1],color[2]);
    // Compact splats into a world-space field. Maximum blending prevents dense
@@ -87,9 +111,9 @@ export class ProjectileLighting {
     for(let channel=0;channel<3;channel++)this.pixels[offset+channel]=Math.max(this.pixels[offset+channel],color[channel]*falloff);
    }
   }
-  for(const attribute of [this.centers,this.colors,this.profiles]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,count*attribute.itemSize);attribute.needsUpdate=true;}
+  for(const attribute of [this.centers,this.colors,this.profiles,this.travel]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,count*attribute.itemSize);attribute.needsUpdate=true;}
   this.field.needsUpdate=true;
  }
- clear(){this.glow.visible=false;this.glow.geometry.instanceCount=0;this.pixels.fill(0);this.field.needsUpdate=true;this.active=false;}
- get diagnostics(){return {count:this.glow.geometry.instanceCount,drawCalls:this.glow.visible?1:0,capacity:this.capacity,fieldSize:FIELD_SIZE};}
+ clear(){this.glow.visible=false;this.glow.geometry.instanceCount=0;this.trail.geometry.instanceCount=0;this.pixels.fill(0);this.field.needsUpdate=true;this.active=false;}
+ get diagnostics(){return {count:this.glow.geometry.instanceCount,drawCalls:this.glow.visible?2:0,capacity:this.capacity,fieldSize:FIELD_SIZE};}
 }

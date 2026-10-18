@@ -154,7 +154,7 @@ export class GameRenderer {
   }
   private updateCrewModels(world:World|null,dt:number,crewInterpolated:boolean,scene:THREE.Scene,menu=false){
     const crewIds=new Set<string>();
-    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===p.id),basketballPose(world.courtyard?.basketball,p.id,world.tick,p));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');const nameLabel=model.getObjectByName('crew-name');if(nameLabel)nameLabel.visible=!(world.courtyard&&inHideWing(p.player.pos.x,p.player.pos.z));}
+    if(world&&!menu)for(let i=0;i<world.crew.length;i++){const p=world.crew[i];if((p.player===world.player&&!(this.crewReplayMode&&(this.topDown||this.crewReplayExternal)))||!p.alive)continue;crewIds.add(p.id);let model=this.crewModels.get(p.id);if(!model){model=createCrewAvatar(i);model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);this.crewModels.set(p.id,model);scene.add(model);}if(model.parent!==scene)scene.add(model);if(crewInterpolated)model.position.set(p.player.pos.x,p.player.pos.y,p.player.pos.z);else model.position.lerp(new THREE.Vector3(p.player.pos.x,p.player.pos.y,p.player.pos.z),1-Math.exp(-25*dt));model.rotation.y=p.input.yaw;const skin=this.crewSkins.get(p.id);setCrewAvatarSkin(model,skin?.skin,skin?.rank);updateCrewAvatar(model,p.input,p.player.vel,p.player.grounded,(scene===this.entrance.scene||scene===this.courtyard.scene)?world.tick*STEP:world.time,p.lastShotTick>=0&&(world.tick-p.lastShotTick)<18,scene===this.entrance.scene||scene===this.courtyard.scene,p.level,footballKickPose(world.courtyard,p.id,world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===p.id),basketballPose(world.courtyard?.basketball,p.id,world.tick,p),undefined,this.blood.handBlood.sample(world,p.player));setCrewAvatarColor(model,this.crewColors.get(p.id));this.updateCrewName(model,this.crewNames.get(p.id)??'Wanderer');const nameLabel=model.getObjectByName('crew-name');if(nameLabel)nameLabel.visible=!(world.courtyard&&inHideWing(p.player.pos.x,p.player.pos.z));}
     for(const [id,model]of this.crewModels)if(!crewIds.has(id)){this.disposeCrew(model);this.crewModels.delete(id);}
   }
   private disposeCrew(model:THREE.Group){model.removeFromParent();disposeCrewAvatar(model);model.traverse(o=>{if(o instanceof THREE.Sprite){o.material.map?.dispose();o.material.dispose();}});}
@@ -169,7 +169,7 @@ export class GameRenderer {
     samplePlayerPosition(world,alpha,hands.position);hands.rotation.set(0,yaw,0);
     const local=world.crew.find(p=>p.player===world.player),skin=local?this.crewSkins.get(local.id):undefined;
     setCrewAvatarColor(hands,local?this.crewColors.get(local.id):this.localPlayerColor);setCrewAvatarSkin(hands,skin?.skin,skin?.rank);
-    updateCrewAvatar(hands,input,world.player.vel,world.player.grounded,time,local?local.lastShotTick>=0&&(world.tick-local.lastShotTick)<18:false,courtyard,world.level,footballKickPose(world.courtyard,local?.id??'',world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===local?.id),basketballPose(world.courtyard?.basketball,local?.id??'',world.tick,local),courtyard?undefined:this.originalWeapon.handFeedback);
+    updateCrewAvatar(hands,input,world.player.vel,world.player.grounded,time,local?local.lastShotTick>=0&&(world.tick-local.lastShotTick)<18:false,courtyard,world.level,footballKickPose(world.courtyard,local?.id??'',world.tick),!!world.courtyard?.drawing?.pencils.some(pencil=>pencil.owner===local?.id),basketballPose(world.courtyard?.basketball,local?.id??'',world.tick,local),courtyard?undefined:{...this.originalWeapon.handFeedback,blood:this.blood.handBlood.sample(world)});
   }
 
   readonly entrance:SinglePlayerEntrance;
@@ -281,6 +281,7 @@ export class GameRenderer {
   async prepare() {
     await Promise.all([this.veilEnvironment.ready,this.furnace.ready,this.sky.ready,this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
     this.entrance.sanctuary.setSpace(this.sky.cosmicTexture);
+    this.blood.setReflections(this.sky.cosmicTexture,this.sky.reflectionTexture);
     if(!this.originalEnemies.ready||!this.originalWeapon.ready)return;
     // Compile the gameplay and hand materials while the menu is still visible.
     const body=createCrewAvatar(0),ghost=createCrewAvatar(0,true);
@@ -319,7 +320,7 @@ export class GameRenderer {
     if(!local&&(effect.kind==='shot'||effect.kind==='burst')&&effect.shooterId){
       const model=this.crewModels.get(effect.shooterId),shooter=world.crew.find(p=>p.id===effect.shooterId);
       if(model&&shooter){
-        updateCrewAvatar(model,shooter.input,shooter.player.vel,shooter.player.grounded,world.time,true,false,shooter.level);
+        updateCrewAvatar(model,shooter.input,shooter.player.vel,shooter.player.grounded,world.time,true,false,shooter.level,undefined,false,undefined,undefined,this.blood.handBlood.sample(world,shooter.player));
         model.updateWorldMatrix(true,true);
         const level=effect.level??shooter.level,count=effect.projectileKind==='shotgun'?(level>=5?2:1):HAND_MUZZLES[level-1].length;
         const muzzles:Vec[]=[];
@@ -395,7 +396,7 @@ export class GameRenderer {
     }
     const atmosphere=this.environment.update(world?.time??0,menu),day=this.environment.daylight;
     this.chapterLighting.update(atmosphere,menu,this.skyLight,this.moonLight,this.rimLight,this.infernalLight);
-    const cosmic=atmosphere.cosmic;
+    const cosmic=atmosphere.cosmic;this.blood.cosmic=cosmic;
     // Keep the orbital landmarks intact when viewed from the far edge of the arena.
     const viewDistance=cosmic>.001?320:180;
     if(this.camera.far!==viewDistance){this.camera.far=viewDistance;this.camera.updateProjectionMatrix();}
@@ -495,7 +496,7 @@ export class GameRenderer {
     if(world&&!menu&&this.topDown&&bodyInput&&!spectatorPosition&&!world.crew.length){
       if(!this.replayBody){this.replayBody=createCrewAvatar(0);this.replayBody.name='replay-player';this.scene.add(this.replayBody);}
       this.replayBody.visible=true;this.replayBody.position.set(world.player.pos.x,world.player.pos.y,world.player.pos.z);this.replayBody.rotation.y=bodyInput.yaw;
-      updateCrewAvatar(this.replayBody,bodyInput,world.player.vel,world.player.grounded,world.time,false,false,world.level);
+      updateCrewAvatar(this.replayBody,bodyInput,world.player.vel,world.player.grounded,world.time,false,false,world.level,undefined,false,undefined,undefined,this.blood.handBlood.sample(world));
     }else if(this.replayBody)this.replayBody.visible=false;
     this.originalWeapon.update(world,dt,menu,this.topDown||spectatorPosition?undefined:this.camera,projectileAlpha,this.feedbackWorldOffset,this.movementMotion.pose,()=>{
       const local=world?.crew.find(p=>p.player===world.player);

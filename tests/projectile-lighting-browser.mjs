@@ -34,7 +34,7 @@ try{
   },quality));
   await page.locator('#light-test').screenshot({path:`artifacts/projectile-light-${quality}.png`});
  }
- for(const r of results){assert.ok(r.floorLit[0]>r.dark[0]+3&&r.floorLit[0]<r.dark[0]+35,JSON.stringify(r));assert.ok(r.floorLit[0]-r.dark[0]>r.floorLit[1]-r.dark[1],JSON.stringify(r));assert.ok(r.glowPixelGain>1000,JSON.stringify(r));assert.equal(r.count,12);assert.equal(r.extraGlowDraws,1);}
+ for(const r of results){assert.ok(r.floorLit[0]>r.dark[0]+3&&r.floorLit[0]<r.dark[0]+35,JSON.stringify(r));assert.ok(r.floorLit[0]-r.dark[0]>r.floorLit[1]-r.dark[1],JSON.stringify(r));assert.ok(r.glowPixelGain>1000,JSON.stringify(r));assert.equal(r.count,12);assert.equal(r.extraGlowDraws,2);}
  await page.evaluate(async()=>{
   const {renderer,world,v}=window.lightFixture;const {idleInput,STEP}=await import('/src/simulation.ts');
   renderer.clear();world.projectiles=[];world.effects=[];world.level=1;world.player.pos=v(0,1.7,0);
@@ -59,7 +59,7 @@ try{
  const strafe=await page.evaluate(()=>{
   const {THREE,v}=window.lightFixture,scene=new THREE.Scene();
   const Lighting=window.lightFixture.renderer.projectileLighting.constructor;
-  const lighting=new Lighting(scene,new THREE.MeshBasicMaterial()),renderer=new THREE.WebGLRenderer({antialias:false});
+  const lighting=new Lighting(scene,new THREE.MeshBasicMaterial()),renderer=new THREE.WebGLRenderer({antialias:false});lighting.trail.visible=false;
   renderer.setSize(512,512);renderer.setClearColor(0);
   const camera=new THREE.PerspectiveCamera(90,1,.05,100),p={id:1,pos:v(0,0,-4),vel:v(0,0,-70),age:.1,homing:false,level:1};
   const world={projectiles:[p],level:1},pixels=new Uint8Array(512*512*4);let maxCenterError=0,maxAnisotropy=0,checks=0;

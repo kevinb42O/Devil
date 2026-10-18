@@ -1,0 +1,542 @@
+{
+  "title": "DESCEND — Environment Film",
+  "duration": 81,
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "dissolve": 1,
+  "source": "Fixed-step native 1080p game rendering. Cinematic spectator cameras, staged drifting creatures and the game Gigapede movement. No player firing, kills or first-person views.",
+  "shots": [
+    {
+      "id": "01-cosmic-sweep",
+      "duration": 9,
+      "start": 5,
+      "bed": "space",
+      "fov": 60,
+      "path": [
+        [
+          -31,
+          8,
+          25
+        ],
+        [
+          -22,
+          14,
+          33
+        ],
+        [
+          0,
+          19,
+          36
+        ],
+        [
+          28,
+          12,
+          27
+        ]
+      ],
+      "look": [
+        [
+          0,
+          5,
+          -2
+        ],
+        [
+          0,
+          7,
+          -3
+        ],
+        [
+          2,
+          6,
+          -5
+        ]
+      ],
+      "filmIn": 0,
+      "filmOut": 9
+    },
+    {
+      "id": "02-orbital-stone",
+      "duration": 7,
+      "start": 12,
+      "bed": "space",
+      "fov": 59,
+      "path": [
+        [
+          -35,
+          5,
+          12
+        ],
+        [
+          -34,
+          9,
+          -4
+        ],
+        [
+          -26,
+          14,
+          -23
+        ],
+        [
+          -6,
+          16,
+          -35
+        ]
+      ],
+      "look": [
+        [
+          -12,
+          7,
+          -10
+        ],
+        [
+          -12,
+          8,
+          -10
+        ],
+        [
+          -8,
+          8,
+          -10
+        ]
+      ],
+      "filmIn": 8,
+      "filmOut": 15
+    },
+    {
+      "id": "03-storm-voyage",
+      "duration": 9,
+      "start": 92,
+      "bed": "storm",
+      "fov": 63,
+      "path": [
+        [
+          30,
+          6,
+          25
+        ],
+        [
+          21,
+          4,
+          24
+        ],
+        [
+          0,
+          3.1,
+          23
+        ],
+        [
+          -25,
+          10,
+          20
+        ]
+      ],
+      "look": [
+        [
+          3,
+          4,
+          -4
+        ],
+        [
+          -3,
+          5,
+          -5
+        ],
+        [
+          -7,
+          7,
+          -8
+        ]
+      ],
+      "filmIn": 14,
+      "filmOut": 23
+    },
+    {
+      "id": "04-waterline",
+      "duration": 6,
+      "start": 105,
+      "bed": "storm",
+      "fov": 58,
+      "path": [
+        [
+          -17,
+          1.05,
+          15
+        ],
+        [
+          -6,
+          0.8,
+          11
+        ],
+        [
+          8,
+          1.5,
+          9
+        ],
+        [
+          18,
+          5,
+          9
+        ]
+      ],
+      "look": [
+        [
+          -2,
+          1.3,
+          -8
+        ],
+        [
+          0,
+          2,
+          -10
+        ],
+        [
+          2,
+          5,
+          -12
+        ]
+      ],
+      "filmIn": 22,
+      "filmOut": 28
+    },
+    {
+      "id": "05-violet-passage",
+      "duration": 8,
+      "start": 175,
+      "bed": "veil",
+      "fov": 59,
+      "path": [
+        [
+          -30,
+          5,
+          18
+        ],
+        [
+          -20,
+          6,
+          12
+        ],
+        [
+          0,
+          8,
+          15
+        ],
+        [
+          24,
+          13,
+          20
+        ]
+      ],
+      "look": [
+        [
+          -8,
+          6,
+          -8
+        ],
+        [
+          1,
+          7,
+          -11
+        ],
+        [
+          8,
+          9,
+          -16
+        ]
+      ],
+      "filmIn": 27,
+      "filmOut": 35
+    },
+    {
+      "id": "06-furnace-crane",
+      "duration": 9,
+      "start": 295,
+      "bed": "furnace",
+      "fov": 62,
+      "path": [
+        [
+          28,
+          19,
+          26
+        ],
+        [
+          24,
+          12,
+          27
+        ],
+        [
+          15,
+          6,
+          28
+        ],
+        [
+          -4,
+          3.8,
+          25
+        ]
+      ],
+      "look": [
+        [
+          0,
+          2,
+          -1
+        ],
+        [
+          -3,
+          3,
+          -6
+        ],
+        [
+          -8,
+          5,
+          -10
+        ]
+      ],
+      "filmIn": 34,
+      "filmOut": 43
+    },
+    {
+      "id": "07-serpent-drift",
+      "duration": 7,
+      "start": 310,
+      "bed": "furnace",
+      "fov": 58,
+      "follow": true,
+      "path": [],
+      "look": [],
+      "filmIn": 42,
+      "filmOut": 49
+    },
+    {
+      "id": "08-cathedral-ascent",
+      "duration": 10,
+      "start": 400,
+      "bed": "cathedral",
+      "fov": 61,
+      "path": [
+        [
+          -22,
+          2.5,
+          22
+        ],
+        [
+          -12,
+          5,
+          27
+        ],
+        [
+          5,
+          12,
+          31
+        ],
+        [
+          25,
+          23,
+          26
+        ]
+      ],
+      "look": [
+        [
+          -3,
+          5,
+          -13
+        ],
+        [
+          0,
+          15,
+          -20
+        ],
+        [
+          1,
+          27,
+          -25
+        ]
+      ],
+      "filmIn": 48,
+      "filmOut": 58
+    },
+    {
+      "id": "09-light-and-limestone",
+      "duration": 7,
+      "start": 415,
+      "bed": "cathedral",
+      "fov": 57,
+      "path": [
+        [
+          -18,
+          1.05,
+          13
+        ],
+        [
+          -6,
+          1.5,
+          12
+        ],
+        [
+          6,
+          3.5,
+          14
+        ],
+        [
+          19,
+          8,
+          18
+        ]
+      ],
+      "look": [
+        [
+          0,
+          2,
+          -6
+        ],
+        [
+          -2,
+          5,
+          -10
+        ],
+        [
+          -4,
+          13,
+          -18
+        ]
+      ],
+      "filmIn": 57,
+      "filmOut": 64
+    },
+    {
+      "id": "10-cathedral-recession",
+      "duration": 9,
+      "start": 430,
+      "bed": "cathedral",
+      "fov": 61,
+      "path": [
+        [
+          4,
+          7,
+          17
+        ],
+        [
+          13,
+          14,
+          25
+        ],
+        [
+          25,
+          24,
+          34
+        ],
+        [
+          34,
+          32,
+          43
+        ]
+      ],
+      "look": [
+        [
+          -1,
+          8,
+          -10
+        ],
+        [
+          0,
+          12,
+          -12
+        ],
+        [
+          1,
+          14,
+          -15
+        ]
+      ],
+      "filmIn": 63,
+      "filmOut": 72
+    },
+    {
+      "id": "11-beneath-the-world",
+      "duration": 6,
+      "start": 487,
+      "bed": "depth",
+      "fov": 65,
+      "path": [
+        [
+          -18,
+          4,
+          23
+        ],
+        [
+          -10,
+          6,
+          27
+        ],
+        [
+          4,
+          10,
+          28
+        ],
+        [
+          20,
+          15,
+          24
+        ]
+      ],
+      "look": [
+        [
+          0,
+          8,
+          -10
+        ],
+        [
+          0,
+          14,
+          -17
+        ],
+        [
+          0,
+          20,
+          -23
+        ]
+      ],
+      "filmIn": 71,
+      "filmOut": 77
+    },
+    {
+      "id": "12-title",
+      "duration": 5,
+      "start": 493,
+      "bed": "depth",
+      "fov": 65,
+      "title": true,
+      "path": [
+        [
+          -7,
+          6,
+          28
+        ],
+        [
+          0,
+          8,
+          29
+        ],
+        [
+          7,
+          10,
+          28
+        ]
+      ],
+      "look": [
+        [
+          0,
+          13,
+          -13
+        ],
+        [
+          0,
+          15,
+          -16
+        ]
+      ],
+      "filmIn": 76,
+      "filmOut": 81
+    }
+  ]
+}

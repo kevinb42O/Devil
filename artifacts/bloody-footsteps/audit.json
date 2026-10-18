@@ -1,0 +1,91 @@
+{
+  "prints": [
+    {
+      "x": 0.25263671875,
+      "y": 0.03878940388560295,
+      "z": -5.629727343678475,
+      "angle": 6.283185307179586,
+      "side": -1,
+      "strength": 0.9266,
+      "born": 11.40819999998808
+    },
+    {
+      "x": -0.06736328125,
+      "y": 0.028709933869540693,
+      "z": -8.029727343678474,
+      "angle": 6.283185307179586,
+      "side": 1,
+      "strength": 0.7616000000000003,
+      "born": 11.808199999988078
+    },
+    {
+      "x": 0.25263671875,
+      "y": 0.03749403949826956,
+      "z": -10.427327343821522,
+      "angle": 6.283185307179586,
+      "side": -1,
+      "strength": 0.5966799999952321,
+      "born": 12.20780000001192
+    },
+    {
+      "x": -0.06736328125,
+      "y": 0.04272980108857155,
+      "z": -12.825527343749993,
+      "angle": 6.283185307179586,
+      "side": 1,
+      "strength": 0.43173999999761664,
+      "born": 12.607499999999998
+    },
+    {
+      "x": 0.25263671875,
+      "y": 0.031068874131888153,
+      "z": -15.228527343749985,
+      "angle": 6.283185307179586,
+      "side": -1,
+      "strength": 0.2666399999976168,
+      "born": 13.007999999999997
+    },
+    {
+      "x": -0.06736328125,
+      "y": 0.03895496636629105,
+      "z": -17.629727343678457,
+      "angle": 6.283185307179586,
+      "side": 1,
+      "strength": 0.10160000000000098,
+      "born": 13.408199999988076
+    }
+  ],
+  "calls": [
+    "footstep-stone3",
+    "footstep-wet3",
+    "footstep-stone9",
+    "footstep-wet9",
+    "footstep-stone4",
+    "footstep-wet4",
+    "footstep-stone11",
+    "footstep-wet11",
+    "footstep-stone2",
+    "footstep-wet2",
+    "footstep-stone1",
+    "footstep-wet1",
+    "footstep-stone10"
+  ],
+  "puddleCoverage": 255,
+  "diagnostics": {
+    "active": 0,
+    "capacity": 768,
+    "landings": 24,
+    "discarded": 0,
+    "revision": 24,
+    "textureBytes": 16777216,
+    "uploadBytes": 0,
+    "stainDrawCalls": 0,
+    "assetsReady": true,
+    "goreVariants": 0,
+    "dropletDrawCalls": 0,
+    "dropletActive": 0,
+    "sprayDrawCalls": 0,
+    "sprayActive": 0
+  },
+  "errors": []
+}

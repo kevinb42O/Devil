@@ -1,0 +1,135 @@
+{
+  "reports": [
+    {
+      "id": "02-orbital-stone",
+      "frames": 210,
+      "renderSeconds": 14.047,
+      "cameraDistance": 48.44563892599822,
+      "maxCameraStep": 0.3233300100950533,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "03-storm-voyage",
+      "frames": 270,
+      "renderSeconds": 16.36,
+      "cameraDistance": 56.48029740199981,
+      "maxCameraStep": 0.2948519787104345,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "04-waterline",
+      "frames": 180,
+      "renderSeconds": 11.204,
+      "cameraDistance": 36.48381752279453,
+      "maxCameraStep": 0.2840963645703176,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "05-violet-passage",
+      "frames": 240,
+      "renderSeconds": 17.204,
+      "cameraDistance": 57.22559460872284,
+      "maxCameraStep": 0.3376456618577477,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "06-furnace-crane",
+      "frames": 270,
+      "renderSeconds": 14.653,
+      "cameraDistance": 38.52679276813818,
+      "maxCameraStep": 0.2007615492763927,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "07-serpent-drift",
+      "frames": 210,
+      "renderSeconds": 13.671,
+      "cameraDistance": 69.10083461720605,
+      "maxCameraStep": 0.4156046121526074,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "09-light-and-limestone",
+      "frames": 210,
+      "renderSeconds": 12.527,
+      "cameraDistance": 38.72026525448567,
+      "maxCameraStep": 0.2584034413279689,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "10-cathedral-recession",
+      "frames": 270,
+      "renderSeconds": 21.875,
+      "cameraDistance": 46.96438877684812,
+      "maxCameraStep": 0.24370652480496377,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "11-beneath-the-world",
+      "frames": 180,
+      "renderSeconds": 7.818,
+      "cameraDistance": 41.05947146118852,
+      "maxCameraStep": 0.3197304907123866,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "id": "12-title",
+      "frames": 150,
+      "renderSeconds": 10.53,
+      "cameraDistance": 14.693661207356659,
+      "maxCameraStep": 0.1373310239305212,
+      "shots": 0,
+      "kills": 0,
+      "buffer": [
+        1920,
+        1080
+      ]
+    }
+  ],
+  "errors": []
+}

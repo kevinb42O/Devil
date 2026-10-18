@@ -25,8 +25,8 @@ vec2 armCells(vec3 p){
 
 export const COMBAT_ARM_COLOR = /* glsl */`
 // One continuous bind-space surface across the skin, with no shoulder seams.
-float armMask=combatActive;
-float armFeedbackMask=clamp(vCombatArm.y+(combatTier>=5.?vCombatArm.x:0.),0.,1.)*combatActive;
+float armMask=combatActive*combatSkin;
+float armFeedbackMask=clamp(vCombatArm.y+(combatTier>=5.?vCombatArm.x:0.),0.,1.)*combatActive*combatSkin;
 // The source GLB is authored in small units; normalize before sampling.
 float armTier=clamp(combatTier,1.,7.);
 float armScale=armTier<2.5?1.25:(armTier<4.5?.8:(armTier<6.5?.95:.56));
@@ -69,7 +69,7 @@ export const COMBAT_ARM_NORMAL = /* glsl */`
 // Screen derivatives turn the same plate field into relief, including tiny pores.
 // Limit subpixel relief so distant hands do not shimmer.
 float armDetailFade=1.-smoothstep(.15,.65,length(fwidth(armP)));
-float armHeight=(smoothstep(.015,.14,armCell.y)*.65+armGrain*.09+armPores*.035)*armDetailFade;
+float armHeight=(smoothstep(.015,.14,armCell.y)*.65+armGrain*.09+armPores*.035)*armDetailFade*(1.-handBloodMask*bloodWet*.6);
 vec3 armDx=dFdx(-vViewPosition),armDy=dFdy(-vViewPosition);
 vec3 armRx=cross(armDy,normal),armRy=cross(normal,armDx);
 float armDet=dot(armDx,armRx);

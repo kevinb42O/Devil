@@ -1,0 +1,63 @@
+{
+  "playbackSpeed": 0.25,
+  "measurements": [
+    {
+      "label": "cosmic",
+      "ms": 1.2999999523162842,
+      "active": 24,
+      "capacity": 768,
+      "landings": 0,
+      "discarded": 0,
+      "revision": 1,
+      "textureBytes": 4194304,
+      "uploadBytes": 0,
+      "stainDrawCalls": 0,
+      "assetsReady": true,
+      "goreVariants": 0,
+      "dropletDrawCalls": 1,
+      "dropletActive": 216,
+      "sprayDrawCalls": 1,
+      "sprayActive": 15,
+      "triangles": 130472
+    },
+    {
+      "label": "furnace",
+      "ms": 1.4000000357627869,
+      "active": 24,
+      "capacity": 768,
+      "landings": 0,
+      "discarded": 0,
+      "revision": 7,
+      "textureBytes": 4194304,
+      "uploadBytes": 0,
+      "stainDrawCalls": 0,
+      "assetsReady": true,
+      "goreVariants": 0,
+      "dropletDrawCalls": 1,
+      "dropletActive": 216,
+      "sprayDrawCalls": 1,
+      "sprayActive": 15,
+      "triangles": 72764
+    },
+    {
+      "label": "cathedral",
+      "ms": 1.800000011920929,
+      "active": 24,
+      "capacity": 768,
+      "landings": 0,
+      "discarded": 0,
+      "revision": 13,
+      "textureBytes": 4194304,
+      "uploadBytes": 0,
+      "stainDrawCalls": 0,
+      "assetsReady": true,
+      "goreVariants": 0,
+      "dropletDrawCalls": 1,
+      "dropletActive": 216,
+      "sprayDrawCalls": 1,
+      "sprayActive": 15,
+      "triangles": 83620
+    }
+  ],
+  "errors": []
+}

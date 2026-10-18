@@ -1,0 +1,15 @@
+{
+  "lightResponse": 78978,
+  "selfLitPixels": 34700,
+  "materialsLit": true,
+  "count": 5,
+  "clearance": true,
+  "shotgun": {
+    "pellets": 180,
+    "colors": 8,
+    "maxColorError": 0,
+    "widthRatio": 1.2999999619544795,
+    "lengthRatio": 1.299999976820416
+  },
+  "errors": []
+}

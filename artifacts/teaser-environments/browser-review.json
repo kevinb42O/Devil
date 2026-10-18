@@ -1,0 +1,143 @@
+{
+  "reports": [
+    {
+      "file": "abyss-daggers-environment-film-master.mp4",
+      "width": 1920,
+      "height": 1080,
+      "duration": 81,
+      "frames": [
+        {
+          "time": 4.95,
+          "ready": 4,
+          "meanRGB": 39.50900462962963
+        },
+        {
+          "time": 11.850000000000001,
+          "ready": 4,
+          "meanRGB": 29.312893518518518
+        },
+        {
+          "time": 18.95,
+          "ready": 4,
+          "meanRGB": 57.77736111111111
+        },
+        {
+          "time": 25.3,
+          "ready": 4,
+          "meanRGB": 70.45664351851852
+        },
+        {
+          "time": 31.4,
+          "ready": 4,
+          "meanRGB": 42.918125
+        },
+        {
+          "time": 38.95,
+          "ready": 4,
+          "meanRGB": 29.19673611111111
+        },
+        {
+          "time": 45.85,
+          "ready": 4,
+          "meanRGB": 28.834537037037038
+        },
+        {
+          "time": 53.5,
+          "ready": 4,
+          "meanRGB": 48.9819212962963
+        },
+        {
+          "time": 60.85,
+          "ready": 4,
+          "meanRGB": 80.55775462962963
+        },
+        {
+          "time": 67.95,
+          "ready": 4,
+          "meanRGB": 39.839050925925925
+        },
+        {
+          "time": 74.3,
+          "ready": 4,
+          "meanRGB": 11.329305555555555
+        },
+        {
+          "time": 78.75,
+          "ready": 4,
+          "meanRGB": 11.437708333333333
+        }
+      ],
+      "playedToEnd": true
+    },
+    {
+      "file": "abyss-daggers-environment-film-share.mp4",
+      "width": 1920,
+      "height": 1080,
+      "duration": 81,
+      "frames": [
+        {
+          "time": 4.95,
+          "ready": 4,
+          "meanRGB": 39.92238425925926
+        },
+        {
+          "time": 11.850000000000001,
+          "ready": 4,
+          "meanRGB": 29.75974537037037
+        },
+        {
+          "time": 18.95,
+          "ready": 4,
+          "meanRGB": 57.87712962962963
+        },
+        {
+          "time": 25.3,
+          "ready": 4,
+          "meanRGB": 70.57953703703704
+        },
+        {
+          "time": 31.4,
+          "ready": 4,
+          "meanRGB": 43.244236111111114
+        },
+        {
+          "time": 38.95,
+          "ready": 4,
+          "meanRGB": 29.21613425925926
+        },
+        {
+          "time": 45.85,
+          "ready": 4,
+          "meanRGB": 29.145347222222224
+        },
+        {
+          "time": 53.5,
+          "ready": 4,
+          "meanRGB": 49.08592592592593
+        },
+        {
+          "time": 60.85,
+          "ready": 4,
+          "meanRGB": 80.549375
+        },
+        {
+          "time": 67.95,
+          "ready": 4,
+          "meanRGB": 40.0469212962963
+        },
+        {
+          "time": 74.3,
+          "ready": 4,
+          "meanRGB": 11.353171296296296
+        },
+        {
+          "time": 78.75,
+          "ready": 4,
+          "meanRGB": 11.444675925925926
+        }
+      ],
+      "playedToEnd": true
+    }
+  ],
+  "errors": []
+}

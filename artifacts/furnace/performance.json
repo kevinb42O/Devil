@@ -8,33 +8,33 @@
     {
       "quality": "high",
       "enabled": false,
-      "calls": 22,
-      "cpuMedianMs": 1.2000000476837158,
-      "gpuMedianMs": 10.755874,
+      "calls": 26,
+      "cpuMedianMs": 1.5,
+      "gpuMedianMs": 12.393874,
       "gpuSamples": 30
     },
     {
       "quality": "high",
       "enabled": true,
-      "calls": 27,
-      "cpuMedianMs": 1,
-      "gpuMedianMs": 14.223499,
+      "calls": 32,
+      "cpuMedianMs": 1.100000023841858,
+      "gpuMedianMs": 18.773499,
       "gpuSamples": 30
     },
     {
       "quality": "low",
       "enabled": false,
-      "calls": 9,
-      "cpuMedianMs": 1.0999999642372131,
-      "gpuMedianMs": 6.988416,
+      "calls": 13,
+      "cpuMedianMs": 1.100000023841858,
+      "gpuMedianMs": 5.701958,
       "gpuSamples": 30
     },
     {
       "quality": "low",
       "enabled": true,
-      "calls": 14,
-      "cpuMedianMs": 1.100000023841858,
-      "gpuMedianMs": 5.997375,
+      "calls": 19,
+      "cpuMedianMs": 1.300000011920929,
+      "gpuMedianMs": 8.220416,
       "gpuSamples": 30
     }
   ]

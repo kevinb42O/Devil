@@ -1,8 +1,10 @@
 import {chromium} from '@playwright/test';
 import assert from 'node:assert/strict';
+import {existsSync} from 'node:fs';
 import {mkdir,writeFile} from 'node:fs/promises';
 const dir='artifacts/combat-presentation';await mkdir(dir,{recursive:true});
-const browser=await chromium.launch({headless:true});
+const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
 try{
  const page=await browser.newPage({viewport:{width:1280,height:720}}),errors=[];
  page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
@@ -18,23 +20,29 @@ try{
   }
   const frame=(dt=0)=>renderer.render(world,0,0,dt,false);
   const pixels=()=>{const gl=renderer.renderer.getContext(),p=new Uint8Array(gl.drawingBufferWidth*gl.drawingBufferHeight*4);gl.readPixels(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight,gl.RGBA,gl.UNSIGNED_BYTE,p);return p;};
-  window.combat={renderer,world,frame,pixels,idleInput};frame();
+  const lightingFrame=(lit=true)=>{
+   frame();if(lit)return;
+   const saved=[];renderer.scene.traverse(node=>{if(node.isLight){saved.push([node,node.intensity]);node.intensity=0;}});
+   renderer.composer.render();renderer.originalWeapon.render(renderer.renderer,false);
+   for(const [light,intensity]of saved)light.intensity=intensity;
+  };
+  window.combat={renderer,world,frame,lightingFrame,pixels,idleInput};frame();
  });
  const visibility=[];
  for(const quality of ['low','high'])for(const time of [0,90,300]){
   const result=await page.evaluate(({quality,time})=>{
-   const {renderer,world,frame,pixels}=window.combat;world.time=time;renderer.configure({quality,fov:90,mist:false});
-   renderer.originalEnemies.surfaceLightStrength.value=0;frame();const before=pixels();
-   renderer.originalEnemies.surfaceLightStrength.value=1;frame();const after=pixels();
+   const {renderer,world,lightingFrame,pixels}=window.combat;world.time=time;renderer.configure({quality,fov:90,mist:false});
+   lightingFrame(false);const before=pixels();
+   lightingFrame();const after=pixels();
    let visiblePixels=0,redGain=0;for(let i=0;i<before.length;i+=4){const d=after[i]-before[i];if(d>10){visiblePixels++;redGain+=d;}}
    return {quality,time,visiblePixels,meanRedGain:redGain/Math.max(1,visiblePixels),drawCalls:renderer.renderer.info.render.calls};
   },{quality,time});
-  assert.ok(result.visiblePixels>1000,`enemy surfaces brighten in ${quality} at ${time}s: ${JSON.stringify(result)}`);visibility.push(result);
+  assert.ok(result.visiblePixels>1000,`enemy surfaces receive scene light in ${quality} at ${time}s: ${JSON.stringify(result)}`);visibility.push(result);
   if(time===0){
    await page.screenshot({path:`${dir}/visibility-${quality}-after.png`});
-   await page.evaluate(()=>{window.combat.renderer.originalEnemies.surfaceLightStrength.value=0;window.combat.frame();});
+   await page.evaluate(()=>window.combat.lightingFrame(false));
    await page.screenshot({path:`${dir}/visibility-${quality}-before.png`});
-   await page.evaluate(()=>{window.combat.renderer.originalEnemies.surfaceLightStrength.value=1;window.combat.frame();});
+   await page.evaluate(()=>window.combat.lightingFrame());
   }
  }
  const weapon=await page.evaluate(()=>{

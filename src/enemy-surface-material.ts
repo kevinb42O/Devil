@@ -1,5 +1,7 @@
 import * as THREE from 'three';
-import {ENVIRONMENT_FRAGMENT,EnvironmentLighting} from './environment-lighting';
+import {EnvironmentLighting} from './environment-lighting';
+import {CATHEDRAL_LIGHT_GLSL} from './cathedral-state';
+import {VEIL_RADIANCE} from './veil-shading';
 import {enemySurfaceProfile,type EnemySurfaceProfile} from './enemy-material-profiles';
 import type {EnemyKind} from './enemy-kinds';
 
@@ -8,7 +10,8 @@ const FAMILIES=['chitin','hide','dragon','spectral','capsule','armor','rift','mi
 const ROLES=['body','shell','metal','bone','rift','jewel','halo'];
 const FUNCTIONS=/* glsl */`
 uniform vec3 eShell,eSecondary,eEdge,eMembrane,eBone,eMetal,eEye,eEnergy;
-uniform float eRough,eMetalness,eScale,eRelief,eHollow,eMarking,eTime,eSurfaceStrength,eHit;
+uniform float eRough,eMetalness,eScale,eRelief,eHollow,eMarking,eTime,eHit;
+uniform float towerVeilAmount,towerCathedralLight,towerCathedralClosure;
 varying vec3 vEnemyP,vEnemyObjectNormal;
 varying float vEnemyRegion;
 float eHash(vec3 p){p=fract(p*.3183099+vec3(.17,.31,.73));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
@@ -209,7 +212,7 @@ vec3 eGradient=sign(eDet)*(dFdx(eHeight)*eRx+dFdy(eHeight)*eRy);
 normal=normalize(abs(eDet)*normal-eGradient*eRelief*eWorldScale*.6);
 `;
 
-export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,environment:EnvironmentLighting,time:{value:number},strength:{value:number},options:{green?:boolean;hit?:boolean}={}){
+export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,environment:EnvironmentLighting,time:{value:number},options:{green?:boolean;hit?:boolean}={}){
  const spider=kind==='spider'||kind==='spider2'||kind==='spiderling';
  const base=enemySurfaceProfile(kind),serpent=kind==='centipede'||kind==='gigapede'||kind==='ghostpede';
  const profile=serpent&&role==='body'?{...base,shell:0x101c21,secondary:0x192b2c,metalness:.12,roughness:.57}:base,p:EnemySurfaceProfile=options.green?{...profile,shell:spider?0x173a28:0x365129,edge:spider?0x60915a:0xceef94,energy:spider?0x4c843c:0x9bea52}:role==='jewel'?{...profile,shell:serpent?0x661e0b:0x8d481a,edge:serpent?0xffb85c:0xffd88a,energy:serpent?0xff772c:0xff9d43}:profile;
@@ -218,7 +221,7 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
  material.userData.enemySurface={kind,role,description:p.description};
 
  const color=(hex:number)=>({value:new THREE.Color(hex)});
- const uniforms={eShell:color(p.shell),eSecondary:color(p.secondary),eEdge:color(p.edge),eMembrane:color(p.membrane),eBone:color(p.bone),eMetal:color(p.metal),eEye:color(p.eye),eEnergy:color(p.energy),eRough:{value:p.roughness},eMetalness:{value:p.metalness},eScale:{value:p.scale},eRelief:{value:p.relief},eHollow:{value:p.hollow?1:0},eMarking:{value:p.marking??0},eTime:time,eSurfaceStrength:strength,eHit:{value:options.hit?1:0}};
+ const uniforms={eShell:color(p.shell),eSecondary:color(p.secondary),eEdge:color(p.edge),eMembrane:color(p.membrane),eBone:color(p.bone),eMetal:color(p.metal),eEye:color(p.eye),eEnergy:color(p.energy),eRough:{value:p.roughness},eMetalness:{value:p.metalness},eScale:{value:p.scale},eRelief:{value:p.relief},eHollow:{value:p.hollow?1:0},eMarking:{value:p.marking??0},eTime:time,eHit:{value:options.hit?1:0}};
  material.onBeforeCompile=shader=>{
   shader.fragmentShader=`${spider&&role==='jewel'?'#define SPIDER_CRYSTAL\n':''}${serpent?'#define SERPENT_ANATOMY\n':''}${serpent&&role==='body'?'#define SERPENT_RECESS\n':''}#define ENEMY_FAMILY ${FAMILIES.indexOf(p.family)}\n#define ENEMY_ROLE ${ROLES.indexOf(role)}\n`+shader.fragmentShader;
   Object.assign(shader.uniforms,environment.uniforms,uniforms);
@@ -239,18 +242,33 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
     transformed.xz=spiderGait.xy+mat2(cos(swing),sin(swing),-sin(swing),cos(swing))*radial;
     transformed.y+=max(0.,cos(stride))*.32*spiderGait.z*${kind==='spiderling'?'.16':kind==='spider2'?'3.3':'1.65'};
     `:'transformed.y+=sin(eTime*16.+motionPhase)*motionWeight*abs(position.x)*.32;'}`:''}`);
-  shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\n'+FUNCTIONS+ENVIRONMENT_FRAGMENT)
+  shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\n'+FUNCTIONS+CATHEDRAL_LIGHT_GLSL+VEIL_RADIANCE)
    .replace('#include <color_fragment>','#include <color_fragment>\n'+COLOR)
    .replace('#include <roughnessmap_fragment>','#include <roughnessmap_fragment>\nroughnessFactor=clamp(rough,.16,.95);')
    .replace('#include <metalnessmap_fragment>','#include <metalnessmap_fragment>\nmetalnessFactor=clamp(metal,0.,.9);')
    .replace('#include <normal_fragment_maps>','#include <normal_fragment_maps>\n'+NORMAL)
-   .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+   .replace('#include <lights_fragment_end>',`#include <lights_fragment_end>
+    // Reconstruct the final deformed/instanced world position from view space.
+    // Creatures receive the same sky and spatial shafts as the arena and towers.
+    vec3 enemyWorldPosition=cameraPosition-inverseTransformDirection(normalize(vViewPosition),viewMatrix)*length(vViewPosition);
     vec3 worldSurfaceNormal=inverseTransformDirection(normal,viewMatrix);
-    float surfaceRim=pow(1.-abs(dot(normal,normalize(vViewPosition))),3.);
-    totalEmissiveRadiance+=environmentLight(albedo,worldSurfaceNormal)*.26+emission;
-    totalEmissiveRadiance+=eEnergy*surfaceRim*(.025+eHollow*.15)*eSurfaceStrength;
-    vec3 pearl=.5+.5*cos(vec3(0.,2.1,4.2)+dot(normal,normalize(vViewPosition))*6.);
-    totalEmissiveRadiance+=pearl*surfaceRim*.025*eHollow;`);
+    if(towerVeilAmount>.001){
+     vec3 enemySky=veilRadiance(normalize(worldSurfaceNormal+vec3(0.,.6,0.)),6.);
+     reflectedLight.indirectDiffuse+=BRDF_Lambert(diffuseColor.rgb)*(1.-metalnessFactor)*enemySky*2.5*towerVeilAmount;
+     vec3 enemyEye=normalize(cameraPosition-enemyWorldPosition);
+     vec3 enemyReflection=reflect(-enemyEye,worldSurfaceNormal);
+     vec3 enemyFresnel=mix(vec3(.04),diffuseColor.rgb,metalnessFactor);
+     reflectedLight.indirectSpecular+=veilRadiance(enemyReflection,2.+roughnessFactor*5.)*enemyFresnel*(1.-roughnessFactor*.65)*towerVeilAmount;
+    }
+    if(towerCathedralLight>.001){
+     float enemyShaft=cathedralShaft(enemyWorldPosition,towerCathedralClosure)*towerCathedralLight;
+     float enemyFacing=max(0.,dot(worldSurfaceNormal,normalize(vec3(enemyWorldPosition.x,24.,enemyWorldPosition.z))));
+     reflectedLight.indirectDiffuse+=BRDF_Lambert(diffuseColor.rgb)*(1.-metalnessFactor)*vec3(.30,.285,.40)*enemyShaft*enemyFacing;
+    }`)
+   .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
+    // Only authored eyes, veins and mineral cores emit light. Ordinary skin,
+    // wings, bone and armor must be allowed to fall into shadow.
+    totalEmissiveRadiance+=emission;`);
   if(spider){
    const start=shader.fragmentShader.indexOf(' // Cuticle has overlapping scutes');
    const end=shader.fragmentShader.indexOf('#elif ENEMY_FAMILY == 1',start);
@@ -268,7 +286,7 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
    `+shader.fragmentShader.slice(end);
   }
  };
- material.customProgramCacheKey=()=>`enemy-authored-surfaces-v2-${p.family}-${role}-${spider?kind:serpent?'serpent':'standard'}`;
+ material.customProgramCacheKey=()=>`enemy-authored-surfaces-v3-${p.family}-${role}-${spider?kind:serpent?'serpent':'standard'}`;
  return material;
 }
 

@@ -1,0 +1,182 @@
+{
+  "opticalPaths": [
+    {
+      "distance": 0.4,
+      "opacity": 0.00927734375
+    },
+    {
+      "distance": 1,
+      "opacity": 0.02294921875
+    },
+    {
+      "distance": 4,
+      "opacity": 0.08935546875
+    },
+    {
+      "distance": 8,
+      "opacity": 0.17236328125
+    }
+  ],
+  "fall": {
+    "release": 0.013089811354453173,
+    "atSpeed": 29.86146494986866,
+    "expected": 29.86146494986866,
+    "reduced": 0
+  },
+  "groundError": 0,
+  "floorClouds": {
+    "cyanPixels": 30082,
+    "violetPixels": 439683,
+    "meanDifference": 7.745019829417231
+  },
+  "difference": 12.20172337962963,
+  "motion": 3.6584211033950615,
+  "paused": 0,
+  "rewind": 0,
+  "reducedDifference": 0,
+  "nearOcclusion": 2.583327617741198,
+  "opacity": {
+    "p10": 0.01904296875,
+    "p50": 0.06689453125,
+    "p95": 0.609130859375
+  },
+  "cloudLight": {
+    "p10": 0.013357162475585938,
+    "p90": 0.176666259765625
+  },
+  "later": {
+    "enabled": true,
+    "strength": 0.8125,
+    "steps": 40,
+    "time": 0,
+    "entrance": false,
+    "heat": 0,
+    "cosmic": 0,
+    "environmentTime": 60,
+    "volumeSize": [
+      360,
+      225
+    ],
+    "chapter": "The Cloud Grave",
+    "blend": 0,
+    "density": 0.13,
+    "height": 13,
+    "bank": 1,
+    "smoke": 0,
+    "shafts": 0,
+    "color": [
+      0.095,
+      0.135,
+      0.18
+    ],
+    "pulse": 1,
+    "lights": 0
+  },
+  "performance": [
+    {
+      "quality": "high",
+      "diagnostics": {
+        "enabled": false,
+        "strength": 0.21875000000000003,
+        "steps": 48,
+        "time": 0,
+        "entrance": false,
+        "heat": 0,
+        "cosmic": 1,
+        "environmentTime": 0,
+        "volumeSize": [
+          360,
+          225
+        ],
+        "chapter": "The Cosmic Expanse",
+        "blend": 0,
+        "density": 0.035,
+        "height": 34,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.085,
+          0.155
+        ],
+        "pulse": 1,
+        "lights": 5
+      },
+      "offGpuMs": {
+        "median": 10.574375,
+        "p95": 12.516749,
+        "samples": 14
+      },
+      "onGpuMs": {
+        "median": 16.187999,
+        "p95": 25.134791,
+        "samples": 14
+      },
+      "offFencedMs": {
+        "median": 2.300000011920929,
+        "p95": 4.700000047683716,
+        "samples": 14
+      },
+      "onFencedMs": {
+        "median": 1.5,
+        "p95": 5.800000011920929,
+        "samples": 14
+      }
+    },
+    {
+      "quality": "low",
+      "diagnostics": {
+        "enabled": false,
+        "strength": 0.21875000000000003,
+        "steps": 28,
+        "time": 0,
+        "entrance": false,
+        "heat": 0,
+        "cosmic": 1,
+        "environmentTime": 0,
+        "volumeSize": [
+          360,
+          225
+        ],
+        "chapter": "The Cosmic Expanse",
+        "blend": 0,
+        "density": 0.035,
+        "height": 34,
+        "bank": 0,
+        "smoke": 0,
+        "shafts": 0,
+        "color": [
+          0.11,
+          0.085,
+          0.155
+        ],
+        "pulse": 1,
+        "lights": 5
+      },
+      "offGpuMs": {
+        "median": 5.356875,
+        "p95": 10.459374,
+        "samples": 14
+      },
+      "onGpuMs": {
+        "median": 9.022583,
+        "p95": 11.83675,
+        "samples": 14
+      },
+      "offFencedMs": {
+        "median": 1.800000011920929,
+        "p95": 2.800000011920929,
+        "samples": 14
+      },
+      "onFencedMs": {
+        "median": 2.100000023841858,
+        "p95": 3,
+        "samples": 14
+      }
+    }
+  ],
+  "timerQueries": true,
+  "glError": 0,
+  "errors": []
+}

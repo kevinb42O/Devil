@@ -1,0 +1,31 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+import {existsSync,mkdirSync} from 'node:fs';
+const chrome='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const browser=await chromium.launch({headless:true,...(existsSync(chrome)?{executablePath:chrome}:{})});
+const errors=[];mkdirSync('artifacts/menu-blood',{recursive:true});
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});
+ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error'&&/THREE|shader|WebGL/i.test(m.text()))errors.push(m.text());});
+ await page.addInitScript(()=>{localStorage.setItem('abyss-player-profile',JSON.stringify({name:'Wanderer',automatic:false,configured:true}));if(!localStorage.getItem('abyss-settings'))localStorage.setItem('abyss-settings',JSON.stringify({quality:'high',volume:0,musicVolume:0}));});
+ await page.route('**/rest/v1/rpc/abyss_leaderboard*',route=>route.fulfill({status:200,contentType:'application/json',body:JSON.stringify([{player_name:'Alpha-Q-PRODIGY',survival_ms:446783,kills:1000,gems:400,achieved_at:'2026-10-14T12:00:00Z'}])}));
+ await page.goto(process.env.GAME_URL||'http://127.0.0.1:5173');
+ await page.waitForFunction(()=>window.abyss&&document.documentElement.dataset.relics==='ready'&&document.querySelector('#shrine-name').textContent==='Alpha-Q-PRODIGY');
+ await page.waitForTimeout(900);
+ const before=await page.evaluate(()=>window.abyss.menuRelics.blood);assert.equal(before.emitters,4);assert.equal(before.drops,16);assert.equal(await page.evaluate(()=>window.abyss.menuRelics.headwear),'worn');assert.equal(before.pedestalStreams,11);assert.equal(before.pedestalDrops,22);assert.equal(before.puddledLedges,22);
+ const cameraBefore=await page.evaluate(()=>window.abyss.menuRelics.camera);
+ const scaleBefore=await page.evaluate(()=>window.abyss.menuRelics.portraitScale);
+ assert.equal(await page.evaluate(()=>window.abyss.menuRelics.portraitJoints),5);
+ await page.waitForTimeout(400);
+ assert.notDeepEqual(await page.evaluate(()=>window.abyss.menuRelics.camera),cameraBefore);
+ assert.notDeepEqual(await page.evaluate(()=>window.abyss.menuRelics.portraitScale),scaleBefore);
+ assert.ok((await page.evaluate(()=>window.abyss.menuRelics.blood.time))>before.time);
+ await page.screenshot({path:'artifacts/menu-blood/desktop.png'});await page.locator('#champion-stage').screenshot({path:'artifacts/menu-blood/devil.png'});
+ await page.setViewportSize({width:390,height:844});await page.locator('#champion-stage').scrollIntoViewIfNeeded();await page.screenshot({path:'artifacts/menu-blood/mobile.png'});
+ await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('abyss-settings'));s.skyMotion='reduced';localStorage.setItem('abyss-settings',JSON.stringify(s));});
+ await page.reload();await page.waitForFunction(()=>window.abyss&&document.documentElement.dataset.relics==='ready');
+ const frozenCamera=await page.evaluate(()=>window.abyss.menuRelics.camera);const frozenScale=await page.evaluate(()=>window.abyss.menuRelics.portraitScale);
+ const frozen=await page.evaluate(()=>window.abyss.menuRelics.blood.time);await page.waitForTimeout(250);assert.equal(await page.evaluate(()=>window.abyss.menuRelics.blood.time),frozen);
+ assert.deepEqual(await page.evaluate(()=>window.abyss.menuRelics.camera),frozenCamera);assert.deepEqual(await page.evaluate(()=>window.abyss.menuRelics.portraitScale),frozenScale);
+ assert.deepEqual(errors,[]);console.log('Menu blood passed: loaded avatar, four hand drip emitters, 16 hand drops, crown worn on head, 11 pedestal overflow streams, 22 pedestal drops, animated camera and breathing, five moving joints, desktop/mobile renders, reduced-motion freeze, no shader or browser errors.');
+}finally{await browser.close();}

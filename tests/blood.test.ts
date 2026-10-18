@@ -1,6 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {BloodField,BLOOD_CAPACITY} from '../src/blood.ts';
+import {BloodField,BLOOD_CAPACITY,enemySprayScale} from '../src/blood.ts';
 import {floorHeight,TILE_SIZE,tileHeight} from '../src/arena.ts';
 import {World,v,idleInput} from '../src/simulation.ts';
 import {ReplayPlayer,RunRecorder} from '../src/replay.ts';
@@ -59,4 +59,70 @@ test('crystal hits and destruction emit no blood; flesh kills still bleed',()=>{
  const skull=world.spawn('skull',v(0,6,0));world.damageEnemy(skull,skull.hp);
  for(const effect of world.effects)field.emit(effect,world.time);
  assert.ok(field.drops.some(drop=>drop.enemyBurst),'flesh death retains its gore burst');
+});
+
+test('pressure direction is immutable cosmetic metadata and does not change floor simulation',()=>{
+ const a=new BloodField(256),b=new BloodField(256),direction=v(.6,.1,-.8);
+ const effect={...kill(),direction};a.emit(effect,0);b.emit(effect,0);
+ assert.deepEqual(a.drops[0].sprayDirection,direction);
+ direction.x=99;assert.equal(a.drops[0].sprayDirection!.x,.6);
+ for(const drop of b.drops)delete drop.sprayDirection;
+ a.advance(3);b.advance(3);assert.deepEqual(a.pixels,b.pixels);assert.equal(a.landings,b.landings);
+});
+
+test('floor impacts create substantial filled pools with additive liquid depth',()=>{
+ const field=new BloodField(1024),ground=floorHeight(0,0,0,0);
+ const drop={origin:v(0,ground+1,0),pos:v(0,ground+1,0),velocity:v(0,-120,0),born:0,age:0,size:.4,angle:0,stretch:1,seed:71};
+ field.drops.push(structuredClone(drop));field.advance(1/60);
+ let covered=0,core=0,depth=0;
+ for(let i=0;i<field.pixels.length;i+=4){if(field.pixels[i])covered++;if(field.pixels[i]>190)core++;depth+=field.pixels[i+3];}
+ assert.ok(covered*(51*TILE_SIZE/1024)**2>1,'one heavy impact leaves more than one square metre of pooled / splashed blood');
+ assert.ok(core>25,'the pool has a filled core rather than just scattered flecks');assert.ok(depth>0);
+ const before=field.pixels.slice();
+ field.drops.push({...structuredClone(drop),born:5});field.advance(5+1/60);
+ let addedDepth=false,refreshed=false;
+ for(let i=0;i<field.pixels.length;i+=4){
+  assert.ok(field.pixels[i]>=before[i]);assert.ok(field.pixels[i+3]>=before[i+3]);
+  if(field.pixels[i+3]>before[i+3])addedDepth=true;
+  if(field.pixels[i]>0&&field.pixels[i+1]+field.pixels[i+2]*256>=20)refreshed=true;
+ }
+ assert.ok(addedDepth,'overlapping blood deepens the pool');assert.ok(refreshed,'new impacts refresh the landing time');
+});
+
+test('large floor pools stop at raised tile boundaries',()=>{
+ let edge:{x:number;z:number;low:number;high:number}|undefined;
+ for(let z=1;z<49&&!edge;z++)for(let x=1;x<48;x++){
+  const low=tileHeight(x,z,0),high=tileHeight(x+1,z,0);
+  if(low>-20&&high>low+.08){edge={x:(x-25+.5)*TILE_SIZE,z:(z-25)*TILE_SIZE,low,high};break;}
+ }
+ assert.ok(edge);const field=new BloodField(1024),pos=v(edge.x-.15,edge.low+.5,edge.z);
+ field.drops.push({origin:{...pos},pos:{...pos},velocity:v(0,-120,0),born:0,age:0,size:.6,angle:0,stretch:1,seed:71});field.advance(1/60);
+ let stained=0;
+ for(let py=0;py<field.size;py++)for(let px=0;px<field.size;px++){
+  if(!field.pixels[(py*field.size+px)*4])continue;stained++;
+  const x=Math.floor(((px+.5)/field.size-.5)*51+25.5),z=Math.floor(((py+.5)/field.size-.5)*51+25.5);
+  assert.ok(tileHeight(x,z,0)<=edge.low+.08,'liquid must not jump onto a higher tile');
+ }
+ assert.ok(stained>20);
+});
+
+
+test('enemy radius strongly scales airborne spray without a size plateau',()=>{
+ const radii=[.4,.65,.8,1.3,2,2.6,4,8],scales=radii.map(enemySprayScale);
+ assert.equal(enemySprayScale(.65),1);
+ for(let i=1;i<scales.length;i++)assert.ok(scales[i]>scales[i-1]);
+ assert.ok(enemySprayScale(1.3)>2,'double radius produces more than double spray dimensions');
+ assert.ok(enemySprayScale(4)>8,'large enemies have a substantially larger spray');
+ const world=new World(42,{schedule:false}),field=new BloodField(256);
+ const enemy=world.spawn('skull4',v(0,6,0));world.damageEnemy(enemy,enemy.hp);
+ for(const effect of world.effects)field.emit(effect,0);
+ const drops=field.drops.filter(drop=>drop.enemyBurst);assert.ok(drops.length>0);
+ assert.equal(drops[0].sprayScale,enemySprayScale(enemy.radius),'actual kill radius reaches the renderer');
+});
+
+test('airborne size metadata does not affect floor blood',()=>{
+ const a=new BloodField(256),b=new BloodField(256),effect={...kill(),amount:4};
+ a.emit(effect,0);b.emit(effect,0);assert.ok(a.drops[0].sprayScale!>8);
+ for(const drop of b.drops)delete drop.sprayScale;
+ a.advance(3);b.advance(3);assert.deepEqual(a.pixels,b.pixels);assert.equal(a.landings,b.landings);
 });

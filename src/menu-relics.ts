@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createCrewAvatar,loadCrewAvatar,updateCrewAvatar} from './crew-avatar';
+import {createCrewAvatar,loadCrewAvatar,updateCrewAvatar,mountCrewAvatarHeadwear} from './crew-avatar';
 import {idleInput} from './simulation';
 import {MenuMist} from './menu-mist';
+import {MenuBlood} from './menu-blood';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 
 /** A menu-only chamber. Shares the game context; never adds a second render loop. */
@@ -14,9 +15,13 @@ export class MenuRelics {
  private idle=idleInput();
  private still={x:0,y:0,z:0};
  private mist=new MenuMist();
+ private blood:MenuBlood;
  private ember:THREE.Points;
  private fire=new THREE.PointLight(0xee5b28,9,5,2);
  private clock=0;
+ private portraitJoints:{bone:THREE.Object3D;base:THREE.Quaternion;kind:string}[]=[];
+ private poseRotation=new THREE.Quaternion();
+ private poseEuler=new THREE.Euler();
  private loaded=0;
  private failures:string[]=[];
  private bounds:DOMRect|null=null;
@@ -27,7 +32,7 @@ export class MenuRelics {
  private reduced=false;
  private stage=document.getElementById('champion-stage');
  private relic=document.querySelector<HTMLElement>('.shrine-relic');
- get diagnostics(){return {loaded:this.loaded,failures:[...this.failures],time:this.clock,player:this.player.userData.avatarSource??'loading',mist:this.mist.diagnostics,particles:this.quality==='high'&&!this.reduced?this.ember.geometry.attributes.position.count:0};}
+ get diagnostics(){return {loaded:this.loaded,failures:[...this.failures],time:this.clock,camera:this.camera.position.toArray(),portraitScale:this.player.scale.toArray(),portraitJoints:this.portraitJoints.length,headwear:this.player.userData.menuHeadwear??'loading',player:this.player.userData.avatarSource??'loading',mist:this.mist.diagnostics,blood:this.blood.diagnostics,particles:this.quality==='high'&&!this.reduced?this.ember.geometry.attributes.position.count:0};}
  constructor(){
   document.documentElement.dataset.relics='loading';
   this.scene.background=new THREE.Color(0x080a0d);
@@ -43,6 +48,7 @@ export class MenuRelics {
   for(const [radius,height,y] of [[1.15,.2,-2.02],[1,.3,-1.78],[.9,.08,-1.59]]){
    const tier=new THREE.Mesh(new THREE.CylinderGeometry(radius,radius+.06,height,64),stone);tier.position.y=y;this.scene.add(tier);
   }
+  this.blood=new MenuBlood(this.scene);
   const floor=new THREE.Mesh(new THREE.PlaneGeometry(100,100),new THREE.MeshStandardMaterial({color:0x07080b,roughness:1,metalness:0}));floor.rotation.x=-Math.PI/2;floor.position.y=-2.15;this.scene.add(floor);
   // A few broken basalt columns give the darkness a physical scale.
   const basalt=new THREE.MeshStandardMaterial({color:0x12151b,roughness:.96,metalness:.12});
@@ -66,8 +72,8 @@ export class MenuRelics {
   document.querySelector('.menu-content')?.addEventListener('animationend',()=>this.needsLayout=true);
   const settle=()=>document.documentElement.dataset.relics=this.failures.length?'unavailable':this.loaded===2?'ready':'loading';
   void new GLTFLoader().loadAsync('/models/relics/crown.glb').then(gltf=>{
-   const model=gltf.scene,box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),scale=1.25/size.x;
-   model.scale.multiplyScalar(scale);model.position.copy(center).multiplyScalar(-scale);
+   const model=gltf.scene,box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3()),scale=1/size.x;
+   model.scale.multiplyScalar(scale);model.position.copy(center).multiplyScalar(-scale);model.position.y=-box.min.y*scale;
    model.traverse(object=>{if(!(object instanceof THREE.Mesh))return;
     const sources=Array.isArray(object.material)?object.material:[object.material];
     const materials=sources.map(source=>{
@@ -77,11 +83,14 @@ export class MenuRelics {
     });
     object.material=materials.length===1?materials[0]:materials;
    });
-   const silhouette=new THREE.Group();silhouette.scale.y=.72;silhouette.add(model);this.crown.add(silhouette);this.loaded++;settle();
+   const silhouette=new THREE.Group();silhouette.scale.y=.72;silhouette.add(model);this.crown.add(silhouette);if(this.player.userData.avatarSource==='quaternius-demon')mountCrewAvatarHeadwear(this.player,this.crown);this.loaded++;settle();
   }).catch(()=>{this.failures.push('crown');settle();});
   void loadCrewAvatar().then(()=>{
    if(this.player.userData.avatarSource!=='quaternius-demon'){this.failures.push('player');settle();return;}
    this.player.traverse(object=>{if(object instanceof THREE.Mesh){const material=object.material as THREE.MeshStandardMaterial;material.emissiveIntensity=.025;material.roughness=.78;}});
+   for(const kind of ['Head','UpperArmL','UpperArmR','LowerArmL','LowerArmR']){const bone=this.player.getObjectByName(kind);if(bone)this.portraitJoints.push({bone,base:bone.quaternion.clone(),kind});}
+   this.blood.coat(this.player);
+   if(this.crown.children.length)mountCrewAvatarHeadwear(this.player,this.crown);
    this.loaded++;settle();
   });
  }
@@ -107,9 +116,22 @@ diffuseColor.rgb*=mix(vec3(0.68,0.70,0.62),vec3(1.0),smoothstep(0.12,0.7,patina)
   if(!this.environment){const pmrem=new THREE.PMREMGenerator(renderer),room=new RoomEnvironment();this.environment=pmrem.fromScene(room,.04);this.scene.environment=this.environment.texture;room.dispose();pmrem.dispose();}
   if(!this.reduced)this.clock+=Math.min(dt,.05);
   const t=this.clock;
-  this.crown.rotation.y=.24+Math.sin(t*.19)*.14;this.crown.position.y=1.65+Math.sin(t*.62)*.035;
-  this.player.rotation.y=Math.PI-.22+Math.sin(t*.15)*.07;
-  updateCrewAvatar(this.player,this.idle,this.still,true,t);
+  // Breathe from the soles: the feet keep contact with the blood-covered altar.
+  const breath=Math.sin(t*1.45);
+  this.player.scale.set(1.35*(1+breath*.008),1.35*(1+breath*.014),1.35*(1+breath*.012));
+  this.player.position.y=-1.54+1.7*this.player.scale.y;
+  this.player.rotation.y=Math.PI-.12+Math.sin(t*.39)*.15;
+  updateCrewAvatar(this.player,this.idle,this.still,true,t,false,true);
+  for(const joint of this.portraitJoints){
+   const left=joint.kind.endsWith('L'),phase=left?0:1.7;
+   if(joint.kind==='Head')this.poseEuler.set(Math.sin(t*.73)*.055,Math.sin(t*.47)*.14,Math.sin(t*.57)*.035);
+   else if(joint.kind.startsWith('Upper'))this.poseEuler.set(Math.sin(t*.83+phase)*.065,Math.sin(t*.57+phase)*.045,Math.sin(t*.67+phase)*.055);
+   else this.poseEuler.set(.05+Math.sin(t*.91+phase)*.07,0,Math.sin(t*.63+phase)*.035);
+   this.poseRotation.setFromEuler(this.poseEuler);
+   if(joint.kind==='Head')joint.bone.quaternion.copy(joint.base);
+   joint.bone.quaternion.multiply(this.poseRotation);
+  }
+  this.player.updateMatrixWorld(true);this.blood.update(t);
   this.fire.intensity=8+Math.sin(t*1.3)*.4+Math.sin(t*3.7)*.2;
   this.ember.rotation.y=t*.025;
   const positions=this.ember.geometry.attributes.position;
@@ -120,10 +142,12 @@ diffuseColor.rgb*=mix(vec3(0.68,0.70,0.62),vec3(1.0),smoothstep(0.12,0.7,patina)
   const visible=bounds.bottom>0&&bounds.top<h;
   this.crown.visible=visible;this.player.visible=visible&&this.player.userData.avatarSource==='quaternius-demon';
   this.ember.visible=visible&&this.quality==='high'&&!this.reduced;
-  const targetHeight=Math.max(100,bounds.height),focal=targetHeight/4.65,distance=8;
+  const targetHeight=Math.max(100,bounds.height),focal=Math.min(targetHeight/3.75,bounds.width/2.85),distance=8;
   this.camera.fov=THREE.MathUtils.radToDeg(2*Math.atan(h/(2*focal*distance)));this.camera.aspect=w/h;
   this.camera.setViewOffset(w,h,w/2-(bounds.left+bounds.width/2),h/2-(bounds.top+bounds.height/2),w,h);
-  this.camera.position.set(0,.65,distance);this.camera.lookAt(0,0,0);this.camera.updateProjectionMatrix();
+  // A restrained orbit, rise, and dolly give the portrait depth without losing the face.
+  this.camera.position.set(Math.sin(t*.19)*.9,.4+Math.sin(t*.27)*.13,distance-.25+Math.sin(t*.23)*.25);
+  this.camera.lookAt(0,-.56+Math.sin(t*.31)*.035,0);this.camera.updateProjectionMatrix();
   this.mist.render(renderer,this.scene,this.camera,t);
  }
 }

@@ -1,0 +1,309 @@
+{
+  "reports": [
+    {
+      "label": "clean",
+      "amount": 0,
+      "bodyAmount": 0,
+      "freshness": 0,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 0,
+          "body": 0,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 0,
+          "body": 0,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 0,
+          "body": 0,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 0,
+          "body": 0,
+          "skin": 0
+        }
+      ],
+      "red": 1868
+    },
+    {
+      "label": "hands-first",
+      "amount": 1,
+      "bodyAmount": 0.4325560308629525,
+      "freshness": 1,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 1,
+          "body": 0.4325560308629525,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 1,
+          "body": 0.4325560308629525,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 1,
+          "body": 0.4325560308629525,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 1,
+          "body": 0.4325560308629525,
+          "skin": 0
+        }
+      ],
+      "red": 27808
+    },
+    {
+      "label": "body-building",
+      "amount": 1,
+      "bodyAmount": 0.7355122458044718,
+      "freshness": 1,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 1,
+          "body": 0.7355122458044718,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 1,
+          "body": 0.7355122458044718,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 1,
+          "body": 0.7355122458044718,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 1,
+          "body": 0.7355122458044718,
+          "skin": 0
+        }
+      ],
+      "red": 47058
+    },
+    {
+      "label": "fully-soaked",
+      "amount": 1,
+      "bodyAmount": 1,
+      "freshness": 1,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 1,
+          "body": 1,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        }
+      ],
+      "red": 57281
+    },
+    {
+      "label": "fully-soaked-back",
+      "amount": 1,
+      "bodyAmount": 1,
+      "freshness": 1,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 1,
+          "body": 1,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        }
+      ],
+      "red": 61549
+    },
+    {
+      "label": "dried",
+      "amount": 1,
+      "bodyAmount": 1,
+      "freshness": 0.049787068367863944,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 1,
+          "body": 1,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        }
+      ],
+      "red": 43568
+    },
+    {
+      "label": "new-spatter",
+      "amount": 1,
+      "bodyAmount": 1,
+      "freshness": 0.07545862131817163,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 1,
+          "body": 1,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 1,
+          "body": 1,
+          "skin": 0
+        }
+      ],
+      "red": 44705
+    },
+    {
+      "label": "reset",
+      "amount": 0,
+      "bodyAmount": 0,
+      "freshness": 0,
+      "far": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      },
+      "uniforms": [
+        {
+          "name": "Demon_Main",
+          "amount": 0,
+          "body": 0,
+          "skin": 1
+        },
+        {
+          "name": "Black",
+          "amount": 0,
+          "body": 0,
+          "skin": 0
+        },
+        {
+          "name": "Eye_White",
+          "amount": 0,
+          "body": 0,
+          "skin": 0
+        },
+        {
+          "name": "Eye_Black",
+          "amount": 0,
+          "body": 0,
+          "skin": 0
+        }
+      ],
+      "red": 1936
+    }
+  ],
+  "errors": []
+}

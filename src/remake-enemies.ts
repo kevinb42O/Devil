@@ -31,7 +31,7 @@ export class RemakeEnemies{
  private surfaceMaterials=new Map<string,THREE.MeshStandardMaterial>();
  private surface(kind:EnemyKind,role:EnemySurfaceRole,green=false,hit=false){
   const key=`${kind}-${role}-${green}-${hit}`;let material=this.surfaceMaterials.get(key);
-  if(!material){material=createEnemySurfaceMaterial(kind,role,this.environment,this.clock,this.surfaceLightStrength,{green,hit});this.surfaceMaterials.set(key,material);}
+  if(!material){material=createEnemySurfaceMaterial(kind,role,this.environment,this.clock,{green,hit});this.surfaceMaterials.set(key,material);}
   return material;
  }
  private towerCrystals=new Map<boolean,THREE.MeshStandardMaterial>();

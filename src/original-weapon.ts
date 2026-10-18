@@ -6,9 +6,12 @@ import {MovementMotion,type MovementPose} from './movement-motion';
 import {sampleProjectile,PROJECTILE_COLORS,projectileStyleIndex,projectileRoll,projectileVisualIndex,ALL_PROJECTILE_COLORS,shotgunStyleIndex} from './projectile-presentation';
 import * as THREE from 'three';
 import {EnvironmentLighting} from './environment-lighting';
+import {projectileMaterial} from './projectile-material';
+import {projectileGeometry} from './projectile-geometry';
+import {projectileChroma} from './projectile-chroma';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { type World, type Effect, type Projectile, type Vec } from './simulation';
-import {WEAPON_PRESENTATION,STREAM_PRESENTATION,DAGGER_PRESENTATION,PROJECTILE_HAND_CLEARANCE,WEAPON_FEEDBACK,shotgunFeedback} from './weapon-tuning';
+import {WEAPON_PRESENTATION,STREAM_PRESENTATION,DAGGER_PRESENTATION,WEAPON_FEEDBACK,shotgunFeedback} from './weapon-tuning';
 import {HAND_POSE,HAND_SOCKETS,HAND_MUZZLES,weaponMuzzle,projectileSocket} from './weapon-origin';
 const HAND_UPGRADE_DURATION=1.65;
 const ROOT='/assets/original/devil-daggers/';
@@ -95,8 +98,7 @@ export class OriginalWeapon {
     const mesh=async(name:string)=>{const r=await fetch(ROOT+`meshes/${name}.obj`);if(!r.ok)throw Error(`Original mesh ${name} missing`);return loader.parse(await r.text());};
     const effectNames=[...Array.from({length:8},(_,i)=>`flame${i+1}`),...Array.from({length:3},(_,i)=>`ember${i+1}`),...Array.from({length:4},(_,i)=>`blood${i+1}`),...Array.from({length:4},(_,i)=>`smokeblob${i+1}`)];
     // Fetch independent assets together instead of paying a round trip per effect.
-    const [daggerModel,daggerMaps,emberTexture,effectModels]=await Promise.all([
-      mesh('dagger'),Promise.all(['dagger','dagger2','dagger3','dagger4','dagger5','dagger6'].map(texture)),
+    const [emberTexture,effectModels]=await Promise.all([
       texture('emberflame'),Promise.all(effectNames.map(async name=>{
         if(name.startsWith('blood'))return new THREE.Mesh(goreGeometry(Number(name.slice(5))),new THREE.MeshBasicMaterial());
         if(name.startsWith('smokeblob'))return new THREE.Mesh(new THREE.IcosahedronGeometry(1,1),new THREE.MeshBasicMaterial());
@@ -126,30 +128,11 @@ export class OriginalWeapon {
     // Original pose is centered, viewed from the back of the hand; no fabricated knuckle crystals.
     this.pose.rotation.set(HAND_POSE.rotationX,HAND_POSE.rotationY,0);
     this.pose.position.set(HAND_POSE.x,HAND_POSE.y,HAND_POSE.z);
-    let daggerGeometry:THREE.BufferGeometry|undefined;daggerModel.traverse(o=>{if(o instanceof THREE.Mesh)daggerGeometry=o.geometry;});if(!daggerGeometry)throw Error('No dagger geometry');
-    // Local +Z is the flight direction; preserve the native blade silhouette.
-    daggerGeometry.scale(DAGGER_PRESENTATION.width,DAGGER_PRESENTATION.width,DAGGER_PRESENTATION.length);
+    const daggerGeometry=projectileGeometry();
     for(const name of ['dagger','dagger2','dagger3','dagger4','dagger5','dagger6',...Array.from({length:6},(_,i)=>`twin-dagger-${i}`),...Array.from({length:14},(_,i)=>`shotgun-${Math.floor(i/2)+1}-${i%2?'seeking':'primary'}`)]) {
-      const pellet=name.startsWith('shotgun'),style=this.daggers.length;
-      const shotgunLevel=pellet?Math.floor((style-12)/2)+1:0;
-      const nativeStyle=pellet&&shotgunLevel<=4?projectileStyleIndex(shotgunLevel,(style-12)%2===1):style;
-      const map=daggerMaps[nativeStyle];if(map)map.colorSpace=THREE.SRGBColorSpace;
-      const material=new THREE.MeshBasicMaterial({...map?{map}:{},toneMapped:false});
-      const color=ALL_PROJECTILE_COLORS[this.daggers.length];
-      // HDR emission keeps the physical dagger readable inside its glow and
-      // feeds the existing bloom pass without introducing a lighting pass.
-      material.onBeforeCompile=shader=>{
-        shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 daggerWorld;')
-          // Clip the complete blade at launch; clipping individual fragments
-          // exposed the enlarged tip as an overlapping solid near the hand.
-          .replace('#include <project_vertex>','#include <project_vertex>\ndaggerWorld=(modelMatrix*instanceMatrix*vec4(0.,0.,0.,1.)).xyz;');
-        shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\nvarying vec3 daggerWorld;')
-          .replace('#include <opaque_fragment>',
-        `if(length(daggerWorld-cameraPosition)<${PROJECTILE_HAND_CLEARANCE.toFixed(2)})discard;
-         float detail=dot(outgoingLight,vec3(.2126,.7152,.0722));
-         ${map?'outgoingLight*=1.5;':`outgoingLight=vec3(${color.join(',')})*(detail*1.5+.25);`}\n#include <opaque_fragment>`);};
-      material.customProgramCacheKey=()=>`dagger-emission-v3-clearance-${name}`;
-      const batch=new THREE.InstancedMesh(pellet?daggerGeometry.clone().scale(DAGGER_PRESENTATION.shotgunScale,DAGGER_PRESENTATION.shotgunScale,DAGGER_PRESENTATION.shotgunScale):daggerGeometry,material,256);batch.count=0;batch.instanceMatrix.setUsage(THREE.DynamicDrawUsage);batch.frustumCulled=false;this.scene.add(batch);this.daggers.push(batch);
+      const pellet=name.startsWith('shotgun');
+      const material=projectileMaterial(pellet?DAGGER_PRESENTATION.shotgunScale:1);
+      const batch=new THREE.InstancedMesh(pellet?daggerGeometry.clone().scale(DAGGER_PRESENTATION.shotgunScale,DAGGER_PRESENTATION.shotgunScale,DAGGER_PRESENTATION.shotgunScale):daggerGeometry,material,256);batch.count=0;batch.instanceMatrix.setUsage(THREE.DynamicDrawUsage);batch.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(256*3).fill(1),3).setUsage(THREE.DynamicDrawUsage);batch.frustumCulled=false;this.scene.add(batch);this.daggers.push(batch);
     }
     for(const [index,name] of effectNames.entries()) {
       const model=effectModels[index];let geometry:THREE.BufferGeometry|undefined;model.traverse(o=>{if(o instanceof THREE.Mesh)geometry=o.geometry.clone();});if(!geometry)continue;
@@ -183,6 +166,10 @@ export class OriginalWeapon {
       }
       const base=`rapid${level}${e.amount===1?'alt':''}`,shotgun=e.projectileKind==='shotgun';
       const name=shotgun?`shotgun-${level}-${e.amount===1?'seeking':'primary'}`:base;const ember=shotgun?name:`${name}ember`;
+      if(!shotgun){
+        const color=projectileChroma(world).launchColor(e.shooterId,level,e.amount===1);
+        for(const family of [name,ember]){const source=this.definitions[family];if(source)this.definitions[family]={...source,start:[...color],end:color.map(c=>c*.4),rim:color.map(c=>c*.65+.25)};}
+      }
       if(shotgun&&!this.definitions[name]){const color=ALL_PROJECTILE_COLORS[shotgunStyleIndex(level,e.amount===1)];this.definitions[name]={...this.definitions[base],start:[...color],end:color.map(c=>c*.35),rim:color.map(c=>c*.6+.4)};}
       const muzzles=e.muzzles??[e.pos];
       const tuning=WEAPON_PRESENTATION[level-1];
@@ -248,6 +235,7 @@ export class OriginalWeapon {
     const previous=this.daggers[index];if(count<=previous.instanceMatrix.count)return;
     let capacity=previous.instanceMatrix.count;while(capacity<count)capacity*=2;
     const replacement=new THREE.InstancedMesh(previous.geometry,previous.material,capacity);replacement.count=0;replacement.frustumCulled=false;replacement.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    replacement.instanceColor=new THREE.InstancedBufferAttribute(new Float32Array(capacity*3).fill(1),3).setUsage(THREE.DynamicDrawUsage);
     this.scene.remove(previous);previous.dispose();this.scene.add(replacement);this.daggers[index]=replacement;
   }
   get projectileDiagnostics(){return {count:this.daggers.reduce((n,b)=>n+b.count,0),batches:this.daggers.filter(b=>b.count>0).length,capacities:this.daggers.map(b=>b.instanceMatrix.count)};}
@@ -323,6 +311,7 @@ export class OriginalWeapon {
     this.handModels.forEach((hand,i)=>{hand.visible=!menu&&i===level-1;});
     const counts=this.daggerCounts,cursors=this.daggerCursors;counts.fill(0);cursors.fill(0);
     if(world&&!menu){
+      const chroma=projectileChroma(world);
       for(const p of world.projectiles)counts[projectileVisualIndex(p,level)]++;
       for(let i=0;i<counts.length;i++)this.ensureDaggerCapacity(i,counts[i]);
       const alpha=Math.max(0,Math.min(1,projectileAlpha));
@@ -337,7 +326,8 @@ export class OriginalWeapon {
         if(qw<Number.EPSILON){qx=0;qy=-1;qw=0;}
         else{const inv=1/Math.sqrt(qx*qx+qy*qy+qw*qw);qx*=inv;qy*=inv;qw*=inv;}
         const scale=p.homing?1.15:1,x2=2*qx*qx,y2=2*qy*qy,xy=2*qx*qy,xw=2*qx*qw,yw=2*qy*qw;
-        const array=this.daggers[index].instanceMatrix.array,offset=cursors[index]++*16;
+        const slot=cursors[index]++,batch=this.daggers[index],array=batch.instanceMatrix.array,offset=slot*16;
+        const color=chroma.color(p,level);batch.instanceColor!.setXYZ(slot,color[0],color[1],color[2]);
         array[offset]=(1-y2)*scale;array[offset+1]=xy*scale;array[offset+2]=-yw*scale;array[offset+3]=0;
         array[offset+4]=xy*scale;array[offset+5]=(1-x2)*scale;array[offset+6]=xw*scale;array[offset+7]=0;
         array[offset+8]=yw*scale;array[offset+9]=-xw*scale;array[offset+10]=(1-x2-y2)*scale;array[offset+11]=0;
@@ -350,7 +340,7 @@ export class OriginalWeapon {
         array[offset+12]=position.x;array[offset+13]=position.y;array[offset+14]=position.z;array[offset+15]=1;
       }
     }
-    this.daggers.forEach((d,i)=>{d.count=counts[i];if(d.count){d.instanceMatrix.clearUpdateRanges();d.instanceMatrix.addUpdateRange(0,d.count*16);d.instanceMatrix.needsUpdate=true;}});
+    this.daggers.forEach((d,i)=>{d.count=counts[i];if(d.count){for(const attribute of [d.instanceMatrix,d.instanceColor!]){attribute.clearUpdateRanges();attribute.addUpdateRange(0,d.count*attribute.itemSize);attribute.needsUpdate=true;}}});
     if(menu)this.fragments.length=0;let alive=0;for(let i=0;i<this.fragments.length;i++){const f=this.fragments[i];if(f.age<f.life)this.fragments[alive++]=f;}this.fragments.length=alive;
     const batchCounts=new Map<string,number>();
     for(const f of this.fragments) {

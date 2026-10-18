@@ -3,61 +3,61 @@
     {
       "quality": "low",
       "dark": [
-        17,
-        24,
-        48,
+        40,
+        47,
+        95,
         255
       ],
       "lit": [
-        44,
-        28,
-        49,
+        60,
+        50,
+        96,
         255
       ],
       "floorLit": [
-        44,
-        28,
-        49,
+        60,
+        50,
+        96,
         255
       ],
-      "extraGlowDraws": 1,
-      "glowPixelGain": 33505,
+      "extraGlowDraws": 2,
+      "glowPixelGain": 63004,
       "count": 12,
-      "drawCalls": 1,
+      "drawCalls": 2,
       "capacity": 256,
       "fieldSize": 128
     },
     {
       "quality": "high",
       "dark": [
-        17,
-        24,
-        48,
+        42,
+        47,
+        97,
         255
       ],
       "lit": [
-        44,
-        28,
-        49,
+        61,
+        50,
+        97,
         255
       ],
       "floorLit": [
-        44,
-        28,
-        49,
+        61,
+        50,
+        97,
         255
       ],
-      "extraGlowDraws": 1,
-      "glowPixelGain": 33513,
+      "extraGlowDraws": 2,
+      "glowPixelGain": 62247,
       "count": 12,
-      "drawCalls": 1,
+      "drawCalls": 2,
       "capacity": 256,
       "fieldSize": 128
     }
   ],
   "dense": {
     "count": 6000,
-    "drawCalls": 1,
+    "drawCalls": 2,
     "capacity": 8192,
     "fieldSize": 128,
     "maxGpuInstances": 8192
@@ -73,8 +73,8 @@
   "menuUploadFree": true,
   "resumedCount": 6000,
   "emptyUploadFree": true,
-  "updateMedianMs": 1.2000000178813934,
-  "updateP95Ms": 1.5999999940395355,
+  "updateMedianMs": 1.100000023841858,
+  "updateP95Ms": 9.200000047683716,
   "strafe": {
     "checks": 3,
     "maxCenterError": 0,

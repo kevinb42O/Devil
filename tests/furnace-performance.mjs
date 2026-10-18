@@ -34,7 +34,7 @@ try{
  });
  mkdirSync('artifacts/furnace',{recursive:true});writeFileSync('artifacts/furnace/performance.json',JSON.stringify(result,null,2));console.log(result);
  for(const quality of ['high','low']){
-  const base=result.results.find(r=>r.quality===quality&&!r.enabled),full=result.results.find(r=>r.quality===quality&&r.enabled);assert.equal(full.calls-base.calls,5);
+  const base=result.results.find(r=>r.quality===quality&&!r.enabled),full=result.results.find(r=>r.quality===quality&&r.enabled);assert.equal(full.calls-base.calls,6);
   if(full.gpuMedianMs!==null)assert.ok(full.gpuMedianMs-base.gpuMedianMs<8,'furnace fits within an eight millisecond additional GPU budget in this local fixture');
  }
 }finally{await browser.close();}

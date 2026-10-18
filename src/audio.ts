@@ -1,6 +1,6 @@
 import {EnvironmentAudio} from './environment-audio';
 import {ArenaReverb} from './arena-reverb';
-import {FOOTSTEP_SOUNDS,WET_FOOTSTEP_SOUNDS,ALL_FOOTSTEP_SOUNDS,footstepSurface,FootstepGait} from './footstep-audio';
+import {FOOTSTEP_SOUNDS,WET_FOOTSTEP_SOUNDS,ALL_FOOTSTEP_SOUNDS,footstepSurface,bloodFootWetness,FootstepGait} from './footstep-audio';
 import {CHATTER_TRIM,distanceEnvelope,hearingProfile} from './spatial-audio';
 import {WEAPON_SOUNDS,weaponBank,weaponShots,weaponTier} from './weapon-audio';
 import {ENEMY_CHATTER,ENEMY_SPAWN,ENEMY_EMERGE,selectEnemyAudio} from './enemy-audio';
@@ -73,7 +73,7 @@ export class Sound{
   })();void this.loading.then(()=>this.warmEmergences());return this.loading;
  }
  private async warmEmergences(){
-  const names=['killminisquid','killsquid','killultrasquid',...Object.values(SPAWN),...Object.values(ENEMY_EMERGE)] as string[];let index=0;
+  const names=[...WET_FOOTSTEP_SOUNDS,'killminisquid','killsquid','killultrasquid',...Object.values(SPAWN),...Object.values(ENEMY_EMERGE)] as string[];let index=0;
   await Promise.all(Array.from({length:2},async()=>{while(index<names.length)await this.load(names[index++]);}));
  }
  private load(name:string):Promise<AudioBuffer|undefined>{
@@ -276,10 +276,8 @@ export class Sound{
   if(this.footstepWorld!==world&&(!world.crew.length||this.footstepWorld?.crew!==world.crew))this.footstepGait.clear();
   this.footstepWorld=world;
   if(world.state!=='playing'||!this.context||this.context.state!=='running'||document.hidden){this.footstepGait.clear();return;}
-  const surface=footstepSurface(world.time,!!world.courtyard);
-  // Warm the small wet bank before rain arrives; practice/replay seeks warm
-  // it immediately. Failed requests retain the normal retry/backoff policy.
-  if(!world.courtyard&&world.time>=43&&world.time<229){
+  // Warm the small wet bank before rain arrives or when feet pick up blood. Failed requests retain the normal retry/backoff policy.
+  if(!world.courtyard&&((world.time>=43&&world.time<229)||bloodFootWetness(world.player)>0||world.crew.some(p=>bloodFootWetness(p.player,p.id)>0))){
    for(const name of WET_FOOTSTEP_SOUNDS)if(!this.buffers.has(name))void this.load(name);
   }
   const actors=world.crew.length?world.crew.filter(p=>p.alive).map(p=>({id:p.id,player:p.player})): [{id:'local',player:world.player}];
@@ -298,6 +296,7 @@ export class Sound{
    const scale=weight*(local?1:.8/Math.sqrt(Math.max(1,actors.length-1)));
    // Choose the material only at contact. Never replay a late-loaded wet
    // voice after its dry fallback, or change gait phase at a weather boundary.
+   const surface=footstepSurface(world.time,!!world.courtyard,bloodFootWetness(player,id));
    const wetMix=this.buffers.has(wet)?surface.wet:0;
    if(wetMix<1)this.oneShot(dry,pos,scale*(1-wetMix),local?1:0,0,undefined,1);
    if(wetMix>0)this.oneShot(wet,pos,scale*wetMix,local?1:0,0,undefined,1);

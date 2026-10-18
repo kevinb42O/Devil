@@ -832,6 +832,9 @@ function init() {
   document.addEventListener('pointerdown',()=>music.unlock(),{capture:true});
   document.addEventListener('keydown',()=>music.unlock(),{capture:true});
   document.addEventListener('click',()=>music.unlock(),{capture:true});
+  // Returning players may already have autoplay permission. Start the menu now;
+  // the gesture handlers above retry if the browser requires interaction first.
+  music.unlock();
   setupMenuAudio(menuAudio,()=>settings.volume/100);
 
   const start=$<HTMLButtonElement>('start');start.disabled=true;void renderer.prepare().then(()=>{start.disabled=!(renderer.originalEnemies.ready&&renderer.originalWeapon.ready);if(start.disabled){$('error').hidden=false;$('error').textContent='The original game assets could not load. '+renderer.originalEnemies.error+' '+renderer.originalWeapon.error;}}).catch(error=>{$('error').hidden=false;$('error').textContent='The arena could not prepare its graphics. '+String(error);});

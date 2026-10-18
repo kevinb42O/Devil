@@ -5,10 +5,14 @@ import {rainAt} from './rain-state';
 export const FOOTSTEP_SOUNDS=Array.from({length:12},(_,i)=>`footstep-stone${i+1}`);
 export const WET_FOOTSTEP_SOUNDS=Array.from({length:12},(_,i)=>`footstep-wet${i+1}`);
 export const ALL_FOOTSTEP_SOUNDS=[...FOOTSTEP_SOUNDS,...WET_FOOTSTEP_SOUNDS];
+const bloodActors=new Map<string,number>();
+const bloodWetness=new WeakMap<object,number>();
+export function setBloodFootWetness(player:object,wet:number,id?:string){bloodWetness.set(player,wet);if(id){if(wet>0)bloodActors.set(id,wet);else bloodActors.delete(id);}}
+export function bloodFootWetness(player:object,id?:string){return (id?bloodActors.get(id):undefined)??bloodWetness.get(player)??0;}
 /** Linear amplitude weights keep the wet transition inside the same peak
  * ceiling as one dry step, even if the two recorded transients coincide. */
-export function footstepSurface(time:number,courtyard=false){
- const wet=courtyard?0:rainAt(time).wetness;
+export function footstepSurface(time:number,courtyard=false,blood=0){
+ const wet=courtyard?0:Math.max(rainAt(time).wetness,Math.min(1,Math.max(0,blood)));
  return {dry:1-wet,wet};
 }
 type Gait={pos:Vec;time:number;distance:number;side:number;grounded:boolean;lastStep:number;lastMotion:number};

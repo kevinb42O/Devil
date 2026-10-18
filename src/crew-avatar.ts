@@ -1,5 +1,6 @@
-import {firstPersonWingVertices} from './first-person-geometry';
+import {connectFirstPersonShoulders,firstPersonWingVertices} from './first-person-geometry';
 import {configureFirstPersonMaterial} from './first-person-material';
+import type {HandBloodState} from './hand-blood';
 import {configureCombatHandMaterial,type CombatHandFeedback} from './combat-hand-feedback';
 import {loadCrewCrown} from './crew-crown';
 import {configureAscendantMaterial} from './ascendant-material';
@@ -18,10 +19,11 @@ let template:THREE.Group|null=null,clips:THREE.AnimationClip[]=[],loading:Promis
 let modelScale=1,floorOffset=0;
 type KickPose={charge:number;age:number;power:number;right?:boolean};
 type KickLeg={foot?:THREE.Bone;end?:THREE.Bone;thigh?:THREE.Bone;shin?:THREE.Bone;position?:THREE.Vector3;rotation?:THREE.Quaternion;bases?:[THREE.Quaternion,THREE.Quaternion]};
-type AvatarState={combatTips?:(THREE.Object3D|undefined)[][];legs:KickLeg[];anchor?:{bone:THREE.Bone;reference:THREE.Vector3;rootPosition:THREE.Vector3};head:THREE.Bone;dark?:THREE.SkinnedMesh;gold:boolean;crown?:THREE.Mesh;root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;leftUpper:THREE.Bone;leftLower:THREE.Bone;baseLeftUpper:THREE.Quaternion;baseLeftLower:THREE.Quaternion;leftRaise:number;rightRaise:number;fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[];muzzle:THREE.Object3D};
+type AvatarState={combatTips?:(THREE.Object3D|undefined)[][];combatOpen:number;legs:KickLeg[];anchor?:{bone:THREE.Bone;reference:THREE.Vector3;rootPosition:THREE.Vector3};head:THREE.Bone;dark?:THREE.SkinnedMesh;gold:boolean;crown?:THREE.Mesh;root:THREE.Group;mixer:THREE.AnimationMixer;actions:THREE.AnimationAction[];upper:THREE.Bone;lower:THREE.Bone;lastTime:number;aim:number;baseUpper:THREE.Quaternion;baseLower:THREE.Quaternion;leftUpper:THREE.Bone;leftLower:THREE.Bone;baseLeftUpper:THREE.Quaternion;baseLeftLower:THREE.Quaternion;leftRaise:number;rightRaise:number;fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[];muzzle:THREE.Object3D};
 const states=new WeakMap<THREE.Group,AvatarState>();
 let originalDark:THREE.BufferGeometry|undefined,crownedDark:THREE.BufferGeometry|undefined,crownMount:THREE.Matrix4|undefined;
 const emoteFrame=new THREE.Matrix4(),emoteWorld=new THREE.Quaternion(),emoteRight=new THREE.Vector3(),emoteBack=new THREE.Vector3(),handDirection=new THREE.Vector3(),handLocal=new THREE.Quaternion(),fingerTarget=new THREE.Quaternion();
+const combatFingerAxis=new THREE.Vector3(1,0,0);
 const neckPosition=new THREE.Vector3(),kickEndBefore=new THREE.Vector3(),kickFootPosition=new THREE.Vector3();
 const aim=new THREE.Vector3(),up=new THREE.Vector3(0,1,0),direction=new THREE.Vector3(),parentRotation=new THREE.Quaternion(),aimRotation=new THREE.Quaternion();
 
@@ -92,16 +94,21 @@ function attachDemon(model:THREE.Group){
    for(let i=1;i+1<loop.length;i++)indices.push(loop[0],loop[i+1],loop[i]);
   }
   node.geometry=node.geometry.clone();node.geometry.setIndex(indices);node.frustumCulled=false;
-
+  if((node.material as THREE.Material).name==='Demon_Main'){
+   const cut=node.geometry;node.geometry=connectFirstPersonShoulders(node);if(node.geometry!==cut)cut.dispose();
+  }
  });
  // Arm weights only gate shot flashes. The tier surface covers Demon_Main in
  // first person, crew views and replays, using the same undeformed coordinates.
  root.traverse(node=>{
-  if(!(node instanceof THREE.SkinnedMesh)||node.geometry.hasAttribute('combatArmMask'))return;
+  if(!(node instanceof THREE.SkinnedMesh)||(node.geometry.hasAttribute('combatArmMask')&&node.geometry.hasAttribute('combatBloodMask')))return;
   const skin=node.geometry.getAttribute('skinIndex'),weights=node.geometry.getAttribute('skinWeight');
-  const masks=new Float32Array(skin.count*2);
+  const masks=new Float32Array(skin.count*2),bloodMask=new Float32Array(skin.count);
   const armSide=node.skeleton.bones.map(bone=>{for(let parent:THREE.Object3D|null=bone;parent;parent=parent.parent){if(parent.name==='UpperArmL')return 0;if(parent.name==='UpperArmR')return 1;}return -1;});
   for(let i=0;i<skin.count;i++)for(let j=0;j<4;j++){const side=armSide[skin.getComponent(i,j)];if(side>=0)masks[i*2+side]+=weights.getComponent(i,j);}
+  const bloodWeights=node.skeleton.bones.map(bone=>/^(Thumb|Index|Middle|Ring|Pinky)/.test(bone.name)?1:bone.name.startsWith('LowerArm')?.65:bone.name.startsWith('UpperArm')?.18:0);
+  for(let i=0;i<skin.count;i++)for(let j=0;j<4;j++)bloodMask[i]+=bloodWeights[skin.getComponent(i,j)]*weights.getComponent(i,j);
+  node.geometry.setAttribute('combatBloodMask',new THREE.BufferAttribute(bloodMask,1));
   node.geometry.setAttribute('combatArmMask',new THREE.BufferAttribute(masks,2));
  });
  const fingers:{bone:THREE.Bone;base:THREE.Quaternion;open:THREE.Quaternion;left:boolean}[]=[];
@@ -113,7 +120,7 @@ function attachDemon(model:THREE.Group){
  const anchor=model.userData.firstPerson?{bone:root.getObjectByName('Neck') as THREE.Bone,reference:new THREE.Vector3(),rootPosition:root.position.clone()}:undefined;
  if(anchor){model.updateWorldMatrix(true,true);anchor.bone.getWorldPosition(anchor.reference);model.worldToLocal(anchor.reference);}
  const legs:KickLeg[]=['L','R'].map(side=>{const foot=root.getObjectByName('Foot'+side) as THREE.Bone|undefined,thigh=root.getObjectByName('UpperLeg'+side) as THREE.Bone|undefined,shin=root.getObjectByName('LowerLeg'+side) as THREE.Bone|undefined;return {foot,end:root.getObjectByName('LowerLeg'+side+'_end') as THREE.Bone|undefined,thigh,shin,position:foot?.position.clone(),rotation:foot?.quaternion.clone(),bases:thigh&&shin?[thigh.quaternion.clone(),shin.quaternion.clone()]:undefined};});
- states.set(model,{legs,anchor,fingers,head:root.getObjectByName('Head') as THREE.Bone,dark,gold:false,root,mixer,actions,upper,lower,lastTime:NaN,aim:0,leftUpper,leftLower,baseLeftUpper:leftUpper.quaternion.clone(),baseLeftLower:leftLower.quaternion.clone(),leftRaise:0,rightRaise:0,baseUpper:upper.quaternion.clone(),baseLower:lower.quaternion.clone(),muzzle:root.getObjectByName('Middle3R_end')!});
+ states.set(model,{combatOpen:0,legs,anchor,fingers,head:root.getObjectByName('Head') as THREE.Bone,dark,gold:false,root,mixer,actions,upper,lower,lastTime:NaN,aim:0,leftUpper,leftLower,baseLeftUpper:leftUpper.quaternion.clone(),baseLeftLower:leftLower.quaternion.clone(),leftRaise:0,rightRaise:0,baseUpper:upper.quaternion.clone(),baseLower:lower.quaternion.clone(),muzzle:root.getObjectByName('Middle3R_end')!});
  model.userData.avatarSource='quaternius-demon';updateHeadwear(model);
 }
 function withoutHalo(source:THREE.BufferGeometry){
@@ -138,6 +145,14 @@ function measureCrownMount(model:THREE.Group,state:AvatarState){
  // Sink the bottom band 7 cm into the cranium so the crown is worn, never floating.
  const desired=new THREE.Matrix4().compose(new THREE.Vector3(center.x,top-.07,center.z),new THREE.Quaternion(),new THREE.Vector3(width,width,width));
  return state.head.matrixWorld.clone().invert().multiply(model.matrixWorld).multiply(desired);
+}
+/** Mount menu headwear to the animated cranium and remove the disjoint source halo. */
+export function mountCrewAvatarHeadwear(model:THREE.Group,headwear:THREE.Object3D){
+ const state=states.get(model);if(!state)return false;
+ if(state.dark&&originalDark)state.dark.geometry=withoutHalo(originalDark);
+ const mount=measureCrownMount(model,state);
+ headwear.matrixAutoUpdate=false;headwear.matrix.copy(mount);state.head.add(headwear);
+ model.userData.menuHeadwear='worn';return true;
 }
 function updateHeadwear(model:THREE.Group){
  const state=states.get(model);if(!state)return;
@@ -229,7 +244,7 @@ function basketballArm(model:THREE.Group,upper:THREE.Bone,lower:THREE.Bone,wrist
  lower.getWorldPosition(shotElbow);shotTarget.copy(shotShoulder).addScaledVector(shotAxis,distance);aim.subVectors(shotTarget,shotElbow).normalize();pointBone(lower,aim,weight);
 }
 /** Presentation only: sample simulation time so pause/seek never advance animation. */
-export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false,courtyard=false,weaponLevel=1,kick?:KickPose,holdingPencil=false,basketball?:BasketballPose|boolean,feedback?:CombatHandFeedback){
+export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grounded:boolean,time:number,recentShot=false,courtyard=false,weaponLevel=1,kick?:KickPose,holdingPencil=false,basketball?:BasketballPose|boolean,feedback?:CombatHandFeedback,blood?:HandBloodState){
  const shot=typeof basketball==='boolean'?basketball?{holding:true,charge:0,gather:0,age:-1}:undefined:basketball,holdingBasketball=shot?.holding===true;
  // Basketball hands remain readable without hiding the ball's release guide.
  if(model.userData.firstPerson){
@@ -303,6 +318,37 @@ export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grou
    lower.parent!.getWorldQuaternion(parentRotation);lower.quaternion.copy(parentRotation.invert().multiply(orientation));lower.updateWorldMatrix(false,true);
   }
  }
+ // Keep the reach steady while the fingers open upward to expose the palm.
+ // Shot feedback also covers single-frame shotgun presses and replay events.
+ if(!courtyard){
+  const shooting=!!(input.fire||input.homing||recentShot||(feedback?.firePower??0)>.01);
+  const target=shooting?1:0;
+  const blend=!Number.isFinite(delta)||delta<0?1:1-Math.exp(-delta*18);
+  state.combatOpen=shooting?1:state.combatOpen+(target-state.combatOpen)*blend;
+  for(const finger of state.fingers){
+   if(finger.left&&weaponLevel<5)continue;
+   finger.bone.quaternion.copy(finger.open);
+   const name=finger.bone.name;
+   // Ease into rest with zero slope at either end. A tiny, deterministic flex
+   // keeps the ready pose alive without shaking the aim or the firing fingers.
+   const resting=shotEase(1-state.combatOpen);
+   const breath=Math.sin(time*1.7+(finger.left?.45:0))*.012*resting;
+   const thumb=name.startsWith('Thumb'),index=name.startsWith('Index'),middle=name.startsWith('Middle');
+   if(/1[LR]$/.test(name)){
+    // A loose ready hand: lift the knuckles slightly instead of flattening a
+    // tightly clenched fist against the forearm. Firing still opens fully.
+    const lift=thumb?.48:index?.72:middle?.78:.84;
+    handLocal.setFromAxisAngle(combatFingerAxis,Math.PI/2*(1-resting)+(lift+breath)*resting);
+    finger.bone.quaternion.premultiply(handLocal);
+    if(thumb)finger.bone.rotateZ((finger.left?-1:1)*.12*resting);
+   }
+   // Stagger the curls so the fingertips form a relaxed cascade. The thumb
+   // stays loosely opposed rather than hooking sharply underneath the fist.
+   const curl=(index?.48:middle?.58:.7)+breath;
+   if(/^(Index|Middle|Pinky)[23]/.test(name))finger.bone.rotateX(-curl*(name[name.length-2]==='3'?.65:1)*resting);
+   if(/^Thumb[23]/.test(name))finger.bone.rotateX(-.18*resting);
+  }
+ }else state.combatOpen=0;
  const blend=!Number.isFinite(delta)||delta<0||delta>.2?1:1-Math.exp(-delta*16);
  state.leftRaise+=((input.leftArm?1:0)-state.leftRaise)*blend;
  state.rightRaise+=((input.rightArm&&!holdingPencil?1:0)-state.rightRaise)*blend;
@@ -379,7 +425,7 @@ export function updateCrewAvatar(model:THREE.Group,input:Input,velocity:Vec,grou
  model.userData.footballKick=courtyard&&kick?{...kick}:null;
  for(const material of model.userData.avatarMaterials as THREE.MeshStandardMaterial[]){
   if(model.userData.firstPerson)configureFirstPersonMaterial(material);
-  if(!courtyard&&!model.userData.ghost&&material.name==='Demon_Main')configureCombatHandMaterial(material,feedback,weaponLevel);
+  if(!courtyard&&!model.userData.ghost)configureCombatHandMaterial(material,feedback,weaponLevel,blood??feedback?.blood);
  }
  model.userData.emotes={left:state.leftRaise,right:state.rightRaise};
 }
@@ -395,21 +441,23 @@ export function crewMuzzle(model:THREE.Group,out:THREE.Vector3,left=false):boole
  const muzzle=left?state.root.getObjectByName('Middle3L_end'):state.muzzle;if(!muzzle)return false;muzzle.getWorldPosition(out);return true;
 }
 
-/** Animated combat fingertips. The demon has four fingers; its fifth lane
- * sits between middle and pinky instead of referring to a missing ring bone.
- * Twin sockets keep the simulation's interleaved right/left ordering. */
+/** Palm emission shared by beams, shotgun blasts and remote effects.
+ * Keep the lane fan inside the palm, with interleaved right/left twin sockets.
+ * The fixed gameplay origins and projectile paths remain in World. */
 const combatTip=new THREE.Vector3();
 export function crewWeaponMuzzle(model:THREE.Group,out:THREE.Vector3,level:number,socket=0):boolean{
  const state=states.get(model);if(!state)return false;
- state.combatTips??=['R','L'].map(side=>['Middle3','Index3','Middle3','Pinky3','Thumb2'].map(name=>state.root.getObjectByName(name+side+'_end')));
- const side=level>=5?socket%2:0,finger=(level>=5?Math.floor(socket/2):socket)%5;
- const tip=state.combatTips[side][finger];
- if(!tip)return false;
- tip.getWorldPosition(out);
- if(finger===2){
-  const pinky=state.combatTips[side][3];if(!pinky)return false;
-  pinky.getWorldPosition(combatTip);out.lerp(combatTip,.5);
- }
+ state.combatTips??=['R','L'].map(side=>['Middle1','Index1','Middle1','Pinky1','Thumb1'].map(name=>state.root.getObjectByName(name+side)));
+ const side=level>=5?socket%2:0,lane=(level>=5?Math.floor(socket/2):socket)%5;
+ const middle=state.combatTips[side][0],index=state.combatTips[side][1],tip=state.combatTips[side][lane];
+ if(!middle||!index||!tip)return false;
+ middle.getWorldPosition(out);index.getWorldPosition(combatTip);out.add(combatTip).multiplyScalar(.5);
+ // Knuckles mark the front edge of the palm. Retract toward the wrist and
+ // lift off its surface using the forearm frame, independent of finger curl.
+ const lower=side?state.leftLower:state.lower;
+ lower.getWorldQuaternion(handLocal);
+ handDirection.set(0,-.045,.025).applyQuaternion(handLocal);out.add(handDirection);
+ tip.getWorldPosition(combatTip);combatTip.sub(out).multiplyScalar(.15);out.add(combatTip);
  return true;
 }
 

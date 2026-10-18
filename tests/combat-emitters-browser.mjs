@@ -7,7 +7,7 @@ try{
  await page.route('**/combat-emitter-test',r=>r.fulfill({contentType:'text/html',body:'<body style="margin:0"><canvas></canvas></body>'}));
  await page.goto((process.env.GAME_URL||'http://127.0.0.1:5173')+'/combat-emitter-test');
  const result=await page.evaluate(async()=>{
-  const [{GameRenderer},{World,idleInput},T,{weaponMuzzle,HAND_MUZZLES}]=await Promise.all([import('/src/renderer.ts'),import('/src/simulation.ts'),import('/node_modules/.vite/deps/three.js'),import('/src/weapon-origin.ts')]);
+  const [{GameRenderer},{World,idleInput},T,{weaponMuzzle,HAND_MUZZLES},{crewWeaponMuzzle}]=await Promise.all([import('/src/renderer.ts'),import('/src/simulation.ts'),import('/node_modules/.vite/deps/three.js'),import('/src/weapon-origin.ts'),import('/src/crew-avatar.ts')]);
   const r=new GameRenderer(document.querySelector('canvas'),{quality:'low',mist:false,movementMotion:0,screenShake:0});await r.prepare();
   const w=new World(971,{schedule:false});w.player.pos={x:4,y:5,z:-3};
   let checks=0,maxError=0;
@@ -23,16 +23,11 @@ try{
     w.time+=dt;r.render(w,yaw,pitch,dt,false,1,null,false,false,input);
     const hands=r.emoteHands;hands.updateWorldMatrix(true,true);
     for(let socket=0;socket<HAND_MUZZLES[level-1].length;socket++){
-     const finger=level>=5?Math.floor(socket/2):socket,side=level>=5&&socket%2?'L':'R';
-     const name=['Middle','Index','Ring','Pinky','Thumb'][finger];
-     const bone=hands.getObjectByName((name==='Ring'?'Middle':name)+(name==='Thumb'?'2':'3')+side+'_end');
-     if(!bone)throw Error('Missing tip '+name+side+'; bones: '+(()=>{const names=[];hands.traverse(o=>{if(o.isBone)names.push(o.name)});return names.join(',')})());
-     const tip=bone.getWorldPosition(new T.Vector3());
-     if(name==='Ring')tip.lerp(hands.getObjectByName('Pinky3'+side+'_end').getWorldPosition(new T.Vector3()),.5);
+     const tip=new T.Vector3();check(crewWeaponMuzzle(hands,tip,level,socket),'Missing palm socket');
      const origin=weaponMuzzle(w.player.pos,yaw,pitch,level,socket);
      const viewed=r.originalWeapon.projectileView({id:-1,level,socket,age:0,pos:origin,vel:{x:0,y:0,z:-70},homing:false},{...origin});
      const error=tip.distanceTo(new T.Vector3(viewed.x,viewed.y,viewed.z));maxError=Math.max(maxError,error);
-     check(error<1e-7,'Emitter missed animated fingertip '+JSON.stringify({level,socket,fov,pitch,aspect,burst,error}));
+     check(error<1e-7,'Emitter missed animated palm '+JSON.stringify({level,socket,fov,pitch,aspect,burst,error}));
      if(dt===0){
       for(const spark of r.originalWeapon.fragments.filter(f=>f.handSocket===socket)){
        const batch=r.originalWeapon.batches.get(spark.family).mesh;
@@ -61,9 +56,7 @@ try{
    check(received.muzzles.length===count,'Remote emission lost firing lanes');
    const model=r.crewModels.get('remote');
    for(let i=0;i<count;i++){
-    const finger=level>=5?Math.floor(i/2):i,side=level>=5&&i%2?'L':'R',name=['Middle3','Index3','Middle3','Pinky3','Thumb2'][finger];
-    const expected=model.getObjectByName(name+side+'_end').getWorldPosition(new T.Vector3());
-    if(finger===2)expected.lerp(model.getObjectByName('Pinky3'+side+'_end').getWorldPosition(new T.Vector3()),.5);
+    const expected=new T.Vector3();check(crewWeaponMuzzle(model,expected,level,i),'Missing remote palm');
     const actual=received.muzzles[i];check(expected.distanceTo(new T.Vector3(actual.x,actual.y,actual.z))<1e-7,'Remote emitter detached');remoteChecks++;
    }
    check(source.muzzles[0].x===20,'Remote presentation mutated network event');

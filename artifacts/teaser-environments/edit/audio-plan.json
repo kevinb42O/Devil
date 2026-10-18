@@ -1,0 +1,54 @@
+{
+  "beds": [
+    {
+      "bed": "space",
+      "start": 0,
+      "end": 15,
+      "crossfadeSeconds": 5.5,
+      "sourceOffset": 5,
+      "gain": 1.163752484881022
+    },
+    {
+      "bed": "storm",
+      "start": 14,
+      "end": 28,
+      "crossfadeSeconds": 5.5,
+      "sourceOffset": 32,
+      "gain": 1.128693301257756
+    },
+    {
+      "bed": "veil",
+      "start": 27,
+      "end": 35,
+      "crossfadeSeconds": 5.5,
+      "sourceOffset": 21,
+      "gain": 1.0710593916053448
+    },
+    {
+      "bed": "furnace",
+      "start": 34,
+      "end": 49,
+      "crossfadeSeconds": 5.5,
+      "sourceOffset": 37,
+      "gain": 1.1393790122850156
+    },
+    {
+      "bed": "cathedral",
+      "start": 48,
+      "end": 72,
+      "crossfadeSeconds": 5.5,
+      "sourceOffset": 31,
+      "gain": 1.0540273664385467
+    },
+    {
+      "bed": "depth",
+      "start": 71,
+      "end": 81,
+      "crossfadeSeconds": 5.5,
+      "sourceOffset": 17,
+      "gain": 1.015498664341667
+    }
+  ],
+  "voices": "Quiet panned creature loops; no action cues",
+  "preMasterPeak": 0.4804198741912842
+}

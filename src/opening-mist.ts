@@ -98,21 +98,23 @@ export class OpeningMist extends ShaderPass {
           if(any(lessThan(tile,vec2(0.)))||any(greaterThanEqual(tile,vec2(${ARENA_DIMENSION.toFixed(1)}))))return vec3(0.);
           float ground=texture(nebulaGround,(tile+.5)/${ARENA_DIMENSION.toFixed(1)}).r;
           float h=p.y-ground;
-          if(ground<-20.||h<0.||h>6.)return vec3(0.);
-          // The envelope belongs to the tile; rising billows share the platform's
-          // fall distance with the surrounding nebula, including its acceleration.
-          vec3 flow=vec3(p.x,h-cosmicFall,p.z);
+          if(ground<-20.||h<0.||h>10.)return vec3(0.);
+          // Ground mist lives in tile-local height coordinates. Only the distant
+          // nebula uses cosmicFall; applying it here lifts billows off the field.
+          vec3 flow=vec3(p.x,h,p.z);
           flow.x+=sin(p.z*.17+cosmicTime*.12)*1.4;
           flow.z+=sin(p.x*.14+cosmicTime*.10)*1.1;
           float broad=texture(densityField,flow*vec3(.023,.045,.023)+vec3(.13,.41,.67)).r;
           float fine=texture(densityField,flow*vec3(.057,.10,.057)+vec3(.64,.12,.31)).r;
           float bank=pow(smoothstep(.34,.70,broad*.76+fine*.24),1.4);
           float crest=smoothstep(.53,.82,broad);
-          float center=1.65+bank*.65+crest*.35,thickness=1.15+bank*.65;
+          // Broad overlapping banks surround the player and crest overhead.
+          // A shared low layer keeps thinner pockets connected to the field.
+          float center=3.+bank*1.6+crest*.8,thickness=2.8+bank*1.2;
           float layer=exp(-pow((h-center)/thickness,2.));
-          layer*=smoothstep(0.,.18,h)*(1.-smoothstep(4.,6.,h));
+          layer*=smoothstep(0.,.18,h)*(1.-smoothstep(7.,10.,h));
           float palette=smoothstep(.25,.75,.5+.5*sin(p.x*.14+p.z*.10+broad*1.2));
-          return vec3(layer*bank,palette,fine);
+          return vec3(layer*(.18+bank*.82),palette,fine);
         }
         vec3 cosmicGas(vec3 p){
           vec3 gas=p-vec3(0.,cosmicFall,0.);
@@ -256,7 +258,7 @@ export class OpeningMist extends ShaderPass {
               float d=(segmentStart+segmentEnd)*.5;
               vec3 p=origin+direction*d;
               vec3 cloud=cosmicFloorCloud(p);
-              float density=cloud.x*.026*cosmic*cosmicGroundAmount*(1.-smoothstep(28.,40.,d));
+              float density=cloud.x*.11*cosmic*cosmicGroundAmount*(1.-smoothstep(28.,40.,d));
               float opacity=1.-exp(-density*segmentLength);
               segmentStart=segmentEnd;
               vec3 color=mix(vec3(.012,.25,.38),vec3(.23,.040,.33),cloud.y)*(.6+cloud.z*.35);
