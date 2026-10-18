@@ -114,6 +114,8 @@ export class Furnace {
      #endif
      heatedStonePosition=(modelMatrix*hotVertex).xyz;heatedStoneNormal=normalize(mat3(modelMatrix)*hotNormal);`);
    shader.fragmentShader=shader.fragmentShader.replace('#include <common>',`#include <common>
+    #define BLOOD_FURNACE_TRANSMISSION
+    vec3 furnaceBloodRadiance=vec3(0.);
     varying vec3 heatedStonePosition,heatedStoneNormal;uniform float furnaceHeat,furnaceClock,furnaceRadius,furnaceFire;uniform vec4 fireLights[8];
     uniform sampler2D furnaceAtlas,furnaceSecondary;
     ${NOISE}
@@ -153,7 +155,8 @@ export class Furnace {
       float halo=exp(-seam*12.);
       float molten=.72+.28*sin(furnaceClock*1.9+fNoise(stone*.4)*8.);
       outgoingLight*=1.-furnaceHeat*top*halo*.55;
-      outgoingLight+=furnaceHeat*top*molten*(vec3(1.15,.12,.002)*fissure+vec3(.19,.018,.001)*halo);
+      furnaceBloodRadiance=furnaceHeat*top*molten*(vec3(1.15,.12,.002)*fissure+vec3(.19,.018,.001)*halo);
+      outgoingLight+=furnaceBloodRadiance;
       // Broad, turbulent incident firelight travels over the stone grain.
       outgoingLight+=vec3(.25,.065,.009)*furnaceHeat*flicker*(.15+sweep*sweep*2.)*(.40+.60*rim)*grain*top;
       vec3 eye=normalize(cameraPosition-heatedStonePosition);
@@ -180,7 +183,7 @@ export class Furnace {
      }
      #include <opaque_fragment>`);
   };
-  floor.customProgramCacheKey=()=>key+'-furnace-volumetric-light-v4';
+  floor.customProgramCacheKey=()=>key+'-furnace-volumetric-light-v5-blood';
  }
  configure(quality:string,reduced:boolean){this.quality=quality;this.reduced=reduced;this.uniforms.fireSteps.value=quality==='high'?40:24;(this.deckFlames.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?48:28;(this.convection.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?56:24;for(const mesh of [this.flames,this.smoke])(mesh.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?24:16;(this.embers.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?520:180;}
  update(camera:THREE.Camera,time:number,enabled=true){

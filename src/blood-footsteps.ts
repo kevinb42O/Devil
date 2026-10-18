@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {bloodWashRetention,BLOOD_WEATHER_GLSL} from './blood-weather';
 import {floorHeight} from './arena';
 import {BloodField} from './blood';
 import {FootstepGait,setBloodFootWetness} from './footstep-audio';
@@ -29,7 +30,7 @@ export class BloodFootprints{
   for(const {id,player}of actors){
    const {x,z}=player.pos,old=this.actors.get(id),dt=old?time-old.time:0,travel=old?Math.hypot(x-old.x,z-old.z):0;
    if(old&&old.player!==player)setBloodFootWetness(old.player,0);
-   let wet=old?Math.max(0,old.wet-dt/BLOODY_FEET_SECONDS):0;
+   let wet=old?Math.max(0,old.wet*bloodWashRetention(old.time,time,.12)-dt/BLOODY_FEET_SECONDS):0;
    if(dt>.2||travel>Math.max(1.8,dt*23))wet=0;
    const continuous=!!old&&dt>0&&dt<=.2&&travel<=Math.max(1.8,dt*23);
    const airtime=player.grounded?0:(continuous?(old.airtime+dt):0);
@@ -74,7 +75,8 @@ export class BloodFootprintRenderer{
    uniforms:{time:this.time},
    vertexShader:`attribute vec3 printState; varying vec2 soleUV; varying vec3 state;
     void main(){soleUV=uv;state=printState;gl_Position=projectionMatrix*modelViewMatrix*instanceMatrix*vec4(position,1.);}`,
-   fragmentShader:`uniform float time;varying vec2 soleUV;varying vec3 state;
+   fragmentShader:`${BLOOD_WEATHER_GLSL}
+uniform float time;varying vec2 soleUV;varying vec3 state;
     void main(){
      vec2 p=(soleUV-.5)*2.;p.x*=state.z;
      float heel=1.-smoothstep(.78,1.,length((p-vec2(-.08,-.57))/vec2(.65,.35)));
@@ -82,7 +84,7 @@ export class BloodFootprintRenderer{
      float shape=max(heel,fore);
      float grain=fract(sin(dot(floor(soleUV*vec2(27.,46.)),vec2(127.1,311.7)))*43758.5453);
      float tread=smoothstep(.06,.15,abs(sin(p.y*26.+p.x*3.)));
-     float fade=1.-smoothstep(12.,24.,time-state.x);
+     float fade=(1.-smoothstep(12.,24.,time-state.x))*bloodWash(state.x,time,.12);
      float alpha=shape*mix(.52,1.,grain)*mix(.65,1.,tread)*state.y*fade*.88;
      if(alpha<.015)discard;
      gl_FragColor=vec4(vec3(.24,.009,.015)*mix(.7,1.2,grain),alpha);

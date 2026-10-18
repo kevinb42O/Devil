@@ -1,10 +1,11 @@
 import * as THREE from 'three';
+import {BLOOD_WEATHER_GLSL} from './blood-weather';
 import {BLOOD_SPAN} from './blood';
 
 /** Wet blood is composed after the arena effects and before output conversion / fog. */
 export function attachBloodFloor(floor:THREE.MeshBasicMaterial,texture:THREE.Texture,size:number,time:{value:number}){
  const uniforms={
-  bloodField:{value:texture},bloodTime:time,
+  bloodField:{value:texture},bloodTime:time,bloodRain:{value:0},bloodHeatTransmission:{value:1},
   bloodKeyDirection:{value:new THREE.Vector3(-.35,.85,.3)},bloodKeyColor:{value:new THREE.Color(.5,.5,.5)},
   bloodSky:{value:new THREE.Texture()},bloodStorm:{value:new THREE.Texture()},
   bloodReflectionReady:{value:0},bloodCosmic:{value:0},
@@ -16,36 +17,42 @@ export function attachBloodFloor(floor:THREE.MeshBasicMaterial,texture:THREE.Tex
    .replace('#include <begin_vertex>','#include <begin_vertex>\nbloodTop=normal.y;');
   shader.fragmentShader=shader.fragmentShader.replace('#include <common>',`#include <common>
    uniform sampler2D bloodField,bloodSky,bloodStorm;
-   uniform float bloodTime,bloodReflectionReady,bloodCosmic;
+   uniform float bloodTime,bloodReflectionReady,bloodCosmic,bloodRain,bloodHeatTransmission;
    uniform vec3 bloodKeyDirection,bloodKeyColor;
    varying float bloodTop;
+   ${BLOOD_WEATHER_GLSL}
    float bloodLanding(vec4 sampleValue){return (sampleValue.g*255.+sampleValue.b*65280.)*.25;}
+   vec4 bloodWetSample(vec2 uv){
+    vec4 value=texture2D(bloodField,uv);if(value.r<.001)return value;
+    float retention=bloodWash(bloodLanding(value),bloodTime,.065);
+    value.r*=retention;value.a*=pow(retention,1.5);return value;
+   }
   `).replace('#include <tonemapping_fragment>',`
    if(bloodTop>.65){
     // Decode packed timestamps before filtering; packed byte carries cannot be interpolated.
     vec2 grid=(gemFloorPosition.xz/${BLOOD_SPAN.toFixed(6)}+.5)*${size.toFixed(1)}-.5;
     vec2 cell=floor(grid),f=fract(grid),stepUV=vec2(${(1/size).toFixed(10)});
     vec2 uv=(cell+.5)*stepUV;
-    vec4 a=texture2D(bloodField,uv),b=texture2D(bloodField,uv+vec2(stepUV.x,0.));
-    vec4 c=texture2D(bloodField,uv+vec2(0.,stepUV.y)),d=texture2D(bloodField,uv+stepUV);
+    vec4 a=bloodWetSample(uv),b=bloodWetSample(uv+vec2(stepUV.x,0.));
+    vec4 c=bloodWetSample(uv+vec2(0.,stepUV.y)),d=bloodWetSample(uv+stepUV);
     vec4 sampleBlood=mix(mix(a,b,f.x),mix(c,d,f.x),f.y);
     float coverage=smoothstep(.09,.67,sampleBlood.r);
     if(coverage>.001){
      float weight=mix(mix(a.r,b.r,f.x),mix(c.r,d.r,f.x),f.y);
      float landed=mix(mix(bloodLanding(a)*a.r,bloodLanding(b)*b.r,f.x),mix(bloodLanding(c)*c.r,bloodLanding(d)*d.r,f.x),f.y)/max(weight,.00001);
-     float age=max(0.,bloodTime-landed),fresh=exp(-age*.012);
+     float age=max(0.,bloodTime-landed),fresh=max(exp(-age*.012),bloodRain*.85);
      float depth=sampleBlood.a;
      // A shallow raised meniscus supplies curved edge normals; pools have calm interiors.
      // Interpolate central differences, not cell slopes: highlight normals stay
      // continuous across texels instead of breaking into a visible square grid.
-     float leftA=texture2D(bloodField,uv-vec2(stepUV.x,0.)).a;
-     float leftC=texture2D(bloodField,uv+vec2(-stepUV.x,stepUV.y)).a;
-     float rightB=texture2D(bloodField,uv+vec2(stepUV.x*2.,0.)).a;
-     float rightD=texture2D(bloodField,uv+vec2(stepUV.x*2.,stepUV.y)).a;
-     float belowA=texture2D(bloodField,uv-vec2(0.,stepUV.y)).a;
-     float belowB=texture2D(bloodField,uv+vec2(stepUV.x,-stepUV.y)).a;
-     float aboveC=texture2D(bloodField,uv+vec2(0.,stepUV.y*2.)).a;
-     float aboveD=texture2D(bloodField,uv+vec2(stepUV.x,stepUV.y*2.)).a;
+     float leftA=bloodWetSample(uv-vec2(stepUV.x,0.)).a;
+     float leftC=bloodWetSample(uv+vec2(-stepUV.x,stepUV.y)).a;
+     float rightB=bloodWetSample(uv+vec2(stepUV.x*2.,0.)).a;
+     float rightD=bloodWetSample(uv+vec2(stepUV.x*2.,stepUV.y)).a;
+     float belowA=bloodWetSample(uv-vec2(0.,stepUV.y)).a;
+     float belowB=bloodWetSample(uv+vec2(stepUV.x,-stepUV.y)).a;
+     float aboveC=bloodWetSample(uv+vec2(0.,stepUV.y*2.)).a;
+     float aboveD=bloodWetSample(uv+vec2(stepUV.x,stepUV.y*2.)).a;
      vec2 slope=vec2(
       mix(mix(b.a-leftA,rightB-a.a,f.x),mix(d.a-leftC,rightD-c.a,f.x),f.y),
       mix(mix(c.a-belowA,d.a-belowB,f.x),mix(aboveC-a.a,aboveD-b.a,f.x),f.y))*.5;
@@ -70,11 +77,17 @@ export function attachBloodFloor(floor:THREE.MeshBasicMaterial,texture:THREE.Tex
      body*=illumination;
      vec3 wet=reflection*(.14+fresnel*.85)*fresh*1.5;
      wet+=bloodKeyColor*(gloss*.3+pow(max(dot(n,h),0.),24.)*.018)*fresh;
-     gl_FragColor.rgb=mix(gl_FragColor.rgb,body+wet,coverage);
+     vec3 transmitted=vec3(0.);
+     #ifdef BLOOD_FURNACE_TRANSMISSION
+      // Preserve the exact molten fissures beneath the liquid. Dense blood filters
+      // their light toward red; thin edges transmit the brighter orange cores.
+      transmitted=bloodHeatTransmission*furnaceBloodRadiance*exp(-vec3(.55,.9,1.7)*depth);
+     #endif
+     gl_FragColor.rgb=mix(gl_FragColor.rgb,body+wet+transmitted,coverage);
     }
    }
    #include <tonemapping_fragment>`);
  };
- floor.customProgramCacheKey=()=>key+'-blood-liquid-floor-v2';
+ floor.customProgramCacheKey=()=>key+'-blood-liquid-floor-v3-weather';
  return uniforms;
 }

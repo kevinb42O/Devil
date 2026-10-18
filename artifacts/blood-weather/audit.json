@@ -1,0 +1,72 @@
+{
+  "rain": [
+    {
+      "time": 50,
+      "covered": 2500,
+      "max": 1,
+      "total": 2500,
+      "body": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      }
+    },
+    {
+      "time": 72,
+      "covered": 2500,
+      "max": 0.6351827781124544,
+      "total": 1587.9569452811977,
+      "body": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      }
+    },
+    {
+      "time": 92,
+      "covered": 2500,
+      "max": 0.06022450379065934,
+      "total": 150.56125947665427,
+      "body": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      }
+    },
+    {
+      "time": 144,
+      "covered": 0,
+      "max": 0,
+      "total": 0,
+      "body": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      }
+    },
+    {
+      "time": 200,
+      "covered": 0,
+      "max": 0,
+      "total": 0,
+      "body": {
+        "amount": 0,
+        "bodyAmount": 0,
+        "freshness": 0
+      }
+    }
+  ],
+  "fire": [
+    {
+      "enabled": false,
+      "red": 139997,
+      "luminance": 50992094.29801473
+    },
+    {
+      "enabled": true,
+      "red": 183559,
+      "luminance": 53331905.03100758
+    }
+  ],
+  "errors": []
+}

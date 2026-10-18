@@ -36,7 +36,7 @@
           "skin": 0
         }
       ],
-      "red": 1868
+      "red": 2425
     },
     {
       "label": "hands-first",
@@ -74,7 +74,7 @@
           "skin": 0
         }
       ],
-      "red": 27808
+      "red": 28607
     },
     {
       "label": "body-building",
@@ -112,7 +112,7 @@
           "skin": 0
         }
       ],
-      "red": 47058
+      "red": 47771
     },
     {
       "label": "fully-soaked",
@@ -150,7 +150,7 @@
           "skin": 0
         }
       ],
-      "red": 57281
+      "red": 57813
     },
     {
       "label": "fully-soaked-back",
@@ -188,7 +188,7 @@
           "skin": 0
         }
       ],
-      "red": 61549
+      "red": 62312
     },
     {
       "label": "dried",
@@ -226,7 +226,7 @@
           "skin": 0
         }
       ],
-      "red": 43568
+      "red": 559591
     },
     {
       "label": "new-spatter",
@@ -264,7 +264,7 @@
           "skin": 0
         }
       ],
-      "red": 44705
+      "red": 560418
     },
     {
       "label": "reset",
@@ -302,7 +302,7 @@
           "skin": 0
         }
       ],
-      "red": 1936
+      "red": 512804
     }
   ],
   "errors": []

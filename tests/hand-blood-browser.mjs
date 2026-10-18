@@ -11,7 +11,7 @@ try{
  await page.evaluate(async()=>{
   const [{GameRenderer},{World,idleInput,v}]=await Promise.all([import('/src/renderer.ts'),import('/src/simulation.ts')]);
   const renderer=new GameRenderer(document.querySelector('canvas'),{quality:'high',fov:90,mist:false,screenShake:0,movementMotion:0});await renderer.prepare();
-  const world=new World(42,{schedule:false,invulnerable:true});world.player.pos=v(0,1.7,0);world.time=10;world.level=5;
+  const world=new World(42,{schedule:false,invulnerable:true});world.player.pos=v(0,1.7,0);world.time=200;world.level=5;
   const input={...idleInput(),leftArm:true,rightArm:true};const render=()=>renderer.render(world,0,-.25,1/60,false,1,null,false,false,{...input,pitch:-.25});
   for(let i=0;i<60;i++)render();
   window.fixture={renderer,world,input,render,v,id:0};

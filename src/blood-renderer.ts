@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import {rainAt} from './rain-state';
 import {HandBlood} from './hand-blood';
 import {bloodMaterial} from './blood-material';
 import {BloodSplashRenderer} from './blood-splash-renderer';
@@ -67,7 +68,7 @@ export class BloodRenderer {
  }
  setReflections(cosmic:THREE.Texture,storm:THREE.Texture){this.surface.bloodSky.value=cosmic;this.surface.bloodStorm.value=storm;this.surface.bloodReflectionReady.value=1;}
  effect(effect:Effect,world:World){this.handBlood.effect(effect,world);this.field.emit(effect,world.time);}
- advance(time:number){this.field.advance(time);this.time.value=time;}
+ advance(time:number){this.field.advance(time);this.time.value=time;this.surface.bloodRain.value=rainAt(time).rain;}
  update(world:World|null,menu:boolean,presentationTime=world?.time,camera?:THREE.Camera){
   this.surface.bloodCosmic.value=this.cosmic;
   this.airFill.value.setRGB(.32,.2,.18);

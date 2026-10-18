@@ -11,7 +11,7 @@ try{
  await page.evaluate(async()=>{
   const [{GameRenderer},{World,idleInput,v},THREE]=await Promise.all([import('/src/renderer.ts'),import('/src/simulation.ts'),import('/node_modules/.vite/deps/three.js')]);
   const renderer=new GameRenderer(document.querySelector('canvas'),{quality:'high',fov:65,mist:false,screenShake:0,movementMotion:0});await renderer.prepare();
-  const world=new World(42,{schedule:false,invulnerable:true});world.addCrew('near');world.addCrew('far');world.selectCrew('near');world.player.pos=v(0,1.7,0);world.crew[1].player.pos=v(20,1.7,0);world.time=10;world.level=world.crew[0].level=3;
+  const world=new World(42,{schedule:false,invulnerable:true});world.addCrew('near');world.addCrew('far');world.selectCrew('near');world.player.pos=v(0,1.7,0);world.crew[1].player.pos=v(20,1.7,0);world.time=200;world.level=world.crew[0].level=3;
   renderer.crewReplayMode=true;
   // A broad neutral studio fill makes skin and blood readable on both sides for material review.
   const fill=new THREE.HemisphereLight(0xffffff,0x5b3e3e,2);renderer.scene.add(fill);

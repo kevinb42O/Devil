@@ -1,3 +1,5 @@
+import {bloodWashRetention} from './blood-weather';
+import {rainAt} from './rain-state';
 import type {Effect,World} from './simulation';
 export type HandBloodState={amount:number;bodyAmount:number;freshness:number};
 type Stain={amount:number;last:number;wet:number};
@@ -26,7 +28,7 @@ export class HandBlood{
    const proximity=Math.max(0,1-distance/7);if(proximity===0)continue;
    const amount=(effect.kind==='kill'?.19:.035)*proximity*proximity*Math.min(1.6,Math.sqrt(Math.max(.3,effect.amount??1)));
    const key=this.key(world,player),old=this.stains.get(key);
-   this.stains.set(key,{amount:Math.min(3,(old?.amount??0)+amount),wet:Math.min(1,(old?old.wet*Math.exp(-Math.max(0,world.time-old.last)/28):0)+amount),last:world.time});
+   this.stains.set(key,{amount:Math.min(3,(old?old.amount*bloodWashRetention(old.last,world.time,.08):0)+amount),wet:Math.min(1,(old?old.wet*Math.exp(-Math.max(0,world.time-old.last)/28)*bloodWashRetention(old.last,world.time,.08):0)+amount),last:world.time});
   }
  }
  sample(world:World,player=world.player):HandBloodState{
@@ -35,7 +37,10 @@ export class HandBlood{
   for(const id of this.stains.keys())if(!live.has(id))this.stains.delete(id);
   if(world.courtyard)return {amount:0,bodyAmount:0,freshness:0};
   const stain=this.stains.get(this.key(world,player));
-  return stain?{amount:Math.min(1,stain.amount),bodyAmount:Math.min(1,Math.max(0,(stain.amount-.12)/2.3)),freshness:Math.min(1,stain.wet/Math.min(1,stain.amount))*Math.exp(-Math.max(0,world.time-stain.last)/28)}:{amount:0,bodyAmount:0,freshness:0};
+  if(!stain)return {amount:0,bodyAmount:0,freshness:0};
+  const retention=bloodWashRetention(stain.last,world.time,.08),amount=stain.amount*retention;
+  const fresh=Math.min(1,stain.wet/Math.min(1,stain.amount))*Math.exp(-Math.max(0,world.time-stain.last)/28);
+  return {amount:Math.min(1,amount),bodyAmount:Math.min(1,Math.max(0,(amount-.12)/2.3)),freshness:amount>.001?Math.max(fresh,rainAt(world.time).rain*.8):0};
  }
  clear(){this.stains.clear();this.seen.clear();this.queue.length=0;this.time=-Infinity;}
 }

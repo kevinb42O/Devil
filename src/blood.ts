@@ -1,3 +1,4 @@
+import {bloodWashRetention} from './blood-weather';
 import {ARENA_DIMENSION,TILE_SIZE,floorHeight,tileHeight} from './arena';
 import type {Effect,Vec} from './simulation';
 
@@ -22,6 +23,7 @@ export class BloodField {
  readonly dirtyMin:Int32Array;
  readonly dirtyMax:Int32Array;
  fullUpload=true;
+ private time=0;
  private cursor=0;
  private identities=new Set<number>();
  private identityQueue:number[]=[];
@@ -65,13 +67,15 @@ export class BloodField {
   }
  }
  /** Contact samples the real liquid map, never the footprint overlay. */
- coverageAt(x:number,z:number){
+ coverageAt(x:number,z:number,time=this.time){
   const px=Math.floor((x/BLOOD_SPAN+.5)*this.size),py=Math.floor((z/BLOOD_SPAN+.5)*this.size);
   if(px<0||py<0||px>=this.size||py>=this.size)return 0;
-  return Math.min(1,Math.max(0,(this.pixels[(py*this.size+px)*4]/255-.09)/.58));
+  const index=(py*this.size+px)*4,born=(this.pixels[index+1]+this.pixels[index+2]*256)*.25;
+  const density=this.pixels[index]/255*bloodWashRetention(born,time);
+  return Math.min(1,Math.max(0,(density-.09)/.58));
  }
  splash(x:number,z:number,time:number,speed:number,motion:Vec,seed:number){
-  const coverage=this.coverageAt(x,z),ground=floorHeight(x,z,time,0);
+  const coverage=this.coverageAt(x,z,time),ground=floorHeight(x,z,time,0);
   if(coverage<.12||ground<-20||speed<.6)return;
   const impact=Math.min(1.5,speed/9),random=bloodRandom(seed),count=Math.round((18+impact*30)*coverage);
   if(this.splashes.length>=BLOOD_SPLASH_CAPACITY)this.splashes.shift();
@@ -89,6 +93,7 @@ export class BloodField {
   }
  }
  advance(time:number){
+  this.time=time;
   for(let i=this.splashes.length-1;i>=0;i--)if(time-this.splashes[i].born>BLOOD_SPLASH_SECONDS)this.splashes.splice(i,1);
   let alive=0;
   for(const drop of this.drops){
@@ -159,9 +164,11 @@ export class BloodField {
      if(height>ground+.08||height<ground-.35)continue;
      this.dirtyMin[py]=Math.min(this.dirtyMin[py],px);this.dirtyMax[py]=Math.max(this.dirtyMax[py],px);
      const index=(py*this.size+px)*4;
-     this.pixels[index]=Math.min(255,this.pixels[index]+Math.round(coverage*205));
+     // New splashes add to what survived the rain, never resurrect washed-away blood.
+     const oldTime=(this.pixels[index+1]+this.pixels[index+2]*256)*.25,retention=bloodWashRetention(oldTime,time);
+     this.pixels[index]=Math.min(255,Math.round(this.pixels[index]*retention)+Math.round(coverage*205));
      const bulge=Math.sqrt(Math.max(0,1-r/Math.max(.1,boundary)));
-     this.pixels[index+3]=Math.min(255,this.pixels[index+3]+Math.round(coverage*(35+bulge*100)));
+     this.pixels[index+3]=Math.min(255,Math.round(this.pixels[index+3]*Math.pow(retention,1.5))+Math.round(coverage*(35+bulge*100)));
      const newest=Math.max(timestamp,this.pixels[index+1]+this.pixels[index+2]*256);
      this.pixels[index+1]=newest&255;this.pixels[index+2]=newest>>>8;
     }
@@ -170,5 +177,5 @@ export class BloodField {
   this.revision++;
  }
  clearDirty(){this.dirtyMin.fill(this.size);this.dirtyMax.fill(-1);this.fullUpload=false;}
- clear(){this.splashes.length=0;this.pixels.fill(0);this.drops.length=0;this.identities.clear();this.identityQueue.length=0;this.cursor=0;this.landings=this.discarded=0;this.revision++;this.fullUpload=true;}
+ clear(){this.time=0;this.splashes.length=0;this.pixels.fill(0);this.drops.length=0;this.identities.clear();this.identityQueue.length=0;this.cursor=0;this.landings=this.discarded=0;this.revision++;this.fullUpload=true;}
 }

@@ -4,10 +4,10 @@ import {HandBlood} from '../src/hand-blood.ts';
 import {World,v,type Effect} from '../src/simulation.ts';
 const kill=(id:number,pos=v(0,1.6,-1)):Effect=>({kind:'kill',bloodId:id,enemyId:1,pos,amount:1});
 test('nearby flesh combat progressively stains hands, saturates, dries and clears',()=>{
- const world=new World(42,{schedule:false}),blood=new HandBlood();world.player.pos=v(0,1.6,0);world.time=10;
+ const world=new World(42,{schedule:false}),blood=new HandBlood();world.player.pos=v(0,1.6,0);world.time=200;
  assert.equal(blood.sample(world).amount,0);blood.effect(kill(1),world);const first=blood.sample(world);assert.ok(first.amount>0&&first.amount<.2);assert.equal(first.freshness,1);
  for(let i=2;i<30;i++)blood.effect(kill(i),world);assert.equal(blood.sample(world).amount,1);
- world.time=94;assert.equal(blood.sample(world).amount,1);assert.ok(blood.sample(world).freshness<.06);
+ world.time=284;assert.equal(blood.sample(world).amount,1);assert.ok(blood.sample(world).freshness<.06);
  blood.clear();assert.deepEqual(blood.sample(world),{amount:0,bodyAmount:0,freshness:0});
 });
 test('bloodless, distant and repeated events do not add blood; no gameplay writes',()=>{
@@ -22,12 +22,12 @@ test('coverage belongs to each life, survives tier changes, and resets on rewind
  blood.effect(kill(2),world);world.time=5;assert.equal(blood.sample(world).amount,0);
 });
 test('hands saturate first, then continued exposure completely coats the body',()=>{
- const world=new World(42,{schedule:false}),blood=new HandBlood();world.player.pos=v(0,1.6,0);world.time=10;
+ const world=new World(42,{schedule:false}),blood=new HandBlood();world.player.pos=v(0,1.6,0);world.time=200;
  for(let i=0;i<8;i++)blood.effect(kill(i),world);
  const handsFirst=blood.sample(world);assert.equal(handsFirst.amount,1);assert.ok(handsFirst.bodyAmount>.1&&handsFirst.bodyAmount<.6);
  for(let i=8;i<30;i++)blood.effect(kill(i),world);
  assert.equal(blood.sample(world).bodyAmount,1);
- world.time=94;const dry=blood.sample(world);assert.equal(dry.bodyAmount,1);
+ world.time=284;const dry=blood.sample(world);assert.equal(dry.bodyAmount,1);
  blood.effect({kind:'hit',bloodId:31,pos:v(0,1.6,-1)},world);
  const fresh=blood.sample(world);assert.ok(fresh.freshness>dry.freshness&&fresh.freshness<.15,'one new splash does not re-wet the whole dried body');
 });
