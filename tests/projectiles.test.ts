@@ -98,7 +98,7 @@ test('projectile interpolation keeps the actual prior swept position without ali
 });
 
 import {sweepArmor} from '../src/projectile-collision.ts';
-import {localToEnemy} from '../src/enemy-presentation.ts';
+import {localToEnemy,crystalToEnemy,towerOutletHeight} from '../src/enemy-presentation.ts';
 import {sampleProjectile,projectileRoll} from '../src/projectile-presentation.ts';
 import {samplePlayerPosition} from '../src/player-presentation.ts';
 test('each projectile has a distinct stable axial roll, including predicted and host shots',()=>{
@@ -161,7 +161,7 @@ test('all tower tiers stop swept primary and homing shots on armor at the exact 
   const w=new World(12,{schedule:false});w.player.pos=v(0,5,15);
   const e=w.spawn(kind,v(0,8,0));e.age=age;
   let a=v(),b=v(),hit:ReturnType<typeof sweepArmor>=null;
-  for(let y=-2;y<-.5&&!hit;y+=.2){a=localToEnemy(e,w.player.pos,v(0,y,8));b=localToEnemy(e,w.player.pos,v(0,y,-8));hit=sweepArmor(e,w.player.pos,a,b);}
+  a=crystalToEnemy(e,w.player.pos,v(0,towerOutletHeight(kind)*.4,8));b=crystalToEnemy(e,w.player.pos,v(0,towerOutletHeight(kind)*.4,-8));hit=sweepArmor(e,w.player.pos,a,b);
   assert.ok(hit,kind+' has solid armor');
   const p={id:900,pos:{...a},vel:v((b.x-a.x)/STEP,(b.y-a.y)/STEP,(b.z-a.z)/STEP),age:0,homing,level:3};w.projectiles.push(p);tickProjectiles(w);
   assert.equal(e.hp,kind==='squid'?10:kind==='squid2'?20:90);

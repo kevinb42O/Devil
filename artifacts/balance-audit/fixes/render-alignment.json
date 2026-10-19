@@ -1,0 +1,156 @@
+{
+  "points": [
+    {
+      "kind": "squid",
+      "error": 0,
+      "radiusError": 0,
+      "height": 3.7910225145220755
+    },
+    {
+      "kind": "squid2",
+      "error": 0,
+      "radiusError": 0,
+      "height": 5.651052979201078
+    },
+    {
+      "kind": "squid2",
+      "error": 8.881784197001252e-16,
+      "radiusError": 0,
+      "height": 5.651052979201078
+    },
+    {
+      "kind": "squid3",
+      "error": 0,
+      "radiusError": 0,
+      "height": 8.129852980345486
+    },
+    {
+      "kind": "squid3",
+      "error": 1.7763568394002505e-15,
+      "radiusError": 0,
+      "height": 8.129852980345486
+    },
+    {
+      "kind": "squid3",
+      "error": 0,
+      "radiusError": 0,
+      "height": 8.129852980345486
+    },
+    {
+      "kind": "spider",
+      "error": 0,
+      "radiusError": 0,
+      "height": 3.01785
+    },
+    {
+      "kind": "spider2",
+      "error": 3.552713678800501e-15,
+      "radiusError": 0,
+      "height": 6.0357
+    }
+  ],
+  "segments": [
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    },
+    {
+      "error": 0,
+      "radiusError": 0
+    }
+  ],
+  "drawCalls": 133,
+  "errors": []
+}

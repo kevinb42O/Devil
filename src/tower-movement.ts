@@ -1,16 +1,18 @@
 import type {Enemy} from './simulation';
 import {isSquid} from './enemy-kinds';
 import {armorBounds} from './projectile-collision';
+import {enemyRigScale} from './enemy-presentation';
 import {towerGameplayEntrancePose} from './tower-spawn';
 
 export const TOWER_SPACING=.5;
 /** Reserve the mature footprint even during emergence, so growing towers do
  * not push their neighbours abruptly when their entrance finishes. */
-export function towerFootprint(e:Enemy){return armorBounds(e)??e.radius;}
+export function towerFootprint(e:Enemy){return (armorBounds(e)??e.radius)*enemyRigScale(e);}
 
 /** Plan all towers together before emitting skulls or testing player contact.
  * Project inward travel onto non-overlapping footprints; axial spin is free. */
 export function planTowerMovement(enemies:readonly Enemy[],time:number,dt:number,speed:number){
+ if(enemies.some(e=>e.balance&&isSquid(e.kind)))return planAnchoredMovement(enemies,time,dt,speed);
  const bodies=enemies.filter(e=>e.hp>0&&isSquid(e.kind)).sort((a,b)=>a.id-b.id).map(e=>{
   const radius=Math.hypot(e.pos.x,e.pos.z),motion=e.towerEntrance;
   const travel=Math.min(radius,motion?Math.max(0,towerGameplayEntrancePose(e.kind,motion.elapsed).radius-towerGameplayEntrancePose(e.kind,Math.max(0,time-motion.born)).radius):speed*dt);
@@ -43,4 +45,32 @@ export function planTowerMovement(enemies:readonly Enemy[],time:number,dt:number
   for(const b of bodies){b.x=cx+(b.x-cx)*(expansion+1e-9);b.z=cz+(b.z-cz)*(expansion+1e-9);}
  }
  return new Map(bodies.map(b=>[b.e,{x:b.x,z:b.z}]));
+}
+
+/** Keep every spawn ray and bound displacement by requested inward travel.
+ * Occupied space stops a tower; it never pushes another tower or banks travel.
+ * Sweep the entire step so a slow frame cannot tunnel through a neighbour. */
+function planAnchoredMovement(enemies:readonly Enemy[],time:number,dt:number,speed:number){
+ const towers=enemies.filter(e=>e.hp>0&&isSquid(e.kind)).sort((a,b)=>a.id-b.id);
+ const planned=new Map<Enemy,{x:number;z:number}>();
+ for(const e of towers){
+  const radius=Math.hypot(e.pos.x,e.pos.z),motion=e.towerEntrance;
+  const travel=Math.min(radius,motion?Math.max(0,towerGameplayEntrancePose(e.kind,motion.elapsed).radius-towerGameplayEntrancePose(e.kind,Math.max(0,time-motion.born)).radius):speed*dt);
+  const dx=radius?-e.pos.x/radius*travel:0,dz=radius?-e.pos.z/radius*travel:0,length2=dx*dx+dz*dz;
+  let fraction=1;
+  if(length2)for(const other of towers){
+   if(other===e)continue;
+   const pos=planned.get(other)??other.pos,ox=e.pos.x-pos.x,oz=e.pos.z-pos.z;
+   const minimum=towerFootprint(e)+towerFootprint(other)+TOWER_SPACING;
+   const c=ox*ox+oz*oz-minimum*minimum,b=ox*dx+oz*dz;
+   // Recover an overlapping imported/debug pose only by reducing penetration.
+   if(c<0){if(b<0)fraction=0;continue;}
+   if(b>=0)continue;
+   const discriminant=b*b-length2*c;if(discriminant<0)continue;
+   const hit=(-b-Math.sqrt(discriminant))/length2;
+   if(hit>=0&&hit<=fraction)fraction=Math.max(0,hit-1e-7);
+  }
+  planned.set(e,{x:e.pos.x+dx*fraction,z:e.pos.z+dz*fraction});
+ }
+ return planned;
 }

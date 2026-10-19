@@ -1,0 +1,1486 @@
+{
+  "note": "Controlled probes, not human survival predictions. legacyTowerArchitecture isolates tower changes only; spider radius is current in both modes. Visibility means an unobstructed ray aimed at a crystal center, stopped at the hit sphere. Old spread includes the smaller historical salvo counts. Spawn crowding keeps every tower alive for 300s.",
+  "geometry": [
+    {
+      "legacy": true,
+      "kind": "squid",
+      "rootY": 5.5576,
+      "crystalY": 5.5176,
+      "crystalRadius": 1.0161,
+      "armorBound": 2.6341,
+      "legacyArmorBottom": -5.2084,
+      "visibility": [
+        {
+          "range": 5,
+          "visibleCrystalsFraction": 0.5889,
+          "anglesWithAnyCrystal": 0.5889
+        },
+        {
+          "range": 10,
+          "visibleCrystalsFraction": 0.6611,
+          "anglesWithAnyCrystal": 0.6611
+        },
+        {
+          "range": 20,
+          "visibleCrystalsFraction": 0.5611,
+          "anglesWithAnyCrystal": 0.5611
+        },
+        {
+          "range": 30,
+          "visibleCrystalsFraction": 0.5611,
+          "anglesWithAnyCrystal": 0.5611
+        }
+      ]
+    },
+    {
+      "legacy": true,
+      "kind": "squid2",
+      "rootY": 8.3621,
+      "crystalY": 8.3221,
+      "crystalRadius": 1.0161,
+      "armorBound": 2.6345,
+      "legacyArmorBottom": -8.0129,
+      "visibility": [
+        {
+          "range": 5,
+          "visibleCrystalsFraction": 0.5722,
+          "anglesWithAnyCrystal": 1
+        },
+        {
+          "range": 10,
+          "visibleCrystalsFraction": 0.4944,
+          "anglesWithAnyCrystal": 0.95
+        },
+        {
+          "range": 20,
+          "visibleCrystalsFraction": 0.4389,
+          "anglesWithAnyCrystal": 0.8778
+        },
+        {
+          "range": 30,
+          "visibleCrystalsFraction": 0.4417,
+          "anglesWithAnyCrystal": 0.8833
+        }
+      ]
+    },
+    {
+      "legacy": true,
+      "kind": "squid3",
+      "rootY": 4.8875,
+      "crystalY": 5.2675,
+      "crystalRadius": 1.0161,
+      "armorBound": 4.7834,
+      "legacyArmorBottom": -4.5357,
+      "visibility": [
+        {
+          "range": 5,
+          "visibleCrystalsFraction": 0.2722,
+          "anglesWithAnyCrystal": 0.8167
+        },
+        {
+          "range": 10,
+          "visibleCrystalsFraction": 0.3944,
+          "anglesWithAnyCrystal": 1
+        },
+        {
+          "range": 20,
+          "visibleCrystalsFraction": 0.4944,
+          "anglesWithAnyCrystal": 1
+        },
+        {
+          "range": 30,
+          "visibleCrystalsFraction": 0.4722,
+          "anglesWithAnyCrystal": 1
+        }
+      ]
+    },
+    {
+      "legacy": false,
+      "kind": "squid",
+      "rootY": 5.5576,
+      "crystalY": 11.1576,
+      "crystalRadius": 0.7,
+      "armorBound": 2.34,
+      "legacyArmorBottom": -5.2084,
+      "visibility": [
+        {
+          "range": 5,
+          "visibleCrystalsFraction": 0.5833,
+          "anglesWithAnyCrystal": 0.5833
+        },
+        {
+          "range": 10,
+          "visibleCrystalsFraction": 0.6667,
+          "anglesWithAnyCrystal": 0.6667
+        },
+        {
+          "range": 20,
+          "visibleCrystalsFraction": 0.6944,
+          "anglesWithAnyCrystal": 0.6944
+        },
+        {
+          "range": 30,
+          "visibleCrystalsFraction": 0.7222,
+          "anglesWithAnyCrystal": 0.7222
+        }
+      ]
+    },
+    {
+      "legacy": false,
+      "kind": "squid2",
+      "rootY": 8.3647,
+      "crystalY": 16.9647,
+      "crystalRadius": 0.8,
+      "armorBound": 3.9,
+      "legacyArmorBottom": -8.0129,
+      "visibility": [
+        {
+          "range": 5,
+          "visibleCrystalsFraction": 0.5278,
+          "anglesWithAnyCrystal": 0.9889
+        },
+        {
+          "range": 10,
+          "visibleCrystalsFraction": 0.6611,
+          "anglesWithAnyCrystal": 1
+        },
+        {
+          "range": 20,
+          "visibleCrystalsFraction": 0.7,
+          "anglesWithAnyCrystal": 1
+        },
+        {
+          "range": 30,
+          "visibleCrystalsFraction": 0.7167,
+          "anglesWithAnyCrystal": 1
+        }
+      ]
+    },
+    {
+      "legacy": false,
+      "kind": "squid3",
+      "rootY": 4.8875,
+      "crystalY": 17.4875,
+      "crystalRadius": 0.9,
+      "armorBound": 5.46,
+      "legacyArmorBottom": -4.5357,
+      "visibility": [
+        {
+          "range": 5,
+          "visibleCrystalsFraction": 0.4074,
+          "anglesWithAnyCrystal": 0.9778
+        },
+        {
+          "range": 10,
+          "visibleCrystalsFraction": 0.6222,
+          "anglesWithAnyCrystal": 1
+        },
+        {
+          "range": 20,
+          "visibleCrystalsFraction": 0.6889,
+          "anglesWithAnyCrystal": 1
+        },
+        {
+          "range": 30,
+          "visibleCrystalsFraction": 0.7111,
+          "anglesWithAnyCrystal": 1
+        }
+      ]
+    }
+  ],
+  "upgradePulseDamage": [
+    {
+      "legacy": true,
+      "kind": "squid",
+      "damage": 5
+    },
+    {
+      "legacy": true,
+      "kind": "squid2",
+      "damage": 5
+    },
+    {
+      "legacy": true,
+      "kind": "squid3",
+      "damage": 5
+    },
+    {
+      "legacy": false,
+      "kind": "squid",
+      "damage": 0
+    },
+    {
+      "legacy": false,
+      "kind": "squid2",
+      "damage": 0
+    },
+    {
+      "legacy": false,
+      "kind": "squid3",
+      "damage": 0
+    }
+  ],
+  "spawnDisplacement": [
+    {
+      "legacy": true,
+      "towers": 38,
+      "maxDeviationFromUnobstructedPath": 0,
+      "displacedTowerTicks": 0
+    },
+    {
+      "legacy": false,
+      "towers": 38,
+      "maxDeviationFromUnobstructedPath": 24.8754,
+      "displacedTowerTicks": 651640
+    }
+  ],
+  "pursuit": [
+    {
+      "legacy": true,
+      "kind": "squid",
+      "child": "skull2",
+      "distances": [
+        {
+          "second": 1,
+          "distance": 22.8098,
+          "height": 5.154
+        },
+        {
+          "second": 2,
+          "distance": 25.6816,
+          "height": 3.3377
+        },
+        {
+          "second": 3,
+          "distance": 25.3045,
+          "height": 3.0508
+        },
+        {
+          "second": 4,
+          "distance": 21.6459,
+          "height": 2.4852
+        },
+        {
+          "second": 5,
+          "distance": 16.465,
+          "height": 2.6531
+        },
+        {
+          "second": 6,
+          "distance": 11.5867,
+          "height": 2.5327
+        },
+        {
+          "second": 7,
+          "distance": 10.547,
+          "height": 2.1816
+        },
+        {
+          "second": 8,
+          "distance": 14.9991,
+          "height": 2.4633
+        },
+        {
+          "second": 9,
+          "distance": 18.7879,
+          "height": 3.4992
+        },
+        {
+          "second": 10,
+          "distance": 17.0725,
+          "height": 2.7574
+        }
+      ]
+    },
+    {
+      "legacy": true,
+      "kind": "squid2",
+      "child": "skull3",
+      "distances": [
+        {
+          "second": 1,
+          "distance": 21.2914,
+          "height": 6.8391
+        },
+        {
+          "second": 2,
+          "distance": 14.5744,
+          "height": 3.1768
+        },
+        {
+          "second": 3,
+          "distance": 6.6748,
+          "height": 2.2447
+        },
+        {
+          "second": 4,
+          "distance": 0.7226,
+          "height": 1.8449
+        },
+        {
+          "second": 5,
+          "distance": 0.0949,
+          "height": 1.7232
+        },
+        {
+          "second": 6,
+          "distance": 0.0132,
+          "height": 1.7044
+        },
+        {
+          "second": 7,
+          "distance": 0.0023,
+          "height": 1.7015
+        },
+        {
+          "second": 8,
+          "distance": 0.0016,
+          "height": 1.7011
+        },
+        {
+          "second": 9,
+          "distance": 0.0017,
+          "height": 1.701
+        },
+        {
+          "second": 10,
+          "distance": 0.0017,
+          "height": 1.701
+        }
+      ]
+    },
+    {
+      "legacy": true,
+      "kind": "squid3",
+      "child": "skull4",
+      "distances": [
+        {
+          "second": 1,
+          "distance": 20.2081,
+          "height": 10.8496
+        },
+        {
+          "second": 2,
+          "distance": 12.9028,
+          "height": 4.5138
+        },
+        {
+          "second": 3,
+          "distance": 4.1657,
+          "height": 2.4059
+        },
+        {
+          "second": 4,
+          "distance": 0.0253,
+          "height": 1.8235
+        },
+        {
+          "second": 5,
+          "distance": 0.0606,
+          "height": 1.7195
+        },
+        {
+          "second": 6,
+          "distance": 0.0087,
+          "height": 1.7038
+        },
+        {
+          "second": 7,
+          "distance": 0.0049,
+          "height": 1.7014
+        },
+        {
+          "second": 8,
+          "distance": 0.0049,
+          "height": 1.7011
+        },
+        {
+          "second": 9,
+          "distance": 0.0051,
+          "height": 1.701
+        },
+        {
+          "second": 10,
+          "distance": 0.0051,
+          "height": 1.701
+        }
+      ]
+    },
+    {
+      "legacy": false,
+      "kind": "squid",
+      "child": "skull2",
+      "distances": [
+        {
+          "second": 1,
+          "distance": 15.5518,
+          "height": 13.1172
+        },
+        {
+          "second": 2,
+          "distance": 10.6449,
+          "height": 6.387
+        },
+        {
+          "second": 3,
+          "distance": 5.4341,
+          "height": 2.7322
+        },
+        {
+          "second": 4,
+          "distance": 0.0351,
+          "height": 1.8983
+        },
+        {
+          "second": 5,
+          "distance": 0.1171,
+          "height": 1.731
+        },
+        {
+          "second": 6,
+          "distance": 0.0128,
+          "height": 1.7055
+        },
+        {
+          "second": 7,
+          "distance": 0.0016,
+          "height": 1.7017
+        },
+        {
+          "second": 8,
+          "distance": 0.0002,
+          "height": 1.7011
+        },
+        {
+          "second": 9,
+          "distance": 0.0001,
+          "height": 1.701
+        },
+        {
+          "second": 10,
+          "distance": 0,
+          "height": 1.701
+        }
+      ]
+    },
+    {
+      "legacy": false,
+      "kind": "squid2",
+      "child": "skull3",
+      "distances": [
+        {
+          "second": 1,
+          "distance": 15.6582,
+          "height": 17.1225
+        },
+        {
+          "second": 2,
+          "distance": 9.7516,
+          "height": 12.0648
+        },
+        {
+          "second": 3,
+          "distance": 4.1296,
+          "height": 5.1643
+        },
+        {
+          "second": 4,
+          "distance": 0.5423,
+          "height": 2.261
+        },
+        {
+          "second": 5,
+          "distance": 0.0719,
+          "height": 1.7853
+        },
+        {
+          "second": 6,
+          "distance": 0.0065,
+          "height": 1.7137
+        },
+        {
+          "second": 7,
+          "distance": 0.0011,
+          "height": 1.7029
+        },
+        {
+          "second": 8,
+          "distance": 0.0003,
+          "height": 1.7013
+        },
+        {
+          "second": 9,
+          "distance": 0,
+          "height": 1.7011
+        },
+        {
+          "second": 10,
+          "distance": 0,
+          "height": 1.701
+        }
+      ]
+    },
+    {
+      "legacy": false,
+      "kind": "squid3",
+      "child": "skull4",
+      "distances": [
+        {
+          "second": 1,
+          "distance": 16.2169,
+          "height": 21.0793
+        },
+        {
+          "second": 2,
+          "distance": 10.4448,
+          "height": 18.5502
+        },
+        {
+          "second": 3,
+          "distance": 5.6868,
+          "height": 11.543
+        },
+        {
+          "second": 4,
+          "distance": 1.2892,
+          "height": 4.7295
+        },
+        {
+          "second": 5,
+          "distance": 0.0469,
+          "height": 2.1754
+        },
+        {
+          "second": 6,
+          "distance": 0.0017,
+          "height": 1.7724
+        },
+        {
+          "second": 7,
+          "distance": 0.0027,
+          "height": 1.7117
+        },
+        {
+          "second": 8,
+          "distance": 0.0004,
+          "height": 1.7026
+        },
+        {
+          "second": 9,
+          "distance": 0,
+          "height": 1.7013
+        },
+        {
+          "second": 10,
+          "distance": 0,
+          "height": 1.7011
+        }
+      ]
+    }
+  ],
+  "streamAccuracy": [
+    {
+      "radius": 0.45,
+      "range": 10,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 0.7055,
+          "hitsPerSecond": 28.22
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.2555,
+          "hitsPerSecond": 30.66
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 10,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.3728,
+          "hitsPerSecond": 29.82
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.1024,
+          "hitsPerSecond": 32.78
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 10,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.3127,
+          "hitsPerSecond": 33.36
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.1033,
+          "hitsPerSecond": 33.0667
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 20,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 0.558,
+          "hitsPerSecond": 22.32
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.1887,
+          "hitsPerSecond": 22.64
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 20,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.2805,
+          "hitsPerSecond": 22.44
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.0724,
+          "hitsPerSecond": 23.18
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 20,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.2647,
+          "hitsPerSecond": 28.24
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.0878,
+          "hitsPerSecond": 28.0933
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 30,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 0.523,
+          "hitsPerSecond": 20.92
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.1767,
+          "hitsPerSecond": 21.2
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 30,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.2625,
+          "hitsPerSecond": 21
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.0666,
+          "hitsPerSecond": 21.3
+        }
+      ]
+    },
+    {
+      "radius": 0.45,
+      "range": 30,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.2562,
+          "hitsPerSecond": 27.3333
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.0854,
+          "hitsPerSecond": 27.3333
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 10,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 1,
+          "hitsPerSecond": 40
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.5128,
+          "hitsPerSecond": 61.54
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 10,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.7478,
+          "hitsPerSecond": 59.82
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.2192,
+          "hitsPerSecond": 70.14
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 10,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.4998,
+          "hitsPerSecond": 53.3067
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.1617,
+          "hitsPerSecond": 51.7467
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 20,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 0.7055,
+          "hitsPerSecond": 28.22
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.2552,
+          "hitsPerSecond": 30.62
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 20,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.3728,
+          "hitsPerSecond": 29.82
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.1024,
+          "hitsPerSecond": 32.76
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 20,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.3127,
+          "hitsPerSecond": 33.36
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.1033,
+          "hitsPerSecond": 33.0667
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 30,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 0.593,
+          "hitsPerSecond": 23.72
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.2057,
+          "hitsPerSecond": 24.68
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 30,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.3073,
+          "hitsPerSecond": 24.58
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.0798,
+          "hitsPerSecond": 25.52
+        }
+      ]
+    },
+    {
+      "radius": 0.9,
+      "range": 30,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.2766,
+          "hitsPerSecond": 29.5067
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.0921,
+          "hitsPerSecond": 29.48
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 10,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 1,
+          "hitsPerSecond": 40
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.6107,
+          "hitsPerSecond": 73.28
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 10,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.893,
+          "hitsPerSecond": 71.44
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.2598,
+          "hitsPerSecond": 83.14
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 10,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.5696,
+          "hitsPerSecond": 60.76
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.182,
+          "hitsPerSecond": 58.24
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 20,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 0.768,
+          "hitsPerSecond": 30.72
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.2775,
+          "hitsPerSecond": 33.3
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 20,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.405,
+          "hitsPerSecond": 32.4
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.1136,
+          "hitsPerSecond": 36.34
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 20,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.3301,
+          "hitsPerSecond": 35.2133
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.109,
+          "hitsPerSecond": 34.8667
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 30,
+      "level": 2,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 2,
+          "hitFraction": 0.617,
+          "hitsPerSecond": 24.68
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 6,
+          "hitFraction": 0.2157,
+          "hitsPerSecond": 25.88
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 30,
+      "level": 3,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 4,
+          "hitFraction": 0.321,
+          "hitsPerSecond": 25.68
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 16,
+          "hitFraction": 0.0844,
+          "hitsPerSecond": 27.02
+        }
+      ]
+    },
+    {
+      "radius": 1.016129,
+      "range": 30,
+      "level": 4,
+      "counts": [
+        {
+          "oldSpread": true,
+          "pelletsPerSalvo": 8,
+          "hitFraction": 0.2844,
+          "hitsPerSecond": 30.3333
+        },
+        {
+          "oldSpread": false,
+          "pelletsPerSalvo": 24,
+          "hitFraction": 0.0945,
+          "hitsPerSecond": 30.2267
+        }
+      ]
+    }
+  ],
+  "spiderRadius": {
+    "beforeRemake": 0.9,
+    "current": 0.45
+  },
+  "schedule": [
+    {
+      "tick": 180,
+      "time": 3,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 839,
+      "time": 13.983333333333333,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 1139,
+      "time": 18.983333333333334,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 1439,
+      "time": 23.983333333333334,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 2340,
+      "time": 39,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 2340,
+      "time": 39,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 2939,
+      "time": 48.983333333333334,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 2939,
+      "time": 48.983333333333334,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 3840,
+      "time": 64,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 3840,
+      "time": 64,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 4740,
+      "time": 79,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 4740,
+      "time": 79,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 5640,
+      "time": 94,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 5640,
+      "time": 94,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 6540,
+      "time": 109,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 6840,
+      "time": 114,
+      "kind": "centipede",
+      "wave": -1
+    },
+    {
+      "tick": 7140,
+      "time": 119,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 8040,
+      "time": 134,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 8040,
+      "time": 134,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 8640,
+      "time": 144,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 8640,
+      "time": 144,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 9240,
+      "time": 154,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 9240,
+      "time": 154,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 9840,
+      "time": 164,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 9840,
+      "time": 164,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 10440,
+      "time": 174,
+      "kind": "centipede",
+      "wave": -1
+    },
+    {
+      "tick": 10440,
+      "time": 174,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 10440,
+      "time": 174,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 10440,
+      "time": 174,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 11040,
+      "time": 184,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 11040,
+      "time": 184,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 11340,
+      "time": 189,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 11340,
+      "time": 189,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 11640,
+      "time": 194,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 11640,
+      "time": 194,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 11940,
+      "time": 199,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 11940,
+      "time": 199,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 11940,
+      "time": 199,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 13740,
+      "time": 229,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 13740,
+      "time": 229,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 13740,
+      "time": 229,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 13740,
+      "time": 229,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 13740,
+      "time": 229,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 13740,
+      "time": 229,
+      "kind": "squid",
+      "wave": -1
+    },
+    {
+      "tick": 14340,
+      "time": 239,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 14340,
+      "time": 239,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 14340,
+      "time": 239,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 14640,
+      "time": 244,
+      "kind": "squid3",
+      "wave": -1
+    },
+    {
+      "tick": 15540,
+      "time": 259,
+      "kind": "gigapede",
+      "wave": -1
+    },
+    {
+      "tick": 15540,
+      "time": 259,
+      "kind": "gigapede",
+      "wave": -1
+    },
+    {
+      "tick": 15540,
+      "time": 259,
+      "kind": "gigapede",
+      "wave": -1
+    },
+    {
+      "tick": 16440,
+      "time": 274,
+      "kind": "spider2",
+      "wave": -1
+    },
+    {
+      "tick": 16440,
+      "time": 274,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 16440,
+      "time": 274,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 17340,
+      "time": 289,
+      "kind": "spider2",
+      "wave": -1
+    },
+    {
+      "tick": 17340,
+      "time": 289,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 17340,
+      "time": 289,
+      "kind": "spider",
+      "wave": -1
+    },
+    {
+      "tick": 18240,
+      "time": 304,
+      "kind": "squid3",
+      "wave": -1
+    },
+    {
+      "tick": 18240,
+      "time": 304,
+      "kind": "squid3",
+      "wave": -1
+    },
+    {
+      "tick": 18240,
+      "time": 304,
+      "kind": "squid3",
+      "wave": -1
+    },
+    {
+      "tick": 19800,
+      "time": 330,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 19800,
+      "time": 330,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 19800,
+      "time": 330,
+      "kind": "squid2",
+      "wave": -1
+    },
+    {
+      "tick": 21000,
+      "time": 350,
+      "kind": "leviathan",
+      "wave": -1
+    }
+  ]
+}

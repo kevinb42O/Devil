@@ -16,6 +16,7 @@ export function validateReplay(value:unknown):RecordedRun{
  if(r.format!=='abyss-replay'||![4,5,6,7].includes(Number(r.version))||!integer(r.version,4,7)||!integer(r.seed,0,0xffffffff)||typeof r.id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(r.id)||!finite(r.created,0,1e15)||!integer(r.ticks,1,MAX_REPLAY_TICKS)||!finite(r.time,0,3000)||typeof r.cause!=='string'||r.cause.length>80||typeof r.practice!=='boolean')invalid();
  if(r.combatRevision!==undefined&&!integer(r.combatRevision,0,20))invalid();
  if(r.version===7&&r.combatRevision!==20||r.version!==7&&Number(r.combatRevision)>19)invalid();
+ if(r.balanceFixes!==undefined&&(typeof r.balanceFixes!=='boolean'||r.balanceFixes&&r.version!==7))invalid();
  if(r.towerSeparation!==undefined&&typeof r.towerSeparation!=='boolean')invalid();
  if(r.towerArchitecture!==undefined&&typeof r.towerArchitecture!=='boolean')invalid();
  if(r.independentPracticeReserve!==undefined&&typeof r.independentPracticeReserve!=='boolean')invalid();

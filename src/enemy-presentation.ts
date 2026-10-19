@@ -33,7 +33,7 @@ export function towerOutlets(kind:Enemy['kind']){
 /** Relative foundation transform shared by rendering and shot collision. */
 export function towerFoundationPose(bottom:number){return {footY:Math.min(0,bottom),footScale:Math.max(.001,-bottom),plinthY:bottom+.3};}
 
-export function towerCrystalRadius(kind:Enemy['kind']){return kind==='squid3'?.9:kind==='squid2'?.8:.7;}
+export function towerCrystalRadius(kind:Enemy['kind'],balanced=false){if(balanced)return .63*CREATURE_SCALE_RATIO/.62;return kind==='squid3'?.9:kind==='squid2'?.8:.7;}
 export function legacyTowerGeometry(enemy:Enemy){return enemy.kind.startsWith('squid')&&(enemy.weakpoints[0]?.local.y??0)<1;}
 /** Anticipation, held opening through the stream, then a soft closing motion. */
 export function towerSpitPulse(age:number,kind:Enemy['kind']='squid',originalCadence=false){
@@ -52,7 +52,17 @@ export function towerSpitPulse(age:number,kind:Enemy['kind']='squid',originalCad
  return 0;
 }
 export function swarmEmergenceScale(enemy:Enemy){return Math.max(0,Math.min(1,enemy.age/(enemy.statusUntil>0&&isSkull(enemy.kind)?.12:1.1)));}
-export function enemyEmergenceScale(enemy:Enemy){return isPede(enemy.kind)?1:isSkull(enemy.kind)||enemy.kind==='spiderling'?swarmEmergenceScale(enemy):Math.max(0,Math.min(1,enemy.age/(enemy.kind==='spider2'?9:enemy.kind==='leviathan'?8.533333:1.1)));}
+/** The arena remains at .62; cosmetics must not enlarge its combatants. */
+export function enemyRigScale(enemy:Enemy){
+ return enemy.balance&&(isSpider(enemy.kind)||isPede(enemy.kind)||(enemy.kind.startsWith('squid')&&!legacyTowerGeometry(enemy))) ? .62 : 1;
+}
+/** Crystal radius in rig coordinates; current spiders recover the pre-remake hit tolerance. */
+export function spiderCrystalRadius(enemy:Enemy){return SPIDER_CRYSTAL_RADIUS*enemy.size*(enemy.balance?2/.62:1);}
+export function enemyEmergenceScale(enemy:Enemy){
+ if(isPede(enemy.kind))return 1; // Pede rigs scale individually; segment positions are world-space.
+ const growth=isSkull(enemy.kind)||enemy.kind==='spiderling'?swarmEmergenceScale(enemy):Math.max(0,Math.min(1,enemy.age/(enemy.kind==='spider2'?9:enemy.kind==='leviathan'?8.533333:1.1)));
+ return enemyRigScale(enemy)*growth;
+}
 export function towerPartOffset(enemy:Enemy,name:string,originalCadence=true){return enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(name)?towerSpitPulse(enemy.age,enemy.kind,originalCadence)*(name.includes('crest')?.4:-.18):0;}
 /** Attached damage targets share the render root's emergence transform. */
 export function crystalToEnemy(enemy:Enemy,player:Vec,local:Vec){const scale=enemyEmergenceScale(enemy);return localToEnemy(enemy,player,v(local.x*scale,local.y*scale,local.z*scale));}

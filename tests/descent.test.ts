@@ -12,15 +12,17 @@ test('the original sky curves and mist timing survive the intro with the Veil ar
     const sky=descentAt(row.time+30),mist=mistAt(row.time+30);
     for(const [key,value] of Object.entries(row.sky))if(key!=='time')assert.deepEqual(sky[key as keyof typeof sky],value,`sky ${row.time}: ${key}`);
     const veil=veilAt(row.time+30);
-    // The Veil art pass intentionally clears and cools this chapter's medium.
-    // Retain the historical fixture and account only for those explicit deltas.
-    const deltas:Record<string,number>={density:.055-.085,height:9-11,falloff:.22-.16,bank:1-.8};
+    // Both approved art revisions change only their chapter's medium.
+    // Keep the historical fixture and account for their explicit crossfades.
+    const cathedral=sky.chapter===3?sky.blend:sky.chapter===4?1-sky.blend:0;
+    const veilDeltas:Record<string,number>={density:.055-.085,height:9-11,falloff:.22-.16,bank:1-.8};
+    const cathedralDeltas:Record<string,number>={density:.065-.08,bank:.22-.3};
     for(const [key,value] of Object.entries(row.mist))if(key!=='time'){
-      if(veil>0&&key in deltas){
-        assert.ok(Math.abs((mist[key as keyof typeof mist] as number)-(Number(value)+deltas[key]*veil))<1e-12,`mist ${row.time}: ${key}`);
-      }else if(veil>0&&key==='color'){
-        const old=[.105,.065,.145],revised=[.052,.041,.078];
-        for(let i=0;i<3;i++)assert.ok(Math.abs(mist.color[i]-((value as number[])[i]+(revised[i]-old[i])*veil))<1e-12,`mist ${row.time}: color ${i}`);
+      if(key==='color'){
+        const veilBefore=[.105,.065,.145],veilAfter=[.052,.041,.078],cathedralBefore=[.055,.038,.08],cathedralAfter=[.040,.033,.061];
+        for(let i=0;i<3;i++)assert.ok(Math.abs(mist.color[i]-((value as number[])[i]+(veilAfter[i]-veilBefore[i])*veil+(cathedralAfter[i]-cathedralBefore[i])*cathedral))<1e-12,`mist ${row.time}: color ${i}`);
+      }else if(key in veilDeltas||key in cathedralDeltas){
+        assert.ok(Math.abs((mist[key as keyof typeof mist] as number)-(Number(value)+(veilDeltas[key]??0)*veil+(cathedralDeltas[key]??0)*cathedral))<1e-12,`mist ${row.time}: ${key}`);
       }else assert.deepEqual(mist[key as keyof typeof mist],value,`mist ${row.time}: ${key}`);
     }
   }

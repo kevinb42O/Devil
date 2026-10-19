@@ -1,7 +1,7 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {World,STEP,idleInput,v} from '../src/simulation';
-import {towerOutletHeight,towerRadius,towerOutlets,localToEnemy,crystalToEnemy} from '../src/enemy-presentation';
+import {towerOutletHeight,towerRadius,towerOutlets,localToEnemy,crystalToEnemy,enemyEmergenceScale} from '../src/enemy-presentation';
 import {towerFloorHeight} from '../src/enemy-floor';
 import {sweepArmor} from '../src/projectile-collision';
 import {createRun,RunRecorder,ReplayPlayer} from '../src/replay';
@@ -29,7 +29,7 @@ test('skulls eject from the enlarged tower outlet rather than the old floating b
  for(const kind of tiers){
   const w=new World(71,{schedule:false,invulnerable:true}),e=w.spawn(kind,v(0,0,0));e.age=12;
   (w as any).ejectSkull(e,0,0,false);const child=w.enemies.at(-1)!;
-  assert.equal(child.pos.y,e.pos.y+towerOutletHeight(kind));
+  assert.equal(child.pos.y,e.pos.y+towerOutletHeight(kind)*enemyEmergenceScale(e));
  }
 });
 
@@ -64,9 +64,9 @@ test('historical team checkpoints retain their exact digests with old tower targ
 test('tower feet and chimney tops stop projectiles before they can hit enemies behind them',()=>{
  for(const kind of tiers)for(const zone of ['foot','exhaust'] as const){
   const w=new World(71,{schedule:false,invulnerable:true}),tower=w.spawn(kind,v(0,5,0));tower.age=12;tower.facingYaw=0;
-  const y=zone==='foot'?(towerFloorHeight(tower,0)+tower.pos.y)*.5:tower.pos.y+towerOutletHeight(kind)-.06;
+  const scale=enemyEmergenceScale(tower),y=zone==='foot'?(towerFloorHeight(tower,0)+tower.pos.y)*.5:tower.pos.y+(towerOutletHeight(kind)-.06)*scale;
   // A vertical ray through the exhaust disk also covers the old gap above the core.
-  const from=zone==='foot'?v(towerRadius(kind)*.85,y,20):v(0,y+3,0);
+  const from=zone==='foot'?v(towerRadius(kind)*.85*scale,y,20):v(0,y+3,0);
   const to=zone==='foot'?v(from.x,y,-20):v(0,y-3,0);
   const target=w.spawn('skull2',to);target.age=2;
   const hp=target.hp;
@@ -85,9 +85,9 @@ test('every tower stream clears the crown before descending into the swarm',()=>
    w.step(idleInput());
    for(const child of w.enemies){
     if(!child.towerFlight||child.age<=0||child.age>3)continue;
-    if(child.pos.y-child.radius<tower.pos.y+towerOutletHeight(kind)&&child.vel.y<0){
+    if(child.pos.y-child.radius<tower.pos.y+towerOutletHeight(kind)*enemyEmergenceScale(tower)&&child.vel.y<0){
      descending++;
-     assert.ok(Math.hypot(child.pos.x-tower.pos.x,child.pos.z-tower.pos.z)>towerRadius(kind)*1.05+child.radius,`${kind} child drops into the crown at age ${child.age}`);
+     assert.ok(Math.hypot(child.pos.x-tower.pos.x,child.pos.z-tower.pos.z)>towerRadius(kind)*1.05*enemyEmergenceScale(tower)+child.radius,`${kind} child drops into the crown at age ${child.age}`);
     }
    }
   }
@@ -103,10 +103,10 @@ test('tower streams rise from the top, then pursue the player instead of scatter
   const outlets=towerOutlets(kind),children=[];
   for(let index=0;index<16;index++){
    (w as any).ejectSkull(tower,index,0,false);
-   const child=w.enemies.at(-1)!,origin=localToEnemy(tower,w.player.pos,outlets[index%outlets.length]);children.push(child);
+   const child=w.enemies.at(-1)!,origin=crystalToEnemy(tower,w.player.pos,outlets[index%outlets.length]);children.push(child);
    assert.ok(Math.hypot(child.pos.x-origin.x,child.pos.z-origin.z)<=.221,`${kind} emits at its chimney mouth`);
    assert.equal(child.pos.y,origin.y);
-   assert.equal(Math.hypot(child.vel.x,child.vel.z),0,'launch starts straight up');
+   if(child.kind!=='skull2')assert.equal(Math.hypot(child.vel.x,child.vel.z),0,'hunting launch starts straight up');
    assert.ok(child.vel.y>0);
   }
   const starts=children.map(e=>({...e.pos}));
@@ -114,6 +114,7 @@ test('tower streams rise from the top, then pursue the player instead of scatter
   children.forEach((e,i)=>assert.ok(e.pos.y>starts[i].y+.4,'stream rises above the outlet'));
   for(let i=0;i<108;i++)w.step(idleInput());
   children.forEach((e,i)=>{
+   if(e.kind==='skull2')return; // The restored tier-II variant wanders after launch.
    const dx=w.player.pos.x-e.pos.x,dz=w.player.pos.z-e.pos.z;
    assert.ok(dx*e.vel.x+dz*e.vel.z>0,`${kind} moves toward the player`);
    assert.ok(Math.hypot(dx,dz)<Math.hypot(player.x-starts[i].x,player.z-starts[i].z)-.5,`${kind} closes the distance`);

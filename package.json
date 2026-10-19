@@ -8,6 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "tsx --test --test-concurrency=4 tests/*.test.ts tests/*.test.mjs",
+    "test:balance": "tsx --test tests/combat-balance.test.ts && node tests/combat-balance-browser.mjs && node tools/audit-remake-colliders.mjs",
     "test:browser": "node tests/browser.mjs",
     "test:champion": "node tests/champion-browser.mjs && node tests/champion-alignment-browser.mjs",
     "test:fullscreen": "node tests/fullscreen-browser.mjs",

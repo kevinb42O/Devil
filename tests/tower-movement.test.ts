@@ -24,8 +24,8 @@ test('mixed towers stay separated through entrance and three minutes of converge
  assert.ok(Math.max(...w.enemies.map((e,i)=>Math.hypot(e.pos.x-before[i].x,e.pos.z-before[i].z)))<.02,'settled towers should not jitter or orbit');
 });
 
-test('dense coincident towers recover deterministically without consuming random state',()=>{
- const w=new World(1,{schedule:false,invulnerable:true});
+test('historical dense coincident towers recover deterministically without consuming random state',()=>{
+ const w=new World(1,{schedule:false,invulnerable:true,legacyBalance:true});
  for(let i=0;i<100;i++)quiet(w.spawn((['squid','squid2','squid3'] as const)[i%3],v()));
  const moves=planTowerMovement(w.enemies,0,STEP,.5),reversed=planTowerMovement([...w.enemies].reverse(),0,STEP,.5);
  for(const e of w.enemies){assert.deepEqual(moves.get(e),reversed.get(e));Object.assign(e.pos,moves.get(e));}
@@ -45,7 +45,7 @@ test('isolated towers keep measured entrance and inward drift, and dead towers r
 });
 
 test('checkpoint restores and new recordings keep separation while older recordings retain their motion',()=>{
- const w=new World(1,{schedule:false,invulnerable:true});quiet(w.spawn('squid',v(-2,5,0)));quiet(w.spawn('squid2',v(2,5,0)));
+ const w=new World(1,{schedule:false,invulnerable:true});quiet(w.spawn('squid',v(-3,5,0)));quiet(w.spawn('squid2',v(3,5,0)));
  const restored=World.restoreCrewCheckpoint(w.captureCrewCheckpoint());
  for(let i=0;i<240;i++){w.step(idleInput(),STEP);restored.step(idleInput(),STEP);w.effects=[];restored.effects=[];}
  assert.deepEqual(restored.enemies,w.enemies);assertSeparated(w.enemies);

@@ -23,7 +23,7 @@ test('tower entrances preserve recorded travel while enlarged armor clears the f
    assert.ok(Math.abs(radius-expected)<.04,`${replay.source}: ${kind} at ${sample.tick}, error ${radius-expected}`);
    const age=(sample.tick-birth.tick)/60;
    assert.ok(Math.abs(towerEntrancePose(kind,age).height-sample.position[1]*.62)<.02,'original height measurements remain available');
-   assert.ok(tower.pos.y>=towerGameplayEntrancePose(kind,age).height-.02,'floor clearance can lift the recorded entrance');
+   assert.ok(Math.abs(tower.pos.y-towerFloorHeight(tower,world.time)-TOWER_FLOOR_CLEARANCE)<1e-8,'grounded architecture uses its own floor anchor');
    if(age>0)assert.ok(tower.pos.y+armorBottom(tower)>=towerFloorHeight(tower,world.time)+TOWER_FLOOR_CLEARANCE-1e-8,'enlarged armor stays above the full floor footprint');
   }
  }

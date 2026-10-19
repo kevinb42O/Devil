@@ -5,7 +5,7 @@ import {World,STEP,TUNING,idleInput,v,distance} from '../src/simulation.ts';
 import {ENEMY_KINDS,ENEMY_STATS,isPede,isSpider} from '../src/enemy-kinds.ts';
 import {floorHeight} from '../src/arena.ts';
 import {touchesPlayer} from '../src/player-contact.ts';
-import {enemyYaw} from '../src/enemy-presentation.ts';
+import {enemyYaw,towerOutletHeight,enemyEmergenceScale} from '../src/enemy-presentation.ts';
 
 const advance=(w:World,count:number)=>{for(let i=0;i<count;i++){w.step(idleInput());w.effects=[];}};
 
@@ -23,8 +23,17 @@ test('tower contact is bounded above the crown and outside the body',()=>{
  for(const kind of ['squid','squid2','squid3'] as const)for(const above of [false,true]){
   const w=new World(23,{schedule:false}),e=w.spawnAt(kind,0);e.age=2;e.nextSpawn=Infinity;e.pos.x=0;e.pos.z=0;
   constrainEnemyFloor(e,w.time);
-  w.player.pos=above?v(0,e.pos.y+e.radius+TUNING.eyeHeight+1,0):v(e.radius+1,TUNING.eyeHeight,0);
+  w.player.pos=above?v(0,e.pos.y+towerOutletHeight(kind)*enemyEmergenceScale(e)+e.radius+TUNING.eyeHeight+1,0):v(e.radius+1,TUNING.eyeHeight,0);
   w.step(idleInput());assert.equal(w.state,'playing',kind);
+ }
+});
+
+test('jumping into the upper half of a grounded remake tower still touches its visible body',()=>{
+ for(const kind of ['squid','squid2','squid3'] as const){
+  const w=new World(23,{schedule:false}),e=w.spawn(kind,v());e.age=20;e.nextSpawn=Infinity;
+  w.player.pos=v(0,e.pos.y+towerOutletHeight(kind)*enemyEmergenceScale(e)*.7+TUNING.eyeHeight,0);
+  w.player.grounded=false;w.step(idleInput());
+  assert.equal(w.state,'dead',kind);assert.equal(w.cause,ENEMY_STATS[kind].death);
  }
 });
 

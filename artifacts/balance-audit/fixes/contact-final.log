@@ -1,0 +1,21 @@
+✔ running into every tower body at ground level is lethal in solo and crew (17.046917ms)
+✔ tower contact is bounded above the crown and outside the body (4.666334ms)
+✔ jumping into the upper half of a grounded remake tower still touches its visible body (2.002334ms)
+✔ all 22 enemy types have lethal active body contact in solo and crew (29.161417ms)
+✔ ground eggs and spiderlings hit the legs of a standing player (0.829542ms)
+✔ fast eggs and moving players cannot tunnel through contact between ticks (0.5255ms)
+✔ capsule sweep keeps jumps above short enemies safe and thorns bounded (0.235708ms)
+✔ centipede commits to an overhead pass beneath its head after the grace period (3.626875ms)
+✔ gigapede vertical sweep is independent of player altitude (491.21175ms)
+✔ snake body remains lethal after its crystals have been destroyed (1.637208ms)
+✔ crew contacts use each player body height and kill only overlapping members (0.461417ms)
+✔ emerging and fully dead enemies cannot kill; invulnerability applies to crew (2.165083ms)
+✔ ghostpede flight does not react to player position (54.718584ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2041.59725

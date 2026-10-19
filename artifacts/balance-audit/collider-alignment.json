@@ -1,0 +1,96 @@
+{
+  "note": "Two-sided horizontal raycasts through the actual loaded remake meshes (jewels excluded), compared with gameplay armor at the same pose. 24 heights x 48 azimuths per kind. Wing shader deformation is excluded; procedural thorn and tower geometry are static at this pose.",
+  "results": [
+    {
+      "kind": "squid",
+      "rays": 1152,
+      "both": 1064,
+      "neither": 88,
+      "invisibleArmor": 0,
+      "visualOnly": 0,
+      "depthMismatch": 0,
+      "examples": []
+    },
+    {
+      "kind": "squid2",
+      "rays": 1152,
+      "both": 1062,
+      "neither": 90,
+      "invisibleArmor": 0,
+      "visualOnly": 0,
+      "depthMismatch": 0,
+      "examples": []
+    },
+    {
+      "kind": "squid3",
+      "rays": 1152,
+      "both": 1050,
+      "neither": 102,
+      "invisibleArmor": 0,
+      "visualOnly": 0,
+      "depthMismatch": 0,
+      "examples": []
+    },
+    {
+      "kind": "leviathan",
+      "rays": 1152,
+      "both": 940,
+      "neither": 0,
+      "invisibleArmor": 212,
+      "visualOnly": 0,
+      "depthMismatch": 909,
+      "examples": [
+        {
+          "from": {
+            "x": 4.5684167277018055,
+            "y": 7.497867583483458,
+            "z": 34.700570148083365
+          },
+          "to": {
+            "x": -4.5684167277018055,
+            "y": 7.497867583483458,
+            "z": -34.700570148083365
+          },
+          "collisionDistance": 27.62439700675733
+        },
+        {
+          "from": {
+            "x": 9.058666578588227,
+            "y": 7.497867583483458,
+            "z": 33.80740392011739
+          },
+          "to": {
+            "x": -9.058666578588227,
+            "y": 7.497867583483458,
+            "z": -33.80740392011739
+          },
+          "collisionDistance": 28.0813746413899
+        },
+        {
+          "from": {
+            "x": 13.393920132778142,
+            "y": 7.497867583483458,
+            "z": 32.335783637895034
+          },
+          "to": {
+            "x": -13.393920132778142,
+            "y": 7.497867583483458,
+            "z": -32.335783637895034
+          },
+          "collisionDistance": 30.07363567869906
+        }
+      ]
+    },
+    {
+      "kind": "thorn",
+      "rays": 1152,
+      "both": 1012,
+      "neither": 0,
+      "invisibleArmor": 0,
+      "visualOnly": 140,
+      "depthMismatch": 1007,
+      "examples": []
+    }
+  ],
+  "errors": []
+}

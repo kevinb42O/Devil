@@ -37,7 +37,7 @@ export class DeathHistory {
   d[i++]=w.player.pos.x;d[i++]=w.player.pos.y;d[i++]=w.player.pos.z;d[i++]=w.player.vel.x;d[i++]=w.player.vel.y;d[i++]=w.player.vel.z;d[i++]=yaw;d[i++]=pitch;d[i++]=w.level;d[i++]=w.radius;d[i++]=firing?1:0;
   for(const e of enemies){
    d[i++]=e.id;d[i++]=kinds.get(e.kind)!;d[i++]=e.pos.x;d[i++]=e.pos.y;d[i++]=e.pos.z;d[i++]=e.vel.x;d[i++]=e.vel.y;d[i++]=e.vel.z;
-   d[i++]=e.hp;d[i++]=e.age;d[i++]=e.phase;d[i++]=e.radius;d[i++]=e.headExposure;d[i++]=e.lastHit;d[i++]=e.activeAt;d[i++]=e.size;d[i++]=e.facingYaw;d[i++]=statuses.indexOf(e.status);d[i++]=e.statusUntil;d[i++]=e.towerSpinDirection??-1;
+   d[i++]=e.hp;d[i++]=e.age;d[i++]=e.phase;d[i++]=e.radius;d[i++]=e.headExposure;d[i++]=e.lastHit;d[i++]=e.activeAt;d[i++]=e.size;d[i++]=e.facingYaw;d[i++]=statuses.indexOf(e.status)+(e.balance?4:0);d[i++]=e.statusUntil;d[i++]=e.towerSpinDirection??-1;
    d[i++]=e.segments.length;d[i++]=e.weakpoints.length;d[i++]=ENEMY_HEADER+(e.segments.length+e.weakpoints.length)*4;
    for(const s of e.segments){d[i++]=s.pos.x;d[i++]=s.pos.y;d[i++]=s.pos.z;d[i++]=s.hp;}
    for(const p of e.weakpoints){d[i++]=p.local.x;d[i++]=p.local.y;d[i++]=p.local.z;d[i++]=p.hp;}
@@ -86,7 +86,7 @@ export class DeathAnalysis {
   for(let n=0;n<a.enemies;n++){
    const id=d[i],kind=ENEMY_KINDS[d[i+1]];let e=this.enemyCache.get(id);if(!e){e=visualEnemy(id,kind);this.enemyCache.set(id,e);}this.activeIds.add(id);w.enemies.push(e);e.kind=kind;
    const next=this.offsets.get(id),valid=next!==undefined&&q[next+1]===d[i+1],k=valid?next!:i,other=valid?q:d,f=valid?t:0;
-   blend(e.pos,d,i+2,other,k+2,f);blend(e.vel,d,i+5,other,k+5,f);e.hp=d[i+8];e.age=mix(d[i+9],other[k+9],f);e.phase=angle(d[i+10],other[k+10],f);e.radius=d[i+11];e.headExposure=mix(d[i+12],other[k+12],f);e.lastHit=d[i+13];e.activeAt=d[i+14];e.size=d[i+15];e.facingYaw=angle(d[i+16],other[k+16],f);e.status=statuses[d[i+17]];e.statusUntil=d[i+18];e.towerSpinDirection=d[i+19];
+   blend(e.pos,d,i+2,other,k+2,f);blend(e.vel,d,i+5,other,k+5,f);e.hp=d[i+8];e.age=mix(d[i+9],other[k+9],f);e.phase=angle(d[i+10],other[k+10],f);e.radius=d[i+11];e.headExposure=mix(d[i+12],other[k+12],f);e.lastHit=d[i+13];e.activeAt=d[i+14];e.size=d[i+15];e.facingYaw=angle(d[i+16],other[k+16],f);e.status=statuses[d[i+17]&3];if(d[i+17]&4)e.balance=true;else delete e.balance;e.statusUntil=d[i+18];e.towerSpinDirection=d[i+19];
    const segments=d[i+20],weak=d[i+21];while(e.segments.length<segments)e.segments.push({pos:v(),hp:1});e.segments.length=segments;while(e.weakpoints.length<weak)e.weakpoints.push({local:v(),hp:1});e.weakpoints.length=weak;
    for(let n=0;n<segments;n++){const at=i+ENEMY_HEADER+n*4,to=k+ENEMY_HEADER+n*4;if(valid&&other[k+20]>n)blend(e.segments[n].pos,d,at,other,to,f);else set(e.segments[n].pos,d,at);e.segments[n].hp=d[at+3];}
    for(let n=0;n<weak;n++){const at=i+ENEMY_HEADER+segments*4+n*4;set(e.weakpoints[n].local,d,at);e.weakpoints[n].hp=d[at+3];}

@@ -1,11 +1,13 @@
 import * as THREE from 'three';
 import {buildTowerStructure} from './tower-geometry';
 import baked from './projectile-colliders.json';
+import remakeBaked from './remake-projectile-colliders.json';
 import {enemyYaw,enemyEmergenceScale,towerPartOffset,CREATURE_SCALE,CREATURE_SCALE_RATIO,towerRadius,towerFoundationPose,legacyTowerGeometry} from './enemy-presentation';
 import {towerFloorHeight} from './enemy-floor';
 import type {Enemy,Vec} from './simulation';
 // BVH topology stays shared; resize bounds and vertices together from the .62 bake.
-const meshes=new Map(Object.entries(baked.meshes).map(([kind,m])=>[kind,{nodes:m.nodes.map(n=>n.map((v,i)=>i<6?v*CREATURE_SCALE_RATIO:v)),vertices:Float32Array.from(m.vertices,v=>v*CREATURE_SCALE_RATIO),indices:new Uint32Array(m.indices)}]));
+type ArmorGeometry={nodes:number[][];vertices:Float32Array;indices:Uint32Array;motion?:Float32Array};
+const meshes=new Map<string,ArmorGeometry>(Object.entries(baked.meshes).map(([kind,m])=>[kind,{nodes:m.nodes.map(n=>n.map((v,i)=>i<6?v*CREATURE_SCALE_RATIO:v)),vertices:Float32Array.from(m.vertices,v=>v*CREATURE_SCALE_RATIO),indices:new Uint32Array(m.indices)}]));
 const colliders=new Map(Object.entries(baked.instances).map(([kind,instances])=>{
  const parts=instances.map(p=>({...p,mesh:meshes.get(p.name)!,c:Math.cos(p.yaw),s:Math.sin(p.yaw)}));
  let radius=0;
@@ -15,9 +17,11 @@ const colliders=new Map(Object.entries(baked.instances).map(([kind,instances])=>
  }
  return [kind,{parts,radius}] as const;
 }));
-export const armorMesh=(e:Enemy)=>colliders.get(e.kind);
-/** Lowest animated armor point, relative to the same root used for damage. */
+const remakeColliders=new Map(Object.entries(remakeBaked).map(([kind,m])=>{const mesh:ArmorGeometry={nodes:m.nodes,vertices:Float32Array.from(m.vertices),indices:Uint32Array.from(m.indices),...('motion' in m?{motion:Float32Array.from(m.motion)}:{})};const b=mesh.nodes[0],radius=Math.hypot(Math.max(Math.abs(b[0]),Math.abs(b[3])),Math.max(Math.abs(b[2]),Math.abs(b[5])));return [kind,{radius,parts:[{name:kind,mesh,c:1,s:0,sx:1,sy:1,flip:false,wave:false}]}] as const;}));
+export const armorMesh=(e:Enemy)=>e.balance&&remakeColliders.has(e.kind)?remakeColliders.get(e.kind):colliders.get(e.kind);
+/** Lowest moving armor point. Grounded remake foundations anchor separately. */
 export function armorBottom(e:Enemy,originalCadence=true){
+ if(e.balance&&e.kind.startsWith('squid')&&!legacyTowerGeometry(e))return 0;
  const collider=armorMesh(e);if(!collider)return 0;
  let bottom=Infinity;
  for(const p of collider.parts){const b=p.mesh.nodes[0];bottom=Math.min(bottom,(p.flip?-b[4]:b[1])*p.sy+towerPartOffset(e,p.name,originalCadence)*CREATURE_SCALE);}
@@ -46,7 +50,7 @@ export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0,origina
   const vx=(dx*p.c-dz*p.s)/p.sx,vy=dy*sign/p.sy,vz=(dx*p.s+dz*p.c)*sign/p.sx;
   const bounds=p.mesh.nodes[0],endY=oy+vy*closest;
   if(Math.max(oy,endY)<bounds[1]||Math.min(oy,endY)>bounds[4])continue;
-  const hit=p.wave?traceRibbon(p.mesh,ox,oy,oz,vx,vy,vz,closest,time):trace(p.mesh,ox,oy,oz,vx,vy,vz,closest);
+  const hit=p.wave?traceRibbon(p.mesh,ox,oy,oz,vx,vy,vz,closest,time):trace(p.mesh,ox,oy,oz,vx,vy,vz,closest,time);
   if(hit===null)continue;
   closest=hit.t;
   // Inverse transpose of the part transform, then the enemy's yaw.
@@ -128,8 +132,8 @@ function traceRibbon(mesh:NonNullable<ReturnType<typeof meshes.get>>,x:number,y:
  return null;
 }
 
-function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:number,az:number,dx:number,dy:number,dz:number,limit:number):ArmorHit|null{
- let best=limit,normal:Vec|null=null;stack.length=0;stack.push(0);
+function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:number,az:number,dx:number,dy:number,dz:number,limit:number,time=0):ArmorHit|null{
+ let best=limit,normal:Vec|null=null;const wave=mesh.motion?Math.sin(time*16):0;stack.length=0;stack.push(0);
  while(stack.length){const node=mesh.nodes[stack.pop()!];let lo=0,hi=best;
   for(let i=0;i<3;i++){if(Math.abs((i===0?dx:i===1?dy:dz))<1e-12){if((i===0?ax:i===1?ay:az)<node[i]-.00001||(i===0?ax:i===1?ay:az)>node[i+3]+.00001){hi=-1;break;}}else{const u=(node[i]-.00001-(i===0?ax:i===1?ay:az))/(i===0?dx:i===1?dy:dz),v=(node[i+3]+.00001-(i===0?ax:i===1?ay:az))/(i===0?dx:i===1?dy:dz);lo=Math.max(lo,Math.min(u,v));hi=Math.min(hi,Math.max(u,v));}}
   if(lo>hi)continue;
@@ -141,9 +145,10 @@ function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:numb
   }
   for(let t=node[7];t<node[7]+node[8];t++){
    const ia=mesh.indices[t*3]*3,ib=mesh.indices[t*3+1]*3,ic=mesh.indices[t*3+2]*3,v=mesh.vertices;
-   const ex=v[ib]-v[ia],ey=v[ib+1]-v[ia+1],ez=v[ib+2]-v[ia+2],fx=v[ic]-v[ia],fy=v[ic+1]-v[ia+1],fz=v[ic+2]-v[ia+2];
+   const ay0=v[ia+1]+wave*(mesh.motion?.[ia/3]??0),by0=v[ib+1]+wave*(mesh.motion?.[ib/3]??0),cy0=v[ic+1]+wave*(mesh.motion?.[ic/3]??0);
+   const ex=v[ib]-v[ia],ey=by0-ay0,ez=v[ib+2]-v[ia+2],fx=v[ic]-v[ia],fy=cy0-ay0,fz=v[ic+2]-v[ia+2];
    const px=dy*fz-dz*fy,py=dz*fx-dx*fz,pz=dx*fy-dy*fx,det=ex*px+ey*py+ez*pz;if(Math.abs(det)<1e-10)continue;
-   const tx=ax-v[ia],ty=ay-v[ia+1],tz=az-v[ia+2],u=(tx*px+ty*py+tz*pz)/det;if(u<0||u>1)continue;
+   const tx=ax-v[ia],ty=ay-ay0,tz=az-v[ia+2],u=(tx*px+ty*py+tz*pz)/det;if(u<0||u>1)continue;
    const qx=ty*ez-tz*ey,qy=tz*ex-tx*ez,qz=tx*ey-ty*ex,w=(dx*qx+dy*qy+dz*qz)/det;if(w<0||u+w>1)continue;
    const at=(fx*qx+fy*qy+fz*qz)/det;if(at<1e-7||at>best)continue;
    best=at;normal={x:ey*fz-ez*fy,y:ez*fx-ex*fz,z:ex*fy-ey*fx};

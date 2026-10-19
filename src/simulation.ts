@@ -14,7 +14,7 @@ import {updateCentipede as updateLegacyCentipede} from './legacy-centipede-motio
 import {initializeCentipede,updateCentipede,type CentipedeMotion} from './centipede-motion';
 import {armorBounds,sweepArmor} from './projectile-collision';
 import {touchesPlayer} from './player-contact';
-import {CREATURE_SCALE_RATIO,LEGACY_SQUID_I_GEM,LEGACY_SQUID_II_GEMS,LEGACY_SQUID_III_GEMS,towerCrystalRadius,legacyTowerGeometry,SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,LEVIATHAN_HOVER_HEIGHT,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderLocalPoint,crystalToEnemy,enemyEmergenceScale,towerOutletHeight,towerRadius,towerOutlets,localToEnemy,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
+import {CREATURE_SCALE_RATIO,LEGACY_SQUID_I_GEM,LEGACY_SQUID_II_GEMS,LEGACY_SQUID_III_GEMS,towerCrystalRadius,legacyTowerGeometry,SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,LEVIATHAN_HOVER_HEIGHT,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,spiderCrystalRadius,enemyRigScale,spiderLocalPoint,crystalToEnemy,enemyEmergenceScale,towerOutletHeight,towerRadius,towerOutlets,localToEnemy,TOWER_EJECTION_DURATION,enemyYaw} from './enemy-presentation';
 import {arenaRadius,floorHeight,sweepFloor,sweepFloorLegacy} from './arena';
 import {constrainEnemyFloor,enemyFloorHeight} from './enemy-floor';
 import {originalSpawnRadius,originalTowerSpawnHeight,nextPerimeterSpawnAngle,pedeSpawnPosition,thornSpawnPosition,THORN_SPAWN_DEPTH} from './spawn-placement';
@@ -37,7 +37,7 @@ export const v=(x=0,y=0,z=0):Vec=>({x,y,z});
 export const distance=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 export function direction(a:Vec,b:Vec):Vec{const d=Math.max(distance(a,b),.001);return v((b.x-a.x)/d,(b.y-a.y)/d,(b.z-a.z)/d);}
 const clamp=(n:number,lo:number,hi:number)=>Math.max(lo,Math.min(hi,n));
-export type Enemy={id:number;kind:EnemyKind;pos:Vec;hp:number;age:number;phase:number;nextSpawn:number;radius:number;gems:number;eaten:number;segments:{pos:Vec;hp:number}[];weakpoints:{local:Vec;hp:number}[];vel:Vec;headExposure:number;lastHit:number;duckUntil:number;pendingDuck:boolean;nextMove:number;orbitSpeed:number;radialOffset:number;facingYaw:number;towerSpinDirection?:number;spawnRadius?:number;towerEntrance?:{born:number;elapsed:number};towerEmission?:{born:number;burst:number;index:number};eggCooldown:number;target:Vec;status:'emerging'|'idle'|'hunting'|'burrowing';statusUntil:number;activeAt:number;nextBeckon:number;size:number;centipedeMotion?:CentipedeMotion;gigapedeMotion?:GigapedeMotion;towerFlight?:{gravity:number;height:number;descentSpeed:number;agility:number;curl:number}};
+export type Enemy={balance?:true;id:number;kind:EnemyKind;pos:Vec;hp:number;age:number;phase:number;nextSpawn:number;radius:number;gems:number;eaten:number;segments:{pos:Vec;hp:number}[];weakpoints:{local:Vec;hp:number}[];vel:Vec;headExposure:number;lastHit:number;duckUntil:number;pendingDuck:boolean;nextMove:number;orbitSpeed:number;radialOffset:number;facingYaw:number;towerSpinDirection?:number;spawnRadius?:number;towerEntrance?:{born:number;elapsed:number};towerEmission?:{born:number;burst:number;index:number};eggCooldown:number;target:Vec;status:'emerging'|'idle'|'hunting'|'burrowing';statusUntil:number;activeAt:number;nextBeckon:number;size:number;centipedeMotion?:CentipedeMotion;gigapedeMotion?:GigapedeMotion;towerFlight?:{gravity:number;height:number;descentSpeed:number;agility:number;curl:number}};
 export type Projectile={socket?:number;kind?:'shotgun';launch?:ShotLaunch;shotKey?:string;id:number;pos:Vec;previous?:Vec;vel:Vec;age:number;homing:boolean;level?:number;energy?:number;floorBounces?:number;path?:{pos:Vec;t:number}[]};
 export type Gem={id:number;pos:Vec;vel:Vec;age:number};
 export type Ring={id:number;owner:number;pos:Vec;radius:number;previous:number;age:number};
@@ -46,7 +46,7 @@ export type Input={leftArm?:boolean;rightArm?:boolean;forward:number;strafe:numb
 // Gestures are presentation inputs: retain held flags without changing combat rules.
 function combatInput(input:Input):Input{const {leftArm,rightArm,...combat}=input;return {...combat,...(leftArm?{leftArm:true}:{}),...(rightArm?{rightArm:true}:{})};}
 export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});
-export type WorldOptions={legacyTowerSeparation?:boolean;legacyTowerArchitecture?:boolean;legacyPracticeReserve?:boolean;legacyHands?:boolean;legacyShotgun?:boolean;legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
+export type WorldOptions={legacyBalance?:boolean;legacyTowerSeparation?:boolean;legacyTowerArchitecture?:boolean;legacyPracticeReserve?:boolean;legacyHands?:boolean;legacyShotgun?:boolean;legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;deathSource?:DeathSource;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
@@ -222,10 +222,10 @@ export class World {
  constructor(seed=80421,options:WorldOptions={}){this.rng=this.shotRngSeed=seed>>>0||1;this.stats.upgradeTimes=Array(options.legacyHands?4:7).fill(0);this.options=options;this.schedule=options.legacySpawnRules?legacySurvivalSchedule():survivalSchedule();if(!options.legacySpawnRules){this.spawnRng=seed>>>0||1;this.spawnAngle=this.spawnRandom()*Math.PI*2;}this.nextEvent=this.schedule.next();}
  /** Complete simulation state at a tick boundary; transport snapshots are not checkpoints. */
  captureCrewCheckpoint(){
-  return structuredClone({...(this.contactOwners.length?{contacts:{owners:this.contactOwners,pending:[...this.pendingContacts.values()],incoming:this.incomingContacts,sources:[...this.contactSources],receipts:[...this.contactReceipts].map(([id,r])=>[id,r.ack,[...r.done]] as const)}}:{}),version:1 as const,options:{...this.options,legacyTowerSeparation:!this.towerSeparationEnabled},scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
+  return structuredClone({...(this.contactOwners.length?{contacts:{owners:this.contactOwners,pending:[...this.pendingContacts.values()],incoming:this.incomingContacts,sources:[...this.contactSources],receipts:[...this.contactReceipts].map(([id,r])=>[id,r.ack,[...r.done]] as const)}}:{}),version:1 as const,options:{...this.options,...(this.balanceFixesEnabled?{legacyBalance:false}:{}),legacyTowerSeparation:!this.towerSeparationEnabled},scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
  }
  static restoreCrewCheckpoint(value:CrewCheckpoint,legacyShotgun=false,legacyHands=false,legacyTowers=false){
-  const s=structuredClone(value),w=new World(s.shotRngSeed,{...s.options,legacyTowerSeparation:s.options.legacyTowerSeparation??true});w.replayLegacyTowers=legacyTowers;w.replayLegacyShotgun=legacyShotgun;w.replayLegacyHands=legacyHands;
+  const s=structuredClone(value),w=new World(s.shotRngSeed,{...s.options,legacyTowerSeparation:s.options.legacyTowerSeparation??true});w.replayLegacyBalance=s.options.legacyBalance===undefined;w.replayLegacyTowers=legacyTowers;w.replayLegacyShotgun=legacyShotgun;w.replayLegacyHands=legacyHands;
   if(s.contacts){w.contactOwners=s.contacts.owners;w.contactReceipts=new Map((s.contacts.receipts??[]).map(([id,ack,done])=>[id,{ack,done:new Set(done)}]));w.contactSources=new Map(s.contacts.sources??[]);w.incomingContacts=s.contacts.incoming;w.pendingContacts=new Map(s.contacts.pending.map(p=>[p.contact.shotKey,p]));}
   Object.assign(w,{rng:s.rng,shotRngSeed:s.shotRngSeed,spawnRng:s.spawnRng,spawnAngle:s.spawnAngle,nextId:s.nextId,bloodSequence:s.bloodSequence,time:s.time,tick:s.tick,state:s.state,cause:s.cause,radius:s.radius,wave:s.wave,stats:s.stats,crew:s.crew,enemies:s.enemies,projectiles:s.projectiles,gems:s.gems,rings:s.rings,delayed:s.delayed,detonations:s.detonations});
   for(let i=0;i<s.scheduleCursor;i++)w.nextEvent=w.schedule.next();w.scheduleCursor=s.scheduleCursor;
@@ -234,6 +234,8 @@ export class World {
   if(s.selectedId)w.selectCrew(s.selectedId);w.level=s.level;w.reserve=s.reserve;w.wasJump=s.wasJump;w.lastShotTick=s.lastShotTick;
   return w;
  }
+ private replayLegacyBalance=false;
+ get balanceFixesEnabled(){return !this.options.legacyBalance&&!this.replayLegacyBalance;}
  private replayLegacyTowers=false;
  get towerSeparationEnabled(){return !this.options.legacyTowerSeparation&&this.towerArchitectureEnabled&&!this.options.legacyTowerOrbit;}
  get towerArchitectureEnabled(){return !this.options.legacyTowerArchitecture&&!this.replayLegacyTowers;}
@@ -243,7 +245,7 @@ export class World {
  emit(kind:Effect['kind'],pos:Vec,amount?:number,enemy?:EnemyKind,enemyId?:number){this.effects.push({kind,pos:{...pos},amount,enemy,enemyId,level:this.level,shooterId:kind==='jump'||kind==='land'||kind==='death'||kind==='pickup'?this.activeCrew?.id:undefined});if(kind==='death')this.effects[this.effects.length-1].deathCause=this.activeCrew?.cause??this.cause;if(kind==='upgrade')this.beginUpgradePulse(pos,this.level,this.activeCrew?.id);}
  spawn(kind:EnemyKind,pos:Vec,announce=true):Enemy{
   const spec=ENEMY_STATS[kind];const size=isSpider(kind)?SPIDER_SIZE*(kind==='spider2'?2:1):kind==='gigapede'?1.5:kind==='ghostpede'?2:1;
-  const e:Enemy={id:this.nextId++,kind,pos:{...pos},hp:spec.hp,radius:spec.radius*(isSpider(kind)?SPIDER_SIZE:1)*(isSquid(kind)||isSpider(kind)||isPede(kind)?CREATURE_SCALE_RATIO:1),gems:this.options.legacySpawnFixes&&isSpider(kind)?5:spec.gems,age:0,phase:isSquid(kind)||isSpider(kind)?Math.atan2(pos.x,pos.z):this.random()*Math.PI*2,nextSpawn:3,eaten:0,segments:[],weakpoints:[],vel:v(),headExposure:isSpider(kind)?0:1,lastHit:-99,duckUntil:0,pendingDuck:false,nextMove:3,orbitSpeed:0,radialOffset:3.8*size,facingYaw:Math.atan2(pos.x,pos.z)+Math.PI,eggCooldown:0,target:{...pos},status:'emerging',statusUntil:0,activeAt:kind==='leviathan'?8.533333333:kind==='orb'?6.683333333:isPede(kind)||kind==='thorn'?3:.6,nextBeckon:kind==='leviathan'?13.533333333:kind==='orb'?6.683333333:Infinity,size};
+  const e:Enemy={...(this.balanceFixesEnabled?{balance:true as const}:{}),id:this.nextId++,kind,pos:{...pos},hp:spec.hp,radius:spec.radius*(isSpider(kind)?SPIDER_SIZE:1)*(isSquid(kind)||isSpider(kind)||isPede(kind)?this.balanceFixesEnabled?1:CREATURE_SCALE_RATIO:1),gems:this.options.legacySpawnFixes&&isSpider(kind)?5:spec.gems,age:0,phase:isSquid(kind)||isSpider(kind)?Math.atan2(pos.x,pos.z):this.random()*Math.PI*2,nextSpawn:3,eaten:0,segments:[],weakpoints:[],vel:v(),headExposure:isSpider(kind)?0:1,lastHit:-99,duckUntil:0,pendingDuck:false,nextMove:3,orbitSpeed:0,radialOffset:3.8*size,facingYaw:Math.atan2(pos.x,pos.z)+Math.PI,eggCooldown:0,target:{...pos},status:'emerging',statusUntil:0,activeAt:kind==='leviathan'?8.533333333:kind==='orb'?6.683333333:isPede(kind)||kind==='thorn'?3:.6,nextBeckon:kind==='leviathan'?13.533333333:kind==='orb'?6.683333333:Infinity,size};
   const points=kind==='squid'?[!this.towerArchitectureEnabled?LEGACY_SQUID_I_GEM:SQUID_I_GEM]:kind==='squid2'?(!this.towerArchitectureEnabled?LEGACY_SQUID_II_GEMS:SQUID_II_GEMS):kind==='squid3'?(!this.towerArchitectureEnabled?LEGACY_SQUID_III_GEMS:SQUID_III_GEMS):kind==='leviathan'?LEVIATHAN_GEMS:[];
   if(this.options.legacyTowerOrbit)e.towerSpinDirection=1;
   e.weakpoints=points.map(local=>({local:{...local},hp:spec.hp/points.length}));
@@ -407,9 +409,9 @@ export class World {
     if(legacyStream||this.options.legacyWideStream){const t=segmentSphere(this.player.pos,end,point,radius);if(t!==null)aimDistance=Math.min(aimDistance,Math.max(.6,t*aimRange));}
     else aimDistance=Math.min(aimDistance,sphereAimDistance(this.player.pos,forward,point,radius,aimRange));
    };
-   if(e.segments.length){for(const p of e.segments)test(p.pos,.53*CREATURE_SCALE_RATIO*e.size);}
-   else if(e.weakpoints.length){for(const p of e.weakpoints)if(p.hp>0)test(crystalToEnemy(e,this.player.pos,p.local),(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:(legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind)))*enemyEmergenceScale(e));}
-   else test(this.weakPoint(e),isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size*enemyEmergenceScale(e):e.radius);
+   if(e.segments.length){for(const p of e.segments)test(p.pos,.53*CREATURE_SCALE_RATIO*e.size*enemyRigScale(e));}
+   else if(e.weakpoints.length){for(const p of e.weakpoints)if(p.hp>0)test(crystalToEnemy(e,this.player.pos,p.local),(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:(legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind,!!e.balance)))*enemyEmergenceScale(e));}
+   else test(this.weakPoint(e),isSpider(e.kind)?spiderCrystalRadius(e)*enemyEmergenceScale(e):e.radius);
   }
   if(!legacyStream&&!this.options.legacyWideStream){const floor=(this.options.legacyRicochet?sweepFloorLegacy:sweepFloor)(this.player.pos,end,this.time);if(floor)aimDistance=Math.min(aimDistance,Math.max(.6,floor.t*aimRange));}
   const shotgun=burst&&!this.options.legacyShotgun&&!this.replayLegacyShotgun;
@@ -461,12 +463,12 @@ export class World {
     const planned=towerMoves?.get(e);
     if(planned){
      e.pos.x=planned.x;e.pos.z=planned.z;e.vel.x=(e.pos.x-previous.x)/dt;e.vel.z=(e.pos.z-previous.z)/dt;
-     if(e.towerEntrance){const motion=e.towerEntrance,elapsed=Math.max(0,this.time-motion.born);e.pos.y+=towerGameplayEntrancePose(e.kind,elapsed).height-towerGameplayEntrancePose(e.kind,motion.elapsed).height;motion.elapsed=elapsed;}
+     if(e.towerEntrance){const motion=e.towerEntrance,elapsed=Math.max(0,this.time-motion.born);if(!e.balance)e.pos.y+=towerGameplayEntrancePose(e.kind,elapsed).height-towerGameplayEntrancePose(e.kind,motion.elapsed).height;motion.elapsed=elapsed;}
     }else if(e.towerEntrance){
      const motion=e.towerEntrance,elapsed=Math.max(0,this.time-motion.born),before=towerGameplayEntrancePose(e.kind,motion.elapsed),after=towerGameplayEntrancePose(e.kind,elapsed);
      const radius=Math.hypot(e.pos.x,e.pos.z),travel=Math.min(radius,Math.max(0,before.radius-after.radius));
      if(radius>0){const factor=(radius-travel)/radius;e.vel.x=-e.pos.x/radius*travel/dt;e.vel.z=-e.pos.z/radius*travel/dt;e.pos.x*=factor;e.pos.z*=factor;}
-     e.pos.y+=after.height-before.height;motion.elapsed=elapsed;
+     if(!e.balance)e.pos.y+=after.height-before.height;motion.elapsed=elapsed;
     }else if(this.options.legacyTowerOrbit){e.phase+=dt*.045;const radius=this.radius-3;e.pos.x=Math.sin(e.phase)*radius;e.pos.z=Math.cos(e.phase)*radius;}else{
     // Towers translate inward along their spawn radius, independently of axial spin.
     const radius=Math.hypot(e.pos.x,e.pos.z),travel=Math.min(radius,TUNING.towerDriftSpeed*dt);
@@ -495,19 +497,21 @@ export class World {
      contactSegment=-1;
      if(this.options.legacyEnemyBehavior){const body=e.kind==='thorn'?v(e.pos.x,Math.max(e.pos.y,Math.min(7,this.player.pos.y)),e.pos.z):e.pos;if(distance(body,player.pos)<e.radius*growing+.35)return true;contactSegment=e.segments.findIndex(s=>distance(s.pos,player.pos)<e.size*.8);return contactSegment>=0;}
      const playerBefore=this.playerStarts.get(player)??player.pos;
-     // Tower origins sit at the crown. Their lethal body reaches down to the
-     // arena, rather than leaving standing players below the contact sphere.
+     // Old origins sat at the crown. Corrected towers are floor-anchored:
+     // their contact column must reach their visible crown in either mode.
      if(isSquid(e.kind)){
       const base=(pos:Vec)=>v(pos.x,Math.min(pos.y,Math.max(0,floorHeight(pos.x,pos.z,this.time,0))),pos.z);
       const start=wasActive?previous:e.pos,from=base(start),to=base(e.pos);
-      return touchesPlayer(from,to,playerBefore,player.pos,e.radius,Math.max(start.y-from.y,e.pos.y-to.y));
+      const radius=e.radius*(e.balance?Math.min(1,e.age/1.1):1);
+      const height=Math.max(start.y-from.y,e.pos.y-to.y)+(e.balance?Math.max(0,towerOutletHeight(e.kind)*enemyEmergenceScale(e)-radius):0);
+      return touchesPlayer(from,to,playerBefore,player.pos,radius,height);
      }
      if(isPede(e.kind)&&!this.options.legacyPedeContact){
       const start=wasActive?previous:e.pos,forward=wasActive?velocityBefore:e.vel;
-      if(touchesPede(start,e.pos,forward,e.vel,playerBefore,player.pos,e.size,true))return true;
+      if(touchesPede(start,e.pos,forward,e.vel,playerBefore,player.pos,e.size,true,e.balance?1:CREATURE_SCALE_RATIO))return true;
       contactSegment=e.segments.findIndex((s,i)=>{
        const from=wasActive?segmentsBefore[i]:s.pos,leadBefore=i===0?start:wasActive?segmentsBefore[i-1]:e.segments[i-1].pos,lead=i===0?e.pos:e.segments[i-1].pos;
-       return touchesPede(from,s.pos,v(leadBefore.x-from.x,leadBefore.y-from.y,leadBefore.z-from.z),v(lead.x-s.pos.x,lead.y-s.pos.y,lead.z-s.pos.z),playerBefore,player.pos,e.size);
+       return touchesPede(from,s.pos,v(leadBefore.x-from.x,leadBefore.y-from.y,leadBefore.z-from.z),v(lead.x-s.pos.x,lead.y-s.pos.y,lead.z-s.pos.z),playerBefore,player.pos,e.size,false,e.balance?1:CREATURE_SCALE_RATIO);
       });return contactSegment>=0;
      }
      if(touchesPlayer(wasActive?previous:e.pos,e.pos,playerBefore,player.pos,e.radius*growing,e.kind==='thorn'?7:0))return true;
@@ -523,7 +527,7 @@ export class World {
   const lift=e.kind==='spider2'?9:3;
   if(e.age>=lift&&e.age>=e.nextMove){e.nextMove=e.age+.3+this.random()*.7;e.orbitSpeed=(this.random()-.5)*.09/e.size;e.radialOffset=(3.8+(this.random()-.5)*.6)*e.size;}
   if(e.age>=lift)e.phase+=e.orbitSpeed*dt;const radius=e.spawnRadius===undefined?this.radius+e.radialOffset:originalSpawnRadius(e.kind,Math.floor(this.time*60+1e-6))!+(this.options.legacySpawnFixes?0:e.radialOffset-3.8*e.size);e.pos.x=Math.sin(e.phase)*radius;e.pos.z=Math.cos(e.phase)*radius;
-  const rise=clamp(e.age/lift,0,1);e.pos.y=-1+(1+2.7*e.size)*rise*rise*(3-2*rise);
+  const rise=clamp(e.age/lift,0,1);e.pos.y=-1+(1+2.7*e.size*enemyRigScale(e))*rise*rise*(3-2*rise);
   if(e.age>=lift){const targetYaw=Math.atan2(this.player.pos.x-e.pos.x,this.player.pos.z-e.pos.z),delta=Math.atan2(Math.sin(targetYaw-e.facingYaw),Math.cos(targetYaw-e.facingYaw));e.facingYaw+=clamp(delta,-dt*3,dt*3);}
   if(e.pendingDuck&&this.time-e.lastHit>=1){e.pendingDuck=false;e.duckUntil=this.time+.9;}
   const expose=e.age<lift?rise:e.duckUntil>this.time?0:1;e.headExposure+=clamp(expose-e.headExposure,-dt*4,dt*4);e.eggCooldown=Math.max(0,e.eggCooldown-dt);
@@ -632,12 +636,12 @@ export class World {
   const outlets=this.towerArchitectureEnabled?towerOutlets(tower.kind):null,outlet=outlets?outlets[index%outlets.length]:null;
   const fan=index*Math.PI*2*.61803398875,variation=(this.random()-.5)*.7;
   const angle=outlet&&outlet.x*outlet.x+outlet.z*outlet.z>0?yaw+outlet.angle+Math.sin(fan)*.45+variation:yaw+fan+variation,spread=index===count?.08:.22;
-  const origin=outlet?localToEnemy(tower,this.player.pos,outlet):v(tower.pos.x,tower.pos.y+towerOutletHeight(tower.kind,true),tower.pos.z);
+  const origin=outlet?(tower.balance?crystalToEnemy:localToEnemy)(tower,this.player.pos,outlet):v(tower.pos.x,tower.pos.y+towerOutletHeight(tower.kind,true),tower.pos.z);
   const skull=this.spawn(index===count?(tower.kind==='squid'?'skull2':tower.kind==='squid2'?'skull3':'skull4'):'skull',v(origin.x+Math.sin(angle)*spread,origin.y,origin.z+Math.cos(angle)*spread),index===0);
   skull.age=-delay;if(legacy)delay+=.03+this.random()*.025;
   skull.activeAt=skull.statusUntil=TOWER_EJECTION_DURATION+this.random()*.2;
   const outward=(index===count?1.8:2.6)+this.random()*2.2;
-  const launchSpeed=this.towerArchitectureEnabled?0:outward;
+  const launchSpeed=this.towerArchitectureEnabled&&!(tower.balance&&skull.kind==='skull2')?0:outward;
   skull.vel=v(Math.sin(angle)*launchSpeed,4.5+this.random()*2.5,Math.cos(angle)*launchSpeed);
   skull.towerFlight={gravity:14+this.random()*8,height:1.1+this.random()*2.5,descentSpeed:4.5+this.random()*3,agility:1.8+this.random()*1.5,curl:(this.random()-.5)*2.4};
   if(this.towerArchitectureEnabled)skull.vel.y=Math.max(skull.vel.y,Math.sqrt(2*skull.towerFlight.gravity*(skull.radius+1.8)));
@@ -657,7 +661,7 @@ export class World {
   if(isSkull(e.kind)&&e.statusUntil>0&&e.age<e.statusUntil){
    if(e.age<0)return;
    if(e.age<dt)this.emit('spawn',e.pos,undefined,e.kind);
-   if(this.towerArchitectureEnabled&&e.towerFlight){
+   if(this.towerArchitectureEnabled&&e.towerFlight&&(!e.balance||skullTier(e.kind)!==2)){
     // Rise out of the outlet first, then turn into a stream toward the player.
     const dx=this.player.pos.x-e.pos.x,dz=this.player.pos.z-e.pos.z,length=Math.hypot(dx,dz)||1;
     const speed=(skullTier(e.kind)>=3?9:7)*clamp((e.age-.12)/.2,0,1),blend=Math.min(1,dt*10);
@@ -669,7 +673,7 @@ export class World {
   }
   if(isSkull(e.kind)&&e.statusUntil>0)e.status='hunting';
   const tier=isSkull(e.kind)?skullTier(e.kind):0;
-  const pursuingTowerStream=this.towerArchitectureEnabled&&!!e.towerFlight;
+  const pursuingTowerStream=this.towerArchitectureEnabled&&!!e.towerFlight&&(!e.balance||tier!==2);
   if((tier===2&&!pursuingTowerStream||e.kind==='spiderling')&&e.age>=e.nextMove){e.nextMove=e.age+(tier===2?1.6+this.random()*.9:.3+this.random()*.45);e.target=tier===2?v((this.random()-.5)*this.radius*1.5,1+this.random()*5,(this.random()-.5)*this.radius*1.5):v(this.player.pos.x+(this.random()-.5)*3,.55,this.player.pos.z+(this.random()-.5)*3);}
   const goal=tier===2&&!pursuingTowerStream||e.kind==='spiderling'?e.target:this.player.pos,d=direction(e.pos,goal),speed=tier===1?3.1:tier===2?5.6:tier===3?8:tier===4?9:Math.sin(e.age*6)>0?7:1;
   let aimX=d.x*speed,aimY=d.y*speed,aimZ=d.z*speed;
@@ -681,7 +685,7 @@ export class World {
    const wave=Math.sin(e.age*(.9+flight.agility*.2)+e.phase);
    const floor=this.options.legacyEnemyFloor?floorHeight(e.pos.x,e.pos.z,this.time,0):enemyFloorHeight(e,this.time);
    let height=goal.y+(Math.max(floor+.9,floor+flight.height+wave*.35)-goal.y)*lane;
-   if(pursuingTowerStream)height=Math.max(height,this.towerFlightClearance(e));
+   if(this.towerArchitectureEnabled&&e.towerFlight)height=Math.max(height,this.towerFlightClearance(e));
    aimY=clamp((height-e.pos.y)*1.4,-flight.descentSpeed,3);
    const curl=flight.curl*wave*lane;
    aimX+=d.z*curl;aimZ-=d.x*curl;
@@ -704,8 +708,8 @@ export class World {
    for(const e of this.enemies){
     if(e.hp<=0||!this.active(e)||pulse.hit.has(e.id))continue;
     // Respect segmented/crystal health: one live target per enemy per wave.
-    const points=e.weakpoints.length?e.weakpoints.map((s,i)=>({pos:crystalToEnemy(e,this.player.pos,s.local),hp:s.hp,index:i,weak:true,r:isSquid(e.kind)&&!legacyTowerGeometry(e)?towerCrystalRadius(e.kind):TUNING.towerCrystalRadius})):
-     e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false,r:.53*CREATURE_SCALE_RATIO*e.size})):
+    const points=e.weakpoints.length?e.weakpoints.map((s,i)=>({pos:crystalToEnemy(e,this.player.pos,s.local),hp:s.hp,index:i,weak:true,r:isSquid(e.kind)&&!legacyTowerGeometry(e)?towerCrystalRadius(e.kind,!!e.balance)*(e.balance?enemyEmergenceScale(e):1):TUNING.towerCrystalRadius})):
+     e.segments.length?e.segments.map((s,i)=>({pos:s.pos,hp:s.hp,index:i,weak:false,r:.53*CREATURE_SCALE_RATIO*e.size*enemyRigScale(e)})):
      [{pos:this.weakPoint(e),hp:e.hp,index:-1,weak:false,r:e.radius}];
     const point=points.find(p=>{
      if(p.hp<=0||Math.abs(p.pos.y-pulse.pos.y)>UPGRADE_PULSE.verticalReach+p.r)return false;
@@ -760,7 +764,7 @@ export class World {
   const needsCollisionGrid=this.prediction||this.projectiles.some(p=>!p.shotKey||!this.contactOwners.includes(p.shotKey.split(':')[0]));
   for(const e of !cached&&needsCollisionGrid?this.enemies:[]){
    if(e.hp<=0||!this.active(e))continue;
-   const targets:ProjectileTarget[]=e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*CREATURE_SCALE_RATIO*e.size,i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:crystalToEnemy(e,this.player.pos,s.local),r:(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:(legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind)))*enemyEmergenceScale(e),i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?SPIDER_CRYSTAL_RADIUS*e.size*enemyEmergenceScale(e):e.radius,i:-1,weak:false}];
+   const targets:ProjectileTarget[]=e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*CREATURE_SCALE_RATIO*e.size*enemyRigScale(e),i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:crystalToEnemy(e,this.player.pos,s.local),r:(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:(legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind,!!e.balance)))*enemyEmergenceScale(e),i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?spiderCrystalRadius(e)*enemyEmergenceScale(e):e.radius,i:-1,weak:false}];
    // Destroyed tower crystals disappear; the surviving armor still blocks shots.
    for(let i=targets.length-1;i>=0;i--)if(targets[i].weak&&e.weakpoints[targets[i].i].hp<=0)targets.splice(i,1);
    if(e.kind==='ghostpede'){
@@ -792,7 +796,7 @@ export class World {
    if(p.floorBounces&&!p.homing)p.vel.y-=TUNING.gravity*flightDt;
    if(p.homing){const ghost=ghosts.find(e=>e.hp>0);let target:Vec|undefined,nearest=Infinity;
     if(ghost)target=ghost.pos;
-    else for(const e of homingTargets){if(e.hp<=0)continue;const point=this.weakPoint(e),dist=(p.pos.x-point.x)**2+(p.pos.y-point.y)**2+(p.pos.z-point.z)**2;if(dist<nearest){nearest=dist;target=point;}}
+    else for(const e of homingTargets){if(e.hp<=0)continue;const point=this.balanceFixesEnabled?this.accessibleHomingPoint(e,p.pos):this.weakPoint(e);if(!point)continue;const dist=(p.pos.x-point.x)**2+(p.pos.y-point.y)**2+(p.pos.z-point.z)**2;if(dist<nearest){nearest=dist;target=point;}}
     if(target){const dir=direction(p.pos,target),blend=Math.min(1,flightDt*7);p.vel.x+=(dir.x*42-p.vel.x)*blend;p.vel.y+=(dir.y*42-p.vel.y)*blend;p.vel.z+=(dir.z*42-p.vel.z)*blend;}
    }
    Object.assign(old,p.pos);p.pos.x+=p.vel.x*flightDt;p.pos.y+=p.vel.y*flightDt;p.pos.z+=p.vel.z*flightDt;
@@ -920,6 +924,20 @@ export class World {
  private projectileDamage(p:Pick<Projectile,'homing'|'level'|'energy'|'kind'>,e:Enemy){return p.homing?(e.kind==='leviathan'||e.kind==='orb'?1:e.kind==='squid3'&&p.level===3?30:p.energy??10):p.kind==='shotgun'?SHOTGUN_TUNING.damage:1;}
  private expireProjectile(p:Projectile,exclude?:{entity:number;segment:number}){p.age=99;if(!this.prediction&&p.homing&&(p.level??1)>=4)this.detonations.push({tick:this.tick+2,pos:{...p.pos},exclude});}
  weakPoint(e:Enemy){const point=e.weakpoints.find(s=>s.hp>0);if(point)return crystalToEnemy(e,this.player.pos,point.local);const segment=e.segments.find(s=>s.hp>0);return segment?.pos??(isSpider(e.kind)?spiderLocalPoint(e,this.player.pos,SPIDER_GEM):e.kind==='thorn'?v(e.pos.x,3,e.pos.z):e.pos);}
+ /** A hidden array-first crystal must not consume a complete homing reserve.
+  * Choose from living, reachable crystals at the projectile's actual position. */
+ private accessibleHomingPoint(e:Enemy,from:Vec):Vec|undefined{
+  if(!e.weakpoints.length)return this.weakPoint(e);
+  const radius=(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind,!!e.balance))*enemyEmergenceScale(e);
+  const points=e.weakpoints.filter(p=>p.hp>0).map(p=>crystalToEnemy(e,this.player.pos,p.local)).sort((a,b)=>distance(from,a)-distance(from,b));
+  for(const point of points){
+   const contact=segmentSphere(from,point,point,radius);if(contact===null)continue;
+   const end=v(from.x+(point.x-from.x)*contact,from.y+(point.y-from.y)*contact,from.z+(point.z-from.z)*contact);
+   if(sweepFloor(from,end,this.time))continue;
+   if(this.enemies.some(other=>other.hp>0&&armorBounds(other)!==null&&sweepArmor(other,this.player.pos,from,point,contact,this.time,this.spawnFixesEnabled)))continue;
+   return point;
+  }
+ }
  dropGems(pos:Vec,count:number){this.stats.released+=count;for(let i=0;i<count;i++)this.gems.push({id:this.nextId++,pos:{...pos},vel:v((this.random()-.5)*3,-2,(this.random()-.5)*3),age:0});}
  private updateGems(input:Input,dt:number){
   let attracting=!input.fire&&!input.homing&&this.lastShotTick!==this.tick;

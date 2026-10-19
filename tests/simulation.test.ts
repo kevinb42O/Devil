@@ -1,4 +1,5 @@
 import {CREATURE_SCALE_RATIO} from '../src/enemy-presentation.ts';
+import {towerFloorHeight,TOWER_FLOOR_CLEARANCE} from '../src/enemy-floor.ts';
 import {floorHeight} from '../src/arena.ts';
 import {SPIDER_GEM,spiderLocalPoint,localToEnemy} from '../src/enemy-presentation.ts';
 import { test } from 'node:test';
@@ -163,12 +164,12 @@ test('spatial projectile lookup agrees with exhaustive swept hits across cell bo
 
 test('all towers drift inward without orbiting and spin clockwise independently',()=>{
  for(const kind of ['squid','squid2','squid3'] as const){
-  // Stay above the enlarged armor's floor clearance to isolate radial movement.
+  // Radial movement is independent of the corrected ground anchor.
   const w=new World(1,{schedule:false,invulnerable:true}),e=w.spawn(kind,v(18,60,-24));e.nextSpawn=Infinity;
   const initialTarget=localToEnemy(e,w.player.pos,e.weakpoints[0].local);if(kind==='squid')assert.ok((initialTarget.x-e.pos.x)*e.pos.x+(initialTarget.z-e.pos.z)*e.pos.z>0,'first gem faces outward');
   run(w,1200);assert.ok(Math.abs(Math.hypot(e.pos.x,e.pos.z)-25)<1e-8);
   assert.ok(Math.abs(e.pos.x*(-24)-e.pos.z*18)<1e-8,'translation stays on original radius');
-  assert.equal(e.pos.y,60);assert.ok(e.age>9.99);
+  assert.equal(e.pos.y,towerFloorHeight(e,w.time)+TOWER_FLOOR_CLEARANCE);assert.ok(e.age>9.99);
   // Reaching the middle must never teleport back to the perimeter or overshoot.
   e.pos=v(.01,60,0);run(w,120);assert.equal(e.pos.x,0);assert.equal(e.pos.z,0);
  }

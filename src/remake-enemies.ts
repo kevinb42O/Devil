@@ -9,7 +9,7 @@ import {EnvironmentLighting} from './environment-lighting';
 import {attachEnemySurfaceLight} from './enemy-surface-lighting';
 import {RemakeModelLibrary,type RemakeModel} from './remake-model-library';
 import {ENEMY_KINDS,isSkull,isSpider,isPede,skullTier,type EnemyKind} from './enemy-kinds';
-import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,CREATURE_SCALE_RATIO,towerPartOffset,towerFoundationPose,towerCrystalRadius,enemyEmergenceScale} from './enemy-presentation';
+import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,CREATURE_SCALE_RATIO,enemyRigScale,spiderCrystalRadius,towerPartOffset,towerFoundationPose,towerCrystalRadius,enemyEmergenceScale} from './enemy-presentation';
 import {crystalImpactScale} from './impact-presentation';
 import {TILE_SIZE} from './arena';
 import {buildSerpentHead,buildSerpentArmor} from './serpent-geometry';
@@ -136,6 +136,7 @@ export class RemakeEnemies{
  setTime(time:number){this.clock.value=time;}
  animate(model:THREE.Group,enemy:Enemy,time:number,originalCadence=false){
   this.setTime(time);
+  if(isPede(enemy.kind)){const scale=enemyRigScale(enemy);model.children[0]?.scale.setScalar(scale);for(const child of model.children)if(child.name==='segment')child.scale.setScalar(scale);}
   if(enemy.kind.startsWith('squid')){
    const scale=enemyEmergenceScale(enemy),bottom=(towerFloorHeight(enemy,time)-enemy.pos.y)/Math.max(.0001,scale);
    const foundation=model.getObjectByName('tower-foundation'),plinth=model.getObjectByName('tower-plinth');
@@ -146,8 +147,8 @@ export class RemakeEnemies{
   let nodes=this.animationNodes.get(model);
   if(!nodes){nodes=[];model.traverse(node=>{if(node.name.startsWith('weak-point-')||node.name==='spider-held-gem'||node.name==='spider-head-pivot'||node.name==='warden-crest'||node.userData.spin||node.userData.serpentMotion)nodes!.push(node);if(node.name.startsWith('weak-point-')){node.userData.crystalIndex=Number(node.name.slice(11));node.userData.crystalHp=enemy.weakpoints[node.userData.crystalIndex]?.hp??1;node.userData.crystalHitAt=-Infinity;node.userData.crystalBaseScale=node.scale.clone();}node.userData.restY=node.position.y;if(node.userData.serpentMotion==='vertebra')node.userData.serpentPhase=nodes!.length*.63;});this.animationNodes.set(model,nodes);}
   for(const node of nodes){
-   if(node.name.startsWith('weak-point-')){const state=node.userData,hp=enemy.weakpoints[state.crystalIndex]?.hp??1;if(hp<state.crystalHp)state.crystalHitAt=time;else if(hp>state.crystalHp||time<state.crystalHitAt)state.crystalHitAt=-Infinity;state.crystalHp=hp;if(enemy.kind.startsWith('squid')&&enemy.weakpoints[state.crystalIndex]){const point=enemy.weakpoints[state.crystalIndex].local;node.position.set(point.x,point.y,point.z);}node.visible=hp>0;node.scale.copy(state.crystalBaseScale).multiplyScalar(crystalImpactScale(time-state.crystalHitAt));const hit=node.visible&&enemy.hp>0&&time-state.crystalHitAt<.16;(node as THREE.Mesh).material=enemy.kind.startsWith('squid')?this.towerCore(hit):this.core(hit,state.crystalGreen===true,state.crystalKind??enemy.kind);}
-   else if(node.name==='spider-held-gem')(node as THREE.Mesh).material=this.core(time-enemy.lastHit>=0&&time-enemy.lastHit<.18,true,enemy.kind);
+   if(node.name.startsWith('weak-point-')){const state=node.userData,hp=enemy.weakpoints[state.crystalIndex]?.hp??1;if(hp<state.crystalHp)state.crystalHitAt=time;else if(hp>state.crystalHp||time<state.crystalHitAt)state.crystalHitAt=-Infinity;state.crystalHp=hp;if(enemy.kind.startsWith('squid')&&enemy.weakpoints[state.crystalIndex]){const point=enemy.weakpoints[state.crystalIndex].local;node.position.set(point.x,point.y,point.z);}node.visible=hp>0;node.scale.copy(state.crystalBaseScale);if(enemy.kind.startsWith('squid'))node.scale.setScalar(towerCrystalRadius(enemy.kind,!!enemy.balance));node.scale.multiplyScalar(crystalImpactScale(time-state.crystalHitAt));const hit=node.visible&&enemy.hp>0&&time-state.crystalHitAt<.16;(node as THREE.Mesh).material=enemy.kind.startsWith('squid')?this.towerCore(hit):this.core(hit,state.crystalGreen===true,state.crystalKind??enemy.kind);}
+   else if(node.name==='spider-held-gem'){node.scale.setScalar(spiderCrystalRadius(enemy));(node as THREE.Mesh).material=this.core(time-enemy.lastHit>=0&&time-enemy.lastHit<.18,true,enemy.kind);}
    else if(node.name==='spider-head-pivot')node.rotation.x=(1-enemy.headExposure)*.9;
    else if(node.name==='warden-crest')node.position.y=node.userData.restY+towerPartOffset(enemy,'crest',originalCadence);
    else if(node.userData.serpentMotion==='jaw')node.rotation.x=.07+Math.sin(time*1.8+enemy.id)*.045;

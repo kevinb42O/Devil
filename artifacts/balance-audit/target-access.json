@@ -1,0 +1,149 @@
+{
+  "note": "Frozen tower pose after 10s, player 20 horizontal units opposite first crystal, hand III shotgun. Demonstrates a targeting weakness, not a new homing regression by itself.",
+  "shots": [
+    {
+      "legacy": true,
+      "kind": "squid",
+      "homing": false,
+      "accessibleCrystals": [
+        false
+      ],
+      "launched": 120,
+      "damage": 0,
+      "armorImpacts": 48
+    },
+    {
+      "legacy": true,
+      "kind": "squid",
+      "homing": true,
+      "accessibleCrystals": [
+        false
+      ],
+      "launched": 20,
+      "damage": 0,
+      "armorImpacts": 20
+    },
+    {
+      "legacy": true,
+      "kind": "squid2",
+      "homing": false,
+      "accessibleCrystals": [
+        false,
+        true
+      ],
+      "launched": 120,
+      "damage": 10,
+      "armorImpacts": 62
+    },
+    {
+      "legacy": true,
+      "kind": "squid2",
+      "homing": true,
+      "accessibleCrystals": [
+        false,
+        true
+      ],
+      "launched": 20,
+      "damage": 10,
+      "armorImpacts": 19
+    },
+    {
+      "legacy": true,
+      "kind": "squid3",
+      "homing": false,
+      "accessibleCrystals": [
+        false,
+        true,
+        true
+      ],
+      "launched": 120,
+      "damage": 28,
+      "armorImpacts": 81
+    },
+    {
+      "legacy": true,
+      "kind": "squid3",
+      "homing": true,
+      "accessibleCrystals": [
+        false,
+        true,
+        true
+      ],
+      "launched": 20,
+      "damage": 0,
+      "armorImpacts": 20
+    },
+    {
+      "legacy": false,
+      "kind": "squid",
+      "homing": false,
+      "accessibleCrystals": [
+        false
+      ],
+      "launched": 120,
+      "damage": 0,
+      "armorImpacts": 56
+    },
+    {
+      "legacy": false,
+      "kind": "squid",
+      "homing": true,
+      "accessibleCrystals": [
+        false
+      ],
+      "launched": 20,
+      "damage": 0,
+      "armorImpacts": 20
+    },
+    {
+      "legacy": false,
+      "kind": "squid2",
+      "homing": false,
+      "accessibleCrystals": [
+        false,
+        true
+      ],
+      "launched": 120,
+      "damage": 2,
+      "armorImpacts": 94
+    },
+    {
+      "legacy": false,
+      "kind": "squid2",
+      "homing": true,
+      "accessibleCrystals": [
+        false,
+        true
+      ],
+      "launched": 20,
+      "damage": 0,
+      "armorImpacts": 20
+    },
+    {
+      "legacy": false,
+      "kind": "squid3",
+      "homing": false,
+      "accessibleCrystals": [
+        false,
+        true,
+        true
+      ],
+      "launched": 120,
+      "damage": 4,
+      "armorImpacts": 111
+    },
+    {
+      "legacy": false,
+      "kind": "squid3",
+      "homing": true,
+      "accessibleCrystals": [
+        false,
+        true,
+        true
+      ],
+      "launched": 20,
+      "damage": 0,
+      "armorImpacts": 20
+    }
+  ]
+}
