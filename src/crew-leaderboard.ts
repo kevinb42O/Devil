@@ -11,8 +11,3 @@ export async function loadCrewLeaderboard(size:number,search='',offset=0):Promis
 export async function loadOwnCrewBests(size:number):Promise<CrewLeaderboardRow[]>{const db=leaderboardDatabase(),session=await db.auth.getSession();if(!session.data.session)return [];const {data,error}=await db.rpc('abyss_crew_my_bests_v20',{p_size:size});if(error)throw crewServiceError(error);return data??[];}
 
 export async function revokeCrew(id:string){const db=await crewIdentity(),{error}=await db.rpc('abyss_crew_revoke',{p_id:id});if(error)throw crewServiceError(error);}
-
-export async function loadCrewHistory(rules:number,size:number,search='',offset=0):Promise<CrewLeaderboardRow[]>{
- const {data,error}=await leaderboardDatabase().rpc('abyss_crew_board_history',{p_rules:rules,p_size:size,p_search:search,p_offset:offset});
- if(error)throw crewServiceError(error);return data??[];
-}

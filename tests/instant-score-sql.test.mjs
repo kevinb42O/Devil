@@ -11,9 +11,15 @@ test('instant scoring checks server elapsed time, ticket ownership, retries and 
   await db.query('insert into auth.users values($1)',[cheater]);
   for(const file of readdirSync(new URL('../supabase/migrations',import.meta.url)).filter(n=>n.endsWith('.sql')).sort()){
    if(file==='20261017223000_verified_solo_scores.sql')await db.query("insert into public.abyss_scores(player_id,rules,player_name,survival_ms,kills,gems) values($1,7,'fuck your vibecoded game',5020208,0,0)",[cheater]);
+   if(file.endsWith('_fresh_leaderboards.sql')){
+    assert.equal((await db.query('select quarantined from public.abyss_scores where player_id=$1',[cheater])).rows[0].quarantined,true);
+    await db.query('insert into abyss_private.solo_tickets(player_id) values($1)',[cheater]);
+   }
    await db.exec(readFileSync(new URL('../supabase/migrations/'+file,import.meta.url),'utf8'));
   }
-  assert.equal((await db.query('select quarantined from public.abyss_scores where player_id=$1',[cheater])).rows[0].quarantined,true);
+  for(const table of ['public.abyss_scores','public.abyss_replays','public.abyss_crew_bests','public.abyss_crew_replays','public.abyss_crew_members','public.abyss_crew_runs','abyss_private.solo_tickets','abyss_private.solo_submissions','abyss_private.replay_limits','abyss_private.crew_limits','abyss_private.podium_skin_grants'])assert.equal((await db.query('select count(*)::int as total from '+table)).rows[0].total,0,table+' is empty after reset');
+  assert.equal((await db.query('select count(*)::int as total from auth.users')).rows[0].total,1,'identity retained');
+  assert.equal((await db.query('select count(*)::int as total from storage.buckets')).rows[0].total,2,'replay buckets retained');
   assert.equal((await db.query('select abyss_private.podium_skin_rank($1) value',[cheater])).rows[0].value,null);
   await db.query('insert into auth.users values($1),($2)',[player,other]);
   const scalar=async(q,args=[])=>(await db.query(q,args)).rows[0].value;

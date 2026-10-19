@@ -1,3 +1,4 @@
+import {resetReplayDatabase} from './leaderboard-reset';
 import {leaderboardDatabase,eligibleForLeaderboard} from './leaderboard';
 import {REPLAY_RULES_VERSION,type RecordedRun} from './replay';
 import {encodeReplay,decodeReplay,MAX_REPLAY_BYTES,readBounded} from './replay-file';
@@ -38,7 +39,7 @@ export async function shareReplay(run:RecordedRun,name:string,best=false):Promis
   }catch(error){try{await removeSharedReplay(id);}catch{/* Reservation remains visible for removal/retry, preserving its budget. */}throw error;}
  }finally{uploading=false;}
 }
-async function localDatabase(){return new Promise<IDBDatabase>((resolve,reject)=>{const r=indexedDB.open('abyss-replay-sharing',1);r.onupgradeneeded=()=>{r.result.createObjectStore('cache',{keyPath:'id'});r.result.createObjectStore('pending');};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
+async function localDatabase(){await resetReplayDatabase('abyss-replay-sharing');return new Promise<IDBDatabase>((resolve,reject)=>{const r=indexedDB.open('abyss-replay-sharing',1);r.onupgradeneeded=()=>{r.result.createObjectStore('cache',{keyPath:'id'});r.result.createObjectStore('pending');};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function local<T>(store:'cache'|'pending',mode:IDBTransactionMode,operation:(s:IDBObjectStore)=>IDBRequest):Promise<T>{const db=await localDatabase();try{return await new Promise<T>((resolve,reject)=>{const tx=db.transaction(store,mode),r=operation(tx.objectStore(store));tx.oncomplete=()=>resolve(r.result as T);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
 export type PendingReplay={run:RecordedRun;name:string};
 const pendingKey=(rules:number)=>`best:v${rules}`;

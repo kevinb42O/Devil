@@ -1,8 +1,9 @@
+import {resetReplayDatabase} from './leaderboard-reset';
 import {encodeCrewReplay,decodeCrewReplay,type RecordedCrewRun,type CrewReplayMember} from './crew-replay';
 export type CrewUploadJob={registrationId:string;automatic:boolean;scoreConfirmed?:boolean;best?:boolean;replayId?:string;ready?:boolean;error?:string;attempts:number;retryAt:number};
 export type StoredCrewReplay={id:string;created:number;time:number;roster:CrewReplayMember[];blob:Blob;kept:boolean;reason:string|null;owner:boolean;publicationRegistrationId?:string;job?:CrewUploadJob};
 const LOCAL_BUDGET=128*1024*1024;
-async function database(){return new Promise<IDBDatabase>((resolve,reject)=>{const r=indexedDB.open('abyss-crew-recordings',1);r.onupgradeneeded=()=>{r.result.createObjectStore('runs',{keyPath:'id'});r.result.createObjectStore('cache',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
+async function database(){await resetReplayDatabase('abyss-crew-recordings');return new Promise<IDBDatabase>((resolve,reject)=>{const r=indexedDB.open('abyss-crew-recordings',1);r.onupgradeneeded=()=>{r.result.createObjectStore('runs',{keyPath:'id'});r.result.createObjectStore('cache',{keyPath:'id'});};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
 async function operation<T>(store:'runs'|'cache',mode:IDBTransactionMode,fn:(s:IDBObjectStore)=>IDBRequest):Promise<T>{const db=await database();try{return await new Promise<T>((resolve,reject)=>{const tx=db.transaction(store,mode),r=fn(tx.objectStore(store));tx.oncomplete=()=>resolve(r.result as T);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}finally{db.close();}}
 export async function listCrewRuns(){return (await operation<StoredCrewReplay[]>('runs','readonly',s=>s.getAll())).sort((a,b)=>b.created-a.created);}
 export function getCrewRun(id:string){return operation<StoredCrewReplay|undefined>('runs','readonly',s=>s.get(id));}

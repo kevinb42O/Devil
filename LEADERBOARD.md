@@ -92,3 +92,12 @@ Migrations `20261017223000_verified_solo_scores.sql` and `20261017224500_instant
 The exact reported 5,020,208 ms record was marked `quarantined=true`. It is excluded from both solo leaderboard RPCs, personal ranks, replay-enabled rankings and podium eligibility. The record is retained in the score table; trusted administration can reverse quarantine. Existing other scores remain visible and were not retrospectively verified.
 
 Run `npx tsx --test tests/instant-score-sql.test.mjs tests/score-queue.test.ts tests/leaderboard.test.ts` and `npm run build`. SQL tests use a local PostgreSQL engine, apply the full migration sequence, and cover immediate visibility, ownership, server duration, single-use tickets, idempotent retries, bounds and rejected legacy submission paths. Never add service-role credentials to browser configuration.
+
+
+## Fresh start (20 October 2026)
+
+The current client shows only the current solo and crew leaderboards. Previous Rankings and its version selector have been removed. A one-time local reset clears personal bests, last-run summaries, pending solo scores, solo/crew recordings, downloaded replay caches, and replay upload jobs. Player identities, nicknames, settings, and publication preferences remain. Fresh recordings and scores survive subsequent reloads.
+
+`20261019224542_fresh_leaderboards.sql` prepares the corresponding live reset: all solo scores (including quarantined history), crew bests/runs/members, replay metadata, pending verification submissions, run tickets, upload limits, and podium proofs are cleared. Empty both `abyss-replays` and `abyss-crew-replays` using the Storage dashboard/API before running this SQL; SQL deletion of Storage metadata would orphan files. Existing pre-reset tickets and crew registrations cannot publish after the reset. The current rules and publication APIs remain available for new runs.
+
+Live application is pending permanent-deletion confirmation in the browser dashboard. Validate with `node tests/leaderboard-history-browser.mjs`, `npx tsx --test tests/instant-score-sql.test.mjs tests/leaderboard.test.ts tests/score-queue.test.ts`, and `npm run build`.

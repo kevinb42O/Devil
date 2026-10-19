@@ -8,10 +8,10 @@ export function leaderboardDatabase(){
  if(!leaderboardConfigured())throw Error('The public leaderboard is not connected yet.');
  return client??=createClient(import.meta.env.VITE_SUPABASE_URL,import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,{auth:{storageKey:'abyss-leaderboard-auth',detectSessionInUrl:false},global:{fetch:(input,init)=>fetch(input,{...init,signal:AbortSignal.timeout(15000)})}});
 }
-export async function loadLeaderboard(rules=REPLAY_RULES_VERSION):Promise<LeaderboardRow[]>{
- const db=leaderboardDatabase();let {data,error}=await db.rpc('abyss_leaderboard_replays',{p_rules:rules});
+export async function loadLeaderboard():Promise<LeaderboardRow[]>{
+ const db=leaderboardDatabase();let {data,error}=await db.rpc('abyss_leaderboard_replays',{p_rules:REPLAY_RULES_VERSION});
  // Scores remain available while a deployment's replay migration is pending.
- if(error?.code==='PGRST202')({data,error}=await db.rpc('abyss_leaderboard',{p_rules:rules}));
+ if(error?.code==='PGRST202')({data,error}=await db.rpc('abyss_leaderboard',{p_rules:REPLAY_RULES_VERSION}));
  if(error)throw Error('The leaderboard is unavailable. Try refreshing in a moment.');
  return data??[];
 }
