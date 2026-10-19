@@ -9,13 +9,13 @@ const chatterRanges:Readonly<Record<string,number>>={
  chatterleviathan:64,eyearousedrone:36,chatterthorn:30,eggdrone:22,eggdrone2:26,
  subchattercentipede:24,eyepacifydrone:36,
 };
-// The recorded chatter bank is calibrated during mastering. Keep this public
-// hook for authored exceptions without reapplying trims from the retired bank.
-export const CHATTER_TRIM:Readonly<Record<string,number>>=Object.fromEntries(Object.keys(chatterRanges).map(name=>[name,1]));
+// Mastered chatter RMS is only .008–.018 before distance attenuation. Bring
+// threat information alongside weapons; retain the authored tier differences.
+export const CHATTER_TRIM:Readonly<Record<string,number>>=Object.fromEntries(Object.keys(chatterRanges).map(name=>[name,3]));
 export function hearingProfile(name:string,role?:string):HearingProfile{
  if(role==='footstep')return {refDistance:2,maxDistance:20};
  if(role==='crystal-hit'||role==='crystal-break')return {refDistance:4,maxDistance:32};
- if(chatterRanges[name])return {refDistance:3,maxDistance:chatterRanges[name]};
+ if(chatterRanges[name])return {refDistance:6,maxDistance:chatterRanges[name]};
  if(role==='gem-chatter')return {refDistance:2,maxDistance:18};
  if(role==='homing-flight')return {refDistance:2,maxDistance:26};
  if(role==='movement'||role==='ricochet'||role==='armor-impact'||role==='pickup')return {refDistance:2,maxDistance:24};

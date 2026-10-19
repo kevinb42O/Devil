@@ -349,7 +349,7 @@ export class Sound{
 
   for(const p of homing){const id=-100-p.id;ids.add(id);this.loop(id,(p.level??1)>=4?'magentadrone':'daggerdrone',p.pos,.3);}
 
-  for(const {enemy:e,pos,scale} of selected){ids.add(e.id);const name=e.kind==='centipede'&&!world.active(e)?'subchattercentipede':e.kind==='orb'&&world.time-e.lastHit<=.2?'eyepacifydrone':CHATTER[e.kind];this.loop(e.id,name,pos,scale,true,.975+((Math.imul(e.id,2654435761)>>>0)%1000)/1000*.05);}
+  for(const {enemy:e,pos,scale} of selected){ids.add(e.id);const name=e.kind==='centipede'&&!world.active(e)?'subchattercentipede':e.kind==='orb'&&world.time-e.lastHit<=.2?'eyepacifydrone':CHATTER[e.kind];this.loop(e.id,name,pos,scale,false,.975+((Math.imul(e.id,2654435761)>>>0)%1000)/1000*.05);}
   for(const [id,name,pos] of [[-1,'polarity1e',{x:32,y:0,z:0}],[-2,'polarity2w',{x:-32,y:0,z:0}],[-3,'polarity3n',{x:0,y:0,z:-32}],[-4,'polarity4s',{x:0,y:0,z:32}]] as const){ids.add(id);this.loop(id,name,pos,selected.some(c=>c.distance<12)?.1:.35);}
   for(const id of this.loops.keys())if(!ids.has(id)){
    const voice=this.loops.get(id)!;

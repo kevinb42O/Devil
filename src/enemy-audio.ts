@@ -28,7 +28,15 @@ export function selectEnemyAudio(enemies:readonly Enemy[],listener:Vec,active:(e
  const kinds=new Set<EnemyKind>();for(const c of candidates){if(kinds.has(c.enemy.kind))continue;kinds.add(c.enemy.kind);add(c);}
  const sectors=new Set<number>();for(const c of candidates){if(sectors.has(c.sector))continue;sectors.add(c.sector);add(c);}
  candidates.forEach(add);
- const counts=new Map<EnemyKind,number>();for(const c of selected)counts.set(c.enemy.kind,(counts.get(c.enemy.kind)??0)+1);
- for(const c of selected){const crowd=1/Math.sqrt(counts.get(c.enemy.kind)!);c.scale=1.2*crowd;}
+ const groups=new Map<EnemyKind,typeof candidates>();
+ for(const c of selected){const group=groups.get(c.enemy.kind)??[];group.push(c);groups.set(c.enemy.kind,group);}
+ for(const group of groups.values()){
+  group.sort((a,b)=>a.distance-b.distance||a.enemy.id-b.enemy.id);
+  // Reserve the nearest threat's bearing. Uniform 1/sqrt(count) scaling let
+  // distant skulls mute a skull at the player's shoulder by almost 15 dB.
+  group[0].scale=group.length===1?1.2:1.05;
+  const others=group.slice(1),power=1.2**2-1.05**2;
+  for(const c of others)c.scale=Math.sqrt(power/others.length);
+ }
  return selected;
 }

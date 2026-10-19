@@ -19,7 +19,7 @@ test('chatter sustained levels stay in a narrow authored band without erasing th
  const manifest=JSON.parse(readFileSync('public/assets/audio/remake/manifest.json','utf8'));
  for(const name of Object.values(ENEMY_CHATTER)){
   const asset=manifest[name],level=asset.rms*asset.gain*CHATTER_TRIM[name];
-  assert(level>=.007&&level<=.019,name+' balanced RMS '+level);
+  assert(level>=.021&&level<=.057,name+' balanced RMS '+level);
  }
 });
 test('each enemy leaves the selection at its own full 3D hearing boundary',()=>{

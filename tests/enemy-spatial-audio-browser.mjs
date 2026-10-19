@@ -7,15 +7,15 @@ try{
  const results=await page.evaluate(async()=>{
   const {Sound}=await import('/src/audio.ts'),{ENEMY_CHATTER}=await import('/src/enemy-audio.ts'),sound=new Sound();await sound.start();
   const check=(v,m)=>{if(!v)throw Error(m);};
-  async function render(buffer,x,yaw=0){
+  async function render(buffer,name,x,yaw=0){
    const c=new OfflineAudioContext(2,48000,48000);sound.context=c;sound.listener({x:0,y:0,z:0},yaw,0);
-   const source=c.createBufferSource();source.buffer=buffer;source.loop=true;const p=sound.panner({x,y:0,z:0});source.connect(p);p.connect(c.destination);source.start(0,0);
+   const source=c.createBufferSource();source.buffer=buffer;source.loop=true;const p=sound.panner({x,y:0,z:0},name);source.connect(p);p.connect(c.destination);source.start(0,0);
    const out=await c.startRendering();return [0,1].map(ch=>Math.sqrt(out.getChannelData(ch).reduce((s,v)=>s+v*v,0)/out.length));
   }
   const output=[];const live=sound.context;
   for(const [kind,name] of Object.entries(ENEMY_CHATTER)){
    sound.context=live;await sound.load(name);const buffer=sound.buffers.get(name);
-   const left=await render(buffer,-6),right=await render(buffer,6),turned=await render(buffer,-6,Math.PI),far=await render(buffer,-24);
+   const left=await render(buffer,name,-6),right=await render(buffer,name,6),turned=await render(buffer,name,-6,Math.PI),far=await render(buffer,name,-24);
    check(left[0]>left[1]*1.1,kind+' left bearing');check(right[1]>right[0]*1.1,kind+' right bearing');check(turned[1]>turned[0]*1.1,kind+' head turn');check(far[0]<left[0]*.5,kind+' distance falloff');
    output.push({kind,left,right,turned,far});
   }
