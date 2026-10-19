@@ -22,7 +22,7 @@ try{
    const model=renderer.enemies.get(e.id);if(!model)throw Error('Missing rendered '+e.kind);model.updateWorldMatrix(true,true);
    for(let i=0;i<e.weakpoints.length;i++){
     const node=model.getObjectByName('weak-point-'+i),position=node.getWorldPosition(new THREE.Vector3()),expected=crystalToEnemy(e,world.player.pos,e.weakpoints[i].local),scale=node.getWorldScale(new THREE.Vector3()).x;
-    points.push({kind:e.kind,error:position.distanceTo(new THREE.Vector3(expected.x,expected.y,expected.z)),radiusError:Math.abs(scale-towerCrystalRadius(e.kind,true)*enemyEmergenceScale(e)),height:position.y});
+    points.push({kind:e.kind,error:position.distanceTo(new THREE.Vector3(expected.x,expected.y,expected.z)),radiusError:Math.abs(scale-towerCrystalRadius(e.kind)*enemyEmergenceScale(e)),visualRadius:scale,hitRadius:towerCrystalRadius(e.kind,true)*enemyEmergenceScale(e),height:position.y});
    }
    if(e.kind.startsWith('spider')){
     const node=model.getObjectByName('spider-held-gem'),position=node.getWorldPosition(new THREE.Vector3()),expected=spiderLocalPoint(e,world.player.pos,SPIDER_GEM),scale=node.getWorldScale(new THREE.Vector3()).x;
@@ -36,6 +36,7 @@ try{
   window.balanceAudit={renderer,world};return {points,segments,drawCalls:renderer.renderer.info.render.calls};
  });
  for(const p of [...report.points,...report.segments]){assert.ok(p.error<1e-6,JSON.stringify(p));assert.ok(p.radiusError<1e-6,JSON.stringify(p));}
+ for(const p of report.points.filter(p=>p.kind.startsWith('squid'))){assert.ok(p.visualRadius<=.56,'crown jewels stay proportionate');assert.ok(p.hitRadius>=1,'aiming tolerance remains forgiving');}
  assert.deepEqual(errors,[]);await page.screenshot({path:output+'/gameplay.png'});
- await writeFile(output+'/render-alignment.json',JSON.stringify({...report,errors},null,2)+'\n');console.log('Corrected enemy rigs, crystals and independent segment positions match gameplay targets.',report.points);
+ await writeFile(output+'/render-alignment.json',JSON.stringify({...report,errors},null,2)+'\n');console.log('Enemy rigs and crystal centers align; tower jewel visuals stay compact with independent aiming tolerance.',report.points);
 }finally{await browser.close();}

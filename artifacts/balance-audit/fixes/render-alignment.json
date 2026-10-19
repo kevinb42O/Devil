@@ -3,37 +3,49 @@
     {
       "kind": "squid",
       "error": 0,
-      "radiusError": 0,
+      "radiusError": 5.551115123125783e-17,
+      "visualRadius": 0.43399999999999994,
+      "hitRadius": 1.0161290322580645,
       "height": 3.7910225145220755
     },
     {
       "kind": "squid2",
       "error": 0,
-      "radiusError": 0,
+      "radiusError": 5.551115123125783e-17,
+      "visualRadius": 0.49600000000000005,
+      "hitRadius": 1.0161290322580645,
       "height": 5.651052979201078
     },
     {
       "kind": "squid2",
       "error": 8.881784197001252e-16,
-      "radiusError": 0,
+      "radiusError": 5.551115123125783e-17,
+      "visualRadius": 0.49600000000000005,
+      "hitRadius": 1.0161290322580645,
       "height": 5.651052979201078
     },
     {
       "kind": "squid3",
       "error": 0,
       "radiusError": 0,
+      "visualRadius": 0.558,
+      "hitRadius": 1.0161290322580645,
       "height": 8.129852980345486
     },
     {
       "kind": "squid3",
       "error": 1.7763568394002505e-15,
       "radiusError": 0,
+      "visualRadius": 0.558,
+      "hitRadius": 1.0161290322580645,
       "height": 8.129852980345486
     },
     {
       "kind": "squid3",
       "error": 0,
       "radiusError": 0,
+      "visualRadius": 0.558,
+      "hitRadius": 1.0161290322580645,
       "height": 8.129852980345486
     },
     {

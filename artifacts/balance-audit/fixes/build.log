@@ -24,10 +24,10 @@ dist/assets/barlow-condensed-latin-500-normal-BgYH2mbd.woff2     21.42 kB
 dist/assets/barlow-condensed-latin-700-normal-v1xN8_Wq.woff2     22.44 kB
 dist/index.html                                                  22.80 kB │ gzip:     7.27 kB
 dist/assets/index-BtwDpLCs.css                                  108.27 kB │ gzip:    23.64 kB
-dist/assets/index-ByAsicoe.js                                 4,840.15 kB │ gzip: 1,416.70 kB
+dist/assets/index-B2rYJNGq.js                                 4,840.31 kB │ gzip: 1,416.76 kB
 
 (!) Some chunks are larger than 700 kB after minification. Consider:
 - Using dynamic import() to code-split the application
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
-✓ built in 20.94s
+✓ built in 21.12s

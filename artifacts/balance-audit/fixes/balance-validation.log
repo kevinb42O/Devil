@@ -2,19 +2,19 @@
 > abyss-daggers@0.1.3 test:balance
 > tsx --test tests/combat-balance.test.ts && node tests/combat-balance-browser.mjs && node tools/audit-remake-colliders.mjs
 
-✔ new tower crowns stay reachable from the ground through their real entrance (394.210625ms)
-✔ ground-level primary fire reaches and destroys every tower crystal (1173.723667ms)
-✔ hand-II ground pulses retain damage against all grounded tower tiers (120.820125ms)
-✔ spider tolerance doubles while creature bodies return to their earlier scale (1.4475ms)
-✔ persistent crowded towers never change their spawn rays or push each other outward (13151.100917ms)
-✔ a late blocker cannot displace an existing tower or bank stopped travel (3.09075ms)
-✔ emitted Skull II resumes wandering instead of gaining pursuit from its skin (25.544583ms)
-✔ homing damages exposed crystals instead of spending all twenty shots on hidden crystal zero (154.690709ms)
-✔ balance rules survive full and delta enemy packets for guest collision prediction (1.524042ms)
-✔ historical solo recordings captured before the edits retain outcomes and backward seeking (6309.619ms)
-✔ historical crew checkpoints captured before the edits retain every exact digest (2736.320167ms)
-✔ current solo recordings and crew checkpoints retain corrected rules on restore (352.731209ms)
-✔ new thorn armor has real remake surfaces while legacy files retain original armor (0.592125ms)
+✔ new tower crowns stay reachable from the ground through their real entrance (183.279541ms)
+✔ ground-level primary fire reaches and destroys every tower crystal (128.377583ms)
+✔ hand-II ground pulses retain damage against all grounded tower tiers (112.572875ms)
+✔ spider tolerance doubles while creature bodies return to their earlier scale (1.441166ms)
+✔ persistent crowded towers never change their spawn rays or push each other outward (16264.821667ms)
+✔ a late blocker cannot displace an existing tower or bank stopped travel (32.6ms)
+✔ emitted Skull II resumes wandering instead of gaining pursuit from its skin (85.59525ms)
+✔ homing damages exposed crystals instead of spending all twenty shots on hidden crystal zero (320.478333ms)
+✔ balance rules survive full and delta enemy packets for guest collision prediction (10.874334ms)
+✔ historical solo recordings captured before the edits retain outcomes and backward seeking (9573.989958ms)
+✔ historical crew checkpoints captured before the edits retain every exact digest (4413.391458ms)
+✔ current solo recordings and crew checkpoints retain corrected rules on restore (472.517459ms)
+✔ new thorn armor has real remake surfaces while legacy files retain original armor (1.556041ms)
 ℹ tests 13
 ℹ suites 0
 ℹ pass 13
@@ -22,42 +22,54 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 26324.366958
-Corrected enemy rigs, crystals and independent segment positions match gameplay targets. [
+ℹ duration_ms 34071.035917
+Enemy rigs and crystal centers align; tower jewel visuals stay compact with independent aiming tolerance. [
   {
     kind: 'squid',
     error: 0,
-    radiusError: 0,
+    radiusError: 5.551115123125783e-17,
+    visualRadius: 0.43399999999999994,
+    hitRadius: 1.0161290322580645,
     height: 3.7910225145220755
   },
   {
     kind: 'squid2',
     error: 0,
-    radiusError: 0,
+    radiusError: 5.551115123125783e-17,
+    visualRadius: 0.49600000000000005,
+    hitRadius: 1.0161290322580645,
     height: 5.651052979201078
   },
   {
     kind: 'squid2',
     error: 8.881784197001252e-16,
-    radiusError: 0,
+    radiusError: 5.551115123125783e-17,
+    visualRadius: 0.49600000000000005,
+    hitRadius: 1.0161290322580645,
     height: 5.651052979201078
   },
   {
     kind: 'squid3',
     error: 0,
     radiusError: 0,
+    visualRadius: 0.558,
+    hitRadius: 1.0161290322580645,
     height: 8.129852980345486
   },
   {
     kind: 'squid3',
     error: 1.7763568394002505e-15,
     radiusError: 0,
+    visualRadius: 0.558,
+    hitRadius: 1.0161290322580645,
     height: 8.129852980345486
   },
   {
     kind: 'squid3',
     error: 0,
     radiusError: 0,
+    visualRadius: 0.558,
+    hitRadius: 1.0161290322580645,
     height: 8.129852980345486
   },
   { kind: 'spider', error: 0, radiusError: 0, height: 3.01785 },
