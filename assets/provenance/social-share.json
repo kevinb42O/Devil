@@ -1,0 +1,11 @@
+{
+  "asset": "public/social/abyss-daggers-share-v1.jpg",
+  "generator": "Built-in image_gen tool",
+  "prompt": "Use case: ads-marketing. Create a spectacular finished social link-preview image for the browser arena survival game ABYSS / DAGGERS, hosted at devilsdescent.vercel.app. Wide landscape aspect ratio 1.90476:1, ideally exactly 1200x630. This is premium dark fantasy videogame key art, visceral, threatening, iconic, almost like a legendary heavy metal album cover rendered with exquisite cinematic painterly detail. Scene: an ancient wet black-stone arena floating above a bottomless infernal void. An enormous horrifying horned skeletal demon skull looms out of swirling smoke in the upper right, cracked ivory bone, deep red glowing eye sockets, long uneven teeth. Swarms of smaller flying skulls descend behind it. In the lower foreground a demonic ember-red cracked stone hand reaches from the left and launches brilliant orange dagger projectiles diagonally toward the horde; a few luminous emerald gems float near the arena. Strong silhouette, deep near-black shadows, molten orange and arterial crimson light, small emerald highlights, sharp bone-white detail. Intense perspective and movement, realistic tactile surfaces, premium art direction, restrained embers, readable focal point. Dramatic infernal light burns behind the skull, smoky blue-black sky at edges. Integrate exceptionally crafted large bone-white gothic serif lettering in the center-left and middle, exact text 'ABYSS' with smaller '/ DAGGERS' directly below; type occupies a substantial portion of the image and must be instantly readable at phone thumbnail size. At bottom center set small but readable condensed uppercase text verbatim: 'ONE ARENA. ONE LIFE. NO MERCY.' No other text, no watermark, no UI, no badges, no logos from other games. The artwork should look terrifying and incredibly cool, with the title dominant and the skull strongly recognizable. Keep title and major focal forms within central 70% of canvas so square crops still make sense; generous safe margins on every side. Fully opaque finished artwork, not a mockup.",
+  "export": {
+    "width": 1200,
+    "height": 630,
+    "format": "JPEG",
+    "quality": 85
+  }
+}
