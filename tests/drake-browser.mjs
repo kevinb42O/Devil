@@ -22,8 +22,13 @@ try{
    const box=new THREE.Box3().setFromObject(model),size=box.getSize(new THREE.Vector3());sizes[kind]={size:size.toArray(),bottom:box.min.y};
    const skull=model.getObjectByName('drake-skull');
    if(!skull||new THREE.Box3().setFromObject(skull).getSize(new THREE.Vector3()).x<3)throw Error('Missing broad replacement skull');
-   const wings=model.getObjectByName('community-dragon'),wingRegion=wings.geometry.getAttribute('creatureRegion');
-   for(const index of wings.geometry.index.array)if(Math.abs(wingRegion.getX(index)-2)>.5)throw Error('Original smiling face remains in wing geometry');
+   if(model.getObjectByName('community-dragon'))throw Error('Retired dragon membrane remains in grounded skull');
+   const anatomy=skull.geometry,regions=new Set(anatomy.getAttribute('creatureRegion').array);
+   if(![0,3,4,5].every(r=>regions.has(r)))throw Error('Missing horn, bone, socket or ember anatomy');
+   for(const attribute of Object.values(anatomy.attributes))if(![...attribute.array].every(Number.isFinite))throw Error('Invalid grounded skull anatomy');
+   if([...anatomy.getAttribute('motionWeight').array].some(w=>w!==0))throw Error('Grounded skull inherits wing deformation');
+   const swarm=renderer.originalEnemies.createSwarmBatch(kind,1);
+   if(swarm.length!==1||swarm[0].geometry.attributes.position.count/3>2400)throw Error('Grounded skull exceeds single-draw geometry budget');
   }
   const world=new World(71,{schedule:false,invulnerable:true});world.player.pos={x:0,y:1.7,z:15};
   const drake=world.spawn('skull4',{x:0,y:8,z:-16});drake.age=12;
@@ -34,7 +39,7 @@ try{
   drake.kind='skull4';renderer.render(world,0,0,0,false,1,null,false,false,idleInput());
   return {sizes,position:drake.pos,floor:enemyFloorHeight(drake,world.time),radius:drake.radius,drawCalls:renderer.renderer.info.render.calls};
  });
- for(const value of Object.values(report.sizes)){assert.ok(Math.abs(Math.max(...value.size)-6)<1e-5,'six-unit model span');assert.ok(value.bottom>=-1.30001,'body and halo stay above the collision floor');}
+ for(const value of Object.values(report.sizes)){assert.ok(Math.abs(Math.max(...value.size)-6)<1e-5,'six-unit model span');assert.ok(Math.abs(value.bottom+1.28)<1e-5,'grounded bone rests just above the collision floor');}
  assert.ok(Math.abs(report.position.y-report.floor-report.radius-.02)<1e-8,'landed floor chase');
  await page.screenshot({path:'artifacts/drake-ground/ground-chase.png'});
  await page.evaluate(()=>{const {renderer,world}=window.drakeCheck;world.enemies[0].vel={x:3,y:0,z:8};renderer.render(world,0,0,0,false,1,null,false,false,{forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});});

@@ -1,0 +1,164 @@
+{
+  "inventory": [
+    {
+      "kind": "skull4",
+      "triangles": 2034,
+      "draws": 1,
+      "swarmTriangles": 2034,
+      "size": [
+        6,
+        2.532762050628662,
+        2.448348879814148
+      ],
+      "bottom": -1.2799999713897705
+    },
+    {
+      "kind": "transmuted4",
+      "triangles": 2034,
+      "draws": 1,
+      "swarmTriangles": 2034,
+      "size": [
+        6,
+        2.532762050628662,
+        2.448348879814148
+      ],
+      "bottom": -1.2799999713897705
+    },
+    {
+      "kind": "spider",
+      "triangles": 16440,
+      "draws": null,
+      "swarmTriangles": null,
+      "size": [
+        17.288305282592773,
+        8.193953590393066,
+        13.560228252410889
+      ],
+      "bottom": -4.161848545074463
+    },
+    {
+      "kind": "spider2",
+      "triangles": 22752,
+      "draws": null,
+      "swarmTriangles": null,
+      "size": [
+        46.46869659423828,
+        21.04161548614502,
+        29.421857643127442
+      ],
+      "bottom": -8.32573413848877
+    },
+    {
+      "kind": "spiderling",
+      "triangles": 3142,
+      "draws": 1,
+      "swarmTriangles": 1099,
+      "size": [
+        1.676189124584198,
+        0.667542427778244,
+        1.205292522907257
+      ],
+      "bottom": -0.4035424292087555
+    },
+    {
+      "kind": "egg",
+      "triangles": 884,
+      "draws": 1,
+      "swarmTriangles": 884,
+      "size": [
+        1.1224743723869324,
+        1.559999942779541,
+        1.2642226219177246
+      ],
+      "bottom": -0.7799999713897705
+    },
+    {
+      "kind": "egg2",
+      "triangles": 1316,
+      "draws": 1,
+      "swarmTriangles": 1316,
+      "size": [
+        1.659241497516632,
+        1.9500000476837158,
+        1.6638246774673462
+      ],
+      "bottom": -0.9750000238418579
+    }
+  ],
+  "targetError": 7.119291619286993e-15,
+  "hatch": [
+    {
+      "kind": "egg",
+      "count": 5,
+      "finite": true,
+      "remaining": 0
+    },
+    {
+      "kind": "egg2",
+      "count": 5,
+      "finite": true,
+      "remaining": 0
+    }
+  ],
+  "hit": [
+    {
+      "kind": "egg",
+      "flagged": 1,
+      "restored": 0,
+      "dead": true
+    },
+    {
+      "kind": "egg2",
+      "flagged": 1,
+      "restored": 0,
+      "dead": true
+    }
+  ],
+  "scenes": [
+    {
+      "name": "storm",
+      "calls": 40,
+      "triangles": 136618,
+      "screenColors": 6321,
+      "camera": [
+        0,
+        1.7,
+        18
+      ],
+      "projectionFinite": true
+    },
+    {
+      "name": "furnace",
+      "calls": 31,
+      "triangles": 95093,
+      "screenColors": 14974,
+      "camera": [
+        0,
+        1.7,
+        18
+      ],
+      "projectionFinite": true
+    },
+    {
+      "name": "depths",
+      "calls": 26,
+      "triangles": 98889,
+      "screenColors": 5234,
+      "camera": [
+        0,
+        1.7,
+        18
+      ],
+      "projectionFinite": true
+    }
+  ],
+  "dense": {
+    "calls": 18,
+    "triangles": 738457,
+    "shown": 628,
+    "medianMs": 8.699999928474426,
+    "p95Ms": 26.899999976158142,
+    "measurement": "Local synchronous render wall time, 1280x800 low quality, GPU synchronization; diagnostic, not a cross-device FPS claim"
+  },
+  "errors": []
+}

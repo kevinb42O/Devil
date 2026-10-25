@@ -1,0 +1,5 @@
+import {writeFile} from 'node:fs/promises';
+import {chromium} from '@playwright/test';
+const items=[['Prelobby reference','reference-actual.png'],['Game before this fix','before-view-fix.png'],['Game after this fix','current-actual.png']];
+await writeFile('artifacts/idle-arm/comparison.html',`<!doctype html><style>*{box-sizing:border-box}body{margin:0;background:#14181e;color:#eceff5;font:16px system-ui}main{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:16px}figure{margin:0}figcaption{padding:0 0 12px;font-weight:600}img{width:100%;display:block;border:1px solid #3c4450}</style><main>${items.map(([label,file])=>`<figure><figcaption>${label}</figcaption><img src="${file}"></figure>`).join('')}</main>`);
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});const page=await browser.newPage({viewport:{width:1440,height:404}});await page.goto('http://127.0.0.1:5173/artifacts/idle-arm/comparison.html');await page.screenshot({path:'artifacts/idle-arm/comparison.png'});await browser.close();

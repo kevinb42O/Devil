@@ -1,0 +1,236 @@
+{
+  "renderedMix": {
+    "peak": 0.9187567234039307,
+    "rms": 0.24423519738187396,
+    "oneShots": 48,
+    "volume": 1
+  },
+  "movement": [
+    {
+      "name": "jump3",
+      "rms": 0.03108799878423465,
+      "peak": 0.09382076561450958
+    },
+    {
+      "name": "jump2",
+      "rms": 0.034545808031555804,
+      "peak": 0.10966597497463226
+    },
+    {
+      "name": "jump1",
+      "rms": 0.02441158606470777,
+      "peak": 0.11708922684192657
+    },
+    {
+      "name": "land",
+      "rms": 0.012427530486416169,
+      "peak": 0.07329445332288742
+    },
+    {
+      "name": "land2",
+      "rms": 0.019071904166951783,
+      "peak": 0.044202424585819244
+    }
+  ],
+  "weaponReference": {
+    "rms": 0.01953340181164059,
+    "peak": 0.12012314051389694
+  },
+  "native": [
+    {
+      "tier": 1,
+      "shotguns": [
+        "shot1"
+      ],
+      "homing": "/assets/audio/original/daggerseek.wav"
+    },
+    {
+      "tier": 2,
+      "shotguns": [
+        "shot2"
+      ],
+      "homing": "/assets/audio/original/daggerseek.wav"
+    },
+    {
+      "tier": 3,
+      "shotguns": [
+        "shot3alt1",
+        "shot3alt2",
+        "shot3alt3",
+        "shot3alt4"
+      ],
+      "homing": "/assets/audio/original/daggerseek.wav"
+    },
+    {
+      "tier": 4,
+      "shotguns": [
+        "shot4alt1",
+        "shot4alt2",
+        "shot4alt3",
+        "shot4alt4",
+        "shot4alt5"
+      ],
+      "homing": "/assets/audio/original/daggerseek.wav"
+    },
+    {
+      "tier": 5,
+      "shotguns": [
+        "shot5",
+        "shot5alt1",
+        "shot5alt2",
+        "shot5alt3",
+        "shot5alt4"
+      ],
+      "homing": "/assets/audio/original/hand-rapid5.wav"
+    },
+    {
+      "tier": 6,
+      "shotguns": [
+        "shot6",
+        "shot6alt1",
+        "shot6alt2",
+        "shot6alt3",
+        "shot6alt4"
+      ],
+      "homing": "/assets/audio/original/hand-rapid6.wav"
+    },
+    {
+      "tier": 7,
+      "shotguns": [
+        "shot7",
+        "shot7alt1",
+        "shot7alt2",
+        "shot7alt3",
+        "shot7alt4"
+      ],
+      "homing": "/assets/audio/original/hand-rapid7.m4a"
+    }
+  ],
+  "enemies": [
+    {
+      "kind": "skull",
+      "death": "killskull4"
+    },
+    {
+      "kind": "skull2",
+      "death": "killsuperskull"
+    },
+    {
+      "kind": "skull3",
+      "death": "killsuperskull2"
+    },
+    {
+      "kind": "skull4",
+      "death": "killsuperskull3"
+    },
+    {
+      "kind": "transmuted1",
+      "death": "killskullblack2"
+    },
+    {
+      "kind": "transmuted2",
+      "death": "killsuperskullblack"
+    },
+    {
+      "kind": "transmuted3",
+      "death": "killsuperskull2black"
+    },
+    {
+      "kind": "transmuted4",
+      "death": "killsuperskull3"
+    },
+    {
+      "kind": "squid",
+      "death": "killminisquid"
+    },
+    {
+      "kind": "squid2",
+      "death": "killsquid"
+    },
+    {
+      "kind": "squid3",
+      "death": "killultrasquid"
+    },
+    {
+      "kind": "spider",
+      "death": "killspider"
+    },
+    {
+      "kind": "spider2",
+      "death": "killgigaspider"
+    },
+    {
+      "kind": "egg",
+      "death": "eggburst"
+    },
+    {
+      "kind": "egg2",
+      "death": "eggburst"
+    },
+    {
+      "kind": "spiderling",
+      "death": "killspiderling2"
+    },
+    {
+      "kind": "centipede",
+      "death": "killcentipede"
+    },
+    {
+      "kind": "gigapede",
+      "death": "killcentipede2"
+    },
+    {
+      "kind": "ghostpede",
+      "death": "ultrapedefall"
+    },
+    {
+      "kind": "leviathan",
+      "death": "killleviathan"
+    },
+    {
+      "kind": "orb",
+      "death": "killeye"
+    },
+    {
+      "kind": "thorn",
+      "death": "killthorn"
+    }
+  ],
+  "contacts": [
+    {
+      "kind": "squid2",
+      "name": "splashgiga"
+    },
+    {
+      "kind": "squid3",
+      "name": "splashgiga4"
+    },
+    {
+      "kind": "spider",
+      "name": "splashgiga3"
+    },
+    {
+      "kind": "spider2",
+      "name": "splashgiga5"
+    },
+    {
+      "kind": "centipede",
+      "name": "splashgiga2"
+    },
+    {
+      "kind": "gigapede",
+      "name": "splashgiga2"
+    },
+    {
+      "kind": "ghostpede",
+      "name": "splashgiga6"
+    }
+  ],
+  "homingContacts": true,
+  "crystalDamage": true,
+  "eggShotAndHatch": true,
+  "towerGush": true,
+  "personalBest": true,
+  "remoteMovement": true,
+  "failed": []
+}

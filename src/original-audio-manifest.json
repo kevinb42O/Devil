@@ -1,0 +1,3284 @@
+{
+  "andrasimpact": {
+    "file": "andrasimpact.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5825850340136056,
+    "role": "effect",
+    "original": "andrasimpact",
+    "nativeLoudness": null
+  },
+  "andrasrise": {
+    "file": "andrasrise.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.0660544217687073,
+    "role": "effect",
+    "original": "andrasrise",
+    "nativeLoudness": null
+  },
+  "burrowcentipede": {
+    "file": "burrowcentipede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.7825850340136054,
+    "role": "effect",
+    "original": "burrowcentipede",
+    "nativeLoudness": 10.0
+  },
+  "chatterandras": {
+    "file": "chatterandras.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "chatterandras",
+    "nativeLoudness": 10.0
+  },
+  "chattercentipede": {
+    "file": "chattercentipede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 20.0,
+    "role": "enemy-chatter",
+    "original": "chattercentipede",
+    "nativeLoudness": 5.0
+  },
+  "chattercentipede2": {
+    "file": "chattercentipede2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 20.0,
+    "role": "enemy-chatter",
+    "original": "chattercentipede2",
+    "nativeLoudness": 10.0
+  },
+  "chattergigaspider": {
+    "file": "chattergigaspider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "chattergigaspider",
+    "nativeLoudness": 20.0
+  },
+  "chatterleviathan": {
+    "file": "chatterleviathan.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "chatterleviathan",
+    "nativeLoudness": 50.0
+  },
+  "chatterminisquid": {
+    "file": "chatterminisquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 28.0,
+    "role": "enemy-chatter",
+    "original": "chatterminisquid",
+    "nativeLoudness": 10.0
+  },
+  "chatterskull": {
+    "file": "chatterskull.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "chatterskull",
+    "nativeLoudness": 2.0
+  },
+  "chatterskull2": {
+    "file": "chatterskull2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "chatterskull2",
+    "nativeLoudness": 5.0
+  },
+  "chatterskull2black": {
+    "file": "chatterskull2black.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 32.0,
+    "role": "enemy-chatter",
+    "original": "chatterskull2black",
+    "nativeLoudness": 10.0
+  },
+  "chatterskull3": {
+    "file": "chatterskull3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 10.0,
+    "role": "enemy-chatter",
+    "original": "chatterskull3",
+    "nativeLoudness": 25.0
+  },
+  "chatterskull3black": {
+    "file": "chatterskull3black.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 28.13485260770975,
+    "role": "enemy-chatter",
+    "original": "chatterskull3black",
+    "nativeLoudness": 20.0
+  },
+  "chatterskull4": {
+    "file": "chatterskull4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 32.0,
+    "role": "enemy-chatter",
+    "original": "chatterskull4",
+    "nativeLoudness": 25.0
+  },
+  "chatterskull4black": {
+    "file": "chatterskull4black.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "chatterskull4black",
+    "nativeLoudness": 30.0
+  },
+  "chatterskullblack": {
+    "file": "chatterskullblack.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 15.5,
+    "role": "enemy-chatter",
+    "original": "chatterskullblack",
+    "nativeLoudness": 5.0
+  },
+  "chatterspider": {
+    "file": "chatterspider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 19.0,
+    "role": "enemy-chatter",
+    "original": "chatterspider",
+    "nativeLoudness": 10.0
+  },
+  "chatterspiderling": {
+    "file": "chatterspiderling.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 14.845374149659865,
+    "role": "enemy-chatter",
+    "original": "chatterspiderling",
+    "nativeLoudness": 4.0
+  },
+  "chattersquid": {
+    "file": "chattersquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 27.965238095238096,
+    "role": "enemy-chatter",
+    "original": "chattersquid",
+    "nativeLoudness": 10.0
+  },
+  "chattersquidsmall": {
+    "file": "chattersquidsmall.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 26.0,
+    "role": "enemy-chatter",
+    "original": "chattersquidsmall",
+    "nativeLoudness": null
+  },
+  "chattersquidultra": {
+    "file": "chattersquidultra.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "chattersquidultra",
+    "nativeLoudness": 15.0
+  },
+  "chatterthorn": {
+    "file": "chatterthorn.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 8.0,
+    "role": "enemy-chatter",
+    "original": "chatterthorn",
+    "nativeLoudness": 10.0
+  },
+  "chatterultrapede": {
+    "file": "chatterultrapede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 14.5,
+    "role": "enemy-chatter",
+    "original": "chatterultrapede",
+    "nativeLoudness": 25.0
+  },
+  "collectgib1": {
+    "file": "collectgib1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.3750113378684807,
+    "role": "pickup",
+    "original": "collectgib1",
+    "nativeLoudness": 1.0
+  },
+  "collectgib2": {
+    "file": "collectgib2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.75,
+    "role": "pickup",
+    "original": "collectgib2",
+    "nativeLoudness": 1.0
+  },
+  "collectgib3": {
+    "file": "collectgib3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.5714285714285714,
+    "role": "pickup",
+    "original": "collectgib3",
+    "nativeLoudness": 1.0
+  },
+  "collectgibbase1": {
+    "file": "collectgibbase1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "pickup",
+    "original": "collectgibbase1",
+    "nativeLoudness": 1.0
+  },
+  "collectgibbase2": {
+    "file": "collectgibbase2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "pickup",
+    "original": "collectgibbase2",
+    "nativeLoudness": 1.0
+  },
+  "collectgibbase3": {
+    "file": "collectgibbase3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "pickup",
+    "original": "collectgibbase3",
+    "nativeLoudness": 1.0
+  },
+  "daggercall": {
+    "file": "daggercall.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 96.03920634920635,
+    "role": "entrance-call",
+    "original": "daggercall",
+    "nativeLoudness": 1.0
+  },
+  "daggercall1bronze": {
+    "file": "daggercall1bronze.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 31.5,
+    "role": "entrance-call",
+    "original": "daggercall1bronze",
+    "nativeLoudness": 1.0
+  },
+  "daggercall2silver": {
+    "file": "daggercall2silver.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 31.5,
+    "role": "entrance-call",
+    "original": "daggercall2silver",
+    "nativeLoudness": 1.0
+  },
+  "daggercall3gold": {
+    "file": "daggercall3gold.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 31.5,
+    "role": "entrance-call",
+    "original": "daggercall3gold",
+    "nativeLoudness": 1.0
+  },
+  "daggercall4devil": {
+    "file": "daggercall4devil.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 31.5,
+    "role": "entrance-call",
+    "original": "daggercall4devil",
+    "nativeLoudness": 1.0
+  },
+  "daggercollect": {
+    "file": "daggercollect.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "entrance-pickup",
+    "original": "daggercollect",
+    "nativeLoudness": 0.2
+  },
+  "daggercollect1bronze": {
+    "file": "daggercollect1bronze.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.916167800453515,
+    "role": "entrance-pickup",
+    "original": "daggercollect1bronze",
+    "nativeLoudness": 1000.0
+  },
+  "daggercollect2silver": {
+    "file": "daggercollect2silver.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.916167800453515,
+    "role": "entrance-pickup",
+    "original": "daggercollect2silver",
+    "nativeLoudness": 1000.0
+  },
+  "daggercollect3gold": {
+    "file": "daggercollect3gold.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.916167800453515,
+    "role": "entrance-pickup",
+    "original": "daggercollect3gold",
+    "nativeLoudness": 1000.0
+  },
+  "daggercollect4devil": {
+    "file": "daggercollect4devil.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 31.831972789115646,
+    "role": "entrance-pickup",
+    "original": "daggercollect4devil",
+    "nativeLoudness": 1000.0
+  },
+  "daggerdivert": {
+    "file": "daggerdivert.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 20.0,
+    "role": "effect",
+    "original": "daggerdivert",
+    "nativeLoudness": null
+  },
+  "daggerdrone": {
+    "file": "daggerdrone.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 8.02498866213152,
+    "role": "homing-flight",
+    "original": "daggerdrone",
+    "nativeLoudness": 3.0
+  },
+  "daggerhit1": {
+    "file": "daggerhit1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.5,
+    "role": "effect",
+    "original": "daggerhit1",
+    "nativeLoudness": 1.4
+  },
+  "daggerseek": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "homing-launch",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "daggersteal1": {
+    "file": "daggersteal1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.3443083900226758,
+    "role": "effect",
+    "original": "daggersteal1",
+    "nativeLoudness": 8.0
+  },
+  "daggersteal2": {
+    "file": "daggersteal2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.110294784580499,
+    "role": "effect",
+    "original": "daggersteal2",
+    "nativeLoudness": 8.0
+  },
+  "daggersteal3": {
+    "file": "daggersteal3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.110294784580499,
+    "role": "effect",
+    "original": "daggersteal3",
+    "nativeLoudness": 8.0
+  },
+  "daggersteal4": {
+    "file": "daggersteal4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.110294784580499,
+    "role": "effect",
+    "original": "daggersteal4",
+    "nativeLoudness": 8.0
+  },
+  "daggersteal5": {
+    "file": "daggersteal5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.110294784580499,
+    "role": "effect",
+    "original": "daggersteal5",
+    "nativeLoudness": 8.0
+  },
+  "damageandras": {
+    "file": "damageandras.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.3130385487528344,
+    "role": "enemy-damage",
+    "original": "damageandras",
+    "nativeLoudness": 10.0
+  },
+  "damagecentipede": {
+    "file": "damagecentipede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.503469387755102,
+    "role": "enemy-damage",
+    "original": "damagecentipede",
+    "nativeLoudness": 10.0
+  },
+  "damagecentipede2": {
+    "file": "damagecentipede2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.146235827664399,
+    "role": "enemy-damage",
+    "original": "damagecentipede2",
+    "nativeLoudness": 10.0
+  },
+  "damagegigaspider": {
+    "file": "damagegigaspider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.7605215419501135,
+    "role": "enemy-damage",
+    "original": "damagegigaspider",
+    "nativeLoudness": 10.0
+  },
+  "damageleviathan": {
+    "file": "damageleviathan.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.313038548752835,
+    "role": "enemy-damage",
+    "original": "damageleviathan",
+    "nativeLoudness": 66.6
+  },
+  "damagespider": {
+    "file": "damagespider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.446575963718821,
+    "role": "enemy-damage",
+    "original": "damagespider",
+    "nativeLoudness": 10.0
+  },
+  "damagesquid": {
+    "file": "damagesquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.9882993197278913,
+    "role": "enemy-damage",
+    "original": "damagesquid",
+    "nativeLoudness": 10.0
+  },
+  "damagesquid2": {
+    "file": "damagesquid2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.9882993197278913,
+    "role": "enemy-damage",
+    "original": "damagesquid2",
+    "nativeLoudness": 25.0
+  },
+  "damagesquid3": {
+    "file": "damagesquid3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.164784580498866,
+    "role": "enemy-damage",
+    "original": "damagesquid3",
+    "nativeLoudness": 30.0
+  },
+  "damagesquid4": {
+    "file": "damagesquid4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.164784580498866,
+    "role": "enemy-damage",
+    "original": "damagesquid4",
+    "nativeLoudness": 35.0
+  },
+  "damagethorn": {
+    "file": "damagethorn.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.028843537414966,
+    "role": "enemy-damage",
+    "original": "damagethorn",
+    "nativeLoudness": 5.0
+  },
+  "damageultrapede": {
+    "file": "damageultrapede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.7402721088435373,
+    "role": "enemy-damage",
+    "original": "damageultrapede",
+    "nativeLoudness": 50.0
+  },
+  "death": {
+    "file": "death.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.75,
+    "role": "player-death",
+    "original": "death",
+    "nativeLoudness": 99.0
+  },
+  "eggbounce": {
+    "file": "eggbounce.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.23478458049886622,
+    "role": "effect",
+    "original": "eggbounce",
+    "nativeLoudness": 30.0
+  },
+  "eggburst": {
+    "file": "eggburst.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "eggburst",
+    "nativeLoudness": 50.0
+  },
+  "eggburst2": {
+    "file": "eggburst2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5654421768707483,
+    "role": "effect",
+    "original": "eggburst2",
+    "nativeLoudness": null
+  },
+  "eggdrone": {
+    "file": "eggdrone.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 8.0,
+    "role": "enemy-chatter",
+    "original": "eggdrone",
+    "nativeLoudness": 1.0
+  },
+  "eggdrone2": {
+    "file": "eggdrone2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "eggdrone2",
+    "nativeLoudness": 2.0
+  },
+  "eyearouse": {
+    "file": "eyearouse.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.9740589569161,
+    "role": "effect",
+    "original": "eyearouse",
+    "nativeLoudness": 40.0
+  },
+  "eyearousedrone": {
+    "file": "eyearousedrone.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 15.0,
+    "role": "enemy-chatter",
+    "original": "eyearousedrone",
+    "nativeLoudness": 98.0
+  },
+  "eyehit": {
+    "file": "eyehit.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.880068027210885,
+    "role": "enemy-damage",
+    "original": "eyehit",
+    "nativeLoudness": 3.0
+  },
+  "eyepacifydrone": {
+    "file": "eyepacifydrone.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 8.0,
+    "role": "effect",
+    "original": "eyepacifydrone",
+    "nativeLoudness": 2.0
+  },
+  "fall": {
+    "file": "fall.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 12.12172335600907,
+    "role": "player-death",
+    "original": "fall",
+    "nativeLoudness": 100.0
+  },
+  "gibcollect": {
+    "file": "gibcollect.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "pickup",
+    "original": "gibcollect",
+    "nativeLoudness": null
+  },
+  "gibcollectmagic": {
+    "file": "gibcollectmagic.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.240907029478458,
+    "role": "pickup",
+    "original": "gibcollectmagic",
+    "nativeLoudness": null
+  },
+  "gibdrone1": {
+    "file": "gibdrone1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 24.0,
+    "role": "gem-chatter",
+    "original": "gibdrone1",
+    "nativeLoudness": 1.0
+  },
+  "gibdrone2": {
+    "file": "gibdrone2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 24.0,
+    "role": "gem-chatter",
+    "original": "gibdrone2",
+    "nativeLoudness": 1.0
+  },
+  "gibdrone3": {
+    "file": "gibdrone3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 24.0,
+    "role": "gem-chatter",
+    "original": "gibdrone3",
+    "nativeLoudness": 1.0
+  },
+  "gigaricochet1": {
+    "file": "gigaricochet1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "gigaricochet1",
+    "nativeLoudness": 1.0
+  },
+  "gigaricochet2": {
+    "file": "gigaricochet2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "gigaricochet2",
+    "nativeLoudness": 1.0
+  },
+  "gigaricochet3": {
+    "file": "gigaricochet3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "gigaricochet3",
+    "nativeLoudness": 1.0
+  },
+  "gigaricochet4": {
+    "file": "gigaricochet4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "gigaricochet4",
+    "nativeLoudness": 1.0
+  },
+  "gigaricochet5": {
+    "file": "gigaricochet5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "gigaricochet5",
+    "nativeLoudness": 1.0
+  },
+  "highscore1": {
+    "file": "highscore1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.021814058956916,
+    "role": "effect",
+    "original": "highscore1",
+    "nativeLoudness": 2.0
+  },
+  "highscore2": {
+    "file": "highscore2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 20.0,
+    "role": "effect",
+    "original": "highscore2",
+    "nativeLoudness": 2.0
+  },
+  "jump1": {
+    "file": "jump1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.082562358276644,
+    "role": "movement",
+    "original": "jump1",
+    "nativeLoudness": 1.0
+  },
+  "jump2": {
+    "file": "jump2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.2629931972789115,
+    "role": "movement",
+    "original": "jump2",
+    "nativeLoudness": 1.0
+  },
+  "jump3": {
+    "file": "jump3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.7366439909297051,
+    "role": "movement",
+    "original": "jump3",
+    "nativeLoudness": 1.0
+  },
+  "killandras": {
+    "file": "killandras.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.3750113378684805,
+    "role": "enemy-death",
+    "original": "killandras",
+    "nativeLoudness": 25.0
+  },
+  "killcentipede": {
+    "file": "killcentipede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.937437641723356,
+    "role": "enemy-death",
+    "original": "killcentipede",
+    "nativeLoudness": 30.0
+  },
+  "killcentipede2": {
+    "file": "killcentipede2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.1250113378684805,
+    "role": "enemy-death",
+    "original": "killcentipede2",
+    "nativeLoudness": 40.0
+  },
+  "killeye": {
+    "file": "killeye.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.0,
+    "role": "enemy-death",
+    "original": "killeye",
+    "nativeLoudness": 40.0
+  },
+  "killgigaspider": {
+    "file": "killgigaspider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 9.48265306122449,
+    "role": "enemy-death",
+    "original": "killgigaspider",
+    "nativeLoudness": 75.0
+  },
+  "killleviathan": {
+    "file": "killleviathan.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 15.39984126984127,
+    "role": "enemy-death",
+    "original": "killleviathan",
+    "nativeLoudness": 66.6
+  },
+  "killminisquid": {
+    "file": "killminisquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.0,
+    "role": "enemy-death",
+    "original": "killminisquid",
+    "nativeLoudness": 50.0
+  },
+  "killskull1": {
+    "file": "killskull1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.9978911564625851,
+    "role": "enemy-death",
+    "original": "killskull1",
+    "nativeLoudness": 3.0
+  },
+  "killskull2": {
+    "file": "killskull2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.9978911564625851,
+    "role": "enemy-death",
+    "original": "killskull2",
+    "nativeLoudness": 3.0
+  },
+  "killskull3": {
+    "file": "killskull3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.9978911564625851,
+    "role": "enemy-death",
+    "original": "killskull3",
+    "nativeLoudness": 3.0
+  },
+  "killskull4": {
+    "file": "killskull4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "enemy-death",
+    "original": "killskull4",
+    "nativeLoudness": 3.0
+  },
+  "killskull5": {
+    "file": "killskull5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "enemy-death",
+    "original": "killskull5",
+    "nativeLoudness": 3.0
+  },
+  "killskullblack1": {
+    "file": "killskullblack1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.7739002267573696,
+    "role": "enemy-death",
+    "original": "killskullblack1",
+    "nativeLoudness": null
+  },
+  "killskullblack2": {
+    "file": "killskullblack2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.75,
+    "role": "enemy-death",
+    "original": "killskullblack2",
+    "nativeLoudness": null
+  },
+  "killskullblack3": {
+    "file": "killskullblack3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.75,
+    "role": "enemy-death",
+    "original": "killskullblack3",
+    "nativeLoudness": null
+  },
+  "killskullblack4": {
+    "file": "killskullblack4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.6250113378684807,
+    "role": "enemy-death",
+    "original": "killskullblack4",
+    "nativeLoudness": null
+  },
+  "killspider": {
+    "file": "killspider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.330408163265306,
+    "role": "enemy-death",
+    "original": "killspider",
+    "nativeLoudness": 55.0
+  },
+  "killspiderling1": {
+    "file": "killspiderling1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.026077097505669,
+    "role": "enemy-death",
+    "original": "killspiderling1",
+    "nativeLoudness": 3.0
+  },
+  "killspiderling2": {
+    "file": "killspiderling2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.25,
+    "role": "enemy-death",
+    "original": "killspiderling2",
+    "nativeLoudness": 3.0
+  },
+  "killspiderling3": {
+    "file": "killspiderling3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.25,
+    "role": "enemy-death",
+    "original": "killspiderling3",
+    "nativeLoudness": 3.0
+  },
+  "killspiderling4": {
+    "file": "killspiderling4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "enemy-death",
+    "original": "killspiderling4",
+    "nativeLoudness": 3.0
+  },
+  "killspiderling5": {
+    "file": "killspiderling5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.25,
+    "role": "enemy-death",
+    "original": "killspiderling5",
+    "nativeLoudness": 3.0
+  },
+  "killsquid": {
+    "file": "killsquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.735011337868481,
+    "role": "enemy-death",
+    "original": "killsquid",
+    "nativeLoudness": 50.0
+  },
+  "killsuperskull": {
+    "file": "killsuperskull.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.8526077097505669,
+    "role": "enemy-death",
+    "original": "killsuperskull",
+    "nativeLoudness": 3.0
+  },
+  "killsuperskull2": {
+    "file": "killsuperskull2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.4201360544217687,
+    "role": "enemy-death",
+    "original": "killsuperskull2",
+    "nativeLoudness": 6.0
+  },
+  "killsuperskull2black": {
+    "file": "killsuperskull2black.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "enemy-death",
+    "original": "killsuperskull2black",
+    "nativeLoudness": 6.0
+  },
+  "killsuperskull3": {
+    "file": "killsuperskull3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.322675736961451,
+    "role": "enemy-death",
+    "original": "killsuperskull3",
+    "nativeLoudness": 10.0
+  },
+  "killsuperskullblack": {
+    "file": "killsuperskullblack.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0869614512471655,
+    "role": "enemy-death",
+    "original": "killsuperskullblack",
+    "nativeLoudness": 6.0
+  },
+  "killthorn": {
+    "file": "killthorn.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.8753061224489795,
+    "role": "enemy-death",
+    "original": "killthorn",
+    "nativeLoudness": 30.0
+  },
+  "killultraskull": {
+    "file": "killultraskull.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.5714285714285716,
+    "role": "enemy-death",
+    "original": "killultraskull",
+    "nativeLoudness": null
+  },
+  "killultrasquid": {
+    "file": "killultrasquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.6250113378684805,
+    "role": "enemy-death",
+    "original": "killultrasquid",
+    "nativeLoudness": 60.0
+  },
+  "land": {
+    "file": "land.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.7209977324263038,
+    "role": "movement",
+    "original": "land",
+    "nativeLoudness": 1.0
+  },
+  "land2": {
+    "file": "land2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.7043310657596372,
+    "role": "movement",
+    "original": "land2",
+    "nativeLoudness": 2.0
+  },
+  "legends": {
+    "file": "legends.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 153.0,
+    "role": "effect",
+    "original": "legends",
+    "nativeLoudness": null
+  },
+  "leveldown": {
+    "file": "leveldown.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.5,
+    "role": "upgrade",
+    "original": "leveldown",
+    "nativeLoudness": 97.0
+  },
+  "levelup2": {
+    "file": "levelup2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.25,
+    "role": "upgrade",
+    "original": "levelup2",
+    "nativeLoudness": 10.0
+  },
+  "levelup3": {
+    "file": "levelup3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.5,
+    "role": "upgrade",
+    "original": "levelup3",
+    "nativeLoudness": 10.0
+  },
+  "levelup4": {
+    "file": "levelup4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 12.25,
+    "role": "upgrade",
+    "original": "levelup4",
+    "nativeLoudness": 10.0
+  },
+  "leviathanbeckon": {
+    "file": "leviathanbeckon.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.497142857142857,
+    "role": "effect",
+    "original": "leviathanbeckon",
+    "nativeLoudness": 200.0
+  },
+  "leviathanbeckon2": {
+    "file": "leviathanbeckon2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.313038548752835,
+    "role": "effect",
+    "original": "leviathanbeckon2",
+    "nativeLoudness": 20.0
+  },
+  "leviathantransmute": {
+    "file": "leviathantransmute.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 11.714013605442178,
+    "role": "effect",
+    "original": "leviathantransmute",
+    "nativeLoudness": null
+  },
+  "magentadetonate1": {
+    "file": "magentadetonate1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "explosion",
+    "original": "magentadetonate1",
+    "nativeLoudness": 10.0
+  },
+  "magentadetonate2": {
+    "file": "magentadetonate2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "explosion",
+    "original": "magentadetonate2",
+    "nativeLoudness": 10.0
+  },
+  "magentadetonate3": {
+    "file": "magentadetonate3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "explosion",
+    "original": "magentadetonate3",
+    "nativeLoudness": 10.0
+  },
+  "magentadetonate4": {
+    "file": "magentadetonate4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "explosion",
+    "original": "magentadetonate4",
+    "nativeLoudness": 10.0
+  },
+  "magentadetonate5": {
+    "file": "magentadetonate5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "explosion",
+    "original": "magentadetonate5",
+    "nativeLoudness": 10.0
+  },
+  "magentadrone": {
+    "file": "magentadrone.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 12.75,
+    "role": "homing-flight",
+    "original": "magentadrone",
+    "nativeLoudness": 30.0
+  },
+  "magentashot": {
+    "file": "magentashot.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.3835374149659865,
+    "role": "homing-launch",
+    "original": "magentashot",
+    "nativeLoudness": 3.0
+  },
+  "magentastuckenemy1": {
+    "file": "magentastuckenemy1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.0039455782312925,
+    "role": "homing-impact",
+    "original": "magentastuckenemy1",
+    "nativeLoudness": null
+  },
+  "magentastuckenemy2": {
+    "file": "magentastuckenemy2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "homing-impact",
+    "original": "magentastuckenemy2",
+    "nativeLoudness": null
+  },
+  "magentastuckenemy3": {
+    "file": "magentastuckenemy3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.75,
+    "role": "homing-impact",
+    "original": "magentastuckenemy3",
+    "nativeLoudness": null
+  },
+  "magentastuckenemy4": {
+    "file": "magentastuckenemy4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "homing-impact",
+    "original": "magentastuckenemy4",
+    "nativeLoudness": null
+  },
+  "magentastuckenemy5": {
+    "file": "magentastuckenemy5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.75,
+    "role": "homing-impact",
+    "original": "magentastuckenemy5",
+    "nativeLoudness": null
+  },
+  "magicpierce1": {
+    "file": "magicpierce1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "homing-impact",
+    "original": "magicpierce1",
+    "nativeLoudness": 9.0
+  },
+  "magicpierce2": {
+    "file": "magicpierce2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "homing-impact",
+    "original": "magicpierce2",
+    "nativeLoudness": 9.0
+  },
+  "magicpierce3": {
+    "file": "magicpierce3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "homing-impact",
+    "original": "magicpierce3",
+    "nativeLoudness": 9.0
+  },
+  "magicpierce4": {
+    "file": "magicpierce4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "homing-impact",
+    "original": "magicpierce4",
+    "nativeLoudness": 9.0
+  },
+  "magicpierce5": {
+    "file": "magicpierce5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "homing-impact",
+    "original": "magicpierce5",
+    "nativeLoudness": 9.0
+  },
+  "magicpulse": {
+    "file": "magicpulse.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.5,
+    "role": "effect",
+    "original": "magicpulse",
+    "nativeLoudness": null
+  },
+  "meat1": {
+    "file": "meat1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meat1",
+    "nativeLoudness": null
+  },
+  "meat10": {
+    "file": "meat10.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.75,
+    "role": "effect",
+    "original": "meat10",
+    "nativeLoudness": null
+  },
+  "meat11": {
+    "file": "meat11.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.75,
+    "role": "effect",
+    "original": "meat11",
+    "nativeLoudness": null
+  },
+  "meat12": {
+    "file": "meat12.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.75,
+    "role": "effect",
+    "original": "meat12",
+    "nativeLoudness": null
+  },
+  "meat13": {
+    "file": "meat13.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meat13",
+    "nativeLoudness": null
+  },
+  "meat2": {
+    "file": "meat2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meat2",
+    "nativeLoudness": null
+  },
+  "meat3": {
+    "file": "meat3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meat3",
+    "nativeLoudness": null
+  },
+  "meat4": {
+    "file": "meat4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meat4",
+    "nativeLoudness": null
+  },
+  "meat5": {
+    "file": "meat5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meat5",
+    "nativeLoudness": null
+  },
+  "meat6": {
+    "file": "meat6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meat6",
+    "nativeLoudness": null
+  },
+  "meat7": {
+    "file": "meat7.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.7130385487528345,
+    "role": "effect",
+    "original": "meat7",
+    "nativeLoudness": null
+  },
+  "meat8": {
+    "file": "meat8.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.75,
+    "role": "effect",
+    "original": "meat8",
+    "nativeLoudness": null
+  },
+  "meat9": {
+    "file": "meat9.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.75,
+    "role": "effect",
+    "original": "meat9",
+    "nativeLoudness": null
+  },
+  "meatbig1": {
+    "file": "meatbig1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatbig1",
+    "nativeLoudness": null
+  },
+  "meatbig2": {
+    "file": "meatbig2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatbig2",
+    "nativeLoudness": null
+  },
+  "meatbig3": {
+    "file": "meatbig3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatbig3",
+    "nativeLoudness": null
+  },
+  "meatbig4": {
+    "file": "meatbig4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatbig4",
+    "nativeLoudness": null
+  },
+  "meatbig5": {
+    "file": "meatbig5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatbig5",
+    "nativeLoudness": null
+  },
+  "meatbig6": {
+    "file": "meatbig6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatbig6",
+    "nativeLoudness": null
+  },
+  "meatmed1": {
+    "file": "meatmed1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatmed1",
+    "nativeLoudness": null
+  },
+  "meatmed2": {
+    "file": "meatmed2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatmed2",
+    "nativeLoudness": null
+  },
+  "meatmed3": {
+    "file": "meatmed3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatmed3",
+    "nativeLoudness": null
+  },
+  "meatmed4": {
+    "file": "meatmed4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatmed4",
+    "nativeLoudness": null
+  },
+  "meatmed5": {
+    "file": "meatmed5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatmed5",
+    "nativeLoudness": null
+  },
+  "meatmed6": {
+    "file": "meatmed6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "meatmed6",
+    "nativeLoudness": null
+  },
+  "menuatmos": {
+    "file": "menuatmos.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 208.69566893424036,
+    "role": "menu-music",
+    "original": "menuatmos",
+    "nativeLoudness": null
+  },
+  "menutheme": {
+    "file": "menutheme.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 108.00045351473923,
+    "role": "menu-music",
+    "original": "menutheme",
+    "nativeLoudness": null
+  },
+  "polarity1e": {
+    "file": "polarity1e.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 50.25,
+    "role": "ambience",
+    "original": "polarity1e",
+    "nativeLoudness": 1.0
+  },
+  "polarity2w": {
+    "file": "polarity2w.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 68.25,
+    "role": "ambience",
+    "original": "polarity2w",
+    "nativeLoudness": 1.0
+  },
+  "polarity3n": {
+    "file": "polarity3n.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 51.56251700680272,
+    "role": "ambience",
+    "original": "polarity3n",
+    "nativeLoudness": 1.0
+  },
+  "polarity4s": {
+    "file": "polarity4s.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 78.0,
+    "role": "ambience",
+    "original": "polarity4s",
+    "nativeLoudness": 1.0
+  },
+  "rapid1": {
+    "file": "rapid1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 8.045963718820861,
+    "role": "weapon-stream",
+    "original": "rapid1",
+    "nativeLoudness": 0.2
+  },
+  "rapid2": {
+    "file": "rapid2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 7.992675736961451,
+    "role": "weapon-stream",
+    "original": "rapid2",
+    "nativeLoudness": 0.3
+  },
+  "rapid3": {
+    "file": "rapid3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 8.0,
+    "role": "weapon-stream",
+    "original": "rapid3",
+    "nativeLoudness": 0.5
+  },
+  "rapid4": {
+    "file": "rapid4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 64.0,
+    "role": "weapon-stream",
+    "original": "rapid4",
+    "nativeLoudness": 1.0
+  },
+  "ricochet1": {
+    "file": "ricochet1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochet1",
+    "nativeLoudness": 1.0
+  },
+  "ricochet2": {
+    "file": "ricochet2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochet2",
+    "nativeLoudness": 1.0
+  },
+  "ricochet3": {
+    "file": "ricochet3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochet3",
+    "nativeLoudness": 1.0
+  },
+  "ricochet4": {
+    "file": "ricochet4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochet4",
+    "nativeLoudness": 1.0
+  },
+  "ricochet5": {
+    "file": "ricochet5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochet5",
+    "nativeLoudness": 1.0
+  },
+  "ricochetmagenta1": {
+    "file": "ricochetmagenta1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmagenta1",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagenta2": {
+    "file": "ricochetmagenta2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmagenta2",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagenta3": {
+    "file": "ricochetmagenta3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmagenta3",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagenta4": {
+    "file": "ricochetmagenta4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmagenta4",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagenta5": {
+    "file": "ricochetmagenta5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmagenta5",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagic1": {
+    "file": "ricochetmagic1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.5,
+    "role": "ricochet",
+    "original": "ricochetmagic1",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagic2": {
+    "file": "ricochetmagic2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.5,
+    "role": "ricochet",
+    "original": "ricochetmagic2",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagic3": {
+    "file": "ricochetmagic3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.5,
+    "role": "ricochet",
+    "original": "ricochetmagic3",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmagic4": {
+    "file": "ricochetmagic4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.5,
+    "role": "ricochet",
+    "original": "ricochetmagic4",
+    "nativeLoudness": 10.0
+  },
+  "ricochetmed1": {
+    "file": "ricochetmed1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmed1",
+    "nativeLoudness": 1.0
+  },
+  "ricochetmed2": {
+    "file": "ricochetmed2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmed2",
+    "nativeLoudness": 1.0
+  },
+  "ricochetmed3": {
+    "file": "ricochetmed3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmed3",
+    "nativeLoudness": 1.0
+  },
+  "ricochetmed4": {
+    "file": "ricochetmed4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmed4",
+    "nativeLoudness": 1.0
+  },
+  "ricochetmed5": {
+    "file": "ricochetmed5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "ricochet",
+    "original": "ricochetmed5",
+    "nativeLoudness": 1.0
+  },
+  "secretsnake": {
+    "file": "secretsnake.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 9.739637188208617,
+    "role": "effect",
+    "original": "secretsnake",
+    "nativeLoudness": null
+  },
+  "secretsnake2": {
+    "file": "secretsnake2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.965215419501134,
+    "role": "effect",
+    "original": "secretsnake2",
+    "nativeLoudness": null
+  },
+  "shard1": {
+    "file": "shard1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "effect",
+    "original": "shard1",
+    "nativeLoudness": 4.0
+  },
+  "shard2": {
+    "file": "shard2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "effect",
+    "original": "shard2",
+    "nativeLoudness": 4.0
+  },
+  "shard3": {
+    "file": "shard3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "effect",
+    "original": "shard3",
+    "nativeLoudness": 4.0
+  },
+  "shard4": {
+    "file": "shard4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.9041496598639456,
+    "role": "effect",
+    "original": "shard4",
+    "nativeLoudness": 4.0
+  },
+  "shard5": {
+    "file": "shard5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "effect",
+    "original": "shard5",
+    "nativeLoudness": 4.0
+  },
+  "shot1": {
+    "file": "shot1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot1",
+    "nativeLoudness": 1.0
+  },
+  "shot2": {
+    "file": "shot2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot2",
+    "nativeLoudness": 1.5
+  },
+  "shot3": {
+    "file": "shot3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot3",
+    "nativeLoudness": 3.0
+  },
+  "shot3alt1": {
+    "file": "shot3alt1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot3alt1",
+    "nativeLoudness": 3.0
+  },
+  "shot3alt2": {
+    "file": "shot3alt2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot3alt2",
+    "nativeLoudness": 3.0
+  },
+  "shot3alt3": {
+    "file": "shot3alt3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot3alt3",
+    "nativeLoudness": 3.0
+  },
+  "shot3alt4": {
+    "file": "shot3alt4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot3alt4",
+    "nativeLoudness": 3.0
+  },
+  "shot4alt1": {
+    "file": "shot4alt1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot4alt1",
+    "nativeLoudness": 5.0
+  },
+  "shot4alt2": {
+    "file": "shot4alt2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot4alt2",
+    "nativeLoudness": 5.0
+  },
+  "shot4alt3": {
+    "file": "shot4alt3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot4alt3",
+    "nativeLoudness": 5.0
+  },
+  "shot4alt4": {
+    "file": "shot4alt4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot4alt4",
+    "nativeLoudness": 5.0
+  },
+  "shot4alt5": {
+    "file": "shot4alt5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.0,
+    "role": "weapon-burst",
+    "original": "shot4alt5",
+    "nativeLoudness": 5.0
+  },
+  "skullaggro": {
+    "file": "skullaggro.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "skullaggro",
+    "nativeLoudness": 30.0
+  },
+  "skullclop1": {
+    "file": "skullclop1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "movement",
+    "original": "skullclop1",
+    "nativeLoudness": 1.0
+  },
+  "skullclop2": {
+    "file": "skullclop2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "movement",
+    "original": "skullclop2",
+    "nativeLoudness": 1.0
+  },
+  "skullclop3": {
+    "file": "skullclop3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "movement",
+    "original": "skullclop3",
+    "nativeLoudness": 1.0
+  },
+  "skullclop4": {
+    "file": "skullclop4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "movement",
+    "original": "skullclop4",
+    "nativeLoudness": 1.0
+  },
+  "skullclop5": {
+    "file": "skullclop5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "movement",
+    "original": "skullclop5",
+    "nativeLoudness": 1.0
+  },
+  "skullclop6": {
+    "file": "skullclop6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "movement",
+    "original": "skullclop6",
+    "nativeLoudness": 1.0
+  },
+  "sorathstone": {
+    "file": "sorathstone.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 291.42478458049885,
+    "role": "effect",
+    "original": "sorathstone",
+    "nativeLoudness": null
+  },
+  "spawnandras": {
+    "file": "spawnandras.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 8.57233560090703,
+    "role": "enemy-spawn",
+    "original": "spawnandras",
+    "nativeLoudness": 45.0
+  },
+  "spawncentipede": {
+    "file": "spawncentipede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.0,
+    "role": "enemy-spawn",
+    "original": "spawncentipede",
+    "nativeLoudness": 35.0
+  },
+  "spawncentipede2": {
+    "file": "spawncentipede2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.58265306122449,
+    "role": "enemy-spawn",
+    "original": "spawncentipede2",
+    "nativeLoudness": 35.0
+  },
+  "spawnegg": {
+    "file": "spawnegg.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.9333560090702948,
+    "role": "enemy-spawn",
+    "original": "spawnegg",
+    "nativeLoudness": 30.0
+  },
+  "spawngigaspider": {
+    "file": "spawngigaspider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 16.0,
+    "role": "enemy-spawn",
+    "original": "spawngigaspider",
+    "nativeLoudness": 70.0
+  },
+  "spawnleviathan": {
+    "file": "spawnleviathan.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 20.70034013605442,
+    "role": "enemy-spawn",
+    "original": "spawnleviathan",
+    "nativeLoudness": 666.0
+  },
+  "spawnminisquid": {
+    "file": "spawnminisquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.0,
+    "role": "enemy-spawn",
+    "original": "spawnminisquid",
+    "nativeLoudness": 60.0
+  },
+  "spawnplayer": {
+    "file": "spawnplayer.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.33,
+    "role": "enemy-spawn",
+    "original": "spawnplayer",
+    "nativeLoudness": 100.0
+  },
+  "spawnskulls": {
+    "file": "spawnskulls.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.217392290249433,
+    "role": "enemy-spawn",
+    "original": "spawnskulls",
+    "nativeLoudness": 25.0
+  },
+  "spawnskulls2": {
+    "file": "spawnskulls2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.75,
+    "role": "enemy-spawn",
+    "original": "spawnskulls2",
+    "nativeLoudness": 25.0
+  },
+  "spawnskulls3": {
+    "file": "spawnskulls3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.3080272108843536,
+    "role": "enemy-spawn",
+    "original": "spawnskulls3",
+    "nativeLoudness": 25.0
+  },
+  "spawnspider": {
+    "file": "spawnspider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 14.22607709750567,
+    "role": "enemy-spawn",
+    "original": "spawnspider",
+    "nativeLoudness": 60.0
+  },
+  "spawnsquid": {
+    "file": "spawnsquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.0,
+    "role": "enemy-spawn",
+    "original": "spawnsquid",
+    "nativeLoudness": 60.0
+  },
+  "spawnultrapede": {
+    "file": "spawnultrapede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 12.190249433106576,
+    "role": "enemy-spawn",
+    "original": "spawnultrapede",
+    "nativeLoudness": 120.0
+  },
+  "spawnultrasquid": {
+    "file": "spawnultrasquid.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.12501133786848,
+    "role": "enemy-spawn",
+    "original": "spawnultrasquid",
+    "nativeLoudness": 70.0
+  },
+  "spidereat1": {
+    "file": "spidereat1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "spidereat1",
+    "nativeLoudness": 60.0
+  },
+  "spidereat2": {
+    "file": "spidereat2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "spidereat2",
+    "nativeLoudness": 60.0
+  },
+  "spidereat3": {
+    "file": "spidereat3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "spidereat3",
+    "nativeLoudness": 60.0
+  },
+  "spidereat4": {
+    "file": "spidereat4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "spidereat4",
+    "nativeLoudness": 60.0
+  },
+  "spidereat5": {
+    "file": "spidereat5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "spidereat5",
+    "nativeLoudness": 60.0
+  },
+  "spidereat6": {
+    "file": "spidereat6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.0,
+    "role": "effect",
+    "original": "spidereat6",
+    "nativeLoudness": 60.0
+  },
+  "splashgiga": {
+    "file": "splashgiga.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.9478231292517005,
+    "role": "death-contact",
+    "original": "splashgiga",
+    "nativeLoudness": 35.0
+  },
+  "splashgiga2": {
+    "file": "splashgiga2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.460861678004536,
+    "role": "death-contact",
+    "original": "splashgiga2",
+    "nativeLoudness": 35.0
+  },
+  "splashgiga3": {
+    "file": "splashgiga3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.356530612244898,
+    "role": "death-contact",
+    "original": "splashgiga3",
+    "nativeLoudness": 35.0
+  },
+  "splashgiga4": {
+    "file": "splashgiga4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 8.452358276643992,
+    "role": "death-contact",
+    "original": "splashgiga4",
+    "nativeLoudness": 40.0
+  },
+  "splashgiga5": {
+    "file": "splashgiga5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.052154195011338,
+    "role": "death-contact",
+    "original": "splashgiga5",
+    "nativeLoudness": 45.0
+  },
+  "splashgiga6": {
+    "file": "splashgiga6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.382585034013606,
+    "role": "death-contact",
+    "original": "splashgiga6",
+    "nativeLoudness": 45.0
+  },
+  "stealgib": {
+    "file": "stealgib.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 27.0,
+    "role": "gem-chatter",
+    "original": "stealgib",
+    "nativeLoudness": 1.0
+  },
+  "stealgib2": {
+    "file": "stealgib2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 27.0,
+    "role": "gem-chatter",
+    "original": "stealgib2",
+    "nativeLoudness": 1.0
+  },
+  "subchattercentipede": {
+    "file": "subchattercentipede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 16.0,
+    "role": "enemy-chatter",
+    "original": "subchattercentipede",
+    "nativeLoudness": 20.0
+  },
+  "thornemerge": {
+    "file": "thornemerge.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.1250113378684805,
+    "role": "enemy-spawn",
+    "original": "thornemerge",
+    "nativeLoudness": 10.0
+  },
+  "thorngib1": {
+    "file": "thorngib1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.5,
+    "role": "effect",
+    "original": "thorngib1",
+    "nativeLoudness": null
+  },
+  "thorngib2": {
+    "file": "thorngib2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.0,
+    "role": "effect",
+    "original": "thorngib2",
+    "nativeLoudness": null
+  },
+  "thorngib3": {
+    "file": "thorngib3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.5,
+    "role": "effect",
+    "original": "thorngib3",
+    "nativeLoudness": null
+  },
+  "thorngib4": {
+    "file": "thorngib4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.5,
+    "role": "effect",
+    "original": "thorngib4",
+    "nativeLoudness": null
+  },
+  "thorngib5": {
+    "file": "thorngib5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.25,
+    "role": "effect",
+    "original": "thorngib5",
+    "nativeLoudness": null
+  },
+  "thorngib6": {
+    "file": "thorngib6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.25,
+    "role": "effect",
+    "original": "thorngib6",
+    "nativeLoudness": null
+  },
+  "uiclick": {
+    "file": "uiclick.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.38258503401360544,
+    "role": "ui",
+    "original": "uiclick",
+    "nativeLoudness": null
+  },
+  "uihover": {
+    "file": "uihover.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.13040816326530613,
+    "role": "ui",
+    "original": "uihover",
+    "nativeLoudness": null
+  },
+  "uislider": {
+    "file": "uislider.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.12501133786848073,
+    "role": "ui",
+    "original": "uislider",
+    "nativeLoudness": null
+  },
+  "ultrapedecrash": {
+    "file": "ultrapedecrash.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 5.75,
+    "role": "effect",
+    "original": "ultrapedecrash",
+    "nativeLoudness": 30.0
+  },
+  "ultrapedeeat": {
+    "file": "ultrapedeeat.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 1.8945124716553288,
+    "role": "effect",
+    "original": "ultrapedeeat",
+    "nativeLoudness": 40.0
+  },
+  "ultrapedefall": {
+    "file": "ultrapedefall.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 4.8750113378684805,
+    "role": "enemy-death",
+    "original": "ultrapedefall",
+    "nativeLoudness": 40.0
+  },
+  "unburrowcentipede": {
+    "file": "unburrowcentipede.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 7.0,
+    "role": "effect",
+    "original": "unburrowcentipede",
+    "nativeLoudness": 10.0
+  },
+  "sorathlogo": {
+    "file": "sorathlogo.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.017392290249433,
+    "role": "effect",
+    "original": "sorathlogo",
+    "nativeLoudness": null
+  },
+  "sorathlogo2": {
+    "file": "sorathlogo2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 10.017392290249433,
+    "role": "effect",
+    "original": "sorathlogo2",
+    "nativeLoudness": null
+  },
+  "daggercall5": {
+    "file": "daggercall5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": true,
+    "duration": 44.75,
+    "role": "entrance-call",
+    "original": "daggercall5",
+    "nativeLoudness": 1.0
+  },
+  "daggercollect5": {
+    "file": "daggercollect5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 16.32888888888889,
+    "role": "entrance-pickup",
+    "original": "daggercollect5",
+    "nativeLoudness": 1000.0
+  },
+  "football-goal": {
+    "file": "highscore1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 6.021814058956916,
+    "role": "courtyard-goal",
+    "original": "highscore1",
+    "nativeLoudness": 2.0
+  },
+  "crew-countdown": {
+    "file": "uiclick.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 0.38258503401360544,
+    "role": "crew-countdown",
+    "original": "uiclick",
+    "nativeLoudness": null
+  },
+  "seekrapid1": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "weapon-homing-stream",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "weapon1-homing": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "homing-launch",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "seekrapid2": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "weapon-homing-stream",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "weapon2-homing": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "homing-launch",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "seekrapid3": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "weapon-homing-stream",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "weapon3-homing": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "homing-launch",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "seekrapid4": {
+    "file": "daggerseek.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 3.5,
+    "role": "weapon-homing-stream",
+    "original": "daggerseek",
+    "nativeLoudness": 4.0
+  },
+  "weapon4-homing": {
+    "file": "magentashot.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level",
+    "loop": false,
+    "duration": 2.3835374149659865,
+    "role": "homing-launch",
+    "original": "magentashot",
+    "nativeLoudness": 3.0
+  },
+  "rapid5": {
+    "file": "hand-rapid5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 8.0,
+    "loop": true,
+    "role": "weapon-stream",
+    "layers": [
+      "rapid1",
+      "rapid2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "seekrapid5": {
+    "file": "hand-rapid5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 8.0,
+    "loop": true,
+    "role": "weapon-homing-stream",
+    "layers": [
+      "rapid1",
+      "rapid2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot5": {
+    "file": "hand-shot5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot1",
+      "shot2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot5alt1": {
+    "file": "hand-shot5alt1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot1",
+      "shot2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot5alt2": {
+    "file": "hand-shot5alt2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot1",
+      "shot2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot5alt3": {
+    "file": "hand-shot5alt3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot1",
+      "shot2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot5alt4": {
+    "file": "hand-shot5alt4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot1",
+      "shot2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "weapon5-homing": {
+    "file": "hand-weapon5-homing.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 3.5,
+    "loop": false,
+    "role": "homing-launch",
+    "layers": [
+      "daggerseek",
+      "daggerseek"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "levelup5": {
+    "file": "hand-levelup5.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 5.25,
+    "loop": false,
+    "role": "upgrade",
+    "layers": [
+      "leveldown",
+      "levelup2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "rapid6": {
+    "file": "hand-rapid6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 8.0,
+    "loop": true,
+    "role": "weapon-stream",
+    "layers": [
+      "rapid2",
+      "rapid3"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "seekrapid6": {
+    "file": "hand-rapid6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 8.0,
+    "loop": true,
+    "role": "weapon-homing-stream",
+    "layers": [
+      "rapid2",
+      "rapid3"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot6": {
+    "file": "hand-shot6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot2",
+      "shot3alt1"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot6alt1": {
+    "file": "hand-shot6alt1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot2",
+      "shot3alt1"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot6alt2": {
+    "file": "hand-shot6alt2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot2",
+      "shot3alt2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot6alt3": {
+    "file": "hand-shot6alt3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot2",
+      "shot3alt3"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot6alt4": {
+    "file": "hand-shot6alt4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot2",
+      "shot3alt4"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "weapon6-homing": {
+    "file": "hand-weapon6-homing.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 3.5,
+    "loop": false,
+    "role": "homing-launch",
+    "layers": [
+      "daggerseek",
+      "daggerseek"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "levelup6": {
+    "file": "hand-levelup6.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 7.5,
+    "loop": false,
+    "role": "upgrade",
+    "layers": [
+      "levelup2",
+      "levelup3"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "rapid7": {
+    "file": "hand-rapid7.m4a",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 64.0,
+    "loop": true,
+    "role": "weapon-stream",
+    "layers": [
+      "rapid3",
+      "rapid4"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "seekrapid7": {
+    "file": "hand-rapid7.m4a",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 64.0,
+    "loop": true,
+    "role": "weapon-homing-stream",
+    "layers": [
+      "rapid3",
+      "rapid4"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot7": {
+    "file": "hand-shot7.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot3alt1",
+      "shot4alt1"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot7alt1": {
+    "file": "hand-shot7alt1.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot3alt1",
+      "shot4alt1"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot7alt2": {
+    "file": "hand-shot7alt2.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot3alt2",
+      "shot4alt2"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot7alt3": {
+    "file": "hand-shot7alt3.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot3alt3",
+      "shot4alt3"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "shot7alt4": {
+    "file": "hand-shot7alt4.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 4.0,
+    "loop": false,
+    "role": "weapon-burst",
+    "layers": [
+      "shot3alt4",
+      "shot4alt4"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "weapon7-homing": {
+    "file": "hand-weapon7-homing.wav",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 3.5,
+    "loop": false,
+    "role": "homing-launch",
+    "layers": [
+      "daggerseek",
+      "magentashot"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  },
+  "levelup7": {
+    "file": "hand-levelup7.m4a",
+    "gain": 1,
+    "gainPolicy": "recorded-level-composite",
+    "duration": 12.25,
+    "loop": false,
+    "role": "upgrade",
+    "layers": [
+      "levelup3",
+      "levelup4"
+    ],
+    "layerWeights": [
+      0.5,
+      0.5
+    ]
+  }
+}

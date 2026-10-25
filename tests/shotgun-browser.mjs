@@ -14,20 +14,45 @@ try{
   window.shotgun={renderer,World,v,idleInput,STEP,T};
  });
  await mkdir('artifacts/shotgun',{recursive:true});const report=[];
- for(const quality of ['low','high'])for(const level of [1,2,3,4]){
+ for(const quality of ['low','high'])for(const level of [1,2,3,4,5,6,7]){
   const result=await page.evaluate(({quality,level})=>{
    const {renderer,World,v,idleInput,STEP}=window.shotgun;renderer.clear();renderer.configure({quality,fov:95});const w=new World(71,{schedule:false,invulnerable:true});w.player.pos=v(0,1.7,10);w.level=level;w.shoot(idleInput(),true,false);
    for(const e of w.effects)renderer.originalWeapon.effect(e,w,0,0);
    for(let i=0;i<7;i++){w.updateProjectiles(STEP);w.time+=STEP;}
    renderer.render(w,0,0,0,false,1);window.shotgun.world=w;
-   const styleIndex=12+(level-1)*2,weapon=renderer.originalWeapon,batches=weapon.daggers.map(b=>b.count),profiles=renderer.projectileLighting.glow.geometry.attributes.shotPellet.array;
+   const styleIndex=12+(Math.min(level,4)-1)*2,weapon=renderer.originalWeapon,batches=weapon.daggers.map(b=>b.count),profiles=renderer.projectileLighting.glow.geometry.attributes.shotPellet.array;
    const colors=renderer.projectileLighting.glow.geometry.attributes.shotColor.array;
+   if(!w.projectiles.every((_,i)=>colors[i*3]===colors[0]&&colors[i*3+1]===colors[1]&&colors[i*3+2]===colors[2]))throw Error('Mixed pellet colours within blast');
    return {quality,level,styleIndex,color:Array.from(colors.slice(0,3)),batches,alive:w.projectiles.length,allPellets:w.projectiles.every(p=>p.kind==='shotgun'),pelletShape:weapon.daggers[styleIndex].geometry.type,glowMatches:w.projectiles.every((_,i)=>profiles[i]===1),calls:renderer.renderer.info.render.calls,lighting:renderer.projectileLighting.diagnostics};
   },{quality,level});
-  assert.equal(result.alive,[10,60,120,180][level-1]);assert.equal(result.batches[result.styleIndex],result.alive);assert.ok(result.allPellets&&result.glowMatches);assert.equal(result.pelletShape,'OctahedronGeometry');assert.equal(result.lighting.drawCalls,1);
+  assert.equal(result.alive,[10,60,120,180,216,252,288][level-1]);assert.equal(result.batches[result.styleIndex],result.alive);assert.ok(result.allPellets&&result.glowMatches);assert.equal(result.pelletShape,'BufferGeometry');assert.equal(result.lighting.drawCalls,2);
   report.push(result);await page.locator('canvas').screenshot({path:`artifacts/shotgun/hand-${level}-${quality}.png`});
  }
- for(const quality of ['low','high'])assert.equal(new Set(report.filter(r=>r.quality===quality).map(r=>JSON.stringify(r.color))).size,4);
+ for(const quality of ['low','high'])assert.equal(new Set(report.filter(r=>r.quality===quality).map(r=>JSON.stringify(r.color))).size,1);
+ const blastColors=await page.evaluate(()=>{
+  const {renderer,World,v,idleInput,STEP}=window.shotgun,w=new World(71,{schedule:false});w.level=7;w.player.pos=v(0,20,0);const colors=[];
+  for(let shot=0;shot<4;shot++){
+   w.projectiles=[];w.effects=[];w.shoot(idleInput(),true,false);
+   for(let tick=0;tick<7;tick++){w.updateProjectiles(STEP);w.time+=STEP;}
+   renderer.render(w,0,0,0,false,1);
+   const glow=renderer.projectileLighting.glow.geometry.attributes.shotColor.array,mesh=renderer.originalWeapon.daggers[18].instanceColor.array;
+   for(let i=0;i<w.projectiles.length*3;i++)if(Math.abs(glow[i]-mesh[i])>1e-6)throw Error('Mesh/glow colour mismatch');
+   colors.push(Array.from(glow.slice(0,3)));
+  }
+  return colors;
+ });
+ assert.equal(new Set(blastColors.map(c=>c.join(','))).size,1);assert.deepEqual(blastColors[0],blastColors[3]);
+ for(const level of [4,5,6,7]){
+  await page.evaluate(level=>{
+   const {renderer,World,v,idleInput,STEP}=window.shotgun;renderer.clear();const w=new World(71,{schedule:false});w.level=level;w.player.pos=v(0,20,0);
+   for(let i=0;i<60;i++){
+    if(i%6===0)w.shoot(idleInput(),false,false);
+    w.updateProjectiles(STEP);w.time+=STEP;
+   }
+   renderer.render(w,0,0,0,false,1);
+  },level);
+  await page.locator('canvas').screenshot({path:`artifacts/shotgun/beam-hand-${level}-high.png`});
+ }
  const alignment=await page.evaluate(()=>{
   const {renderer,World,v,idleInput,T}=window.shotgun,weapon=renderer.originalWeapon;let maxError=0,checks=0;
   for(const aspect of [16/9,9/16])for(const fov of [75,115,145])for(const pitch of [0,1.45,-1.45])for(let level=1;level<=4;level++){
@@ -42,8 +67,8 @@ try{
   const {renderer,World,v,T}=window.shotgun;renderer.clear();const w=new World(1,{schedule:false});const weapon=renderer.originalWeapon;
   const scene=new T.Scene(),camera=new T.PerspectiveCamera(90,1,.05,100),canvas=document.createElement('canvas'),gpu=new T.WebGLRenderer({canvas});gpu.setSize(256,256);gpu.setClearColor(0);
   // Draw the actual game's instanced pellet batches in isolation.
-  const pellet=weapon.daggers[12];scene.add(pellet);const read=(kind)=>{w.projectiles=[{id:1,pos:v(0,0,-.85),previous:v(0,0,-.85),vel:v(0,0,-70),age:.2,homing:false,level:1,kind}];weapon.update(w,0,false,camera,1);gpu.render(scene,camera);const gl=gpu.getContext(),p=new Uint8Array(256*256*4);gl.readPixels(0,0,256,256,gl.RGBA,gl.UNSIGNED_BYTE,p);let red=0,green=0,blue=0,lit=0;for(let i=0;i<p.length;i+=4){red+=p[i];green+=p[i+1];blue+=p[i+2];if(p[i]+p[i+1]+p[i+2]>0)lit++;}return {red,green,blue,lit};};
+  const pellet=weapon.daggers[12];scene.add(pellet);const read=(kind)=>{w.projectiles=[{id:1,pos:v(0,0,-3),previous:v(0,0,-3),vel:v(0,0,-70),age:.2,homing:false,level:1,kind}];weapon.update(w,0,false,camera,1);gpu.render(scene,camera);const gl=gpu.getContext(),p=new Uint8Array(256*256*4);gl.readPixels(0,0,256,256,gl.RGBA,gl.UNSIGNED_BYTE,p);let red=0,green=0,blue=0,lit=0;for(let i=0;i<p.length;i+=4){red+=p[i];green+=p[i+1];blue+=p[i+2];if(p[i]+p[i+1]+p[i+2]>0)lit++;}return {red,green,blue,lit};};
   const actual=read('shotgun');renderer.scene.add(pellet);gpu.dispose();return actual;
  });assert.ok(pixels.lit>20);assert.ok(pixels.red>pixels.green*1.5&&pixels.red>pixels.blue*2,JSON.stringify(pixels));assert.deepEqual(errors,[]);
- await writeFile('artifacts/shotgun/audit.json',JSON.stringify({report,alignment,pixels,errors},null,2)+'\n');console.log('Shotgun browser checks passed',JSON.stringify({report,alignment,pixels}));
+ await writeFile('artifacts/shotgun/audit.json',JSON.stringify({report,blastColors,alignment,pixels,errors},null,2)+'\n');console.log('Shotgun browser checks passed',JSON.stringify({report,alignment,pixels}));
 }finally{await browser.close();}

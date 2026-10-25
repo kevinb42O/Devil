@@ -3,17 +3,18 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {SOUND_NAMES,entranceSounds,handUpgradeSound} from '../src/audio.ts';
-import {REMAKE_AUDIO,remakeAudioUrl} from '../src/remake-audio';
+import {remakeAudioUrl} from '../src/remake-audio';
+import replacementManifest from '../src/remake-audio-manifest.json';
 import {World,STEP,idleInput,v} from '../src/simulation.ts';
 const ROOT=new URL('../public/assets/audio/remake/',import.meta.url);
-test('every replacement cue has an intact licensed file and every runtime cue is covered',()=>{
+test('archived replacement bank stays intact, including the preserved footsteps',()=>{
  const manifest=JSON.parse(readFileSync(new URL('manifest.json',ROOT),'utf8'));
  const available=new Set<string>();
  for(const [name,entry] of Object.entries(manifest) as [string,any][]){
   const data=readFileSync(new URL(entry.file,ROOT));available.add(name);
   assert.equal(data.length,entry.bytes,name);assert.equal(createHash('sha256').update(data).digest('hex'),entry.sha256,name);
-  assert.deepEqual(REMAKE_AUDIO[name],Object.fromEntries(['file','gain','loop','duration','role'].map(k=>[k,entry[k]])));
-  assert.equal(remakeAudioUrl(name),'/assets/audio/remake/'+entry.file);
+  assert.deepEqual((replacementManifest as Record<string,unknown>)[name],Object.fromEntries(['file','gain','loop','duration','role'].map(k=>[k,entry[k]])));
+  if(entry.role==='footstep')assert.equal(remakeAudioUrl(name),'/assets/audio/remake/'+entry.file);
   assert.ok(['CC0-1.0','CC-BY-4.0','Sonniss-GDC-2026-08-27'].includes(entry.license));assert.ok(entry.gain>0&&entry.gain<=1);assert.ok(entry.duration>0);
   if(!entry.file.endsWith('.wav')){assert.equal(data.toString('ascii',4,8),'ftyp');continue;}
   assert.equal(data.toString('ascii',0,4),'RIFF');assert.equal(data.toString('ascii',8,12),'WAVE');
@@ -25,9 +26,9 @@ test('every replacement cue has an intact licensed file and every runtime cue is
   }
   assert.ok(format&&samples,name);
  }
- for(const name of SOUND_NAMES)assert.ok(available.has(name),'missing runtime recording '+name);
+ for(const name of SOUND_NAMES.filter(name=>name.startsWith('footstep-')))assert.ok(available.has(name),'missing retained footstep '+name);
  for(const name of ['crew-countdown','crew-release-laugh','football-goal','uihover','uiclick','uislider','highscore1','menutheme','menuatmos'])assert.ok(available.has(name));
- assert.ok(Object.keys(manifest).length>=SOUND_NAMES.length);
+ assert.equal(Object.keys(manifest).length,Object.keys(replacementManifest).length);
  const sources=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/sources.json',import.meta.url),'utf8'));
  const recipes=JSON.parse(readFileSync(new URL('../assets/provenance/remake/audio/recipes.json',import.meta.url),'utf8'));
  const files=new Set(sources.map((source:any)=>source.file));
@@ -37,9 +38,9 @@ test('every replacement cue has an intact licensed file and every runtime cue is
 test('audio stream state follows release, primary/homing priority and death at every hand',()=>{
  for(let level=1;level<=4;level++){
   const w=new World(7,{schedule:false});w.level=level;w.reserve=100;
-  for(let i=0;i<30;i++)w.step({...idleInput(),fire:true});assert.equal(w.weaponAudio.primary,true);
+  for(let i=0;i<40;i++)w.step({...idleInput(),fire:true});assert.equal(w.weaponAudio.primary,true);
   w.step(idleInput());assert.equal(w.weaponAudio.primary,false);
-  if(level>=2){for(let i=0;i<30;i++)w.step({...idleInput(),fire:true});w.step({...idleInput(),fire:true,homing:true});assert.equal(w.weaponAudio.primary,false);assert.equal(w.weaponAudio.homing,true);}
+  if(level>=2){for(let i=0;i<40;i++)w.step({...idleInput(),fire:true});w.step({...idleInput(),fire:true,homing:true});assert.equal(w.weaponAudio.primary,false);assert.equal(w.weaponAudio.homing,true);}
   w.die('skull');assert.deepEqual(w.weaponAudio,{primary:false,homing:false});
  }
 });
@@ -121,9 +122,9 @@ test('centipede emergence cues occur at the ground crossing on each cycle',()=>{
  assert.ok(cues.every(c=>c.pos.y>=0&&c.pos.y<.3));assert.notDeepEqual(cues[0].pos,cues[1].pos);
 });
 
-test('entrance replacement cues follow the existing best-time tiers',()=>{
+test('entrance call follows best-time tiers while every grab uses the native pickup',()=>{
  const thresholds=[0,60,120,250,500,1000];const suffixes=['','1bronze','2silver','3gold','4devil','5'];
- thresholds.forEach((time,i)=>{assert.deepEqual(entranceSounds(time),{call:'daggercall'+suffixes[i],collect:'daggercollect'+suffixes[i]});if(i)assert.equal(entranceSounds(time-.01).collect,'daggercollect'+suffixes[i-1]);});
+ thresholds.forEach((time,i)=>{assert.deepEqual(entranceSounds(time),{call:'daggercall'+suffixes[i],collect:'daggercollect'});if(i)assert.equal(entranceSounds(time-.01).call,'daggercall'+suffixes[i-1]);});
 });
 test('every hand upgrade has its own long animal/creature performance',()=>{
  const manifest=JSON.parse(readFileSync(new URL('manifest.json',ROOT),'utf8'));

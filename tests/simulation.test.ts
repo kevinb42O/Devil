@@ -13,7 +13,7 @@ test('identical seeds and inputs produce identical simulation results',()=>{
 test('opening summoner spawns at 3s and releases the complete reference-timed batch',()=>{
   const w=new World();run(w,359);assert.equal(w.enemies.length,0);w.step(idleInput());assert.equal(w.enemies[0].kind,'squid');run(w,405);assert.equal(w.enemies.filter(e=>e.kind==='skull').length,10);assert.equal(w.enemies.filter(e=>e.kind==='skull2').length,1);
 });
-test('tap releases ten physical daggers; holding uses stream without a release burst',()=>{
+test('tap releases ten physical daggers; holding uses a clean stream without a release burst',()=>{
   const tap=new World();run(tap,5,{...idleInput(),fire:true});tap.step(idleInput());assert.equal(tap.stats.shots,10);assert.equal(tap.projectiles.length,10);
   const hold=new World();run(hold,40,{...idleInput(),fire:true});const before=hold.stats.shots;hold.step(idleInput());assert.equal(hold.stats.shots,before);assert.ok(before>0&&before<10);
 });

@@ -1,25 +1,7 @@
 /** Parallel sends preserve the attack and HRTF bearing of the direct sound.
  * Continuous layers get less room than isolated, expressive events. */
 export function arenaReverbSend(role:string):{body:number;tail:number}{
- switch(role){
-  case 'footstep':return {body:.035,tail:0};
-  case 'movement':return {body:.2,tail:.025};
-  case 'armor-impact':case 'enemy-damage':case 'ricochet':return {body:.16,tail:.055};
-  case 'crystal-hit':return {body:.07,tail:.015};
-  case 'weapon-stream':case 'weapon-homing-stream':return {body:.055,tail:.012};
-  case 'weapon-start':return {body:.1,tail:.025};
-  case 'weapon-release':case 'weapon-burst':case 'homing-launch':return {body:.18,tail:.12};
-  case 'enemy-chatter':return {body:.045,tail:.015};
-  case 'enemy-feed':return {body:.12,tail:.095};
-  case 'enemy-spawn':case 'enemy-burrow':return {body:.2,tail:.24};
-  case 'enemy-death':return {body:.15,tail:.13};
-  case 'explosion':case 'player-death':case 'upgrade':return {body:.18,tail:.25};
-  case 'pickup':return {body:.09,tail:.09};
-  case 'crystal-break':return {body:.09,tail:.055};
-  case 'entrance-pickup':case 'arrival-laugh':return {body:.16,tail:.2};
-  case 'gem-chatter':case 'homing-flight':case 'ambience':return {body:.045,tail:.035};
-  default:return {body:0,tail:0};
- }
+ return role==='footstep'?{body:.035,tail:0}:{body:0,tail:0};
 }
 
 /** Fixed stereo diffuse response with staggered early reflections. A smooth

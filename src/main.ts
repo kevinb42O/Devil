@@ -111,7 +111,7 @@ let soloScoreTicket:Promise<string|null>=Promise.resolve(null);const runScoreTic
 let recorder:RunRecorder|null=null,replay:ReplayPlayer|null=null,lastRun:RecordedRun|null=null;let practice=false,historyOpen=false,replayPaused=false;
 let friends:FriendsSession|null=null;let friendsOpen=false;const lobbyBrowser=new LobbyBrowser();let lobbyStarted=false;let lobbyCrewCount=1;let receivedEpoch=-1;
 const hostClock=new CrewClock();let hostClockWorker:Worker|null=null;
-const buttonEdges:{button:'fire'|'homing'|'jump';held:boolean}[]=[];let sampledFire=false,sampledHoming=false,sampledJump=false;let capturingMouse=false,captureTicket=0;
+const buttonEdges:{button:'fire'|'fireLeft'|'fireRight'|'homing'|'jump';held:boolean}[]=[];let sampledFire=false,sampledHoming=false,sampledJump=false,sampledLeft=false,sampledRight=false;let capturingMouse=false,captureTicket=0;
 let previousPad:ReturnType<typeof controllerState>|null=null;let activePadIndex:number|null=null;let padFire=false,padHoming=false,padJump=false,padLeftShoulder=false,padRightShoulder=false;
 let waitingForController=false;
 let movement={forward:0,strafe:0,jump:false},controllerDown=false,controllerFast=false;
@@ -142,7 +142,15 @@ function syncSpectator(){
 }
 const courtyardUI=new CourtyardUI({room:()=>{paused();friendsOpen=true;showPanels();roster();}});
 function sampleEmotes(active:boolean){const emotes=courtyardEmotes(keys,settings.controlScheme,padLeftShoulder,padRightShoulder);return {leftArm:active&&!spectator.position&&(emotes.leftArm||settings.controlScheme==='mobile'&&(entrance?courtyardUI.arms.leftArm:combatGestures.arms.leftArm)),rightArm:active&&!spectator.position&&(emotes.rightArm||settings.controlScheme==='mobile'&&(entrance?courtyardUI.arms.rightArm:combatGestures.arms.rightArm))};}
-function clearInput() {soloUpgradeSlowdown.clear();sound.setPlaybackRate(1);courtyardUI.resetSelect();combatGestures.reset();mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
+function applyButtonEdge(edge:(typeof buttonEdges)[number]){
+ if(edge.button==='fireLeft')sampledLeft=edge.held;
+ else if(edge.button==='fireRight')sampledRight=edge.held;
+ else if(edge.button==='fire')sampledFire=edge.held;
+ else if(edge.button==='homing')sampledHoming=edge.held;
+ else sampledJump=edge.held;
+ if(edge.button==='fireLeft'||edge.button==='fireRight')sampledFire=sampledLeft||sampledRight;
+}
+function clearInput() {soloUpgradeSlowdown.clear();sound.setPlaybackRate(1);courtyardUI.resetSelect();combatGestures.reset();mobileControls.reset();buttonEdges.length=0;sampledFire=false;sampledLeft=false;sampledRight=false;sampledHoming=false;sampledJump=false;padFire=false;padHoming=false;padJump=false;padLeftShoulder=false;padRightShoulder=false;blockedPadJump=true;blockedPadFire=true;blockedPadHoming=true;movement={forward:0,strafe:0,jump:false};controllerDown=false;controllerFast=false;keys.clear();pressedKeys.clear();input=idleInput();input.yaw=yaw;input.pitch=pitch;}
 function notice(text:string,seconds=2.5) {noticeText=text;noticeUntil=performance.now()+seconds*1000;}
 async function captureMouse() {
   if(settings.controlScheme==='mobile'){void enterMobileFullscreen();return;}
@@ -294,8 +302,8 @@ function advanceHost(now:number){
  hostClock.advance(now,()=>{
   const active=!document.hidden&&mode==='playing'&&!controlMenuRoot()&&!spectator.position;
   const move=settings.controlScheme==='qwerty'||settings.controlScheme==='azerty'?keyboardMovement(keys,settings.controlScheme):movement;
-  if(active&&Date.now()>=friends!.startAt){const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}}
-  input={forward:active?move.forward:0,strafe:active?move.strafe:0,yaw,pitch,jump:active&&sampledJump,fire:active&&sampledFire,homing:active&&sampledHoming,...sampleEmotes(active)};
+  if(active&&Date.now()>=friends!.startAt){const edge=buttonEdges.shift();if(edge)applyButtonEdge(edge);}
+  input={forward:active?move.forward:0,strafe:active?move.strafe:0,yaw,pitch,jump:active&&sampledJump,fireLeft:active&&sampledLeft,fireRight:active&&sampledRight,fire:active&&sampledFire,homing:active&&sampledHoming,...sampleEmotes(active)};
   friends!.step({...input});syncSpectator();
  });
  // Network effects have already been captured by FriendsSession.step. Avoid
@@ -332,7 +340,7 @@ function frame(now:number) {
   if(!friends&&mode==='playing'&&world&&!controlMenuRoot()) {
     Object.assign(input,sampleEmotes(true));input.forward=movement.forward;input.strafe=movement.strafe;input.jump=movement.jump;input.yaw=yaw;input.pitch=pitch;
     accumulator+=soloSimulationElapsed;let steps=0;
-    while(accumulator>=STEP&&world.state==='playing'&&(entrance||Date.now()>=soloStartAt)&&steps++<12) {const edge=buttonEdges.shift();if(edge){if(edge.button==='fire')sampledFire=edge.held;else if(edge.button==='homing')sampledHoming=edge.held;else sampledJump=edge.held;}input.fire=sampledFire;input.homing=sampledHoming;input.jump=sampledJump;if(entrance){world.stepEntrance(input);if(touchesEntranceSeal(world.player.pos,world.previousPlayerPosition))enterArena();}else{recorder?.record(input);world.step(input);deathHistory.capture(world,yaw,pitch,false,input.fire||input.homing);}accumulator-=STEP;}
+    while(accumulator>=STEP&&world.state==='playing'&&(entrance||Date.now()>=soloStartAt)&&steps++<12) {const edge=buttonEdges.shift();if(edge)applyButtonEdge(edge);input.fireLeft=sampledLeft;input.fireRight=sampledRight;input.fire=sampledFire;input.homing=sampledHoming;input.jump=sampledJump;if(entrance){world.stepEntrance(input);if(touchesEntranceSeal(world.player.pos,world.previousPlayerPosition))enterArena();}else{recorder?.record(input);world.step(input);deathHistory.capture(world,yaw,pitch,false,input.fire||input.homing);}accumulator-=STEP;}
     if(soloStartAt&&!entrance){
      crewArrival.update(-soloArrivalEpoch,soloStartAt,Date.now(),1);
      if(Date.now()<soloStartAt)accumulator=0;
@@ -340,7 +348,7 @@ function frame(now:number) {
     sound.listener(world.player.pos,yaw,pitch);
     for(const effect of world.effects) {renderer.effect(effect,world,yaw,pitch);sound.play(effect,world);if(effect.kind==='upgrade'){soloUpgradeSlowdown.begin();notice(`ATTUNEMENT ${HAND_LABELS[(effect.amount||1)-1]} · ${effect.amount===(world.homingUnlockGems===10?2:3)?'HOMING UNLOCKED':'POWER RISES'}`,3);}if(effect.kind==='death'){$('flash').style.opacity='1';setTimeout(()=>$('flash').style.opacity='0',170);}}
     world.effects=[];
-    if(entrance){sound.updateFootsteps(world);sound.entrance(best,ENTRANCE_SEAL);}else sound.update(world);
+    if(entrance){sound.updateFootsteps(world);sound.entrance(best,ENTRANCE_SEAL);}else sound.update(world,{personalBest:!practice&&!friends?best:undefined});
     if(world.state==='dead')death();
   }
   if(friends&&world){
@@ -348,15 +356,16 @@ function frame(now:number) {
     const cameraActive=mode==='playing'&&!controlMenuRoot();
     if(cameraActive&&spectator.position)spectator.move(dt,yaw,pitch,movement.forward,movement.strafe,(movement.jump||keys.has('e')?1:0)-(controllerDown||keys.has('ControlLeft')||keys.has('ControlRight')||(settings.controlScheme==='qwerty'&&keys.has('q'))?1:0),controllerFast||keys.has('ShiftLeft')||keys.has('ShiftRight'));
     const active=cameraActive&&!spectator.position;input.forward=active?movement.forward:0;input.strafe=active?movement.strafe:0;input.jump=active&&movement.jump;input.yaw=yaw;input.pitch=pitch;
-    input.fire=active&&sampledFire;input.homing=active&&sampledHoming;Object.assign(input,sampleEmotes(active));
+    input.fireLeft=active&&sampledLeft;input.fireRight=active&&sampledRight;input.fire=active&&sampledFire;input.homing=active&&sampledHoming;Object.assign(input,sampleEmotes(active));
     if(friends.role==='host')advanceHost(now);
     else {
      accumulator+=Math.min(.1,elapsed);let crewSteps=0;
      while(accumulator>=STEP&&world.state==='playing'&&crewSteps++<12){
       const edge=active&&Date.now()>=friends.startAt?buttonEdges[0]:undefined;
-      const fire=edge?.button==='fire'?edge.held:sampledFire,homing=edge?.button==='homing'?edge.held:sampledHoming,jump=edge?.button==='jump'?edge.held:sampledJump;
-      input.fire=active&&fire;input.homing=active&&homing;input.jump=active&&jump;
-      if(active&&friends.predict(world,{...input})&&edge){buttonEdges.shift();sampledFire=fire;sampledHoming=homing;sampledJump=jump;}
+      const left=edge?.button==='fireLeft'?edge.held:sampledLeft,right=edge?.button==='fireRight'?edge.held:sampledRight;
+      const fire=edge?.button==='fire'?edge.held:edge?.button==='fireLeft'||edge?.button==='fireRight'?left||right:sampledFire,homing=edge?.button==='homing'?edge.held:sampledHoming,jump=edge?.button==='jump'?edge.held:sampledJump;
+      input.fireLeft=active&&left;input.fireRight=active&&right;input.fire=active&&fire;input.homing=active&&homing;input.jump=active&&jump;
+      if(active&&friends.predict(world,{...input})&&edge){buttonEdges.shift();applyButtonEdge(edge);}
       syncSpectator();accumulator-=STEP;
      }
     }
@@ -618,8 +627,8 @@ function updateControlHints(){
  $('controller-settings').hidden=!controller;$('controller-status').hidden=!controller;$('mouse-sensitivity-setting').hidden=controller||mobile;$('mobile-sensitivity-setting').hidden=!mobile;$('control-bindings').hidden=mobile;
  $('control-hint').textContent=mobile?'MOBILE':controller?'CONTROLLER':settings.controlScheme==='azerty'?'ZQSD + MOUSE':'WASD + MOUSE';
  const rows=controller?[
-  ['LEFT STICK','Move'],['RIGHT STICK','Look'],['A / CROSS','Jump · time each hop'],['SELECT / SHARE / VIEW','Tap ready · hold 5s to open pit · courtyard'],['RT / R2','Tap burst / hold stream'],['LT / L2','Homing · attunement II'],['LB / L1 · RB / R1','Hold left / right arm up'],['LT / L2 · RT / R2','Left / right foot kick · courtyard only'],['START / OPTIONS','Pause / resume'],['D-PAD · A / CROSS','Navigate menus · select'],['B / CIRCLE','Back']
- ]:[['1 2 3 4 5 6 7','Test weapons · makes run unranked'],[settings.controlScheme==='azerty'?'Z Q S D':'W A S D','Move'],['MOUSE','Look'],['SPACE','Jump · time each hop'],['LMB','Tap burst / hold stream'],['RMB','Homing · attunement II'],[settings.controlScheme==='azerty'?'A · E':'Q · E','Hold left / right arm up'],['ESC','Pause'],['R','Retry after death']];
+  ['LEFT STICK','Move'],['RIGHT STICK','Look'],['A / CROSS','Jump · time each hop'],['SELECT / SHARE / VIEW','Tap ready · hold 5s to open pit · courtyard'],['RT / R2','Tap blast / hold beam'],['LT / L2','Homing · attunement II'],['LB / L1 · RB / R1','Hold left / right arm up'],['LT / L2 · RT / R2','Left / right foot kick · courtyard only'],['START / OPTIONS','Pause / resume'],['D-PAD · A / CROSS','Navigate menus · select'],['B / CIRCLE','Back']
+ ]:[['1 2 3 4 5 6 7','Test weapons · makes run unranked'],[settings.controlScheme==='azerty'?'Z Q S D':'W A S D','Move'],['MOUSE','Look'],['SPACE','Jump · time each hop'],['LMB','Left hand · Tap blast / hold beam'],['RMB','Right hand · Tap blast / hold beam'],['MMB','Homing · press scroll wheel · attunement II'],[settings.controlScheme==='azerty'?'A · E':'Q · E','Hold left / right arm up'],['ESC','Pause'],['R','Retry after death']];
  const list=$('control-bindings');list.replaceChildren();for(const [binding,action] of rows){const row=document.createElement('div'),key=document.createElement('kbd'),text=document.createElement('span');key.textContent=binding;text.textContent=action;row.append(key,text);list.append(row);}
 }
 function controlMenuRoot():HTMLElement|null {
@@ -826,7 +835,7 @@ function setupFriends(){
 function init() {
   setupPwa();
   setupFullscreenMenu($<HTMLButtonElement>('fullscreen-toggle'),$('fullscreen-label'),$('fullscreen-status'));
-  try {renderer=new GameRenderer($<HTMLCanvasElement>('game'),settings);}catch(error){$('error').hidden=false;$('error').textContent=`The arena could not initialize WebGL2. Enable hardware acceleration and use a current browser. ${error instanceof Error?error.message:''}`;return;}
+  try {renderer=new GameRenderer($<HTMLCanvasElement>('game'),settings);renderer.onDeathContact=(kind,pos)=>sound.deathContact(kind,pos);}catch(error){$('error').hidden=false;$('error').textContent=`The arena could not initialize WebGL2. Enable hardware acceleration and use a current browser. ${error instanceof Error?error.message:''}`;return;}
   crewViewer=new CrewReplayViewer(renderer,sound,()=>settings.controlScheme,()=>settings.controlScheme==='mobile'?settings.mobileSensitivity:settings.sensitivity);setupCrewReplayActions();
   updateBest();showPanels();setupSettings();
   document.addEventListener('pointerdown',()=>music.unlock(),{capture:true});
@@ -862,11 +871,12 @@ function init() {
      if(friends.pencilAction())return;
     }
    }
-   if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position||document.pointerLockElement!==$('game'))return;if(e.button===0)buttonEdges.push({button:'fire',held:true});if(e.button===2){buttonEdges.push({button:'homing',held:true});if(world&&!entrance&&!world.homingUnlocked)notice(`HOMING AWAKENS AT ${world.homingUnlockGems} GEMS`,1.5);}});
-  document.addEventListener('mouseup',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position)return;if(e.button===0)buttonEdges.push({button:'fire',held:false});if(e.button===2)buttonEdges.push({button:'homing',held:false});});
+   if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position||document.pointerLockElement!==$('game'))return;if(e.button===0)buttonEdges.push({button:entrance?'fire':'fireLeft',held:true});if(e.button===2&&!entrance)buttonEdges.push({button:'fireRight',held:true});if(e.button===1||e.button===2&&entrance){e.preventDefault();buttonEdges.push({button:'homing',held:true});if(world&&!entrance&&!world.homingUnlocked)notice(`HOMING AWAKENS AT ${world.homingUnlockGems} GEMS`,1.5);}});
+  document.addEventListener('mouseup',e=>{if(settings.controlScheme==='controller'||settings.controlScheme==='mobile'||mode!=='playing'||spectator.position)return;if(e.button===0)buttonEdges.push({button:entrance?'fire':'fireLeft',held:false});if(e.button===2&&!entrance)buttonEdges.push({button:'fireRight',held:false});if(e.button===1||e.button===2&&entrance){e.preventDefault();buttonEdges.push({button:'homing',held:false});}});
   $('game').addEventListener('click',()=>{if(friends&&mode==='playing'&&!controlMenuRoot()&&settings.controlScheme!=='controller'&&settings.controlScheme!=='mobile'&&document.pointerLockElement!==$('game'))void captureMouse();});
   setupMobileControls();
   $('game').addEventListener('contextmenu',e=>e.preventDefault());
+  $('game').addEventListener('auxclick',e=>{if(e.button===1)e.preventDefault();});
   // Read-only diagnostic surface for development smoke tests and frame profiling.
   if(import.meta.env.DEV||import.meta.env.VITE_TRAINER_ENABLED==='true'){
    // Explicit production opt-in for the companion trainer. Keeping its helpers here means

@@ -24,13 +24,13 @@ test('dense swarm preserves immediate danger, rare types and all eight bearings'
  const rare=w.spawn('spider2',v(-24,1,0));rare.age=20;
  const selected=selectEnemyAudio(w.enemies,listener,()=>true);
  assert.equal(selected.length,28);assert(selected.some(c=>c.enemy===urgent));assert(selected.some(c=>c.enemy===rare));assert.equal(new Set(selected.map(c=>c.sector)).size,8);
- assert.equal(selected.find(c=>c.enemy===urgent)!.scale,1.05);assert(selected.filter(c=>c.enemy.kind==='skull'&&c.enemy!==urgent).every(c=>c.scale<1));assert(selected.find(c=>c.enemy===rare)!.scale>1);
+ assert(selected.every(c=>c.scale===1),'selection never rebalances original recordings');
 });
 test('nearest living segment anchors long enemies; dead, inactive and out of range sources are excluded',()=>{
  const w=new World(1,{schedule:false}),e=w.spawn('gigapede',v(40,2,0));e.segments=[{hp:10,pos:v(-2,1,0)},{hp:0,pos:v(0,0,0)}];
  assert.deepEqual(enemyAudioPosition(e,v()),v(-2,1,0));
  const dead=w.spawn('skull',v(1,0,0));dead.hp=0;
- w.spawn('skull',v(100,0,0));const hidden=w.spawn('spider',v(3,0,0));
+ w.spawn('skull',v(10000,0,0));const hidden=w.spawn('spider',v(3,0,0));
  assert.deepEqual(selectEnemyAudio(w.enemies,v(),x=>x!==hidden).map(c=>c.enemy.id),[e.id]);
 });
 test('continuity prevents marginal voice churn but cannot displace immediate danger',()=>{
@@ -40,12 +40,12 @@ test('continuity prevents marginal voice churn but cannot displace immediate dan
  assert(result.filter(c=>retained.has(c.enemy.id)).length>=19);
 });
 
-test('same-kind swarm chatter keeps a constant power budget',()=>{
+test('same-kind selection preserves each original recording level',()=>{
  const w=new World(1,{schedule:false});
  for(let i=0;i<28;i++)w.spawn('skull',v(3,1,0));
  const selected=selectEnemyAudio(w.enemies,v(),()=>true);
  const power=selected.reduce((sum,c)=>sum+c.scale*c.scale,0);
- assert.ok(Math.abs(power-1.44)<1e-9,'adding identical voices must not multiply the noise floor');
+ assert.equal(power,selected.length,'no inherited crowd attenuation');
 });
 
  test('distant same-kind voices cannot erase an approaching enemy bearing',()=>{
@@ -54,6 +54,6 @@ test('same-kind swarm chatter keeps a constant power budget',()=>{
  for(let i=0;i<27;i++)w.spawn('skull',v(20,1,i*.02));
  const selected=selectEnemyAudio(w.enemies,v(),()=>true),near=selected.find(c=>c.enemy===urgent)!;
  assert(near.scale/alone>.85,'nearest cue loses less than 1.2 dB in a full swarm');
- assert(selected.filter(c=>c.enemy!==urgent).every(c=>c.scale<near.scale/5));
- assert(Math.abs(selected.reduce((sum,c)=>sum+c.scale*c.scale,0)-1.44)<1e-9);
+ assert(selected.every(c=>c.scale===near.scale));
+ assert.equal(selected.reduce((sum,c)=>sum+c.scale*c.scale,0),selected.length);
  });

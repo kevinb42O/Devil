@@ -1,0 +1,23 @@
+{
+  "checks": [
+    {
+      "kind": "squid",
+      "poses": 64,
+      "minimumGap": 0.29937064447705314,
+      "maximumGap": 0.3929083042465042
+    },
+    {
+      "kind": "squid2",
+      "poses": 64,
+      "minimumGap": 0.2987910947415482,
+      "maximumGap": 0.41064630895108906
+    },
+    {
+      "kind": "squid3",
+      "poses": 64,
+      "minimumGap": 0.29500952899964544,
+      "maximumGap": 0.34951535330596456
+    }
+  ],
+  "errors": []
+}

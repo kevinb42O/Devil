@@ -1,0 +1,327 @@
+{
+  "result": [
+    {
+      "name": "solo-idle",
+      "enemies": 382,
+      "peakProjectiles": 0,
+      "peakEffects": 306,
+      "frames": 600,
+      "over20ms": 0,
+      "over33ms": 0,
+      "timingsMs": {
+        "cadence": {
+          "median": 16.699999999999818,
+          "p95": 16.799999999999272,
+          "max": 16.80000000000109
+        },
+        "cpu": {
+          "median": 5.899999976158142,
+          "p95": 6.800000071525574,
+          "max": 30.700000047683716
+        },
+        "simulation": {
+          "median": 3.100000023841858,
+          "p95": 3.600000023841858,
+          "max": 8.200000047683716
+        },
+        "effects": {
+          "median": 0,
+          "p95": 0,
+          "max": 0.10000002384185791
+        },
+        "render": {
+          "median": 2.799999952316284,
+          "p95": 3.399999976158142,
+          "max": 27.700000047683716
+        }
+      }
+    },
+    {
+      "name": "solo-primary",
+      "enemies": 63,
+      "peakProjectiles": 1308,
+      "peakEffects": 306,
+      "frames": 600,
+      "over20ms": 0,
+      "over33ms": 0,
+      "timingsMs": {
+        "cadence": {
+          "median": 16.69999999999891,
+          "p95": 16.700000000000728,
+          "max": 16.80000000000291
+        },
+        "cpu": {
+          "median": 8.800000071525574,
+          "p95": 15.899999976158142,
+          "max": 20
+        },
+        "simulation": {
+          "median": 4.100000023841858,
+          "p95": 5.199999928474426,
+          "max": 7.099999904632568
+        },
+        "effects": {
+          "median": 0.10000002384185791,
+          "p95": 0.20000004768371582,
+          "max": 0.30000007152557373
+        },
+        "render": {
+          "median": 4.699999928474426,
+          "p95": 11.199999928474426,
+          "max": 13.599999904632568
+        }
+      }
+    },
+    {
+      "name": "solo-homing",
+      "enemies": 0,
+      "peakProjectiles": 125,
+      "peakEffects": 156,
+      "frames": 600,
+      "over20ms": 0,
+      "over33ms": 0,
+      "timingsMs": {
+        "cadence": {
+          "median": 16.69999999999709,
+          "p95": 16.700000000004366,
+          "max": 16.80000000000291
+        },
+        "cpu": {
+          "median": 5.700000047683716,
+          "p95": 11.299999952316284,
+          "max": 13.599999904632568
+        },
+        "simulation": {
+          "median": 1.6999999284744263,
+          "p95": 3.399999976158142,
+          "max": 4.700000047683716
+        },
+        "effects": {
+          "median": 0,
+          "p95": 0.10000002384185791,
+          "max": 0.20000004768371582
+        },
+        "render": {
+          "median": 3.9000000953674316,
+          "p95": 9.799999952316284,
+          "max": 11.699999928474426
+        }
+      }
+    },
+    {
+      "name": "crew-primary",
+      "enemies": 16,
+      "peakProjectiles": 9804,
+      "peakEffects": 306,
+      "frames": 600,
+      "over20ms": 344,
+      "over33ms": 151,
+      "timingsMs": {
+        "cadence": {
+          "median": 33.299999999995634,
+          "p95": 50.099999999998545,
+          "max": 83.39999999999418
+        },
+        "cpu": {
+          "median": 24.100000023841858,
+          "p95": 57.200000047683716,
+          "max": 78.70000004768372
+        },
+        "simulation": {
+          "median": 12.5,
+          "p95": 34.59999990463257,
+          "max": 63.200000047683716
+        },
+        "effects": {
+          "median": 0.2999999523162842,
+          "p95": 2.0999999046325684,
+          "max": 6.899999976158142
+        },
+        "render": {
+          "median": 10.599999904632568,
+          "p95": 20.800000071525574,
+          "max": 33.59999990463257
+        }
+      }
+    },
+    {
+      "name": "crew-homing",
+      "enemies": 0,
+      "peakProjectiles": 1907,
+      "peakEffects": 156,
+      "frames": 600,
+      "over20ms": 269,
+      "over33ms": 48,
+      "timingsMs": {
+        "cadence": {
+          "median": 16.70000000001164,
+          "p95": 50,
+          "max": 100
+        },
+        "cpu": {
+          "median": 20.5,
+          "p95": 47.299999952316284,
+          "max": 97.40000009536743
+        },
+        "simulation": {
+          "median": 5.399999976158142,
+          "p95": 22.90000009536743,
+          "max": 58.200000047683716
+        },
+        "effects": {
+          "median": 0.10000002384185791,
+          "p95": 2.100000023841858,
+          "max": 4.300000071525574
+        },
+        "render": {
+          "median": 13.400000095367432,
+          "p95": 29.699999928474426,
+          "max": 75
+        }
+      }
+    }
+  ],
+  "topSamples": [
+    [
+      "(idle) :0",
+      27561
+    ],
+    [
+      "updateProjectiles simulation.ts:1564",
+      8821
+    ],
+    [
+      "trace projectile-collision.ts:215",
+      3914
+    ],
+    [
+      "texSubImage2D chunk-IT3TP6RZ.js?v=556e658f:37319",
+      3692
+    ],
+    [
+      "stamp blood.ts:151",
+      2833
+    ],
+    [
+      "updateSwarm simulation.ts:1396",
+      2336
+    ],
+    [
+      "sweepTowerStructure projectile-collision.ts:146",
+      2041
+    ],
+    [
+      "(program) :0",
+      1646
+    ],
+    [
+      "multiplyMatrices chunk-IT3TP6RZ.js?v=556e658f:6652",
+      1370
+    ],
+    [
+      "advanceWorld simulation.ts:657",
+      1365
+    ],
+    [
+      "update original-weapon.ts:404",
+      1285
+    ],
+    [
+      "spill enemy-lighting.ts:122",
+      1284
+    ],
+    [
+      "towerOrganicTransform projectile-collision.ts:113",
+      1271
+    ],
+    [
+      "branch collision-bvh.ts:4",
+      1182
+    ],
+    [
+      "update projectile-lighting.ts:90",
+      1158
+    ],
+    [
+      "WebGLRenderer.renderBufferDirect chunk-IT3TP6RZ.js?v=556e658f:40314",
+      1020
+    ],
+    [
+      "onFirstUse chunk-IT3TP6RZ.js?v=556e658f:35313",
+      972
+    ],
+    [
+      "updateEnemies simulation.ts:986",
+      955
+    ],
+    [
+      "sampleProjectile projectile-presentation.ts:37",
+      893
+    ],
+    [
+      "update blood-renderer.ts:91",
+      880
+    ],
+    [
+      "(garbage collector) :0",
+      870
+    ],
+    [
+      "updateTexture chunk-IT3TP6RZ.js?v=556e658f:37900",
+      851
+    ],
+    [
+      "getObjectByProperty chunk-IT3TP6RZ.js?v=556e658f:8180",
+      826
+    ],
+    [
+      "compose chunk-IT3TP6RZ.js?v=556e658f:7082",
+      752
+    ],
+    [
+      "update projectile-chroma.ts:36",
+      737
+    ],
+    [
+      "updateBuffer chunk-IT3TP6RZ.js?v=556e658f:31420",
+      679
+    ],
+    [
+      "setFromRotationMatrix chunk-IT3TP6RZ.js?v=556e658f:7436",
+      662
+    ],
+    [
+      "updateMatrixWorld chunk-IT3TP6RZ.js?v=556e658f:8325",
+      647
+    ],
+    [
+      "sweepFloor arena.ts:49",
+      633
+    ],
+    [
+      "setFromEuler chunk-IT3TP6RZ.js?v=556e658f:1486",
+      628
+    ],
+    [
+      "color projectile-chroma.ts:66",
+      610
+    ],
+    [
+      "projectObject chunk-IT3TP6RZ.js?v=556e658f:40593",
+      588
+    ],
+    [
+      "legacyTowerGeometry enemy-presentation.ts:39",
+      573
+    ],
+    [
+      "bindVertexArrayObject chunk-IT3TP6RZ.js?v=556e658f:32423",
+      541
+    ],
+    [
+      "tileHeight arena.ts:12",
+      519
+    ]
+  ],
+  "errors": []
+}

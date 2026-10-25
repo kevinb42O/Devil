@@ -25,6 +25,11 @@ export function validateReplay(value:unknown):RecordedRun{
  if(r.towerSeparation!==undefined&&typeof r.towerSeparation!=='boolean')invalid();
  if(r.towerArchitecture!==undefined&&typeof r.towerArchitecture!=='boolean')invalid();
  if(r.independentPracticeReserve!==undefined&&typeof r.independentPracticeReserve!=='boolean')invalid();
+ if(r.extendedBeamHold!==undefined&&typeof r.extendedBeamHold!=='boolean')invalid();
+ if(r.tapFire!==undefined&&typeof r.tapFire!=='boolean')invalid();
+ if(r.pressFire!==undefined&&typeof r.pressFire!=='boolean')invalid();
+ if(r.denseBeam!==undefined&&typeof r.denseBeam!=='boolean')invalid();
+ if(r.wideWeaponSpread!==undefined&&typeof r.wideWeaponSpread!=='boolean')invalid();
  if(r.analogMovement!==undefined&&typeof r.analogMovement!=='boolean')invalid();
  if(!object(r.setup)||!finite(r.setup.time,0,1200)||!integer(r.setup.level,1,r.version===7?7:4)||!finite(r.setup.reserve,0,1000))invalid();
  if(Math.abs((r.time as number)-(r.setup.time as number)-(r.ticks as number)/120)>.02)invalid();
@@ -35,7 +40,7 @@ export function validateReplay(value:unknown):RecordedRun{
  for(const [key,v] of Object.entries(r.stats.killed))if(!ENEMY_KINDS.includes(key as typeof ENEMY_KINDS[number])||!integer(v,0,10000000))invalid();
  if(!Array.isArray(r.frames)||r.frames.length>(r.ticks as number))invalid();let ticks=0;
  for(const frame of r.frames){if(!object(frame)||!integer(frame.ticks,1,MAX_REPLAY_TICKS)||!object(frame.input))invalid();const i=frame.input;
-  if(!finite(i.forward,-1,1)||!finite(i.strafe,-1,1)||!finite(i.yaw,-1e6,1e6)||!finite(i.pitch,-Math.PI,Math.PI)||['jump','fire','homing'].some(k=>typeof i[k]!=='boolean')||['leftArm','rightArm'].some(k=>i[k]!==undefined&&typeof i[k]!=='boolean'))invalid();ticks+=frame.ticks as number;if(ticks>(r.ticks as number))invalid();
+  if(!finite(i.forward,-1,1)||!finite(i.strafe,-1,1)||!finite(i.yaw,-1e6,1e6)||!finite(i.pitch,-Math.PI,Math.PI)||['jump','fire','homing'].some(k=>typeof i[k]!=='boolean')||['leftArm','rightArm','fireLeft','fireRight'].some(k=>i[k]!==undefined&&typeof i[k]!=='boolean'))invalid();ticks+=frame.ticks as number;if(ticks>(r.ticks as number))invalid();
  }
  if(ticks!==r.ticks)invalid();
  return structuredClone(r) as RecordedRun;
@@ -43,7 +48,7 @@ export function validateReplay(value:unknown):RecordedRun{
 export function packReplay(run:RecordedRun):Uint8Array{
  validateReplay(run);const {frames,...metadata}=run;const header=new TextEncoder().encode(JSON.stringify(metadata));
  const bytes=new Uint8Array(9+header.length+frames.length*37);bytes.set(magic);const view=new DataView(bytes.buffer);view.setUint32(5,header.length,true);bytes.set(header,9);let at=9+header.length;
- for(const f of frames){view.setUint32(at,f.ticks,true);at+=4;for(const key of fields){view.setFloat64(at,f.input[key],true);at+=8;}bytes[at++]=(f.input.jump?1:0)|(f.input.fire?2:0)|(f.input.homing?4:0)|(f.input.leftArm?8:0)|(f.input.rightArm?16:0);}
+ for(const f of frames){view.setUint32(at,f.ticks,true);at+=4;for(const key of fields){view.setFloat64(at,f.input[key],true);at+=8;}bytes[at++]=(f.input.jump?1:0)|(f.input.fire?2:0)|(f.input.homing?4:0)|(f.input.leftArm?8:0)|(f.input.rightArm?16:0)|(f.input.fireLeft?32:0)|(f.input.fireRight?64:0);}
  return bytes;
 }
 export function unpackReplay(bytes:Uint8Array):RecordedRun{
@@ -52,7 +57,7 @@ export function unpackReplay(bytes:Uint8Array):RecordedRun{
  if(bytes.length<9||magic.some((b,i)=>bytes[i]!==b))invalid();const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),length=view.getUint32(5,true);let at=9+length;
  if(length>65536||at>bytes.length||(bytes.length-at)%37!==0||(bytes.length-at)/37>MAX_REPLAY_TICKS)invalid();
  const metadata=JSON.parse(new TextDecoder().decode(bytes.subarray(9,at)));if(!object(metadata))invalid();const frames:RecordedRun['frames']=[];
- while(at<bytes.length){const ticks=view.getUint32(at,true);at+=4;const input={forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false};for(const key of fields){input[key]=view.getFloat64(at,true);at+=8;}const flags=bytes[at++];if(flags>31)invalid();input.jump=!!(flags&1);input.fire=!!(flags&2);input.homing=!!(flags&4);if(flags&8)Object.assign(input,{leftArm:true});if(flags&16)Object.assign(input,{rightArm:true});frames.push({ticks,input});}
+ while(at<bytes.length){const ticks=view.getUint32(at,true);at+=4;const input={forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false};for(const key of fields){input[key]=view.getFloat64(at,true);at+=8;}const flags=bytes[at++];if(flags>127)invalid();input.jump=!!(flags&1);input.fire=!!(flags&2);input.homing=!!(flags&4);if(flags&8)Object.assign(input,{leftArm:true});if(flags&16)Object.assign(input,{rightArm:true});if(flags&32)Object.assign(input,{fireLeft:true});if(flags&64)Object.assign(input,{fireRight:true});frames.push({ticks,input});}
  return validateReplay({...metadata,frames});
 }
 export async function readBounded(stream:ReadableStream<Uint8Array>,limit:number):Promise<Uint8Array>{

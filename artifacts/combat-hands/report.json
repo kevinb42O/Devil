@@ -6,6 +6,23 @@
       "gestures": {
         "left": 0,
         "right": 0
+      },
+      "hands": {
+        "open": [
+          0,
+          0
+        ],
+        "feedback": [
+          {
+            "firePower": 0,
+            "recoil": 0
+          },
+          {
+            "firePower": 0,
+            "recoil": 0
+          }
+        ],
+        "primary": "left"
       }
     },
     "raised": {
@@ -14,6 +31,23 @@
       "gestures": {
         "left": 0.9999938557876467,
         "right": 0.9999938557876467
+      },
+      "hands": {
+        "open": [
+          1,
+          1
+        ],
+        "feedback": [
+          {
+            "firePower": 0,
+            "recoil": 0
+          },
+          {
+            "firePower": 0,
+            "recoil": 0
+          }
+        ],
+        "primary": "left"
       }
     },
     "released": {
@@ -22,6 +56,23 @@
       "gestures": {
         "left": 0.000006144174601983046,
         "right": 0.000006144174601983046
+      },
+      "hands": {
+        "open": [
+          0.0000013709590863841503,
+          0.0000013709590863841503
+        ],
+        "feedback": [
+          {
+            "firePower": 0,
+            "recoil": 0
+          },
+          {
+            "firePower": 0,
+            "recoil": 0
+          }
+        ],
+        "primary": "left"
       }
     },
     "checks": 84
@@ -29,19 +80,19 @@
   "feedback": [
     {
       "level": 1,
-      "recoilDistance": 0.128040867152246
+      "recoilDistance": 0.12804084427445475
     },
     {
       "level": 2,
-      "recoilDistance": 0.1643887003112982
+      "recoilDistance": 0.1643886749317009
     },
     {
       "level": 3,
-      "recoilDistance": 0.2722194810140186
+      "recoilDistance": 0.2722194580946824
     },
     {
       "level": 4,
-      "recoilDistance": 0.32858630533547184
+      "recoilDistance": 0.32858627966309445
     },
     {
       "level": 5,
@@ -63,8 +114,7 @@
     "alive": true
   },
   "bullets": {
-    "cases": 42,
-    "maxError": 0
+    "cases": 42
   },
   "controls": [
     "qwerty",

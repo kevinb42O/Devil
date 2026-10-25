@@ -1,0 +1,43 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+import {mkdir,writeFile} from 'node:fs/promises';
+const seconds=Number(process.env.GUEST_SOAK_SECONDS||600),updates=Math.ceil(seconds*20),out='artifacts/fps-deep-audit/guest';
+await mkdir(out,{recursive:true});
+const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:process.platform==='win32'?{channel:'chrome'}:process.platform==='darwin'?{executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'}:{}),args:['--disable-background-timer-throttling','--disable-renderer-backgrounding']});
+try{
+ const page=await browser.newPage({viewport:{width:960,height:540}}),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',msg=>{if(msg.text().startsWith('Dense guest'))console.log(msg.text());});
+ await page.route('**/guest-dense-test',r=>r.fulfill({contentType:'text/html',body:'<!doctype html><html><body style="margin:0"><canvas></canvas></body></html>'}));await page.goto((process.env.GAME_URL||'http://127.0.0.1:5173')+'/guest-dense-test');
+ await page.evaluate(async()=>{
+  const {FriendsSession}=await import('/src/multiplayer.ts'),{World,idleInput}=await import('/src/simulation.ts'),{encodeState,fragmentState,snapshotBaseline,StateAssembler}=await import('/src/network-state.ts'),{GameRenderer}=await import('/src/renderer.ts');
+  const host=new FriendsSession('host',[]),guest=new FriendsSession('guest',[]),world=new World(1,{schedule:false}),renderer=new GameRenderer(document.querySelector('canvas'),{quality:'low',fov:90,mist:false});
+  await Promise.all([renderer.originalEnemies.loaded,renderer.originalWeapon.loaded]);
+  host.running=true;host.world=new World(42,{schedule:false});host.world.addCrew('host');host.world.addCrew('guest');host.world.selectCrew('host');const h=host.world;h.contactOwners=['guest'];
+  for(let i=0;i<1000;i++){const e=h.spawn(i%25===0?'squid3':i%3===0?'skull4':'skull',{x:Math.sin(i)*20,y:3,z:Math.cos(i)*20},false);e.age=30;e.hp=1000;}
+  h.projectiles=Array.from({length:3000},(_,i)=>({id:100000+i,pos:{x:0,y:3,z:0},vel:{x:Math.sin(i)*8,y:0,z:-42},age:0,homing:i%4===0,level:7,energy:1,shotKey:`host:1:${i}`}));
+  const p=h.crew[1];p.level=7;p.reserve=200;p.primary={held:1000,wasHeld:true,streaming:true,nextShot:0,recoverUntil:0,lastBurst:0};
+  guest.running=true;guest.localId='guest';const link={assembler:new StateAssembler(),baselines:new Map()},receive=[],render=[],blocks=[];
+  let received=0,baseline,seq=0,frame=0,viewNow=performance.now();guest.onSnapshot=s=>{received++;guest.reconcile(world,s);};guest.onEffects=effects=>{for(const e of effects)renderer.effect(e,world,0,0);};
+  // A deterministic 12-tick ACK lag exercises normal prediction/reconciliation.
+  // Host encoding is timed separately from guest receive/render processing.
+  window.dense={host,guest,world,renderer,link,receive,render,blocks,get received(){return received;},run(count){
+   for(let n=0;n<count;n++){
+    frame++;h.time=30+frame*.05;h.tick=3600+frame*6;p.ack=Math.max(0,seq-12);p.shotSequence=Math.floor(h.tick/9);p.primary.nextShot=h.tick+3;
+    for(let i=0;i<h.enemies.length;i++){const e=h.enemies[i],a=i+h.time*.08;e.pos.x=Math.sin(a)*20;e.pos.z=Math.cos(a)*20;e.age=h.time;e.vel.x=Math.cos(a)*1.6;e.vel.z=-Math.sin(a)*1.6;}
+    for(let i=0;i<h.projectiles.length;i++){const b=h.projectiles[i];b.age=(h.time+i*.007)%2.8;b.pos.x=Math.sin(i)*15+b.vel.x*b.age;b.pos.y=3+i%8*.2;b.pos.z=12+b.vel.z*b.age;}
+    const s=host.snapshot();s.crew[1].ack=p.ack;s.crew[1].contactAck=guest.contactSequence;const packets=fragmentState(encodeState(s,frame,frame-1,baseline),frame);baseline=snapshotBaseline(s);
+    const at=performance.now();for(const packet of packets)guest.receiveState(link,packet);receive.push(performance.now()-at);
+    for(let tick=0;tick<6;tick++){const input={...idleInput(),fire:true,homing:frame%200>=180,yaw:Math.sin(frame*.002)*.4,strafe:frame%120<60?.1:-.1,jump:frame%90===0&&tick===0};if(guest.predict(world,input))seq++;for(const e of world.effects)renderer.effect(e,world,input.yaw,0);world.effects=[];}
+    const start=performance.now();viewNow+=50;renderer.render(guest.presentation(world,viewNow),0,0,.05,false,1,null,true);renderer.renderer.getContext().finish();render.push(performance.now()-start);
+   }
+   return {frame,received,pending:guest.diagnostics.pendingInputs,poses:world.playerStarts.size,baselines:link.baselines.size,history:guest.timeline.samples.length,projectiles:world.projectiles.length,heap:performance.memory?.usedJSHeapSize};
+  }};
+ });
+ const cdp=await page.context().newCDPSession(page);await cdp.send('HeapProfiler.enable');const blocks=[],started=Date.now();
+ for(let done=0;done<updates;done+=200){const result=await page.evaluate(n=>window.dense.run(n),Math.min(200,updates-done));assert.equal(result.received,result.frame);assert.ok(result.pending<=24);assert.ok(result.poses<=1);assert.ok(result.baselines<=32);assert.ok(result.history<=12);
+  if(result.frame%1000===0||result.frame===updates){await cdp.send('HeapProfiler.collectGarbage');const heap=await cdp.send('Runtime.getHeapUsage');blocks.push({...result,retainedHeap:heap.usedSize,elapsedMs:Date.now()-started});console.log('Dense guest',JSON.stringify(blocks.at(-1)));}
+ }
+ const report=await page.evaluate(()=>{const d=window.dense;function summary(a){a=[...a].sort((x,y)=>x-y);return {median:a[Math.floor(a.length*.5)],p95:a[Math.floor(a.length*.95)],max:a.at(-1)};}return {updates:d.received,receive:summary(d.receive),renderWithGpuFinish:summary(d.render),earlyReceive:summary(d.receive.slice(100,1100)),lateReceive:summary(d.receive.slice(-1000)),earlyRender:summary(d.render.slice(100,1100)),lateRender:summary(d.render.slice(-1000)),gpu:d.renderer.renderer.info.memory,clientHits:d.guest.clientHits,localFlight:d.guest.localFlight.size,pendingDamage:d.guest.pendingDamage.size,network:d.guest.diagnostics};});
+ report.simulatedSeconds=seconds;report.elapsedMs=Date.now()-started;report.blocks=blocks;
+ assert.deepEqual(errors,[]);if(blocks.length>=3){assert.ok(blocks.at(-1).retainedHeap<blocks[0].retainedHeap*1.5+10_000_000,'retained heap must plateau after baseline/history caches fill');assert.ok(report.lateReceive.median<Math.max(10,report.earlyReceive.median*3),'receive cost must not grow with match duration');}
+ await page.screenshot({path:out+'/dense-guest.png'});await writeFile(out+'/dense-rendered-soak.json',JSON.stringify(report,null,2));console.log('Rendered dense guest soak passed:',JSON.stringify(report));await page.evaluate(()=>{window.dense.host.close();window.dense.guest.close();window.dense.renderer.clear();});
+}finally{await browser.close();}

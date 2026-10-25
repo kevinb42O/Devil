@@ -39,6 +39,6 @@ export function projectileMaterial(shapeScale=1){
     diffuseColor.rgb*=score*(.65+fresnel*.35);
    `);
  };
- material.customProgramCacheKey=()=>`projectile-shard-chroma-v3-${shapeScale}`;
+ material.customProgramCacheKey=()=>`projectile-shard-chroma-v5-${shapeScale}`;
  return material;
 }

@@ -1,5 +1,5 @@
-/** Presentation-only neck lean. The courtyard renderer owns its lifetime;
- * combat, movement, aiming and the body origin never use these offsets. */
+/** Presentation-only neck lean shared by the prelobby and combat renderer.
+ * Movement, simulation aiming and the body origin never use these offsets. */
 export class CourtyardNeck {
  readonly pose={forward:0,drop:0};
  private bend=0;

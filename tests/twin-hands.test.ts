@@ -26,7 +26,7 @@ test('paired primary and homing use one budget with symmetric physical origins',
 });
 test('new tiers keep IV cadence, homing priority and once-only shotgun floor launch',()=>{
  for(const level of [4,5,6,7]){
-  const w=new World(1,{schedule:false});w.level=level;w.reserve=1000;for(let i=0;i<120;i++)w.step({...idleInput(),fire:true});assert.equal(w.stats.shots,12*STREAM_COUNTS[level-1]);
+  const w=new World(1,{schedule:false});w.level=level;w.reserve=1000;for(let i=0;i<120;i++)w.step({...idleInput(),fire:true});assert.equal(w.stats.shots,10*STREAM_COUNTS[level-1]);
   const h=new World(1,{schedule:false});h.level=level;h.reserve=1000;for(let i=0;i<120;i++)h.step({...idleInput(),fire:true,homing:true});assert.equal(h.stats.shots,h.stats.homingFired);assert.equal(h.stats.shots,9*4);
   const j=new World(1,{schedule:false});j.startAt(0,level);j.shoot({...idleInput(),pitch:-1.4},true,false);assert.equal(j.player.vel.y,17);assert.equal(j.effects.filter(e=>e.kind==='jump').length,1);
  }

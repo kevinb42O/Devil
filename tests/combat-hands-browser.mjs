@@ -30,7 +30,7 @@ try{
    if(!hands.visible||hands.getObjectByName('crew-arm'))throw Error('Combat hand selection wrong');
    for(const side of ['L','R']){
     const tip=hands.getObjectByName('Middle3'+side).getWorldPosition(new THREE.Vector3());if(!tip.toArray().every(Number.isFinite))throw Error('Nonfinite pose');
-    if(side==='R'||level>=5){
+    if(side==='L'||level>=5){
      const dorsal=new THREE.Vector3(0,0,1).applyQuaternion(hands.getObjectByName('LowerArm'+side).getWorldQuaternion(new THREE.Quaternion()));
      const expected=new THREE.Vector3(0,Math.cos(pitch),Math.sin(pitch));
      if(dorsal.dot(expected)<.99)throw Error('Upside-down combat palm '+JSON.stringify({side,level,fov,pitch,dot:dorsal.dot(expected)}));
@@ -65,13 +65,13 @@ try{
   const wrist=side=>r.emoteHands.getObjectByName('Middle1'+side).getWorldPosition(r.camera.position.clone());
   for(let level=1;level<=7;level++){
    w.level=level;r.originalWeapon.clear();render(0);
-   const rest=wrist('R');
+   const active=level<5?'L':'R',rest=wrist(active);
    r.originalWeapon.effect({kind:'burst',level,pos:w.player.pos},w,0,0,false);render(0);
    if(r.originalWeapon.handFeedback.firePower!==0)throw Error('Remote shot changed local feedback');
    r.originalWeapon.effect({kind:'burst',level,pos:w.player.pos},w,0,0,true);render(0);
    const state=r.originalWeapon.handFeedback,materials=r.emoteHands.userData.avatarMaterials;
    const skin=materials.find(m=>m.name==='Demon_Main'),u=skin.userData.combatFeedback.uniforms;
-   const distance=rest.distanceTo(wrist('R'));
+   const distance=rest.distanceTo(wrist(active));
    if(state.firePower!==1||u.combatFire.value!==1||distance<.01)throw Error('Visible rig missed shot feedback '+level+' '+distance);
    if(level>=5&&wrist('L').distanceTo(wrist('R'))<.3)throw Error('Recoil collapsed twin palms');
    for(let i=0;i<120;i++)render(1/60);
@@ -102,7 +102,9 @@ try{
   w.state='playing';r.render(w,0,0,0,false,1,null,false,false,idleInput());const alive=r.emoteHands.visible;
   return {topDown,spectator,dead,alive};
  });assert.deepEqual(visibility,{topDown:true,spectator:true,dead:true,alive:true});
- // Load the previous renderer only for an exact bullet comparison. The normal
+ // Compare projectile counts with the previous renderer. Hand attachment and recoil
+ // now vary by firing side, so validate attachment in hand-feedback-browser instead
+ // of requiring identical cosmetic transforms. The normal
  // game above has already been checked to request none of its hand assets.
  const baseline=execFileSync('git',['show','f9abc5b:src/original-weapon.ts'],{encoding:'utf8'});
  // Vite must transpile the TypeScript baseline, preserving its relative imports.
@@ -112,19 +114,19 @@ try{
  const bullets=await page.evaluate(async()=>{
   const [{OriginalWeapon},THREE,{World,idleInput}]=await Promise.all([import('/src/baseline-original-weapon.ts'),import('/node_modules/.vite/deps/three.js'),import('/src/simulation.ts')]);
   const current=window.combatTest.renderer.originalWeapon,previous=new OriginalWeapon(new THREE.Scene());await previous.loaded;
-  if(!previous.ready)throw Error(previous.error);let cases=0,maxError=0;
+  if(!previous.ready)throw Error(previous.error);let cases=0;
   for(let level=1;level<=7;level++)for(const fov of [75,90,145])for(const burst of [false,true]){
-   const world=new World(72,{schedule:false});world.level=level;world.player.pos={x:0,y:5,z:0};world.shoot(idleInput(),burst,false);
+   const world=new World(72,{schedule:false});world.level=level;world.player.pos={x:0,y:5,z:0};world.shoot(idleInput(),burst,false);const physical=JSON.stringify(world.projectiles);
    const camera=new THREE.PerspectiveCamera(fov,16/9,.04,1000);camera.position.set(0,5,0);
    for(const weapon of [current,previous]){weapon.clear();for(const effect of world.effects)weapon.effect(effect,world,0,0);weapon.update(world,0,false,camera);}
-   for(let socket=0;socket<(level>=5?10:level===1?1:level===2?2:level===3?3:5);socket++)maxError=Math.max(maxError,current.socketScreen(level,socket).distanceTo(previous.socketScreen(level,socket)));
+   for(let socket=0;socket<(level>=5?10:level===1?1:level===2?2:level===3?3:5);socket++)if(!current.socketScreen(level,socket).toArray().every(Number.isFinite))throw Error('Invalid visual socket');
    for(let batch=0;batch<current.daggers.length;batch++){
     const a=current.daggers[batch],b=previous.daggers[batch];if(a.count!==b.count)throw Error('Bullet count changed');
-    for(let i=0;i<a.count*16;i++)maxError=Math.max(maxError,Math.abs(a.instanceMatrix.array[i]-b.instanceMatrix.array[i]));
-   }cases++;
+    for(let i=0;i<a.count*16;i++)if(!Number.isFinite(a.instanceMatrix.array[i]))throw Error('Invalid projectile transform');
+   }if(JSON.stringify(world.projectiles)!==physical)throw Error('Presentation changed projectile physics');cases++;
   }
-  return {cases,maxError};
- });assert.equal(bullets.maxError,0,'bullet sockets and rendered transforms unchanged');
+  return {cases};
+ });assert.equal(bullets.cases,42,'all tiers, FOVs and fire modes retain projectile counts and physics');
  // Exercise real combat input, including controller trigger separation and mobile holds.
  const controls=[];
  for(const scheme of ['qwerty','azerty','controller','mobile']){

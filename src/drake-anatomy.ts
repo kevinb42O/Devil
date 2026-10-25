@@ -1,61 +1,39 @@
 import * as THREE from 'three';
-import {prepareEnemySurfaceGeometry,type EnemySurfaceRole} from './enemy-surface-material';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+import {createSkullAnatomy} from './skull-anatomy';
+import {sweepAnatomy,type AnatomyPoint} from './creature-geometry';
+import type {EnemySurfaceRole} from './enemy-surface-material';
 
-/** A broad, angular hunting skull replaces the source dragon's round smiling
- * face. Retain its licensed wing membranes and their animation attributes. */
-export function createDrakeAnatomy(wings:THREE.Mesh,material:(role:EnemySurfaceRole)=>THREE.Material){
- const root=new THREE.Group();root.name='drake-anatomy';
- const geometry=wings.geometry.clone(),region=geometry.getAttribute('creatureRegion');
- const indices:number[]=[],source=geometry.index;
- for(let i=0;i<(source?.count??region.count);i+=3){
-  const ids=[0,1,2].map(j=>source?source.getX(i+j):i+j);
-  if(ids.every(id=>Math.abs(region.getX(id)-2)<.5))indices.push(...ids);
- }
- geometry.setIndex(indices);geometry.computeBoundingBox();geometry.computeBoundingSphere();wings.geometry=geometry;root.add(wings);
- const add=(name:string,g:THREE.BufferGeometry,role:EnemySurfaceRole)=>{
-  prepareEnemySurfaceGeometry(g,role);
-  if(!g.hasAttribute('uv'))g.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(g.getAttribute('position').count*2),2));
-  // Authored rigid anatomy must not inherit the wing deformation.
-  g.setAttribute('motionWeight',new THREE.BufferAttribute(new Float32Array(g.getAttribute('position').count),1));
-  const mesh=new THREE.Mesh(g,material(role));mesh.name=name;root.add(mesh);return mesh;
+/** Heavy grounded tier IV. Newly authored lateral horn anatomy replaces the
+ * dragon membranes; the six-unit silhouette retains its existing floor frame. */
+export function createDrakeAnatomy(material:(role:EnemySurfaceRole)=>THREE.Material){
+ const root=new THREE.Group();root.name='drake-anatomy';const parts:THREE.BufferGeometry[]=[];
+ const head=createSkullAnatomy(1,material('body'));
+ const skull=head.geometry;skull.scale(3.05,1.65,2.05);skull.translate(0,.1,.12);parts.push(skull);
+ const add=(source:THREE.BufferGeometry,region:number)=>{
+  const g=source.index?source.toNonIndexed():source;if(g!==source)source.dispose();const count=g.getAttribute('position').count;
+  g.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(count*2),2));
+  g.setAttribute('creatureCoord',new THREE.BufferAttribute(new Float32Array(count*3),3));
+  const regions=new Float32Array(count);regions.fill(region);g.setAttribute('creatureRegion',new THREE.BufferAttribute(regions,1));
+  g.setAttribute('motionWeight',new THREE.BufferAttribute(new Float32Array(count),1));parts.push(g);
  };
- // Eight-point sections make a flattened wedge, with cheekbones extending
- // beyond the jaws. The front is a brow-heavy mask rather than a round muzzle.
- const sections=[{z:-.95,w:1.15,h:.85,y:.05},{z:.35,w:1.65,h:1.05,y:.05},{z:1.18,w:1.28,h:.72,y:-.02}];
- const positions:number[]=[],triangles:number[]=[];
- for(const s of sections)for(let i=0;i<8;i++){const a=Math.PI/8+i*Math.PI/4;positions.push(Math.cos(a)*s.w,s.y+Math.sin(a)*s.h,s.z);}
- for(let ring=0;ring<2;ring++)for(let i=0;i<8;i++){const a=ring*8+i,b=ring*8+(i+1)%8,c=a+8,d=b+8;triangles.push(a,b,c,b,d,c);}
- for(let i=1;i<7;i++)triangles.push(0,i+1,i,16,16+i,17+i);
- const skull=new THREE.BufferGeometry();skull.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));skull.setIndex(triangles);skull.computeVertexNormals();
- // Shell role keeps the large rigid head out of the animated swarm body path.
- add('drake-skull',skull,'shell');
- const plate=(name:string,points:number[][],role:EnemySurfaceRole)=>{
-  const g=new THREE.BufferGeometry(),p=points.flat(),idx:number[]=[];
-  for(let i=1;i<points.length-1;i++){const a=points[0],b=points[i],c=points[i+1];
-   const facing=(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
-   if(facing<0)idx.push(0,i+1,i);else idx.push(0,i,i+1);
-  }
-  g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));g.setIndex(idx);g.computeVertexNormals();return add(name,g,role);
- };
- const dark=new THREE.MeshStandardMaterial({color:0x080608,roughness:.9,toneMapped:false});
- dark.name='drake-recessed-sockets';dark.userData.enemySurface={...material('shell').userData.enemySurface,description:'Recessed black eye sockets and a closed downturned mouth seam.'};
- const cold=material('shell').userData.enemySurface.kind==='transmuted4';
- const ember=new THREE.MeshStandardMaterial({color:cold?0x163f39:0x6e1d0a,emissive:cold?0x69dcc9:0xe85a18,emissiveIntensity:.4,roughness:.5,toneMapped:false});
- ember.name='drake-narrow-eye-slits';ember.userData.enemySurface={...material('shell').userData.enemySurface,description:'Narrow ember slits beneath a heavy angular brow.'};
  for(const side of [-1,1]){
-  const points=[[.22,.22,1.205],[1.13,.52,1.205],[1.05,.02,1.215],[.38,.02,1.22]].map(([x,y,z])=>[x*side,y,z]);
-  if(side<0)points.reverse();const socket=plate('drake-recessed-eye',points,'shell');socket.material=dark;
-  const slit=[[.35,.13,1.235],[.98,.34,1.235],[.91,.21,1.24],[.40,.07,1.24]].map(([x,y,z])=>[x*side,y,z]);
-  if(side<0)slit.reverse();plate('drake-eye-slit',slit,'shell').material=ember;
-  const browShape=new THREE.Shape();
-  const browPoints=[[.16,.37],[1.40,.72],[1.29,.48],[.30,.20]];
-  browPoints.forEach(([x,y],i)=>{if(i===0)browShape.moveTo(x*side,y);else browShape.lineTo(x*side,y);});browShape.closePath();
-  const brow=add('drake-heavy-brow',new THREE.ExtrudeGeometry(browShape,{depth:.18,bevelEnabled:false}),'shell');brow.position.z=1.20;
-  const cheek=add('drake-jaw-blade',new THREE.ConeGeometry(.32,1.15,4),'bone');cheek.position.set(side*1.15,-.65,.92);cheek.rotation.z=side*.22;cheek.rotation.x=Math.PI;
-  const horn=add('drake-swept-horn',new THREE.ConeGeometry(.27,1.65,5),'bone');horn.position.set(side*1.20,1.30,-.30);horn.rotation.z=-side*.50;horn.rotation.x=-.55;
+  // The lateral mass curls down and back inward, with bone growth collars.
+  const centers:AnatomyPoint[]=[[side*1.2,.65,-.32],[side*1.95,.77,-.68],[side*2.55,.45,-.85],[side*2.68,-.06,-.71],[side*2.40,-.48,-.40],[side*2.03,-.61,.08],[side*1.88,-.97,.57]];
+  add(sweepAnatomy(centers,[.38,.55,.51,.38,.29,.16,.002],8,18),0);
+  for(let i=0;i<5;i++){
+   const p=centers[i],out=new THREE.Vector3(side*(i<2?.35:.8),i<2?.9:i<3?.3:-.4,-.3).normalize();
+   const base=new THREE.Vector3(...p).addScaledVector(out,.33),tip=base.clone().addScaledVector(out,.35+(i%2)*.12);
+   add(sweepAnatomy([base.toArray() as AnatomyPoint,tip.toArray() as AnatomyPoint],[.20,.002],5),3);
+  }
+  add(sweepAnatomy([[side*.90,-.29,1.02],[side*1.03,-.62,1.24],[side*.81,-1.02,1.38]],[.13,.085,.002],6,7),3);
+  add(sweepAnatomy([[side*.70,.97,-.52],[side*.94,1.50,-.95],[side*1.00,1.73,-1.31]],[.22,.14,.002],6,8),3);
  }
- // A short broken horizontal seam, with downturned ends: no upturned mouth.
- const mouth=plate('drake-mouth-seam',[[-.83,-.38,1.24],[-.47,-.28,1.24],[0,-.34,1.24],[.47,-.28,1.24],[.83,-.38,1.24],[.62,-.49,1.24],[0,-.43,1.24],[-.62,-.49,1.24]],'shell');mouth.material=dark;
- const keel=add('drake-chin-keel',new THREE.ConeGeometry(.44,.78,3),'shell');keel.position.set(0,-.91,.62);keel.rotation.x=Math.PI;
- return root;
+ const geometry=mergeGeometries(parts)!;parts.forEach(p=>p.dispose());geometry.computeBoundingBox();
+ const size=geometry.boundingBox!.getSize(new THREE.Vector3()),scale=6/Math.max(size.x,size.y,size.z);geometry.scale(scale,scale,scale);geometry.computeBoundingBox();
+ geometry.translate(0,-1.28-geometry.boundingBox!.min.y,0);
+ const p=geometry.getAttribute('position'),coords=geometry.getAttribute('creatureCoord'),weights=geometry.getAttribute('motionWeight');
+ for(let i=0;i<p.count;i++){coords.setXYZ(i,p.getX(i)/6,p.getY(i)/6,p.getZ(i)/6);weights.setX(i,0);}
+ geometry.computeBoundingBox();geometry.computeBoundingSphere();
+ const mesh=new THREE.Mesh(geometry,material('body'));mesh.name='drake-skull';root.add(mesh);root.userData.anatomy='authored-grounded-horned-skull';return root;
 }

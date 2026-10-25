@@ -1,0 +1,303 @@
+✖ new tower crowns stay reachable from the ground through their real entrance (604.645709ms)
+✔ ground-level primary fire reaches and destroys every tower crystal (731.976708ms)
+✖ hand-II ground pulses retain damage against all grounded tower tiers (164.763708ms)
+✔ spider tolerance doubles while creature bodies return to their earlier scale (0.778208ms)
+✔ persistent crowded towers never change their spawn rays or push each other outward (13998.1455ms)
+✔ a late blocker cannot displace an existing tower or bank stopped travel (1.054416ms)
+✔ emitted Skull II resumes wandering instead of gaining pursuit from its skin (14.611584ms)
+✔ homing damages exposed crystals instead of spending all twenty shots on hidden crystal zero (180.562209ms)
+✔ balance rules survive full and delta enemy packets for guest collision prediction (0.968584ms)
+✔ historical solo recordings captured before the edits retain outcomes and backward seeking (1432.43675ms)
+✖ historical crew checkpoints captured before the edits retain every exact digest (167.277209ms)
+✖ current solo recordings and crew checkpoints retain corrected rules on restore (47.977541ms)
+✔ new thorn armor has real remake surfaces while legacy files retain original armor (0.27075ms)
+✖ wider travelling cones keep compact launch radii and rotate with the aim (3.45375ms)
+✔ hand II through VII roughly double or exceed the travelling diameter without moving bullet spawns (2.225459ms)
+✔ upgrades improve distant small-target throughput without narrowing the outer beam (2375.867ms)
+✔ launch direction changes continuously at a crystal-sized target silhouette (0.604083ms)
+✔ aim convergence respects armor and floor obstructions (163.015958ms)
+✔ lifetime clips the swept path before damage and still permits earlier contacts (1.982458ms)
+✔ expired homing shots cannot trigger absorption, hits or explosions (0.530167ms)
+✔ flight range is independent of the shooter position and passes the old world boundary (6.214959ms)
+✔ floor bounce cannot continue collision after consuming the remaining lifetime (0.697625ms)
+✔ compact network launch reproduces circular spread and focused lanes exactly (1.972375ms)
+✖ stream radius fills multiple lanes with the full primary salvo at every hand (112.300208ms)
+✔ wider stream preserves damage per bullet and point-blank effectiveness (159.201875ms)
+✔ physical stream expands toward aim as a cone rather than parallel or inward lanes (65.7565ms)
+✔ every hand launches compact bursts and streams throughout its circular firing area (13.52ms)
+✔ under-hand origin follows horizontal and vertical aim using the camera basis (0.412375ms)
+✔ muzzle parallax converges on a close crosshair target instead of firing below it (1.791041ms)
+✔ projectile interpolation keeps the actual prior swept position without aliasing (1.412625ms)
+✔ each projectile has a distinct stable axial roll, including predicted and host shots (2.789166ms)
+✔ new emitters sit below and behind the original fingertips at every hand (0.665042ms)
+✔ moving the shooter never adds strafe, forward or jump momentum to a fired dagger (714.716042ms)
+✔ camera and projectiles share one render time through fast strafing, jumping and reversal (3.810083ms)
+✔ crew camera history follows the selected player and does not reuse another player position (2.797417ms)
+✔ all tower tiers stop swept primary and homing shots on armor at the exact contact (768.661416ms)
+✔ empty space near a tower remains traversable, with no giant invisible hit sphere (0.508541ms)
+✔ destroyed pede segments absorb shots without damage or ricochets (4.217416ms)
+✔ floor impacts retain a damped reflection and a bent interpolated flight path (0.470291ms)
+✔ damage impacts expire at contact and never create a ricochet after death (0.283292ms)
+✔ bent interpolation follows the contact instead of cutting through the obstacle (0.087291ms)
+✔ identical seeds and inputs produce identical simulation results (1025.455708ms)
+✔ opening summoner spawns at 3s and releases the complete reference-timed batch (42.039125ms)
+✔ tap releases ten physical daggers; holding uses a clean stream without a release burst (6.216667ms)
+✔ swept projectile collision hits small targets between endpoints (1.098708ms)
+✔ squid body is protected while its crystal receives damage (6.495791ms)
+✔ tower crystals accept edge shots within the enlarged radius (5.071417ms)
+✔ gems are attracted only in collection windows and expire after ten seconds (442.701583ms)
+✔ progression distinguishes total collection from unspent homing reserve (8.49525ms)
+✔ gem steering switches off for either fire button and resumes on release (0.800666ms)
+✔ tap release pushes gems away without attracting them on the burst tick (3.616ms)
+✔ released gems catch a moving player instead of overshooting into an orbit (1.732709ms)
+✔ homing cannot spend more daggers than held in reserve (0.46575ms)
+✔ jump requires a fresh press, keeps air momentum, and falls beyond the arena (10.079375ms)
+✔ floor shotgun taps gain height with hand level and still land (384.29725ms)
+✔ floor shotgun boost preserves upward momentum and requires a nearby downward burst (8.588125ms)
+✔ contact is lethal after emergence and dead runs stop their clock (1.038542ms)
+✔ each gem consumed by an exposed spider ejects one egg that hatches five spiderlings (9.0715ms)
+✔ both spider spawners release exactly one normal gem from their held crystal on death (0.535083ms)
+✔ large spider stays outside the arena and does not chase the player or walk to gems (130.038334ms)
+✔ spider holds its head exposed under fire, then shields after one second without a hit (2.3175ms)
+✔ squid II crystals have independent health and release one gem each (88.711125ms)
+✔ centipede damage and rewards belong to individual living segments (0.29675ms)
+✔ spatial projectile lookup agrees with exhaustive swept hits across cell boundaries (22.780958ms)
+✖ all towers drift inward without orbiting and spin clockwise independently (46.841708ms)
+✖ tower entrances preserve recorded travel while enlarged armor clears the floor (445.842625ms)
+✔ every recorded tower offspring event matches original ticks and types, including repeat bursts (8417.771959ms)
+✔ killing a tower during discharge prevents unborn children from appearing (13.601166ms)
+✔ tower animation stays open through each measured discharge across repeated bursts (0.22875ms)
+✔ scheduled spiders retain radial jitter relative to their measured base radius (0.721459ms)
+✔ both spider rewards match the independent v3.2 reference and old revisions keep five gems (0.782334ms)
+✖ revision ten and current recordings replay and seek with their own entrance and discharge rules (211.804041ms)
+ℹ tests 72
+ℹ suites 0
+ℹ pass 63
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19778.533834
+
+✖ failing tests:
+
+test at tests/combat-balance.test.ts:20:1
+✖ new tower crowns stay reachable from the ground through their real entrance (604.645709ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Math.abs(e.pos.y-towerFloorHeight(e,w.time)-TOWER_FLOOR_CLEARANCE)<1e-8)
+  
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/combat-balance.test.ts:24:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/combat-balance.test.ts:49:1
+✖ hand-II ground pulses retain damage against all grounded tower tiers (164.763708ms)
+  AssertionError [ERR_ASSERTION]: squid2
+  
+  0 !== 5
+  
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/combat-balance.test.ts:55:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 5,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/combat-balance.test.ts:128:1
+✖ historical crew checkpoints captured before the edits retain every exact digest (167.277209ms)
+  Error: Team replay validation failed. Playback stopped to avoid showing an inaccurate match.
+      at CrewReplayPlayer.step (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/src/crew-replay.ts:99:182)
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/combat-balance.test.ts:130:66)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests/combat-balance.test.ts:135:1
+✖ current solo recordings and crew checkpoints retain corrected rules on restore (47.977541ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    World {
+      activeCrew: null,
+      activeFlightBatch: undefined,
+      bloodSequence: 0,
+      cause: 'FALLEN',
+  ...
+        legacyBeamDensity: false,
+  +     legacyBeamHold: true,
+  -     legacyBeamHold: false,
+        legacyCentipedeArc: false,
+        legacyCentipedeCycle: false,
+        legacyClickFiring: true,
+        legacyEnemyBehavior: false,
+        legacyEnemyFloor: false,
+  
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/combat-balance.test.ts:139:27)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [World],
+    expected: [World],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/projectile-distance.test.ts:20:1
+✖ wider travelling cones keep compact launch radii and rotate with the aim (3.45375ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      0.008,
+      0.01,
+      0.012,
+  +   0.003,
+  +   0.003,
+  +   0.003,
+  +   0.003
+  -   0.015,
+  -   0.015,
+  -   0.015,
+  -   0.015
+    ]
+  
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/projectile-distance.test.ts:21:9)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [
+      0.008,  0.01,
+      0.012, 0.003,
+      0.003, 0.003,
+      0.003
+    ],
+    expected: [
+      0.008,  0.01,
+      0.012, 0.015,
+      0.015, 0.015,
+      0.015
+    ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/projectiles.test.ts:7:1
+✖ stream radius fills multiple lanes with the full primary salvo at every hand (112.300208ms)
+  AssertionError [ERR_ASSERTION]: each upgrade has a wider physical stream
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/projectiles.test.ts:24:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/simulation.test.ts:165:1
+✖ all towers drift inward without orbiting and spin clockwise independently (46.841708ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + -0.2731786857863746
+  - 0.32302781373262407
+  
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/simulation.test.ts:172:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -0.2731786857863746,
+    expected: 0.32302781373262407,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/spawn-fixes.test.ts:14:1
+✖ tower entrances preserve recorded travel while enlarged armor clears the floor (445.842625ms)
+  AssertionError [ERR_ASSERTION]: grounded architecture uses its own floor anchor
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/spawn-fixes.test.ts:26:11)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/spawn-fixes.test.ts:90:1
+✖ revision ten and current recordings replay and seek with their own entrance and discharge rules (211.804041ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    World {
+      activeCrew: null,
+      activeFlightBatch: undefined,
+      bloodSequence: 0,
+      cause: '',
+  ...
+        legacyBeamDensity: false,
+  +     legacyBeamHold: true,
+  -     legacyBeamHold: false,
+        legacyCentipedeArc: false,
+        legacyCentipedeCycle: false,
+        legacyClickFiring: true,
+        legacyEnemyBehavior: false,
+        legacyEnemyFloor: true,
+  
+      at TestContext.<anonymous> (/private/var/folders/46/_9p2z_b539j98zwsbpy20h880000gn/T/daggers-fps-baseline-t3sc2awl/tests/spawn-fixes.test.ts:96:57)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [World],
+    expected: [World],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,40 @@
+✔ accelerated tower sweeps match the original triangles across poses, scales, pitch, and cadence (929.334ms)
+✔ BVH keeps every triangle once and bounds each leaf (0.673542ms)
+✔ all mobile enemy spawns are safe even when requested below the floor or beyond the arena (59.871208ms)
+✔ tower skulls never dive beneath the void and then return through the arena (352.392583ms)
+✔ ejection, eggs, spiderlings and separation retain floor clearance after high downward velocity (0.395959ms)
+✔ a body overlapping a higher neighboring tile is kept above that tile (0.115542ms)
+✔ multiplayer interpolation is constrained without mutating host samples (3.127834ms)
+✔ historical recordings retain prior floor rules while new recordings replay the fix (230.462625ms)
+✔ cached tile shrink thresholds preserve every floor height across the descent (2.747125ms)
+✔ floor fast paths preserve swept contacts, raised sides, voids, and footprint sampling (81.054208ms)
+✔ bounded homing search matches exhaustive steering, damage, and effects across varied tower approaches (924.0905ms)
+✔ a nearer body prevents distant crystal visibility queries from tracing armor (0.784417ms)
+✔ tower-stream movement matches the exhaustive clearance scan as towers move and enemies spawn (52.910417ms)
+✔ destroyed tower crystals stop blocking immediately, including later shots in one tick (18.5485ms)
+✔ attached crystal centers follow the rendered emergence root and accept shots there (680.9035ms)
+✔ emerging crystal radii shrink with the rendered root instead of hitting empty space (1.447041ms)
+✔ ghostpede absorbs a grazing homing sweep at contact even with both endpoints outside (0.778292ms)
+✔ a nearer enemy wins over ghostpede absorption farther along the same homing path (0.2735ms)
+✔ moving enemy sweeps into a bullet even when its final hitbox misses, across cells (1.638166ms)
+✔ movement history is consumed once and does not affect later stationary queries (0.250708ms)
+✔ pede crystals use their own swept movement rather than only the enemy head (0.545833ms)
+✔ animated rigid armor contacts and normals agree with transformed render triangles (436.882125ms)
+✔ raised tile sides reflect descending, horizontal and ascending shots without lifting them (4.340375ms)
+✔ a shallow floor shot gets useful travel rather than repeated tiny rebounds (4.12425ms)
+✔ steep floor bursts fan outward at every hand level without increasing damage or energy (18.188083ms)
+✔ floor sweep ignores clear flight and missing arena but reflects either side of a seam (0.181583ms)
+✔ revision 16 preserves old ricochets and new floor-burst replays remain deterministic after seeking (23.005333ms)
+✔ tile-side contacts at the exact start and end cannot tunnel (0.205875ms)
+✔ all enlarged tower tiers clear the full footprint during entrance, spitting and inward travel (1014.259083ms)
+✔ clearance handles mature towers on raised tiles and over the sinking perimeter without cumulative lift (4.364375ms)
+✔ shotgun depth pullback increases at every one of the seven tiers (0.137334ms)
+✔ floating spawners bob at a deterministic altitude and never grow a ground attachment (0.996875ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1732.88275

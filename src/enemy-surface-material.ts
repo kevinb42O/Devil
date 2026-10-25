@@ -108,7 +108,7 @@ float ridge=scales.y;
  albedo*=1.-vein*.14;
  float shellGrain=eNoise(ep*85.);albedo*=.82+shellGrain*.30;
  height+=ribs*.48-vein*.08+(shellGrain-.5)*.12;
- if(eMarking>1.5){albedo*=.73+scales.x*.27;height+=scales.y*.35;}
+ if(eMarking>1.5){float oldKeratin=eNoise(ep*vec3(23.,17.,29.));albedo*=.79+oldKeratin*.21;height+=(oldKeratin-.5)*.16;}
  rough+=ribs*.12+(shellGrain-.5)*.10;
 #elif ENEMY_FAMILY == 5
  // Interlocking machined panels, polished bevels and directional abrasion.
@@ -293,12 +293,31 @@ if(eHollow>.5&&region<3.5){
  emission+=eEnergy*(poleWave*.10+poleWake*.025)*(1.-poleWell);
 
 #endif
+#ifdef DRAKE_DETAIL
+ if(region<.5){
+  float hornGrain=eNoise(ep*vec3(91.,23.,47.));
+  float hornGrowth=pow(.5+.5*sin(ep.x*97.+ep.y*51.+cloud*3.),10.);
+  albedo=mix(eShell,eEdge,hornGrain*.28)*(.72+cloud*.25-hornGrowth*.10);
+  height=(hornGrain-.5)*.12-hornGrowth*.08;rough=.75;metal=.01;emission=vec3(0.);
+ }else if(region>2.5&&region<3.5){
+  float boneGrain=eNoise(ep*vec3(73.,37.,81.));
+  albedo=eBone*(.63+cloud*.21+boneGrain*.13);
+  albedo=mix(albedo,eSecondary*.40,smoothstep(.59,.82,boneGrain)*.22);
+  height=(boneGrain-.5)*.11;rough=.73;metal=.01;emission=vec3(0.);
+ }
+#endif
 #ifdef SKULL_HORROR
- // Aged bone and hammered funerary iron, without the old insect bands or
+ // Aged cranial bone and worn horn, without the old insect bands or
  // regular diamond lattice. Thin branching fractures stay dark at distance.
  float fractureField=sin(ep.y*23.+sin(ep.z*21.)*1.7+sin(ep.x*16.)*2.4);
  float fissure=eLine(fractureField,.022,max(fwidth(fractureField)*.65,.018))*smoothstep(.43,.67,cloud);
- if(region>2.5&&region<3.5){
+ if(region<.5){
+  // Horn growth is broad, dry keratin. No armor engraving or luminous inlay.
+  float hornGrain=eNoise(ep*vec3(54.,19.,47.));
+  float growth=pow(.5+.5*sin(ep.y*108.+ep.x*31.+cloud*2.),9.);
+  albedo=mix(eShell,eEdge,hornGrain*.28)*(.76+cloud*.27-growth*.12);
+  height=(hornGrain-.5)*.14-growth*.08;rough=.74+hornGrain*.16;metal=.01;
+ }else if(region>2.5&&region<3.5){
   float stain=eNoise(ep*vec3(17.,11.,23.));
   albedo=eBone*(.54+cloud*.28+stain*.20);
   float mineral=eNoise(ep*vec3(83.,31.,77.));
@@ -350,7 +369,7 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
  const skullTier=horror?Number(kind.match(/[123]$/)?.[0]??1):0;
  const skullLight={value:1};
  if(horror)material.userData.skullLight=skullLight;
- const skullAccent=kind.startsWith('transmuted')?p.eye:[0,0xff9955,0x72cfde,0xef4968][skullTier];
+ const skullAccent=kind.startsWith('transmuted')?p.eye:[0,0xff9955,0xff793b,0xef4968][skullTier];
  const skullFill=[0,0xe6d0ae,0xb3cfd6,0xbfb0d0][skullTier];
  const uniforms={eSkullFill:color(skullFill),eSkullAccent:color(skullAccent),eSkullLightStrength:skullLight,eSkullTier:{value:skullTier},eShell:color(p.shell),eSecondary:color(p.secondary),eEdge:color(p.edge),eMembrane:color(p.membrane),eBone:color(p.bone),eMetal:color(p.metal),eEye:color(p.eye),eEnergy:color(p.energy),eRough:{value:p.roughness},eMetalness:{value:p.metalness},eScale:{value:p.scale},eRelief:{value:p.relief},eHollow:{value:p.hollow?1:0},eMarking:{value:p.marking??0},eTime:time,eHit:{value:options.hit?1:0}};
  material.onBeforeCompile=shader=>{
@@ -399,7 +418,7 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
     #ifdef SKULL_HORROR
      // A fixed per-material fill and surface-bound inner light survive the
      // unlit depths without adding a light, sprite or draw call per enemy.
-     // Sockets stay black; the bone, helm and tissue retain sculpted shading.
+     // Sockets stay black; bone, horn and tissue retain sculpted shading.
      float skullRim=pow(1.-abs(dot(normal,normalize(vViewPosition))),3.);
      // Light is embedded in the geometry's luminous channels, not projected
      // from a virtual key or a point light. Keep a small neutral depth floor.
@@ -407,6 +426,11 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
       reflectedLight.indirectDiffuse+=diffuseColor.rgb*.15*eSkullLightStrength;
       reflectedLight.indirectSpecular+=eSkullAccent*skullRim*.045*eSkullLightStrength;
      }
+    #endif
+    #if ENEMY_FAMILY == 4
+     // Brood shells retain a small shaded depth floor without reintroducing
+     // the retired neon capsule light or adding a point light per egg.
+     reflectedLight.indirectDiffuse+=diffuseColor.rgb*.12;
     #endif
     #if ENEMY_FAMILY == 7 && ENEMY_ROLE == 1
      // Restrained cold facet sheen: broad directional reflection with only a
@@ -433,9 +457,9 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
     // Only authored eyes, veins and mineral cores emit light. Ordinary skin,
     // wings, bone and armor must be allowed to fall into shadow.
     #ifdef DRAKE_DETAIL
-     // A low grazing sheen describes the silhouette, without billboard glows.
+     // A restrained grazing sheen describes the grounded bone silhouette.
      float drakeRim=pow(1.-abs(dot(normal,normalize(vViewPosition))),3.);
-     if(region<3.5)emission+=eEnergy*drakeRim*.10;
+     if(region<3.5)emission+=eEnergy*drakeRim*.035;
     #endif
     totalEmissiveRadiance+=emission;`);
   if(spider){
@@ -455,7 +479,7 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
    `+shader.fragmentShader.slice(end);
   }
  };
- material.customProgramCacheKey=()=>`enemy-authored-surfaces-v7-${p.family}-${role}-${horror?'skull-horror':spider?kind:drake?'drake':kind==='gigapede'?'gigapede-enamel':serpent?'serpent':'standard'}`;
+ material.customProgramCacheKey=()=>`enemy-authored-surfaces-v7-${p.family}-${role}-${horror?'skull-horror':spider?kind+'-feeding-face':drake?'drake-bone':p.family==='capsule'?'brood-shell':kind==='gigapede'?'gigapede-enamel':serpent?'serpent':'standard'}`;
  return material;
 }
 

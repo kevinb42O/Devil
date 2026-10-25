@@ -27,7 +27,7 @@ try {
   const before=await page.evaluate(()=>window.abyss.position.z);
   await page.keyboard.down('KeyW');await page.waitForTimeout(550);await page.keyboard.up('KeyW');
   assert.ok(await page.evaluate(()=>window.abyss.position.z)<before-2,'W moves the player forward');
-  await page.keyboard.down('Space');await page.waitForTimeout(140);assert.ok(await page.evaluate(()=>window.abyss.position.y)>1.8,'jump leaves the ground');await page.keyboard.up('Space');
+  await page.keyboard.down('Space');await page.waitForTimeout(140);assert.ok(await page.evaluate(()=>window.abyss.position.y)>1.8,'jump leaves the ground');await page.waitForFunction(()=>window.abyss.audio.recent.includes('jump1'));assert.deepEqual(await page.evaluate(()=>window.abyss.audio.failed),[],'live jump audio loads without failures');await page.keyboard.up('Space');
   await page.mouse.down();await page.waitForTimeout(400);await page.mouse.up();assert.ok(await page.evaluate(()=>window.abyss.stats.shots)>0,'stream launches physical projectiles');
   await page.evaluate(()=>document.exitPointerLock());await page.waitForFunction(()=>window.abyss.mode==='paused');
   const time=await page.evaluate(()=>window.abyss.time);await page.waitForTimeout(250);assert.equal(await page.evaluate(()=>window.abyss.time),time,'pause freezes simulation');

@@ -1,0 +1,2136 @@
+{
+  "sourceCount": 275,
+  "mixPolicy": "recorded-level",
+  "nativeMixerFormulaVerified": false,
+  "summary": {
+    "native-unused-or-prototype": 34,
+    "routed": 203,
+    "absent-native-behavior": 37,
+    "extension-input": 1
+  },
+  "reference": "https://raw.githubusercontent.com/NoahStolk/ddinfo-web/master/src/DevilDaggersInfo.Web.Server/Utils/AssetInfo/AudioAudio.cs",
+  "recordings": [
+    {
+      "name": "andrasimpact",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "andrasrise",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "burrowcentipede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "burrowcentipede"
+      ]
+    },
+    {
+      "name": "chatterandras",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "chattercentipede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chattercentipede"
+      ]
+    },
+    {
+      "name": "chattercentipede2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chattercentipede2"
+      ]
+    },
+    {
+      "name": "chattergigaspider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chattergigaspider"
+      ]
+    },
+    {
+      "name": "chatterleviathan",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterleviathan"
+      ]
+    },
+    {
+      "name": "chatterminisquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterminisquid"
+      ]
+    },
+    {
+      "name": "chatterskull",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskull"
+      ]
+    },
+    {
+      "name": "chatterskull2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskull2"
+      ]
+    },
+    {
+      "name": "chatterskull2black",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskull2black"
+      ]
+    },
+    {
+      "name": "chatterskull3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskull3"
+      ]
+    },
+    {
+      "name": "chatterskull3black",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskull3black"
+      ]
+    },
+    {
+      "name": "chatterskull4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskull4"
+      ]
+    },
+    {
+      "name": "chatterskull4black",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskull4black"
+      ]
+    },
+    {
+      "name": "chatterskullblack",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterskullblack"
+      ]
+    },
+    {
+      "name": "chatterspider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterspider"
+      ]
+    },
+    {
+      "name": "chatterspiderling",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterspiderling"
+      ]
+    },
+    {
+      "name": "chattersquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chattersquid"
+      ]
+    },
+    {
+      "name": "chattersquidsmall",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "chattersquidultra",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chattersquidultra"
+      ]
+    },
+    {
+      "name": "chatterthorn",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterthorn"
+      ]
+    },
+    {
+      "name": "chatterultrapede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "chatterultrapede"
+      ]
+    },
+    {
+      "name": "collectgib1",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "collectgib2",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "collectgib3",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "collectgibbase1",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "collectgibbase2",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "collectgibbase3",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "daggercall",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercall"
+      ]
+    },
+    {
+      "name": "daggercall1bronze",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercall1bronze"
+      ]
+    },
+    {
+      "name": "daggercall2silver",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercall2silver"
+      ]
+    },
+    {
+      "name": "daggercall3gold",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercall3gold"
+      ]
+    },
+    {
+      "name": "daggercall4devil",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercall4devil"
+      ]
+    },
+    {
+      "name": "daggercall5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercall5"
+      ]
+    },
+    {
+      "name": "daggercollect",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercollect"
+      ]
+    },
+    {
+      "name": "daggercollect1bronze",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercollect1bronze"
+      ]
+    },
+    {
+      "name": "daggercollect2silver",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercollect2silver"
+      ]
+    },
+    {
+      "name": "daggercollect3gold",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercollect3gold"
+      ]
+    },
+    {
+      "name": "daggercollect4devil",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercollect4devil"
+      ]
+    },
+    {
+      "name": "daggercollect5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggercollect5"
+      ]
+    },
+    {
+      "name": "daggerdivert",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "daggerdrone",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggerdrone"
+      ]
+    },
+    {
+      "name": "daggerhit1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggerhit1"
+      ]
+    },
+    {
+      "name": "daggerseek",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "daggerseek",
+        "seekrapid1",
+        "weapon1-homing",
+        "seekrapid2",
+        "weapon2-homing",
+        "seekrapid3",
+        "weapon3-homing",
+        "seekrapid4",
+        "weapon5-homing",
+        "weapon5-homing",
+        "weapon6-homing",
+        "weapon6-homing",
+        "weapon7-homing"
+      ]
+    },
+    {
+      "name": "daggersteal1",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "daggersteal2",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "daggersteal3",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "daggersteal4",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "daggersteal5",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "damageandras",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "damagecentipede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagecentipede"
+      ]
+    },
+    {
+      "name": "damagecentipede2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagecentipede2"
+      ]
+    },
+    {
+      "name": "damagegigaspider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagegigaspider"
+      ]
+    },
+    {
+      "name": "damageleviathan",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damageleviathan"
+      ]
+    },
+    {
+      "name": "damagespider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagespider"
+      ]
+    },
+    {
+      "name": "damagesquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagesquid"
+      ]
+    },
+    {
+      "name": "damagesquid2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagesquid2"
+      ]
+    },
+    {
+      "name": "damagesquid3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagesquid3"
+      ]
+    },
+    {
+      "name": "damagesquid4",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "damagethorn",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damagethorn"
+      ]
+    },
+    {
+      "name": "damageultrapede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "damageultrapede"
+      ]
+    },
+    {
+      "name": "death",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "death"
+      ]
+    },
+    {
+      "name": "eggbounce",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "eggbounce"
+      ]
+    },
+    {
+      "name": "eggburst",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "eggburst"
+      ]
+    },
+    {
+      "name": "eggburst2",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "eggdrone",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "eggdrone"
+      ]
+    },
+    {
+      "name": "eggdrone2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "eggdrone2"
+      ]
+    },
+    {
+      "name": "eyearouse",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "eyearouse"
+      ]
+    },
+    {
+      "name": "eyearousedrone",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "eyearousedrone"
+      ]
+    },
+    {
+      "name": "eyehit",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "eyehit"
+      ]
+    },
+    {
+      "name": "eyepacifydrone",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "fall",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "fall"
+      ]
+    },
+    {
+      "name": "gibcollect",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gibcollect"
+      ]
+    },
+    {
+      "name": "gibcollectmagic",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gibcollectmagic"
+      ]
+    },
+    {
+      "name": "gibdrone1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gibdrone1"
+      ]
+    },
+    {
+      "name": "gibdrone2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gibdrone2"
+      ]
+    },
+    {
+      "name": "gibdrone3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gibdrone3"
+      ]
+    },
+    {
+      "name": "gigaricochet1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gigaricochet1"
+      ]
+    },
+    {
+      "name": "gigaricochet2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gigaricochet2"
+      ]
+    },
+    {
+      "name": "gigaricochet3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gigaricochet3"
+      ]
+    },
+    {
+      "name": "gigaricochet4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gigaricochet4"
+      ]
+    },
+    {
+      "name": "gigaricochet5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "gigaricochet5"
+      ]
+    },
+    {
+      "name": "highscore1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "highscore1",
+        "football-goal"
+      ]
+    },
+    {
+      "name": "highscore2",
+      "status": "absent-native-behavior",
+      "reason": "The native friends-leaderboard proximity warning has no matching native friends-ranking system in this game.",
+      "cues": []
+    },
+    {
+      "name": "jump1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "jump1"
+      ]
+    },
+    {
+      "name": "jump2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "jump2"
+      ]
+    },
+    {
+      "name": "jump3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "jump3"
+      ]
+    },
+    {
+      "name": "killandras",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "killcentipede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killcentipede"
+      ]
+    },
+    {
+      "name": "killcentipede2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killcentipede2"
+      ]
+    },
+    {
+      "name": "killeye",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killeye"
+      ]
+    },
+    {
+      "name": "killgigaspider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killgigaspider"
+      ]
+    },
+    {
+      "name": "killleviathan",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killleviathan"
+      ]
+    },
+    {
+      "name": "killminisquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killminisquid"
+      ]
+    },
+    {
+      "name": "killskull1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskull1"
+      ]
+    },
+    {
+      "name": "killskull2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskull2"
+      ]
+    },
+    {
+      "name": "killskull3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskull3"
+      ]
+    },
+    {
+      "name": "killskull4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskull4"
+      ]
+    },
+    {
+      "name": "killskull5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskull5"
+      ]
+    },
+    {
+      "name": "killskullblack1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskullblack1"
+      ]
+    },
+    {
+      "name": "killskullblack2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskullblack2"
+      ]
+    },
+    {
+      "name": "killskullblack3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskullblack3"
+      ]
+    },
+    {
+      "name": "killskullblack4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killskullblack4"
+      ]
+    },
+    {
+      "name": "killspider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killspider"
+      ]
+    },
+    {
+      "name": "killspiderling1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killspiderling1"
+      ]
+    },
+    {
+      "name": "killspiderling2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killspiderling2"
+      ]
+    },
+    {
+      "name": "killspiderling3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killspiderling3"
+      ]
+    },
+    {
+      "name": "killspiderling4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killspiderling4"
+      ]
+    },
+    {
+      "name": "killspiderling5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killspiderling5"
+      ]
+    },
+    {
+      "name": "killsquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killsquid"
+      ]
+    },
+    {
+      "name": "killsuperskull",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killsuperskull"
+      ]
+    },
+    {
+      "name": "killsuperskull2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killsuperskull2"
+      ]
+    },
+    {
+      "name": "killsuperskull2black",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killsuperskull2black"
+      ]
+    },
+    {
+      "name": "killsuperskull3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killsuperskull3"
+      ]
+    },
+    {
+      "name": "killsuperskullblack",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killsuperskullblack"
+      ]
+    },
+    {
+      "name": "killthorn",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killthorn"
+      ]
+    },
+    {
+      "name": "killultraskull",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "killultrasquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "killultrasquid"
+      ]
+    },
+    {
+      "name": "land",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "land"
+      ]
+    },
+    {
+      "name": "land2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "land2"
+      ]
+    },
+    {
+      "name": "legends",
+      "status": "absent-native-behavior",
+      "reason": "Original skull-throne lobby Easter egg is absent.",
+      "cues": []
+    },
+    {
+      "name": "leveldown",
+      "status": "extension-input",
+      "reason": "Explicit source for the requested extra-hand upgrade pair and debug hand-I transition.",
+      "cues": [
+        "leveldown",
+        "levelup5"
+      ]
+    },
+    {
+      "name": "levelup2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "levelup2",
+        "levelup5",
+        "levelup6"
+      ]
+    },
+    {
+      "name": "levelup3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "levelup3",
+        "levelup6",
+        "levelup7"
+      ]
+    },
+    {
+      "name": "levelup4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "levelup4",
+        "levelup7"
+      ]
+    },
+    {
+      "name": "leviathanbeckon",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "leviathanbeckon"
+      ]
+    },
+    {
+      "name": "leviathanbeckon2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "leviathanbeckon2"
+      ]
+    },
+    {
+      "name": "leviathantransmute",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "leviathantransmute"
+      ]
+    },
+    {
+      "name": "magentadetonate1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentadetonate1"
+      ]
+    },
+    {
+      "name": "magentadetonate2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentadetonate2"
+      ]
+    },
+    {
+      "name": "magentadetonate3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentadetonate3"
+      ]
+    },
+    {
+      "name": "magentadetonate4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentadetonate4"
+      ]
+    },
+    {
+      "name": "magentadetonate5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentadetonate5"
+      ]
+    },
+    {
+      "name": "magentadrone",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentadrone"
+      ]
+    },
+    {
+      "name": "magentashot",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentashot",
+        "weapon4-homing",
+        "weapon7-homing"
+      ]
+    },
+    {
+      "name": "magentastuckenemy1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentastuckenemy1"
+      ]
+    },
+    {
+      "name": "magentastuckenemy2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentastuckenemy2"
+      ]
+    },
+    {
+      "name": "magentastuckenemy3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentastuckenemy3"
+      ]
+    },
+    {
+      "name": "magentastuckenemy4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentastuckenemy4"
+      ]
+    },
+    {
+      "name": "magentastuckenemy5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magentastuckenemy5"
+      ]
+    },
+    {
+      "name": "magicpierce1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magicpierce1"
+      ]
+    },
+    {
+      "name": "magicpierce2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magicpierce2"
+      ]
+    },
+    {
+      "name": "magicpierce3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magicpierce3"
+      ]
+    },
+    {
+      "name": "magicpierce4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magicpierce4"
+      ]
+    },
+    {
+      "name": "magicpierce5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "magicpierce5"
+      ]
+    },
+    {
+      "name": "magicpulse",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "meat1",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat10",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat11",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat12",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat13",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat2",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat3",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat4",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat5",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat6",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat7",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat8",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meat9",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatbig1",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatbig2",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatbig3",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatbig4",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatbig5",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatbig6",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatmed1",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatmed2",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatmed3",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatmed4",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatmed5",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "meatmed6",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "menuatmos",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "menuatmos"
+      ]
+    },
+    {
+      "name": "menutheme",
+      "status": "absent-native-behavior",
+      "reason": "Native splash/title sequence is absent; menu uses menuatmos.",
+      "cues": []
+    },
+    {
+      "name": "polarity1e",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "polarity1e"
+      ]
+    },
+    {
+      "name": "polarity2w",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "polarity2w"
+      ]
+    },
+    {
+      "name": "polarity3n",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "polarity3n"
+      ]
+    },
+    {
+      "name": "polarity4s",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "polarity4s"
+      ]
+    },
+    {
+      "name": "rapid1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "rapid1",
+        "rapid5",
+        "seekrapid5"
+      ]
+    },
+    {
+      "name": "rapid2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "rapid2",
+        "rapid5",
+        "seekrapid5",
+        "rapid6",
+        "seekrapid6"
+      ]
+    },
+    {
+      "name": "rapid3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "rapid3",
+        "rapid6",
+        "seekrapid6",
+        "rapid7",
+        "seekrapid7"
+      ]
+    },
+    {
+      "name": "rapid4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "rapid4",
+        "rapid7",
+        "seekrapid7"
+      ]
+    },
+    {
+      "name": "ricochet1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochet1"
+      ]
+    },
+    {
+      "name": "ricochet2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochet2"
+      ]
+    },
+    {
+      "name": "ricochet3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochet3"
+      ]
+    },
+    {
+      "name": "ricochet4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochet4"
+      ]
+    },
+    {
+      "name": "ricochet5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochet5"
+      ]
+    },
+    {
+      "name": "ricochetmagenta1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagenta1"
+      ]
+    },
+    {
+      "name": "ricochetmagenta2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagenta2"
+      ]
+    },
+    {
+      "name": "ricochetmagenta3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagenta3"
+      ]
+    },
+    {
+      "name": "ricochetmagenta4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagenta4"
+      ]
+    },
+    {
+      "name": "ricochetmagenta5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagenta5"
+      ]
+    },
+    {
+      "name": "ricochetmagic1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagic1"
+      ]
+    },
+    {
+      "name": "ricochetmagic2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagic2"
+      ]
+    },
+    {
+      "name": "ricochetmagic3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagic3"
+      ]
+    },
+    {
+      "name": "ricochetmagic4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmagic4"
+      ]
+    },
+    {
+      "name": "ricochetmed1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmed1"
+      ]
+    },
+    {
+      "name": "ricochetmed2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmed2"
+      ]
+    },
+    {
+      "name": "ricochetmed3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmed3"
+      ]
+    },
+    {
+      "name": "ricochetmed4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmed4"
+      ]
+    },
+    {
+      "name": "ricochetmed5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ricochetmed5"
+      ]
+    },
+    {
+      "name": "secretsnake",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "secretsnake2",
+      "status": "absent-native-behavior",
+      "reason": "Original hidden lobby Easter egg is absent.",
+      "cues": []
+    },
+    {
+      "name": "shard1",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "shard2",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "shard3",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "shard4",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "shard5",
+      "status": "absent-native-behavior",
+      "reason": "Original bouncing meat/shard debris physics is absent; liquid droplets are not those bodies.",
+      "cues": []
+    },
+    {
+      "name": "shot1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot1",
+        "shot5",
+        "shot5alt1",
+        "shot5alt2",
+        "shot5alt3",
+        "shot5alt4"
+      ]
+    },
+    {
+      "name": "shot2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot2",
+        "shot5",
+        "shot5alt1",
+        "shot5alt2",
+        "shot5alt3",
+        "shot5alt4",
+        "shot6",
+        "shot6alt1",
+        "shot6alt2",
+        "shot6alt3",
+        "shot6alt4"
+      ]
+    },
+    {
+      "name": "shot3",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "shot3alt1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot3alt1",
+        "shot6",
+        "shot6alt1",
+        "shot7",
+        "shot7alt1"
+      ]
+    },
+    {
+      "name": "shot3alt2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot3alt2",
+        "shot6alt2",
+        "shot7alt2"
+      ]
+    },
+    {
+      "name": "shot3alt3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot3alt3",
+        "shot6alt3",
+        "shot7alt3"
+      ]
+    },
+    {
+      "name": "shot3alt4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot3alt4",
+        "shot6alt4",
+        "shot7alt4"
+      ]
+    },
+    {
+      "name": "shot4alt1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot4alt1",
+        "shot7",
+        "shot7alt1"
+      ]
+    },
+    {
+      "name": "shot4alt2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot4alt2",
+        "shot7alt2"
+      ]
+    },
+    {
+      "name": "shot4alt3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot4alt3",
+        "shot7alt3"
+      ]
+    },
+    {
+      "name": "shot4alt4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot4alt4",
+        "shot7alt4"
+      ]
+    },
+    {
+      "name": "shot4alt5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "shot4alt5"
+      ]
+    },
+    {
+      "name": "skullaggro",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "skullclop1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "skullclop1"
+      ]
+    },
+    {
+      "name": "skullclop2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "skullclop2"
+      ]
+    },
+    {
+      "name": "skullclop3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "skullclop3"
+      ]
+    },
+    {
+      "name": "skullclop4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "skullclop4"
+      ]
+    },
+    {
+      "name": "skullclop5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "skullclop5"
+      ]
+    },
+    {
+      "name": "skullclop6",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "skullclop6"
+      ]
+    },
+    {
+      "name": "sorathlogo",
+      "status": "absent-native-behavior",
+      "reason": "Sorath branding splash is absent.",
+      "cues": []
+    },
+    {
+      "name": "sorathlogo2",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "sorathstone",
+      "status": "absent-native-behavior",
+      "reason": "Original Sorath-stone lobby Easter egg is absent.",
+      "cues": []
+    },
+    {
+      "name": "spawnandras",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "spawncentipede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawncentipede"
+      ]
+    },
+    {
+      "name": "spawncentipede2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawncentipede2"
+      ]
+    },
+    {
+      "name": "spawnegg",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnegg"
+      ]
+    },
+    {
+      "name": "spawngigaspider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawngigaspider"
+      ]
+    },
+    {
+      "name": "spawnleviathan",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnleviathan"
+      ]
+    },
+    {
+      "name": "spawnminisquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnminisquid"
+      ]
+    },
+    {
+      "name": "spawnplayer",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnplayer"
+      ]
+    },
+    {
+      "name": "spawnskulls",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnskulls"
+      ]
+    },
+    {
+      "name": "spawnskulls2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnskulls2"
+      ]
+    },
+    {
+      "name": "spawnskulls3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnskulls3"
+      ]
+    },
+    {
+      "name": "spawnspider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnspider"
+      ]
+    },
+    {
+      "name": "spawnsquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnsquid"
+      ]
+    },
+    {
+      "name": "spawnultrapede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnultrapede"
+      ]
+    },
+    {
+      "name": "spawnultrasquid",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spawnultrasquid"
+      ]
+    },
+    {
+      "name": "spidereat1",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spidereat1"
+      ]
+    },
+    {
+      "name": "spidereat2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spidereat2"
+      ]
+    },
+    {
+      "name": "spidereat3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spidereat3"
+      ]
+    },
+    {
+      "name": "spidereat4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spidereat4"
+      ]
+    },
+    {
+      "name": "spidereat5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spidereat5"
+      ]
+    },
+    {
+      "name": "spidereat6",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "spidereat6"
+      ]
+    },
+    {
+      "name": "splashgiga",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "splashgiga"
+      ]
+    },
+    {
+      "name": "splashgiga2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "splashgiga2"
+      ]
+    },
+    {
+      "name": "splashgiga3",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "splashgiga3"
+      ]
+    },
+    {
+      "name": "splashgiga4",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "splashgiga4"
+      ]
+    },
+    {
+      "name": "splashgiga5",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "splashgiga5"
+      ]
+    },
+    {
+      "name": "splashgiga6",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "splashgiga6"
+      ]
+    },
+    {
+      "name": "stealgib",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "stealgib"
+      ]
+    },
+    {
+      "name": "stealgib2",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "stealgib2"
+      ]
+    },
+    {
+      "name": "subchattercentipede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "subchattercentipede"
+      ]
+    },
+    {
+      "name": "thornemerge",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "thornemerge"
+      ]
+    },
+    {
+      "name": "thorngib1",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "thorngib2",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "thorngib3",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "thorngib4",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "thorngib5",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "thorngib6",
+      "status": "native-unused-or-prototype",
+      "reason": "The reference catalog marks this as unused or prototype, including uncertain unused entries.",
+      "cues": []
+    },
+    {
+      "name": "uiclick",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "crew-countdown",
+        "uiclick"
+      ]
+    },
+    {
+      "name": "uihover",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "uihover"
+      ]
+    },
+    {
+      "name": "uislider",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "uislider"
+      ]
+    },
+    {
+      "name": "ultrapedecrash",
+      "status": "absent-native-behavior",
+      "reason": "Ghostpede floor-crash behavior is absent from the implemented orbiting movement; death correctly uses ultrapedefall.",
+      "cues": []
+    },
+    {
+      "name": "ultrapedeeat",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ultrapedeeat"
+      ]
+    },
+    {
+      "name": "ultrapedefall",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "ultrapedefall"
+      ]
+    },
+    {
+      "name": "unburrowcentipede",
+      "status": "routed",
+      "reason": "Connected to implemented events or the requested hand composites.",
+      "cues": [
+        "unburrowcentipede"
+      ]
+    }
+  ]
+}

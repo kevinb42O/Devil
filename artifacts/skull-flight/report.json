@@ -159,18 +159,18 @@
     }
   },
   "film": {
-    "frames": 500
+    "frames": 469
   },
   "decoded": {
-    "duration": 8.467767,
+    "duration": 8.424533,
     "width": 1280,
     "height": 720
   },
   "gameplay": {
     "launched": 290,
-    "descending": 1541,
-    "maxPitch": 0.38199898233350826,
-    "maxRoll": 0.30520098652849215,
+    "descending": 1629,
+    "maxPitch": 0.3819229989662229,
+    "maxRoll": 0.30343369344890403,
     "groundPitch": 0,
     "hitChecked": true,
     "finite": true,
@@ -179,18 +179,18 @@
   "dense": {
     "shown": 1000,
     "draws": 16,
-    "triangles": 1259095,
+    "triangles": 1469013,
     "cache": 1000,
     "growthPhases": 1000,
     "cleared": 0,
     "timing": {
       "bypass": {
-        "median": 4,
-        "p95": 5.399999976158142
+        "median": 7.100000023841858,
+        "p95": 9.600000023841858
       },
       "motion": {
-        "median": 4.899999976158142,
-        "p95": 7.5
+        "median": 7.5,
+        "p95": 10.299999952316284
       }
     },
     "measurement": "CPU render submission; same shader/attributes, controller enabled versus bypassed"

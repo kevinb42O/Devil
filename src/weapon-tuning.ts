@@ -17,7 +17,7 @@ export const LEGACY_STREAM_SPREAD = [.022,.045,.085,.13] as const;
  * fill this disc and fan outward in a circular cone toward the aim target. Widen the stream's
  * cross-section without enlarging its bullets or changing its damage budget.
  */
-export const STREAM_RADIUS = [.008,.01,.012,.015,.015,.015,.015] as const;
+export const STREAM_RADIUS = [.008,.01,.012,.003,.003,.003,.003] as const;
 /** Replay revision III used a broad launch disc; current streams start at a tip. */
 export const LEGACY_WIDE_STREAM_RADIUS = [.16,.25,.4,.55] as const;
 
@@ -64,13 +64,14 @@ export const RICOCHET_TUNING={retention:.65,verticalRetention:.55,minRiseSpeed:4
 
 /** A dense close-range packet, with a broad outer scatter at every hand. */
 export const SHOTGUN_TUNING={radius:.01,coreFraction:.8,coreSpread:.5,maxCoreSpread:.14,damage:2} as const;
-/** Native warm blades with cyan and magenta seeking accents, shared with stream light. */
-export const SHOTGUN_COLORS=[
- [1,.12,.025], [1,.12,.025],
- [1,.2,.035], [1,.2,.035],
- [1,.22,.025], [.025,.75,1],
- [1,.04,.025], [1,.025,.4],
- [1,.04,.025], [1,.025,.4],
- [1,.04,.025], [1,.025,.4],
- [1,.04,.025], [1,.025,.4],
-] as const;
+/** Original warm regular dagger colour, shared by all shotgun pellets and effects. */
+export const SHOTGUN_COLOR=[1,.12,.025] as const;
+export const SHOTGUN_COLORS=Array.from({length:14},()=>SHOTGUN_COLOR);
+
+/** Radius grows geometrically at a fixed distance, not at the emission point.
+ * Convert radius multipliers to angles so tan(angle), rather than angle, scales. */
+export const SHOTGUN_SPREAD = [.17,.21,.26,...Array.from({length:4},(_,i)=>Math.atan(Math.tan(.32)*1.5*1.4**i))] as const;
+export const WIDE_SHOTGUN_TUNING={coreFraction:.6,coreSpread:.7} as const;
+
+/** The travelling beam footprint grows at the same rate; fingertip radii stay tiny. */
+export const BEAM_SPREAD=[.045,.14,.22,...Array.from({length:4},(_,i)=>Math.atan(Math.tan(.31)*1.5*1.4**i))] as const;

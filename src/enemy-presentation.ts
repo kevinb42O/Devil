@@ -23,18 +23,19 @@ export function towerDeathPose(elapsed:number,sinkDepth:number){
  return {spin:TOWER_SPIN_SPEED*time+.5*18*time*time,sink:sinkDepth*progress*progress,done:elapsed>=TOWER_DEATH_DURATION};
 }
 export const TOWER_EJECTION_DURATION=.5;
-/** Lower crown outlets keep the large grounded silhouettes easier to aim at. */
-export function towerOutletHeight(kind:Enemy['kind'],legacy=false){return legacy?(kind==='squid3'?5:kind==='squid2'?2.5:1.1)*CREATURE_SCALE_RATIO:kind==='squid3'?13:kind==='squid2'?9:6;}
-export function towerRadius(kind:Enemy['kind']){return kind==='squid3'?4.2:kind==='squid2'?3:1.8;}
+/** Distinct creature heights, shared by visible anatomy and emission mouths. */
+export function towerOutletHeight(kind:Enemy['kind'],legacy=false){return legacy?(kind==='squid3'?5:kind==='squid2'?2.5:1.1)*CREATURE_SCALE_RATIO:kind==='squid3'?18:kind==='squid2'?13:8;}
+export function towerRadius(kind:Enemy['kind']){return kind==='squid3'?3.2:kind==='squid2'?2.5:1.8;}
 /** Every emitted child uses the same exhaust center as the visible chimney. */
 export function towerOutlets(kind:Enemy['kind']){
  const count=kind==='squid3'?3:kind==='squid2'?2:1,offset=count===1?0:towerRadius(kind)*.48;
- return Array.from({length:count},(_,i)=>{const angle=i*Math.PI*2/count;return {x:Math.sin(angle)*offset,y:towerOutletHeight(kind),z:Math.cos(angle)*offset,angle,radius:count===1?1.05:count===2?1.15:1.4};});
+ return Array.from({length:count},(_,i)=>{const angle=i*Math.PI*2/count;return {x:Math.sin(angle)*offset,y:towerOutletHeight(kind),z:Math.cos(angle)*offset,angle,radius:count===1?1.05:count===2?1.0:1.12};});
 }
 /** Relative foundation transform shared by rendering and shot collision. */
 export function towerFoundationPose(bottom:number){return {footY:Math.min(0,bottom),footScale:Math.max(.001,-bottom),plinthY:bottom+.3};}
 
-export function towerCrystalRadius(kind:Enemy['kind'],balanced=false){if(balanced)return .63*CREATURE_SCALE_RATIO/.62;return kind==='squid3'?.9:kind==='squid2'?.8:.7;}
+/** Visible gem sizes; balanced damage spheres keep their existing tolerance. */
+export function towerCrystalRadius(kind:Enemy['kind'],balanced=false){if(balanced)return .63*CREATURE_SCALE_RATIO/.62;return kind==='squid3'?.66:kind==='squid2'?.60:.52;}
 export function legacyTowerGeometry(enemy:Enemy){return enemy.kind.startsWith('squid')&&(enemy.weakpoints[0]?.local.y??0)<1;}
 /** Anticipation, held opening through the stream, then a soft closing motion. */
 export function towerSpitPulse(age:number,kind:Enemy['kind']='squid',originalCadence=false){
@@ -61,6 +62,8 @@ export function enemyRigScale(enemy:Enemy){
 }
 /** Crystal radius in rig coordinates; current spiders recover the pre-remake hit tolerance. */
 export function spiderCrystalRadius(enemy:Enemy){return SPIDER_CRYSTAL_RADIUS*enemy.size*(enemy.balance?2/.62:1);}
+/** Visual size follows the feeding face, independently of forgiving hit tolerance. */
+export function spiderCrystalVisualRadius(enemy:Pick<Enemy,'kind'|'size'>){return SPIDER_CRYSTAL_RADIUS*enemy.size*(enemy.kind==='spider2'?1.25:1);}
 export function enemyEmergenceScale(enemy:Enemy){
  if(enemy.kind==='orb'&&enemy.radius>ORB_CORE_RADIUS+.01){const t=Math.max(0,Math.min(1,enemy.age/ORB_REVEAL_SECONDS));return enemyRigScale(enemy)*t*t*(3-2*t);}
  if(isPede(enemy.kind))return 1; // Pede rigs scale individually; segment positions are world-space.
@@ -72,29 +75,14 @@ export function towerPartOffset(enemy:Enemy,name:string,originalCadence=true){
  const lift=legacyTowerGeometry(enemy)?.4:enemy.kind==='squid3'?1.05:enemy.kind==='squid2'?.85:.65;
  return towerSpitPulse(enemy.age,enemy.kind,originalCadence)*(name.includes('crest')?lift:-.18);
 }
-/** A reverse muscular wind-up, full release turn and small recovery overshoot.
- * Integrated angle preserves continuity through repeated bursts and replay seeks. */
-export function towerSpitTurn(age:number,kind:Enemy['kind'],originalCadence=true){
- const start=originalCadence?towerEmissionTick(kind,0,0)/60:3;
- const period=originalCadence?(towerEmissionTick(kind,1,0)-towerEmissionTick(kind,0,0))/60:20;
- const elapsed=age-start+.4;if(elapsed<=0)return 0;
- const cycles=Math.floor(elapsed/period),t=elapsed-cycles*period,turn=Math.PI*2;
- const ease=(x:number)=>{const u=Math.max(0,Math.min(1,x));return u*u*u*(u*(u*6-15)+10);};
- const release=kind==='squid3'?1.05:.85;
- let angle:number;
- if(t<.4)angle=-.42*ease(t/.4);
- else if(t<.4+release)angle=-.42+(turn+.54)*ease((t-.4)/release);
- else angle=turn+.12*(1-ease((t-.4-release)/.35));
- return cycles*turn+angle;
-}
 /** Attached damage targets share the render root's emergence transform. */
 export function crystalToEnemy(enemy:Enemy,player:Vec,local:Vec){const scale=enemyEmergenceScale(enemy);return localToEnemy(enemy,player,v(local.x*scale,local.y*scale,local.z*scale));}
-export function enemyYaw(enemy:Enemy,player:Vec){return isSpider(enemy.kind)?enemy.facingYaw:enemy.kind==='leviathan'?enemy.phase:isPede(enemy.kind)?(Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):enemy.facingYaw):enemy.kind.startsWith('squid')?enemy.facingYaw+(enemy.towerSpinDirection??-1)*(enemy.age*TOWER_SPIN_SPEED+(legacyTowerGeometry(enemy)?0:towerSpitTurn(enemy.age,enemy.kind,!!enemy.towerEmission))):isSkull(enemy.kind)&&Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):Math.atan2(player.x-enemy.pos.x,player.z-enemy.pos.z);}
+export function enemyYaw(enemy:Enemy,player:Vec){return isSpider(enemy.kind)?enemy.facingYaw:enemy.kind==='leviathan'?enemy.phase:isPede(enemy.kind)?(Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):enemy.facingYaw):enemy.kind.startsWith('squid')?enemy.facingYaw+(enemy.towerSpinDirection??-1)*enemy.age*TOWER_SPIN_SPEED:isSkull(enemy.kind)&&Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):Math.atan2(player.x-enemy.pos.x,player.z-enemy.pos.z);}
 export function localToEnemy(enemy:Enemy,player:Vec,local:Vec):Vec {const yaw=enemyYaw(enemy,player);return v(enemy.pos.x+local.x*Math.cos(yaw)+local.z*Math.sin(yaw),enemy.pos.y+local.y,enemy.pos.z-local.x*Math.sin(yaw)+local.z*Math.cos(yaw));}
 export const LEGACY_SQUID_I_GEM=v(0,-.04*CREATURE_SCALE,-.51*CREATURE_SCALE);
 export const SQUID_I_GEM=v(0,towerOutletHeight('squid')-.4,-2.1);
 export const LEGACY_SQUID_II_GEMS=[v(1.35*CREATURE_SCALE,-.04*CREATURE_SCALE,0),v(-1.35*CREATURE_SCALE,-.04*CREATURE_SCALE,0)];
-export const SQUID_II_GEMS=[v(3.5,towerOutletHeight('squid2')-.4,0),v(-3.5,towerOutletHeight('squid2')-.4,0)];
+export const SQUID_II_GEMS=[v(2.85,towerOutletHeight('squid2')-.4,0),v(-2.85,towerOutletHeight('squid2')-.4,0)];
 export const SPIDER_GEM=v(0,.25*CREATURE_SCALE,2.45*CREATURE_SCALE);
 
 export const SPIDER_HEAD=v(0,.9*CREATURE_SCALE,1.95*CREATURE_SCALE);
@@ -106,5 +94,5 @@ export function spiderLocalPoint(enemy:Enemy,player:Vec,local:Vec):Vec {
 }
 
 export const LEGACY_SQUID_III_GEMS=Array.from({length:3},(_,i)=>{const angle=i*Math.PI*2/3;return v(Math.sin(angle)*2.34*CREATURE_SCALE,.38*CREATURE_SCALE,Math.cos(angle)*2.34*CREATURE_SCALE);});
-export const SQUID_III_GEMS=Array.from({length:3},(_,i)=>{const angle=i*Math.PI*2/3;return v(Math.sin(angle)*4.9,towerOutletHeight('squid3')-.4,Math.cos(angle)*4.9);});
+export const SQUID_III_GEMS=Array.from({length:3},(_,i)=>{const angle=i*Math.PI*2/3;return v(Math.sin(angle)*4.0,towerOutletHeight('squid3')-.4,Math.cos(angle)*4.0);});
 export const LEVIATHAN_GEMS=Array.from({length:6},(_,i)=>{const angle=i*Math.PI/3;return v(Math.sin(angle)*8.35*CREATURE_SCALE,-2.9*CREATURE_SCALE,Math.cos(angle)*8.35*CREATURE_SCALE);});

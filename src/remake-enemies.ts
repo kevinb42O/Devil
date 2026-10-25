@@ -6,6 +6,7 @@ import {buildTowerStructure} from './tower-geometry';
 import {towerOrganicPose} from './tower-anatomy-motion';
 import * as THREE from 'three';
 import {createSpiderAnatomy} from './spider-anatomy';
+import {createEggAnatomy} from './egg-anatomy';
 import {createEnemySurfaceMaterial,prepareEnemySurfaceGeometry,type EnemySurfaceRole} from './enemy-surface-material';
 import {createTowerMaterial,createTowerCrystalMaterial,type TowerFinish} from './tower-material';
 import {mergeGeometries,mergeVertices} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -14,7 +15,7 @@ import {EnvironmentLighting} from './environment-lighting';
 import {attachEnemySurfaceLight} from './enemy-surface-lighting';
 import {RemakeModelLibrary,type RemakeModel} from './remake-model-library';
 import {ENEMY_KINDS,isSkull,isSpider,isPede,skullTier,type EnemyKind} from './enemy-kinds';
-import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,CREATURE_SCALE_RATIO,enemyRigScale,spiderCrystalRadius,towerPartOffset,towerCrystalRadius,enemyEmergenceScale} from './enemy-presentation';
+import {SQUID_I_GEM,SQUID_II_GEMS,SQUID_III_GEMS,LEVIATHAN_GEMS,SPIDER_GEM,SPIDER_SIZE,SPIDER_CRYSTAL_RADIUS,CREATURE_SCALE_RATIO,enemyRigScale,spiderCrystalVisualRadius,towerPartOffset,towerCrystalRadius,enemyEmergenceScale} from './enemy-presentation';
 import {crystalImpactScale} from './impact-presentation';
 import {TILE_SIZE} from './arena';
 import {buildSerpentHead,buildSerpentArmor} from './serpent-geometry';
@@ -84,22 +85,22 @@ export class RemakeEnemies{
  private build(kind:EnemyKind){
   const root=new THREE.Group(),rig=new THREE.Group();root.name=kind;root.userData={source:'licensed-community-remake',label:REMAKE_NAMES[kind],original:false};root.add(rig);
   if(isSkull(kind)){
-   const tier=skullTier(kind),hollow=kind.startsWith('transmuted');
-   if(tier<=3)rig.add(createSkullAnatomy(tier,this.surface(kind,'body')));
+   const tier=skullTier(kind);
+   if(tier<=3){
+    const skull=createSkullAnatomy(tier,this.surface(kind,'body'));
+    if(kind==='skull')skull.scale.multiplyScalar(.78);
+    rig.add(skull);
+   }
    else{
-    const body=this.creature('dragon',6,kind,true);
-    body.geometry.computeBoundingBox();body.position.y=-1.3-body.geometry.boundingBox!.min.y*body.scale.y;
-    rig.add(createDrakeAnatomy(body,role=>this.surface(kind,role)));
-    if(hollow)this.hoop(rig,2.1,.05,-.6,this.surface(kind,'halo'),'hollow-halo');
+    rig.add(createDrakeAnatomy(role=>this.surface(kind,role)));
    }
   }else if(kind.startsWith('squid')){
    this.buildTower(rig,kind);
   }else if(isSpider(kind)){
    const size=SPIDER_SIZE*(kind==='spider2'?2:1),anatomy=createSpiderAnatomy(kind,this.surface(kind,'body'),size);rig.add(anatomy.root);
-   this.crystalAt(anatomy.head,'spider-held-gem',{x:0,y:SPIDER_GEM.y*size-anatomy.head.position.y,z:SPIDER_GEM.z*size-anatomy.head.position.z},SPIDER_CRYSTAL_RADIUS*size,true,kind);
+   this.crystalAt(anatomy.head,'spider-held-gem',{x:0,y:SPIDER_GEM.y*size-anatomy.head.position.y,z:SPIDER_GEM.z*size-anatomy.head.position.z},spiderCrystalVisualRadius({kind,size}),true,kind);
   }else if(kind==='egg'||kind==='egg2'){
-   const radius=kind==='egg2'?.75:.6,shell=this.mesh(rig,new THREE.IcosahedronGeometry(radius,1),this.surface(kind,'shell'),'capsule');shell.scale.y=1.3;
-   this.hoop(rig,radius*.98,.075,0,this.core(false,true,kind),'capsule-seam');this.crystalAt(rig,'capsule-tip',{x:0,y:radius,z:0},.18,true,kind);
+   rig.add(createEggAnatomy(kind==='egg2',this.surface(kind,'shell')));
   }else if(kind==='spiderling')rig.add(createSpiderAnatomy(kind,this.surface(kind,'body'),.16).root);
   else if(isPede(kind)){
    buildSerpentHead(rig,kind,role=>this.surface(kind,role));
@@ -163,7 +164,7 @@ export class RemakeEnemies{
   for(const node of nodes){
    if(node.name.startsWith('weak-point-')){const state=node.userData,hp=enemy.weakpoints[state.crystalIndex]?.hp??1;if(hp<state.crystalHp)state.crystalHitAt=time;else if(hp>state.crystalHp||time<state.crystalHitAt)state.crystalHitAt=-Infinity;state.crystalHp=hp;if(enemy.kind.startsWith('squid')&&enemy.weakpoints[state.crystalIndex]){const point=enemy.weakpoints[state.crystalIndex].local;node.position.set(point.x,point.y,point.z);}node.visible=hp>0;node.scale.copy(state.crystalBaseScale);if(enemy.kind.startsWith('squid'))node.scale.setScalar(towerCrystalRadius(enemy.kind));node.scale.multiplyScalar(crystalImpactScale(time-state.crystalHitAt));const hit=node.visible&&enemy.hp>0&&time-state.crystalHitAt<.16;(node as THREE.Mesh).material=enemy.kind.startsWith('squid')?this.towerCore(hit):this.core(hit,state.crystalGreen===true,state.crystalKind??enemy.kind);}
    // Keep the matriarch's face visible; its forgiving combat radius stays in the simulation.
-   else if(node.name==='spider-held-gem'){node.scale.setScalar(enemy.kind==='spider2'?SPIDER_CRYSTAL_RADIUS*enemy.size:spiderCrystalRadius(enemy));(node as THREE.Mesh).material=this.core(time-enemy.lastHit>=0&&time-enemy.lastHit<.18,true,enemy.kind);}
+   else if(node.name==='spider-held-gem'){node.scale.setScalar(spiderCrystalVisualRadius(enemy));(node as THREE.Mesh).material=this.core(time-enemy.lastHit>=0&&time-enemy.lastHit<.18,true,enemy.kind);}
    else if(node.name==='spider-head-pivot')node.rotation.x=(1-enemy.headExposure)*.9;
    else if(node.userData.towerOrganicMotion){const pose=towerOrganicPose(enemy.age,enemy.kind,node.userData.towerOrganicMotion,originalCadence);node.rotation.set(pose.rx,0,pose.rz);node.scale.set(1,pose.sy,1);}
    else if(node.name==='warden-crest')node.position.y=node.userData.restY+towerPartOffset(enemy,'crest',originalCadence);

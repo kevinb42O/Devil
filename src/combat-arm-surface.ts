@@ -26,7 +26,8 @@ vec2 armCells(vec3 p){
 export const COMBAT_ARM_COLOR = /* glsl */`
 // One continuous bind-space surface across the skin, with no shoulder seams.
 float armMask=combatActive*combatSkin;
-float armFeedbackMask=clamp(vCombatArm.y+(combatTier>=5.?vCombatArm.x:0.),0.,1.)*combatActive*combatSkin;
+float armFeedbackMask=clamp(vCombatArm.x+(combatTier>=5.?vCombatArm.y:0.),0.,1.)*combatActive*combatSkin;
+float armFire=dot(vCombatArm,combatHandFire)*combatActive*combatSkin;
 // The source GLB is authored in small units; normalize before sampling.
 float armTier=clamp(combatTier,1.,7.);
 float armScale=armTier<2.5?1.25:(armTier<4.5?.8:(armTier<6.5?.95:.56));

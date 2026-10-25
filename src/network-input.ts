@@ -24,7 +24,7 @@ export type InputRun=[seq:number,ticks:number,forward:number,strafe:number,yaw:n
  * command per tick, so a held stream never turns into a tap during recovery. */
 export function inputRuns(commands:InputCommand[]):InputRun[]{
  const runs:InputRun[]=[];
- for(const {seq,input}of commands){const flags=(input.jump?1:0)|(input.fire?2:0)|(input.homing?4:0)|(input.leftArm?8:0)|(input.rightArm?16:0),last=runs.at(-1);
+ for(const {seq,input}of commands){const flags=(input.jump?1:0)|(input.fire?2:0)|(input.homing?4:0)|(input.leftArm?8:0)|(input.rightArm?16:0)|(input.fireLeft?32:0)|(input.fireRight?64:0),last=runs.at(-1);
   if(last&&last[0]+last[1]===seq&&last[2]===input.forward&&last[3]===input.strafe&&last[4]===input.yaw&&last[5]===input.pitch&&last[6]===flags)last[1]++;
   else runs.push([seq,1,input.forward,input.strafe,input.yaw,input.pitch,flags]);
  }

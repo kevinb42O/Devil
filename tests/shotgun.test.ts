@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {World,v,idleInput,segmentSphere,STEP,type Projectile} from '../src/simulation';
 import {sweepArmor} from '../src/projectile-collision';
 import {weaponMuzzle} from '../src/weapon-origin';
-import {SHOTGUN_TUNING,WEAPON_PRESENTATION} from '../src/weapon-tuning';
+import {SHOTGUN_TUNING,SHOTGUN_SPREAD,BEAM_SPREAD,STREAM_RADIUS,WEAPON_PRESENTATION} from '../src/weapon-tuning';
 import {BURST_COUNTS} from '../src/weapon-levels';
 import {daggerLaunch,shotLaunches,type ShotLaunch} from '../src/projectile-launch';
 import {packShotLaunch,unpackShotLaunch} from '../src/network-shots';
@@ -20,15 +20,15 @@ function contacts(w:World,range:number,radius=.65){
 }
 
 test('shotgun launch stays compact and perpendicular to aim, including partial homing reserves',()=>{
- for(let level=1;level<=4;level++)for(const pitch of [0,1.5,-Math.PI/2])for(const homing of [false,true]){
+ for(let level=1;level<=7;level++)for(const pitch of [0,1.5,-Math.PI/2])for(const homing of [false,true]){
   if(homing&&level===1)continue;
   const w=new World(71,{schedule:false});w.level=level;w.reserve=3;w.player.pos=v(10,20,30);
   const input={...idleInput(),yaw:1.3,pitch};w.shoot(input,true,homing);
   const center=weaponMuzzle(w.player.pos,input.yaw,pitch,level,0),forward=v(-Math.sin(input.yaw)*Math.cos(pitch),Math.sin(pitch),-Math.cos(input.yaw)*Math.cos(pitch));
   assert.equal(w.projectiles.length,homing?3:BURST_COUNTS[level-1]);
-  assert.equal(w.effects[0].projectileKind,'shotgun');assert.deepEqual(w.effects[0].muzzles,[center]);
+  assert.equal(w.effects[0].projectileKind,'shotgun');assert.deepEqual(w.effects[0].muzzles,level>=5?[center,weaponMuzzle(w.player.pos,input.yaw,pitch,level,1)]:[center]);
   for(const p of w.projectiles){
-   assert.equal(p.kind,'shotgun');const dx=p.pos.x-center.x,dy=p.pos.y-center.y,dz=p.pos.z-center.z;
+   assert.equal(p.kind,'shotgun');const muzzle=level>=5?weaponMuzzle(w.player.pos,input.yaw,pitch,level,p.socket??0):center,dx=p.pos.x-muzzle.x,dy=p.pos.y-muzzle.y,dz=p.pos.z-muzzle.z;
    assert.ok(Math.hypot(dx,dy,dz)<=SHOTGUN_TUNING.radius+1e-10);
    assert.ok(Math.abs(dx*forward.x+dy*forward.y+dz*forward.z)<1e-10);
    assert.ok(Math.abs(Math.hypot(p.vel.x,p.vel.y,p.vel.z)-(homing?42:70))<1e-10);
@@ -36,14 +36,14 @@ test('shotgun launch stays compact and perpendicular to aim, including partial h
  }
 });
 
-test('shotgun concentration improves each hand, with broad scatter and useful distant beam advantage',()=>{
+test('historical shotgun concentration improves each hand, with broad scatter and useful distant beam advantage',()=>{
  const report=[];
  for(const range of [3,5,25]){
   let lastDamage=0;
   for(let level=1;level<=4;level++){
    let hits=0,oldHits=0,beamHits=0,outer=0;
    for(const seed of [1,71,98765]){
-    const w=new World(seed,{schedule:false}),old=new World(seed,{schedule:false,legacyShotgun:true});
+    const w=new World(seed,{schedule:false,legacyWeaponSpread:true}),old=new World(seed,{schedule:false,legacyShotgun:true});
     for(const world of [w,old]){world.level=level;world.player.pos=v(0,10,0);const target=world.spawn('skull4',v(0,10,-range));target.age=2;target.radius=.65;}
     for(let i=0;i<120;i++){
      for(const world of [w,old]){world.projectiles=[];world.effects=[];world.shoot(idleInput(),true,false);}
@@ -152,4 +152,49 @@ test('old and new crew checkpoints preserve exact digests through playback and s
   while(!player.done)player.step();assert.equal(crewCheckpointDigest(player.world.captureCrewCheckpoint()),run.checkpoints.at(-1)!.digest);
   player.seek(2);assert.equal(player.world.projectiles[0].kind,revision===19?'shotgun':undefined);player.seek(90);player.seek(125);assert.equal(crewCheckpointDigest(player.world.captureCrewCheckpoint()),run.checkpoints.at(-1)!.digest);
  }
+});
+
+
+test('hands IV–VII widen the travelling radius geometrically while emission stays compact',()=>{
+ const radii=[];
+ for(let level=4;level<=7;level++){
+  const w=new World(71,{schedule:false,legacyWeaponSpread:false});w.level=level;w.player.pos=v(0,100,0);w.shoot(idleInput(),true,false);
+  const host=new World(71,{schedule:false,legacyWeaponSpread:false});host.addCrew('host');host.crew[0].level=level;(host as any).useCrew(host.crew[0]);host.player.pos=v(0,100,0);host.shoot(idleInput(),true,false);const spec=host.projectiles[0].launch!;assert.deepEqual(shotLaunches(unpackShotLaunch(packShotLaunch(spec,level)!,level),w.projectiles.length,70),shotLaunches(spec,w.projectiles.length,70));
+  const radiiAt=(range:number)=>w.projectiles.map(p=>{const t=(-range-p.pos.z)/p.vel.z;return Math.hypot(p.pos.x+p.vel.x*t,p.pos.y+p.vel.y*t-100);}).sort((a,b)=>a-b);
+  const footprint=radiiAt(25),outer=footprint.at(-1)!;radii.push(outer);
+  assert.ok(Math.abs(outer/(25*Math.tan(SHOTGUN_SPREAD[level-1]))-1)<.04);
+  assert.ok(footprint[Math.floor(footprint.length*.6)]>outer*.55,'most pellets must occupy the broader body');
+  for(const p of w.projectiles){const muzzle=weaponMuzzle(w.player.pos,0,0,level,p.socket??0);assert.ok(Math.hypot(p.pos.x-muzzle.x,p.pos.y-muzzle.y,p.pos.z-muzzle.z)<=.010000001);}
+  assert.ok(radiiAt(50).at(-1)!>outer*1.9);
+ }
+ for(let i=1;i<radii.length;i++)assert.ok(Math.abs(radii[i]/radii[i-1]-1.4)<.04);
+});
+
+
+test('recordings without the wide-shotgun flag retain the old hand IV spread',()=>{
+ const w=new World(42,{schedule:false,legacyWeaponSpread:true});w.startAt(0,4,0);
+ const recorder=new RunRecorder(42,{time:0,level:4,reserve:0});
+ for(let i=0;i<60;i++){const input={...idleInput(),fire:i<2};recorder.record(input);w.step(input);}
+ const run=recorder.finish(w);delete run.wideWeaponSpread;
+ const replay=new ReplayPlayer(run);while(!replay.done)replay.step();
+ assert.equal(replay.world.wideWeaponSpreadEnabled,false);assert.deepEqual(replay.world.projectiles,w.projectiles);
+ replay.seek(0);replay.seek(60);assert.deepEqual(replay.world.projectiles,w.projectiles);
+});
+
+
+test('hands IV–VII widen beam flight exponentially without changing fingertip emission',()=>{
+ const radii=[];
+ for(let level=4;level<=7;level++){
+  const w=new World(71,{schedule:false,legacyWeaponSpread:false});w.level=level;w.player.pos=v(0,100,0);let outer=0;
+  for(let shot=0;shot<40;shot++){
+   w.projectiles=[];w.shoot(idleInput(),false,false);
+   for(let i=0;i<w.projectiles.length;i++){
+    const p=w.projectiles[i],muzzle=weaponMuzzle(w.player.pos,0,0,level,p.socket??i%5);
+    assert.ok(Math.hypot(p.pos.x-muzzle.x,p.pos.y-muzzle.y,p.pos.z-muzzle.z)<=STREAM_RADIUS[level-1]+1e-9);
+    const t=(-25-p.pos.z)/p.vel.z;outer=Math.max(outer,Math.hypot(p.pos.x+p.vel.x*t,p.pos.y+p.vel.y*t-100));
+   }
+  }
+  assert.ok(Math.abs(outer/(25*Math.tan(BEAM_SPREAD[level-1]))-1)<.04);radii.push(outer);
+ }
+ for(let i=1;i<radii.length;i++)assert.ok(Math.abs(radii[i]/radii[i-1]-1.4)<.04);
 });

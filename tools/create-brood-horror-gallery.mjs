@@ -1,0 +1,21 @@
+import {chromium} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
+const output='artifacts/brood-horror',names={skull4:'Skull IV',transmuted4:'Transmuted IV',spider:'Brood Weaver',spider2:'Armored Matriarch',spiderling:'Spiderling',egg:'Brood Sac I',egg2:'Armored Brood Sac II'};
+const image=(path,label)=>`<a href="${path}"><img src="${path}" alt="${label}"></a>`;
+const hero=(kind)=>`<figure>${image(`after/current-${kind}-quarter.png`,names[kind])}<figcaption>${names[kind]}</figcaption></figure>`;
+await writeFile(`${output}/index.html`,`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skull IV and the brood</title><style>
+*{box-sizing:border-box}body{margin:0;background:#10151e;color:#eee5d7;font:16px/1.6 Arial,sans-serif}main{max-width:1440px;margin:auto;padding:40px 32px}h1{font-size:36px;font-weight:500;margin:0 0 12px}h2{font-size:26px;font-weight:500;margin:42px 0 16px}p{max-width:78ch;color:#adb9c5}a{color:#d3ac8b;text-underline-offset:4px}a:focus-visible{outline:2px solid #d3ac8b;outline-offset:4px}img,video{display:block;width:100%;height:auto}figure{margin:0}figcaption{padding:10px 0;color:#b8c1ca}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}::selection{background:#63352b;color:#fff}@media(max-width:700px){main{padding:24px 16px}.three,.two{grid-template-columns:1fr}h1{font-size:28px}}
+</style><main><h1>Skull IV and the brood</h1><p>Newly authored bone, feeding faces and brood shells, using the retained Devil Daggers meshes as anatomical references. Ground pursuit, mouth targets, spider gait and egg hatching retain their current behavior.</p>
+<div class="three" id="lineup">${['skull4','spider','egg2'].map(hero).join('')}</div>
+<h2>The completed family</h2><div class="three">${Object.keys(names).map(hero).join('')}</div>
+<h2>In motion</h2><video controls preload="metadata" poster="film-start.png" src="brood-in-motion.mp4"></video><p>Controlled real simulation: grounded pursuit, feeding-head poses, moving spiderlings and both egg types hatching. Camera placement is authored for review.</p>
+<h2>Before / after</h2><p>Models are individually fitted to the frame; this compares design rather than size. Click each image to inspect the full capture.</p>
+${Object.entries(names).map(([kind,name])=>`<h2>${name}</h2><div class="two"><figure>${image(`before/current-${kind}-quarter.png`,name+' before')}<figcaption>Previous model</figcaption></figure><figure>${image(`after/current-${kind}-quarter.png`,name+' after')}<figcaption>New model · <a href="after/current-${kind}-front.png">front</a> / <a href="after/current-${kind}-side.png">side</a></figcaption></figure></div>`).join('')}
+<h2>Retained original references</h2><p>Neutral clay shading. Component placement is approximate: original skeletal transforms are unavailable. Spider references show body and feeding parts, without reconstructed legs.</p><div class="three">${['skull4','spider','spider2','egg','egg2'].map(kind=>`<figure>${image(`before/reference-${kind}-quarter.png`,names[kind]+' original reference')}<figcaption>${names[kind]} · original reference</figcaption></figure>`).join('')}</div>
+<h2>Actual arena renderer</h2>${image('storm-gameplay.png','Skull IV, spiders and eggs in the arena')}<div class="two">${image('furnace-gameplay.png','Furnace low quality')}${image('depths-gameplay.png','Depths low quality')}</div><h2>628-enemy stress scene</h2>${image('dense-gameplay.png','500 spiderlings, 120 eggs and eight Skull IV enemies')}<p><a href="report.json">Functional checks and render counts</a> · <a href="README.md">Implementation and verification notes</a></p></main></html>`);
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});await page.goto((process.env.GAME_URL??'http://127.0.0.1:5173')+`/${output}/index.html`);
+ await page.locator('#lineup img').evaluateAll(images=>Promise.all(images.map(img=>img.decode())));await page.locator('#lineup').screenshot({path:`${output}/lineup.png`});
+}finally{await browser.close();}
+console.log('Created brood review gallery');

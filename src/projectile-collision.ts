@@ -1,3 +1,5 @@
+import {hasMeshArmor} from './enemy-kinds';
+import {buildCollisionBvh} from './collision-bvh';
 import * as THREE from 'three';
 import {buildTowerStructure} from './tower-geometry';
 import {towerOrganicPose,type TowerOrganicMotion} from './tower-anatomy-motion';
@@ -20,9 +22,9 @@ const colliders=new Map(Object.entries(baked.instances).map(([kind,instances])=>
 }));
 const remakeColliders=new Map(Object.entries(remakeBaked).map(([kind,m])=>{const mesh:ArmorGeometry={nodes:m.nodes,vertices:Float32Array.from(m.vertices),indices:Uint32Array.from(m.indices),...('motion' in m?{motion:Float32Array.from(m.motion)}:{})};const b=mesh.nodes[0],radius=Math.hypot(Math.max(Math.abs(b[0]),Math.abs(b[3])),Math.max(Math.abs(b[2]),Math.abs(b[5])));return [kind,{radius,parts:[{name:kind,mesh,c:1,s:0,sx:1,sy:1,flip:false,wave:false}]}] as const;}));
 export const armorMesh=(e:Enemy)=>e.balance&&remakeColliders.has(e.kind)?remakeColliders.get(e.kind):colliders.get(e.kind);
-/** Lowest moving armor point. Grounded remake foundations anchor separately. */
+/** Lowest articulated armor point, shared with floor clearance. */
 export function armorBottom(e:Enemy,originalCadence=true){
- if(e.balance&&e.kind.startsWith('squid')&&!legacyTowerGeometry(e))return 0;
+ if(e.balance&&e.kind.startsWith('squid')&&!legacyTowerGeometry(e))return towerAnimatedBottom(e,originalCadence);
  const collider=armorMesh(e);if(!collider)return 0;
  let bottom=Infinity;
  for(const p of collider.parts){const b=p.mesh.nodes[0];bottom=Math.min(bottom,(p.flip?-b[4]:b[1])*p.sy+towerPartOffset(e,p.name,originalCadence)*CREATURE_SCALE);}
@@ -33,6 +35,7 @@ export type ArmorHit={t:number;nx:number;ny:number;nz:number};
 // Geometry is shared by all towers; queries allocate only on successful hits.
 const stack:number[]=[];
 export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0,originalCadence=true):ArmorHit|null{
+ if(!hasMeshArmor(e.kind))return null;
  if(e.kind.startsWith('squid')&&!legacyTowerGeometry(e))return sweepTowerStructure(e,player,a,b,limit,time,originalCadence);
  const collider=armorMesh(e);if(!collider)return null;
  // A conservative horizontal cylinder rejects distant aim rays before mesh
@@ -74,19 +77,62 @@ function towerArmorParts(kind:Enemy['kind']){
  root.traverse(part=>{
   if(!(part instanceof THREE.Mesh))return;
   const geometry=part.geometry.clone().applyMatrix4(part.matrixWorld);geometry.computeBoundingBox();
-  const box=geometry.boundingBox!,vertices=Float32Array.from(geometry.getAttribute('position').array),indices=geometry.index?Uint32Array.from(geometry.index.array):Uint32Array.from({length:vertices.length/3},(_,i)=>i);
+  const vertices=Float32Array.from(geometry.getAttribute('position').array),indices=geometry.index?Uint32Array.from(geometry.index.array):Uint32Array.from({length:vertices.length/3},(_,i)=>i);
   const motion=part.parent?.name==='tower-foundation'?'foot':part.name==='tower-plinth'?'plinth':part.parent?.name==='warden-crest'?'crown':'fixed';
   const organic:NonNullable<TowerArmorPart['organic']>=[];
   for(let ancestor=part.parent;ancestor;ancestor=ancestor.parent){
    if(ancestor.userData.towerOrganicMotion)organic.unshift({motion:ancestor.userData.towerOrganicMotion,rest:ancestor.matrixWorld.clone(),inverse:ancestor.matrixWorld.clone().invert()});
   }
-  parts!.push({mesh:{vertices,indices,nodes:[[box.min.x,box.min.y,box.min.z,box.max.x,box.max.y,box.max.z,-1,0,indices.length/3]]},motion,...organic.length?{organic}:{}});
+  parts!.push({mesh:{vertices,...buildCollisionBvh(vertices,indices)},motion,...organic.length?{organic}:{}});
   geometry.dispose();part.geometry.dispose();
  });
  material.dispose();towerArmor.set(kind,parts);return parts;
 }
-const organicMatrix=new THREE.Matrix4(),organicPoseMatrix=new THREE.Matrix4(),organicJointMatrix=new THREE.Matrix4(),organicInverse=new THREE.Matrix4(),organicNormal=new THREE.Matrix3();
+/** Prepare all three static armor trees while gameplay is still loading. */
+export function prepareTowerCollisions(){for(const kind of ['squid','squid2','squid3'] as const)towerArmorParts(kind);}
+const organicMatrix=new THREE.Matrix4(),organicPoseMatrix=new THREE.Matrix4(),organicJointMatrix=new THREE.Matrix4();
 const organicOrigin=new THREE.Vector3(),organicEnd=new THREE.Vector3(),organicScale=new THREE.Vector3(),organicRotation=new THREE.Quaternion(),organicEuler=new THREE.Euler(),organicZero=new THREE.Vector3(),organicHitNormal=new THREE.Vector3();
+/** Compose the same ancestor joint chain used by the visible anatomy. */
+function composeTowerOrganicMatrix(e:Enemy,part:TowerArmorPart,originalCadence:boolean){
+ organicMatrix.identity();
+ for(const joint of part.organic??[]){
+  const pose=towerOrganicPose(e.age,e.kind,joint.motion,originalCadence);
+  organicRotation.setFromEuler(organicEuler.set(pose.rx,0,pose.rz));
+  organicPoseMatrix.compose(organicZero,organicRotation,organicScale.set(1,pose.sy,1));
+  organicJointMatrix.copy(joint.rest).multiply(organicPoseMatrix).multiply(joint.inverse);
+  organicMatrix.multiply(organicJointMatrix);
+ }
+ return organicMatrix;
+}
+type OrganicTransform={age:number;cadence:boolean;matrix:THREE.Matrix4;inverse:THREE.Matrix4;normal:THREE.Matrix3};
+const towerPoseCache=new WeakMap<Enemy,Map<TowerArmorPart,OrganicTransform>>();
+/** All projectile queries in a tick share the same immutable joint pose.
+ * Reuse matrix storage across ticks to avoid a new allocation per joint/query. */
+function towerOrganicTransform(e:Enemy,part:TowerArmorPart,originalCadence:boolean){
+ let cached=towerPoseCache.get(e);
+ if(!cached){cached=new Map();towerPoseCache.set(e,cached);}
+ let transform=cached.get(part);
+ if(!transform){transform={age:NaN,cadence:originalCadence,matrix:new THREE.Matrix4(),inverse:new THREE.Matrix4(),normal:new THREE.Matrix3()};cached.set(part,transform);}
+ if(transform.age!==e.age||transform.cadence!==originalCadence){
+  transform.matrix.copy(composeTowerOrganicMatrix(e,part,originalCadence));transform.inverse.copy(transform.matrix).invert();transform.normal.getNormalMatrix(transform.matrix);
+  transform.age=e.age;transform.cadence=originalCadence;
+ }
+ return transform;
+}
+function towerAnimatedBottom(e:Enemy,originalCadence:boolean){
+ let bottom=Infinity;
+ for(const part of towerArmorParts(e.kind)){
+  const b=part.mesh.nodes[0];let y=b[1];
+  if(part.organic){
+   const m=towerOrganicTransform(e,part,originalCadence).matrix.elements;
+   // Support point of the transformed bounds in the downward direction.
+   // Small conservative padding prevents moving tendril tips grazing tiles.
+   y=m[13]+m[1]*b[m[1]>=0?0:3]+m[5]*b[m[5]>=0?1:4]+m[9]*b[m[9]>=0?2:5];
+  }else if(part.motion==='crown')y+=towerPartOffset(e,'crest',originalCadence);
+  bottom=Math.min(bottom,y);
+ }
+ return bottom*enemyEmergenceScale(e);
+}
 /** Trace the same triangles as the visible tower, including its telescoping foot
  * and opening crown. Historical targets continue using their original BVH. */
 function sweepTowerStructure(e:Enemy,player:Vec,a:Vec,b:Vec,limit:number,time:number,originalCadence:boolean):ArmorHit|null{
@@ -104,22 +150,14 @@ function sweepTowerStructure(e:Enemy,player:Vec,a:Vec,b:Vec,limit:number,time:nu
   const offset=part.motion==='foot'?foundation.footY:part.motion==='plinth'?foundation.plinthY-.3:part.motion==='crown'?towerPartOffset(e,'crest',originalCadence):0;
   let ox=ax,oy=(ay-offset)/sy,oz=az,dx=vx,dy=vy/sy,dz=vz;
   if(part.organic){
-   organicMatrix.identity();
-   for(const joint of part.organic){
-    const pose=towerOrganicPose(e.age,e.kind,joint.motion,originalCadence);
-    organicRotation.setFromEuler(organicEuler.set(pose.rx,0,pose.rz));
-    organicPoseMatrix.compose(organicZero,organicRotation,organicScale.set(1,pose.sy,1));
-    organicJointMatrix.copy(joint.rest).multiply(organicPoseMatrix).multiply(joint.inverse);
-    organicMatrix.multiply(organicJointMatrix);
-   }
-   organicInverse.copy(organicMatrix).invert();
-   organicOrigin.set(ax,ay,az).applyMatrix4(organicInverse);
-   organicEnd.set(ax+vx,ay+vy,az+vz).applyMatrix4(organicInverse).sub(organicOrigin);
+   const transform=towerOrganicTransform(e,part,originalCadence);
+   organicOrigin.set(ax,ay,az).applyMatrix4(transform.inverse);
+   organicEnd.set(ax+vx,ay+vy,az+vz).applyMatrix4(transform.inverse).sub(organicOrigin);
    ox=organicOrigin.x;oy=organicOrigin.y;oz=organicOrigin.z;dx=organicEnd.x;dy=organicEnd.y;dz=organicEnd.z;
   }
   const hit=trace(part.mesh,ox,oy,oz,dx,dy,dz,closest);if(!hit)continue;
   closest=hit.t;normal={...hit,ny:hit.ny/sy};
-  if(part.organic){organicNormal.getNormalMatrix(organicMatrix);organicHitNormal.set(hit.nx,hit.ny,hit.nz).applyMatrix3(organicNormal);normal={...hit,nx:organicHitNormal.x,ny:organicHitNormal.y,nz:organicHitNormal.z};}
+  if(part.organic){organicHitNormal.set(hit.nx,hit.ny,hit.nz).applyMatrix3(towerOrganicTransform(e,part,originalCadence).normal);normal={...hit,nx:organicHitNormal.x,ny:organicHitNormal.y,nz:organicHitNormal.z};}
  }
  if(!normal)return null;
  const nx=normal.nx*c+normal.nz*s,ny=normal.ny,nz=-normal.nx*s+normal.nz*c,length=Math.hypot(nx,ny,nz)||1;
@@ -181,4 +219,4 @@ function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:numb
 }
 
 // Conservative broad phase for the rotated mesh, once per enemy per tick.
-export function armorBounds(e:Enemy){return e.kind.startsWith('squid')&&!legacyTowerGeometry(e)?towerRadius(e.kind)*1.65:armorMesh(e)?.radius??null;}
+export function armorBounds(e:Enemy){if(!hasMeshArmor(e.kind))return null;return e.kind.startsWith('squid')&&!legacyTowerGeometry(e)?towerRadius(e.kind)*1.65:armorMesh(e)?.radius??null;}

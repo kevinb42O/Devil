@@ -51,7 +51,7 @@ test('all twelve distinct cues use the licensed catalog and restrained positiona
  assert.equal(new Set(FOOTSTEP_SOUNDS).size,12);
  for(const name of ALL_FOOTSTEP_SOUNDS){const asset=remakeAudioAsset(name);assert.equal(asset.role,'footstep');assert.ok(asset.duration>=.19&&asset.duration<=.21);assert.equal(asset.loop,false);}
  const range=hearingProfile(FOOTSTEP_SOUNDS[0],'footstep');assert.equal(distanceEnvelope(20,range.maxDistance),0);
- assert.ok(arenaReverbSend('footstep').tail<arenaReverbSend('movement').tail);
+ assert.deepEqual(arenaReverbSend('footstep'),{body:.035,tail:0});assert.deepEqual(arenaReverbSend('movement'),{body:0,tail:0});
 });
 test('packet-spaced remote motion preserves stride phase without phantom idle contacts',()=>{
  const w=new World(1,{schedule:false}),g=new FootstepGait();let count=0;

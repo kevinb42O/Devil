@@ -7,7 +7,7 @@ test('crew shares one clock, caps at six and moves/fires independently',()=>{
  const w=new World(24,{schedule:false});for(const id of ['host','a','b','c','d','e','extra'])w.addCrew(id);assert.equal(w.crew.length,6);
  const inputs=new Map([['host',{...idleInput(),forward:1,fire:true}],['a',{...idleInput(),strafe:1,fire:true}],['b',idleInput()],['c',idleInput()]]);
  for(let i=0;i<120;i++)w.stepCrew(inputs);
- assert.ok(Math.abs(w.time-1)<1e-8);assert.ok(w.crew[0].player.pos.z<4);assert.ok(w.crew[1].player.pos.x>5);assert.equal(w.crew[2].player.pos.x,-2);assert.ok(w.stats.shots>=30);
+ assert.ok(Math.abs(w.time-1)<1e-8);assert.ok(w.crew[0].player.pos.z<4);assert.ok(w.crew[1].player.pos.x>5);assert.equal(w.crew[2].player.pos.x,-2);assert.equal(w.stats.shots,28);
  assert.notEqual(w.crew[0].primary,w.crew[1].primary);
 });
 test('individual fall deaths leave surviving crew in play, then end on team wipe',()=>{

@@ -55,7 +55,7 @@ test('respawn protection also blocks abyss deaths until the three-second deadlin
 test('respawn protection permits movement and firing, and is carried in network snapshots',()=>{
  const host=new FriendsSession('host');try{
   host.start();host.world=world();const w=host.world;kill(w,'a');stepTo(w,w.crew[1].respawnAt!);const p=w.crew[1],before={...p.player.pos};
-  for(let i=0;i<30;i++)w.stepCrew(new Map([['a',{...idleInput(),forward:1,fire:true}]]));
+  for(let i=0;i<40;i++)w.stepCrew(new Map([['a',{...idleInput(),forward:1,fire:true}]]));
   assert.equal(p.alive,true);assert.ok(w.time<p.protectedUntil);assert.ok(Math.hypot(p.player.pos.x-before.x,p.player.pos.z-before.z)>.5);assert.ok(w.stats.shots>0);
   const snapshot=decodeState(encodeState(host.snapshot()!,1,0),new Map())!.snapshot;
   const view=new World(1);applySnapshot(view,snapshot,'a');assert.equal(view.crew[1].protectedUntil,p.protectedUntil);assert.ok(view.time<view.crew[1].protectedUntil);

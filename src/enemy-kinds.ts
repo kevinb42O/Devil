@@ -5,6 +5,9 @@ export const isSpider=(k:EnemyKind)=>k==='spider'||k==='spider2';
 export const isEgg=(k:EnemyKind)=>k==='egg'||k==='egg2';
 export const isPede=(k:EnemyKind)=>k==='centipede'||k==='gigapede'||k==='ghostpede';
 export const isSkull=(k:EnemyKind)=>k.startsWith('skull')||k.startsWith('transmuted');
+/** Every part of these bodies is damageable; they have no armored subregions. */
+export const isWholeBodyTarget=(k:EnemyKind)=>isSkull(k)||isEgg(k)||k==='spiderling'||k==='orb';
+export const hasMeshArmor=(k:EnemyKind)=>isSquid(k)||k==='leviathan'||k==='thorn';
 export const skullTier=(k:EnemyKind)=>k==='skull'?1:Number(k.slice(-1));
 export const ENEMY_STATS:Record<EnemyKind,{hp:number;gems:number;radius:number;death:string}>={
  skull:{hp:1,gems:0,radius:.65,death:'SWARMED'},skull2:{hp:5,gems:1,radius:.8,death:'IMPALED'},skull3:{hp:10,gems:1,radius:.7,death:'GORED'},skull4:{hp:100,gems:0,radius:1.3,death:'OPENED'},

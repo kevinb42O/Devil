@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import type {EnemyKind} from './enemy-kinds';
+import {createSkullAnatomy} from './skull-anatomy';
 
 /** Project-authored arachnid anatomy. All surface coordinates live in the same
  * anatomical space, including the instanced juveniles. */
@@ -10,9 +11,10 @@ export function createSpiderAnatomy(kind:EnemyKind,material:THREE.Material,size:
  const add=(geometry:THREE.BufferGeometry,region=0,head=false,leg?:{hip:THREE.Vector3;phase:number})=>{
   const g=geometry.index?geometry.toNonIndexed():geometry; if(g!==geometry)geometry.dispose();
   g.deleteAttribute('uv');
+  const semantic=g.getAttribute('creatureRegion');
   const p=g.getAttribute('position'),coords=new Float32Array(p.count*3),regions=new Float32Array(p.count),motion=new Float32Array(p.count),gait=new Float32Array(p.count*4);
   for(let i=0;i<p.count;i++){
-   coords[i*3]=p.getX(i)/12;coords[i*3+1]=p.getY(i)/12;coords[i*3+2]=p.getZ(i)/12;regions[i]=region;
+   coords[i*3]=p.getX(i)/12;coords[i*3+1]=p.getY(i)/12;coords[i*3+2]=p.getZ(i)/12;regions[i]=region<0?semantic.getX(i):region;
    if(leg){gait[i*4]=leg.hip.x*size;gait[i*4+1]=leg.hip.z*size;gait[i*4+2]=Math.min(1,Math.abs(p.getX(i)-leg.hip.x)/3.7);gait[i*4+3]=leg.phase;}
   }
   g.setAttribute('creatureCoord',new THREE.BufferAttribute(coords,3));g.setAttribute('creatureRegion',new THREE.BufferAttribute(regions,1));g.setAttribute('motionWeight',new THREE.BufferAttribute(motion,1));g.setAttribute('spiderGait',new THREE.BufferAttribute(gait,4));g.scale(size,size,size);(head?headParts:bodyParts).push(g);
@@ -34,8 +36,8 @@ export function createSpiderAnatomy(kind:EnemyKind,material:THREE.Material,size:
  };
  const path=(p:number[][])=>p.map(v=>new THREE.Vector3(...v as [number,number,number]));
  // A pear-shaped abdomen rises behind the low, broad cephalothorax.
- const abdomenWidth=armored?2.12:1.48,abdomenHeight=armored?1.65:1.1,abdomenLength=armored?2.65:1.95;
- const abdomenY=armored?.65:.35,abdomenZ=armored?-2.05:-1.65;
+ const abdomenWidth=armored?2.12:1.48,abdomenHeight=armored?1.85:1.25,abdomenLength=armored?2.65:1.95;
+ const abdomenY=armored?.70:.45,abdomenZ=armored?-2.05:-1.65;
  ellipsoid([0,abdomenY,abdomenZ],[juvenile?.78:abdomenWidth,juvenile?.64:abdomenHeight,juvenile?1.25:abdomenLength]);
  ellipsoid([0,.13,.35],[armored?1.5:1.13,armored?.88:.65,armored?1.65:1.45]);
  ellipsoid([0,-.32,.2],[.87,.34,1.23],1);
@@ -50,6 +52,10 @@ export function createSpiderAnatomy(kind:EnemyKind,material:THREE.Material,size:
   }
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const a=r*(cols+1)+c,b=a+cols+1;indices.push(a,b,a+1,b,b+1,a+1);}
   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setIndex(indices);g.computeVertexNormals();add(g);
+ }
+ if(!juvenile)for(const side of [-1,1])for(let i=0;i<4;i++){
+  const z=-.9-i*.7;
+  tube(path([[side*(armored?1.7:1.12),armored?1.55:1.0,z],[side*(armored?2.35:1.55),armored?2.05:1.42,z-.28],[side*(armored?2.75:1.75),armored?2.17:1.46,z-.60]]),[armored?.27:.16,armored?.16:.10,.003],3);
  }
  // Eight legs: muscular coxa, rising femur, bowed tibia, tapering hooked tarsus.
  for(const side of [-1,1])for(let i=0;i<4;i++){
@@ -71,25 +77,40 @@ export function createSpiderAnatomy(kind:EnemyKind,material:THREE.Material,size:
    if(armored)tube([knee.clone().add(new THREE.Vector3(0,.1,0)),knee.clone().add(new THREE.Vector3(side*.5,1.05,-.45))],[.25,.008],3,false,leg);
   }
  }
- // Head geometry is relative to the combat pivot (0, .2, 1).
- ellipsoid([0,.04,.58],[armored?1.2:.99,armored?.7:.57,.86],0,true);
- ellipsoid([0,-.25,1.04],[.64,.24,.46],4,true);
- for(const side of [-1,1]){
-  for(let i=0;i<3;i++){
-   const x=side*(.31+i*.23),y=.34-i*.055,z=1.28-i*.13,r=(i===0?.095:.062)*(armored?1.3:1);
-   ellipsoid([x,y,z],[r*1.43,r*1.4,r*.72],4,true);
-   ellipsoid([x,y+.006,z+.045],[r,r*.68,r*.54],5,true);
-  }
-  ellipsoid([side*.64,-.3,1.18],[.29,.4,.37],0,true);
-  tube(path([[side*.69,-.42,1.26],[side*(armored?1.03:.8),-.72,1.59],[side*(armored?.86:.65),armored?-1.2:-.9,armored?2.3:1.94],[side*.35,armored?-1.02:-.78,armored?2.65:2.13]]),[armored?.3:.21,armored?.25:.18,.1,.006],3,true);
-  tube(path([[side*.86,-.17,.89],[side*1.27,-.29,1.41],[side*1.12,-.48,1.92]]),[.15,.12,.008],0,true);
-  if(armored)tube(path([[side*.83,.35,.68],[side*1.2,1.45,.05],[side*1.35,2.45,-1.15]]),[.36,.22,.005],3,true);
+ // The upper feeding face grows out of the cephalothorax. Deep skull
+ // cavities sit above the held crystal, so the gem cannot hide the identity.
+ // Keep the established combat pivot and its exposure/folding animation.
+ let face=createSkullAnatomy(1,material).geometry;
+ if(!juvenile){
+  // Adults feed through this opening. A complete human mandible would cover
+  // the held crystal, especially on the larger, deeper matriarch face.
+  const source=face.getAttribute('position'),keep:number[]=[];
+  for(let i=0;i<source.count;i+=3){const y=(source.getY(i)+source.getY(i+1)+source.getY(i+2))/3;if(y>=-.23)keep.push(i,i+1,i+2);}
+  face.setIndex(keep);const trimmed=face.toNonIndexed();face.dispose();face=trimmed;
  }
+ const faceScale=juvenile?[.92,.88,.72]:armored?[2.5,2.10,1.55]:[2.0,1.7,1.3];
+ face.scale(faceScale[0],faceScale[1],faceScale[2]);face.translate(0,juvenile?.40:armored?1.18:.95,juvenile?.78:1.0);add(face,-1,true);
+ ellipsoid([0,-.08,juvenile?.78:1.05],[juvenile?.40:.90,juvenile?.22:.38,juvenile?.16:.56],4,true);
+ for(const side of [-1,1]){
+  // Paired feeding tusks frame the functional mouth-held gem. Juveniles have
+  // a shorter, forward biting claw instead of a miniature adult gem cradle.
+  const reach=juvenile?.68:armored?1.65:1.38;
+  ellipsoid([side*(juvenile?.48:.98),.05,1.15],[juvenile?.2:.37,juvenile?.23:.46,juvenile?.26:.44],0,true);
+  tube(path([[side*(juvenile?.48:1.0),.10,1.26],[side*reach,-.15,juvenile?1.55:1.98],[side*reach*.90,juvenile?-.38:-.60,juvenile?1.90:2.75],[side*reach*.45,juvenile?-.24:-.38,juvenile?2.02:3.16]]),[juvenile?.15:armored?.38:.29,juvenile?.12:armored?.32:.25,juvenile?.065:.14,.004],3,true);
+  tube(path([[side*(juvenile?.64:1.20),.20,.89],[side*(juvenile?.88:1.65),.16,1.50],[side*(juvenile?.70:1.48),-.12,juvenile?1.82:2.10]]),[juvenile?.09:.18,juvenile?.07:.14,.005],0,true);
+  if(!juvenile){
+   // Hooked temporal horns and splayed cheek flanges replace a naturalistic
+   // multi-eye spider face with the reference's demonic feeding silhouette.
+   tube(path([[side*1.0,1.45,.72],[side*(armored?1.95:1.55),armored?2.45:1.95,.20],[side*(armored?2.05:1.65),armored?3.10:2.12,-.65]]),[armored?.32:.23,armored?.22:.14,.005],3,true);
+   for(let i=0;i<3;i++)tube(path([[side*(1.15+i*.03),1.15-i*.35,.76],[side*(1.62+i*.10),1.22-i*.45,.52],[side*(1.86+i*.10),1.15-i*.48,.20]]),[armored?.22:.15,.10,.004],3,true);
+  }
+ }
+
  if(armored){
   // A swept ivory crown and flared shoulder scutes distinguish the matriarch at range.
   for(const side of [-1,1]){
    for(let i=0;i<3;i++){
-    tube(path([[side*1.25,1.35,-1.1-i*.85],[side*1.85,2.65-i*.12,-1.65-i*.85],[side*2.05,3.35-i*.18,-2.65-i*.85]]),[.38,.24,.005],3);
+    tube(path([[side*1.25,1.35,-1.1-i*.85],[side*1.85,2.65-i*.12,-1.65-i*.85],[side*2.05,3.85-i*.18,-2.65-i*.85]]),[.38,.24,.005],3);
     ellipsoid([side*1.32,.58,.5-i*.7],[.65,.58,.7]);
     tube(path([[side*1.5,.85,.4-i*.7],[side*2.1,1.3,-.1-i*.7],[side*2.45,1.45,-.65-i*.7]]),[.24,.17,.005],3);
    }

@@ -154,7 +154,7 @@ test('a thousand moving enemies send poses without repeating unchanged metadata 
 
 test('unchanged held inputs compress into runs while the host retains exact tap/stream timing',()=>{
  const history=new InputHistory();for(let i=0;i<120;i++)history.record({...idleInput(),fire:i<40});const runs=inputRuns(history.commands);assert.equal(runs.length,2);assert.deepEqual(runs.map(r=>[r[0],r[1],r[6]]),[[1,40,2],[41,80,0]]);
- const host=setup();try{host.running=true;host.startAt=0;host.links.set('guest',{pc:{close(){}},timer:0} as any);(host as any).receiveCommands('guest',encodePacket({epoch:host.epoch,runs}).buffer);for(let i=0;i<120;i++)host.step(idleInput());assert.equal(host.world!.stats.shots,4);assert.equal(host.snapshot()!.crew[1].ack,120);assert.equal(host.world!.crew[1].primary.streaming,false);}finally{host.close();}
+ const host=setup();try{host.running=true;host.startAt=0;host.links.set('guest',{pc:{close(){}},timer:0} as any);(host as any).receiveCommands('guest',encodePacket({epoch:host.epoch,runs}).buffer);for(let i=0;i<120;i++)host.step(idleInput());assert.equal(host.world!.stats.shots,1);assert.equal(host.snapshot()!.crew[1].ack,120);assert.equal(host.world!.crew[1].primary.streaming,false);}finally{host.close();}
 });
 
 test('guest countdown uses the host clock even when browser clocks differ by a minute',()=>{

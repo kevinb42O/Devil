@@ -5,12 +5,12 @@ import {isPede, type EnemyKind} from './enemy-kinds';
 export const hasCreatureDeath=(kind:string)=>kind==='spider'||kind==='spider2'||kind==='spiderling'||isPede(kind as EnemyKind)||kind==='leviathan';
 const DURATION=2.6;
 type Part={node:THREE.Object3D;position:THREE.Vector3;rotation:THREE.Euler;scale:THREE.Vector3;bottom:number;height:number;delay:number;side:number};
-type Corpse={model:THREE.Group;started:number;parts:Part[]};
+type Corpse={model:THREE.Group;started:number;parts:Part[];landed:boolean};
 
 /** Keep the actual last combat pose, then collapse it without touching shared materials. */
 export class EnemyDeaths {
  private corpses=new Map<number,Corpse>();
- constructor(private scene:THREE.Scene){}
+ constructor(private scene:THREE.Scene,private onContact?:(kind:EnemyKind,pos:THREE.Vector3)=>void){}
  begin(id:number,model:THREE.Group,time:number){
   if(this.corpses.has(id))return;
   // Bound simultaneous remains, including explosions through juvenile swarms.
@@ -24,7 +24,7 @@ export class EnemyDeaths {
    const floor=Math.max(-5,floorHeight(center.x,center.z,time));
    return {node,position:node.position.clone(),rotation:node.rotation.clone(),scale:node.scale.clone(),bottom:Math.max(0,box.min.y-floor),height:Math.max(.2,box.max.y-box.min.y),delay:snake?Math.min(.55,index*.035):0,side:(index+id)%2?1:-1};
   });
-  this.scene.add(model);this.corpses.set(id,{model,started:time,parts});
+  this.scene.add(model);this.corpses.set(id,{model,started:time,parts,landed:false});
  }
  update(time:number,present:Set<number>){
   for(const [id,corpse] of this.corpses){
@@ -45,6 +45,10 @@ export class EnemyDeaths {
     p.node.scale.multiplyScalar(Math.max(.001,1-sink));
    }
    corpse.model.updateWorldMatrix(true,true);
+   const first=corpse.parts[0];
+   if(!corpse.landed&&first&&age>=first.delay+Math.sqrt(first.bottom/10)){
+    corpse.landed=true;this.onContact?.(corpse.model.name as EnemyKind,corpse.model.getWorldPosition(new THREE.Vector3()));
+   }
   }
  }
  addSegments(add:(model:THREE.Group)=>void){for(const corpse of this.corpses.values())if(isPede(corpse.model.name as EnemyKind))add(corpse.model);}

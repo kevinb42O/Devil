@@ -73,7 +73,7 @@ try{
   return ['squid','squid2','squid3'].map((kind,index)=>{
    const model=assets.clone(kind);if(model.getObjectByName('tower-foundation')||model.getObjectByName('tower-plinth'))throw Error('Floating creature has a base');model.updateMatrixWorld(true);let radius=0;
    model.traverse(node=>{if(!node.isMesh||node.name.startsWith('weak-point-'))return;const p=node.geometry.getAttribute('position'),v=new THREE.Vector3();for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i).applyMatrix4(node.matrixWorld);radius=Math.max(radius,Math.hypot(v.x,v.z));}});
-   return {kind,radius,limit:[1.8,3,4.2][index]*1.65};
+   return {kind,radius,limit:[1.8,2.5,3.2][index]*1.65};
   });
  });
  for(const check of structureChecks)assert.ok(check.radius<=check.limit,`${check.kind} armor escapes collision broad phase: ${check.radius}`);
@@ -90,7 +90,7 @@ try{
     model.traverse(n=>{if(!n.isMesh)return;const p=n.geometry.getAttribute('position'),v=new THREE.Vector3();for(let j=0;j<p.count;j++){v.fromBufferAttribute(p,j).applyMatrix4(n.matrixWorld);maxRadius=Math.max(maxRadius,Math.hypot(v.x,v.z));}});
    }
    const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3()),motion=Math.max(...samples.map(p=>p.distanceTo(samples[0]))),scale=enemyEmergenceScale(enemy);
-   return {kind,joints:joints.length,tipTravel:motion,height:size.y,width:Math.max(size.x,size.z),scale,increasePercent:(scale/.62-1)*100,maxRadius,limit:({squid:1.8,squid2:3,squid3:4.2})[kind]*1.65*scale};
+   return {kind,joints:joints.length,tipTravel:motion,height:size.y,width:Math.max(size.x,size.z),scale,increasePercent:(scale/.62-1)*100,maxRadius,limit:({squid:1.8,squid2:2.5,squid3:3.2})[kind]*1.65*scale};
   });
  });
  for(const check of anatomyChecks){assert.ok(check.tipTravel>.35,`${check.kind} tendril motion is unreadable`);assert.ok(check.maxRadius<check.limit,`${check.kind} animated tips escape collision bounds`);}

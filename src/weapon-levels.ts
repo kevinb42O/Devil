@@ -2,7 +2,8 @@
 export const HAND_THRESHOLDS=[0,10,70,200,350,550,800] as const;
 export const HAND_LABELS=['I','II','III','IV','V','VI','VII'] as const;
 export const HAND_NAMES=['AWAKENED','KINDLED','ASCENDANT','UNBOUND','TWINFLAME','DOMINION','ECLIPSE'] as const;
-/** Dense primary salvos fill the widened cones; every dagger deals damage. */
+/** Keep the beam within its original simulation and rendering budget. */
+export const LEGACY_STREAM_COUNTS=[1,6,16,24,32,40,48] as const;
 export const STREAM_COUNTS=[1,6,16,24,32,40,48] as const;
 /** Upgraded shotguns deliver three times the pellets in the same compact pattern. */
 export const BURST_COUNTS=[10,60,120,180,216,252,288] as const;

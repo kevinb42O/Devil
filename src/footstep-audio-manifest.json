@@ -1,0 +1,170 @@
+{
+  "footstep-stone1": {
+    "file": "footstep-stone1.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone2": {
+    "file": "footstep-stone2.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone3": {
+    "file": "footstep-stone3.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone4": {
+    "file": "footstep-stone4.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone5": {
+    "file": "footstep-stone5.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone6": {
+    "file": "footstep-stone6.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone7": {
+    "file": "footstep-stone7.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone8": {
+    "file": "footstep-stone8.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone9": {
+    "file": "footstep-stone9.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone10": {
+    "file": "footstep-stone10.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone11": {
+    "file": "footstep-stone11.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-stone12": {
+    "file": "footstep-stone12.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet1": {
+    "file": "footstep-wet1.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet2": {
+    "file": "footstep-wet2.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet3": {
+    "file": "footstep-wet3.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet4": {
+    "file": "footstep-wet4.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet5": {
+    "file": "footstep-wet5.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet6": {
+    "file": "footstep-wet6.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet7": {
+    "file": "footstep-wet7.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet8": {
+    "file": "footstep-wet8.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet9": {
+    "file": "footstep-wet9.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet10": {
+    "file": "footstep-wet10.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet11": {
+    "file": "footstep-wet11.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  },
+  "footstep-wet12": {
+    "file": "footstep-wet12.wav",
+    "gain": 0.015,
+    "loop": false,
+    "duration": 0.2,
+    "role": "footstep"
+  }
+}

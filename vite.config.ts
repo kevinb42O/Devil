@@ -1,12 +1,18 @@
 import { defineConfig } from 'vite';
 import {buildPwa} from './tools/build-pwa.mjs';
-import { cp, mkdir, writeFile } from 'node:fs/promises';
+import { cp, mkdir, writeFile, readFile, readdir, rm } from 'node:fs/promises';
 // Keep provenance/source downloads out of the shipped game; include runtime assets.
 export default defineConfig({
   server:{host:'127.0.0.1',port:5173,strictPort:true},
   preview:{host:'127.0.0.1',port:4173,strictPort:true},
   build:{target:'es2022',chunkSizeWarningLimit:700},
   plugins:[{name:'game-assets',async closeBundle(){
+    // Ship the active footstep exception, not the retired replacement bank.
+    const footsteps=JSON.parse(await readFile('src/footstep-audio-manifest.json','utf8'));
+    const retainedSteps=new Set(Object.values(footsteps).map((asset:any)=>asset.file));
+    for(const file of await readdir('dist/assets/audio/remake'))if(/\.(wav|m4a)$/.test(file)&&!retainedSteps.has(file))await rm('dist/assets/audio/remake/'+file);
+    await writeFile('dist/assets/audio/remake/manifest.json',JSON.stringify(footsteps));
+    await rm('dist/assets/audio/menu',{recursive:true,force:true});
     await mkdir('dist/assets/audio',{recursive:true});await mkdir('dist/assets/materials/rock_tile_floor/2k/textures',{recursive:true});
     for(const file of ['rock_tile_floor_diff_2k.jpg','rock_tile_floor_nor_gl_2k.jpg','rock_tile_floor_rough_2k.png'])await cp(`assets/materials/rock_tile_floor/2k/textures/${file}`,`dist/assets/materials/rock_tile_floor/2k/textures/${file}`);
     await cp('assets/licenses','dist/assets/licenses',{recursive:true});
@@ -22,7 +28,7 @@ export default defineConfig({
     for(const name of projectileMeshes)await cp(`assets/original/devil-daggers/meshes/${name}.obj`,`${retained}/meshes/${name}.obj`);
     for(const name of projectileTextures)await cp(`assets/original/devil-daggers/textures/${name}.png`,`${retained}/textures/${name}.png`);
     await cp('assets/original/devil-daggers/emitters.json',retained+'/emitters.json');
-    await writeFile(retained+'/manifest.json',JSON.stringify({ready:true,scope:'Retained projectile visuals only; audio uses CC0 replacements',owner:'Sorath',reuseLicenseFound:false,meshes:projectileMeshes,textures:projectileTextures}));
+    await writeFile(retained+'/manifest.json',JSON.stringify({ready:true,scope:'Retained projectile visuals only; audio uses the original bank with retained replacement footsteps',owner:'Sorath',reuseLicenseFound:false,meshes:projectileMeshes,textures:projectileTextures}));
     await buildPwa();
   }}]
 });

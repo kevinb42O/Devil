@@ -1,10 +1,12 @@
+import {HomingBodyIndex} from './homing-body-index';
+import {isWholeBodyTarget,hasMeshArmor} from './enemy-kinds';
 import {ORB_RADIUS,ORB_HOVER_HEIGHT} from './orb-scale';
 import {heavenDropsBetween} from './heaven-reward';
 import {constrainHideSolids,HIDE_SOLIDS} from './courtyard-hide-and-seek';
 import {basketballDunkApproach} from './courtyard-basketball';
 import {courtyardFloor,COURTYARD_BOUNDS,constrainCourtyard,COURTYARD_SOLIDS,PIT,SPAWNS,insidePit,pitIsOpen,type CourtyardState} from './courtyard-state';
 import {validContact,type ProjectileContact} from './network-contacts';
-import {HAND_THRESHOLDS,STREAM_COUNTS,BURST_COUNTS,collectedLevel} from './weapon-levels';
+import {HAND_THRESHOLDS,LEGACY_STREAM_COUNTS,STREAM_COUNTS,BURST_COUNTS,collectedLevel} from './weapon-levels';
 import {MAX_CREW_PLAYERS} from './crew-config';
 import {UPGRADE_PULSE,upgradePulseRadius} from './upgrade-pulse-tuning';
 import {projectileRoll} from './projectile-presentation';
@@ -26,7 +28,7 @@ import {planTowerMovement} from './tower-movement';
 import {entranceFloor,ENTRANCE_SPAWN,ENTRANCE_COURTYARD,touchesEntranceSeal} from './entrance-layout';
 import {ENEMY_STATS,isSquid,isSpider,isEgg,isPede,isSkull,skullTier,type EnemyKind} from './enemy-kinds';
 import {survivalSchedule,legacySurvivalSchedule,TIMELINE,type ScheduledSpawn} from './survival';
-import {SHOTGUN_TUNING,RICOCHET_TUNING,SHOTGUN_LAUNCH_SPEED,WEAPON_PRESENTATION,STREAM_RADIUS,LEGACY_STREAM_SPREAD,LEGACY_WIDE_STREAM_RADIUS} from './weapon-tuning';
+import {BEAM_SPREAD,SHOTGUN_SPREAD,SHOTGUN_TUNING,RICOCHET_TUNING,SHOTGUN_LAUNCH_SPEED,WEAPON_PRESENTATION,STREAM_RADIUS,LEGACY_STREAM_SPREAD,LEGACY_WIDE_STREAM_RADIUS} from './weapon-tuning';
 import {HAND_MUZZLES,weaponMuzzle,projectileSocket} from './weapon-origin';
 export {TIMELINE};export type {EnemyKind};
 /** Fixed-step combat. Reference counts/timers are separated from unmeasured movement/AI tuning. */
@@ -41,16 +43,16 @@ export const distance=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 export function direction(a:Vec,b:Vec):Vec{const d=Math.max(distance(a,b),.001);return v((b.x-a.x)/d,(b.y-a.y)/d,(b.z-a.z)/d);}
 const clamp=(n:number,lo:number,hi:number)=>Math.max(lo,Math.min(hi,n));
 export type Enemy={balance?:true;id:number;kind:EnemyKind;pos:Vec;hp:number;age:number;phase:number;nextSpawn:number;radius:number;gems:number;eaten:number;segments:{pos:Vec;hp:number}[];weakpoints:{local:Vec;hp:number}[];vel:Vec;headExposure:number;lastHit:number;duckUntil:number;pendingDuck:boolean;nextMove:number;orbitSpeed:number;radialOffset:number;facingYaw:number;towerSpinDirection?:number;spawnRadius?:number;towerEntrance?:{born:number;elapsed:number};towerEmission?:{born:number;burst:number;index:number};eggCooldown:number;target:Vec;status:'emerging'|'idle'|'hunting'|'burrowing';statusUntil:number;activeAt:number;nextBeckon:number;size:number;centipedeMotion?:CentipedeMotion;gigapedeMotion?:GigapedeMotion;towerFlight?:{gravity:number;height:number;descentSpeed:number;agility:number;curl:number}};
-export type Projectile={socket?:number;kind?:'shotgun';launch?:ShotLaunch;shotKey?:string;id:number;pos:Vec;previous?:Vec;vel:Vec;age:number;homing:boolean;level?:number;energy?:number;floorBounces?:number;path?:{pos:Vec;t:number}[]};
+export type Projectile={hand?:number;socket?:number;kind?:'shotgun';launch?:ShotLaunch;shotKey?:string;id:number;pos:Vec;previous?:Vec;vel:Vec;age:number;homing:boolean;level?:number;energy?:number;floorBounces?:number;path?:{pos:Vec;t:number}[]};
 export type Gem={id:number;pos:Vec;vel:Vec;age:number};
 export type Ring={id:number;owner:number;pos:Vec;radius:number;previous:number;age:number};
-export type Effect={crystalBreak?:boolean;sharedWave?:boolean;projectileKind?:'shotgun';bloodless?:boolean;bloodId?:number;bloodTime?:number;bloodSources?:Vec[];bloodSegment?:boolean;shotKey?:string;networkId?:number;shooterId?:string;deathCause?:string;kind:'shot'|'burst'|'hit'|'kill'|'pickup'|'upgrade'|'spawn'|'jump'|'death'|'egg'|'beckon'|'transmute'|'explosion'|'land'|'impact'|'ricochet'|'pierce'|'eat'|'bounce'|'hatch'|'burrow'|'emerge';pos:Vec;amount?:number;enemy?:EnemyKind;enemyId?:number;level?:number;direction?:Vec;muzzles?:Vec[]};
-export type Input={leftArm?:boolean;rightArm?:boolean;forward:number;strafe:number;yaw:number;pitch:number;jump:boolean;fire:boolean;homing:boolean};
+export type Effect={hand?:number;homing?:boolean;jumpAudio?:0|1|2|3;crystalBreak?:boolean;sharedWave?:boolean;projectileKind?:'shotgun';bloodless?:boolean;bloodId?:number;bloodTime?:number;bloodSources?:Vec[];bloodSegment?:boolean;shotKey?:string;networkId?:number;shooterId?:string;deathCause?:string;kind:'shot'|'burst'|'hit'|'kill'|'pickup'|'upgrade'|'spawn'|'jump'|'death'|'egg'|'beckon'|'transmute'|'explosion'|'land'|'impact'|'ricochet'|'pierce'|'eat'|'bounce'|'hatch'|'burrow'|'emerge'|'gush'|'clop';pos:Vec;amount?:number;enemy?:EnemyKind;enemyId?:number;level?:number;direction?:Vec;muzzles?:Vec[]};
+export type Input={fireLeft?:boolean;fireRight?:boolean;leftArm?:boolean;rightArm?:boolean;forward:number;strafe:number;yaw:number;pitch:number;jump:boolean;fire:boolean;homing:boolean};
 // Gestures are presentation inputs: retain held flags without changing combat rules.
-function combatInput(input:Input):Input{const {leftArm,rightArm,...combat}=input;return {...combat,...(leftArm?{leftArm:true}:{}),...(rightArm?{rightArm:true}:{})};}
+function combatInput(input:Input):Input{const {leftArm,rightArm,fireLeft,fireRight,...combat}=input;return {...combat,...(fireLeft?{fireLeft:true}:{}),...(fireRight?{fireRight:true}:{}),...(leftArm?{leftArm:true}:{}),...(rightArm?{rightArm:true}:{})};}
 export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});
-export type WorldOptions={legacySpiderFormation?:boolean;heavenRewards?:boolean;legacyGigapedeFormation?:boolean;legacyGigapedeSweeps?:boolean;legacyGroundSkulls?:boolean;legacyBalance?:boolean;legacyTowerSeparation?:boolean;legacyTowerArchitecture?:boolean;legacyPracticeReserve?:boolean;legacyHands?:boolean;legacyShotgun?:boolean;legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
-type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
+export type WorldOptions={legacyBeamHold?:boolean;legacyTapFiring?:boolean;legacyClickFiring?:boolean;legacySpiderFormation?:boolean;heavenRewards?:boolean;legacyGigapedeFormation?:boolean;legacyGigapedeSweeps?:boolean;legacyGroundSkulls?:boolean;legacyBalance?:boolean;legacyTowerSeparation?:boolean;legacyTowerArchitecture?:boolean;legacyPracticeReserve?:boolean;legacyHands?:boolean;legacyBeamDensity?:boolean;legacyWeaponSpread?:boolean;legacyShotgun?:boolean;legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
+type FireChannel={hands?:[FireChannel,FireChannel];held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;deathSource?:DeathSource;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
 type ProjectileTarget={e:Enemy;pos:Vec;r:number;i:number;weak:boolean;armor?:boolean;absorb?:boolean;previous?:Vec;stamp?:number};
@@ -192,8 +194,12 @@ export class World {
  // Kept outside checkpoint options so revision-18 checkpoint digests stay exact.
  private replayLegacyHeavenRewards=false;
  get heavenRewardsEnabled(){return this.options.heavenRewards!==false&&!this.replayLegacyHeavenRewards;}
+ private replayLegacyBeamDensity=false;private replayLegacyWeaponSpread=false;
  private replayLegacyShotgun=false;private replayLegacyHands=false;
  get independentPracticeReserve(){return this.maxHandLevel>4&&!this.options.legacyPracticeReserve;}
+ get denseBeamEnabled(){return !this.options.legacyBeamDensity&&!this.replayLegacyBeamDensity;}
+ // Expanded cones are retained only for recordings that explicitly opted in.
+ get wideWeaponSpreadEnabled(){return this.options.legacyWeaponSpread===false&&!this.replayLegacyWeaponSpread;}
  get maxHandLevel(){return this.options.legacyHands||this.replayLegacyHands?4:7;}
  private upgradePulses:{pos:Vec;born:number;level:number;shooterId?:string;previous:number;hit:Set<number>}[]=[];
  private beginUpgradePulse(pos:Vec,level:number,shooterId?:string){
@@ -228,10 +234,10 @@ export class World {
  constructor(seed=80421,options:WorldOptions={}){this.rng=this.shotRngSeed=seed>>>0||1;this.stats.upgradeTimes=Array(options.legacyHands?4:7).fill(0);this.options=options;this.schedule=options.legacySpawnRules?legacySurvivalSchedule():survivalSchedule();if(!options.legacySpawnRules){this.spawnRng=seed>>>0||1;this.spawnAngle=this.spawnRandom()*Math.PI*2;}this.nextEvent=this.schedule.next();}
  /** Complete simulation state at a tick boundary; transport snapshots are not checkpoints. */
  captureCrewCheckpoint(){
-  return structuredClone({...(this.contactOwners.length?{contacts:{owners:this.contactOwners,pending:[...this.pendingContacts.values()],incoming:this.incomingContacts,sources:[...this.contactSources],receipts:[...this.contactReceipts].map(([id,r])=>[id,r.ack,[...r.done]] as const)}}:{}),version:1 as const,options:{...this.options,...(this.spiderFormationEnabled?{legacySpiderFormation:false}:{}),...(this.heavenRewardsEnabled?{heavenRewards:true}:{}),...(this.balanceFixesEnabled?{legacyBalance:false}:{}),...(this.gigapedeFormationEnabled?{legacyGigapedeFormation:false}:{}),...(this.gigapedeSweepsEnabled?{legacyGigapedeSweeps:false}:{}),...(this.groundSkullsEnabled?{legacyGroundSkulls:false}:{}),legacyTowerSeparation:!this.towerSeparationEnabled},scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
+  return structuredClone({...(this.contactOwners.length?{contacts:{owners:this.contactOwners,pending:[...this.pendingContacts.values()],incoming:this.incomingContacts,sources:[...this.contactSources],receipts:[...this.contactReceipts].map(([id,r])=>[id,r.ack,[...r.done]] as const)}}:{}),version:1 as const,options:{...this.options,...(this.tapFireEnabled?{legacyTapFiring:false}:{}),...(this.pressFireEnabled?{legacyClickFiring:false}:{}),...(this.denseBeamEnabled?{legacyBeamDensity:false}:{}),...(this.wideWeaponSpreadEnabled?{legacyWeaponSpread:false}:{}),...(this.spiderFormationEnabled?{legacySpiderFormation:false}:{}),...(this.heavenRewardsEnabled?{heavenRewards:true}:{}),...(this.balanceFixesEnabled?{legacyBalance:false}:{}),...(this.gigapedeFormationEnabled?{legacyGigapedeFormation:false}:{}),...(this.gigapedeSweepsEnabled?{legacyGigapedeSweeps:false}:{}),...(this.groundSkullsEnabled?{legacyGroundSkulls:false}:{}),legacyTowerSeparation:!this.towerSeparationEnabled},scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
  }
  static restoreCrewCheckpoint(value:CrewCheckpoint,legacyShotgun=false,legacyHands=false,legacyTowers=false){
-  const s=structuredClone(value),w=new World(s.shotRngSeed,{...s.options,legacyTowerSeparation:s.options.legacyTowerSeparation??true});w.replayLegacySpiderFormation=s.options.legacySpiderFormation!==false;w.replayLegacyHeavenRewards=s.options.heavenRewards!==true;w.replayLegacyGigapedeFormation=s.options.legacyGigapedeFormation!==false;w.replayLegacyGigapedeSweeps=s.options.legacyGigapedeSweeps!==false;w.replayLegacyGroundSkulls=s.options.legacyGroundSkulls!==false;w.replayLegacyBalance=s.options.legacyBalance===undefined;w.replayLegacyTowers=legacyTowers;w.replayLegacyShotgun=legacyShotgun;w.replayLegacyHands=legacyHands;
+  const s=structuredClone(value),w=new World(s.shotRngSeed,{...s.options,legacyTowerSeparation:s.options.legacyTowerSeparation??true});w.replayLegacyTapFiring=s.options.legacyTapFiring===undefined;w.replayLegacyClickFiring=s.options.legacyClickFiring===undefined;w.replayLegacySpiderFormation=s.options.legacySpiderFormation!==false;w.replayLegacyHeavenRewards=s.options.heavenRewards!==true;w.replayLegacyGigapedeFormation=s.options.legacyGigapedeFormation!==false;w.replayLegacyGigapedeSweeps=s.options.legacyGigapedeSweeps!==false;w.replayLegacyGroundSkulls=s.options.legacyGroundSkulls!==false;w.replayLegacyBalance=s.options.legacyBalance===undefined;w.replayLegacyTowers=legacyTowers;w.replayLegacyBeamDensity=s.options.legacyBeamDensity===undefined;w.replayLegacyWeaponSpread=s.options.legacyWeaponSpread===undefined;w.replayLegacyShotgun=legacyShotgun;w.replayLegacyHands=legacyHands;
   if(s.contacts){w.contactOwners=s.contacts.owners;w.contactReceipts=new Map((s.contacts.receipts??[]).map(([id,ack,done])=>[id,{ack,done:new Set(done)}]));w.contactSources=new Map(s.contacts.sources??[]);w.incomingContacts=s.contacts.incoming;w.pendingContacts=new Map(s.contacts.pending.map(p=>[p.contact.shotKey,p]));}
   Object.assign(w,{rng:s.rng,shotRngSeed:s.shotRngSeed,spawnRng:s.spawnRng,spawnAngle:s.spawnAngle,nextId:s.nextId,bloodSequence:s.bloodSequence,time:s.time,tick:s.tick,state:s.state,cause:s.cause,radius:s.radius,wave:s.wave,stats:s.stats,crew:s.crew,enemies:s.enemies,projectiles:s.projectiles,gems:s.gems,rings:s.rings,delayed:s.delayed,detonations:s.detonations});
   for(let i=0;i<s.scheduleCursor;i++)w.nextEvent=w.schedule.next();w.scheduleCursor=s.scheduleCursor;
@@ -240,6 +246,11 @@ export class World {
   if(s.selectedId)w.selectCrew(s.selectedId);w.level=s.level;w.reserve=s.reserve;w.wasJump=s.wasJump;w.lastShotTick=s.lastShotTick;
   return w;
  }
+ private replayLegacyTapFiring=false;
+ get extendedBeamHoldEnabled(){return !this.options.legacyBeamHold;}
+ get tapFireEnabled(){return !this.options.legacyTapFiring&&!this.replayLegacyTapFiring;}
+ private replayLegacyClickFiring=false;
+ get pressFireEnabled(){return !this.tapFireEnabled&&!this.options.legacyClickFiring&&!this.replayLegacyClickFiring;}
  private replayLegacySpiderFormation=false;
  get spiderFormationEnabled(){return !this.options.legacySpawnRules&&!this.options.legacySpiderFormation&&!this.replayLegacySpiderFormation;}
  private replayLegacyGigapedeFormation=false;
@@ -358,7 +369,7 @@ export class World {
   const strength=this.options.legacyAnalogMovement?1:Math.min(1,magnitude),wishSpeed=TUNING.speed*strength;
   const add=Math.max(0,wishSpeed-p.vel.x*wx-p.vel.z*wz),accel=Math.min(add,(p.grounded?TUNING.acceleration:TUNING.airAcceleration)*dt);
   p.vel.x+=wx*accel;p.vel.z+=wz*accel;
-  if(jump&&p.grounded){p.jumpBuffer=0;if(this.tick-p.landedAt<=8){p.vel.x*=1.12;p.vel.z*=1.12;p.hopPulse=1;}p.vel.y=TUNING.jump;p.grounded=false;this.emit('jump',p.pos,p.hopPulse?3:1);}
+  if(jump&&p.grounded){p.jumpBuffer=0;if(this.tick-p.landedAt<=8){p.vel.x*=1.12;p.vel.z*=1.12;p.hopPulse=1;}p.vel.y=TUNING.jump;p.grounded=false;this.emit('jump',p.pos,p.hopPulse?3:1);this.effects[this.effects.length-1].jumpAudio=this.tick-p.landedAt<=1?3:this.tick-p.landedAt<=8?2:1;}
   const speed=Math.hypot(p.vel.x,p.vel.z);if(speed>TUNING.maxSpeed){p.vel.x*=TUNING.maxSpeed/speed;p.vel.z*=TUNING.maxSpeed/speed;}
   const beforeY=p.pos.y;p.vel.y-=TUNING.gravity*dt;p.pos.x+=p.vel.x*dt;p.pos.y+=p.vel.y*dt;p.pos.z+=p.vel.z*dt;
   const floor=ground(p.pos.x,p.pos.z)+TUNING.eyeHeight;
@@ -381,7 +392,7 @@ export class World {
   const primary=crew?.primary??this.primary,secondary=crew?.secondary??this.secondary;
   const level=crew?.level??this.level,reserve=crew?.reserve??this.reserve;
   const homing=secondary.wasHeld&&level>=(this.options.legacyHomingUnlock?3:2)&&reserve>0;
-  return {primary:this.state==='playing'&&primary.wasHeld&&primary.streaming&&!homing&&this.tick>=primary.recoverUntil,
+  return {primary:this.state==='playing'&&primary.wasHeld&&primary.streaming&&!homing&&(this.tapFireEnabled||this.pressFireEnabled||this.tick>=primary.recoverUntil),
    homing:this.state==='playing'&&homing&&secondary.streaming&&this.tick>=secondary.recoverUntil};
  }
  private weapon(input:Input){
@@ -389,24 +400,70 @@ export class World {
   // Homing has input priority. Entering it while streaming inherits stream mode.
   if(input.homing&&!this.secondary.wasHeld&&(this.primary.streaming||this.primary.held>16)){this.secondary.held=17;this.secondary.streaming=true;}
   this.fireChannel(this.secondary,input.homing,homingAvailable,input,true);
-  this.fireChannel(this.primary,input.fire,!input.homing||!homingAvailable,input,false);
+  const allowed=!input.homing||!homingAvailable;
+  if(!this.tapFireEnabled&&this.level<5||input.fire&&!input.fireLeft&&!input.fireRight)delete this.primary.hands;
+  if((this.tapFireEnabled||this.level>=5)&&(input.fireLeft||input.fireRight||this.primary.hands)){
+   const hands=this.primary.hands??=[channel(),channel()];
+   this.fireChannel(hands[0],!!input.fireLeft,allowed,input,false,1);
+   this.fireChannel(hands[1],!!input.fireRight,allowed,input,false,0);
+   this.primary.wasHeld=hands.some(c=>c.wasHeld);this.primary.streaming=hands.some(c=>c.streaming);
+   const heldHands=hands.filter(c=>c.wasHeld);
+   this.primary.held=Math.max(...hands.map(c=>c.held));
+   this.primary.recoverUntil=heldHands.length?Math.min(...heldHands.map(c=>c.recoverUntil)):this.tick;
+  }else this.fireChannel(this.primary,input.fire,allowed,input,false);
  }
- private fireChannel(c:FireChannel,held:boolean,allowed:boolean,input:Input,homing:boolean){
+ private fireChannel(c:FireChannel,held:boolean,allowed:boolean,input:Input,homing:boolean,hand?:number){
+  if(!homing&&this.tapFireEnabled){
+   // Classify each hand independently: a short release is a blast; a hold
+   // becomes a beam after 300 ms, without an opening shotgun volley.
+   if(held){
+    c.held++;
+    if(c.held>(this.extendedBeamHoldEnabled?36:16)){
+     c.streaming=true;
+     if(allowed&&this.tick>=c.nextShot){this.shoot(input,false,false,hand);c.nextShot=this.tick+(this.level>=4?9:6);}
+    }
+   }else if(c.wasHeld){
+    if(!c.streaming&&allowed&&this.tick>=c.recoverUntil){
+     this.shoot(input,true,false,hand);c.lastBurst=this.tick;c.recoverUntil=this.tick+60;c.nextShot=this.tick;
+    }
+    c.held=0;c.streaming=false;
+   }
+   c.wasHeld=held;return;
+  }
+  if(!homing&&this.pressFireEnabled){
+   // Register a blast on the press tick. Release only ends the hold; it must
+   // never create a second shot or make aim depend on click duration.
+   if(held){
+    c.held++;
+    if(!c.wasHeld&&allowed&&this.tick>=c.recoverUntil){
+     this.shoot(input,true,false,hand);c.lastBurst=this.tick;
+     c.recoverUntil=this.tick+60;c.nextShot=this.tick+16;
+    }
+    if(c.held>16){
+     c.streaming=true;
+     if(allowed&&this.tick>=c.nextShot){this.shoot(input,false,false,hand);c.nextShot=this.tick+(this.level>=4?9:6);}
+    }
+   }else{c.held=0;c.streaming=false;}
+   c.wasHeld=held;return;
+  }
   if(held){
    c.held++;if(c.wasHeld&&this.tick<c.recoverUntil)c.recoverUntil=Math.min(c.recoverUntil,Math.max(this.tick,c.lastBurst+45));
-   if(c.held>16){c.streaming=true;if(allowed&&this.tick>=c.nextShot&&this.tick>=c.recoverUntil){this.shoot(input,false,homing);c.nextShot=this.tick+(homing?12:this.level>=4?9:6);}}
+   if(c.held>16){c.streaming=true;if(allowed&&this.tick>=c.nextShot&&this.tick>=c.recoverUntil){this.shoot(input,false,homing,hand);c.nextShot=this.tick+(homing?12:this.level>=4?9:6);}}
   }else if(c.wasHeld){
-   if(!c.streaming&&allowed&&this.tick>=c.recoverUntil){this.shoot(input,true,homing);c.lastBurst=this.tick;c.recoverUntil=this.tick+60;c.nextShot=c.recoverUntil;}
+   if(!c.streaming&&allowed&&this.tick>=c.recoverUntil){this.shoot(input,true,homing,hand);c.lastBurst=this.tick;c.recoverUntil=this.tick+60;c.nextShot=c.recoverUntil;}
    c.held=0;c.streaming=false;
   }
   c.wasHeld=held;
  }
- shoot(input:Input,burst:boolean,homing:boolean){
-  let count:number=burst?BURST_COUNTS[this.level-1]:STREAM_COUNTS[this.level-1];
+ shoot(input:Input,burst:boolean,homing:boolean,hand?:number){
+  let count:number=burst?BURST_COUNTS[this.level-1]:(this.denseBeamEnabled?STREAM_COUNTS:LEGACY_STREAM_COUNTS)[this.level-1];
   if(homing){if(!this.homingUnlocked)return;count=Math.min(this.reserve,burst?(this.level>=4?30:20):4);this.reserve-=count;this.stats.homingFired+=count;}
+  // Early tiers keep their full single-hand budget; hand identity still routes
+  // the visible palm and feedback. Twin tiers split their existing budget.
+  if(hand!==undefined&&this.level>=5)count=Math.ceil(count/2);
   if(!count)return;this.lastShotTick=this.tick;
   const legacyStream=this.options.cameraProjectiles||this.options.legacyWeaponOrigin||this.options.legacyStreamRadius;
-  const tuning=WEAPON_PRESENTATION[this.level-1],spread=burst?tuning.burstSpread:legacyStream||this.options.legacyWideStream?LEGACY_STREAM_SPREAD[this.level-1]:tuning.streamSpread;
+  const tuning=WEAPON_PRESENTATION[this.level-1],spread=burst?tuning.burstSpread:legacyStream||this.options.legacyWideStream?LEGACY_STREAM_SPREAD[this.level-1]:this.wideWeaponSpreadEnabled?BEAM_SPREAD[this.level-1]:tuning.streamSpread;
   const forward=v(-Math.sin(input.yaw)*Math.cos(input.pitch),Math.sin(input.pitch),-Math.cos(input.yaw)*Math.cos(input.pitch));
   // Converge on the closest damageable target under the crosshair, otherwise a
   // distant point on the aim ray. Physical daggers still sweep their whole path.
@@ -415,8 +472,13 @@ export class World {
   let aimDistance=aimRange;
   if(!this.options.cameraProjectiles)for(const e of this.enemies){
    if(e.hp<=0||!this.active(e))continue;
+   if(isWholeBodyTarget(e.kind)){
+    if(legacyStream||this.options.legacyWideStream){const t=segmentSphere(this.player.pos,end,e.pos,e.radius);if(t!==null)aimDistance=Math.min(aimDistance,Math.max(.6,t*aimRange));}
+    else aimDistance=Math.min(aimDistance,sphereAimDistance(this.player.pos,forward,e.pos,e.radius,aimRange));
+    continue;
+   }
    if(!legacyStream&&!this.options.legacyWideStream){
-    const armor=sweepArmor(e,this.player.pos,this.player.pos,end,1,this.time,this.spawnFixesEnabled);
+    const armor=hasMeshArmor(e.kind)?sweepArmor(e,this.player.pos,this.player.pos,end,1,this.time,this.spawnFixesEnabled):null;
     if(armor)aimDistance=Math.min(aimDistance,Math.max(.6,armor.t*aimRange));
     if(isSpider(e.kind)&&e.headExposure<.5){const t=segmentSphere(this.player.pos,end,e.pos,e.radius);if(t!==null)aimDistance=Math.min(aimDistance,Math.max(.6,t*aimRange));continue;}
    }else if(isSpider(e.kind)&&e.headExposure<.5)continue;
@@ -430,27 +492,28 @@ export class World {
   }
   if(!legacyStream&&!this.options.legacyWideStream){const floor=(this.options.legacyRicochet?sweepFloorLegacy:sweepFloor)(this.player.pos,end,this.time);if(floor)aimDistance=Math.min(aimDistance,Math.max(.6,floor.t*aimRange));}
   const shotgun=burst&&!this.options.legacyShotgun&&!this.replayLegacyShotgun;
-  const muzzles=this.options.cameraProjectiles?[{...this.player.pos}]:HAND_MUZZLES[this.level-1].map((_,i)=>weaponMuzzle(this.player.pos,input.yaw,input.pitch,this.level,i,this.options.legacyWeaponOrigin));
+  const allMuzzles=this.options.cameraProjectiles?[{...this.player.pos}]:HAND_MUZZLES[this.level-1].map((_,i)=>weaponMuzzle(this.player.pos,input.yaw,input.pitch,this.level,i,this.options.legacyWeaponOrigin));
+  const muzzles=hand===undefined||this.level<5?allMuzzles:allMuzzles.filter((_,i)=>i%2===hand);
   // Crew shots have an independent RNG: prediction must not consume world RNG.
   const shotKey=this.activeCrew?`${this.activeCrew.id}:${++this.activeCrew.shotSequence}`:undefined;
   let shotSeed=(this.activeCrew?.shotSeed??0)^2166136261;for(const c of shotKey??'')shotSeed=Math.imul(shotSeed^c.charCodeAt(0),16777619);
   const shotRandom=()=>{if(!shotKey)return this.random();shotSeed^=shotSeed<<13;shotSeed^=shotSeed>>>17;shotSeed^=shotSeed<<5;return(shotSeed>>>0)/4294967296;};
-  const spec:ShotLaunch={...(this.level>=5?{dual:true}:{}),pos:{...this.player.pos},muzzles,yaw:input.yaw,pitch:input.pitch,spread,aimDistance,radius:!burst&&!legacyStream?(this.options.legacyWideStream?LEGACY_WIDE_STREAM_RADIUS:STREAM_RADIUS)[this.level-1]:null,camera:!!this.options.cameraProjectiles,legacyOrigin:!!this.options.legacyWeaponOrigin,cone:!legacyStream&&!this.options.legacyWideStream,focused:!burst&&!homing&&!legacyStream&&!this.options.legacyWideStream&&this.level>1,seed:shotSeed};
-  if(shotgun){spec.muzzles=this.level>=5?[muzzles[0],muzzles[1]]:[muzzles[0]];spec.radius=SHOTGUN_TUNING.radius;spec.shotgunCount=count;if(!shotKey)spec.seed=this.rng;}
+  const spec:ShotLaunch={...(hand===undefined?{}:{hand}),...(this.level>=5&&hand===undefined?{dual:true}:{}),pos:{...this.player.pos},muzzles,yaw:input.yaw,pitch:input.pitch,spread,aimDistance,radius:!burst&&!legacyStream?(this.options.legacyWideStream?LEGACY_WIDE_STREAM_RADIUS:STREAM_RADIUS)[this.level-1]:null,camera:!!this.options.cameraProjectiles,legacyOrigin:!!this.options.legacyWeaponOrigin,cone:!legacyStream&&!this.options.legacyWideStream,focused:!burst&&!homing&&!legacyStream&&!this.options.legacyWideStream&&this.level>1,seed:shotSeed};
+  if(shotgun){spec.muzzles=this.level>=5&&hand===undefined?[muzzles[0],muzzles[1]]:[muzzles[0]];spec.radius=SHOTGUN_TUNING.radius;spec.shotgunCount=count;if(this.wideWeaponSpreadEnabled){spec.spread=SHOTGUN_SPREAD[this.level-1];}if(!shotKey)spec.seed=this.rng;}
   const launches:Vec[]=[];
   for(let i=0;i<count;i++){
    const {pos,vel}=daggerLaunch(spec,i,shotRandom(),shotRandom(),homing?42:TUNING.projectileSpeed);launches.push(pos);
-   this.projectiles.push({...(this.level>=5?{socket:projectileSocket(this.level,i,shotgun)}:{}),...(shotgun?{kind:'shotgun' as const}:{}),launch:shotKey?spec:undefined,shotKey:shotKey?`${shotKey}:${i}`:undefined,id:this.prediction?-this.nextId++:this.nextId++,pos,previous:{...pos},vel,age:0,homing,level:this.level,energy:homing?10:1});
+   this.projectiles.push({...(hand===undefined?{}:{hand}),...(this.level>=5||this.level===4&&this.denseBeamEnabled&&!burst?{socket:hand===undefined||this.level<5?projectileSocket(this.level,i,shotgun):(shotgun?hand:(i%5)*2+hand)}:{}),...(shotgun?{kind:'shotgun' as const}:{}),launch:shotKey?spec:undefined,shotKey:shotKey?`${shotKey}:${i}`:undefined,id:this.prediction?-this.nextId++:this.nextId++,pos,previous:{...pos},vel,age:0,homing,level:this.level,energy:homing?10:1});
   }
   const partition=this.flightPartition;
   if(this.prediction&&partition&&partition.source===this.projectiles&&partition.length+count===this.projectiles.length&&partition.owner===this.activeCrew?.id){
    for(let i=partition.length;i<this.projectiles.length;i++)partition.local.push(this.projectiles[i]);partition.length=this.projectiles.length;
   }
   this.stats.shots+=count;this.emit(burst?'burst':'shot',launches[0],homing?1:0);
-  const effect=this.effects[this.effects.length-1];effect.shotKey=shotKey;effect.shooterId=this.activeCrew?.id;effect.direction=direction(launches[0],v(this.player.pos.x+forward.x*aimDistance,this.player.pos.y+forward.y*aimDistance,this.player.pos.z+forward.z*aimDistance));effect.muzzles=shotgun?(this.level>=5?spec.muzzles.map(p=>({...p})):[{...muzzles[0]}]):launches.slice(0,Math.min(count,muzzles.length));if(shotgun)effect.projectileKind='shotgun';
+  const effect=this.effects[this.effects.length-1];if(hand!==undefined)effect.hand=hand;effect.shotKey=shotKey;effect.shooterId=this.activeCrew?.id;effect.direction=direction(launches[0],v(this.player.pos.x+forward.x*aimDistance,this.player.pos.y+forward.y*aimDistance,this.player.pos.z+forward.z*aimDistance));effect.muzzles=shotgun?(this.level>=5&&hand===undefined?spec.muzzles.map(p=>({...p})):[{...muzzles[0]}]):launches.slice(0,Math.min(count,muzzles.length));if(shotgun)effect.projectileKind='shotgun';
   if(burst){if(!this.prediction)for(const g of this.gems){const d=direction(this.player.pos,g.pos);g.vel.x+=d.x*8;g.vel.y+=d.y*8;g.vel.z+=d.z*8;}
    const floor=floorHeight(this.player.pos.x,this.player.pos.z,this.time);
-   if(input.pitch<-.95&&this.player.pos.y-floor<3.8&&(this.options.legacyJumpMovement||(floor>-1000&&this.player.pos.y-floor>=TUNING.eyeHeight-1e-6))){this.player.vel.y=Math.max(this.player.vel.y,SHOTGUN_LAUNCH_SPEED[this.level-1]);this.player.grounded=false;this.emit('jump',this.player.pos,2);}}
+   if(input.pitch<-.95&&this.player.pos.y-floor<3.8&&(this.options.legacyJumpMovement||(floor>-1000&&this.player.pos.y-floor>=TUNING.eyeHeight-1e-6))){this.player.vel.y=Math.max(this.player.vel.y,SHOTGUN_LAUNCH_SPEED[this.level-1]);this.player.grounded=false;this.emit('jump',this.player.pos,2);this.effects[this.effects.length-1].jumpAudio=0;}}
  }
  active(e:Enemy){
   if(this.options.legacyEnemyBehavior)return e.age+1e-7>=e.activeAt&&e.status!=='burrowing';
@@ -469,11 +532,12 @@ export class World {
   this.projectileTargetStarts.clear();
   const gigapedePlans=this.gigapedeFormationEnabled&&!this.options.legacyGigapedeMotion&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit?planGigapedeFormation(this.enemies,this.crew.length?this.crew.filter(p=>p.alive).map(p=>p.player.pos):[this.player.pos],this.time):null;
   const towerMoves=this.towerSeparationEnabled?planTowerMovement(this.enemies,this.time,dt,TUNING.towerDriftSpeed):null;
+  const towerBodies=this.enemies.filter(e=>isSquid(e.kind));
   const cells=new Map<string,Enemy[]>();for(const e of this.enemies){const key=`${Math.floor(e.pos.x/3)},${Math.floor(e.pos.z/3)}`;const cell=cells.get(key)||[];cell.push(e);cells.set(key,cell);}
   for(const e of [...this.enemies]){
    if(this.crew.length){const target=this.crew.filter(p=>p.alive).sort((a,b)=>distance(a.player.pos,e.pos)-distance(b.player.pos,e.pos))[0];if(!target)break;this.useCrew(target);}
    if(e.hp<=0)continue;const wasActive=this.active(e),previous={...e.pos},velocityBefore={...e.vel},segmentsBefore=e.segments.map(s=>({...s.pos}));
-   if(wasActive&&this.projectiles.length)this.projectileTargetStarts.set(e,{pos:{...e.pos},targets:e.segments.length?segmentsBefore:e.weakpoints.length?e.weakpoints.map(s=>crystalToEnemy(e,this.player.pos,s.local)):[{...this.weakPoint(e)}]});
+   if(wasActive&&this.projectiles.length)this.projectileTargetStarts.set(e,{pos:{...e.pos},targets:isWholeBodyTarget(e.kind)?[{...e.pos}]:e.segments.length?segmentsBefore:e.weakpoints.length?e.weakpoints.map(s=>crystalToEnemy(e,this.player.pos,s.local)):[{...this.weakPoint(e)}]});
    e.age+=dt;
    if(isSquid(e.kind)){
     const planned=towerMoves?.get(e);
@@ -504,8 +568,10 @@ export class World {
     if(this.active(e)&&e.age+1e-7>=e.nextBeckon&&(e.kind!=='orb'||this.time-e.lastHit>.2)){
      this.rings.push({id:this.nextId++,owner:e.id,pos:{...e.pos},radius:0,previous:0,age:0});this.emit('beckon',e.pos,undefined,e.kind);e.nextBeckon=e.age+(e.kind==='leviathan'?20:2.533333333);}
    }else if(e.kind==='thorn')e.pos.y=this.active(e)?0:(this.options.legacySpawnRules?-8:THORN_SPAWN_DEPTH)*(1-Math.min(1,e.age/3));
-   else this.updateSwarm(e,dt,cells);
+   else this.updateSwarm(e,dt,cells,towerBodies);
+   const fallingVelocity=e.vel.y,beforeFloor=e.pos.y;
    if(!this.options.legacyEnemyFloor)constrainEnemyFloor(e,this.time);
+   if(isSkull(e.kind)&&(skullTier(e.kind)===1||skullTier(e.kind)===3)&&fallingVelocity<-1&&e.vel.y>=0&&e.pos.y>beforeFloor)this.emit('clop',e.pos,undefined,e.kind,e.id);
    if((e.hp>0||this.options.legacyEnemyBehavior)&&this.active(e)){
     const growing=isSpider(e.kind)?Math.min(1,e.age/(e.kind==='spider2'?9:3)):1;
     let contactSegment=-1;
@@ -550,7 +616,7 @@ export class World {
   if(e.age>=lift&&e.headExposure>.5){
    const mouth=spiderLocalPoint(e,this.player.pos,SPIDER_GEM);
    for(const g of this.gems){if(g.age>=99)continue;const dist=distance(g.pos,mouth);if(dist<.8*e.size){g.age=99;e.eaten++;this.stats.eaten++;this.emit('eat',mouth,undefined,e.kind);}else{const pull=direction(g.pos,mouth);g.vel.x+=pull.x*dt*25*e.size;g.vel.y+=pull.y*dt*25*e.size;g.vel.z+=pull.z*dt*25*e.size;}}
-   if(e.eaten>0&&e.eggCooldown<=0){e.eaten--;e.eggCooldown=.65;const aim=direction(mouth,this.player.pos),egg=this.spawn(e.kind==='spider2'?'egg2':'egg',mouth);egg.vel=v(aim.x*12,3.5,aim.z*12);this.emit('egg',mouth);}
+   if(e.eaten>0&&e.eggCooldown<=0){e.eaten--;e.eggCooldown=.65;const aim=direction(mouth,this.player.pos),egg=this.spawn(e.kind==='spider2'?'egg2':'egg',mouth);egg.vel=v(aim.x*12,3.5,aim.z*12);this.emit('egg',mouth,undefined,e.kind);}
   }
  }
  private updatePede(e:Enemy,dt:number,gigapedePlan?:GigapedeFlightPlan){
@@ -648,6 +714,7 @@ export class World {
   for(let i=0;i<=count;i++)delay=this.ejectSkull(tower,i,delay,true);
  }
  private ejectSkull(tower:Enemy,index:number,delay:number,legacy:boolean){
+  if(index===0)this.emit('gush',tower.pos,undefined,tower.kind,tower.id);
   const count=tower.kind==='squid3'?15:10,yaw=enemyYaw(tower,this.player.pos);
   const outlets=this.towerArchitectureEnabled?towerOutlets(tower.kind):null,outlet=outlets?outlets[index%outlets.length]:null;
   const fan=index*Math.PI*2*.61803398875,variation=(this.random()-.5)*.7;
@@ -664,16 +731,16 @@ export class World {
   skull.target=this.towerArchitectureEnabled?{...this.player.pos}:v(skull.pos.x+Math.sin(angle)*6,3,skull.pos.z+Math.cos(angle)*6);return delay;
  }
  /** Keep an outgoing stream above the crown until it has crossed its edge. */
- private towerFlightClearance(e:Enemy){
+ private towerFlightClearance(e:Enemy,towers:readonly Enemy[]=this.enemies){
   let height=-Infinity;
-  for(const tower of this.enemies){
+  for(const tower of towers){
    if(tower.hp<=0||!isSquid(tower.kind))continue;
    const scale=enemyEmergenceScale(tower),radius=towerRadius(tower.kind)*1.1*scale+e.radius+.25;
    if((e.pos.x-tower.pos.x)**2+(e.pos.z-tower.pos.z)**2<radius*radius)height=Math.max(height,tower.pos.y+(towerOutletHeight(tower.kind)+1.6)*scale+e.radius+.2);
   }
   return height;
  }
- private updateSwarm(e:Enemy,dt:number,cells:Map<string,Enemy[]>){
+ private updateSwarm(e:Enemy,dt:number,cells:Map<string,Enemy[]>,towers:readonly Enemy[]=this.enemies){
   if(isSkull(e.kind)&&e.statusUntil>0&&e.age<e.statusUntil){
    if(e.age<0)return;
    if(e.age<dt)this.emit('spawn',e.pos,undefined,e.kind);
@@ -684,7 +751,7 @@ export class World {
     e.vel.x+=(dx/length*speed-e.vel.x)*blend;e.vel.z+=(dz/length*speed-e.vel.z)*blend;
    }
    e.vel.y=Math.max(-(e.towerFlight?.descentSpeed??6)*.65,e.vel.y-(e.towerFlight?.gravity??18)*dt);
-   if(this.towerArchitectureEnabled&&e.towerFlight&&e.vel.y<0&&e.pos.y<this.towerFlightClearance(e))e.vel.y=0;
+   if(this.towerArchitectureEnabled&&e.towerFlight&&e.vel.y<0&&e.pos.y<this.towerFlightClearance(e,towers))e.vel.y=0;
    e.pos.x+=e.vel.x*dt;e.pos.y+=e.vel.y*dt;e.pos.z+=e.vel.z*dt;return;
   }
   if(isSkull(e.kind)&&e.statusUntil>0)e.status='hunting';
@@ -709,7 +776,7 @@ export class World {
    const wave=Math.sin(e.age*(.9+flight.agility*.2)+e.phase);
    const floor=this.options.legacyEnemyFloor?floorHeight(e.pos.x,e.pos.z,this.time,0):enemyFloorHeight(e,this.time);
    let height=goal.y+(Math.max(floor+.9,floor+flight.height+wave*.35)-goal.y)*lane;
-   if(this.towerArchitectureEnabled&&e.towerFlight)height=Math.max(height,this.towerFlightClearance(e));
+   if(this.towerArchitectureEnabled&&e.towerFlight)height=Math.max(height,this.towerFlightClearance(e,towers));
    aimY=clamp((height-e.pos.y)*1.4,-flight.descentSpeed,3);
    const curl=flight.curl*wave*lane;
    aimX+=d.z*curl;aimZ-=d.x*curl;
@@ -720,11 +787,19 @@ export class World {
   if(e.towerFlight&&this.towerArchitectureEnabled){
    // Enlarged hovering spawners can rise while a child is already turning.
    // Resolve the outgoing lane after integration so the stream clears the maw.
-   const clearance=this.towerFlightClearance(e);
+   const clearance=this.towerFlightClearance(e,towers);
    if(e.pos.y<clearance&&e.vel.y<0){e.pos.y=clearance;e.vel.y=0;}
   }
   const cx=Math.floor(e.pos.x/3),cz=Math.floor(e.pos.z/3);
-  for(let x=cx-1;x<=cx+1;x++)for(let z=cz-1;z<=cz+1;z++)for(const other of cells.get(`${x},${z}`)||[]){if(other.id===e.id)continue;const dist=distance(e.pos,other.pos);if(dist<1.5&&dist>.01){const sep=direction(other.pos,e.pos);e.pos.x+=sep.x*(1.5-dist)*dt*3;e.pos.z+=sep.z*(1.5-dist)*dt*3;}}
+  for(let x=cx-1;x<=cx+1;x++)for(let z=cz-1;z<=cz+1;z++)for(const other of cells.get(`${x},${z}`)||[]){
+   if(other.id===e.id)continue;
+   const dx=e.pos.x-other.pos.x,dy=e.pos.y-other.pos.y,dz=e.pos.z-other.pos.z;
+   // Most neighbors in the nine broad-phase cells are outside the 1.5-unit
+   // separation sphere. Reject by axis before the length calculation.
+   if(Math.abs(dx)>=1.5||Math.abs(dy)>=1.5||Math.abs(dz)>=1.5)continue;
+   const dist=Math.hypot(dx,dy,dz);
+   if(dist<1.5&&dist>.01){e.pos.x+=dx/dist*(1.5-dist)*dt*3;e.pos.z+=dz/dist*(1.5-dist)*dt*3;}
+  }
  }
  private updateRings(dt:number){
   for(const ring of this.rings){ring.previous=ring.radius;ring.radius+=dt*9;ring.age+=dt;
@@ -791,17 +866,17 @@ export class World {
   // After the first substep the targets are stationary within this same pose
   // sample. Its earlier swept cells remain a conservative broad phase.
   if(cached)for(const cell of cells.values())for(const target of cell)target.previous=target.pos;
-  const needsCollisionGrid=this.prediction||this.projectiles.some(p=>!p.shotKey||!this.contactOwners.includes(p.shotKey.split(':')[0]));
+  const needsCollisionGrid=this.prediction||!this.contactOwners.length||this.projectiles.some(p=>!p.shotKey||!this.contactOwners.includes(p.shotKey.split(':')[0]));
   for(const e of !cached&&needsCollisionGrid?this.enemies:[]){
    if(e.hp<=0||!this.active(e))continue;
-   const targets:ProjectileTarget[]=e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*CREATURE_SCALE_RATIO*e.size*enemyRigScale(e),i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:crystalToEnemy(e,this.player.pos,s.local),r:(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:(legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind,!!e.balance)))*enemyEmergenceScale(e),i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?spiderCrystalRadius(e)*enemyEmergenceScale(e):e.radius,i:-1,weak:false}];
+   const targets:ProjectileTarget[]=isWholeBodyTarget(e.kind)?[{e,pos:e.pos,r:e.radius,i:-1,weak:false}]:e.segments.length?e.segments.map((s,i)=>({e,pos:s.pos,r:.53*CREATURE_SCALE_RATIO*e.size*enemyRigScale(e),i,weak:false})):e.weakpoints.length?e.weakpoints.map((s,i)=>({e,pos:crystalToEnemy(e,this.player.pos,s.local),r:(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:(legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind,!!e.balance)))*enemyEmergenceScale(e),i,weak:true})):[{e,pos:this.weakPoint(e),r:isSpider(e.kind)?spiderCrystalRadius(e)*enemyEmergenceScale(e):e.radius,i:-1,weak:false}];
    // Destroyed tower crystals disappear; the surviving armor still blocks shots.
    for(let i=targets.length-1;i>=0;i--)if(targets[i].weak&&e.weakpoints[targets[i].i].hp<=0)targets.splice(i,1);
    if(e.kind==='ghostpede'){
     targets.push({e,pos:e.pos,r:1.5,i:-1,weak:false,absorb:true});
     for(let i=0;i<e.segments.length;i++)targets.push({e,pos:e.segments[i].pos,r:1,i,weak:false,absorb:true});
    }
-   const radius=armorBounds(e);
+   const radius=hasMeshArmor(e.kind)?armorBounds(e):null;
    if(radius!==null)targets.push({e,pos:e.pos,r:radius,i:-1,weak:false,armor:true});
    if(isSpider(e.kind)&&e.headExposure<.5){targets.length=0;targets.push({e,pos:e.pos,r:e.radius,i:-1,weak:false,armor:true});}
    for(const target of targets){
@@ -815,18 +890,33 @@ export class World {
   if(this.prediction&&this.activeFlightBatch&&!cached)this.predictionGrid={batch:this.activeFlightBatch,cells};
   const ghosts=this.enemies.filter(e=>e.kind==='ghostpede'&&e.hp>0&&this.active(e));
   const homingTargets=this.projectiles.some(p=>p.homing)?this.enemies.filter(e=>!isEgg(e.kind)&&e.kind!=='orb'&&e.hp>0&&this.active(e)):[];
+  const homingArmor=homingTargets.length?this.enemies.filter(e=>e.hp>0&&hasMeshArmor(e.kind)):[];
+  // Swarms are entirely damageable bodies. Query their nearest living center
+  // through an exact spatial index instead of scanning every skull per shot.
+  const indexedBodies=homingTargets.map((enemy,order)=>({enemy,order})).filter(({enemy})=>isWholeBodyTarget(enemy.kind)&&!enemy.weakpoints.length&&!enemy.segments.length);
+  const bodyIndex=indexedBodies.length>=256&&this.projectiles.filter(p=>p.homing).length>=16?new HomingBodyIndex(indexedBodies):undefined;
+  const indexedOrders=bodyIndex?new Set(indexedBodies.map(t=>t.order)):undefined;
+  const complexHomingTargets=homingTargets.map((enemy,order)=>({enemy,order})).filter(t=>!indexedOrders?.has(t.order));
   const old=v(),relativeOld=v(),relativeEnd=v();
   for(const p of this.projectiles){
    const projectileEffects=this.effects.length,bouncesBefore=p.floorBounces??0;
-   const clientOwned=!this.prediction&&!!p.shotKey&&this.contactOwners.includes(p.shotKey.split(':')[0]);
+   const clientOwned=!this.prediction&&this.contactOwners.length>0&&!!p.shotKey&&this.contactOwners.includes(p.shotKey.split(':')[0]);
    p.previous??={...p.pos};Object.assign(p.previous,p.pos);
    const lifetime=p.homing?8:2.8,ageBefore=p.age,flightDt=Math.min(dt,Math.max(0,lifetime-ageBefore));
    p.path=undefined;if(flightDt<=0)continue;p.age+=flightDt;p.energy??=p.homing?10:1;
    let agePenalty=0;
    if(p.floorBounces&&!p.homing)p.vel.y-=TUNING.gravity*flightDt;
-   if(p.homing){const ghost=ghosts.find(e=>e.hp>0);let target:Vec|undefined,nearest=Infinity;
+   if(p.homing){const ghost=ghosts.find(e=>e.hp>0);let target:Vec|undefined,nearest=Infinity,bestOrder=Infinity;
     if(ghost)target=ghost.pos;
-    else for(const e of homingTargets){if(e.hp<=0)continue;const point=this.balanceFixesEnabled?this.accessibleHomingPoint(e,p.pos):this.weakPoint(e);if(!point)continue;const dist=(p.pos.x-point.x)**2+(p.pos.y-point.y)**2+(p.pos.z-point.z)**2;if(dist<nearest){nearest=dist;target=point;}}
+    else{
+     const body=bodyIndex?.nearest(p.pos);if(body){target=body.point;nearest=body.distanceSquared;bestOrder=body.order;}
+     for(const {enemy:e,order} of complexHomingTargets){
+      if(e.hp<=0)continue;
+      const point=isWholeBodyTarget(e.kind)?e.pos:this.balanceFixesEnabled&&e.weakpoints.length?this.accessibleHomingPoint(e,p.pos,nearest,homingArmor):this.weakPoint(e);
+      if(!point)continue;const dist=(p.pos.x-point.x)**2+(p.pos.y-point.y)**2+(p.pos.z-point.z)**2;
+      if(dist<nearest||dist===nearest&&order<bestOrder){nearest=dist;target=point;bestOrder=order;}
+     }
+    }
     if(target){const dir=direction(p.pos,target),blend=Math.min(1,flightDt*7);p.vel.x+=(dir.x*42-p.vel.x)*blend;p.vel.y+=(dir.y*42-p.vel.y)*blend;p.vel.z+=(dir.z*42-p.vel.z)*blend;}
    }
    Object.assign(old,p.pos);p.pos.x+=p.vel.x*flightDt;p.pos.y+=p.vel.y*flightDt;p.pos.z+=p.vel.z*flightDt;
@@ -846,8 +936,8 @@ export class World {
      const endFraction=(elapsed+remaining)/dt;
      relativeEnd.x=p.pos.x+(target.pos.x-before.x)*(1-endFraction);relativeEnd.y=p.pos.y+(target.pos.y-before.y)*(1-endFraction);relativeEnd.z=p.pos.z+(target.pos.z-before.z)*(1-endFraction);
      if(target.armor){
-      const hit=armorBounds(e)!==null?sweepArmor(e,this.player.pos,relativeOld,relativeEnd,best?.t??1,this.time,this.spawnFixesEnabled):null;
-      const t=hit?.t??(armorBounds(e)===null?segmentSphere(relativeOld,relativeEnd,target.pos,target.r):null);
+      const hit=hasMeshArmor(e.kind)?sweepArmor(e,this.player.pos,relativeOld,relativeEnd,best?.t??1,this.time,this.spawnFixesEnabled):null;
+      const t=hit?.t??(!hasMeshArmor(e.kind)?segmentSphere(relativeOld,relativeEnd,target.pos,target.r):null);
       if(t!==null&&(!best||t<best.t))best={e,segment:-1,weak:false,t,pos:target.pos,dead:false,armor:true,r:target.r,...(hit??{})};continue;
      }
      const t=segmentSphere(relativeOld,relativeEnd,target.pos,target.r);if(t!==null&&(!best||t<best.t||(t===best.t&&best.armor)))best={e,segment:target.i,weak:target.weak,t,pos:target.pos,dead,armor:false,absorb:target.absorb,r:target.r};
@@ -918,6 +1008,7 @@ export class World {
    }
    // Stable contact identities prevent a replayed prediction or the host's
    // confirmation from playing the same impact twice. Kills stay authoritative.
+   if(p.homing)for(let i=projectileEffects;i<this.effects.length;i++){const effect=this.effects[i];if(effect.kind==='hit'||effect.kind==='impact'){effect.homing=true;effect.level=p.level;}}
    let bounce=bouncesBefore;
    for(let i=projectileEffects;i<this.effects.length;i++){const effect=this.effects[i];if(effect.kind==='kill')continue;
     if(effect.kind==='ricochet')bounce++;
@@ -925,7 +1016,7 @@ export class World {
    }
   }
   let surviving=0;for(let i=0;i<this.projectiles.length;i++){const p=this.projectiles[i];if(p.age<(p.homing?8:2.8))this.projectiles[surviving++]=p;
-   else if(!this.prediction&&p.age<99&&p.shotKey&&this.contactOwners.includes(p.shotKey.split(':')[0]))this.contactSources.set(p.shotKey,{level:p.level??1,energy:p.energy??1,homing:p.homing,...(p.kind?{kind:p.kind}:{}),expires:this.tick+360});
+   else if(!this.prediction&&this.contactOwners.length>0&&p.age<99&&p.shotKey&&this.contactOwners.includes(p.shotKey.split(':')[0]))this.contactSources.set(p.shotKey,{level:p.level??1,energy:p.energy??1,homing:p.homing,...(p.kind?{kind:p.kind}:{}),expires:this.tick+360});
   }this.projectiles.length=surviving;if(!this.prediction)this.enemies=this.enemies.filter(e=>e.hp>0);this.projectileTargetStarts.clear();
  }
  private applyClientContacts(){
@@ -946,7 +1037,7 @@ export class World {
     const damage=this.projectileDamage(p,e);
     if(this.damageEnemy(e,damage,c.pos,c.segment,c.weak)>0)this.stats.hits++;
    }
-   for(let i=first;i<this.effects.length;i++){const effect=this.effects[i];effect.direction={...c.direction};effect.level=p.level;effect.shotKey=`${key}:${effect.kind}:${effect.enemyId??''}`;}
+   for(let i=first;i<this.effects.length;i++){const effect=this.effects[i];effect.direction={...c.direction};if(p.homing&&(effect.kind==='hit'||effect.kind==='impact'))effect.homing=true;effect.level=p.level;effect.shotKey=`${key}:${effect.kind}:${effect.enemyId??''}`;}
    this.acknowledgeContact(c);
    this.expireProjectile(p,{entity:c.enemyId,segment:c.segment});
   }
@@ -956,15 +1047,16 @@ export class World {
  weakPoint(e:Enemy){const point=e.weakpoints.find(s=>s.hp>0);if(point)return crystalToEnemy(e,this.player.pos,point.local);const segment=e.segments.find(s=>s.hp>0);return segment?.pos??(isSpider(e.kind)?spiderLocalPoint(e,this.player.pos,SPIDER_GEM):e.kind==='thorn'?v(e.pos.x,3,e.pos.z):e.pos);}
  /** A hidden array-first crystal must not consume a complete homing reserve.
   * Choose from living, reachable crystals at the projectile's actual position. */
- private accessibleHomingPoint(e:Enemy,from:Vec):Vec|undefined{
+ private accessibleHomingPoint(e:Enemy,from:Vec,maxDistanceSquared=Infinity,armorEnemies:readonly Enemy[]=this.enemies):Vec|undefined{
   if(!e.weakpoints.length)return this.weakPoint(e);
   const radius=(e.kind==='leviathan'?.6*CREATURE_SCALE_RATIO:legacyTowerGeometry(e)?TUNING.towerCrystalRadius:towerCrystalRadius(e.kind,!!e.balance))*enemyEmergenceScale(e);
   const points=e.weakpoints.filter(p=>p.hp>0).map(p=>crystalToEnemy(e,this.player.pos,p.local)).sort((a,b)=>distance(from,a)-distance(from,b));
   for(const point of points){
+   if((from.x-point.x)**2+(from.y-point.y)**2+(from.z-point.z)**2>maxDistanceSquared)continue;
    const contact=segmentSphere(from,point,point,radius);if(contact===null)continue;
    const end=v(from.x+(point.x-from.x)*contact,from.y+(point.y-from.y)*contact,from.z+(point.z-from.z)*contact);
    if(sweepFloor(from,end,this.time))continue;
-   if(this.enemies.some(other=>other.hp>0&&armorBounds(other)!==null&&sweepArmor(other,this.player.pos,from,point,contact,this.time,this.spawnFixesEnabled)))continue;
+   if(armorEnemies.some(other=>other.hp>0&&hasMeshArmor(other.kind)&&sweepArmor(other,this.player.pos,from,point,contact,this.time,this.spawnFixesEnabled)))continue;
    return point;
   }
  }

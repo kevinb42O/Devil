@@ -15,7 +15,7 @@ export function towerOrganicPose(age:number,kind:EnemyKind,motion:TowerOrganicMo
  return {rx:0,rz:0,sy:1+Math.sin(age*1.65+phase)*.018};
 }
 
-/** Root-space levitation. Weak points and spawn mouths use the same lift. */
+/** Small breathing lift above the articulated underside clearance. */
 export function towerHoverOffset(age:number,kind:EnemyKind){
- return .85+Math.sin(age*.95+(kind==='squid3'?1.7:kind==='squid2'?.8:0))*.18;
+ return .04+Math.sin(age*.95+(kind==='squid3'?1.7:kind==='squid2'?.8:0))*.025;
 }

@@ -4,37 +4,37 @@
       "kind": "skull",
       "name": "Shrieker",
       "draws": 1,
-      "triangles": 1628
+      "triangles": 882
     },
     {
       "kind": "skull2",
       "name": "Executioner",
       "draws": 1,
-      "triangles": 1072
+      "triangles": 1270
     },
     {
       "kind": "skull3",
       "name": "Reliquary",
       "draws": 1,
-      "triangles": 954
+      "triangles": 1510
     },
     {
       "kind": "transmuted1",
       "name": "Hollow Shrieker",
       "draws": 1,
-      "triangles": 1628
+      "triangles": 882
     },
     {
       "kind": "transmuted2",
       "name": "Hollow Executioner",
       "draws": 1,
-      "triangles": 1072
+      "triangles": 1270
     },
     {
       "kind": "transmuted3",
       "name": "Hollow Reliquary",
       "draws": 1,
-      "triangles": 954
+      "triangles": 1510
     }
   ],
   "checks": {
@@ -45,21 +45,21 @@
   "darkness": [
     {
       "kind": "skull",
-      "lifted": 139166
+      "lifted": 210309
     },
     {
       "kind": "skull2",
-      "lifted": 132599
+      "lifted": 310952
     },
     {
       "kind": "skull3",
-      "lifted": 93996
+      "lifted": 262215
     }
   ],
   "dense": {
     "shown": 1000,
     "draws": 17,
-    "triangles": 1265095,
+    "triangles": 1267013,
     "lights": 6
   },
   "errors": []

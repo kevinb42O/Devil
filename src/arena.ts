@@ -4,14 +4,22 @@ export const WORLD_SCALE = .62;
 export const TILE_SIZE = 4 * WORLD_SCALE;
 export const ARENA_DIMENSION = SURVIVAL_HEADER.arenaDimension;
 export const arenaRadius = (time:number) => Math.max(SURVIVAL_HEADER.shrinkEnd, SURVIVAL_HEADER.shrinkStart - time * SURVIVAL_HEADER.shrinkRate) * WORLD_SCALE;
+const sinkThreshold=(x:number,z:number)=>{
+ const dist=Math.hypot(x-25,z-25)*4;
+ return dist<=SURVIVAL_HEADER.shrinkEnd?Infinity:Math.max(0,(SURVIVAL_HEADER.shrinkStart-dist)/SURVIVAL_HEADER.shrinkRate);
+};
+// Shrink thresholds depend only on the immutable tile coordinates.
+const sinkThresholds=Float64Array.from({length:ARENA_DIMENSION**2},(_,i)=>sinkThreshold(i%ARENA_DIMENSION,Math.floor(i/ARENA_DIMENSION)));
+const highestFloor=Math.max(...SURVIVAL_HEIGHTS)*WORLD_SCALE;
 export function tileHeight(x:number,z:number,time:number):number {
   if(x<0||z<0||x>=ARENA_DIMENSION||z>=ARENA_DIMENSION)return -1000;
-  const dist=Math.hypot(x-25,z-25)*4;
-  const threshold=dist<=SURVIVAL_HEADER.shrinkEnd?Infinity:Math.max(0,(SURVIVAL_HEADER.shrinkStart-dist)/SURVIVAL_HEADER.shrinkRate);
+  const index=z*ARENA_DIMENSION+x;
+  const threshold=Number.isInteger(x)&&Number.isInteger(z)?sinkThresholds[index]:sinkThreshold(x,z);
   // Source parser stores x as the fast coordinate: x = index % dimension.
-  return (SURVIVAL_HEIGHTS[z*ARENA_DIMENSION+x]-Math.max(0,time-threshold)/4)*WORLD_SCALE;
+  return (SURVIVAL_HEIGHTS[index]-Math.max(0,time-threshold)/4)*WORLD_SCALE;
 }
 export function floorHeight(x:number,z:number,time:number,footprint=.18):number {
+  if(footprint===0)return Math.max(-1000,tileHeight(Math.floor(x/TILE_SIZE+25.5),Math.floor(z/TILE_SIZE+25.5),time));
   let height=-1000;
   for(const dx of [-footprint,footprint])for(const dz of [-footprint,footprint]){
     const ix=Math.floor((x+dx)/TILE_SIZE+25.5),iz=Math.floor((z+dz)/TILE_SIZE+25.5);
@@ -23,6 +31,8 @@ export function floorHeight(x:number,z:number,time:number,footprint=.18):number 
  * along the path. Sample each tile interval, never the endpoint's height alone. */
 export function sweepFloorLegacy(a:{x:number;y:number;z:number},b:{x:number;y:number;z:number},time:number,clearance=.08):{t:number;y:number}|null {
   if(b.y>=a.y)return null;
+  // Tiles only sink: a segment above the highest authored surface is clear.
+  if(Math.min(a.y,b.y)>highestFloor+clearance)return null;
   const cuts=[0,1];
   for(const axis of ['x','z'] as const){
     const from=a[axis]/TILE_SIZE+25.5,to=b[axis]/TILE_SIZE+25.5;
@@ -44,6 +54,8 @@ export function sweepFloorLegacy(a:{x:number;y:number;z:number},b:{x:number;y:nu
 /** Sweep top surfaces and raised tile sides. Side contacts stay at the
  * dagger's actual height and carry an outward normal for reflection. */
 export function sweepFloor(a:{x:number;y:number;z:number},b:{x:number;y:number;z:number},time:number,clearance=.08):{t:number;y:number;normal?:{x:number;y:number;z:number}}|null {
+  // Tiles only sink: a segment above the highest authored surface is clear.
+  if(Math.min(a.y,b.y)>highestFloor+clearance)return null;
   const cuts=[0,1];
   for(const axis of ['x','z'] as const){
     const from=a[axis]/TILE_SIZE+25.5,to=b[axis]/TILE_SIZE+25.5;

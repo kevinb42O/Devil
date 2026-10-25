@@ -38,6 +38,13 @@ try{
        check(new T.Vector3().setFromMatrixPosition(matrix).distanceTo(expected)<1e-5,'Spark detached from animated tip');
       }
      }
+     if(!burst&&level>=4&&dt===0){
+      for(const p of w.projectiles.filter(p=>p.socket===socket)){
+       const actual=r.originalWeapon.projectileView(p,{...p.pos}),launch=weaponMuzzle(w.player.pos,yaw,pitch,level,socket);
+       const expected=tip.clone().add(new T.Vector3(p.pos.x-launch.x,p.pos.y-launch.y,p.pos.z-launch.z));
+       check(expected.distanceTo(new T.Vector3(actual.x,actual.y,actual.z))<1e-7,'Actual beam dagger missed its assigned emitter');
+      }
+     }
      const settled=r.originalWeapon.projectileView({id:-1,level,socket,age:.1,pos:origin,vel:{x:0,y:0,z:-70},homing:false},{...origin});
      check(new T.Vector3(settled.x,settled.y,settled.z).distanceTo(new T.Vector3(origin.x,origin.y,origin.z))<1e-10,'Flight did not rejoin physics');checks++;
     }

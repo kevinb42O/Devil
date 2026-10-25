@@ -14,7 +14,7 @@ import {packShotLaunch,unpackShotLaunch} from './network-shots';
 type WireCrew=Omit<ArenaSnapshot['crew'][number],'life'|'respawnAt'|'protectedUntil'>&{life?:number;respawnAt?:number;protectedUntil?:number};
 const MAX_SHOT_DAGGERS=Math.max(...BURST_COUNTS,...STREAM_COUNTS);
 export type StateBaseline={drawing?:DrawingState;time:number;projectiles:Map<number,Projectile>;enemies:Map<number,EnemyRow>};
-const projectileFlags=(p:Projectile)=>(p.homing?1:0)|(((p.level??1)-1)<<1)|(p.kind==='shotgun'?16:0);
+const projectileFlags=(p:Projectile)=>(p.homing?1:0)|(((p.level??1)-1)<<1)|(p.kind==='shotgun'?16:0)|(p.hand===undefined?0:32|(p.hand===1?64:0));
 type ShotRow=[owner:number,sequence:number,flags:number,energy:number,age:number,launch:number[],entries:number[]];
 export type WireState={version:typeof NETWORK_PROTOCOL_VERSION;frame:number;epoch:number;body:Omit<ArenaSnapshot,'projectiles'|'enemies'|'effects'|'crew'|'courtyard'>&{courtyard?:WireCourtyard;enemies:(EnemyRow|EnemyDelta)[];crew:WireCrew[]};creatures:{ids:Uint8Array;positions:Uint8Array;relative:boolean};flight:{base:number;ids:Uint8Array;updates:unknown[][];shots:ShotRow[]}};
 // Receive snapshots are immutable. Their packed rows and decoded flight already
@@ -27,7 +27,7 @@ export function snapshotBaseline(s:ArenaSnapshot):StateBaseline{
   time:s.time,
   projectiles:new Map(s.projectiles.map(p=>[p.id,{
    id:p.id,pos:{...p.pos},vel:{...p.vel},age:p.age,homing:p.homing,level:p.level,
-   kind:p.kind,socket:p.socket,energy:p.energy,floorBounces:p.floorBounces,shotKey:p.shotKey
+   kind:p.kind,socket:p.socket,hand:p.hand,energy:p.energy,floorBounces:p.floorBounces,shotKey:p.shotKey
   }])),
   enemies:new Map(s.enemies.map(e=>{const row=packEnemy(e),pos=canonicalPosition(e.pos);row[2].set([pos.x,pos.y,pos.z]);return [e.id,row];}))
  };
@@ -87,16 +87,16 @@ export function decodeState(data:Uint8Array,baselines:Map<number,StateBaseline>)
  }
  const updates=new Map<number,Projectile>();for(const r of w.flight.updates){
   if(!Array.isArray(r)||r.length!==8||!Number.isInteger(r[0])||!(r[1] instanceof Float32Array)||r[1].length!==7||r.slice(2).some(v=>typeof v!=='number'||!Number.isFinite(v)))throw Error('Invalid flight');
-  const [id,values,flags,energy,floorBounces,owner,shot,index]=r as [number,Float32Array,number,number,number,number,number,number];if(!Number.isInteger(flags)||flags<0||flags>31||((flags>>1)&7)>6)throw Error('Invalid projectile flags');const [x,y,z,vx,vy,vz,age]=values;
-  updates.set(id,{id,pos:{x,y,z},previous:{x,y,z},vel:{x:vx,y:vy,z:vz},age,...(flags&16?{kind:'shotgun' as const}:{}),homing:!!(flags&1),level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces,shotKey:owner>=0&&w.body.crew[owner]?`${w.body.crew[owner].id}:${shot}:${index}`:undefined});
+  const [id,values,flags,energy,floorBounces,owner,shot,index]=r as [number,Float32Array,number,number,number,number,number,number];if(!Number.isInteger(flags)||flags<0||flags>127||((flags>>1)&7)>6)throw Error('Invalid projectile flags');const [x,y,z,vx,vy,vz,age]=values;
+  updates.set(id,{...(flags&32?{hand:flags&64?1:0}:{}),id,pos:{x,y,z},previous:{x,y,z},vel:{x:vx,y:vy,z:vz},age,...(flags&16?{kind:'shotgun' as const}:{}),homing:!!(flags&1),level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:flags&32?(flags&16?(flags&64?1:0):(index%5)*2+(flags&64?1:0)):projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces,shotKey:owner>=0&&w.body.crew[owner]?`${w.body.crew[owner].id}:${shot}:${index}`:undefined});
  }
  for(const r of w.flight.shots){
   if(!Array.isArray(r)||r.length!==7)throw Error('Invalid shot');const [owner,sequence,flags,energy,age,description,entries]=r;
-  if(!Number.isInteger(owner)||!w.body.crew[owner]||!Number.isSafeInteger(sequence)||sequence<1||!Number.isInteger(flags)||flags<0||flags>30||((flags>>1)&7)>6||flags%2||!Number.isFinite(energy)||!Number.isFinite(age)||age<0||age>3||!Array.isArray(entries)||entries.length>MAX_SHOT_DAGGERS*2||entries.length%2)throw Error('Invalid shot launch');
+  if(!Number.isInteger(owner)||!w.body.crew[owner]||!Number.isSafeInteger(sequence)||sequence<1||!Number.isInteger(flags)||flags<0||flags>126||((flags>>1)&7)>6||flags%2||!Number.isFinite(energy)||!Number.isFinite(age)||age<0||age>3||!Array.isArray(entries)||entries.length>MAX_SHOT_DAGGERS*2||entries.length%2)throw Error('Invalid shot launch');
   let count=0;for(let i=0;i<entries.length;i+=2){if(!Number.isSafeInteger(entries[i])||entries[i]<0||!Number.isInteger(entries[i+1])||entries[i+1]<0||entries[i+1]>=MAX_SHOT_DAGGERS)throw Error('Invalid shot identity');count=Math.max(count,entries[i+1]+1);}
   const spec=unpackShotLaunch(description,1+((flags>>1)&7)),launches=shotLaunches(spec,count,TUNING.projectileSpeed);
   if(!!(flags&16)!==!!spec.shotgunCount||spec.shotgunCount&&count>spec.shotgunCount)throw Error('Invalid shotgun identity');
-  for(let i=0;i<entries.length;i+=2){const id=entries[i],index=entries[i+1],{pos:origin,vel}=launches[index],pos={x:origin.x+vel.x*age,y:origin.y+vel.y*age,z:origin.z+vel.z*age};if(updates.has(id))throw Error('Duplicate shot identity');updates.set(id,{id,pos,previous:{...pos},vel,age,...(flags&16?{kind:'shotgun' as const}:{}),homing:false,level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces:0,shotKey:`${w.body.crew[owner].id}:${sequence}:${index}`});}
+  for(let i=0;i<entries.length;i+=2){const id=entries[i],index=entries[i+1],{pos:origin,vel}=launches[index],pos={x:origin.x+vel.x*age,y:origin.y+vel.y*age,z:origin.z+vel.z*age};if(updates.has(id))throw Error('Duplicate shot identity');updates.set(id,{...(flags&32?{hand:flags&64?1:0}:{}),id,pos,previous:{...pos},vel,age,...(flags&16?{kind:'shotgun' as const}:{}),homing:false,level:1+((flags>>1)&7),...(((flags>>1)&7)>=4?{socket:flags&32?(flags&16?(flags&64?1:0):(index%5)*2+(flags&64?1:0)):projectileSocket(1+((flags>>1)&7),index,!!(flags&16))}:{}),energy,floorBounces:0,shotKey:`${w.body.crew[owner].id}:${sequence}:${index}`});}
  }
  const projectiles:Projectile[]=[];for(const id of projectileIds){let p=updates.get(id);if(!p){const old=baseline?.projectiles.get(id);if(!old)return null;p={...old,age:old.age+elapsed,pos:flightPosition(old,elapsed),vel:{...old.vel,y:old.vel.y-(old.floorBounces&&!old.homing?TUNING.gravity*elapsed:0)}};p.previous={...p.pos};}projectiles.push(p);}
  const snapshot:ArenaSnapshot={...w.body,courtyard,crew:w.body.crew.map(p=>({...p,life:p.life??0,respawnAt:p.respawnAt??null,protectedUntil:p.protectedUntil??0})),effects:[],enemies,projectiles};

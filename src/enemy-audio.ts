@@ -4,8 +4,8 @@ import {hearingProfile} from './spatial-audio';
 
 export const ENEMY_CHATTER:Record<EnemyKind,string>={skull:'chatterskull',skull2:'chatterskull2',skull3:'chatterskull3',skull4:'chatterskull4',transmuted1:'chatterskullblack',transmuted2:'chatterskull2black',transmuted3:'chatterskull3black',transmuted4:'chatterskull4black',squid:'chatterminisquid',squid2:'chattersquid',squid3:'chattersquidultra',spider:'chatterspider',spider2:'chattergigaspider',spiderling:'chatterspiderling',centipede:'chattercentipede',gigapede:'chattercentipede2',ghostpede:'chatterultrapede',leviathan:'chatterleviathan',orb:'eyearousedrone',thorn:'chatterthorn',egg:'eggdrone',egg2:'eggdrone2'};
 /** Creature arrival and surface break-through are separate physical gestures. */
-export const ENEMY_SPAWN:Partial<Record<EnemyKind,string>>={squid:'spawnminisquid',squid2:'spawnsquid',squid3:'spawnultrasquid',spider:'spawnspider',spider2:'spawngigaspider',centipede:'spawncentipede',gigapede:'spawncentipede2',ghostpede:'spawnultrapede',leviathan:'spawnleviathan',orb:'eyearouse',thorn:'thornemerge',egg:'spawnegg',egg2:'spawnegg2'};
-export const ENEMY_EMERGE:Partial<Record<EnemyKind,string>>={centipede:'unburrowcentipede',gigapede:'unburrowgigapede',ghostpede:'unburrowghostpede'};
+export const ENEMY_SPAWN:Partial<Record<EnemyKind,string>>={squid:'spawnminisquid',squid2:'spawnsquid',squid3:'spawnultrasquid',spider:'spawnspider',spider2:'spawngigaspider',centipede:'spawncentipede',gigapede:'spawncentipede2',ghostpede:'spawnultrapede',leviathan:'spawnleviathan',orb:'eyearouse',thorn:'thornemerge'};
+export const ENEMY_EMERGE:Partial<Record<EnemyKind,string>>={centipede:'unburrowcentipede'};
 const squared=(a:Vec,b:Vec)=>(a.x-b.x)**2+(a.y-b.y)**2+(a.z-b.z)**2;
 /** A long creature is audible where its nearest living body passes the listener. */
 export function enemyAudioPosition(enemy:Enemy,listener:Vec):Vec{
@@ -17,7 +17,7 @@ export function enemyAudioPosition(enemy:Enemy,listener:Vec):Vec{
 }
 /** Protect immediate danger, then type and bearing diversity, within a fixed voice budget. */
 export function selectEnemyAudio(enemies:readonly Enemy[],listener:Vec,active:(e:Enemy)=>boolean,retained:ReadonlySet<number>=new Set(),budget=28){
- const candidates=enemies.filter(e=>e.hp>0&&(active(e)||e.kind==='centipede')).map(enemy=>{
+ const candidates=enemies.filter(e=>e.hp>0&&(active(e)||e.kind==='centipede'||e.kind==='gigapede'||e.kind==='ghostpede')).map(enemy=>{
   const pos=enemyAudioPosition(enemy,listener),distance=Math.sqrt(squared(pos,listener));
   return {enemy,pos,distance,score:distance*(retained.has(enemy.id)?.85:1),sector:Math.floor((Math.atan2(pos.z-listener.z,pos.x-listener.x)+Math.PI)/(Math.PI/4))%8,scale:1};
  }).filter(c=>c.distance<hearingProfile(ENEMY_CHATTER[c.enemy.kind]).maxDistance).sort((a,b)=>a.score-b.score||a.enemy.id-b.enemy.id);
@@ -28,15 +28,6 @@ export function selectEnemyAudio(enemies:readonly Enemy[],listener:Vec,active:(e
  const kinds=new Set<EnemyKind>();for(const c of candidates){if(kinds.has(c.enemy.kind))continue;kinds.add(c.enemy.kind);add(c);}
  const sectors=new Set<number>();for(const c of candidates){if(sectors.has(c.sector))continue;sectors.add(c.sector);add(c);}
  candidates.forEach(add);
- const groups=new Map<EnemyKind,typeof candidates>();
- for(const c of selected){const group=groups.get(c.enemy.kind)??[];group.push(c);groups.set(c.enemy.kind,group);}
- for(const group of groups.values()){
-  group.sort((a,b)=>a.distance-b.distance||a.enemy.id-b.enemy.id);
-  // Reserve the nearest threat's bearing. Uniform 1/sqrt(count) scaling let
-  // distant skulls mute a skull at the player's shoulder by almost 15 dB.
-  group[0].scale=group.length===1?1.2:1.05;
-  const others=group.slice(1),power=1.2**2-1.05**2;
-  for(const c of others)c.scale=Math.sqrt(power/others.length);
- }
+ // Voice selection bounds CPU cost; selected sources keep their recorded level.
  return selected;
 }

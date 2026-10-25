@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {enemyYaw} from './enemy-presentation';
-import {isSkull} from './enemy-kinds';
+import {isSkull,isEgg} from './enemy-kinds';
 import {type Enemy,type Vec} from './simulation';
 import {type OriginalEnemies} from './original-enemies';
 
@@ -20,9 +20,9 @@ export class EnemyGlowSources {
  private scale=new THREE.Vector3();
  constructor(private originals:OriginalEnemies){}
  sources(e:Enemy,player:Vec,camera:THREE.Camera,model?:THREE.Group):GlowSource[]{
-  // Skull light belongs to authored sockets, visors and wounds. Bounding-box
+  // Bone sockets and brood-shell splits carry their own surface light. Bounding-box
   // anchors would draw floating white dots over the new faces and horns.
-  if(isSkull(e.kind))return [];
+  if(isSkull(e.kind)||isEgg(e.kind)||e.kind==='spiderling')return [];
   const root=model??this.originals.templates.get(e.kind);if(!root)return [];
   // Instanced creatures use immutable templates; update each template once.
   // Animated individual rigs still refresh their complete world transforms.

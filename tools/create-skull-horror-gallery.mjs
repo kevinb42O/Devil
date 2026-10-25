@@ -1,0 +1,22 @@
+import {writeFile,copyFile} from 'node:fs/promises';
+import {chromium} from '@playwright/test';
+const directory='artifacts/skull-horror',kinds=['skull','skull2','skull3'];
+for(const file of ['dense.png','report.json'])await copyFile(`artifacts/skull-redesign/${file}`,`${directory}/after/${file}`);
+const image=(path,alt)=>`<a href="${path}"><img src="${path}" alt="${alt}" loading="eager"></a>`;
+await writeFile(`${directory}/index.html`,`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Skulls I–III — horror anatomy review</title><style>
+*{box-sizing:border-box}body{margin:0;background:#10151e;color:#eee5d7;font:16px/1.55 Arial,sans-serif}main{max-width:1440px;margin:auto;padding:40px 32px}h1{font-size:36px;font-weight:500;margin:0 0 12px}h2{font-size:26px;font-weight:500;margin:44px 0 14px}p{max-width:78ch;color:#aeb9c5}a{color:#d7b18b;text-underline-offset:4px}a:focus-visible{outline:2px solid #d7b18b;outline-offset:4px}img{display:block;width:100%;height:auto}figure{margin:0}figcaption{padding:10px 0;color:#b9c0ca}strong{color:#eee5d7}.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}video{display:block;width:100%;max-height:750px;background:#070b12}small{color:#aeb9c5}::selection{background:#6b4031;color:white}@media(max-width:700px){main{padding:24px 16px}.three{grid-template-columns:1fr}h1{font-size:28px}}
+</style><main><h1>Skulls I–III</h1><p>Newly authored anatomy inspired by the retained Devil Daggers references. Deep orbital cavities, compact biting bone and descending horn silhouettes replace the previous screaming skull, iron helmet and split mask.</p>
+<div class="three" id="lineup">${kinds.map((kind,i)=>`<figure>${image(`after/current-${i+1}-quarter.png`,`New Skull ${i+1}, three-quarter view`)}<figcaption><strong>Skull ${i+1}</strong> · ${['Compact biting skull','Heavy descending ram horns','Serrated horns and extended jaw'][i]}</figcaption></figure>`).join('')}</div>
+<h2>In motion</h2><video controls preload="metadata" poster="film/frame-3.png" src="film/skulls-in-motion.mp4"></video><p>The film shows the new geometry in studio and arena views. <a href="../skull-flight/comparison.mp4">The instance-motion fixture</a> exercises the production flight controller with controlled trajectories.</p>
+<h2>Original reference / previous model / new model</h2><p>Each model is fitted to its own frame; these images compare shape, not size. Original component assemblies use imported local coordinates, with approximate articulation. Clay shading makes their anatomy easier to inspect.</p>
+${kinds.map((kind,i)=>`<h2>Skull ${i+1}</h2><div class="three"><figure>${image(`reference/clay-${i+1}-quarter.png`,'Original reference in clay')}<figcaption>Original reference · clay</figcaption></figure><figure>${image(`before/current-${i+1}-quarter.png`,'Previous authored model')}<figcaption>Previous model</figcaption></figure><figure>${image(`after/current-${i+1}-quarter.png`,'New authored model')}<figcaption>New model · <a href="after/current-${i+1}-front.png">front</a> / <a href="after/current-${i+1}-side.png">side</a></figcaption></figure></div>`).join('')}
+<h2>Actual arena renderer</h2>${image('after/arena.png','New skulls in the arena')}<div class="three">${['storm','furnace','depths'].map(name=>`<figure>${image(`after/${name}-low.png`,name+' low quality')}<figcaption>${name} · low quality</figcaption></figure>`).join('')}</div>
+<p>Matched camera distance: <a href="after/near.png">5 units</a> / <a href="after/arena.png">12 units</a> / <a href="after/far.png">30 units</a>.</p><h2>Dense swarm</h2>${image('after/dense.png','One thousand enemies in the real instance renderer')}<p><a href="after/report.json">Renderer checks and geometry counts</a> · <a href="README.md">Implementation and verification notes</a></p></main></html>`);
+const browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});
+try{
+ const page=await browser.newPage({viewport:{width:1440,height:1000}});
+ await page.goto((process.env.GAME_URL??'http://127.0.0.1:5173')+`/${directory}/index.html`);
+ await page.locator('#lineup img').evaluateAll(images=>Promise.all(images.map(img=>img.decode())));
+ await page.locator('#lineup').screenshot({path:`${directory}/lineup.png`});
+}finally{await browser.close();}
+console.log(`Saved ${directory}/index.html and lineup.png`);

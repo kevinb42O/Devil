@@ -39,10 +39,10 @@ test('floating spawners bob at a deterministic altitude and never grow a ground 
   const heights:number[]=[];
   for(const age of [12,13,14,15,16]){
    e.age=age;constrainEnemyFloor(e,12);
-   const floor=towerFloorHeight(e,12),expected=floor+TOWER_FLOOR_CLEARANCE+towerHoverOffset(age,kind);
-   assert.ok(Math.abs(e.pos.y-expected)<1e-8);assert.ok(e.pos.y-floor>.9);heights.push(e.pos.y);
+   const floor=towerFloorHeight(e,12),expected=floor-armorBottom(e)+TOWER_FLOOR_CLEARANCE+towerHoverOffset(age,kind);
+   assert.ok(Math.abs(e.pos.y-expected)<1e-8);assert.ok(e.pos.y+armorBottom(e)-floor>=.29);assert.ok(e.pos.y+armorBottom(e)-floor<=.35);heights.push(e.pos.y);
   }
-  assert.ok(Math.max(...heights)-Math.min(...heights)>.1,'hover visibly changes over match time');
+  assert.ok(Math.max(...heights)-Math.min(...heights)>.015,'height follows the articulated underside');
   e.age=12;constrainEnemyFloor(e,12);assert.equal(e.pos.y,heights[0],'seeking restores the same levitation pose');
  }
 });

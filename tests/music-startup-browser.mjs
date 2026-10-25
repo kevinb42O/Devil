@@ -23,9 +23,9 @@ for(const autoplay of [true,false]){
    }));
   });
   await page.goto('http://127.0.0.1:5173');
-  await page.waitForFunction(()=>window.abyss?.music.tracks.some(t=>t.name==='menutheme'));
+  await page.waitForFunction(()=>window.abyss?.music.tracks.some(t=>t.name==='menuatmos'));
   if(!autoplay){
-   await page.waitForFunction(()=>window.abyss.music.failed.includes('menutheme'));
+   await page.waitForFunction(()=>window.abyss.music.failed.includes('menuatmos'));
    assert.equal(await page.evaluate(()=>window.musicPeak()),0,'blocked autoplay stays silent');
    await page.click('#settings-open');
   }

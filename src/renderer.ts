@@ -1,3 +1,4 @@
+import {prepareTowerCollisions} from './projectile-collision';
 import {AscentRumble,ASCENT_RUMBLE} from './ascent-rumble';
 import {SkullMotion} from './skull-motion';
 import {AscentRush} from './ascent-rush';
@@ -69,6 +70,7 @@ function shape(parent:THREE.Object3D,geometry:THREE.BufferGeometry,material:THRE
 }
 export type VisualSettings={quality:string;fov:number;skyMotion?:'full'|'reduced';mist?:boolean;screenShake?:number;movementMotion?:number};
 export class GameRenderer {
+  onDeathContact?:(kind:Enemy['kind'],pos:Vec)=>void;
   readonly skullMotion=new SkullMotion();
   readonly cameraFeedback=new CameraFeedback();
   readonly ascentRumble=new AscentRumble();
@@ -169,7 +171,7 @@ export class GameRenderer {
   private emoteHands:THREE.Group|null=null;
   private readonly combatMuzzle=(level:number,socket:number,out:THREE.Vector3)=>!!this.emoteHands?.visible&&crewWeaponMuzzle(this.emoteHands,out,level,socket);
   localPlayerColor:string='crimson';
-  get combatHandDiagnostics(){return {source:this.emoteHands?.userData.avatarSource,visible:!!this.emoteHands?.visible&&this.emoteHands.parent===this.scene,gestures:this.emoteHands?.userData.emotes};}
+  get combatHandDiagnostics(){return {source:this.emoteHands?.userData.avatarSource,visible:!!this.emoteHands?.visible&&this.emoteHands.parent===this.scene,gestures:this.emoteHands?.userData.emotes,hands:this.emoteHands?.userData.combatHands};}
   private updateFirstPersonBody(world:World,input:Input,yaw:number,alpha:number,time:number,courtyard:boolean,scene:THREE.Scene){
     this.emoteHands??=createCrewAvatar(0,false,true);
     const hands=this.emoteHands;hands.visible=true;if(hands.parent!==scene)scene.add(hands);
@@ -292,6 +294,7 @@ export class GameRenderer {
   }
   async prepare() {
     await Promise.all([this.veilEnvironment.ready,this.furnace.ready,this.sky.ready,this.originalEnemies.loaded,this.originalWeapon.loaded,this.crewAvatarReady,this.entrance.ready,this.blood.ready,this.deathBurst!.ready,...this.crewDeathBursts.map(s=>s.burst.ready)]);
+    prepareTowerCollisions();
     this.furnace.prepare(this.renderer);
     this.entrance.sanctuary.setSpace(this.sky.cosmicTexture);
     this.blood.setReflections(this.sky.cosmicTexture,this.sky.reflectionTexture);
@@ -337,10 +340,10 @@ export class GameRenderer {
       if(model&&shooter){
         updateCrewAvatar(model,shooter.input,shooter.player.vel,shooter.player.grounded,world.time,true,false,shooter.level,undefined,false,undefined,undefined,this.blood.handBlood.sample(world,shooter.player));
         model.updateWorldMatrix(true,true);
-        const level=effect.level??shooter.level,count=effect.projectileKind==='shotgun'?(level>=5?2:1):HAND_MUZZLES[level-1].length;
+        const level=effect.level??shooter.level,single=level>=5&&effect.hand!==undefined,count=effect.projectileKind==='shotgun'?(level>=5&&!single?2:1):HAND_MUZZLES[level-1].length/(single?2:1);
         const muzzles:Vec[]=[];
         for(let socket=0;socket<count;socket++){
-          if(!crewWeaponMuzzle(model,this.crewMuzzlePosition,level,socket))break;
+          if(!crewWeaponMuzzle(model,this.crewMuzzlePosition,level,single?(effect.projectileKind==='shotgun'?effect.hand!:socket*2+effect.hand!):socket+(level<5&&effect.hand===0?HAND_MUZZLES[level-1].length:0)))break;
           muzzles.push({x:this.crewMuzzlePosition.x,y:this.crewMuzzlePosition.y,z:this.crewMuzzlePosition.z});
         }
         if(muzzles.length===count)weaponEffect={...effect,muzzles};
@@ -373,7 +376,7 @@ export class GameRenderer {
     this.camera.position.add(this.feedbackWorldOffset);
   }
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
-    if(!entrance||!world||!bodyInput||spectatorPosition||this.topDown)this.courtyardNeck.clear();
+    if(!world||!bodyInput||spectatorPosition||this.topDown||this.deathGhost?.visible||this.deathBurstActive)this.courtyardNeck.clear();
     this.crewReplayExternal=!!spectatorPosition;this.renderer.info.reset();if(menu){
       this.descentPassage.group.visible=false;
       if(this.emoteHands)this.emoteHands.visible=false;
@@ -433,6 +436,15 @@ export class GameRenderer {
       if(spectatorPosition)this.camera.position.set(spectatorPosition.x,spectatorPosition.y,spectatorPosition.z);
       else samplePlayerPosition(world,projectileAlpha,this.camera.position);
       this.applyViewFeedback(world,yaw,pitch,dt,!!spectatorPosition||this.topDown||!!this.deathGhost?.visible||this.deathBurstActive,true,projectileAlpha);
+      // Use the prelobby eye-to-body relationship when looking down. The
+      // resting arm keeps its animation; viewing it from over the collar
+      // instead makes its forearm appear to bend backward across the screen.
+      if(bodyInput&&!spectatorPosition&&!this.topDown&&!this.deathGhost?.visible&&!this.deathBurstActive){
+        const neck=this.courtyardNeck.update(pitch,document.hidden?0:dt);
+        this.camera.position.x-=Math.sin(yaw)*neck.forward;
+        this.camera.position.z-=Math.cos(yaw)*neck.forward;
+        this.camera.position.y-=neck.drop;
+      }
       this.camera.rotation.set(pitch,yaw,0,'YXZ');if(this.topDown){const centerZ=this.crewReplayMode?14:0;this.camera.position.set(0,55,centerZ+.001);this.camera.lookAt(0,0,centerZ);}
       this.updateTiles(world.time);
       this.enemyEmergence.update(world,this.camera);
@@ -443,7 +455,7 @@ export class GameRenderer {
       this.skullMotion.begin(world,world.time);
       const present=new Set<number>();
       const spiderlings=new Map<number,Enemy>();
-      this.creatureDeaths??=new EnemyDeaths(this.scene);
+      this.creatureDeaths??=new EnemyDeaths(this.scene,(kind,pos)=>this.onDeathContact?.(kind,{x:pos.x,y:0,z:pos.z}));
       for(const e of world.enemies) {
         if(e.kind==='spiderling'&&e.age>=0)spiderlings.set(e.id,e);
         if(isSkull(e.kind)||isEgg(e.kind)||e.kind==='spiderling'){
@@ -522,7 +534,7 @@ export class GameRenderer {
       this.creatureDeaths.update(world.time,present);
       for(const [id,death] of this.dyingTowers){
         const elapsed=world.time-death.started,pose=towerDeathPose(elapsed,death.depth);
-        if(pose.done||elapsed<0||present.has(id)){this.scene.remove(death.model);this.dyingTowers.delete(id);continue;}
+        if(pose.done||elapsed<0||present.has(id)){if(pose.done&&!present.has(id))this.onDeathContact?.(death.model.name as Enemy['kind'],{x:death.model.position.x,y:floorHeight(death.model.position.x,death.model.position.z,world.time),z:death.model.position.z});this.scene.remove(death.model);this.dyingTowers.delete(id);continue;}
         death.model.visible=true;death.model.position.y=death.y-pose.sink;death.model.rotation.y=death.yaw+death.direction*pose.spin;
       }
       this.gemMesh.count=Math.min(1200,world.gems.length);for(let i=0;i<this.gemMesh.count;i++){const gem=world.gems[i];this.dummy.position.set(gem.pos.x,gem.pos.y,gem.pos.z);this.dummy.rotation.set(t,t*2,0);this.dummy.scale.setScalar(1.4*(gem.age>8?Math.sin(t*18)*.2+.8:1));this.dummy.updateMatrix();this.gemMesh.setMatrixAt(i,this.dummy.matrix);}if(this.gemMesh.count){this.gemMesh.instanceMatrix.clearUpdateRanges();this.gemMesh.instanceMatrix.addUpdateRange(0,this.gemMesh.count*16);this.gemMesh.instanceMatrix.needsUpdate=true;}

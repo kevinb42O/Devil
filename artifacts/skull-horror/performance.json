@@ -1,0 +1,78 @@
+{
+  "measurement": "Synchronous total render wall time including gl.finish; 960x640, low quality, 1000 mixed base/transmuted skulls, 4 alternating rounds, 24 warmup + 60 measured frames per round. Incumbent HEAD geometry, profiles and shader versus working-tree versions.",
+  "stats": {
+    "before": {
+      "median": 3.4000000953674316,
+      "p95": 5.900000095367432
+    },
+    "after": {
+      "median": 3,
+      "p95": 5.700000047683716
+    }
+  },
+  "rounds": [
+    {
+      "round": 0,
+      "name": "before",
+      "median": 3.3000000715255737,
+      "p95": 4
+    },
+    {
+      "round": 0,
+      "name": "after",
+      "median": 2.600000023841858,
+      "p95": 3.3000000715255737
+    },
+    {
+      "round": 1,
+      "name": "after",
+      "median": 3,
+      "p95": 3.5
+    },
+    {
+      "round": 1,
+      "name": "before",
+      "median": 4.100000023841858,
+      "p95": 6.299999952316284
+    },
+    {
+      "round": 2,
+      "name": "before",
+      "median": 5.5,
+      "p95": 6.300000071525574
+    },
+    {
+      "round": 2,
+      "name": "after",
+      "median": 4.799999952316284,
+      "p95": 6
+    },
+    {
+      "round": 3,
+      "name": "after",
+      "median": 3.200000047683716,
+      "p95": 5.800000071525574
+    },
+    {
+      "round": 3,
+      "name": "before",
+      "median": 5.100000023841858,
+      "p95": 5.799999952316284
+    }
+  ],
+  "counts": {
+    "before": {
+      "draws": 19,
+      "triangles": 1259095,
+      "shown": 1000
+    },
+    "after": {
+      "draws": 19,
+      "triangles": 1261013,
+      "shown": 1000
+    }
+  },
+  "medianChangePercent": -11.764708357286224,
+  "p95ChangePercent": -3.3898312618800164,
+  "errors": []
+}

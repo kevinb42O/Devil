@@ -93,6 +93,8 @@ export class ProjectileLighting {
    const {x,y,z}=position;
    const speed=Math.hypot(this.velocity.x,this.velocity.y,this.velocity.z);
    let length=Math.min(p.kind==='shotgun'?1.2:2.1,speed*.026,speed*Math.max(0,p.age));
+   // The ribbon's rear must never extend behind the palm where this beam began.
+   if(p.kind!=='shotgun'&&(p.level??1)>=4)length=Math.min(length,Math.max(0,speed*Math.max(0,p.age)-PROJECTILE_TRAIL_OFFSET));
    // A ribbon cannot extend through a floor or armor contact after a bounce.
    // Limit it to the currently displayed segment of the swept path.
    if(p.path?.length){let start=p.previous??p.pos;for(const point of p.path){if(point.t>alpha)break;start=point.pos;}

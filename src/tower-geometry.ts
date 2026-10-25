@@ -74,25 +74,25 @@ export function buildTowerStructure(rig:THREE.Group,kind:EnemyKind,material:(fin
    tendon(crown,[[side*.7,-.4,.2],[side*1.3,.35,.05],[side*1.18,1.16,-.23],[side*.75,1.45,-.5]],[.28,.22,.12,.008],bone,'lantern-horn');
   }
  }else if(tier===2){
-  // A broad pendulous brood sac, opposing faces and a forked occipital crest.
-  profile(breast,[[-h*.37,.18],[-h*.27,.8],[-h*.03,1.65,.83],[h*.12,2.0,.8],[h*.29,1.6,.86],[h*.36,.85]],flesh,'brood-abdomen',6);
+  // A long lean brood sac, opposing faces and a forked occipital crest.
+  profile(breast,[[-h*.37,.14],[-h*.27,.58],[-h*.03,1.18,.83],[h*.12,1.42,.8],[h*.29,1.16,.86],[h*.36,.64]],flesh,'brood-abdomen',6);
   for(const side of [-1,1]){
-   tendon(crown,[[0,-.55,side*.85],[side*.55,.25,side*1.5],[side*.72,1.2,side*1.6],[side*.48,1.6,side*1.1]],[.5,.38,.19,.009],bone,'brood-crest');
-   ellipsoid(rig,[0,h*.7,side*1.25],[1.3,1.3,1.0],flesh,'brood-shoulder');
+   tendon(crown,[[0,-.55,side*.85],[side*.55,.25,side*1.5],[side*.62,1.9,side*1.4],[side*.30,2.5,side*.65]],[.40,.30,.14,.006],bone,'brood-crest');
+   ellipsoid(rig,[0,h*.7,side*1.05],[.94,1.4,.8],flesh,'brood-shoulder');
   }
  }else{
-  // A three-headed radial predator, hanging from a swollen ribbed mantle.
-  profile(breast,[[-h*.37,.2],[-h*.34,.85],[-h*.13,1.8],[h*.07,2.6],[h*.21,2.65],[h*.31,1.8],[h*.36,.9]],flesh,'sovereign-mantle',9);
+  // A tall three-headed predator: pinched waist and long radial neck tendons.
+  profile(breast,[[-h*.37,.15],[-h*.34,.56],[-h*.13,1.10],[h*.07,1.64],[h*.21,1.84],[h*.31,1.30],[h*.36,.68]],flesh,'sovereign-mantle',9);
   for(let i=0;i<3;i++){
    const a=i*Math.PI*2/3,x=Math.sin(a),z=Math.cos(a);
-   tendon(rig,[[x*.6,1.2,z*.6],[x*1.5,h*.42,z*1.5],[x*2.35,h*.72,z*2.35],[x*2.9,h-.9,z*2.9]],[.38,.5,.65,.7],bone,'matriarch-neck');
-   tendon(crown,[[x*1.8,-.55,z*1.8],[x*2.75,.2,z*2.75],[x*2.5,1.13,z*2.5],[x*1.9,1.72,z*1.9]],[.55,.4,.22,.008],bone,'matriarch-crown-horn');
+   tendon(rig,[[x*.42,1.2,z*.42],[x*1.10,h*.42,z*1.10],[x*1.72,h*.72,z*1.72],[x*2.3,h-.9,z*2.3]],[.25,.34,.44,.52],bone,'matriarch-neck');
+   tendon(crown,[[x*1.48,-.55,z*1.48],[x*2.16,.4,z*2.16],[x*1.96,1.9,z*1.96],[x*1.44,2.85,z*1.44]],[.40,.3,.15,.006],bone,'matriarch-crown-horn');
   }
  }
  // Raised translucent seams follow the sacs' lobes, with darker dermis
  // between them. Their curved cross-section catches light in bright scenes
  // and exposes the contained organ light in darkness.
- const sacRadii=tier===1?[.52,.77,.92,.73]:tier===2?[.87,1.53,2.02,1.63]:[1.16,2.04,2.67,2.10];
+ const sacRadii=tier===1?[.52,.77,.92,.73]:tier===2?[.63,1.10,1.44,1.18]:[.76,1.27,1.86,1.46];
  const seamCount=tier===1?4:tier===2?6:9;
  for(let i=0;i<seamCount;i++){
   const a=(i+.35)*Math.PI*2/seamCount;
@@ -139,7 +139,7 @@ export function buildTowerStructure(rig:THREE.Group,kind:EnemyKind,material:(fin
  }
  const gems=tier===1?[SQUID_I_GEM]:tier===2?SQUID_II_GEMS:SQUID_III_GEMS;
  for(const [index,gem] of gems.entries()){
-  const a=Math.atan2(gem.x,gem.z),distance=Math.hypot(gem.x,gem.z),headWidth=tier===1?.84:tier===2?1.1:1.36,front=distance*.37;
+  const a=Math.atan2(gem.x,gem.z),distance=Math.hypot(gem.x,gem.z),headWidth=tier===1?.84:tier===2?.95:1.05,front=distance*.37;
   const frame=new THREE.Group();frame.position.set(gem.x*.58,h-1.0,gem.z*.58);frame.rotation.y=a;rig.add(frame);
   // A heavy skull grown around the gem: brow, empty mouth, cheek arches.
   ellipsoid(frame,[0,.02,-.15],[headWidth,1.2,tier===1?.69:1.0],flesh,'spawner-cranium');

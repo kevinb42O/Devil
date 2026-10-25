@@ -1,0 +1,33 @@
+
+> abyss-daggers@0.1.3 build
+> tsc --noEmit && vite build
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 306 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/assets/crew-clock-worker-B6qlbIvJ.js                         0.12 kB
+dist/assets/pirata-one-latin-400-normal-C8jLWNfm.woff2            8.87 kB
+dist/assets/pirata-one-latin-400-normal-CiJE7gJH.woff            12.02 kB
+dist/assets/dm-sans-latin-600-normal-Aqo67rzb.woff2              14.14 kB
+dist/assets/dm-sans-latin-400-normal-CW0RaeGs.woff2              14.20 kB
+dist/assets/dm-sans-latin-500-normal-B9HHJjqV.woff2              14.30 kB
+dist/assets/dm-sans-latin-700-normal-DvUfVpUG.woff2              14.35 kB
+dist/assets/dm-sans-latin-600-normal-BmdmIIQ2.woff               18.32 kB
+dist/assets/dm-sans-latin-400-normal-BwCSEQnW.woff               18.36 kB
+dist/assets/dm-sans-latin-700-normal-CUSSCpQX.woff               18.50 kB
+dist/assets/dm-sans-latin-500-normal-Dr3UlScf.woff               18.52 kB
+dist/assets/barlow-condensed-latin-500-normal-HIEiP5Ov.woff      18.60 kB
+dist/assets/barlow-condensed-latin-700-normal-Dmwat-ge.woff      18.82 kB
+dist/assets/barlow-condensed-latin-500-normal-BgYH2mbd.woff2     21.42 kB
+dist/assets/barlow-condensed-latin-700-normal-v1xN8_Wq.woff2     22.44 kB
+dist/index.html                                                  22.91 kB │ gzip:     7.30 kB
+dist/assets/index-BtwDpLCs.css                                  108.27 kB │ gzip:    23.64 kB
+dist/assets/index-NVkpHLvq.js                                 4,959.98 kB │ gzip: 1,448.69 kB
+
+(!) Some chunks are larger than 700 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 5.09s

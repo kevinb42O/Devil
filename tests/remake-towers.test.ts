@@ -11,7 +11,7 @@ const tiers=['squid','squid2','squid3'] as const;
 test('large spawners expose shootable crystals at the crown above their solid core',()=>{
  for(const kind of tiers){
   const w=new World(71,{schedule:false,invulnerable:true}),e=w.spawn(kind,v(0,0,0));e.age=12;
-  assert.equal(towerOutletHeight(kind),kind==='squid3'?13:kind==='squid2'?9:6);assert.ok(towerRadius(kind)>=1.8);
+  assert.equal(towerOutletHeight(kind),kind==='squid3'?18:kind==='squid2'?13:8);assert.ok(towerRadius(kind)>=1.8);
   for(const point of e.weakpoints){
    assert.equal(point.local.y,towerOutletHeight(kind)-.4);
    assert.ok(Math.hypot(point.local.x,point.local.z)>towerRadius(kind));

@@ -1,0 +1,6056 @@
+{
+  "sourceHash": "dbbfac20d9e6db1c4ba1626748e9b3bec92776513bc5270396d48c1d62d07845",
+  "mixPolicy": "recorded-level",
+  "nativeMixerFormulaVerified": false,
+  "files": {
+    "andrasimpact": {
+      "file": "andrasimpact.wav",
+      "duration": 3.5825850340136056,
+      "rms": 0.15730450462219725,
+      "peak": 0.98004150390625,
+      "bytes": 632092,
+      "sha256": "a892383937202e5e9844f00d1f2df21eefa8b3d2761a6dbff2111cde71334f1d",
+      "sourceSha256": "a892383937202e5e9844f00d1f2df21eefa8b3d2761a6dbff2111cde71334f1d"
+    },
+    "andrasrise": {
+      "file": "andrasrise.wav",
+      "duration": 3.0660544217687073,
+      "rms": 0.13505648617661203,
+      "peak": 0.980010986328125,
+      "bytes": 540976,
+      "sha256": "1a5e14e5c60c8aecdf47eaf1eee846047c9b8312b395540e859e66f096b9c6e6",
+      "sourceSha256": "1a5e14e5c60c8aecdf47eaf1eee846047c9b8312b395540e859e66f096b9c6e6"
+    },
+    "burrowcentipede": {
+      "file": "burrowcentipede.wav",
+      "duration": 2.7825850340136054,
+      "rms": 0.13065528382972078,
+      "peak": 0.980072021484375,
+      "bytes": 490972,
+      "sha256": "6a3129710b71be3c0051e6f6bb8e0e6abeb989dece58f49053f5baf34d94c2ea",
+      "sourceSha256": "6a3129710b71be3c0051e6f6bb8e0e6abeb989dece58f49053f5baf34d94c2ea"
+    },
+    "chatterandras": {
+      "file": "chatterandras.wav",
+      "duration": 16.0,
+      "rms": 0.24749778876331827,
+      "peak": 1.0,
+      "bytes": 2822524,
+      "sha256": "936531cca252d2dcfec5d909184e2d45f0077fee792034621ebd7b0336e225e6",
+      "sourceSha256": "936531cca252d2dcfec5d909184e2d45f0077fee792034621ebd7b0336e225e6"
+    },
+    "chattercentipede": {
+      "file": "chattercentipede.wav",
+      "duration": 20.0,
+      "rms": 0.26635292338633537,
+      "peak": 0.98004150390625,
+      "bytes": 3528124,
+      "sha256": "795ca4a76a17f19b280180c61614e6c156d12620c215a4a8b242718cd080d694",
+      "sourceSha256": "795ca4a76a17f19b280180c61614e6c156d12620c215a4a8b242718cd080d694"
+    },
+    "chattercentipede2": {
+      "file": "chattercentipede2.wav",
+      "duration": 20.0,
+      "rms": 0.09218090046576877,
+      "peak": 0.359619140625,
+      "bytes": 3528124,
+      "sha256": "1a35562179a6e9a477d35373c72fa69c3a9c90f866e7473d25a16a69712c2e45",
+      "sourceSha256": "1a35562179a6e9a477d35373c72fa69c3a9c90f866e7473d25a16a69712c2e45"
+    },
+    "chattergigaspider": {
+      "file": "chattergigaspider.wav",
+      "duration": 16.0,
+      "rms": 0.3177112526506221,
+      "peak": 1.0,
+      "bytes": 2822524,
+      "sha256": "4d0a75d6d25e694e25db01d95dd6081ad18775e93198c50234d84454ea1c2e3e",
+      "sourceSha256": "4d0a75d6d25e694e25db01d95dd6081ad18775e93198c50234d84454ea1c2e3e"
+    },
+    "chatterleviathan": {
+      "file": "chatterleviathan.wav",
+      "duration": 16.0,
+      "rms": 0.2586348666798521,
+      "peak": 1.0,
+      "bytes": 2822524,
+      "sha256": "42bdd7f599dbe251092c6e444d4b1b28c7dac9988004574a6d7ee6f12ee62f63",
+      "sourceSha256": "42bdd7f599dbe251092c6e444d4b1b28c7dac9988004574a6d7ee6f12ee62f63"
+    },
+    "chatterminisquid": {
+      "file": "chatterminisquid.wav",
+      "duration": 28.0,
+      "rms": 0.20469431017554268,
+      "peak": 0.98004150390625,
+      "bytes": 4939324,
+      "sha256": "8ce90d6d7c82c1f67304e4b34e8359d053092eff9c0bf9c72b2ae4776106a85c",
+      "sourceSha256": "8ce90d6d7c82c1f67304e4b34e8359d053092eff9c0bf9c72b2ae4776106a85c"
+    },
+    "chatterskull": {
+      "file": "chatterskull.wav",
+      "duration": 16.0,
+      "rms": 0.16333276150934994,
+      "peak": 0.980072021484375,
+      "bytes": 2822524,
+      "sha256": "9537d8eda03ee34cf62527b8f8c78830b1f4981a40eeca41503e085500934bca",
+      "sourceSha256": "9537d8eda03ee34cf62527b8f8c78830b1f4981a40eeca41503e085500934bca"
+    },
+    "chatterskull2": {
+      "file": "chatterskull2.wav",
+      "duration": 16.0,
+      "rms": 0.10900600996059422,
+      "peak": 0.91729736328125,
+      "bytes": 2822524,
+      "sha256": "e81c14739f20f535d356e12236b3585d015201c7d9c849f40616b5c3fb745e3a",
+      "sourceSha256": "e81c14739f20f535d356e12236b3585d015201c7d9c849f40616b5c3fb745e3a"
+    },
+    "chatterskull2black": {
+      "file": "chatterskull2black.wav",
+      "duration": 32.0,
+      "rms": 0.23104713278149835,
+      "peak": 0.979949951171875,
+      "bytes": 5644924,
+      "sha256": "8bb96fbe949471cfcc90a896380936f68ecfe511a21cc33317a17aaf05bf877d",
+      "sourceSha256": "8bb96fbe949471cfcc90a896380936f68ecfe511a21cc33317a17aaf05bf877d"
+    },
+    "chatterskull3": {
+      "file": "chatterskull3.wav",
+      "duration": 10.0,
+      "rms": 0.09641253628407462,
+      "peak": 0.74493408203125,
+      "bytes": 1764124,
+      "sha256": "222dfb50f51a07ac7709ec867bf687e731bbc767bbcd924cc65ff431fed9a129",
+      "sourceSha256": "222dfb50f51a07ac7709ec867bf687e731bbc767bbcd924cc65ff431fed9a129"
+    },
+    "chatterskull3black": {
+      "file": "chatterskull3black.wav",
+      "duration": 28.13485260770975,
+      "rms": 0.31776621618159495,
+      "peak": 0.944854736328125,
+      "bytes": 4963112,
+      "sha256": "608f870087cd24d9389bf2d71e5370880f8094cc578ebab8cccb4959f1204596",
+      "sourceSha256": "608f870087cd24d9389bf2d71e5370880f8094cc578ebab8cccb4959f1204596"
+    },
+    "chatterskull4": {
+      "file": "chatterskull4.wav",
+      "duration": 32.0,
+      "rms": 0.25619785361181746,
+      "peak": 0.94549560546875,
+      "bytes": 5644924,
+      "sha256": "6e0f821306fa6073d0db817669314e2d8386bbec530c37e6393c014cfe86adfd",
+      "sourceSha256": "6e0f821306fa6073d0db817669314e2d8386bbec530c37e6393c014cfe86adfd"
+    },
+    "chatterskull4black": {
+      "file": "chatterskull4black.wav",
+      "duration": 16.0,
+      "rms": 0.3168934783479846,
+      "peak": 0.9801025390625,
+      "bytes": 2822524,
+      "sha256": "a6ed188880c020f949a59ed62537d4cbfe71dd276215201d94bcefb0fe86ce1a",
+      "sourceSha256": "a6ed188880c020f949a59ed62537d4cbfe71dd276215201d94bcefb0fe86ce1a"
+    },
+    "chatterskullblack": {
+      "file": "chatterskullblack.wav",
+      "duration": 15.5,
+      "rms": 0.2184806431730212,
+      "peak": 0.905548095703125,
+      "bytes": 2734324,
+      "sha256": "13f5c7b8572c48ae9723a084f2b53e592204a44a3bc37ae854c1a9e68d656883",
+      "sourceSha256": "13f5c7b8572c48ae9723a084f2b53e592204a44a3bc37ae854c1a9e68d656883"
+    },
+    "chatterspider": {
+      "file": "chatterspider.wav",
+      "duration": 19.0,
+      "rms": 0.07304013106304753,
+      "peak": 0.980072021484375,
+      "bytes": 3351724,
+      "sha256": "a534f12ee3f2d0e472e985843ddff63dd1c199556c90c8a709d3455b62704175",
+      "sourceSha256": "a534f12ee3f2d0e472e985843ddff63dd1c199556c90c8a709d3455b62704175"
+    },
+    "chatterspiderling": {
+      "file": "chatterspiderling.wav",
+      "duration": 14.845374149659865,
+      "rms": 0.10697770207898605,
+      "peak": 0.980072021484375,
+      "bytes": 2618848,
+      "sha256": "58d3d98db4f2d9e04171b135f84b6e12c56a69be4afe316fbc80ff70b73e9f22",
+      "sourceSha256": "58d3d98db4f2d9e04171b135f84b6e12c56a69be4afe316fbc80ff70b73e9f22"
+    },
+    "chattersquid": {
+      "file": "chattersquid.wav",
+      "duration": 27.965238095238096,
+      "rms": 0.17718609127005977,
+      "peak": 0.98004150390625,
+      "bytes": 4933192,
+      "sha256": "23309fcbfddda5e31d3ff2a3ba6b749444dcef559aada6256883eba79194de32",
+      "sourceSha256": "23309fcbfddda5e31d3ff2a3ba6b749444dcef559aada6256883eba79194de32"
+    },
+    "chattersquidsmall": {
+      "file": "chattersquidsmall.wav",
+      "duration": 26.0,
+      "rms": 0.20950004635665567,
+      "peak": 0.980072021484375,
+      "bytes": 4586524,
+      "sha256": "5f9b9412c3001fb9653b424c1cca787df6b9c2875bda2152cce3bccd82f00601",
+      "sourceSha256": "5f9b9412c3001fb9653b424c1cca787df6b9c2875bda2152cce3bccd82f00601"
+    },
+    "chattersquidultra": {
+      "file": "chattersquidultra.wav",
+      "duration": 16.0,
+      "rms": 0.27390261878920014,
+      "peak": 0.980072021484375,
+      "bytes": 2822524,
+      "sha256": "0cc7a9d53101e87417e1d21036bbf6505d9f9fbd0ca958cda08a58699ac764d6",
+      "sourceSha256": "0cc7a9d53101e87417e1d21036bbf6505d9f9fbd0ca958cda08a58699ac764d6"
+    },
+    "chatterthorn": {
+      "file": "chatterthorn.wav",
+      "duration": 8.0,
+      "rms": 0.18511217324570114,
+      "peak": 0.98004150390625,
+      "bytes": 1411324,
+      "sha256": "8104c5ba38b1f7adda7c3d23b955bcd7242ce635943a25581852edc34435d94d",
+      "sourceSha256": "8104c5ba38b1f7adda7c3d23b955bcd7242ce635943a25581852edc34435d94d"
+    },
+    "chatterultrapede": {
+      "file": "chatterultrapede.wav",
+      "duration": 14.5,
+      "rms": 0.33422413188253813,
+      "peak": 0.898681640625,
+      "bytes": 2557924,
+      "sha256": "ee05272fab66ed7b0d017a684f86121d83d4454d3f31533ea9bc74e8b8f43f55",
+      "sourceSha256": "ee05272fab66ed7b0d017a684f86121d83d4454d3f31533ea9bc74e8b8f43f55"
+    },
+    "collectgib1": {
+      "file": "collectgib1.wav",
+      "duration": 1.3750113378684807,
+      "rms": 0.27375477821326766,
+      "peak": 0.98004150390625,
+      "bytes": 242676,
+      "sha256": "c25f70d76899d35d54712d821729877ee1cf6ad79e8a7c1ee3c4b932b2efe04e",
+      "sourceSha256": "c25f70d76899d35d54712d821729877ee1cf6ad79e8a7c1ee3c4b932b2efe04e"
+    },
+    "collectgib2": {
+      "file": "collectgib2.wav",
+      "duration": 0.75,
+      "rms": 0.3084452500755458,
+      "peak": 0.98004150390625,
+      "bytes": 132424,
+      "sha256": "2dbeac42a93ffe86691346ea7395681c08ffdc3e3189f89c7df48e157ecd851f",
+      "sourceSha256": "2dbeac42a93ffe86691346ea7395681c08ffdc3e3189f89c7df48e157ecd851f"
+    },
+    "collectgib3": {
+      "file": "collectgib3.wav",
+      "duration": 0.5714285714285714,
+      "rms": 0.3314608325470803,
+      "peak": 0.98004150390625,
+      "bytes": 100924,
+      "sha256": "6ae08d85540f70f04ba0fe683eb627898204bf33f892c2f3adaf38e9bb25a4b4",
+      "sourceSha256": "6ae08d85540f70f04ba0fe683eb627898204bf33f892c2f3adaf38e9bb25a4b4"
+    },
+    "collectgibbase1": {
+      "file": "collectgibbase1.wav",
+      "duration": 2.0,
+      "rms": 0.12937723859498407,
+      "peak": 0.980010986328125,
+      "bytes": 352924,
+      "sha256": "040bb959239d29b76818ac1d3ed049a9882d9fa10b7a63da434f30560ffe2dd7",
+      "sourceSha256": "040bb959239d29b76818ac1d3ed049a9882d9fa10b7a63da434f30560ffe2dd7"
+    },
+    "collectgibbase2": {
+      "file": "collectgibbase2.wav",
+      "duration": 2.0,
+      "rms": 0.1553769266547697,
+      "peak": 0.906494140625,
+      "bytes": 352924,
+      "sha256": "1f5d7ab2eb39b3a67bb2de2fdbfb746da6b6b6e8b32e901478288dd3c08af3d3",
+      "sourceSha256": "1f5d7ab2eb39b3a67bb2de2fdbfb746da6b6b6e8b32e901478288dd3c08af3d3"
+    },
+    "collectgibbase3": {
+      "file": "collectgibbase3.wav",
+      "duration": 2.0,
+      "rms": 0.18765028413211046,
+      "peak": 1.0,
+      "bytes": 352924,
+      "sha256": "433a1e8a456a7a77ad3f7e6f2813b7434562f9470c841288cb314171079cf258",
+      "sourceSha256": "433a1e8a456a7a77ad3f7e6f2813b7434562f9470c841288cb314171079cf258"
+    },
+    "daggercall": {
+      "file": "daggercall.wav",
+      "duration": 96.03920634920635,
+      "rms": 0.04894682232662375,
+      "peak": 0.18359375,
+      "bytes": 16945482,
+      "sha256": "129e1367a72c568378c376271e8a75ab678a3f8d98b6febe0e3b52c34c0deb2b",
+      "sourceSha256": "129e1367a72c568378c376271e8a75ab678a3f8d98b6febe0e3b52c34c0deb2b"
+    },
+    "daggercall1bronze": {
+      "file": "daggercall1bronze.wav",
+      "duration": 31.5,
+      "rms": 0.1434816196486154,
+      "peak": 0.6422119140625,
+      "bytes": 5556724,
+      "sha256": "2f9ce0a1fab334c726d2888a7e96c020fa5b7c86b7f14d51c00ed496291d0481",
+      "sourceSha256": "2f9ce0a1fab334c726d2888a7e96c020fa5b7c86b7f14d51c00ed496291d0481"
+    },
+    "daggercall2silver": {
+      "file": "daggercall2silver.wav",
+      "duration": 31.5,
+      "rms": 0.20510858759334566,
+      "peak": 0.755279541015625,
+      "bytes": 5556724,
+      "sha256": "e509f6688bd6cb48deb6e683324d9e293302f7f4facc161924ec22fbb4dc0340",
+      "sourceSha256": "e509f6688bd6cb48deb6e683324d9e293302f7f4facc161924ec22fbb4dc0340"
+    },
+    "daggercall3gold": {
+      "file": "daggercall3gold.wav",
+      "duration": 31.5,
+      "rms": 0.15916059041705471,
+      "peak": 0.872802734375,
+      "bytes": 5556724,
+      "sha256": "c925a97f21b79c852e9d9882f31b829d12c37224f085a66c027cc5ad48e466c6",
+      "sourceSha256": "c925a97f21b79c852e9d9882f31b829d12c37224f085a66c027cc5ad48e466c6"
+    },
+    "daggercall4devil": {
+      "file": "daggercall4devil.wav",
+      "duration": 31.5,
+      "rms": 0.23804185143414802,
+      "peak": 0.919921875,
+      "bytes": 5556724,
+      "sha256": "15995355debf0c0846a96bb8ec9c502046eb5538fc15da0941528241f450a67e",
+      "sourceSha256": "15995355debf0c0846a96bb8ec9c502046eb5538fc15da0941528241f450a67e"
+    },
+    "daggercollect": {
+      "file": "daggercollect.wav",
+      "duration": 3.5,
+      "rms": 0.10141181785126438,
+      "peak": 0.986785888671875,
+      "bytes": 618136,
+      "sha256": "9c4da85f7fc723af3c6b99db43242917a96cd380da41ee2ffd9857747933eff4",
+      "sourceSha256": "9c4da85f7fc723af3c6b99db43242917a96cd380da41ee2ffd9857747933eff4"
+    },
+    "daggercollect1bronze": {
+      "file": "daggercollect1bronze.wav",
+      "duration": 10.916167800453515,
+      "rms": 0.06376290839922262,
+      "peak": 0.980010986328125,
+      "bytes": 1925736,
+      "sha256": "4ea808b38c70f4851da10c55e35dc534b6c16a788610b789d4d6299f45fd476b",
+      "sourceSha256": "4ea808b38c70f4851da10c55e35dc534b6c16a788610b789d4d6299f45fd476b"
+    },
+    "daggercollect2silver": {
+      "file": "daggercollect2silver.wav",
+      "duration": 10.916167800453515,
+      "rms": 0.06004733977913251,
+      "peak": 0.980010986328125,
+      "bytes": 1925736,
+      "sha256": "a7546bf9ae3a9557746d8e163335c6ce94bc5be7cc13187dbb60d3cf4358d4ff",
+      "sourceSha256": "a7546bf9ae3a9557746d8e163335c6ce94bc5be7cc13187dbb60d3cf4358d4ff"
+    },
+    "daggercollect3gold": {
+      "file": "daggercollect3gold.wav",
+      "duration": 10.916167800453515,
+      "rms": 0.07199493211626162,
+      "peak": 0.98004150390625,
+      "bytes": 1925736,
+      "sha256": "9d793b54571c8f56700f442159690dab73f0572446bd039780eb398fcaf7ab83",
+      "sourceSha256": "9d793b54571c8f56700f442159690dab73f0572446bd039780eb398fcaf7ab83"
+    },
+    "daggercollect4devil": {
+      "file": "daggercollect4devil.wav",
+      "duration": 31.831972789115646,
+      "rms": 0.1959231838742555,
+      "peak": 0.98004150390625,
+      "bytes": 5615284,
+      "sha256": "1154b1f6f933ec50995e51a90911bc7fc3ed821bebef647f371c5b22b7912360",
+      "sourceSha256": "1154b1f6f933ec50995e51a90911bc7fc3ed821bebef647f371c5b22b7912360"
+    },
+    "daggerdivert": {
+      "file": "daggerdivert.wav",
+      "duration": 20.0,
+      "rms": 0.12244511069169021,
+      "peak": 0.90728759765625,
+      "bytes": 3528124,
+      "sha256": "b2b97c689c21b2d1c11df6088352ed8b186bede4dbcfff6f102ac1b7366fcb03",
+      "sourceSha256": "b2b97c689c21b2d1c11df6088352ed8b186bede4dbcfff6f102ac1b7366fcb03"
+    },
+    "daggerdrone": {
+      "file": "daggerdrone.wav",
+      "duration": 8.02498866213152,
+      "rms": 0.38665846786776686,
+      "peak": 0.953857421875,
+      "bytes": 1415732,
+      "sha256": "5c6754bbbf2d82ea99a04c988c630d0baaa5f8bffe6ab2ce50440c64bd84e421",
+      "sourceSha256": "5c6754bbbf2d82ea99a04c988c630d0baaa5f8bffe6ab2ce50440c64bd84e421"
+    },
+    "daggerhit1": {
+      "file": "daggerhit1.wav",
+      "duration": 0.5,
+      "rms": 0.24655285114368636,
+      "peak": 0.98004150390625,
+      "bytes": 88324,
+      "sha256": "1bb30c4eb29871bcc71e2a05805309b2aa77231fc5ba314d8fca5b9d89c8e06d",
+      "sourceSha256": "1bb30c4eb29871bcc71e2a05805309b2aa77231fc5ba314d8fca5b9d89c8e06d"
+    },
+    "daggerseek": {
+      "file": "daggerseek.wav",
+      "duration": 3.5,
+      "rms": 0.11946294689627548,
+      "peak": 0.98004150390625,
+      "bytes": 617524,
+      "sha256": "2068216eed3d1a1582beb3b7f237499b92fc0d21d6a905d280c11afb3276cf8c",
+      "sourceSha256": "2068216eed3d1a1582beb3b7f237499b92fc0d21d6a905d280c11afb3276cf8c"
+    },
+    "daggersteal1": {
+      "file": "daggersteal1.wav",
+      "duration": 2.3443083900226758,
+      "rms": 0.09643799151551445,
+      "peak": 0.9456787109375,
+      "bytes": 413660,
+      "sha256": "9372984aca93d20dd1c6cd98679164b36309097b65fe523a81a1681486d37de7",
+      "sourceSha256": "9372984aca93d20dd1c6cd98679164b36309097b65fe523a81a1681486d37de7"
+    },
+    "daggersteal2": {
+      "file": "daggersteal2.wav",
+      "duration": 3.110294784580499,
+      "rms": 0.08067230293947635,
+      "peak": 0.914337158203125,
+      "bytes": 548780,
+      "sha256": "6f8aa77acd307bef15ada552b163c3115c99847ce8be957b64ab5a3a8dc579fa",
+      "sourceSha256": "6f8aa77acd307bef15ada552b163c3115c99847ce8be957b64ab5a3a8dc579fa"
+    },
+    "daggersteal3": {
+      "file": "daggersteal3.wav",
+      "duration": 3.110294784580499,
+      "rms": 0.08923307100448956,
+      "peak": 0.9622802734375,
+      "bytes": 548780,
+      "sha256": "60bb10cb1e6a64a9ccf3017fbe6f31aed7b5bc09418f87c51f81545e07a364f0",
+      "sourceSha256": "60bb10cb1e6a64a9ccf3017fbe6f31aed7b5bc09418f87c51f81545e07a364f0"
+    },
+    "daggersteal4": {
+      "file": "daggersteal4.wav",
+      "duration": 3.110294784580499,
+      "rms": 0.09444228040645723,
+      "peak": 0.91552734375,
+      "bytes": 548780,
+      "sha256": "c531265ae6242ebfc1150a25e8320afa70618846635af0e4786fb67d708749f6",
+      "sourceSha256": "c531265ae6242ebfc1150a25e8320afa70618846635af0e4786fb67d708749f6"
+    },
+    "daggersteal5": {
+      "file": "daggersteal5.wav",
+      "duration": 3.110294784580499,
+      "rms": 0.08294245535771125,
+      "peak": 0.980010986328125,
+      "bytes": 548780,
+      "sha256": "b8f531985808d51dcad7efb63a93dbc337de185c69a7de7fb50dfd5080e327eb",
+      "sourceSha256": "b8f531985808d51dcad7efb63a93dbc337de185c69a7de7fb50dfd5080e327eb"
+    },
+    "damageandras": {
+      "file": "damageandras.wav",
+      "duration": 1.3130385487528344,
+      "rms": 0.11226312049413241,
+      "peak": 0.980010986328125,
+      "bytes": 231744,
+      "sha256": "296128278cf1cdf4671ca85640d8768eeda523f895bfbc0a6e6d2a2a76f45085",
+      "sourceSha256": "296128278cf1cdf4671ca85640d8768eeda523f895bfbc0a6e6d2a2a76f45085"
+    },
+    "damagecentipede": {
+      "file": "damagecentipede.wav",
+      "duration": 2.503469387755102,
+      "rms": 0.14978640099670554,
+      "peak": 0.930511474609375,
+      "bytes": 441736,
+      "sha256": "b7ec4155ca3aa688baa6ab1924c162b2370c1f7e2fcdd0448748aa07e4ebd04a",
+      "sourceSha256": "b7ec4155ca3aa688baa6ab1924c162b2370c1f7e2fcdd0448748aa07e4ebd04a"
+    },
+    "damagecentipede2": {
+      "file": "damagecentipede2.wav",
+      "duration": 3.146235827664399,
+      "rms": 0.15589983462625054,
+      "peak": 0.93743896484375,
+      "bytes": 555120,
+      "sha256": "77662d797ae53db1a0c614db78c3ad102d0d75ac559576323f68053773be1e52",
+      "sourceSha256": "77662d797ae53db1a0c614db78c3ad102d0d75ac559576323f68053773be1e52"
+    },
+    "damagegigaspider": {
+      "file": "damagegigaspider.wav",
+      "duration": 1.7605215419501135,
+      "rms": 0.303959813828647,
+      "peak": 1.0,
+      "bytes": 310680,
+      "sha256": "c9a4b2a7b840da8b6fede948fba349108fd91cd2ca30bcab582c59dd0d181dc5",
+      "sourceSha256": "c9a4b2a7b840da8b6fede948fba349108fd91cd2ca30bcab582c59dd0d181dc5"
+    },
+    "damageleviathan": {
+      "file": "damageleviathan.wav",
+      "duration": 4.313038548752835,
+      "rms": 0.18355344141369695,
+      "peak": 0.98004150390625,
+      "bytes": 760944,
+      "sha256": "607913a6a02185fbcfdf82eff70f0790833226daef4ac84105d176dde4e7a50f",
+      "sourceSha256": "607913a6a02185fbcfdf82eff70f0790833226daef4ac84105d176dde4e7a50f"
+    },
+    "damagespider": {
+      "file": "damagespider.wav",
+      "duration": 2.446575963718821,
+      "rms": 0.0658204796680923,
+      "peak": 0.980010986328125,
+      "bytes": 432312,
+      "sha256": "e1df9eff696c49c1b7463b0d39ffaaf20ffd822cfa18cb7174a68b69f58f3279",
+      "sourceSha256": "e1df9eff696c49c1b7463b0d39ffaaf20ffd822cfa18cb7174a68b69f58f3279"
+    },
+    "damagesquid": {
+      "file": "damagesquid.wav",
+      "duration": 2.9882993197278913,
+      "rms": 0.15091013618963234,
+      "peak": 1.0,
+      "bytes": 527260,
+      "sha256": "6b32eb0ba17aae7bb9748f09bbdc5610ec0b0954375847822ff769bff42547fe",
+      "sourceSha256": "6b32eb0ba17aae7bb9748f09bbdc5610ec0b0954375847822ff769bff42547fe"
+    },
+    "damagesquid2": {
+      "file": "damagesquid2.wav",
+      "duration": 2.9882993197278913,
+      "rms": 0.17251882388865766,
+      "peak": 0.9698486328125,
+      "bytes": 527260,
+      "sha256": "bf89360d1f869d7a6a0347e029b696a068caf0807b094e60dadb52ba51c8251a",
+      "sourceSha256": "bf89360d1f869d7a6a0347e029b696a068caf0807b094e60dadb52ba51c8251a"
+    },
+    "damagesquid3": {
+      "file": "damagesquid3.wav",
+      "duration": 5.164784580498866,
+      "rms": 0.1393359454427409,
+      "peak": 0.980010986328125,
+      "bytes": 911192,
+      "sha256": "3490cd5818775909cae2acc84c2f8a814faadbdde088929ecd4165a562d976a3",
+      "sourceSha256": "3490cd5818775909cae2acc84c2f8a814faadbdde088929ecd4165a562d976a3"
+    },
+    "damagesquid4": {
+      "file": "damagesquid4.wav",
+      "duration": 5.164784580498866,
+      "rms": 0.16343471723739195,
+      "peak": 0.980010986328125,
+      "bytes": 911192,
+      "sha256": "32abb4b81779a6c262ce9d20f096a5d0a68b3db89a33019f09403a9137cbdc33",
+      "sourceSha256": "32abb4b81779a6c262ce9d20f096a5d0a68b3db89a33019f09403a9137cbdc33"
+    },
+    "damagethorn": {
+      "file": "damagethorn.wav",
+      "duration": 1.028843537414966,
+      "rms": 0.10662593942540384,
+      "peak": 0.980010986328125,
+      "bytes": 181612,
+      "sha256": "117b7957e23623d7b53cd3dce4536a572ff139703b6eb7e760b9188842dd7512",
+      "sourceSha256": "117b7957e23623d7b53cd3dce4536a572ff139703b6eb7e760b9188842dd7512"
+    },
+    "damageultrapede": {
+      "file": "damageultrapede.wav",
+      "duration": 2.7402721088435373,
+      "rms": 0.13349845451353234,
+      "peak": 0.97998046875,
+      "bytes": 483508,
+      "sha256": "2d875eb64bebc674ab7cbc5c64c945123ef8243e0932fc9bebada604ef30ac39",
+      "sourceSha256": "2d875eb64bebc674ab7cbc5c64c945123ef8243e0932fc9bebada604ef30ac39"
+    },
+    "death": {
+      "file": "death.wav",
+      "duration": 10.75,
+      "rms": 0.1233801736364539,
+      "peak": 0.99420166015625,
+      "bytes": 1896424,
+      "sha256": "861539b73d4f4d000cbcd104345231e86fa232017a9192ccb91a0ce5fb794ccf",
+      "sourceSha256": "861539b73d4f4d000cbcd104345231e86fa232017a9192ccb91a0ce5fb794ccf"
+    },
+    "eggbounce": {
+      "file": "eggbounce.wav",
+      "duration": 0.23478458049886622,
+      "rms": 0.08770722623050349,
+      "peak": 0.980010986328125,
+      "bytes": 41540,
+      "sha256": "d22cfe6d044046ee9b2f23d40a9e73ea021c878b73fedd6d2f47a10d77c7d3bd",
+      "sourceSha256": "d22cfe6d044046ee9b2f23d40a9e73ea021c878b73fedd6d2f47a10d77c7d3bd"
+    },
+    "eggburst": {
+      "file": "eggburst.wav",
+      "duration": 2.0,
+      "rms": 0.08270542136442184,
+      "peak": 0.98004150390625,
+      "bytes": 352924,
+      "sha256": "368d7eb7d8ea39ce4ffbcf16f2f2fbfe67d3773ed4bc843ffcab539a1715c4aa",
+      "sourceSha256": "368d7eb7d8ea39ce4ffbcf16f2f2fbfe67d3773ed4bc843ffcab539a1715c4aa"
+    },
+    "eggburst2": {
+      "file": "eggburst2.wav",
+      "duration": 3.5654421768707483,
+      "rms": 0.20674512903644537,
+      "peak": 1.0,
+      "bytes": 629068,
+      "sha256": "348c5c41eb5d38b6a208011cf5cdf56fb1f8edb0861666b0616c4e94c2d5d806",
+      "sourceSha256": "348c5c41eb5d38b6a208011cf5cdf56fb1f8edb0861666b0616c4e94c2d5d806"
+    },
+    "eggdrone": {
+      "file": "eggdrone.wav",
+      "duration": 8.0,
+      "rms": 0.2589857645935775,
+      "peak": 0.98004150390625,
+      "bytes": 1415366,
+      "sha256": "124e6f6abcb3c5536a54744b6520df5037cb9c08ec0006279cd01aef9b59b960",
+      "sourceSha256": "124e6f6abcb3c5536a54744b6520df5037cb9c08ec0006279cd01aef9b59b960"
+    },
+    "eggdrone2": {
+      "file": "eggdrone2.wav",
+      "duration": 16.0,
+      "rms": 0.2622659611318441,
+      "peak": 0.98004150390625,
+      "bytes": 2822524,
+      "sha256": "7e3b6b0a3bb02ee03b95f5d8e9ba9bdf326b5b939c3e21ee4bb72b2bd38fa9f4",
+      "sourceSha256": "7e3b6b0a3bb02ee03b95f5d8e9ba9bdf326b5b939c3e21ee4bb72b2bd38fa9f4"
+    },
+    "eyearouse": {
+      "file": "eyearouse.wav",
+      "duration": 5.9740589569161,
+      "rms": 0.23329054809234667,
+      "peak": 0.929412841796875,
+      "bytes": 1053948,
+      "sha256": "ec3bf6a2660111fca03ef5d97c3ad531e9a5f096ba151ae8d6acbb59391dc4df",
+      "sourceSha256": "ec3bf6a2660111fca03ef5d97c3ad531e9a5f096ba151ae8d6acbb59391dc4df"
+    },
+    "eyearousedrone": {
+      "file": "eyearousedrone.wav",
+      "duration": 15.0,
+      "rms": 0.323240303182123,
+      "peak": 0.866943359375,
+      "bytes": 2646124,
+      "sha256": "63277603e4a3fe25ec4ed5e9774ddc9e00ba4875febb4fc07b7e624a0d9a1ae1",
+      "sourceSha256": "63277603e4a3fe25ec4ed5e9774ddc9e00ba4875febb4fc07b7e624a0d9a1ae1"
+    },
+    "eyehit": {
+      "file": "eyehit.wav",
+      "duration": 4.880068027210885,
+      "rms": 0.12741179983273154,
+      "peak": 0.97998046875,
+      "bytes": 860968,
+      "sha256": "aa67faf8eceaa81cf8f0ffa307409688633d2021a2c49b7e391698aca134eab4",
+      "sourceSha256": "aa67faf8eceaa81cf8f0ffa307409688633d2021a2c49b7e391698aca134eab4"
+    },
+    "eyepacifydrone": {
+      "file": "eyepacifydrone.wav",
+      "duration": 8.0,
+      "rms": 0.3611045272618289,
+      "peak": 0.98004150390625,
+      "bytes": 1411324,
+      "sha256": "30119c68b25dce46eb65fc294f638ad81fb407dd1e65cccd164d4c0b39eaf692",
+      "sourceSha256": "30119c68b25dce46eb65fc294f638ad81fb407dd1e65cccd164d4c0b39eaf692"
+    },
+    "fall": {
+      "file": "fall.wav",
+      "duration": 12.12172335600907,
+      "rms": 0.06185936100975768,
+      "peak": 0.498382568359375,
+      "bytes": 2138396,
+      "sha256": "1f319cdf506767997d622b2307c8b0600abfb869312616f90997d4c0d0fdbbb0",
+      "sourceSha256": "1f319cdf506767997d622b2307c8b0600abfb869312616f90997d4c0d0fdbbb0"
+    },
+    "gibcollect": {
+      "file": "gibcollect.wav",
+      "duration": 2.0,
+      "rms": 0.19966614983133268,
+      "peak": 0.98004150390625,
+      "bytes": 352924,
+      "sha256": "129b25bd936a1bf2821d8e6c733dcc9d1fc6f9a96cb177277f7d946e909bc5c8",
+      "sourceSha256": "129b25bd936a1bf2821d8e6c733dcc9d1fc6f9a96cb177277f7d946e909bc5c8"
+    },
+    "gibcollectmagic": {
+      "file": "gibcollectmagic.wav",
+      "duration": 1.240907029478458,
+      "rms": 0.12626200897694614,
+      "peak": 0.917083740234375,
+      "bytes": 219020,
+      "sha256": "82deab2b8dc5d75205044351fb30786f3d0ded9228527b61a9bb73b5041c6dc3",
+      "sourceSha256": "82deab2b8dc5d75205044351fb30786f3d0ded9228527b61a9bb73b5041c6dc3"
+    },
+    "gibdrone1": {
+      "file": "gibdrone1.wav",
+      "duration": 24.0,
+      "rms": 0.206188106986148,
+      "peak": 0.664031982421875,
+      "bytes": 4233724,
+      "sha256": "ba698ff7717a829be75df884da6b20042db63e8e6c0187c5ab0f608b124dabb8",
+      "sourceSha256": "ba698ff7717a829be75df884da6b20042db63e8e6c0187c5ab0f608b124dabb8"
+    },
+    "gibdrone2": {
+      "file": "gibdrone2.wav",
+      "duration": 24.0,
+      "rms": 0.16540356284768856,
+      "peak": 0.64190673828125,
+      "bytes": 4233724,
+      "sha256": "232748d82268b87e26ba4069ca228c71a62a21dded682775d625426e8f08cc4d",
+      "sourceSha256": "232748d82268b87e26ba4069ca228c71a62a21dded682775d625426e8f08cc4d"
+    },
+    "gibdrone3": {
+      "file": "gibdrone3.wav",
+      "duration": 24.0,
+      "rms": 0.23131545353389027,
+      "peak": 0.980010986328125,
+      "bytes": 4233724,
+      "sha256": "4d1a774d59df0cbe3950ea08786377c296a49e2b9e341409b0b385ef6e7ef27b",
+      "sourceSha256": "4d1a774d59df0cbe3950ea08786377c296a49e2b9e341409b0b385ef6e7ef27b"
+    },
+    "gigaricochet1": {
+      "file": "gigaricochet1.wav",
+      "duration": 1.0,
+      "rms": 0.20601926925195932,
+      "peak": 0.92022705078125,
+      "bytes": 176524,
+      "sha256": "e2d124a1927aa074a7aae63813ec5e58b85914e2d21b279b5c089d7f306948cc",
+      "sourceSha256": "e2d124a1927aa074a7aae63813ec5e58b85914e2d21b279b5c089d7f306948cc"
+    },
+    "gigaricochet2": {
+      "file": "gigaricochet2.wav",
+      "duration": 1.0,
+      "rms": 0.24014453954016676,
+      "peak": 0.94500732421875,
+      "bytes": 176524,
+      "sha256": "4f034448704e61719668b8cae84efc808aa57447c3e9e447b96e26fe7aa43580",
+      "sourceSha256": "4f034448704e61719668b8cae84efc808aa57447c3e9e447b96e26fe7aa43580"
+    },
+    "gigaricochet3": {
+      "file": "gigaricochet3.wav",
+      "duration": 1.0,
+      "rms": 0.24056901301185513,
+      "peak": 0.923675537109375,
+      "bytes": 176524,
+      "sha256": "103ce041e0d3e0631bf0ac8578b0b61100e410808f8845dd4cde2ded1656f899",
+      "sourceSha256": "103ce041e0d3e0631bf0ac8578b0b61100e410808f8845dd4cde2ded1656f899"
+    },
+    "gigaricochet4": {
+      "file": "gigaricochet4.wav",
+      "duration": 1.0,
+      "rms": 0.20267046131654565,
+      "peak": 0.909698486328125,
+      "bytes": 176524,
+      "sha256": "51f1f27762a1ce866ad0a16a5e16529f1ec59d3d8b5bc60ccf1020cfdaeb9ab2",
+      "sourceSha256": "51f1f27762a1ce866ad0a16a5e16529f1ec59d3d8b5bc60ccf1020cfdaeb9ab2"
+    },
+    "gigaricochet5": {
+      "file": "gigaricochet5.wav",
+      "duration": 1.0,
+      "rms": 0.23284076529942438,
+      "peak": 0.93560791015625,
+      "bytes": 176524,
+      "sha256": "0859cf425a0c008be66b93f7cec1f65d62e93b9aa042bd8b1037a80db0a1f775",
+      "sourceSha256": "0859cf425a0c008be66b93f7cec1f65d62e93b9aa042bd8b1037a80db0a1f775"
+    },
+    "highscore1": {
+      "file": "highscore1.wav",
+      "duration": 6.021814058956916,
+      "rms": 0.14924102623041072,
+      "peak": 0.98004150390625,
+      "bytes": 1062372,
+      "sha256": "cf5c6fec277364818e6bcb1dc841e139454c43a5e9a4b0eb805da5503cfb04ac",
+      "sourceSha256": "cf5c6fec277364818e6bcb1dc841e139454c43a5e9a4b0eb805da5503cfb04ac"
+    },
+    "highscore2": {
+      "file": "highscore2.wav",
+      "duration": 20.0,
+      "rms": 0.15457673184293622,
+      "peak": 1.0,
+      "bytes": 3528124,
+      "sha256": "ca41dec71b1cf83fe91a339d89dd544d44fc07a5bf6a2f5794ceb7f8e166580d",
+      "sourceSha256": "ca41dec71b1cf83fe91a339d89dd544d44fc07a5bf6a2f5794ceb7f8e166580d"
+    },
+    "jump1": {
+      "file": "jump1.wav",
+      "duration": 1.082562358276644,
+      "rms": 0.11965471414460249,
+      "peak": 0.851531982421875,
+      "bytes": 191088,
+      "sha256": "59728fe72cbf60128b0155b050507d74eb9c44add77b3189bd6fce75a09e6c61",
+      "sourceSha256": "59728fe72cbf60128b0155b050507d74eb9c44add77b3189bd6fce75a09e6c61"
+    },
+    "jump2": {
+      "file": "jump2.wav",
+      "duration": 1.2629931972789115,
+      "rms": 0.15726667165621336,
+      "peak": 0.999969482421875,
+      "bytes": 222916,
+      "sha256": "3561201200f22da459ecc91cb032fec246214d292196f46ab2c9aff0a70ddc82",
+      "sourceSha256": "3561201200f22da459ecc91cb032fec246214d292196f46ab2c9aff0a70ddc82"
+    },
+    "jump3": {
+      "file": "jump3.wav",
+      "duration": 1.7366439909297051,
+      "rms": 0.15739841779647087,
+      "peak": 0.69244384765625,
+      "bytes": 306468,
+      "sha256": "55067c1a0f00735a1c1044a4e2156b92d400a98dcca7c3a9e7ff8482f44a46b9",
+      "sourceSha256": "55067c1a0f00735a1c1044a4e2156b92d400a98dcca7c3a9e7ff8482f44a46b9"
+    },
+    "killandras": {
+      "file": "killandras.wav",
+      "duration": 3.3750113378684805,
+      "rms": 0.11325657622497666,
+      "peak": 0.97998046875,
+      "bytes": 595476,
+      "sha256": "db5096341dcc4a5e80478fcbbeba78346a3368969a69f7c3a3eec5819ed870e2",
+      "sourceSha256": "db5096341dcc4a5e80478fcbbeba78346a3368969a69f7c3a3eec5819ed870e2"
+    },
+    "killcentipede": {
+      "file": "killcentipede.wav",
+      "duration": 5.937437641723356,
+      "rms": 0.18936167415648522,
+      "peak": 0.98004150390625,
+      "bytes": 1047488,
+      "sha256": "b465bd11f103362328c4ce775e3ceeaf970f4fdea658ff179feb7f3052d43904",
+      "sourceSha256": "b465bd11f103362328c4ce775e3ceeaf970f4fdea658ff179feb7f3052d43904"
+    },
+    "killcentipede2": {
+      "file": "killcentipede2.wav",
+      "duration": 7.1250113378684805,
+      "rms": 0.16483811057871828,
+      "peak": 1.0,
+      "bytes": 1256976,
+      "sha256": "83d40966353bed4c314cde274396f2a9e02910014b141a85a1d99c2813baeffc",
+      "sourceSha256": "83d40966353bed4c314cde274396f2a9e02910014b141a85a1d99c2813baeffc"
+    },
+    "killeye": {
+      "file": "killeye.wav",
+      "duration": 7.0,
+      "rms": 0.19050375748147944,
+      "peak": 0.980010986328125,
+      "bytes": 1234924,
+      "sha256": "8626eba6df7dcedb273cc6f93b4de7cd626a4e744b2289c6b78a1bb8ad25f660",
+      "sourceSha256": "8626eba6df7dcedb273cc6f93b4de7cd626a4e744b2289c6b78a1bb8ad25f660"
+    },
+    "killgigaspider": {
+      "file": "killgigaspider.wav",
+      "duration": 9.48265306122449,
+      "rms": 0.08702643625166638,
+      "peak": 0.903717041015625,
+      "bytes": 1672864,
+      "sha256": "5514e1e8a422962a388196bcc762829a943d0457a95deee662a9fa3671bce3b7",
+      "sourceSha256": "5514e1e8a422962a388196bcc762829a943d0457a95deee662a9fa3671bce3b7"
+    },
+    "killleviathan": {
+      "file": "killleviathan.wav",
+      "duration": 15.39984126984127,
+      "rms": 0.2003887325056281,
+      "peak": 0.980010986328125,
+      "bytes": 2716656,
+      "sha256": "530a384fae40e0d69c089c6085efc967db9abb32a5c6249800b1b0e10ccaafec",
+      "sourceSha256": "530a384fae40e0d69c089c6085efc967db9abb32a5c6249800b1b0e10ccaafec"
+    },
+    "killminisquid": {
+      "file": "killminisquid.wav",
+      "duration": 5.0,
+      "rms": 0.1141051152587255,
+      "peak": 0.872772216796875,
+      "bytes": 882124,
+      "sha256": "708c8597379409ad8f3b4974739fe624353e85be4ea06f010beb391b7547c9c0",
+      "sourceSha256": "708c8597379409ad8f3b4974739fe624353e85be4ea06f010beb391b7547c9c0"
+    },
+    "killskull1": {
+      "file": "killskull1.wav",
+      "duration": 0.9978911564625851,
+      "rms": 0.2154556108996357,
+      "peak": 0.76995849609375,
+      "bytes": 176152,
+      "sha256": "8b2d00751a69a2c05a459c9317e899ea457e9c7e331d900718575c3b01cbf7c9",
+      "sourceSha256": "8b2d00751a69a2c05a459c9317e899ea457e9c7e331d900718575c3b01cbf7c9"
+    },
+    "killskull2": {
+      "file": "killskull2.wav",
+      "duration": 0.9978911564625851,
+      "rms": 0.19266176238078897,
+      "peak": 0.769775390625,
+      "bytes": 176152,
+      "sha256": "6524c6ea14110d030c2df6b07e7921fdc91dbe8960719638334d848693cccbc3",
+      "sourceSha256": "6524c6ea14110d030c2df6b07e7921fdc91dbe8960719638334d848693cccbc3"
+    },
+    "killskull3": {
+      "file": "killskull3.wav",
+      "duration": 0.9978911564625851,
+      "rms": 0.21521743757452147,
+      "peak": 0.769622802734375,
+      "bytes": 176152,
+      "sha256": "d9e26639320fd0ea45f7b19b669d4095cb53c1e24877aa5372fc85e8a08b82ed",
+      "sourceSha256": "d9e26639320fd0ea45f7b19b669d4095cb53c1e24877aa5372fc85e8a08b82ed"
+    },
+    "killskull4": {
+      "file": "killskull4.wav",
+      "duration": 1.0,
+      "rms": 0.13277328760019858,
+      "peak": 1.0,
+      "bytes": 176524,
+      "sha256": "90084053b8e879a3a8a1f9b84919e8df71d30b9525e3ee5c8e851571dc7d05c0",
+      "sourceSha256": "90084053b8e879a3a8a1f9b84919e8df71d30b9525e3ee5c8e851571dc7d05c0"
+    },
+    "killskull5": {
+      "file": "killskull5.wav",
+      "duration": 1.0,
+      "rms": 0.22507379736087915,
+      "peak": 0.76959228515625,
+      "bytes": 176524,
+      "sha256": "fe19bcbae20728bd774dc83d459d5f2fafe45cc3c0615854b7583ac08c7aee07",
+      "sourceSha256": "fe19bcbae20728bd774dc83d459d5f2fafe45cc3c0615854b7583ac08c7aee07"
+    },
+    "killskullblack1": {
+      "file": "killskullblack1.wav",
+      "duration": 1.7739002267573696,
+      "rms": 0.1312601222974692,
+      "peak": 0.858428955078125,
+      "bytes": 313040,
+      "sha256": "d4a6709645262c6f126e8cb9237402e73d364e589fd455b467bd78f473723510",
+      "sourceSha256": "d4a6709645262c6f126e8cb9237402e73d364e589fd455b467bd78f473723510"
+    },
+    "killskullblack2": {
+      "file": "killskullblack2.wav",
+      "duration": 1.75,
+      "rms": 0.14582389385308006,
+      "peak": 0.86767578125,
+      "bytes": 308824,
+      "sha256": "2518e505f40a635d7a820e06c26c58b716756ffc652d383e2831099125506f33",
+      "sourceSha256": "2518e505f40a635d7a820e06c26c58b716756ffc652d383e2831099125506f33"
+    },
+    "killskullblack3": {
+      "file": "killskullblack3.wav",
+      "duration": 1.75,
+      "rms": 0.14026936534963785,
+      "peak": 0.8709716796875,
+      "bytes": 308824,
+      "sha256": "610c33f2bb9780bca8e6e73b386199b514ebbd868462016f699bf2a2c5cfff36",
+      "sourceSha256": "610c33f2bb9780bca8e6e73b386199b514ebbd868462016f699bf2a2c5cfff36"
+    },
+    "killskullblack4": {
+      "file": "killskullblack4.wav",
+      "duration": 1.6250113378684807,
+      "rms": 0.13870021508980646,
+      "peak": 0.859466552734375,
+      "bytes": 286776,
+      "sha256": "35f542dc52a94b1d59f08fe93c18946791ad61c020c3c08bba6c5f15632e5212",
+      "sourceSha256": "35f542dc52a94b1d59f08fe93c18946791ad61c020c3c08bba6c5f15632e5212"
+    },
+    "killspider": {
+      "file": "killspider.wav",
+      "duration": 6.330408163265306,
+      "rms": 0.15927324488267697,
+      "peak": 0.98004150390625,
+      "bytes": 1116808,
+      "sha256": "34ea562b433b7b0c0f4438dc1a98fe9f731119405357e392594eaf656d119897",
+      "sourceSha256": "34ea562b433b7b0c0f4438dc1a98fe9f731119405357e392594eaf656d119897"
+    },
+    "killspiderling1": {
+      "file": "killspiderling1.wav",
+      "duration": 1.026077097505669,
+      "rms": 0.15481372110948186,
+      "peak": 0.98004150390625,
+      "bytes": 181124,
+      "sha256": "b01e58faef03f6ba148602ea355636565d252727dc6c68af29297af3295378dd",
+      "sourceSha256": "b01e58faef03f6ba148602ea355636565d252727dc6c68af29297af3295378dd"
+    },
+    "killspiderling2": {
+      "file": "killspiderling2.wav",
+      "duration": 1.25,
+      "rms": 0.15489121994675484,
+      "peak": 0.98004150390625,
+      "bytes": 220624,
+      "sha256": "d918f4e66b5f15e5a3faf055c7c58bc130bfe6ab751dd9134c1444b3f4622988",
+      "sourceSha256": "d918f4e66b5f15e5a3faf055c7c58bc130bfe6ab751dd9134c1444b3f4622988"
+    },
+    "killspiderling3": {
+      "file": "killspiderling3.wav",
+      "duration": 1.25,
+      "rms": 0.13764949804131377,
+      "peak": 0.98004150390625,
+      "bytes": 220624,
+      "sha256": "e0c3c36a8ee4b593d62afa7c5c670cb46d7a805482da0edf667e679016cba10d",
+      "sourceSha256": "e0c3c36a8ee4b593d62afa7c5c670cb46d7a805482da0edf667e679016cba10d"
+    },
+    "killspiderling4": {
+      "file": "killspiderling4.wav",
+      "duration": 1.0,
+      "rms": 0.1686557243210039,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "ea25f2b1572c55695427d32c2a14d5e449ce44aa138afc6656e6b6370cafbf62",
+      "sourceSha256": "ea25f2b1572c55695427d32c2a14d5e449ce44aa138afc6656e6b6370cafbf62"
+    },
+    "killspiderling5": {
+      "file": "killspiderling5.wav",
+      "duration": 1.25,
+      "rms": 0.16097332019387361,
+      "peak": 0.98004150390625,
+      "bytes": 220624,
+      "sha256": "0cf8e039ad34a9c8c0bec045ee5780a7b8d7f7a3488619fe3e0ae22bba6a982b",
+      "sourceSha256": "0cf8e039ad34a9c8c0bec045ee5780a7b8d7f7a3488619fe3e0ae22bba6a982b"
+    },
+    "killsquid": {
+      "file": "killsquid.wav",
+      "duration": 7.735011337868481,
+      "rms": 0.11741891219503828,
+      "peak": 0.980010986328125,
+      "bytes": 1364580,
+      "sha256": "3ebb85bf69ac71ab0bc26ffeabf90d42a8f84b4b4242bc9d861a97b773db388a",
+      "sourceSha256": "3ebb85bf69ac71ab0bc26ffeabf90d42a8f84b4b4242bc9d861a97b773db388a"
+    },
+    "killsuperskull": {
+      "file": "killsuperskull.wav",
+      "duration": 1.8526077097505669,
+      "rms": 0.27663709863726577,
+      "peak": 0.7696533203125,
+      "bytes": 326924,
+      "sha256": "5a2eefbd0f0004a4126ec3940a23fcd3b6489f65d7d323ac32078120af35bc4e",
+      "sourceSha256": "5a2eefbd0f0004a4126ec3940a23fcd3b6489f65d7d323ac32078120af35bc4e"
+    },
+    "killsuperskull2": {
+      "file": "killsuperskull2.wav",
+      "duration": 3.4201360544217687,
+      "rms": 0.21707596965282533,
+      "peak": 1.0,
+      "bytes": 603436,
+      "sha256": "0bef3e739eecbefd879637c31360d8cabc9cf382df856d064f95b50d576fcded",
+      "sourceSha256": "0bef3e739eecbefd879637c31360d8cabc9cf382df856d064f95b50d576fcded"
+    },
+    "killsuperskull2black": {
+      "file": "killsuperskull2black.wav",
+      "duration": 4.0,
+      "rms": 0.1667081500030086,
+      "peak": 0.980010986328125,
+      "bytes": 705724,
+      "sha256": "352f7164e19636bdb55b0c16850d5aeb8ae23531ac061059008f3f1c953d3fc9",
+      "sourceSha256": "352f7164e19636bdb55b0c16850d5aeb8ae23531ac061059008f3f1c953d3fc9"
+    },
+    "killsuperskull3": {
+      "file": "killsuperskull3.wav",
+      "duration": 5.322675736961451,
+      "rms": 0.1459041906918273,
+      "peak": 0.98004150390625,
+      "bytes": 939044,
+      "sha256": "f8e7ebbd6ae0b7139957b4d02f4ebdeb26fb230f0e97f40c203b2252811b99f4",
+      "sourceSha256": "f8e7ebbd6ae0b7139957b4d02f4ebdeb26fb230f0e97f40c203b2252811b99f4"
+    },
+    "killsuperskullblack": {
+      "file": "killsuperskullblack.wav",
+      "duration": 2.0869614512471655,
+      "rms": 0.18169700238634617,
+      "peak": 0.980010986328125,
+      "bytes": 368264,
+      "sha256": "59bb087be50191a3707b0b4630687700b1388ec467acb58804f5c69af2ad88a1",
+      "sourceSha256": "59bb087be50191a3707b0b4630687700b1388ec467acb58804f5c69af2ad88a1"
+    },
+    "killthorn": {
+      "file": "killthorn.wav",
+      "duration": 3.8753061224489795,
+      "rms": 0.08716653376210981,
+      "peak": 0.97998046875,
+      "bytes": 683728,
+      "sha256": "270be59bc4c8a37bb3ea2aff75ba1b4c1cfd870f3f270f0938cdf0da3cb11428",
+      "sourceSha256": "270be59bc4c8a37bb3ea2aff75ba1b4c1cfd870f3f270f0938cdf0da3cb11428"
+    },
+    "killultraskull": {
+      "file": "killultraskull.wav",
+      "duration": 2.5714285714285716,
+      "rms": 0.18753828571861306,
+      "peak": 0.980010986328125,
+      "bytes": 453724,
+      "sha256": "3fb9d78b8b2b8c6dbb77bb4ef8b7155f9cc49e1fe26637ca74bebd7019787418",
+      "sourceSha256": "3fb9d78b8b2b8c6dbb77bb4ef8b7155f9cc49e1fe26637ca74bebd7019787418"
+    },
+    "killultrasquid": {
+      "file": "killultrasquid.wav",
+      "duration": 6.6250113378684805,
+      "rms": 0.20124926998309925,
+      "peak": 0.98004150390625,
+      "bytes": 1168776,
+      "sha256": "2f29cae143b890eeb2acf460dd0515b5577f0b932e6518122a7cd058cf2450c9",
+      "sourceSha256": "2f29cae143b890eeb2acf460dd0515b5577f0b932e6518122a7cd058cf2450c9"
+    },
+    "land": {
+      "file": "land.wav",
+      "duration": 0.7209977324263038,
+      "rms": 0.07632714443396382,
+      "peak": 0.533050537109375,
+      "bytes": 127308,
+      "sha256": "54c65ca91ce8eee4fde30d01464e58dddd94d90fbb380ba48a2e268fc7eef7e7",
+      "sourceSha256": "54c65ca91ce8eee4fde30d01464e58dddd94d90fbb380ba48a2e268fc7eef7e7"
+    },
+    "land2": {
+      "file": "land2.wav",
+      "duration": 0.7043310657596372,
+      "rms": 0.11414331792570291,
+      "peak": 0.32147216796875,
+      "bytes": 124368,
+      "sha256": "9c065a0e6efe3353996c27e6e07c22f675d33e65b7278d1973270d6294876860",
+      "sourceSha256": "9c065a0e6efe3353996c27e6e07c22f675d33e65b7278d1973270d6294876860"
+    },
+    "legends": {
+      "file": "legends.wav",
+      "duration": 153.0,
+      "rms": 0.16385396318611906,
+      "peak": 0.89727783203125,
+      "bytes": 26989324,
+      "sha256": "7db2245643fcdd14b48c74a237834df991062b87c4e28d93f7a5f46abd8e1f92",
+      "sourceSha256": "7db2245643fcdd14b48c74a237834df991062b87c4e28d93f7a5f46abd8e1f92"
+    },
+    "leveldown": {
+      "file": "leveldown.wav",
+      "duration": 2.5,
+      "rms": 0.17321638823040036,
+      "peak": 0.9276123046875,
+      "bytes": 445166,
+      "sha256": "ce8dfe58758a120f36b4ad5b194fadfaa1bd6a24bc7c895fa80f285b7863a74c",
+      "sourceSha256": "ce8dfe58758a120f36b4ad5b194fadfaa1bd6a24bc7c895fa80f285b7863a74c"
+    },
+    "levelup2": {
+      "file": "levelup2.wav",
+      "duration": 5.25,
+      "rms": 0.1767265366782976,
+      "peak": 0.980010986328125,
+      "bytes": 926224,
+      "sha256": "98934fbfa6360c7bce9a8a18532b7c130b8dfc3e838906377aa30bb64d9866de",
+      "sourceSha256": "98934fbfa6360c7bce9a8a18532b7c130b8dfc3e838906377aa30bb64d9866de"
+    },
+    "levelup3": {
+      "file": "levelup3.wav",
+      "duration": 7.5,
+      "rms": 0.15597206944675465,
+      "peak": 0.980010986328125,
+      "bytes": 1323124,
+      "sha256": "3d068a07f526a712ce800e53b4cb1d6ad0f4c831e2425c43c37eee8a66437215",
+      "sourceSha256": "3d068a07f526a712ce800e53b4cb1d6ad0f4c831e2425c43c37eee8a66437215"
+    },
+    "levelup4": {
+      "file": "levelup4.wav",
+      "duration": 12.25,
+      "rms": 0.17900617132008934,
+      "peak": 0.96807861328125,
+      "bytes": 2161024,
+      "sha256": "4e85f38beec029303898dc65a11ec730ede5feb384192924a76aa9620b4c42c5",
+      "sourceSha256": "4e85f38beec029303898dc65a11ec730ede5feb384192924a76aa9620b4c42c5"
+    },
+    "leviathanbeckon": {
+      "file": "leviathanbeckon.wav",
+      "duration": 7.497142857142857,
+      "rms": 0.1356402234694298,
+      "peak": 1.0,
+      "bytes": 1322620,
+      "sha256": "bec7c4201b30d950c57f7949fd3f6ef3da201ff2e11318a7407293d6f5ec2c19",
+      "sourceSha256": "bec7c4201b30d950c57f7949fd3f6ef3da201ff2e11318a7407293d6f5ec2c19"
+    },
+    "leviathanbeckon2": {
+      "file": "leviathanbeckon2.wav",
+      "duration": 4.313038548752835,
+      "rms": 0.12756759650363841,
+      "peak": 0.980010986328125,
+      "bytes": 760944,
+      "sha256": "8218a360dd0396850d869d74fe1f7d9d445376e4209f6763f4776e87706b6f6b",
+      "sourceSha256": "8218a360dd0396850d869d74fe1f7d9d445376e4209f6763f4776e87706b6f6b"
+    },
+    "leviathantransmute": {
+      "file": "leviathantransmute.wav",
+      "duration": 11.714013605442178,
+      "rms": 0.06592806917546322,
+      "peak": 0.98004150390625,
+      "bytes": 2066476,
+      "sha256": "493a4c9c9d6cc88c7c6f4e3b6a5807427aef450ee7ddb908fdfa39eb66d2096e",
+      "sourceSha256": "493a4c9c9d6cc88c7c6f4e3b6a5807427aef450ee7ddb908fdfa39eb66d2096e"
+    },
+    "magentadetonate1": {
+      "file": "magentadetonate1.wav",
+      "duration": 4.0,
+      "rms": 0.12571495649344047,
+      "peak": 0.89404296875,
+      "bytes": 705724,
+      "sha256": "bef86e4dde7619cebb48895f78cd89b3fb182be951a12fe159858a1e2d329b38",
+      "sourceSha256": "bef86e4dde7619cebb48895f78cd89b3fb182be951a12fe159858a1e2d329b38"
+    },
+    "magentadetonate2": {
+      "file": "magentadetonate2.wav",
+      "duration": 4.0,
+      "rms": 0.1328349654424208,
+      "peak": 0.897857666015625,
+      "bytes": 705724,
+      "sha256": "8249f6698e45e2e1384748d14ce056152ebad2dda225fd7feb4f545343f3c734",
+      "sourceSha256": "8249f6698e45e2e1384748d14ce056152ebad2dda225fd7feb4f545343f3c734"
+    },
+    "magentadetonate3": {
+      "file": "magentadetonate3.wav",
+      "duration": 4.0,
+      "rms": 0.13334844028767828,
+      "peak": 0.89117431640625,
+      "bytes": 705724,
+      "sha256": "6789633684f45ed639648c0b246ea01a5c8032cfe45ab67f9c8760852030b484",
+      "sourceSha256": "6789633684f45ed639648c0b246ea01a5c8032cfe45ab67f9c8760852030b484"
+    },
+    "magentadetonate4": {
+      "file": "magentadetonate4.wav",
+      "duration": 4.0,
+      "rms": 0.1343940006823879,
+      "peak": 0.89227294921875,
+      "bytes": 705724,
+      "sha256": "8867bbb5506245dbadee14b6104af445bb5fd7ba4a79738e5627e354877748c4",
+      "sourceSha256": "8867bbb5506245dbadee14b6104af445bb5fd7ba4a79738e5627e354877748c4"
+    },
+    "magentadetonate5": {
+      "file": "magentadetonate5.wav",
+      "duration": 4.0,
+      "rms": 0.13250633437310835,
+      "peak": 0.8948974609375,
+      "bytes": 705724,
+      "sha256": "628f7a42304524d66a14b48b7399ad8d2737d94f33690c7a00edf7a8bcf548f4",
+      "sourceSha256": "628f7a42304524d66a14b48b7399ad8d2737d94f33690c7a00edf7a8bcf548f4"
+    },
+    "magentadrone": {
+      "file": "magentadrone.wav",
+      "duration": 12.75,
+      "rms": 0.16417748198430285,
+      "peak": 0.8970947265625,
+      "bytes": 2249224,
+      "sha256": "391d2cb7a867d807ed819d66a95cec5ba96436cce138c4b1cbb292a851a93e48",
+      "sourceSha256": "391d2cb7a867d807ed819d66a95cec5ba96436cce138c4b1cbb292a851a93e48"
+    },
+    "magentashot": {
+      "file": "magentashot.wav",
+      "duration": 2.3835374149659865,
+      "rms": 0.12503723849740708,
+      "peak": 0.980072021484375,
+      "bytes": 420580,
+      "sha256": "aa815bcb6f805341a095253e74417044d460ca78bcc3a22d04b1983698326eea",
+      "sourceSha256": "aa815bcb6f805341a095253e74417044d460ca78bcc3a22d04b1983698326eea"
+    },
+    "magentastuckenemy1": {
+      "file": "magentastuckenemy1.wav",
+      "duration": 3.0039455782312925,
+      "rms": 0.13138972160593193,
+      "peak": 0.888519287109375,
+      "bytes": 530020,
+      "sha256": "5cb4c0c5f096435d9d7b2bfb7cf86d37c2af22a017a8c04fb5f93848cd26eea3",
+      "sourceSha256": "5cb4c0c5f096435d9d7b2bfb7cf86d37c2af22a017a8c04fb5f93848cd26eea3"
+    },
+    "magentastuckenemy2": {
+      "file": "magentastuckenemy2.wav",
+      "duration": 3.5,
+      "rms": 0.1449750164118056,
+      "peak": 0.88812255859375,
+      "bytes": 617524,
+      "sha256": "8b9c2478b210929702a6e4f92f1f64b41dcc9ea0ff9ffbbf01e4766ae31cf53f",
+      "sourceSha256": "8b9c2478b210929702a6e4f92f1f64b41dcc9ea0ff9ffbbf01e4766ae31cf53f"
+    },
+    "magentastuckenemy3": {
+      "file": "magentastuckenemy3.wav",
+      "duration": 3.75,
+      "rms": 0.1226795666929111,
+      "peak": 0.892578125,
+      "bytes": 661624,
+      "sha256": "95654213afb887b3121ac1afe4300c7303f899da8e0670a3e6ad4064dc07bb5c",
+      "sourceSha256": "95654213afb887b3121ac1afe4300c7303f899da8e0670a3e6ad4064dc07bb5c"
+    },
+    "magentastuckenemy4": {
+      "file": "magentastuckenemy4.wav",
+      "duration": 3.5,
+      "rms": 0.14225530043034695,
+      "peak": 0.888153076171875,
+      "bytes": 617524,
+      "sha256": "a12b3d8241f0610fbd1dd68b734db357ac55976df34f7d5a9185ec385015fbe2",
+      "sourceSha256": "a12b3d8241f0610fbd1dd68b734db357ac55976df34f7d5a9185ec385015fbe2"
+    },
+    "magentastuckenemy5": {
+      "file": "magentastuckenemy5.wav",
+      "duration": 3.75,
+      "rms": 0.12489565598642081,
+      "peak": 0.892852783203125,
+      "bytes": 661624,
+      "sha256": "274895fabfadb98eec927f98ef8ec3078cde16f507fe146e6f9b98aded6d425b",
+      "sourceSha256": "274895fabfadb98eec927f98ef8ec3078cde16f507fe146e6f9b98aded6d425b"
+    },
+    "magicpierce1": {
+      "file": "magicpierce1.wav",
+      "duration": 4.0,
+      "rms": 0.04876445109792563,
+      "peak": 0.97930908203125,
+      "bytes": 705724,
+      "sha256": "9a2fa8449c8fcf87a2f2150dd38549f1b88d24f78da98bb363261c7421a840bf",
+      "sourceSha256": "9a2fa8449c8fcf87a2f2150dd38549f1b88d24f78da98bb363261c7421a840bf"
+    },
+    "magicpierce2": {
+      "file": "magicpierce2.wav",
+      "duration": 4.0,
+      "rms": 0.05306622193649646,
+      "peak": 0.974090576171875,
+      "bytes": 705724,
+      "sha256": "18054f5e9f3713192750ed2a448383d8aa5aae04d9bac0ee9e853fe8005eeb97",
+      "sourceSha256": "18054f5e9f3713192750ed2a448383d8aa5aae04d9bac0ee9e853fe8005eeb97"
+    },
+    "magicpierce3": {
+      "file": "magicpierce3.wav",
+      "duration": 4.0,
+      "rms": 0.09077531539028738,
+      "peak": 0.958831787109375,
+      "bytes": 705724,
+      "sha256": "cb5a9e65d2d9e3b6343073a73c2c76aae82db97ac4f8f20bad5d1aa0eab38172",
+      "sourceSha256": "cb5a9e65d2d9e3b6343073a73c2c76aae82db97ac4f8f20bad5d1aa0eab38172"
+    },
+    "magicpierce4": {
+      "file": "magicpierce4.wav",
+      "duration": 4.0,
+      "rms": 0.06000222186255314,
+      "peak": 0.978240966796875,
+      "bytes": 705724,
+      "sha256": "65561c8a2db357c84f2e12098b2b3cf907d4afc0aa5177f5c31b479e441d43a2",
+      "sourceSha256": "65561c8a2db357c84f2e12098b2b3cf907d4afc0aa5177f5c31b479e441d43a2"
+    },
+    "magicpierce5": {
+      "file": "magicpierce5.wav",
+      "duration": 4.0,
+      "rms": 0.05596297221092197,
+      "peak": 0.976898193359375,
+      "bytes": 705724,
+      "sha256": "5ac6f255cf61531040ef0b55dd9aaeb64298afa62ca01db4bf5bf2b72f6a5ac5",
+      "sourceSha256": "5ac6f255cf61531040ef0b55dd9aaeb64298afa62ca01db4bf5bf2b72f6a5ac5"
+    },
+    "magicpulse": {
+      "file": "magicpulse.wav",
+      "duration": 1.5,
+      "rms": 0.10071627866509117,
+      "peak": 0.662353515625,
+      "bytes": 264724,
+      "sha256": "fcd10f56ed43594d1c2272573c17e3090715dfac00ea5536d8614adc2edc09da",
+      "sourceSha256": "fcd10f56ed43594d1c2272573c17e3090715dfac00ea5536d8614adc2edc09da"
+    },
+    "meat1": {
+      "file": "meat1.wav",
+      "duration": 1.0,
+      "rms": 0.04422923297765605,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "8bf2482e1f652e545fc7566c1d740c36e2db3e7b5e24b718f90c7a3f1cbc378e",
+      "sourceSha256": "8bf2482e1f652e545fc7566c1d740c36e2db3e7b5e24b718f90c7a3f1cbc378e"
+    },
+    "meat10": {
+      "file": "meat10.wav",
+      "duration": 0.75,
+      "rms": 0.09550576208624395,
+      "peak": 0.98004150390625,
+      "bytes": 132424,
+      "sha256": "aea1025613924ea80e69f5560f46431879f4db448ea3a2dcccc2a68295e169d9",
+      "sourceSha256": "aea1025613924ea80e69f5560f46431879f4db448ea3a2dcccc2a68295e169d9"
+    },
+    "meat11": {
+      "file": "meat11.wav",
+      "duration": 0.75,
+      "rms": 0.08605121380124925,
+      "peak": 0.980010986328125,
+      "bytes": 132424,
+      "sha256": "5e6808928f4ce990cc7f0b2712f2b9c4655bbeff2e5298746a21ddcf0c631cc9",
+      "sourceSha256": "5e6808928f4ce990cc7f0b2712f2b9c4655bbeff2e5298746a21ddcf0c631cc9"
+    },
+    "meat12": {
+      "file": "meat12.wav",
+      "duration": 0.75,
+      "rms": 0.07678544769564853,
+      "peak": 0.980010986328125,
+      "bytes": 132424,
+      "sha256": "531bf8e87ffbd08cd5546681b0e4860a7b2e029c4277e80b3bdcc04936c6c72f",
+      "sourceSha256": "531bf8e87ffbd08cd5546681b0e4860a7b2e029c4277e80b3bdcc04936c6c72f"
+    },
+    "meat13": {
+      "file": "meat13.wav",
+      "duration": 1.0,
+      "rms": 0.10993560489788545,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "0908f41db9ac3c0a1c1d93714b92befb7ced69274977acf52aae83802dbf2116",
+      "sourceSha256": "0908f41db9ac3c0a1c1d93714b92befb7ced69274977acf52aae83802dbf2116"
+    },
+    "meat2": {
+      "file": "meat2.wav",
+      "duration": 1.0,
+      "rms": 0.049800669795138475,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "0b07ab8485bc8bf5f71d21e4423f75ed66e279c52ebb8a702fd0c935a2ab65e3",
+      "sourceSha256": "0b07ab8485bc8bf5f71d21e4423f75ed66e279c52ebb8a702fd0c935a2ab65e3"
+    },
+    "meat3": {
+      "file": "meat3.wav",
+      "duration": 1.0,
+      "rms": 0.05525304350261496,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "46ef3ec1451224516812f83a20ac9753d35ade43b5e76fab468ea53c45297eb4",
+      "sourceSha256": "46ef3ec1451224516812f83a20ac9753d35ade43b5e76fab468ea53c45297eb4"
+    },
+    "meat4": {
+      "file": "meat4.wav",
+      "duration": 1.0,
+      "rms": 0.055830056292012493,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "dde026495404014cefbbb9e6904adb7e63145f359ce63099ff61b8c9311cdf84",
+      "sourceSha256": "dde026495404014cefbbb9e6904adb7e63145f359ce63099ff61b8c9311cdf84"
+    },
+    "meat5": {
+      "file": "meat5.wav",
+      "duration": 1.0,
+      "rms": 0.0477282223599842,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "4c93c08b2a305ab629ca549f53b673419a7d4d126c48b4cd774857d38f26e769",
+      "sourceSha256": "4c93c08b2a305ab629ca549f53b673419a7d4d126c48b4cd774857d38f26e769"
+    },
+    "meat6": {
+      "file": "meat6.wav",
+      "duration": 1.0,
+      "rms": 0.05628835223966064,
+      "peak": 0.979949951171875,
+      "bytes": 176524,
+      "sha256": "d71f095976dd03e25e4f53fd7785daf792bd8d8bef0f4ca165a2480308a2d1db",
+      "sourceSha256": "d71f095976dd03e25e4f53fd7785daf792bd8d8bef0f4ca165a2480308a2d1db"
+    },
+    "meat7": {
+      "file": "meat7.wav",
+      "duration": 0.7130385487528345,
+      "rms": 0.08555367635477201,
+      "peak": 0.98004150390625,
+      "bytes": 125904,
+      "sha256": "abd616846865790c9c56d89fd457d5b8d934d215ccc832e20e7396842c50fa0e",
+      "sourceSha256": "abd616846865790c9c56d89fd457d5b8d934d215ccc832e20e7396842c50fa0e"
+    },
+    "meat8": {
+      "file": "meat8.wav",
+      "duration": 0.75,
+      "rms": 0.09007979322902757,
+      "peak": 0.980010986328125,
+      "bytes": 132424,
+      "sha256": "d62e0c5acd905bdd48c392440e72d6d45b96352a0474fc2b98642c0fe70bc70d",
+      "sourceSha256": "d62e0c5acd905bdd48c392440e72d6d45b96352a0474fc2b98642c0fe70bc70d"
+    },
+    "meat9": {
+      "file": "meat9.wav",
+      "duration": 0.75,
+      "rms": 0.07430399196661096,
+      "peak": 0.980010986328125,
+      "bytes": 132424,
+      "sha256": "7f4a5b52851fe4aa40d689cdb7e3faef44cd3c70168c7fb07138fc8fdb92b2a2",
+      "sourceSha256": "7f4a5b52851fe4aa40d689cdb7e3faef44cd3c70168c7fb07138fc8fdb92b2a2"
+    },
+    "meatbig1": {
+      "file": "meatbig1.wav",
+      "duration": 1.0,
+      "rms": 0.15529031648364439,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "a61c60b6ea1b04cd7f1b1eadef6fee293fe081a6245648770cedc8f8ee9c1199",
+      "sourceSha256": "a61c60b6ea1b04cd7f1b1eadef6fee293fe081a6245648770cedc8f8ee9c1199"
+    },
+    "meatbig2": {
+      "file": "meatbig2.wav",
+      "duration": 1.0,
+      "rms": 0.17630476787476546,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "d7c0c6b6fc82cf2c0cb913a387da4416c609c25ccfb7c3562a966893699a25c1",
+      "sourceSha256": "d7c0c6b6fc82cf2c0cb913a387da4416c609c25ccfb7c3562a966893699a25c1"
+    },
+    "meatbig3": {
+      "file": "meatbig3.wav",
+      "duration": 1.0,
+      "rms": 0.17741728904058113,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "27f47d09652ebf37d0a6bd536a11cb9ac0ab65ed5ff18572c7a4bc029dccc033",
+      "sourceSha256": "27f47d09652ebf37d0a6bd536a11cb9ac0ab65ed5ff18572c7a4bc029dccc033"
+    },
+    "meatbig4": {
+      "file": "meatbig4.wav",
+      "duration": 1.0,
+      "rms": 0.17501219167756552,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "dd1f22073add903bdbb7e91806e670281afde856ce128186575af9a06db65904",
+      "sourceSha256": "dd1f22073add903bdbb7e91806e670281afde856ce128186575af9a06db65904"
+    },
+    "meatbig5": {
+      "file": "meatbig5.wav",
+      "duration": 1.0,
+      "rms": 0.15355193669181252,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "d2753aa186af614d3471c19182d2a5549585c5f7a2c288e87785e68e9c8c3fe0",
+      "sourceSha256": "d2753aa186af614d3471c19182d2a5549585c5f7a2c288e87785e68e9c8c3fe0"
+    },
+    "meatbig6": {
+      "file": "meatbig6.wav",
+      "duration": 1.0,
+      "rms": 0.16689075423624958,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "3a312a9610facb856894a18c78b4acd22f1df53f9d9b6f5b785a0211d7c0ca32",
+      "sourceSha256": "3a312a9610facb856894a18c78b4acd22f1df53f9d9b6f5b785a0211d7c0ca32"
+    },
+    "meatmed1": {
+      "file": "meatmed1.wav",
+      "duration": 1.0,
+      "rms": 0.13054749879931288,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "69dee53aec4fdc1194b9842ebe6c746fa4640bafd53e82a6e11a991fcc77ec06",
+      "sourceSha256": "69dee53aec4fdc1194b9842ebe6c746fa4640bafd53e82a6e11a991fcc77ec06"
+    },
+    "meatmed2": {
+      "file": "meatmed2.wav",
+      "duration": 1.0,
+      "rms": 0.13449680535701453,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "5235a7a2c6c9907c079b3e711c6ebd8207e016be9a5ae1938ee6ec93dfd276a8",
+      "sourceSha256": "5235a7a2c6c9907c079b3e711c6ebd8207e016be9a5ae1938ee6ec93dfd276a8"
+    },
+    "meatmed3": {
+      "file": "meatmed3.wav",
+      "duration": 1.0,
+      "rms": 0.13531228861016875,
+      "peak": 0.97998046875,
+      "bytes": 176524,
+      "sha256": "836d493331fc997060385ae547f61ce90a7228c0e3b5330f9c0828d66207806b",
+      "sourceSha256": "836d493331fc997060385ae547f61ce90a7228c0e3b5330f9c0828d66207806b"
+    },
+    "meatmed4": {
+      "file": "meatmed4.wav",
+      "duration": 1.0,
+      "rms": 0.1387200113374616,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "4b45afe6f8022f4ffa2e2860fd300345e30d89146d491b1cb5dfdb2871c723c2",
+      "sourceSha256": "4b45afe6f8022f4ffa2e2860fd300345e30d89146d491b1cb5dfdb2871c723c2"
+    },
+    "meatmed5": {
+      "file": "meatmed5.wav",
+      "duration": 1.0,
+      "rms": 0.12851972299051817,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "bd13cc733b0125b68b476937c44791f443bae89d3636d099ceb769387744218f",
+      "sourceSha256": "bd13cc733b0125b68b476937c44791f443bae89d3636d099ceb769387744218f"
+    },
+    "meatmed6": {
+      "file": "meatmed6.wav",
+      "duration": 1.0,
+      "rms": 0.07154611802049186,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "76aed4cc88b11676b491e8982eee0fa506ae8e9ad3c4c7eb9e1987570ff0499d",
+      "sourceSha256": "76aed4cc88b11676b491e8982eee0fa506ae8e9ad3c4c7eb9e1987570ff0499d"
+    },
+    "menuatmos": {
+      "file": "menuatmos.wav",
+      "duration": 208.69566893424036,
+      "rms": 0.24362867978448063,
+      "peak": 0.95416259765625,
+      "bytes": 36814040,
+      "sha256": "77dd6ec59640ba6d7840950a606ec4e323b68df5a0e1a38edd867d23927f40b6",
+      "sourceSha256": "77dd6ec59640ba6d7840950a606ec4e323b68df5a0e1a38edd867d23927f40b6"
+    },
+    "menutheme": {
+      "file": "menutheme.wav",
+      "duration": 108.00045351473923,
+      "rms": 0.10946770144446152,
+      "peak": 0.978607177734375,
+      "bytes": 19055446,
+      "sha256": "e0d11088c8d032f1a0022478ef2149ccd802adaec88829e2922c4179c50f2d28",
+      "sourceSha256": "e0d11088c8d032f1a0022478ef2149ccd802adaec88829e2922c4179c50f2d28"
+    },
+    "polarity1e": {
+      "file": "polarity1e.wav",
+      "duration": 50.25,
+      "rms": 0.34026215774823465,
+      "peak": 0.917938232421875,
+      "bytes": 8864224,
+      "sha256": "71128aceb280c95d07d2fc11a9db0708feb7fbb23e74a2fdb03c0d751dc64664",
+      "sourceSha256": "71128aceb280c95d07d2fc11a9db0708feb7fbb23e74a2fdb03c0d751dc64664"
+    },
+    "polarity2w": {
+      "file": "polarity2w.wav",
+      "duration": 68.25,
+      "rms": 0.3518137320677476,
+      "peak": 0.98004150390625,
+      "bytes": 12039424,
+      "sha256": "42897d1160ad59acdff754bac0fbe24a215bb6b6af3be1fb43014a0a6d30d002",
+      "sourceSha256": "42897d1160ad59acdff754bac0fbe24a215bb6b6af3be1fb43014a0a6d30d002"
+    },
+    "polarity3n": {
+      "file": "polarity3n.wav",
+      "duration": 51.56251700680272,
+      "rms": 0.36570826812176166,
+      "peak": 0.922882080078125,
+      "bytes": 9095752,
+      "sha256": "cf2f82c8b1a363e9919f88d23f44e05aeea8fb31001642e44d25f18f54a6db6a",
+      "sourceSha256": "cf2f82c8b1a363e9919f88d23f44e05aeea8fb31001642e44d25f18f54a6db6a"
+    },
+    "polarity4s": {
+      "file": "polarity4s.wav",
+      "duration": 78.0,
+      "rms": 0.329218674227764,
+      "peak": 0.940338134765625,
+      "bytes": 13759324,
+      "sha256": "434c348abaf1490c9e76fe47d0a82f40531af95b6572b2a31b7dfd89bd4df67c",
+      "sourceSha256": "434c348abaf1490c9e76fe47d0a82f40531af95b6572b2a31b7dfd89bd4df67c"
+    },
+    "rapid1": {
+      "file": "rapid1.wav",
+      "duration": 8.045963718820861,
+      "rms": 0.19217546344350386,
+      "peak": 0.980072021484375,
+      "bytes": 1419432,
+      "sha256": "1bafbd596543363bcd7906054d269aab1db533ae08abc7149a98b1e6412e4117",
+      "sourceSha256": "1bafbd596543363bcd7906054d269aab1db533ae08abc7149a98b1e6412e4117"
+    },
+    "rapid2": {
+      "file": "rapid2.wav",
+      "duration": 7.992675736961451,
+      "rms": 0.4049978387808224,
+      "peak": 0.980072021484375,
+      "bytes": 1410032,
+      "sha256": "1aaff3f57045247cdf155b4c594c240cbccd1fd2898577bc1243c8d0f7512c24",
+      "sourceSha256": "1aaff3f57045247cdf155b4c594c240cbccd1fd2898577bc1243c8d0f7512c24"
+    },
+    "rapid3": {
+      "file": "rapid3.wav",
+      "duration": 8.0,
+      "rms": 0.23325272164258373,
+      "peak": 0.6500244140625,
+      "bytes": 1415366,
+      "sha256": "f80347073c785f472300e816f83d6b67d90af20b41858647ec74da25b0f223eb",
+      "sourceSha256": "f80347073c785f472300e816f83d6b67d90af20b41858647ec74da25b0f223eb"
+    },
+    "rapid4": {
+      "file": "rapid4.wav",
+      "duration": 64.0,
+      "rms": 0.3326238713385291,
+      "peak": 0.86669921875,
+      "bytes": 11289724,
+      "sha256": "fb93cf93fb4ecde38d3b447d622c9417ed5155bf236042497c0bc8a1080f70ba",
+      "sourceSha256": "fb93cf93fb4ecde38d3b447d622c9417ed5155bf236042497c0bc8a1080f70ba"
+    },
+    "ricochet1": {
+      "file": "ricochet1.wav",
+      "duration": 1.0,
+      "rms": 0.07862338706693296,
+      "peak": 0.508087158203125,
+      "bytes": 176524,
+      "sha256": "6fda57b45c0366bc95845f28f6ebb0f13a188316c3d82831c5b2af2916a78971",
+      "sourceSha256": "6fda57b45c0366bc95845f28f6ebb0f13a188316c3d82831c5b2af2916a78971"
+    },
+    "ricochet2": {
+      "file": "ricochet2.wav",
+      "duration": 1.0,
+      "rms": 0.07309429649266176,
+      "peak": 0.44708251953125,
+      "bytes": 176524,
+      "sha256": "e74466939fbce45719c2395cd8996b553e8768a786aa0ac4175fe1eff0ab88d4",
+      "sourceSha256": "e74466939fbce45719c2395cd8996b553e8768a786aa0ac4175fe1eff0ab88d4"
+    },
+    "ricochet3": {
+      "file": "ricochet3.wav",
+      "duration": 1.0,
+      "rms": 0.05987633618626301,
+      "peak": 0.49774169921875,
+      "bytes": 176524,
+      "sha256": "94f69d16dd97dd6b924b0fe6b32c61cacee1eb7bcf2e70043cf6e6aeb6dd3804",
+      "sourceSha256": "94f69d16dd97dd6b924b0fe6b32c61cacee1eb7bcf2e70043cf6e6aeb6dd3804"
+    },
+    "ricochet4": {
+      "file": "ricochet4.wav",
+      "duration": 1.0,
+      "rms": 0.0637528202568196,
+      "peak": 0.4276123046875,
+      "bytes": 176524,
+      "sha256": "73a05d24285e67aa8672096da9202089806548280127de51783444e8fbc4db32",
+      "sourceSha256": "73a05d24285e67aa8672096da9202089806548280127de51783444e8fbc4db32"
+    },
+    "ricochet5": {
+      "file": "ricochet5.wav",
+      "duration": 1.0,
+      "rms": 0.07232437428879282,
+      "peak": 0.493743896484375,
+      "bytes": 176524,
+      "sha256": "73bf7b20400c1d446439dead4e7af1c867b8874de17c4b70da749c364db96d98",
+      "sourceSha256": "73bf7b20400c1d446439dead4e7af1c867b8874de17c4b70da749c364db96d98"
+    },
+    "ricochetmagenta1": {
+      "file": "ricochetmagenta1.wav",
+      "duration": 1.0,
+      "rms": 0.17058215914210076,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "a058b428ded0c6908ffaada194f0fe2af0240f1162ccf63c3f419b3a4d7bab84",
+      "sourceSha256": "a058b428ded0c6908ffaada194f0fe2af0240f1162ccf63c3f419b3a4d7bab84"
+    },
+    "ricochetmagenta2": {
+      "file": "ricochetmagenta2.wav",
+      "duration": 1.0,
+      "rms": 0.1709775448485191,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "5f52cf3fd4a919cc886e366c9faae38f1c98bdfd009fe8e310ac5f8d81b12c43",
+      "sourceSha256": "5f52cf3fd4a919cc886e366c9faae38f1c98bdfd009fe8e310ac5f8d81b12c43"
+    },
+    "ricochetmagenta3": {
+      "file": "ricochetmagenta3.wav",
+      "duration": 1.0,
+      "rms": 0.1660598735529063,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "db6e9c0e16820846462a898a3233ca8fb65f597f4580aabd1a9fcbe672bac302",
+      "sourceSha256": "db6e9c0e16820846462a898a3233ca8fb65f597f4580aabd1a9fcbe672bac302"
+    },
+    "ricochetmagenta4": {
+      "file": "ricochetmagenta4.wav",
+      "duration": 1.0,
+      "rms": 0.15636840136002483,
+      "peak": 0.98004150390625,
+      "bytes": 176524,
+      "sha256": "3b0445063fd29b01f2af51dbb8d77c36eb1ad7f39bd87f75a17ee9fe3f0bf773",
+      "sourceSha256": "3b0445063fd29b01f2af51dbb8d77c36eb1ad7f39bd87f75a17ee9fe3f0bf773"
+    },
+    "ricochetmagenta5": {
+      "file": "ricochetmagenta5.wav",
+      "duration": 1.0,
+      "rms": 0.17808549750953018,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "0f2634bf663eb026b96b34052ef7c7dd8c6ba3c2d18d472bd71ac66471013805",
+      "sourceSha256": "0f2634bf663eb026b96b34052ef7c7dd8c6ba3c2d18d472bd71ac66471013805"
+    },
+    "ricochetmagic1": {
+      "file": "ricochetmagic1.wav",
+      "duration": 2.5,
+      "rms": 0.12899130939339842,
+      "peak": 0.97857666015625,
+      "bytes": 441124,
+      "sha256": "0d45abf543669320ccc63f32cfea39fdd2c942ff1693b9413ccf64514360e395",
+      "sourceSha256": "0d45abf543669320ccc63f32cfea39fdd2c942ff1693b9413ccf64514360e395"
+    },
+    "ricochetmagic2": {
+      "file": "ricochetmagic2.wav",
+      "duration": 2.5,
+      "rms": 0.12978470218669275,
+      "peak": 0.980010986328125,
+      "bytes": 441124,
+      "sha256": "6767d61385fd4a3830a389e131d7d0f76bc1c81f833a6390d09e454a38dd7407",
+      "sourceSha256": "6767d61385fd4a3830a389e131d7d0f76bc1c81f833a6390d09e454a38dd7407"
+    },
+    "ricochetmagic3": {
+      "file": "ricochetmagic3.wav",
+      "duration": 2.5,
+      "rms": 0.13285745962741874,
+      "peak": 0.980010986328125,
+      "bytes": 441124,
+      "sha256": "d1872b0f7e8a60850def9bdaba82b62a07c6d53fd3bc3c9d9c2985500e63485f",
+      "sourceSha256": "d1872b0f7e8a60850def9bdaba82b62a07c6d53fd3bc3c9d9c2985500e63485f"
+    },
+    "ricochetmagic4": {
+      "file": "ricochetmagic4.wav",
+      "duration": 2.5,
+      "rms": 0.1423808354667977,
+      "peak": 0.980010986328125,
+      "bytes": 441124,
+      "sha256": "0f52c1b72b6ace6a0cd30d590c4661fb746df3b8c0dad76be83635d44a000282",
+      "sourceSha256": "0f52c1b72b6ace6a0cd30d590c4661fb746df3b8c0dad76be83635d44a000282"
+    },
+    "ricochetmed1": {
+      "file": "ricochetmed1.wav",
+      "duration": 1.0,
+      "rms": 0.08746301763899905,
+      "peak": 0.81317138671875,
+      "bytes": 176524,
+      "sha256": "e4c87d9cec01f4148c52464663033d180eab71e44e8d29a6a9516205f96ce7d4",
+      "sourceSha256": "e4c87d9cec01f4148c52464663033d180eab71e44e8d29a6a9516205f96ce7d4"
+    },
+    "ricochetmed2": {
+      "file": "ricochetmed2.wav",
+      "duration": 1.0,
+      "rms": 0.08601566143889285,
+      "peak": 0.809478759765625,
+      "bytes": 176524,
+      "sha256": "aa5688caeb8651938ff1e42f2eaae7e404ba795589b6b5d84cb5032a4e1410b7",
+      "sourceSha256": "aa5688caeb8651938ff1e42f2eaae7e404ba795589b6b5d84cb5032a4e1410b7"
+    },
+    "ricochetmed3": {
+      "file": "ricochetmed3.wav",
+      "duration": 1.0,
+      "rms": 0.07309003795410185,
+      "peak": 0.798919677734375,
+      "bytes": 176524,
+      "sha256": "8e4faf82caca6a190ebda8319b6e6ad33a69c8f45badb948914fd391a0e66fe1",
+      "sourceSha256": "8e4faf82caca6a190ebda8319b6e6ad33a69c8f45badb948914fd391a0e66fe1"
+    },
+    "ricochetmed4": {
+      "file": "ricochetmed4.wav",
+      "duration": 1.0,
+      "rms": 0.07427152840702056,
+      "peak": 0.79254150390625,
+      "bytes": 176524,
+      "sha256": "88cb90dbec16705f445a2316c85efd32dd0e58544ff0e076e8c6d6d1ff5834b8",
+      "sourceSha256": "88cb90dbec16705f445a2316c85efd32dd0e58544ff0e076e8c6d6d1ff5834b8"
+    },
+    "ricochetmed5": {
+      "file": "ricochetmed5.wav",
+      "duration": 1.0,
+      "rms": 0.07629674052862087,
+      "peak": 0.658355712890625,
+      "bytes": 176524,
+      "sha256": "7c71be6be28199ea9b7ba8008debfe50e1ba4021aaf1a71e503c97c88217ff08",
+      "sourceSha256": "7c71be6be28199ea9b7ba8008debfe50e1ba4021aaf1a71e503c97c88217ff08"
+    },
+    "secretsnake": {
+      "file": "secretsnake.wav",
+      "duration": 9.739637188208617,
+      "rms": 0.0249723682523965,
+      "peak": 0.980010986328125,
+      "bytes": 1718196,
+      "sha256": "7a06c44ca9a9911d5d321865b99e4268a0d78737a6357428881de7c6af4d6ab5",
+      "sourceSha256": "7a06c44ca9a9911d5d321865b99e4268a0d78737a6357428881de7c6af4d6ab5"
+    },
+    "secretsnake2": {
+      "file": "secretsnake2.wav",
+      "duration": 7.965215419501134,
+      "rms": 0.13750908419158536,
+      "peak": 0.96673583984375,
+      "bytes": 1405188,
+      "sha256": "0e909aaf0dc0cd4215fe12737f0adeb08c3717ae6a5cb5194d2dd7c3dfd4826a",
+      "sourceSha256": "0e909aaf0dc0cd4215fe12737f0adeb08c3717ae6a5cb5194d2dd7c3dfd4826a"
+    },
+    "shard1": {
+      "file": "shard1.wav",
+      "duration": 3.5,
+      "rms": 0.05845513103180822,
+      "peak": 0.903167724609375,
+      "bytes": 617524,
+      "sha256": "5f531e278f9c552cae61c174821b058cc5d772a73ada1fa582cc5f6fe4dfee90",
+      "sourceSha256": "5f531e278f9c552cae61c174821b058cc5d772a73ada1fa582cc5f6fe4dfee90"
+    },
+    "shard2": {
+      "file": "shard2.wav",
+      "duration": 3.5,
+      "rms": 0.06613288870539674,
+      "peak": 0.894683837890625,
+      "bytes": 617524,
+      "sha256": "48af3a9190277e52c8808689ea089a244aedd64825a7a90e93900ab0e2256338",
+      "sourceSha256": "48af3a9190277e52c8808689ea089a244aedd64825a7a90e93900ab0e2256338"
+    },
+    "shard3": {
+      "file": "shard3.wav",
+      "duration": 3.5,
+      "rms": 0.07692064335110349,
+      "peak": 0.8985595703125,
+      "bytes": 617524,
+      "sha256": "58f720e50b6a217f9a54325095a714cdb6f74a1063331f8e5c77a50330b73ff3",
+      "sourceSha256": "58f720e50b6a217f9a54325095a714cdb6f74a1063331f8e5c77a50330b73ff3"
+    },
+    "shard4": {
+      "file": "shard4.wav",
+      "duration": 3.9041496598639456,
+      "rms": 0.06724028629511261,
+      "peak": 0.8922119140625,
+      "bytes": 688816,
+      "sha256": "97da01a5e7e2113910611f4ac9663b4841ced2ff28e7d68e169d9937ee6d19e7",
+      "sourceSha256": "97da01a5e7e2113910611f4ac9663b4841ced2ff28e7d68e169d9937ee6d19e7"
+    },
+    "shard5": {
+      "file": "shard5.wav",
+      "duration": 4.0,
+      "rms": 0.08526031596524608,
+      "peak": 0.90106201171875,
+      "bytes": 705724,
+      "sha256": "f6b19c8d2d04e8d3ab0906a5d5f54111f5e081899767e9c77ca340cee3b55efa",
+      "sourceSha256": "f6b19c8d2d04e8d3ab0906a5d5f54111f5e081899767e9c77ca340cee3b55efa"
+    },
+    "shot1": {
+      "file": "shot1.wav",
+      "duration": 4.0,
+      "rms": 0.07415675960937682,
+      "peak": 1.0,
+      "bytes": 709766,
+      "sha256": "492ff81e24ad68c38fe2ba5d7cd3c3af113ab61da910cefbe9e6f0c9c80d0af8",
+      "sourceSha256": "492ff81e24ad68c38fe2ba5d7cd3c3af113ab61da910cefbe9e6f0c9c80d0af8"
+    },
+    "shot2": {
+      "file": "shot2.wav",
+      "duration": 4.0,
+      "rms": 0.08234345472883468,
+      "peak": 1.0,
+      "bytes": 709760,
+      "sha256": "54bb61be6283b5cd72038a2cf8de8d11d18f02582cb4753c7b0ae925553dc201",
+      "sourceSha256": "54bb61be6283b5cd72038a2cf8de8d11d18f02582cb4753c7b0ae925553dc201"
+    },
+    "shot3": {
+      "file": "shot3.wav",
+      "duration": 4.0,
+      "rms": 0.096758550151449,
+      "peak": 1.0,
+      "bytes": 705724,
+      "sha256": "212e942099f9c8b3ae66b375fba6314b3cf5b0f8acebb19ca92ab86321d0e80f",
+      "sourceSha256": "212e942099f9c8b3ae66b375fba6314b3cf5b0f8acebb19ca92ab86321d0e80f"
+    },
+    "shot3alt1": {
+      "file": "shot3alt1.wav",
+      "duration": 4.0,
+      "rms": 0.09574484080367304,
+      "peak": 1.0,
+      "bytes": 705724,
+      "sha256": "4bd96074f8bdf3546ce5fb9fcf13c112851ce56bec5d7c143c847fc5ef5404c7",
+      "sourceSha256": "4bd96074f8bdf3546ce5fb9fcf13c112851ce56bec5d7c143c847fc5ef5404c7"
+    },
+    "shot3alt2": {
+      "file": "shot3alt2.wav",
+      "duration": 4.0,
+      "rms": 0.09555049049886476,
+      "peak": 1.0,
+      "bytes": 705724,
+      "sha256": "733bdd09726e88445ec9f30a8e42b207c522aa4b15be7e69840146e74ea529ef",
+      "sourceSha256": "733bdd09726e88445ec9f30a8e42b207c522aa4b15be7e69840146e74ea529ef"
+    },
+    "shot3alt3": {
+      "file": "shot3alt3.wav",
+      "duration": 4.0,
+      "rms": 0.09494754243430815,
+      "peak": 1.0,
+      "bytes": 705724,
+      "sha256": "d2b109e21910698af439c91621356f89d3687c6ba48cba1b04ea649e0d1016e4",
+      "sourceSha256": "d2b109e21910698af439c91621356f89d3687c6ba48cba1b04ea649e0d1016e4"
+    },
+    "shot3alt4": {
+      "file": "shot3alt4.wav",
+      "duration": 4.0,
+      "rms": 0.09893816448012097,
+      "peak": 1.0,
+      "bytes": 705724,
+      "sha256": "69a503614b48a1d8f8ea80a8afe191f7eaed494e1411b058a86e1fe991a8a753",
+      "sourceSha256": "69a503614b48a1d8f8ea80a8afe191f7eaed494e1411b058a86e1fe991a8a753"
+    },
+    "shot4alt1": {
+      "file": "shot4alt1.wav",
+      "duration": 4.0,
+      "rms": 0.07773832427410789,
+      "peak": 0.942840576171875,
+      "bytes": 705724,
+      "sha256": "f6eac4d2b08396e2a37365c22ec2dd7ad3e8f78d17d94179aef6b9e42c77d19c",
+      "sourceSha256": "f6eac4d2b08396e2a37365c22ec2dd7ad3e8f78d17d94179aef6b9e42c77d19c"
+    },
+    "shot4alt2": {
+      "file": "shot4alt2.wav",
+      "duration": 4.0,
+      "rms": 0.08148279420641362,
+      "peak": 0.94244384765625,
+      "bytes": 705724,
+      "sha256": "9e596e37bee777ebc0f35e95149625b7d2e300d36bb26d8b4d1afc10bea87972",
+      "sourceSha256": "9e596e37bee777ebc0f35e95149625b7d2e300d36bb26d8b4d1afc10bea87972"
+    },
+    "shot4alt3": {
+      "file": "shot4alt3.wav",
+      "duration": 4.0,
+      "rms": 0.08435682572046088,
+      "peak": 0.94232177734375,
+      "bytes": 705724,
+      "sha256": "062ed55247d7cb0d70c164629dcaa0cf832578db29bfd5b90ed8dec99756f78b",
+      "sourceSha256": "062ed55247d7cb0d70c164629dcaa0cf832578db29bfd5b90ed8dec99756f78b"
+    },
+    "shot4alt4": {
+      "file": "shot4alt4.wav",
+      "duration": 4.0,
+      "rms": 0.08107876376664584,
+      "peak": 0.942596435546875,
+      "bytes": 705724,
+      "sha256": "2b8d94309391ee1aecd822c7c74282c60152b566a76f41517a108e05d304c97c",
+      "sourceSha256": "2b8d94309391ee1aecd822c7c74282c60152b566a76f41517a108e05d304c97c"
+    },
+    "shot4alt5": {
+      "file": "shot4alt5.wav",
+      "duration": 4.0,
+      "rms": 0.08029185528579204,
+      "peak": 0.94281005859375,
+      "bytes": 705724,
+      "sha256": "f26cdd565669d2c427e5600ab2a683eca482cac5add56e13b06f6aec77d3f16d",
+      "sourceSha256": "f26cdd565669d2c427e5600ab2a683eca482cac5add56e13b06f6aec77d3f16d"
+    },
+    "skullaggro": {
+      "file": "skullaggro.wav",
+      "duration": 2.0,
+      "rms": 0.08619940392591219,
+      "peak": 0.454864501953125,
+      "bytes": 352924,
+      "sha256": "0a68bfeb55bf6a32385870f317f696c4e81eb4cefba9f5296a75ba195a17d1f9",
+      "sourceSha256": "0a68bfeb55bf6a32385870f317f696c4e81eb4cefba9f5296a75ba195a17d1f9"
+    },
+    "skullclop1": {
+      "file": "skullclop1.wav",
+      "duration": 2.0,
+      "rms": 0.026336429713417438,
+      "peak": 0.7576904296875,
+      "bytes": 352924,
+      "sha256": "7cd7e4c879944f0c67d10c08e00e946996be8aaa8caf81555de6a42ee19143f3",
+      "sourceSha256": "7cd7e4c879944f0c67d10c08e00e946996be8aaa8caf81555de6a42ee19143f3"
+    },
+    "skullclop2": {
+      "file": "skullclop2.wav",
+      "duration": 2.0,
+      "rms": 0.028895707301204065,
+      "peak": 0.838592529296875,
+      "bytes": 352924,
+      "sha256": "085e5e3a17369f5c03ef9ee15680a934428344ec653a2c097edceeb721dc5f83",
+      "sourceSha256": "085e5e3a17369f5c03ef9ee15680a934428344ec653a2c097edceeb721dc5f83"
+    },
+    "skullclop3": {
+      "file": "skullclop3.wav",
+      "duration": 2.0,
+      "rms": 0.03148122950488538,
+      "peak": 0.74383544921875,
+      "bytes": 352924,
+      "sha256": "037fb967afab75396da8509f5fd1fcc8f01098e6887fc89bac5a86a61ec2c63f",
+      "sourceSha256": "037fb967afab75396da8509f5fd1fcc8f01098e6887fc89bac5a86a61ec2c63f"
+    },
+    "skullclop4": {
+      "file": "skullclop4.wav",
+      "duration": 2.0,
+      "rms": 0.027594273551830775,
+      "peak": 0.651458740234375,
+      "bytes": 352924,
+      "sha256": "36cc8f24cd6f44d7e24d62b62315535ce85fb4015051530491cd929a2dfe06f7",
+      "sourceSha256": "36cc8f24cd6f44d7e24d62b62315535ce85fb4015051530491cd929a2dfe06f7"
+    },
+    "skullclop5": {
+      "file": "skullclop5.wav",
+      "duration": 2.0,
+      "rms": 0.029929984913767083,
+      "peak": 0.7852783203125,
+      "bytes": 352924,
+      "sha256": "40dc57cc06a3801f44639f9f67eb79ad22be39d7cb19a7df074e0c234f04b85e",
+      "sourceSha256": "40dc57cc06a3801f44639f9f67eb79ad22be39d7cb19a7df074e0c234f04b85e"
+    },
+    "skullclop6": {
+      "file": "skullclop6.wav",
+      "duration": 2.0,
+      "rms": 0.034876373222916125,
+      "peak": 0.739898681640625,
+      "bytes": 352924,
+      "sha256": "00040a246588a74c5b5e3e1f7c97ad8fc0933a4214b9fb0d1b975a4107a298c9",
+      "sourceSha256": "00040a246588a74c5b5e3e1f7c97ad8fc0933a4214b9fb0d1b975a4107a298c9"
+    },
+    "sorathstone": {
+      "file": "sorathstone.wav",
+      "duration": 291.42478458049885,
+      "rms": 0.1643212246685421,
+      "peak": 0.98004150390625,
+      "bytes": 51407456,
+      "sha256": "04c49ac78332c1786a2ff1b5499e1487fb8b9175262bd4d7410526a010f14ca1",
+      "sourceSha256": "04c49ac78332c1786a2ff1b5499e1487fb8b9175262bd4d7410526a010f14ca1"
+    },
+    "spawnandras": {
+      "file": "spawnandras.wav",
+      "duration": 8.57233560090703,
+      "rms": 0.15721508218120392,
+      "peak": 0.85296630859375,
+      "bytes": 1512284,
+      "sha256": "d6fc255e727c97de191c0915376b0facaee55b0f5870aa41152de1ed2ddeadd7",
+      "sourceSha256": "d6fc255e727c97de191c0915376b0facaee55b0f5870aa41152de1ed2ddeadd7"
+    },
+    "spawncentipede": {
+      "file": "spawncentipede.wav",
+      "duration": 7.0,
+      "rms": 0.21151071456778814,
+      "peak": 0.98004150390625,
+      "bytes": 1234924,
+      "sha256": "42ebfc9da2468a2a8683a84d092105c807a688593816caf5fd060c4c5b8db57f",
+      "sourceSha256": "42ebfc9da2468a2a8683a84d092105c807a688593816caf5fd060c4c5b8db57f"
+    },
+    "spawncentipede2": {
+      "file": "spawncentipede2.wav",
+      "duration": 10.58265306122449,
+      "rms": 0.3913190073675524,
+      "peak": 0.980072021484375,
+      "bytes": 1866904,
+      "sha256": "8a698d71f5a5b64a924cc329adc6289e5a28057d759a208f0a071d0ca414df50",
+      "sourceSha256": "8a698d71f5a5b64a924cc329adc6289e5a28057d759a208f0a071d0ca414df50"
+    },
+    "spawnegg": {
+      "file": "spawnegg.wav",
+      "duration": 1.9333560090702948,
+      "rms": 0.12818655775347026,
+      "peak": 0.980010986328125,
+      "bytes": 341168,
+      "sha256": "3b4ecfa38854b014e7f317d10ddc2dc2f3d103b9a2aa9d58f47bf9c35c1e9ed8",
+      "sourceSha256": "3b4ecfa38854b014e7f317d10ddc2dc2f3d103b9a2aa9d58f47bf9c35c1e9ed8"
+    },
+    "spawngigaspider": {
+      "file": "spawngigaspider.wav",
+      "duration": 16.0,
+      "rms": 0.1894626429425336,
+      "peak": 0.89288330078125,
+      "bytes": 2822524,
+      "sha256": "6a2cf3f1ad5acdf598c902635fbebd21aa9d5ca066177d567d5f81618ffc1a5c",
+      "sourceSha256": "6a2cf3f1ad5acdf598c902635fbebd21aa9d5ca066177d567d5f81618ffc1a5c"
+    },
+    "spawnleviathan": {
+      "file": "spawnleviathan.wav",
+      "duration": 20.70034013605442,
+      "rms": 0.2700356031501751,
+      "peak": 0.98004150390625,
+      "bytes": 3655706,
+      "sha256": "7d091979d2ed0db34133d4434f96fa999d961f548d6c97a0073f5f86d7a365ab",
+      "sourceSha256": "7d091979d2ed0db34133d4434f96fa999d961f548d6c97a0073f5f86d7a365ab"
+    },
+    "spawnminisquid": {
+      "file": "spawnminisquid.wav",
+      "duration": 6.0,
+      "rms": 0.08614534555399388,
+      "peak": 0.56640625,
+      "bytes": 1058524,
+      "sha256": "7d266dd779fad9d19db044ab56e21778820b3cafde16d339c76eac802b530b7d",
+      "sourceSha256": "7d266dd779fad9d19db044ab56e21778820b3cafde16d339c76eac802b530b7d"
+    },
+    "spawnplayer": {
+      "file": "spawnplayer.wav",
+      "duration": 4.33,
+      "rms": 0.23264097784980828,
+      "peak": 0.98004150390625,
+      "bytes": 764548,
+      "sha256": "528ca958fe288b955a2de99fc93c5b0d69b690fdf9491a5dbe4f6af7cae3c5f0",
+      "sourceSha256": "528ca958fe288b955a2de99fc93c5b0d69b690fdf9491a5dbe4f6af7cae3c5f0"
+    },
+    "spawnskulls": {
+      "file": "spawnskulls.wav",
+      "duration": 5.217392290249433,
+      "rms": 0.13365391583335265,
+      "peak": 0.885284423828125,
+      "bytes": 920472,
+      "sha256": "03e25c2aa8b2c2f42213f09241814605ea4f3139a708acfda53734f0b98bf758",
+      "sourceSha256": "03e25c2aa8b2c2f42213f09241814605ea4f3139a708acfda53734f0b98bf758"
+    },
+    "spawnskulls2": {
+      "file": "spawnskulls2.wav",
+      "duration": 4.75,
+      "rms": 0.1392152713583011,
+      "peak": 0.890411376953125,
+      "bytes": 838024,
+      "sha256": "182dede25b9e273c1051754c134320b793fd4f43ccbfac47ea4ab5c3ba9a09e8",
+      "sourceSha256": "182dede25b9e273c1051754c134320b793fd4f43ccbfac47ea4ab5c3ba9a09e8"
+    },
+    "spawnskulls3": {
+      "file": "spawnskulls3.wav",
+      "duration": 3.3080272108843536,
+      "rms": 0.10558790584505572,
+      "peak": 0.98004150390625,
+      "bytes": 583660,
+      "sha256": "fed5846a940e2765362996a5ee796d9422ff474583009f3fb421dbdbe7568047",
+      "sourceSha256": "fed5846a940e2765362996a5ee796d9422ff474583009f3fb421dbdbe7568047"
+    },
+    "spawnspider": {
+      "file": "spawnspider.wav",
+      "duration": 14.22607709750567,
+      "rms": 0.06621896810014394,
+      "peak": 0.98004150390625,
+      "bytes": 2509604,
+      "sha256": "9e6990a0a765446352b3e89a8501577264b08fa171ea0bab95eda591c2b01226",
+      "sourceSha256": "9e6990a0a765446352b3e89a8501577264b08fa171ea0bab95eda591c2b01226"
+    },
+    "spawnsquid": {
+      "file": "spawnsquid.wav",
+      "duration": 10.0,
+      "rms": 0.08897410683764345,
+      "peak": 0.587860107421875,
+      "bytes": 1764124,
+      "sha256": "62a1d4877fe011c88cdbbab7a5bc959989be6cc8556b18f41bf8c3cad9e23c22",
+      "sourceSha256": "62a1d4877fe011c88cdbbab7a5bc959989be6cc8556b18f41bf8c3cad9e23c22"
+    },
+    "spawnultrapede": {
+      "file": "spawnultrapede.wav",
+      "duration": 12.190249433106576,
+      "rms": 0.16950997046391944,
+      "peak": 0.980010986328125,
+      "bytes": 2150484,
+      "sha256": "0e6168e61da53be372004c95d152027364b69682af495fa1e7d39ff00f9c0cab",
+      "sourceSha256": "0e6168e61da53be372004c95d152027364b69682af495fa1e7d39ff00f9c0cab"
+    },
+    "spawnultrasquid": {
+      "file": "spawnultrasquid.wav",
+      "duration": 10.12501133786848,
+      "rms": 0.13739499593044208,
+      "peak": 0.980010986328125,
+      "bytes": 1786176,
+      "sha256": "907d9de1706d1028f5ca2c6c0f75b8dc84fb33a8b1046266222855bc7badd99d",
+      "sourceSha256": "907d9de1706d1028f5ca2c6c0f75b8dc84fb33a8b1046266222855bc7badd99d"
+    },
+    "spidereat1": {
+      "file": "spidereat1.wav",
+      "duration": 2.0,
+      "rms": 0.02769035500887409,
+      "peak": 0.98004150390625,
+      "bytes": 352924,
+      "sha256": "ed6386b849339bb5809ce6b684d50802e9a6a1000081899777ae031a259c23e8",
+      "sourceSha256": "ed6386b849339bb5809ce6b684d50802e9a6a1000081899777ae031a259c23e8"
+    },
+    "spidereat2": {
+      "file": "spidereat2.wav",
+      "duration": 2.0,
+      "rms": 0.033747270971388736,
+      "peak": 0.980010986328125,
+      "bytes": 352924,
+      "sha256": "c3685c1568fef7cb692f3dedc50505bb173d2b4a2c2e80fa87ecd547bbbe5cd3",
+      "sourceSha256": "c3685c1568fef7cb692f3dedc50505bb173d2b4a2c2e80fa87ecd547bbbe5cd3"
+    },
+    "spidereat3": {
+      "file": "spidereat3.wav",
+      "duration": 2.0,
+      "rms": 0.03103196743869726,
+      "peak": 0.980010986328125,
+      "bytes": 352924,
+      "sha256": "8c8f1342b61d41faf39d41fb00c1627b7dbebb78415030b6f81fc2251528551f",
+      "sourceSha256": "8c8f1342b61d41faf39d41fb00c1627b7dbebb78415030b6f81fc2251528551f"
+    },
+    "spidereat4": {
+      "file": "spidereat4.wav",
+      "duration": 2.0,
+      "rms": 0.03992912257650548,
+      "peak": 0.98004150390625,
+      "bytes": 352924,
+      "sha256": "b23514533a6f3c04418d76000f9a672fbcf7f4c0ec859c20067bbb563731b2ac",
+      "sourceSha256": "b23514533a6f3c04418d76000f9a672fbcf7f4c0ec859c20067bbb563731b2ac"
+    },
+    "spidereat5": {
+      "file": "spidereat5.wav",
+      "duration": 2.0,
+      "rms": 0.03114518619987847,
+      "peak": 0.980010986328125,
+      "bytes": 352924,
+      "sha256": "e94788c2c28e738d120b611e14eefae822a66eccddad8b085f5dfbbb4f63996e",
+      "sourceSha256": "e94788c2c28e738d120b611e14eefae822a66eccddad8b085f5dfbbb4f63996e"
+    },
+    "spidereat6": {
+      "file": "spidereat6.wav",
+      "duration": 2.0,
+      "rms": 0.042595386480155095,
+      "peak": 0.980010986328125,
+      "bytes": 352924,
+      "sha256": "c0d1cf2136cdc6e2837b71b9c7a0f86059923715436f22d7113a4e5270a95e73",
+      "sourceSha256": "c0d1cf2136cdc6e2837b71b9c7a0f86059923715436f22d7113a4e5270a95e73"
+    },
+    "splashgiga": {
+      "file": "splashgiga.wav",
+      "duration": 5.9478231292517005,
+      "rms": 0.17741975425786125,
+      "peak": 1.0,
+      "bytes": 1049320,
+      "sha256": "eba995b2a36ad4cbd97dd6d8451ca3d61d121a5335bf3a0761da33e6b3f7fc41",
+      "sourceSha256": "eba995b2a36ad4cbd97dd6d8451ca3d61d121a5335bf3a0761da33e6b3f7fc41"
+    },
+    "splashgiga2": {
+      "file": "splashgiga2.wav",
+      "duration": 5.460861678004536,
+      "rms": 0.12274446731449053,
+      "peak": 0.98004150390625,
+      "bytes": 963420,
+      "sha256": "b88c7655b4515f8822cce3ecd652abd80492a057dfcd0de222489df6366d816d",
+      "sourceSha256": "b88c7655b4515f8822cce3ecd652abd80492a057dfcd0de222489df6366d816d"
+    },
+    "splashgiga3": {
+      "file": "splashgiga3.wav",
+      "duration": 5.356530612244898,
+      "rms": 0.1057956685349597,
+      "peak": 0.98004150390625,
+      "bytes": 945016,
+      "sha256": "46bc6a4bd90a5c2a559d5a2de37648ed310f732c21931d3ac87b72a77e501fd8",
+      "sourceSha256": "46bc6a4bd90a5c2a559d5a2de37648ed310f732c21931d3ac87b72a77e501fd8"
+    },
+    "splashgiga4": {
+      "file": "splashgiga4.wav",
+      "duration": 8.452358276643992,
+      "rms": 0.13395511752649472,
+      "peak": 0.919342041015625,
+      "bytes": 1491120,
+      "sha256": "3c4bfc854410e95f4ad9e3d52bb7734394800e82df46388dbe91768052a6f0c3",
+      "sourceSha256": "3c4bfc854410e95f4ad9e3d52bb7734394800e82df46388dbe91768052a6f0c3"
+    },
+    "splashgiga5": {
+      "file": "splashgiga5.wav",
+      "duration": 6.052154195011338,
+      "rms": 0.16623040113802026,
+      "peak": 0.98004150390625,
+      "bytes": 1067724,
+      "sha256": "5b1a55cffc2a105484e17a978b9373fd37a573be65eb76d0bd1e0e94faaf0e77",
+      "sourceSha256": "5b1a55cffc2a105484e17a978b9373fd37a573be65eb76d0bd1e0e94faaf0e77"
+    },
+    "splashgiga6": {
+      "file": "splashgiga6.wav",
+      "duration": 6.382585034013606,
+      "rms": 0.14059923856478068,
+      "peak": 0.98004150390625,
+      "bytes": 1126012,
+      "sha256": "0a85342e9610432e5c1b3f9405f292da6887376cc6fbceba5a04406747bd84f9",
+      "sourceSha256": "0a85342e9610432e5c1b3f9405f292da6887376cc6fbceba5a04406747bd84f9"
+    },
+    "stealgib": {
+      "file": "stealgib.wav",
+      "duration": 27.0,
+      "rms": 0.25279581718421384,
+      "peak": 0.980010986328125,
+      "bytes": 4762924,
+      "sha256": "8a31b163aa9fde7f3a3e792e9f90a0862b1f3d5da87b393537eacb7d71511040",
+      "sourceSha256": "8a31b163aa9fde7f3a3e792e9f90a0862b1f3d5da87b393537eacb7d71511040"
+    },
+    "stealgib2": {
+      "file": "stealgib2.wav",
+      "duration": 27.0,
+      "rms": 0.23154282070854754,
+      "peak": 0.98004150390625,
+      "bytes": 4762924,
+      "sha256": "a0b76408545729af10b9c6dd91f7f99548b13e85f3ecec629f9f56f467403e61",
+      "sourceSha256": "a0b76408545729af10b9c6dd91f7f99548b13e85f3ecec629f9f56f467403e61"
+    },
+    "subchattercentipede": {
+      "file": "subchattercentipede.wav",
+      "duration": 16.0,
+      "rms": 0.29282175264783006,
+      "peak": 0.980072021484375,
+      "bytes": 2822524,
+      "sha256": "e78a8284c1eebf77220fd44853f92aca98108ca4b55bb03c3c1531e0ca920420",
+      "sourceSha256": "e78a8284c1eebf77220fd44853f92aca98108ca4b55bb03c3c1531e0ca920420"
+    },
+    "thornemerge": {
+      "file": "thornemerge.wav",
+      "duration": 6.1250113378684805,
+      "rms": 0.2366655215022023,
+      "peak": 0.91534423828125,
+      "bytes": 1080576,
+      "sha256": "8c2039e9eea9438a0363f2f11e6c5280bceaf49bf97bbdeba887d2de20e0aec4",
+      "sourceSha256": "8c2039e9eea9438a0363f2f11e6c5280bceaf49bf97bbdeba887d2de20e0aec4"
+    },
+    "thorngib1": {
+      "file": "thorngib1.wav",
+      "duration": 1.5,
+      "rms": 0.052929173150876536,
+      "peak": 0.980010986328125,
+      "bytes": 264724,
+      "sha256": "2c4908770eddf67bc8280aba31545c8cfc831210d291f8f2ae9ff107eb678bf1",
+      "sourceSha256": "2c4908770eddf67bc8280aba31545c8cfc831210d291f8f2ae9ff107eb678bf1"
+    },
+    "thorngib2": {
+      "file": "thorngib2.wav",
+      "duration": 1.0,
+      "rms": 0.05426963443164942,
+      "peak": 0.980010986328125,
+      "bytes": 176524,
+      "sha256": "9799478754d758d4b8d625dafcb3c1e8b6395946c34d93101de29702c93a3699",
+      "sourceSha256": "9799478754d758d4b8d625dafcb3c1e8b6395946c34d93101de29702c93a3699"
+    },
+    "thorngib3": {
+      "file": "thorngib3.wav",
+      "duration": 1.5,
+      "rms": 0.06507511910779659,
+      "peak": 0.98004150390625,
+      "bytes": 264724,
+      "sha256": "8d441d732800488b95ddbdc528ce7b1bd4edd8eefb03c216c5b92a5a75360bc5",
+      "sourceSha256": "8d441d732800488b95ddbdc528ce7b1bd4edd8eefb03c216c5b92a5a75360bc5"
+    },
+    "thorngib4": {
+      "file": "thorngib4.wav",
+      "duration": 1.5,
+      "rms": 0.07974738687743689,
+      "peak": 0.98004150390625,
+      "bytes": 264724,
+      "sha256": "a66ba27510127f21e658725dd637a0164222628059e66fff1bc83f9672f8c697",
+      "sourceSha256": "a66ba27510127f21e658725dd637a0164222628059e66fff1bc83f9672f8c697"
+    },
+    "thorngib5": {
+      "file": "thorngib5.wav",
+      "duration": 1.25,
+      "rms": 0.057354959360648286,
+      "peak": 0.98004150390625,
+      "bytes": 220624,
+      "sha256": "72158e36069162eb71cf59868f31dc81619c4b4b5d234d1ec9331e0a5154ab48",
+      "sourceSha256": "72158e36069162eb71cf59868f31dc81619c4b4b5d234d1ec9331e0a5154ab48"
+    },
+    "thorngib6": {
+      "file": "thorngib6.wav",
+      "duration": 1.25,
+      "rms": 0.06261298226335733,
+      "peak": 0.98004150390625,
+      "bytes": 220624,
+      "sha256": "95f83c663dac7ac5668b9c2606a9d59cf9390519a64918fd6c33c4cdb95288f2",
+      "sourceSha256": "95f83c663dac7ac5668b9c2606a9d59cf9390519a64918fd6c33c4cdb95288f2"
+    },
+    "uiclick": {
+      "file": "uiclick.wav",
+      "duration": 0.38258503401360544,
+      "rms": 0.01037903810149702,
+      "peak": 0.2724609375,
+      "bytes": 67612,
+      "sha256": "7a5e42e603f127de0ff9bf5f965346689d30331fcef4a85f190b5c49c109c5e8",
+      "sourceSha256": "7a5e42e603f127de0ff9bf5f965346689d30331fcef4a85f190b5c49c109c5e8"
+    },
+    "uihover": {
+      "file": "uihover.wav",
+      "duration": 0.13040816326530613,
+      "rms": 0.010146266991326435,
+      "peak": 0.079345703125,
+      "bytes": 23128,
+      "sha256": "d4646816d7d75ffa897300d01f1867d159dbf3b0f076f2ef361a6dc2d6ed3e55",
+      "sourceSha256": "d4646816d7d75ffa897300d01f1867d159dbf3b0f076f2ef361a6dc2d6ed3e55"
+    },
+    "uislider": {
+      "file": "uislider.wav",
+      "duration": 0.12501133786848073,
+      "rms": 0.08246155458809938,
+      "peak": 0.930511474609375,
+      "bytes": 22176,
+      "sha256": "20b821efee3e2841eb2596dd1419128d9590d6e75bfa6a2c734df2be4b8c3c01",
+      "sourceSha256": "20b821efee3e2841eb2596dd1419128d9590d6e75bfa6a2c734df2be4b8c3c01"
+    },
+    "ultrapedecrash": {
+      "file": "ultrapedecrash.wav",
+      "duration": 5.75,
+      "rms": 0.25268561528822875,
+      "peak": 0.94488525390625,
+      "bytes": 1014424,
+      "sha256": "018a51d045b909a4106d3afd1922a5ce763f78e4c2c7a00fa99161618f4edfd0",
+      "sourceSha256": "018a51d045b909a4106d3afd1922a5ce763f78e4c2c7a00fa99161618f4edfd0"
+    },
+    "ultrapedeeat": {
+      "file": "ultrapedeeat.wav",
+      "duration": 1.8945124716553288,
+      "rms": 0.1385865612559956,
+      "peak": 0.980010986328125,
+      "bytes": 334316,
+      "sha256": "54047997d3a21227eda36c4784abbca6b88d1150570e96cfb402a3eca0bf8895",
+      "sourceSha256": "54047997d3a21227eda36c4784abbca6b88d1150570e96cfb402a3eca0bf8895"
+    },
+    "ultrapedefall": {
+      "file": "ultrapedefall.wav",
+      "duration": 4.8750113378684805,
+      "rms": 0.18104913835728037,
+      "peak": 0.98004150390625,
+      "bytes": 860076,
+      "sha256": "67c625b3a60148f05d5adcf39ab12ebbcf6edb3d3897a8cc00f1f06a21bc8c0d",
+      "sourceSha256": "67c625b3a60148f05d5adcf39ab12ebbcf6edb3d3897a8cc00f1f06a21bc8c0d"
+    },
+    "unburrowcentipede": {
+      "file": "unburrowcentipede.wav",
+      "duration": 7.0,
+      "rms": 0.14539991066988583,
+      "peak": 0.98004150390625,
+      "bytes": 1234924,
+      "sha256": "69b0b667885086bb69e9c5585e359ecd4f5726b5ee95c60e7b0a6aed02a5611a",
+      "sourceSha256": "69b0b667885086bb69e9c5585e359ecd4f5726b5ee95c60e7b0a6aed02a5611a"
+    },
+    "sorathlogo": {
+      "file": "sorathlogo.wav",
+      "duration": 10.017392290249433,
+      "rms": 0.13210086657433925,
+      "peak": 0.980010986328125,
+      "bytes": 1767192,
+      "sha256": "e7bcd4fa27531e8fd738d538ddf036c6317be9dfaba3fe889c55e51fac259a49",
+      "sourceSha256": "e7bcd4fa27531e8fd738d538ddf036c6317be9dfaba3fe889c55e51fac259a49"
+    },
+    "sorathlogo2": {
+      "file": "sorathlogo2.wav",
+      "duration": 10.017392290249433,
+      "rms": 0.14139490149378706,
+      "peak": 0.978759765625,
+      "bytes": 1767192,
+      "sha256": "d236cb31b30e753aa258837f4620fa2a29fc1c6058b048305941e8f54cd7ac98",
+      "sourceSha256": "d236cb31b30e753aa258837f4620fa2a29fc1c6058b048305941e8f54cd7ac98"
+    },
+    "daggercall5": {
+      "file": "daggercall5.wav",
+      "duration": 44.75,
+      "rms": 0.2950962731377085,
+      "peak": 0.920318603515625,
+      "bytes": 7894024,
+      "sha256": "1af293862206133599df69139e6ff4d167d374a524247fecd07a926cb81885fc",
+      "sourceSha256": "1af293862206133599df69139e6ff4d167d374a524247fecd07a926cb81885fc"
+    },
+    "daggercollect5": {
+      "file": "daggercollect5.wav",
+      "duration": 16.32888888888889,
+      "rms": 0.18871932023051635,
+      "peak": 0.9317626953125,
+      "bytes": 2880540,
+      "sha256": "97e7ddf6be94ae6f6b0ff5101053e8317c5c6cedd0d3bd221b5db37546fb7d1e",
+      "sourceSha256": "97e7ddf6be94ae6f6b0ff5101053e8317c5c6cedd0d3bd221b5db37546fb7d1e"
+    }
+  },
+  "cues": {
+    "andrasimpact": {
+      "file": "andrasimpact.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5825850340136056,
+      "role": "effect",
+      "original": "andrasimpact",
+      "nativeLoudness": null
+    },
+    "andrasrise": {
+      "file": "andrasrise.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.0660544217687073,
+      "role": "effect",
+      "original": "andrasrise",
+      "nativeLoudness": null
+    },
+    "burrowcentipede": {
+      "file": "burrowcentipede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.7825850340136054,
+      "role": "effect",
+      "original": "burrowcentipede",
+      "nativeLoudness": 10.0
+    },
+    "chatterandras": {
+      "file": "chatterandras.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "chatterandras",
+      "nativeLoudness": 10.0
+    },
+    "chattercentipede": {
+      "file": "chattercentipede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 20.0,
+      "role": "enemy-chatter",
+      "original": "chattercentipede",
+      "nativeLoudness": 5.0
+    },
+    "chattercentipede2": {
+      "file": "chattercentipede2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 20.0,
+      "role": "enemy-chatter",
+      "original": "chattercentipede2",
+      "nativeLoudness": 10.0
+    },
+    "chattergigaspider": {
+      "file": "chattergigaspider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "chattergigaspider",
+      "nativeLoudness": 20.0
+    },
+    "chatterleviathan": {
+      "file": "chatterleviathan.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "chatterleviathan",
+      "nativeLoudness": 50.0
+    },
+    "chatterminisquid": {
+      "file": "chatterminisquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 28.0,
+      "role": "enemy-chatter",
+      "original": "chatterminisquid",
+      "nativeLoudness": 10.0
+    },
+    "chatterskull": {
+      "file": "chatterskull.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "chatterskull",
+      "nativeLoudness": 2.0
+    },
+    "chatterskull2": {
+      "file": "chatterskull2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "chatterskull2",
+      "nativeLoudness": 5.0
+    },
+    "chatterskull2black": {
+      "file": "chatterskull2black.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 32.0,
+      "role": "enemy-chatter",
+      "original": "chatterskull2black",
+      "nativeLoudness": 10.0
+    },
+    "chatterskull3": {
+      "file": "chatterskull3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 10.0,
+      "role": "enemy-chatter",
+      "original": "chatterskull3",
+      "nativeLoudness": 25.0
+    },
+    "chatterskull3black": {
+      "file": "chatterskull3black.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 28.13485260770975,
+      "role": "enemy-chatter",
+      "original": "chatterskull3black",
+      "nativeLoudness": 20.0
+    },
+    "chatterskull4": {
+      "file": "chatterskull4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 32.0,
+      "role": "enemy-chatter",
+      "original": "chatterskull4",
+      "nativeLoudness": 25.0
+    },
+    "chatterskull4black": {
+      "file": "chatterskull4black.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "chatterskull4black",
+      "nativeLoudness": 30.0
+    },
+    "chatterskullblack": {
+      "file": "chatterskullblack.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 15.5,
+      "role": "enemy-chatter",
+      "original": "chatterskullblack",
+      "nativeLoudness": 5.0
+    },
+    "chatterspider": {
+      "file": "chatterspider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 19.0,
+      "role": "enemy-chatter",
+      "original": "chatterspider",
+      "nativeLoudness": 10.0
+    },
+    "chatterspiderling": {
+      "file": "chatterspiderling.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 14.845374149659865,
+      "role": "enemy-chatter",
+      "original": "chatterspiderling",
+      "nativeLoudness": 4.0
+    },
+    "chattersquid": {
+      "file": "chattersquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 27.965238095238096,
+      "role": "enemy-chatter",
+      "original": "chattersquid",
+      "nativeLoudness": 10.0
+    },
+    "chattersquidsmall": {
+      "file": "chattersquidsmall.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 26.0,
+      "role": "enemy-chatter",
+      "original": "chattersquidsmall",
+      "nativeLoudness": null
+    },
+    "chattersquidultra": {
+      "file": "chattersquidultra.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "chattersquidultra",
+      "nativeLoudness": 15.0
+    },
+    "chatterthorn": {
+      "file": "chatterthorn.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 8.0,
+      "role": "enemy-chatter",
+      "original": "chatterthorn",
+      "nativeLoudness": 10.0
+    },
+    "chatterultrapede": {
+      "file": "chatterultrapede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 14.5,
+      "role": "enemy-chatter",
+      "original": "chatterultrapede",
+      "nativeLoudness": 25.0
+    },
+    "collectgib1": {
+      "file": "collectgib1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.3750113378684807,
+      "role": "pickup",
+      "original": "collectgib1",
+      "nativeLoudness": 1.0
+    },
+    "collectgib2": {
+      "file": "collectgib2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.75,
+      "role": "pickup",
+      "original": "collectgib2",
+      "nativeLoudness": 1.0
+    },
+    "collectgib3": {
+      "file": "collectgib3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.5714285714285714,
+      "role": "pickup",
+      "original": "collectgib3",
+      "nativeLoudness": 1.0
+    },
+    "collectgibbase1": {
+      "file": "collectgibbase1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "pickup",
+      "original": "collectgibbase1",
+      "nativeLoudness": 1.0
+    },
+    "collectgibbase2": {
+      "file": "collectgibbase2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "pickup",
+      "original": "collectgibbase2",
+      "nativeLoudness": 1.0
+    },
+    "collectgibbase3": {
+      "file": "collectgibbase3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "pickup",
+      "original": "collectgibbase3",
+      "nativeLoudness": 1.0
+    },
+    "daggercall": {
+      "file": "daggercall.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 96.03920634920635,
+      "role": "entrance-call",
+      "original": "daggercall",
+      "nativeLoudness": 1.0
+    },
+    "daggercall1bronze": {
+      "file": "daggercall1bronze.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 31.5,
+      "role": "entrance-call",
+      "original": "daggercall1bronze",
+      "nativeLoudness": 1.0
+    },
+    "daggercall2silver": {
+      "file": "daggercall2silver.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 31.5,
+      "role": "entrance-call",
+      "original": "daggercall2silver",
+      "nativeLoudness": 1.0
+    },
+    "daggercall3gold": {
+      "file": "daggercall3gold.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 31.5,
+      "role": "entrance-call",
+      "original": "daggercall3gold",
+      "nativeLoudness": 1.0
+    },
+    "daggercall4devil": {
+      "file": "daggercall4devil.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 31.5,
+      "role": "entrance-call",
+      "original": "daggercall4devil",
+      "nativeLoudness": 1.0
+    },
+    "daggercollect": {
+      "file": "daggercollect.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "entrance-pickup",
+      "original": "daggercollect",
+      "nativeLoudness": 0.2
+    },
+    "daggercollect1bronze": {
+      "file": "daggercollect1bronze.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.916167800453515,
+      "role": "entrance-pickup",
+      "original": "daggercollect1bronze",
+      "nativeLoudness": 1000.0
+    },
+    "daggercollect2silver": {
+      "file": "daggercollect2silver.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.916167800453515,
+      "role": "entrance-pickup",
+      "original": "daggercollect2silver",
+      "nativeLoudness": 1000.0
+    },
+    "daggercollect3gold": {
+      "file": "daggercollect3gold.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.916167800453515,
+      "role": "entrance-pickup",
+      "original": "daggercollect3gold",
+      "nativeLoudness": 1000.0
+    },
+    "daggercollect4devil": {
+      "file": "daggercollect4devil.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 31.831972789115646,
+      "role": "entrance-pickup",
+      "original": "daggercollect4devil",
+      "nativeLoudness": 1000.0
+    },
+    "daggerdivert": {
+      "file": "daggerdivert.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 20.0,
+      "role": "effect",
+      "original": "daggerdivert",
+      "nativeLoudness": null
+    },
+    "daggerdrone": {
+      "file": "daggerdrone.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 8.02498866213152,
+      "role": "homing-flight",
+      "original": "daggerdrone",
+      "nativeLoudness": 3.0
+    },
+    "daggerhit1": {
+      "file": "daggerhit1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.5,
+      "role": "effect",
+      "original": "daggerhit1",
+      "nativeLoudness": 1.4
+    },
+    "daggerseek": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "homing-launch",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "daggersteal1": {
+      "file": "daggersteal1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.3443083900226758,
+      "role": "effect",
+      "original": "daggersteal1",
+      "nativeLoudness": 8.0
+    },
+    "daggersteal2": {
+      "file": "daggersteal2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.110294784580499,
+      "role": "effect",
+      "original": "daggersteal2",
+      "nativeLoudness": 8.0
+    },
+    "daggersteal3": {
+      "file": "daggersteal3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.110294784580499,
+      "role": "effect",
+      "original": "daggersteal3",
+      "nativeLoudness": 8.0
+    },
+    "daggersteal4": {
+      "file": "daggersteal4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.110294784580499,
+      "role": "effect",
+      "original": "daggersteal4",
+      "nativeLoudness": 8.0
+    },
+    "daggersteal5": {
+      "file": "daggersteal5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.110294784580499,
+      "role": "effect",
+      "original": "daggersteal5",
+      "nativeLoudness": 8.0
+    },
+    "damageandras": {
+      "file": "damageandras.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.3130385487528344,
+      "role": "enemy-damage",
+      "original": "damageandras",
+      "nativeLoudness": 10.0
+    },
+    "damagecentipede": {
+      "file": "damagecentipede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.503469387755102,
+      "role": "enemy-damage",
+      "original": "damagecentipede",
+      "nativeLoudness": 10.0
+    },
+    "damagecentipede2": {
+      "file": "damagecentipede2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.146235827664399,
+      "role": "enemy-damage",
+      "original": "damagecentipede2",
+      "nativeLoudness": 10.0
+    },
+    "damagegigaspider": {
+      "file": "damagegigaspider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.7605215419501135,
+      "role": "enemy-damage",
+      "original": "damagegigaspider",
+      "nativeLoudness": 10.0
+    },
+    "damageleviathan": {
+      "file": "damageleviathan.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.313038548752835,
+      "role": "enemy-damage",
+      "original": "damageleviathan",
+      "nativeLoudness": 66.6
+    },
+    "damagespider": {
+      "file": "damagespider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.446575963718821,
+      "role": "enemy-damage",
+      "original": "damagespider",
+      "nativeLoudness": 10.0
+    },
+    "damagesquid": {
+      "file": "damagesquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.9882993197278913,
+      "role": "enemy-damage",
+      "original": "damagesquid",
+      "nativeLoudness": 10.0
+    },
+    "damagesquid2": {
+      "file": "damagesquid2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.9882993197278913,
+      "role": "enemy-damage",
+      "original": "damagesquid2",
+      "nativeLoudness": 25.0
+    },
+    "damagesquid3": {
+      "file": "damagesquid3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.164784580498866,
+      "role": "enemy-damage",
+      "original": "damagesquid3",
+      "nativeLoudness": 30.0
+    },
+    "damagesquid4": {
+      "file": "damagesquid4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.164784580498866,
+      "role": "enemy-damage",
+      "original": "damagesquid4",
+      "nativeLoudness": 35.0
+    },
+    "damagethorn": {
+      "file": "damagethorn.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.028843537414966,
+      "role": "enemy-damage",
+      "original": "damagethorn",
+      "nativeLoudness": 5.0
+    },
+    "damageultrapede": {
+      "file": "damageultrapede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.7402721088435373,
+      "role": "enemy-damage",
+      "original": "damageultrapede",
+      "nativeLoudness": 50.0
+    },
+    "death": {
+      "file": "death.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.75,
+      "role": "player-death",
+      "original": "death",
+      "nativeLoudness": 99.0
+    },
+    "eggbounce": {
+      "file": "eggbounce.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.23478458049886622,
+      "role": "effect",
+      "original": "eggbounce",
+      "nativeLoudness": 30.0
+    },
+    "eggburst": {
+      "file": "eggburst.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "eggburst",
+      "nativeLoudness": 50.0
+    },
+    "eggburst2": {
+      "file": "eggburst2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5654421768707483,
+      "role": "effect",
+      "original": "eggburst2",
+      "nativeLoudness": null
+    },
+    "eggdrone": {
+      "file": "eggdrone.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 8.0,
+      "role": "enemy-chatter",
+      "original": "eggdrone",
+      "nativeLoudness": 1.0
+    },
+    "eggdrone2": {
+      "file": "eggdrone2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "eggdrone2",
+      "nativeLoudness": 2.0
+    },
+    "eyearouse": {
+      "file": "eyearouse.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.9740589569161,
+      "role": "effect",
+      "original": "eyearouse",
+      "nativeLoudness": 40.0
+    },
+    "eyearousedrone": {
+      "file": "eyearousedrone.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 15.0,
+      "role": "enemy-chatter",
+      "original": "eyearousedrone",
+      "nativeLoudness": 98.0
+    },
+    "eyehit": {
+      "file": "eyehit.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.880068027210885,
+      "role": "enemy-damage",
+      "original": "eyehit",
+      "nativeLoudness": 3.0
+    },
+    "eyepacifydrone": {
+      "file": "eyepacifydrone.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 8.0,
+      "role": "effect",
+      "original": "eyepacifydrone",
+      "nativeLoudness": 2.0
+    },
+    "fall": {
+      "file": "fall.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 12.12172335600907,
+      "role": "player-death",
+      "original": "fall",
+      "nativeLoudness": 100.0
+    },
+    "gibcollect": {
+      "file": "gibcollect.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "pickup",
+      "original": "gibcollect",
+      "nativeLoudness": null
+    },
+    "gibcollectmagic": {
+      "file": "gibcollectmagic.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.240907029478458,
+      "role": "pickup",
+      "original": "gibcollectmagic",
+      "nativeLoudness": null
+    },
+    "gibdrone1": {
+      "file": "gibdrone1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 24.0,
+      "role": "gem-chatter",
+      "original": "gibdrone1",
+      "nativeLoudness": 1.0
+    },
+    "gibdrone2": {
+      "file": "gibdrone2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 24.0,
+      "role": "gem-chatter",
+      "original": "gibdrone2",
+      "nativeLoudness": 1.0
+    },
+    "gibdrone3": {
+      "file": "gibdrone3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 24.0,
+      "role": "gem-chatter",
+      "original": "gibdrone3",
+      "nativeLoudness": 1.0
+    },
+    "gigaricochet1": {
+      "file": "gigaricochet1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "gigaricochet1",
+      "nativeLoudness": 1.0
+    },
+    "gigaricochet2": {
+      "file": "gigaricochet2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "gigaricochet2",
+      "nativeLoudness": 1.0
+    },
+    "gigaricochet3": {
+      "file": "gigaricochet3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "gigaricochet3",
+      "nativeLoudness": 1.0
+    },
+    "gigaricochet4": {
+      "file": "gigaricochet4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "gigaricochet4",
+      "nativeLoudness": 1.0
+    },
+    "gigaricochet5": {
+      "file": "gigaricochet5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "gigaricochet5",
+      "nativeLoudness": 1.0
+    },
+    "highscore1": {
+      "file": "highscore1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.021814058956916,
+      "role": "effect",
+      "original": "highscore1",
+      "nativeLoudness": 2.0
+    },
+    "highscore2": {
+      "file": "highscore2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 20.0,
+      "role": "effect",
+      "original": "highscore2",
+      "nativeLoudness": 2.0
+    },
+    "jump1": {
+      "file": "jump1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.082562358276644,
+      "role": "movement",
+      "original": "jump1",
+      "nativeLoudness": 1.0
+    },
+    "jump2": {
+      "file": "jump2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.2629931972789115,
+      "role": "movement",
+      "original": "jump2",
+      "nativeLoudness": 1.0
+    },
+    "jump3": {
+      "file": "jump3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.7366439909297051,
+      "role": "movement",
+      "original": "jump3",
+      "nativeLoudness": 1.0
+    },
+    "killandras": {
+      "file": "killandras.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.3750113378684805,
+      "role": "enemy-death",
+      "original": "killandras",
+      "nativeLoudness": 25.0
+    },
+    "killcentipede": {
+      "file": "killcentipede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.937437641723356,
+      "role": "enemy-death",
+      "original": "killcentipede",
+      "nativeLoudness": 30.0
+    },
+    "killcentipede2": {
+      "file": "killcentipede2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.1250113378684805,
+      "role": "enemy-death",
+      "original": "killcentipede2",
+      "nativeLoudness": 40.0
+    },
+    "killeye": {
+      "file": "killeye.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.0,
+      "role": "enemy-death",
+      "original": "killeye",
+      "nativeLoudness": 40.0
+    },
+    "killgigaspider": {
+      "file": "killgigaspider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 9.48265306122449,
+      "role": "enemy-death",
+      "original": "killgigaspider",
+      "nativeLoudness": 75.0
+    },
+    "killleviathan": {
+      "file": "killleviathan.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 15.39984126984127,
+      "role": "enemy-death",
+      "original": "killleviathan",
+      "nativeLoudness": 66.6
+    },
+    "killminisquid": {
+      "file": "killminisquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.0,
+      "role": "enemy-death",
+      "original": "killminisquid",
+      "nativeLoudness": 50.0
+    },
+    "killskull1": {
+      "file": "killskull1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.9978911564625851,
+      "role": "enemy-death",
+      "original": "killskull1",
+      "nativeLoudness": 3.0
+    },
+    "killskull2": {
+      "file": "killskull2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.9978911564625851,
+      "role": "enemy-death",
+      "original": "killskull2",
+      "nativeLoudness": 3.0
+    },
+    "killskull3": {
+      "file": "killskull3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.9978911564625851,
+      "role": "enemy-death",
+      "original": "killskull3",
+      "nativeLoudness": 3.0
+    },
+    "killskull4": {
+      "file": "killskull4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "enemy-death",
+      "original": "killskull4",
+      "nativeLoudness": 3.0
+    },
+    "killskull5": {
+      "file": "killskull5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "enemy-death",
+      "original": "killskull5",
+      "nativeLoudness": 3.0
+    },
+    "killskullblack1": {
+      "file": "killskullblack1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.7739002267573696,
+      "role": "enemy-death",
+      "original": "killskullblack1",
+      "nativeLoudness": null
+    },
+    "killskullblack2": {
+      "file": "killskullblack2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.75,
+      "role": "enemy-death",
+      "original": "killskullblack2",
+      "nativeLoudness": null
+    },
+    "killskullblack3": {
+      "file": "killskullblack3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.75,
+      "role": "enemy-death",
+      "original": "killskullblack3",
+      "nativeLoudness": null
+    },
+    "killskullblack4": {
+      "file": "killskullblack4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.6250113378684807,
+      "role": "enemy-death",
+      "original": "killskullblack4",
+      "nativeLoudness": null
+    },
+    "killspider": {
+      "file": "killspider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.330408163265306,
+      "role": "enemy-death",
+      "original": "killspider",
+      "nativeLoudness": 55.0
+    },
+    "killspiderling1": {
+      "file": "killspiderling1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.026077097505669,
+      "role": "enemy-death",
+      "original": "killspiderling1",
+      "nativeLoudness": 3.0
+    },
+    "killspiderling2": {
+      "file": "killspiderling2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.25,
+      "role": "enemy-death",
+      "original": "killspiderling2",
+      "nativeLoudness": 3.0
+    },
+    "killspiderling3": {
+      "file": "killspiderling3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.25,
+      "role": "enemy-death",
+      "original": "killspiderling3",
+      "nativeLoudness": 3.0
+    },
+    "killspiderling4": {
+      "file": "killspiderling4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "enemy-death",
+      "original": "killspiderling4",
+      "nativeLoudness": 3.0
+    },
+    "killspiderling5": {
+      "file": "killspiderling5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.25,
+      "role": "enemy-death",
+      "original": "killspiderling5",
+      "nativeLoudness": 3.0
+    },
+    "killsquid": {
+      "file": "killsquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.735011337868481,
+      "role": "enemy-death",
+      "original": "killsquid",
+      "nativeLoudness": 50.0
+    },
+    "killsuperskull": {
+      "file": "killsuperskull.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.8526077097505669,
+      "role": "enemy-death",
+      "original": "killsuperskull",
+      "nativeLoudness": 3.0
+    },
+    "killsuperskull2": {
+      "file": "killsuperskull2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.4201360544217687,
+      "role": "enemy-death",
+      "original": "killsuperskull2",
+      "nativeLoudness": 6.0
+    },
+    "killsuperskull2black": {
+      "file": "killsuperskull2black.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "enemy-death",
+      "original": "killsuperskull2black",
+      "nativeLoudness": 6.0
+    },
+    "killsuperskull3": {
+      "file": "killsuperskull3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.322675736961451,
+      "role": "enemy-death",
+      "original": "killsuperskull3",
+      "nativeLoudness": 10.0
+    },
+    "killsuperskullblack": {
+      "file": "killsuperskullblack.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0869614512471655,
+      "role": "enemy-death",
+      "original": "killsuperskullblack",
+      "nativeLoudness": 6.0
+    },
+    "killthorn": {
+      "file": "killthorn.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.8753061224489795,
+      "role": "enemy-death",
+      "original": "killthorn",
+      "nativeLoudness": 30.0
+    },
+    "killultraskull": {
+      "file": "killultraskull.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.5714285714285716,
+      "role": "enemy-death",
+      "original": "killultraskull",
+      "nativeLoudness": null
+    },
+    "killultrasquid": {
+      "file": "killultrasquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.6250113378684805,
+      "role": "enemy-death",
+      "original": "killultrasquid",
+      "nativeLoudness": 60.0
+    },
+    "land": {
+      "file": "land.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.7209977324263038,
+      "role": "movement",
+      "original": "land",
+      "nativeLoudness": 1.0
+    },
+    "land2": {
+      "file": "land2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.7043310657596372,
+      "role": "movement",
+      "original": "land2",
+      "nativeLoudness": 2.0
+    },
+    "legends": {
+      "file": "legends.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 153.0,
+      "role": "effect",
+      "original": "legends",
+      "nativeLoudness": null
+    },
+    "leveldown": {
+      "file": "leveldown.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.5,
+      "role": "upgrade",
+      "original": "leveldown",
+      "nativeLoudness": 97.0
+    },
+    "levelup2": {
+      "file": "levelup2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.25,
+      "role": "upgrade",
+      "original": "levelup2",
+      "nativeLoudness": 10.0
+    },
+    "levelup3": {
+      "file": "levelup3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.5,
+      "role": "upgrade",
+      "original": "levelup3",
+      "nativeLoudness": 10.0
+    },
+    "levelup4": {
+      "file": "levelup4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 12.25,
+      "role": "upgrade",
+      "original": "levelup4",
+      "nativeLoudness": 10.0
+    },
+    "leviathanbeckon": {
+      "file": "leviathanbeckon.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.497142857142857,
+      "role": "effect",
+      "original": "leviathanbeckon",
+      "nativeLoudness": 200.0
+    },
+    "leviathanbeckon2": {
+      "file": "leviathanbeckon2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.313038548752835,
+      "role": "effect",
+      "original": "leviathanbeckon2",
+      "nativeLoudness": 20.0
+    },
+    "leviathantransmute": {
+      "file": "leviathantransmute.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 11.714013605442178,
+      "role": "effect",
+      "original": "leviathantransmute",
+      "nativeLoudness": null
+    },
+    "magentadetonate1": {
+      "file": "magentadetonate1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "explosion",
+      "original": "magentadetonate1",
+      "nativeLoudness": 10.0
+    },
+    "magentadetonate2": {
+      "file": "magentadetonate2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "explosion",
+      "original": "magentadetonate2",
+      "nativeLoudness": 10.0
+    },
+    "magentadetonate3": {
+      "file": "magentadetonate3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "explosion",
+      "original": "magentadetonate3",
+      "nativeLoudness": 10.0
+    },
+    "magentadetonate4": {
+      "file": "magentadetonate4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "explosion",
+      "original": "magentadetonate4",
+      "nativeLoudness": 10.0
+    },
+    "magentadetonate5": {
+      "file": "magentadetonate5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "explosion",
+      "original": "magentadetonate5",
+      "nativeLoudness": 10.0
+    },
+    "magentadrone": {
+      "file": "magentadrone.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 12.75,
+      "role": "homing-flight",
+      "original": "magentadrone",
+      "nativeLoudness": 30.0
+    },
+    "magentashot": {
+      "file": "magentashot.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.3835374149659865,
+      "role": "homing-launch",
+      "original": "magentashot",
+      "nativeLoudness": 3.0
+    },
+    "magentastuckenemy1": {
+      "file": "magentastuckenemy1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.0039455782312925,
+      "role": "homing-impact",
+      "original": "magentastuckenemy1",
+      "nativeLoudness": null
+    },
+    "magentastuckenemy2": {
+      "file": "magentastuckenemy2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "homing-impact",
+      "original": "magentastuckenemy2",
+      "nativeLoudness": null
+    },
+    "magentastuckenemy3": {
+      "file": "magentastuckenemy3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.75,
+      "role": "homing-impact",
+      "original": "magentastuckenemy3",
+      "nativeLoudness": null
+    },
+    "magentastuckenemy4": {
+      "file": "magentastuckenemy4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "homing-impact",
+      "original": "magentastuckenemy4",
+      "nativeLoudness": null
+    },
+    "magentastuckenemy5": {
+      "file": "magentastuckenemy5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.75,
+      "role": "homing-impact",
+      "original": "magentastuckenemy5",
+      "nativeLoudness": null
+    },
+    "magicpierce1": {
+      "file": "magicpierce1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "homing-impact",
+      "original": "magicpierce1",
+      "nativeLoudness": 9.0
+    },
+    "magicpierce2": {
+      "file": "magicpierce2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "homing-impact",
+      "original": "magicpierce2",
+      "nativeLoudness": 9.0
+    },
+    "magicpierce3": {
+      "file": "magicpierce3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "homing-impact",
+      "original": "magicpierce3",
+      "nativeLoudness": 9.0
+    },
+    "magicpierce4": {
+      "file": "magicpierce4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "homing-impact",
+      "original": "magicpierce4",
+      "nativeLoudness": 9.0
+    },
+    "magicpierce5": {
+      "file": "magicpierce5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "homing-impact",
+      "original": "magicpierce5",
+      "nativeLoudness": 9.0
+    },
+    "magicpulse": {
+      "file": "magicpulse.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.5,
+      "role": "effect",
+      "original": "magicpulse",
+      "nativeLoudness": null
+    },
+    "meat1": {
+      "file": "meat1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meat1",
+      "nativeLoudness": null
+    },
+    "meat10": {
+      "file": "meat10.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.75,
+      "role": "effect",
+      "original": "meat10",
+      "nativeLoudness": null
+    },
+    "meat11": {
+      "file": "meat11.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.75,
+      "role": "effect",
+      "original": "meat11",
+      "nativeLoudness": null
+    },
+    "meat12": {
+      "file": "meat12.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.75,
+      "role": "effect",
+      "original": "meat12",
+      "nativeLoudness": null
+    },
+    "meat13": {
+      "file": "meat13.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meat13",
+      "nativeLoudness": null
+    },
+    "meat2": {
+      "file": "meat2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meat2",
+      "nativeLoudness": null
+    },
+    "meat3": {
+      "file": "meat3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meat3",
+      "nativeLoudness": null
+    },
+    "meat4": {
+      "file": "meat4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meat4",
+      "nativeLoudness": null
+    },
+    "meat5": {
+      "file": "meat5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meat5",
+      "nativeLoudness": null
+    },
+    "meat6": {
+      "file": "meat6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meat6",
+      "nativeLoudness": null
+    },
+    "meat7": {
+      "file": "meat7.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.7130385487528345,
+      "role": "effect",
+      "original": "meat7",
+      "nativeLoudness": null
+    },
+    "meat8": {
+      "file": "meat8.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.75,
+      "role": "effect",
+      "original": "meat8",
+      "nativeLoudness": null
+    },
+    "meat9": {
+      "file": "meat9.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.75,
+      "role": "effect",
+      "original": "meat9",
+      "nativeLoudness": null
+    },
+    "meatbig1": {
+      "file": "meatbig1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatbig1",
+      "nativeLoudness": null
+    },
+    "meatbig2": {
+      "file": "meatbig2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatbig2",
+      "nativeLoudness": null
+    },
+    "meatbig3": {
+      "file": "meatbig3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatbig3",
+      "nativeLoudness": null
+    },
+    "meatbig4": {
+      "file": "meatbig4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatbig4",
+      "nativeLoudness": null
+    },
+    "meatbig5": {
+      "file": "meatbig5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatbig5",
+      "nativeLoudness": null
+    },
+    "meatbig6": {
+      "file": "meatbig6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatbig6",
+      "nativeLoudness": null
+    },
+    "meatmed1": {
+      "file": "meatmed1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatmed1",
+      "nativeLoudness": null
+    },
+    "meatmed2": {
+      "file": "meatmed2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatmed2",
+      "nativeLoudness": null
+    },
+    "meatmed3": {
+      "file": "meatmed3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatmed3",
+      "nativeLoudness": null
+    },
+    "meatmed4": {
+      "file": "meatmed4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatmed4",
+      "nativeLoudness": null
+    },
+    "meatmed5": {
+      "file": "meatmed5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatmed5",
+      "nativeLoudness": null
+    },
+    "meatmed6": {
+      "file": "meatmed6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "meatmed6",
+      "nativeLoudness": null
+    },
+    "menuatmos": {
+      "file": "menuatmos.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 208.69566893424036,
+      "role": "menu-music",
+      "original": "menuatmos",
+      "nativeLoudness": null
+    },
+    "menutheme": {
+      "file": "menutheme.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 108.00045351473923,
+      "role": "menu-music",
+      "original": "menutheme",
+      "nativeLoudness": null
+    },
+    "polarity1e": {
+      "file": "polarity1e.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 50.25,
+      "role": "ambience",
+      "original": "polarity1e",
+      "nativeLoudness": 1.0
+    },
+    "polarity2w": {
+      "file": "polarity2w.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 68.25,
+      "role": "ambience",
+      "original": "polarity2w",
+      "nativeLoudness": 1.0
+    },
+    "polarity3n": {
+      "file": "polarity3n.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 51.56251700680272,
+      "role": "ambience",
+      "original": "polarity3n",
+      "nativeLoudness": 1.0
+    },
+    "polarity4s": {
+      "file": "polarity4s.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 78.0,
+      "role": "ambience",
+      "original": "polarity4s",
+      "nativeLoudness": 1.0
+    },
+    "rapid1": {
+      "file": "rapid1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 8.045963718820861,
+      "role": "weapon-stream",
+      "original": "rapid1",
+      "nativeLoudness": 0.2
+    },
+    "rapid2": {
+      "file": "rapid2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 7.992675736961451,
+      "role": "weapon-stream",
+      "original": "rapid2",
+      "nativeLoudness": 0.3
+    },
+    "rapid3": {
+      "file": "rapid3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 8.0,
+      "role": "weapon-stream",
+      "original": "rapid3",
+      "nativeLoudness": 0.5
+    },
+    "rapid4": {
+      "file": "rapid4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 64.0,
+      "role": "weapon-stream",
+      "original": "rapid4",
+      "nativeLoudness": 1.0
+    },
+    "ricochet1": {
+      "file": "ricochet1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochet1",
+      "nativeLoudness": 1.0
+    },
+    "ricochet2": {
+      "file": "ricochet2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochet2",
+      "nativeLoudness": 1.0
+    },
+    "ricochet3": {
+      "file": "ricochet3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochet3",
+      "nativeLoudness": 1.0
+    },
+    "ricochet4": {
+      "file": "ricochet4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochet4",
+      "nativeLoudness": 1.0
+    },
+    "ricochet5": {
+      "file": "ricochet5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochet5",
+      "nativeLoudness": 1.0
+    },
+    "ricochetmagenta1": {
+      "file": "ricochetmagenta1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmagenta1",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagenta2": {
+      "file": "ricochetmagenta2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmagenta2",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagenta3": {
+      "file": "ricochetmagenta3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmagenta3",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagenta4": {
+      "file": "ricochetmagenta4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmagenta4",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagenta5": {
+      "file": "ricochetmagenta5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmagenta5",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagic1": {
+      "file": "ricochetmagic1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.5,
+      "role": "ricochet",
+      "original": "ricochetmagic1",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagic2": {
+      "file": "ricochetmagic2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.5,
+      "role": "ricochet",
+      "original": "ricochetmagic2",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagic3": {
+      "file": "ricochetmagic3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.5,
+      "role": "ricochet",
+      "original": "ricochetmagic3",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmagic4": {
+      "file": "ricochetmagic4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.5,
+      "role": "ricochet",
+      "original": "ricochetmagic4",
+      "nativeLoudness": 10.0
+    },
+    "ricochetmed1": {
+      "file": "ricochetmed1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmed1",
+      "nativeLoudness": 1.0
+    },
+    "ricochetmed2": {
+      "file": "ricochetmed2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmed2",
+      "nativeLoudness": 1.0
+    },
+    "ricochetmed3": {
+      "file": "ricochetmed3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmed3",
+      "nativeLoudness": 1.0
+    },
+    "ricochetmed4": {
+      "file": "ricochetmed4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmed4",
+      "nativeLoudness": 1.0
+    },
+    "ricochetmed5": {
+      "file": "ricochetmed5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "ricochet",
+      "original": "ricochetmed5",
+      "nativeLoudness": 1.0
+    },
+    "secretsnake": {
+      "file": "secretsnake.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 9.739637188208617,
+      "role": "effect",
+      "original": "secretsnake",
+      "nativeLoudness": null
+    },
+    "secretsnake2": {
+      "file": "secretsnake2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.965215419501134,
+      "role": "effect",
+      "original": "secretsnake2",
+      "nativeLoudness": null
+    },
+    "shard1": {
+      "file": "shard1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "effect",
+      "original": "shard1",
+      "nativeLoudness": 4.0
+    },
+    "shard2": {
+      "file": "shard2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "effect",
+      "original": "shard2",
+      "nativeLoudness": 4.0
+    },
+    "shard3": {
+      "file": "shard3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "effect",
+      "original": "shard3",
+      "nativeLoudness": 4.0
+    },
+    "shard4": {
+      "file": "shard4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.9041496598639456,
+      "role": "effect",
+      "original": "shard4",
+      "nativeLoudness": 4.0
+    },
+    "shard5": {
+      "file": "shard5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "effect",
+      "original": "shard5",
+      "nativeLoudness": 4.0
+    },
+    "shot1": {
+      "file": "shot1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot1",
+      "nativeLoudness": 1.0
+    },
+    "shot2": {
+      "file": "shot2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot2",
+      "nativeLoudness": 1.5
+    },
+    "shot3": {
+      "file": "shot3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot3",
+      "nativeLoudness": 3.0
+    },
+    "shot3alt1": {
+      "file": "shot3alt1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot3alt1",
+      "nativeLoudness": 3.0
+    },
+    "shot3alt2": {
+      "file": "shot3alt2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot3alt2",
+      "nativeLoudness": 3.0
+    },
+    "shot3alt3": {
+      "file": "shot3alt3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot3alt3",
+      "nativeLoudness": 3.0
+    },
+    "shot3alt4": {
+      "file": "shot3alt4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot3alt4",
+      "nativeLoudness": 3.0
+    },
+    "shot4alt1": {
+      "file": "shot4alt1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot4alt1",
+      "nativeLoudness": 5.0
+    },
+    "shot4alt2": {
+      "file": "shot4alt2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot4alt2",
+      "nativeLoudness": 5.0
+    },
+    "shot4alt3": {
+      "file": "shot4alt3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot4alt3",
+      "nativeLoudness": 5.0
+    },
+    "shot4alt4": {
+      "file": "shot4alt4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot4alt4",
+      "nativeLoudness": 5.0
+    },
+    "shot4alt5": {
+      "file": "shot4alt5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.0,
+      "role": "weapon-burst",
+      "original": "shot4alt5",
+      "nativeLoudness": 5.0
+    },
+    "skullaggro": {
+      "file": "skullaggro.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "skullaggro",
+      "nativeLoudness": 30.0
+    },
+    "skullclop1": {
+      "file": "skullclop1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "movement",
+      "original": "skullclop1",
+      "nativeLoudness": 1.0
+    },
+    "skullclop2": {
+      "file": "skullclop2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "movement",
+      "original": "skullclop2",
+      "nativeLoudness": 1.0
+    },
+    "skullclop3": {
+      "file": "skullclop3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "movement",
+      "original": "skullclop3",
+      "nativeLoudness": 1.0
+    },
+    "skullclop4": {
+      "file": "skullclop4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "movement",
+      "original": "skullclop4",
+      "nativeLoudness": 1.0
+    },
+    "skullclop5": {
+      "file": "skullclop5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "movement",
+      "original": "skullclop5",
+      "nativeLoudness": 1.0
+    },
+    "skullclop6": {
+      "file": "skullclop6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "movement",
+      "original": "skullclop6",
+      "nativeLoudness": 1.0
+    },
+    "sorathstone": {
+      "file": "sorathstone.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 291.42478458049885,
+      "role": "effect",
+      "original": "sorathstone",
+      "nativeLoudness": null
+    },
+    "spawnandras": {
+      "file": "spawnandras.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 8.57233560090703,
+      "role": "enemy-spawn",
+      "original": "spawnandras",
+      "nativeLoudness": 45.0
+    },
+    "spawncentipede": {
+      "file": "spawncentipede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.0,
+      "role": "enemy-spawn",
+      "original": "spawncentipede",
+      "nativeLoudness": 35.0
+    },
+    "spawncentipede2": {
+      "file": "spawncentipede2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.58265306122449,
+      "role": "enemy-spawn",
+      "original": "spawncentipede2",
+      "nativeLoudness": 35.0
+    },
+    "spawnegg": {
+      "file": "spawnegg.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.9333560090702948,
+      "role": "enemy-spawn",
+      "original": "spawnegg",
+      "nativeLoudness": 30.0
+    },
+    "spawngigaspider": {
+      "file": "spawngigaspider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 16.0,
+      "role": "enemy-spawn",
+      "original": "spawngigaspider",
+      "nativeLoudness": 70.0
+    },
+    "spawnleviathan": {
+      "file": "spawnleviathan.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 20.70034013605442,
+      "role": "enemy-spawn",
+      "original": "spawnleviathan",
+      "nativeLoudness": 666.0
+    },
+    "spawnminisquid": {
+      "file": "spawnminisquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.0,
+      "role": "enemy-spawn",
+      "original": "spawnminisquid",
+      "nativeLoudness": 60.0
+    },
+    "spawnplayer": {
+      "file": "spawnplayer.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.33,
+      "role": "enemy-spawn",
+      "original": "spawnplayer",
+      "nativeLoudness": 100.0
+    },
+    "spawnskulls": {
+      "file": "spawnskulls.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.217392290249433,
+      "role": "enemy-spawn",
+      "original": "spawnskulls",
+      "nativeLoudness": 25.0
+    },
+    "spawnskulls2": {
+      "file": "spawnskulls2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.75,
+      "role": "enemy-spawn",
+      "original": "spawnskulls2",
+      "nativeLoudness": 25.0
+    },
+    "spawnskulls3": {
+      "file": "spawnskulls3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.3080272108843536,
+      "role": "enemy-spawn",
+      "original": "spawnskulls3",
+      "nativeLoudness": 25.0
+    },
+    "spawnspider": {
+      "file": "spawnspider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 14.22607709750567,
+      "role": "enemy-spawn",
+      "original": "spawnspider",
+      "nativeLoudness": 60.0
+    },
+    "spawnsquid": {
+      "file": "spawnsquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.0,
+      "role": "enemy-spawn",
+      "original": "spawnsquid",
+      "nativeLoudness": 60.0
+    },
+    "spawnultrapede": {
+      "file": "spawnultrapede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 12.190249433106576,
+      "role": "enemy-spawn",
+      "original": "spawnultrapede",
+      "nativeLoudness": 120.0
+    },
+    "spawnultrasquid": {
+      "file": "spawnultrasquid.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.12501133786848,
+      "role": "enemy-spawn",
+      "original": "spawnultrasquid",
+      "nativeLoudness": 70.0
+    },
+    "spidereat1": {
+      "file": "spidereat1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "spidereat1",
+      "nativeLoudness": 60.0
+    },
+    "spidereat2": {
+      "file": "spidereat2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "spidereat2",
+      "nativeLoudness": 60.0
+    },
+    "spidereat3": {
+      "file": "spidereat3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "spidereat3",
+      "nativeLoudness": 60.0
+    },
+    "spidereat4": {
+      "file": "spidereat4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "spidereat4",
+      "nativeLoudness": 60.0
+    },
+    "spidereat5": {
+      "file": "spidereat5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "spidereat5",
+      "nativeLoudness": 60.0
+    },
+    "spidereat6": {
+      "file": "spidereat6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.0,
+      "role": "effect",
+      "original": "spidereat6",
+      "nativeLoudness": 60.0
+    },
+    "splashgiga": {
+      "file": "splashgiga.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.9478231292517005,
+      "role": "death-contact",
+      "original": "splashgiga",
+      "nativeLoudness": 35.0
+    },
+    "splashgiga2": {
+      "file": "splashgiga2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.460861678004536,
+      "role": "death-contact",
+      "original": "splashgiga2",
+      "nativeLoudness": 35.0
+    },
+    "splashgiga3": {
+      "file": "splashgiga3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.356530612244898,
+      "role": "death-contact",
+      "original": "splashgiga3",
+      "nativeLoudness": 35.0
+    },
+    "splashgiga4": {
+      "file": "splashgiga4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 8.452358276643992,
+      "role": "death-contact",
+      "original": "splashgiga4",
+      "nativeLoudness": 40.0
+    },
+    "splashgiga5": {
+      "file": "splashgiga5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.052154195011338,
+      "role": "death-contact",
+      "original": "splashgiga5",
+      "nativeLoudness": 45.0
+    },
+    "splashgiga6": {
+      "file": "splashgiga6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.382585034013606,
+      "role": "death-contact",
+      "original": "splashgiga6",
+      "nativeLoudness": 45.0
+    },
+    "stealgib": {
+      "file": "stealgib.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 27.0,
+      "role": "gem-chatter",
+      "original": "stealgib",
+      "nativeLoudness": 1.0
+    },
+    "stealgib2": {
+      "file": "stealgib2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 27.0,
+      "role": "gem-chatter",
+      "original": "stealgib2",
+      "nativeLoudness": 1.0
+    },
+    "subchattercentipede": {
+      "file": "subchattercentipede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 16.0,
+      "role": "enemy-chatter",
+      "original": "subchattercentipede",
+      "nativeLoudness": 20.0
+    },
+    "thornemerge": {
+      "file": "thornemerge.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.1250113378684805,
+      "role": "enemy-spawn",
+      "original": "thornemerge",
+      "nativeLoudness": 10.0
+    },
+    "thorngib1": {
+      "file": "thorngib1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.5,
+      "role": "effect",
+      "original": "thorngib1",
+      "nativeLoudness": null
+    },
+    "thorngib2": {
+      "file": "thorngib2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.0,
+      "role": "effect",
+      "original": "thorngib2",
+      "nativeLoudness": null
+    },
+    "thorngib3": {
+      "file": "thorngib3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.5,
+      "role": "effect",
+      "original": "thorngib3",
+      "nativeLoudness": null
+    },
+    "thorngib4": {
+      "file": "thorngib4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.5,
+      "role": "effect",
+      "original": "thorngib4",
+      "nativeLoudness": null
+    },
+    "thorngib5": {
+      "file": "thorngib5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.25,
+      "role": "effect",
+      "original": "thorngib5",
+      "nativeLoudness": null
+    },
+    "thorngib6": {
+      "file": "thorngib6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.25,
+      "role": "effect",
+      "original": "thorngib6",
+      "nativeLoudness": null
+    },
+    "uiclick": {
+      "file": "uiclick.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.38258503401360544,
+      "role": "ui",
+      "original": "uiclick",
+      "nativeLoudness": null
+    },
+    "uihover": {
+      "file": "uihover.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.13040816326530613,
+      "role": "ui",
+      "original": "uihover",
+      "nativeLoudness": null
+    },
+    "uislider": {
+      "file": "uislider.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.12501133786848073,
+      "role": "ui",
+      "original": "uislider",
+      "nativeLoudness": null
+    },
+    "ultrapedecrash": {
+      "file": "ultrapedecrash.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 5.75,
+      "role": "effect",
+      "original": "ultrapedecrash",
+      "nativeLoudness": 30.0
+    },
+    "ultrapedeeat": {
+      "file": "ultrapedeeat.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 1.8945124716553288,
+      "role": "effect",
+      "original": "ultrapedeeat",
+      "nativeLoudness": 40.0
+    },
+    "ultrapedefall": {
+      "file": "ultrapedefall.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 4.8750113378684805,
+      "role": "enemy-death",
+      "original": "ultrapedefall",
+      "nativeLoudness": 40.0
+    },
+    "unburrowcentipede": {
+      "file": "unburrowcentipede.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 7.0,
+      "role": "effect",
+      "original": "unburrowcentipede",
+      "nativeLoudness": 10.0
+    },
+    "sorathlogo": {
+      "file": "sorathlogo.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.017392290249433,
+      "role": "effect",
+      "original": "sorathlogo",
+      "nativeLoudness": null
+    },
+    "sorathlogo2": {
+      "file": "sorathlogo2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 10.017392290249433,
+      "role": "effect",
+      "original": "sorathlogo2",
+      "nativeLoudness": null
+    },
+    "daggercall5": {
+      "file": "daggercall5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": true,
+      "duration": 44.75,
+      "role": "entrance-call",
+      "original": "daggercall5",
+      "nativeLoudness": 1.0
+    },
+    "daggercollect5": {
+      "file": "daggercollect5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 16.32888888888889,
+      "role": "entrance-pickup",
+      "original": "daggercollect5",
+      "nativeLoudness": 1000.0
+    },
+    "football-goal": {
+      "file": "highscore1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 6.021814058956916,
+      "role": "courtyard-goal",
+      "original": "highscore1",
+      "nativeLoudness": 2.0
+    },
+    "crew-countdown": {
+      "file": "uiclick.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 0.38258503401360544,
+      "role": "crew-countdown",
+      "original": "uiclick",
+      "nativeLoudness": null
+    },
+    "seekrapid1": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "weapon-homing-stream",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "weapon1-homing": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "homing-launch",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "seekrapid2": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "weapon-homing-stream",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "weapon2-homing": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "homing-launch",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "seekrapid3": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "weapon-homing-stream",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "weapon3-homing": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "homing-launch",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "seekrapid4": {
+      "file": "daggerseek.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 3.5,
+      "role": "weapon-homing-stream",
+      "original": "daggerseek",
+      "nativeLoudness": 4.0
+    },
+    "weapon4-homing": {
+      "file": "magentashot.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level",
+      "loop": false,
+      "duration": 2.3835374149659865,
+      "role": "homing-launch",
+      "original": "magentashot",
+      "nativeLoudness": 3.0
+    },
+    "rapid5": {
+      "file": "hand-rapid5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 8.0,
+      "loop": true,
+      "role": "weapon-stream",
+      "layers": [
+        "rapid1",
+        "rapid2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "seekrapid5": {
+      "file": "hand-rapid5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 8.0,
+      "loop": true,
+      "role": "weapon-homing-stream",
+      "layers": [
+        "rapid1",
+        "rapid2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot5": {
+      "file": "hand-shot5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot5alt1": {
+      "file": "hand-shot5alt1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot5alt2": {
+      "file": "hand-shot5alt2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot5alt3": {
+      "file": "hand-shot5alt3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot5alt4": {
+      "file": "hand-shot5alt4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "weapon5-homing": {
+      "file": "hand-weapon5-homing.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 3.5,
+      "loop": false,
+      "role": "homing-launch",
+      "layers": [
+        "daggerseek",
+        "daggerseek"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "levelup5": {
+      "file": "hand-levelup5.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 5.25,
+      "loop": false,
+      "role": "upgrade",
+      "layers": [
+        "leveldown",
+        "levelup2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "rapid6": {
+      "file": "hand-rapid6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 8.0,
+      "loop": true,
+      "role": "weapon-stream",
+      "layers": [
+        "rapid2",
+        "rapid3"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "seekrapid6": {
+      "file": "hand-rapid6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 8.0,
+      "loop": true,
+      "role": "weapon-homing-stream",
+      "layers": [
+        "rapid2",
+        "rapid3"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot6": {
+      "file": "hand-shot6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot2",
+        "shot3alt1"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot6alt1": {
+      "file": "hand-shot6alt1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot2",
+        "shot3alt1"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot6alt2": {
+      "file": "hand-shot6alt2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot2",
+        "shot3alt2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot6alt3": {
+      "file": "hand-shot6alt3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot2",
+        "shot3alt3"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot6alt4": {
+      "file": "hand-shot6alt4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot2",
+        "shot3alt4"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "weapon6-homing": {
+      "file": "hand-weapon6-homing.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 3.5,
+      "loop": false,
+      "role": "homing-launch",
+      "layers": [
+        "daggerseek",
+        "daggerseek"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "levelup6": {
+      "file": "hand-levelup6.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 7.5,
+      "loop": false,
+      "role": "upgrade",
+      "layers": [
+        "levelup2",
+        "levelup3"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "rapid7": {
+      "file": "hand-rapid7.m4a",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 64.0,
+      "loop": true,
+      "role": "weapon-stream",
+      "layers": [
+        "rapid3",
+        "rapid4"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "seekrapid7": {
+      "file": "hand-rapid7.m4a",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 64.0,
+      "loop": true,
+      "role": "weapon-homing-stream",
+      "layers": [
+        "rapid3",
+        "rapid4"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot7": {
+      "file": "hand-shot7.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot3alt1",
+        "shot4alt1"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot7alt1": {
+      "file": "hand-shot7alt1.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot3alt1",
+        "shot4alt1"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot7alt2": {
+      "file": "hand-shot7alt2.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot3alt2",
+        "shot4alt2"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot7alt3": {
+      "file": "hand-shot7alt3.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot3alt3",
+        "shot4alt3"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "shot7alt4": {
+      "file": "hand-shot7alt4.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 4.0,
+      "loop": false,
+      "role": "weapon-burst",
+      "layers": [
+        "shot3alt4",
+        "shot4alt4"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "weapon7-homing": {
+      "file": "hand-weapon7-homing.wav",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 3.5,
+      "loop": false,
+      "role": "homing-launch",
+      "layers": [
+        "daggerseek",
+        "magentashot"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    },
+    "levelup7": {
+      "file": "hand-levelup7.m4a",
+      "gain": 1,
+      "gainPolicy": "recorded-level-composite",
+      "duration": 12.25,
+      "loop": false,
+      "role": "upgrade",
+      "layers": [
+        "levelup3",
+        "levelup4"
+      ],
+      "layerWeights": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "composites": {
+    "rapid5": {
+      "file": "hand-rapid5.wav",
+      "layers": [
+        "rapid1",
+        "rapid2"
+      ],
+      "sha256": "390c0c0a6f9765a54af1018caa46476bbeb2f2c9fac63264291d6e16ba0cd422",
+      "bytes": 1411244,
+      "rms": 0.22306975268684892,
+      "peak": 0.9359131860627921,
+      "duration": 8.0
+    },
+    "shot5": {
+      "file": "hand-shot5.wav",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "sha256": "71d9238490043eeb2d3e5b5dd6715b7736db432417de2af1547c7d711dd77bc0",
+      "bytes": 705644,
+      "rms": 0.06265197448096652,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot5alt1": {
+      "file": "hand-shot5alt1.wav",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "sha256": "71d9238490043eeb2d3e5b5dd6715b7736db432417de2af1547c7d711dd77bc0",
+      "bytes": 705644,
+      "rms": 0.06265197448096652,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot5alt2": {
+      "file": "hand-shot5alt2.wav",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "sha256": "71d9238490043eeb2d3e5b5dd6715b7736db432417de2af1547c7d711dd77bc0",
+      "bytes": 705644,
+      "rms": 0.06265197448096652,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot5alt3": {
+      "file": "hand-shot5alt3.wav",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "sha256": "71d9238490043eeb2d3e5b5dd6715b7736db432417de2af1547c7d711dd77bc0",
+      "bytes": 705644,
+      "rms": 0.06265197448096652,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot5alt4": {
+      "file": "hand-shot5alt4.wav",
+      "layers": [
+        "shot1",
+        "shot2"
+      ],
+      "sha256": "71d9238490043eeb2d3e5b5dd6715b7736db432417de2af1547c7d711dd77bc0",
+      "bytes": 705644,
+      "rms": 0.06265197448096652,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "weapon5-homing": {
+      "file": "hand-weapon5-homing.wav",
+      "layers": [
+        "daggerseek",
+        "daggerseek"
+      ],
+      "sha256": "851d19f8f6c37c8c758a21c5e4bae7aade0a451b79a4929267a5760772112036",
+      "bytes": 617444,
+      "rms": 0.11946294689627548,
+      "peak": 0.98004150390625,
+      "duration": 3.5
+    },
+    "levelup5": {
+      "file": "hand-levelup5.wav",
+      "layers": [
+        "leveldown",
+        "levelup2"
+      ],
+      "sha256": "164b8df2d54b82f00a0d47dad353285d4b60b3d56808293d6b7202df66df8e32",
+      "bytes": 926144,
+      "rms": 0.10531242956482255,
+      "peak": 0.732421875,
+      "duration": 5.25
+    },
+    "rapid6": {
+      "file": "hand-rapid6.wav",
+      "layers": [
+        "rapid2",
+        "rapid3"
+      ],
+      "sha256": "1a636fca23090426e39429faef2b90867ae36b6f770e9768d46c317b5df60f46",
+      "bytes": 1411244,
+      "rms": 0.23488734206188433,
+      "peak": 0.8077809816362382,
+      "duration": 8.0
+    },
+    "shot6": {
+      "file": "hand-shot6.wav",
+      "layers": [
+        "shot2",
+        "shot3alt1"
+      ],
+      "sha256": "7dbc4404e73cb1dc5afd5efacf833df5a5e2bf982c8b9f1dd2fae93769ff0f1b",
+      "bytes": 705644,
+      "rms": 0.08440330122587858,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot6alt1": {
+      "file": "hand-shot6alt1.wav",
+      "layers": [
+        "shot2",
+        "shot3alt1"
+      ],
+      "sha256": "7dbc4404e73cb1dc5afd5efacf833df5a5e2bf982c8b9f1dd2fae93769ff0f1b",
+      "bytes": 705644,
+      "rms": 0.08440330122587858,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot6alt2": {
+      "file": "hand-shot6alt2.wav",
+      "layers": [
+        "shot2",
+        "shot3alt2"
+      ],
+      "sha256": "6587bce362809f2a1260d7c7fbfb335c745cd7a4140e18e81f8f9a5bcc7ecfa6",
+      "bytes": 705644,
+      "rms": 0.08389223590206607,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot6alt3": {
+      "file": "hand-shot6alt3.wav",
+      "layers": [
+        "shot2",
+        "shot3alt3"
+      ],
+      "sha256": "9b7a06756309bbecd2ae1f4789aada3f2c8c8e03c40927c36a07db3a91f11a29",
+      "bytes": 705644,
+      "rms": 0.08379928288121447,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "shot6alt4": {
+      "file": "hand-shot6alt4.wav",
+      "layers": [
+        "shot2",
+        "shot3alt4"
+      ],
+      "sha256": "db0e43c26e87a75257de6fb72f380a37fa981a4139bc2e2a40ecc8e685732336",
+      "bytes": 705644,
+      "rms": 0.0847793799791945,
+      "peak": 1.0,
+      "duration": 4.0
+    },
+    "weapon6-homing": {
+      "file": "hand-weapon6-homing.wav",
+      "layers": [
+        "daggerseek",
+        "daggerseek"
+      ],
+      "sha256": "851d19f8f6c37c8c758a21c5e4bae7aade0a451b79a4929267a5760772112036",
+      "bytes": 617444,
+      "rms": 0.11946294689627548,
+      "peak": 0.98004150390625,
+      "duration": 3.5
+    },
+    "levelup6": {
+      "file": "hand-levelup6.wav",
+      "layers": [
+        "levelup2",
+        "levelup3"
+      ],
+      "sha256": "50c48d7cc5afc7779e94a9a7ddb35a2a2258a45a39161e165bee9040108ed54e",
+      "bytes": 1323044,
+      "rms": 0.10767541628879067,
+      "peak": 0.74151611328125,
+      "duration": 7.5
+    },
+    "rapid7": {
+      "file": "hand-rapid7.m4a",
+      "layers": [
+        "rapid3",
+        "rapid4"
+      ],
+      "sha256": "d12a488ad42c35fbb5e9f0754a75ae1e5ad9af6ed51d6db911e44002c95a41fa",
+      "bytes": 1312166,
+      "rms": 0.20297450351220625,
+      "peak": 0.738250732421875,
+      "duration": 64.0
+    },
+    "shot7": {
+      "file": "hand-shot7.wav",
+      "layers": [
+        "shot3alt1",
+        "shot4alt1"
+      ],
+      "sha256": "2f2b13f16da1b83e84b192648015fd19e5da24132846ef38256d28a0562cb82a",
+      "bytes": 705644,
+      "rms": 0.06585883008928943,
+      "peak": 0.887908935546875,
+      "duration": 4.0
+    },
+    "shot7alt1": {
+      "file": "hand-shot7alt1.wav",
+      "layers": [
+        "shot3alt1",
+        "shot4alt1"
+      ],
+      "sha256": "2f2b13f16da1b83e84b192648015fd19e5da24132846ef38256d28a0562cb82a",
+      "bytes": 705644,
+      "rms": 0.06585883008928943,
+      "peak": 0.887908935546875,
+      "duration": 4.0
+    },
+    "shot7alt2": {
+      "file": "hand-shot7alt2.wav",
+      "layers": [
+        "shot3alt2",
+        "shot4alt2"
+      ],
+      "sha256": "9558abcb56938524712d1b08305e8a654429aadf884196b955ae2eeece82698f",
+      "bytes": 705644,
+      "rms": 0.06290335879462058,
+      "peak": 0.9709014892578125,
+      "duration": 4.0
+    },
+    "shot7alt3": {
+      "file": "hand-shot7alt3.wav",
+      "layers": [
+        "shot3alt3",
+        "shot4alt3"
+      ],
+      "sha256": "0b26cde2a4fc4470b4e65819dadcf7044858bc9ef1054aa497f0a530f4d1d25d",
+      "bytes": 705644,
+      "rms": 0.06342920154055089,
+      "peak": 0.83172607421875,
+      "duration": 4.0
+    },
+    "shot7alt4": {
+      "file": "hand-shot7alt4.wav",
+      "layers": [
+        "shot3alt4",
+        "shot4alt4"
+      ],
+      "sha256": "b990363a10d53a30fe4f6a91eddfa21c0d325ad91d20df8d1b23c9048312005b",
+      "bytes": 705644,
+      "rms": 0.06271644565611731,
+      "peak": 0.93023681640625,
+      "duration": 4.0
+    },
+    "weapon7-homing": {
+      "file": "hand-weapon7-homing.wav",
+      "layers": [
+        "daggerseek",
+        "magentashot"
+      ],
+      "sha256": "7d2cf901ec3140ec66a5e3d7c7412b686096846860f22342c15375f6d69959f2",
+      "bytes": 617444,
+      "rms": 0.07919202671777849,
+      "peak": 0.96868896484375,
+      "duration": 3.5
+    },
+    "levelup7": {
+      "file": "hand-levelup7.m4a",
+      "layers": [
+        "levelup3",
+        "levelup4"
+      ],
+      "sha256": "e60e42da978aea35da2dc52d0f181623cc67427f10b5132a06ccf5ff379bcccc",
+      "bytes": 230067,
+      "rms": 0.10860110345704081,
+      "peak": 0.89886474609375,
+      "duration": 12.25
+    }
+  }
+}

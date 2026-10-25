@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {floorHeight} from './arena';
-import {isPede,isSkull,type EnemyKind} from './enemy-kinds';
+import {isPede,isSkull,isEgg,type EnemyKind} from './enemy-kinds';
 import {type World,type Vec,type Enemy} from './simulation';
 import {type GlowSource} from './enemy-glow-sources';
 
@@ -49,6 +49,8 @@ export class EnemyLighting {
  update(world:World|null,camera:THREE.Camera,menu:boolean,sources:(e:Enemy)=>GlowSource[]){
   this.pixels.fill(0);
   if(world&&!menu)for(const e of world.enemies){
+   // The new brood shells and juvenile bone faces have no lantern or crystal.
+   if(isEgg(e.kind)||e.kind==='spiderling')continue;
    let color=this.palette.get(e.kind);if(!color){color=enemyGlowColor(e.kind);this.palette.set(e.kind,color);}
    const emergence=isPede(e.kind)?1:Math.min(1,e.age/(e.kind==='spider2'?9:e.kind==='leviathan'?8.533333:1.1));
    this.spill(e.pos,color,e.kind==='orb'?10.5:e.kind==='thorn'?2.6:Math.min(6,2.5+e.radius*.7),emergence,world.time,e.radius,e.kind==='orb',isSkull(e.kind));

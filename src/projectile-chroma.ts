@@ -1,18 +1,12 @@
+import {SHOTGUN_COLOR} from './weapon-tuning';
 import {ALL_PROJECTILE_COLORS,projectileVisualIndex,projectileStyleIndex} from './projectile-presentation';
 import type {World,Projectile} from './simulation';
 
 type RGB=readonly [number,number,number];
 type Source={heat:number;last:number};
 type Launch={color:RGB;born:number};
-/** Every blast contains this full palette; pellets keep their own colour. */
-export const SHOTGUN_RAINBOW:readonly RGB[]=[
- [1,.035,.018],[1,.24,.012],[1,.78,.025],[.28,1,.045],
- [.025,.88,1],[.065,.22,1],[.52,.045,1],[1,.035,.46],
-];
-export function shotgunPelletColor(p:Pick<Projectile,'id'|'shotKey'>):RGB{
- const index=p.shotKey?Number(p.shotKey.slice(p.shotKey.lastIndexOf(':')+1)):Math.abs(p.id);
- return SHOTGUN_RAINBOW[(Number.isFinite(index)?Math.abs(Math.floor(index)):Math.abs(p.id))%SHOTGUN_RAINBOW.length];
-}
+/** Every shotgun uses the original game's warm regular dagger colour. */
+export function shotgunPelletColor(_p?:Pick<Projectile,'id'|'shotKey'>):RGB{return SHOTGUN_COLOR;}
 const STOPS:readonly (readonly [number,RGB])[]=[
  [0,[1,.07,.012]],[1,[1,.42,.025]],[2,[1,.88,.46]],
  [3.4,[.035,.82,1]],[4.6,[.10,.22,1]],[5.7,[.58,.055,1]],

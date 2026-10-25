@@ -1,7 +1,8 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {ProjectileChroma,sprayColor,shotgunPelletColor,SHOTGUN_RAINBOW} from '../src/projectile-chroma';
+import {ProjectileChroma,sprayColor,shotgunPelletColor} from '../src/projectile-chroma';
 import {World,type Projectile,v} from '../src/simulation';
+import {SHOTGUN_COLOR} from '../src/weapon-tuning';
 import {ALL_PROJECTILE_COLORS} from '../src/projectile-presentation';
 
 const base=ALL_PROJECTILE_COLORS[0];
@@ -56,7 +57,7 @@ test('snapshot batch order and render cadence produce the same launch colours',(
  for(let i=0;i<a.length;i++)assert.ok(distance(a[i],b[i])<1e-12);
 });
 
-test('replay rewind resets progression and shotgun pellets retain their rainbow colours',()=>{
+test('replay rewind resets progression and shotgun pellets retain their blast colour',()=>{
  const world=new World(5,{schedule:false}),chroma=new ProjectileChroma();
  for(let i=0;i<=30;i++){world.time=i*.1;world.projectiles=[shot(i)];chroma.update(world);}
  world.time=0;world.projectiles=[shot(0)];chroma.update(world);assert.deepEqual(chroma.color(world.projectiles[0]),base);
@@ -64,18 +65,30 @@ test('replay rewind resets progression and shotgun pellets retain their rainbow 
  assert.deepEqual(chroma.color(burst),shotgunPelletColor(burst));
 });
 
-test('every shotgun blast contains the full rainbow, with stable colours across shots and prediction',()=>{
+test('every shotgun blast has one warm colour, stable across prediction and flight',()=>{
  const world=new World(6,{schedule:false}),chroma=new ProjectileChroma();
  for(const sequence of [1,2,17])for(const homing of [false,true]){
   world.time=sequence;
   world.projectiles=Array.from({length:24},(_,i)=>({...shot(sequence*100+i,0,`player:${sequence}:${i}`),kind:'shotgun' as const,homing}));chroma.update(world);
   const colors=world.projectiles.map(p=>chroma.color(p));
-  assert.equal(new Set(colors.map(c=>c.join(','))).size,SHOTGUN_RAINBOW.length);
-  for(let i=0;i<colors.length;i++)assert.deepEqual(colors[i],SHOTGUN_RAINBOW[i%SHOTGUN_RAINBOW.length]);
+  assert.equal(new Set(colors.map(c=>c.join(','))).size,1);
+  for(let i=0;i<colors.length;i++)assert.deepEqual(colors[i],SHOTGUN_COLOR);
   assert.deepEqual(shotgunPelletColor({...world.projectiles[3],id:-999}),colors[3]);
   world.time+=.3;world.projectiles=world.projectiles.map(p=>({...p,age:.3}));chroma.update(world);
   assert.deepEqual(world.projectiles.map(p=>chroma.color(p)),colors);
  }
  const solo=Array.from({length:24},(_,i)=>shotgunPelletColor(shot(321+i)));
- assert.equal(new Set(solo.map(c=>c.join(','))).size,SHOTGUN_RAINBOW.length);
+ assert.equal(new Set(solo.map(c=>c.join(','))).size,1);
+});
+
+
+test('all solo shotgun blasts retain the original warm colour',()=>{
+ const world=new World(71,{schedule:false});world.level=7;
+ const colors=[];
+ for(let i=0;i<4;i++){
+  world.projectiles=[];world.shoot({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false},true,false);
+  const blast=world.projectiles.map(shotgunPelletColor);
+  assert.equal(new Set(blast.map(c=>c.join(','))).size,1);colors.push(blast[0]);
+ }
+ assert.equal(new Set(colors.map(c=>c.join(','))).size,1);assert.deepEqual(colors[0],colors[3]);
 });

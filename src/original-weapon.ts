@@ -54,15 +54,15 @@ export class OriginalWeapon {
   private pivotOffset=new THREE.Vector3();
   configureMotion(value:unknown){this.movement.configure(value);if(this.movement.diagnostics.intensity===0)this.resetMotion();}
   resetMotion(){this.movement.clear();this.counterSwing=0;this.motion.x=this.motion.y=this.motion.z=0;this.motionRotation.x=this.motionRotation.y=this.motionRotation.z=0;}
-  get effectDiagnostics(){return {flashTime:this.flashTime,recoil:this.recoil,particles:this.fragments.length,upgradeTime:this.upgradeTime,upgradeDuration:HAND_UPGRADE_DURATION,motion:{...this.motion},motionRotation:{...this.motionRotation},visibleLevel:this.handModels.findIndex(hand=>hand.visible)+1,visibleHands:this.handModels.findIndex(hand=>hand.visible)>=4?2:1};}
+  get effectDiagnostics(){return {hands:this.handAnimations.map((a,i)=>({firePower:a.power,recoil:this.handRecoils[i].value})),flashTime:this.flashTime,recoil:this.recoil,particles:this.fragments.length,upgradeTime:this.upgradeTime,upgradeDuration:HAND_UPGRADE_DURATION,motion:{...this.motion},motionRotation:{...this.motionRotation},visibleLevel:this.handModels.findIndex(hand=>hand.visible)+1,visibleHands:this.handModels.findIndex(hand=>hand.visible)>=4?2:1};}
   get handFeedback(){
     const level=this.handModels.findIndex(hand=>hand.visible)+1||this.lastLevel,upgradeAge=HAND_UPGRADE_DURATION-this.upgradeTime;
-    return {level,firePower:this.fireAnimation.level===level?this.fireAnimation.power:0,recoil:this.recoil,upgradeAge,upgradeTime:this.upgradeTime,
+    return {hands:this.handAnimations.map((a,i)=>({firePower:a.level===level?a.power:0,recoil:this.handRecoils[i].value})),level,firePower:this.fireAnimation.level===level?this.fireAnimation.power:0,recoil:this.recoil,upgradeAge,upgradeTime:this.upgradeTime,
       upgradePower:this.upgradeTime>0?Math.exp(-upgradeAge*2.2)*Math.min(1,this.upgradeTime/.35):0,motion:this.motion,motionRotation:this.motionRotation,counterSwing:this.counterSwing};
   }
   ready=false;error='';loaded:Promise<void>;handScene=new THREE.Scene();handCamera=new THREE.PerspectiveCamera(HAND_VIEW_FOV,1,.01,3);
   private animatedTip=new THREE.Vector3();
-  private viewOffsets=HAND_MUZZLES.map(sockets=>sockets.map(()=>new THREE.Vector3()));
+  private viewOffsets=HAND_MUZZLES.map((sockets,l)=>Array.from({length:sockets.length*(l<4?2:1)},()=>new THREE.Vector3()));
   private launchSockets=new Map<number,{socket:number;expires:number}>();
   private viewLocalId:string|undefined;private viewEnabled=false;
   /** The local launch is drawn at the overlay fingertips, then joins its physical path. */
@@ -76,9 +76,10 @@ export class OriginalWeapon {
     if(p.floorBounces||this.viewLocalId&&!p.shotKey?.startsWith(this.viewLocalId+':'))return position;
     const level=p.level??1,sockets=HAND_MUZZLES[handIndex(level)];
     const index=p.shotKey?Number(p.shotKey.slice(p.shotKey.lastIndexOf(':')+1)):0;
-    return this.offsetLaunch(position,level,p.socket??(level>=5?projectileSocket(level,Number.isFinite(index)?index:0,p.kind==='shotgun'):p.kind==='shotgun'?0:this.launchSockets.get(p.id)?.socket??(Number.isFinite(index)?index%sockets.length:0)),p.age);
+    const socket=p.socket??(level>=5?projectileSocket(level,Number.isFinite(index)?index:0,p.kind==='shotgun'):p.kind==='shotgun'?0:this.launchSockets.get(p.id)?.socket??(Number.isFinite(index)?index%sockets.length:0));
+    return this.offsetLaunch(position,level,socket+(level<5&&p.hand===0?sockets.length:0),p.age);
   };
-  private twinPoses:THREE.Group[][]=[];private handModels:THREE.Group[]=[];private projection=new THREE.Group();private pose=new THREE.Group();private fireAnimation=new HandFireAnimation();private get flashTime(){return this.fireAnimation.remaining;}private upgradeTime=0;private freshUpgrade=false;private handRecoil=new HandRecoil();private get recoil(){return this.handRecoil.value;}
+  private twinPoses:THREE.Group[][]=[];private handModels:THREE.Group[]=[];private projection=new THREE.Group();private pose=new THREE.Group();private fireAnimation=new HandFireAnimation();private handAnimations=[new HandFireAnimation(),new HandFireAnimation()];private handRecoils=[new HandRecoil(),new HandRecoil()];private get flashTime(){return this.fireAnimation.remaining;}private upgradeTime=0;private freshUpgrade=false;private handRecoil=new HandRecoil();private get recoil(){return this.handRecoil.value;}
   private daggers:THREE.InstancedMesh[]=[];private batches=new Map<string,Batch>();private fragments:Fragment[]=[];private definitions:Record<string,Emitter>={};private dummy=new THREE.Object3D();private projectileVelocity=new THREE.Vector3();private lastLevel=1;private daggerCounts=new Uint32Array(ALL_PROJECTILE_COLORS.length);private daggerCursors=new Uint32Array(ALL_PROJECTILE_COLORS.length);
   constructor(private scene:THREE.Scene,private environment=new EnvironmentLighting()){this.handScene.add(this.projection);this.projection.add(this.pose);this.projection.scale.set(HAND_POSE.screenScale,HAND_POSE.screenScale,1);
     // Extend the visible arm forward without lowering the hand in the frame.
@@ -156,6 +157,8 @@ export class OriginalWeapon {
       for(let i=0;i<count;i++)this.add(name,new THREE.Vector3(e.pos.x+(Math.random()-.5)*2,e.pos.y+.08,e.pos.z+(Math.random()-.5)*2),new THREE.Vector3((Math.random()-.5)*2,.6+Math.random()*1.3,(Math.random()-.5)*2),`smokeblob${1+i%4}`,.7+Math.random()*.7,1.2+Math.random(),.6);
     } else if(e.kind==='shot'||e.kind==='burst') {
       if(local){const burst=e.kind==='burst',response=shotgunFeedback(level);this.fireAnimation.trigger(level,burst);this.handRecoil.trigger(burst?response.kick:WEAPON_FEEDBACK.streamKick,burst?response.recovery:WEAPON_FEEDBACK.recovery,burst?response.hold:.014);
+        const sides=e.hand!==undefined?[e.hand]:level<5?[1]:[0,1];
+        for(const side of sides){this.handAnimations[side].trigger(level,burst);this.handRecoils[side].trigger(burst?response.kick:WEAPON_FEEDBACK.streamKick,burst?response.recovery:WEAPON_FEEDBACK.recovery,burst?response.hold:.014);}
         const sockets=e.muzzles??[e.pos];
         for(const p of world.projectiles){
           if(p.socket!==undefined||p.age>0||e.shotKey&&!p.shotKey?.startsWith(e.shotKey+':'))continue;
@@ -185,7 +188,7 @@ export class OriginalWeapon {
           if(i<muzzles.length){
             const velocity=dir.clone().multiplyScalar(28).addScaledVector(right,(Math.random()-.5)*3);
             const before=this.fragments.length;this.add(ember,muzzle,velocity,`ember${1+i%3}`,.025,.045,.45);
-            if(this.fragments.length>before){const fragment=this.fragments[before];fragment.handLevel=level;fragment.handSocket=i;}
+            if(this.fragments.length>before){const fragment=this.fragments[before];fragment.handLevel=level;fragment.handSocket=level>=5&&e.hand!==undefined?(shotgun?e.hand:(i%5)*2+e.hand):i+(level<5&&e.hand===0?HAND_MUZZLES[level-1].length:0);}
           }
           continue;
         }
@@ -248,6 +251,7 @@ export class OriginalWeapon {
     // An event arrived during this frame: show it once before advancing its
     // render clock, even if the frame took longer than the entire flash.
     if(menu)this.fireAnimation.clear();else this.fireAnimation.update(dt);this.handRecoil.update(dt);
+    for(let side=0;side<2;side++){if(menu){this.handAnimations[side].clear();this.handRecoils[side].clear();}else{this.handAnimations[side].update(dt);this.handRecoils[side].update(dt);}}
     if(menu)this.upgradeTime=0;
     if(!this.freshUpgrade)this.upgradeTime=Math.max(0,this.upgradeTime-dt);this.freshUpgrade=false;
     // Pose precedes socket measurement, including rotation: launch and glow
@@ -269,7 +273,7 @@ export class OriginalWeapon {
     const shrink=Math.sqrt(Math.min(1,this.handCamera.aspect/HAND_POSE.screenScale));
     for(let i=0;i<this.twinPoses.length;i++){
       const group=this.handModels[i+4];group.scale.set(shrink,shrink,1);
-      group.position.set(this.motion.x,this.motion.y-.22*(1-shrink),this.recoil+this.motion.z);
+      group.position.set(this.motion.x,this.motion.y-.22*(1-shrink),this.motion.z);
       group.quaternion.copy(this.movementRotation);
       this.pivotOffset.copy(this.pairBase).applyQuaternion(this.movementRotation);
       group.position.add(this.pairBase).sub(this.pivotOffset);
@@ -277,9 +281,9 @@ export class OriginalWeapon {
       const age=HAND_UPGRADE_DURATION-this.upgradeTime;
       const reveal=this.upgradeTime>0&&level===i+5?Math.pow(Math.max(0,1-age/.48),3):0;
       this.twinPoses[i].forEach((pose,side)=>{
-        const anchor=this.twinRecoilAnchors[side],pull=this.recoil/(HAND_VIEW_FORWARD-anchor.z);
+        const anchor=this.twinRecoilAnchors[side],pull=this.handRecoils[side].value/(HAND_VIEW_FORWARD-anchor.z);
         const counter=this.counterSwing*(side===0?1:-1);
-        pose.position.set((side===0?1:-1)*(TWIN_POSE.spacing-reveal*.018)-anchor.x*pull,TWIN_POSE.y-reveal*(side===1?.075:.025)-anchor.y*pull+counter*.006,TWIN_POSE.z+counter*.008);
+        pose.position.set((side===0?1:-1)*(TWIN_POSE.spacing-reveal*.018)-anchor.x*pull,TWIN_POSE.y-reveal*(side===1?.075:.025)-anchor.y*pull+counter*.006,TWIN_POSE.z+this.handRecoils[side].value+counter*.008);
         pose.quaternion.copy(this.restRotation).premultiply(this.counterRotation.setFromEuler(this.counterEuler.set(counter*.012,0,counter*.018)));
         this.pivotOffset.copy(this.armBase).multiplyScalar(TWIN_POSE.scale).applyQuaternion(this.counterRotation);
         pose.position.addScaledVector(this.armBase,TWIN_POSE.scale).sub(this.pivotOffset);
@@ -292,14 +296,14 @@ export class OriginalWeapon {
     if(camera&&this.viewEnabled){
       camera.updateMatrixWorld(true);this.handScene.updateMatrixWorld(true);
       const tangent=Math.tan(THREE.MathUtils.degToRad(camera.fov/2));
-      for(let l=0;l<HAND_MUZZLES.length;l++)for(let i=0;i<HAND_MUZZLES[l].length;i++){
+      for(let l=0;l<HAND_MUZZLES.length;l++)for(let i=0;i<this.viewOffsets[l].length;i++){
         const offset=this.viewOffsets[l][i];
         if(socketPosition&&world&&socketPosition(l+1,i,this.animatedTip)){
           const muzzle=weaponMuzzle(world.player.pos,camera.rotation.y,camera.rotation.x,l+1,i);
           offset.set(this.animatedTip.x-muzzle.x,this.animatedTip.y-muzzle.y,this.animatedTip.z-muzzle.z);
           continue;
         }
-        const muzzle=HAND_MUZZLES[l][i],tip=this.socketScreen(l+1,i),depth=-muzzle.z;
+        const lane=i%HAND_MUZZLES[l].length,muzzle=HAND_MUZZLES[l][lane],tip=this.socketScreen(l+1,lane),depth=-muzzle.z;
         offset.set(tip.x*depth*tangent*camera.aspect-muzzle.x,tip.y*depth*tangent-muzzle.y,0);
         offset.applyQuaternion(camera.quaternion);
         // The camera may translate independently of the physical player. Keep
@@ -354,6 +358,6 @@ export class OriginalWeapon {
   }
   // Launch transforms are retained for unchanged bullets; the crew rig renders the hands.
   render(_renderer:THREE.WebGLRenderer,_menu:boolean){}
-  clear(){this.resetMotion();this.launchSockets.clear();this.viewEnabled=false;this.fragments.length=0;for(const batch of this.daggers)batch.count=0;this.fireAnimation.clear();this.upgradeTime=0;this.freshUpgrade=false;this.handRecoil.clear();this.lastLevel=1;}
+  clear(){this.resetMotion();this.launchSockets.clear();this.viewEnabled=false;this.fragments.length=0;for(const batch of this.daggers)batch.count=0;this.fireAnimation.clear();this.upgradeTime=0;this.freshUpgrade=false;this.handRecoil.clear();for(const a of this.handAnimations)a.clear();for(const r of this.handRecoils)r.clear();this.lastLevel=1;}
   preview(level:number){this.lastLevel=level;}
 }

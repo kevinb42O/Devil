@@ -1,23 +1,21 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
-import {towerSpitTurn,towerDeathPose} from '../src/enemy-presentation';
+import {towerDeathPose,enemyYaw,TOWER_SPIN_SPEED} from '../src/enemy-presentation';
 
 import {towerEmissionTick} from '../src/tower-spawn';
+import {World,v} from '../src/simulation';
 const kinds=['squid','squid2','squid3'] as const;
-test('spawners reverse wind-up, release a full turn, and settle between bursts',()=>{
- for(const kind of kinds)for(const original of [false,true]){
-  const start=original?towerEmissionTick(kind,0,0)/60:3,period=original?(towerEmissionTick(kind,1,0)-towerEmissionTick(kind,0,0))/60:20;
-  assert.equal(towerSpitTurn(start-.5,kind,original),0);
-  assert.ok(towerSpitTurn(start-.1,kind,original)<-.3);
-  assert.ok(towerSpitTurn(start+.65,kind,original)>2);
-  assert.ok(Math.abs(towerSpitTurn(start+1.7,kind,original)-Math.PI*2)<1e-10);
-  const peak=(towerSpitTurn(start+.51,kind,original)-towerSpitTurn(start+.49,kind,original))/.02;
-  assert.ok(peak>5,'spit rotation must visibly outrun idle rotation');
-  for(const offset of [-.4,0,.85,1.05,1.4,period-.4]){
-   const a=towerSpitTurn(start+offset-1e-5,kind,original),b=towerSpitTurn(start+offset+1e-5,kind,original);
-   assert.ok(Math.abs(b-a)<.001,'angle must not snap at a phase boundary');
+test('spawning keeps the normal idle rotation throughout each burst',()=>{
+ for(const kind of kinds){
+  const world=new World(71,{schedule:false}),enemy=world.spawn(kind,v());
+  for(const burst of [0,1,2]){
+   const start=towerEmissionTick(kind,burst,0)/60;
+   for(const offset of [-.4,-.1,0,.3,.8,1.5]){
+    enemy.age=start+offset;const yaw=enemyYaw(enemy,world.player.pos);
+    enemy.age+=.01;
+    assert.ok(Math.abs(enemyYaw(enemy,world.player.pos)-yaw+.01*TOWER_SPIN_SPEED)<1e-10);
+   }
   }
-  assert.ok(Math.abs(towerSpitTurn(start+period+1.7,kind,original)-Math.PI*4)<1e-9);
  }
 });
 test('death spin accelerates while the complete creature sinks beneath the floor',()=>{

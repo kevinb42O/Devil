@@ -47,7 +47,7 @@ try{
   for(const y of [1.7,0,-3,-7,1.7]){world.player.pos={x:0,y,z:0};world.playerStarts.clear();renderer.render(world,1.4,-1.5,1/60,false,1,null,false,true,S.idleInput());for(const joint of ['L','R'].map(side=>renderer.emoteHands.getObjectByName('UpperArm'+side))){renderer.emoteHands.updateMatrixWorld(true);check(joint.getWorldPosition(point).distanceTo(renderer.camera.position)>.3,'pit fall eye clips shoulder');}}
   renderer.configure({quality:'low',fov:90,movementMotion:0,screenShake:0,mist:false});
   renderer.render(world,0,-1.3,1/60,false,1,null,false,false,S.idleInput());
-  check(renderer.camera.position.distanceTo(new T.Vector3(world.player.pos.x,world.player.pos.y,world.player.pos.z))<1e-9,'prelobby camera offset leaked into combat');
+  check(renderer.camera.position.z<world.player.pos.z&&renderer.camera.position.distanceTo(new T.Vector3(world.player.pos.x,world.player.pos.y,world.player.pos.z))<.5,'combat lost the shared first-person look-down lean');
   window.audit={renderer,world,idleInput:S.idleInput};
   return {poses,maxNeckError,minClearance,renderedClearance,airFrames,landings};
  });

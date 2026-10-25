@@ -1,0 +1,44 @@
+✖ stream radius fills multiple lanes with the full primary salvo at every hand (70.821458ms)
+✔ wider stream preserves damage per bullet and point-blank effectiveness (28.592666ms)
+✔ physical stream expands toward aim as a cone rather than parallel or inward lanes (28.30125ms)
+✔ every hand launches compact bursts and streams throughout its circular firing area (4.151167ms)
+✔ under-hand origin follows horizontal and vertical aim using the camera basis (0.245458ms)
+✔ muzzle parallax converges on a close crosshair target instead of firing below it (0.622834ms)
+✔ projectile interpolation keeps the actual prior swept position without aliasing (0.136ms)
+✔ each projectile has a distinct stable axial roll, including predicted and host shots (0.713917ms)
+✔ new emitters sit below and behind the original fingertips at every hand (0.310959ms)
+✔ moving the shooter never adds strafe, forward or jump momentum to a fired dagger (337.7425ms)
+✔ camera and projectiles share one render time through fast strafing, jumping and reversal (0.720583ms)
+✔ crew camera history follows the selected player and does not reuse another player position (0.4645ms)
+✔ all tower tiers stop swept primary and homing shots on armor at the exact contact (284.785916ms)
+✔ empty space near a tower remains traversable, with no giant invisible hit sphere (0.746042ms)
+✔ destroyed pede segments absorb shots without damage or ricochets (3.324458ms)
+✔ floor impacts retain a damped reflection and a bent interpolated flight path (0.801833ms)
+✔ damage impacts expire at contact and never create a ricochet after death (0.267083ms)
+✔ bent interpolation follows the contact instead of cutting through the obstacle (0.071958ms)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 17
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1446.394625
+
+✖ failing tests:
+
+test at tests/fps-baseline-projectiles.tmp.ts:7:1
+✖ stream radius fills multiple lanes with the full primary salvo at every hand (70.821458ms)
+  AssertionError [ERR_ASSERTION]: each upgrade has a wider physical stream
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/fps-baseline-projectiles.tmp.ts:24:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.start (node:internal/test_runner/test:1015:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
