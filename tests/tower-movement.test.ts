@@ -45,7 +45,7 @@ test('isolated towers keep measured entrance and inward drift, and dead towers r
 });
 
 test('checkpoint restores and new recordings keep separation while older recordings retain their motion',()=>{
- const w=new World(1,{schedule:false,invulnerable:true});quiet(w.spawn('squid',v(-3,5,0)));quiet(w.spawn('squid2',v(3,5,0)));
+ const w=new World(1,{schedule:false,invulnerable:true});quiet(w.spawn('squid',v(-6,5,0)));quiet(w.spawn('squid2',v(6,5,0)));
  const restored=World.restoreCrewCheckpoint(w.captureCrewCheckpoint());
  for(let i=0;i<240;i++){w.step(idleInput(),STEP);restored.step(idleInput(),STEP);w.effects=[];restored.effects=[];}
  assert.deepEqual(restored.enemies,w.enemies);assertSeparated(w.enemies);

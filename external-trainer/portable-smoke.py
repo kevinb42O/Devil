@@ -10,7 +10,7 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('archive', type=Path)
-parser.add_argument('--url', default='https://devil-green.vercel.app')
+parser.add_argument('--url', default='https://devilsdescent.vercel.app')
 args = parser.parse_args()
 with tempfile.TemporaryDirectory(prefix='Abyss portable smoke ') as temporary:
     destination = Path(temporary)

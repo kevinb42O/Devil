@@ -28,19 +28,21 @@ try{
   window.timer=setInterval(()=>{if(window.time!==null)window.time+=window.advance;ambience.update(window.time,.02);},20);
  });
  await page.click('button');const results=[];
- for(const [name,time] of [['space',0],['ash',35],['storm',80],['veil',150],['furnace',270],['cathedral',390],['depth',480]]){
+ for(const [name,time] of [['space',0],['ash',35],['storm',80],['veil',150],['furnace',270],['cathedral',390],['depth',480],['heaven',504]]){
   await page.evaluate(t=>window.time=t,time);
   await page.waitForFunction(name=>ambience.diagnostics.beds.some(b=>b.name===name&&b.streams.some(s=>s.playing&&s.ready>=3&&s.gain>.07))&&peak()>.001,name);
   results.push(await page.evaluate(()=>({time,peak:peak(),...ambience.diagnostics})));
  }
  // Force a long-bed wrap; both sources must play during the four-second overlap.
+ await page.evaluate(()=>window.time=480);
+ await page.waitForFunction(()=>{const b=ambience.beds.get('depth'),s=b?.streams[b.current];return b.target>.1&&s&&!s.starting&&!s.audio.paused&&s.gain.gain.value>.1&&s.audio.currentTime>25&&s.audio.currentTime<40;});
  await page.evaluate(()=>{const b=ambience.beds.get('depth');b.streams[b.current].audio.currentTime=117;});
  await page.waitForFunction(()=>ambience.diagnostics.beds.find(b=>b.name==='depth').streams.every(s=>s.playing&&s.gain>.02));
  await page.waitForFunction(()=>{const b=ambience.beds.get('depth');return b.streams[b.current].audio.currentTime<8;},null,{timeout:10000});
  assert.ok(await page.evaluate(()=>peak()>.001));
  // Traverse every handover with small continuous clock steps, never a direct seek.
  const transitions=[];
- for(const [start,end,outgoing,incoming] of [[21,30,'space','ash'],[51,69,'ash','storm'],[126,144,'storm','veil'],[241,259,'veil','furnace'],[362,380,'furnace','cathedral'],[454,472,'cathedral','depth']]){
+ for(const [start,end,outgoing,incoming] of [[21,30,'space','ash'],[51,69,'ash','storm'],[126,144,'storm','veil'],[241,259,'veil','furnace'],[362,380,'furnace','cathedral'],[454,472,'cathedral','depth'],[492,498,'space','heaven'],[510,528,'heaven','space']]){
   await page.evaluate(t=>{window.advance=0;window.time=t;},start-1);
   await page.waitForFunction(name=>bedRms(name)>.001,outgoing);
   await page.evaluate(()=>window.advance=.1);
@@ -86,5 +88,5 @@ try{
  await page.click('#resume');await page.waitForFunction(()=>window.abyss.audio.environment.active);
  await page.keyboard.press('Escape');await page.click('#quit');await page.waitForFunction(()=>window.abyss.mode==='menu'&&!window.abyss.audio.environment.active);
  assert.deepEqual(errors,[]);
- console.log('Seven long stereo beds produce real samples; transitions, overlapping loop, seek, pause, hidden, mute and game lifecycle passed.');
+ console.log('Eight long stereo beds produce real samples; transitions, overlapping loop, seek, pause, hidden, mute and game lifecycle passed.');
 }finally{await browser.close();}

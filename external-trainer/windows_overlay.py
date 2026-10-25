@@ -12,7 +12,13 @@ from windows_settings import SettingsForm
 
 user32=ctypes.windll.user32
 WM_HOTKEY=0x0312; WM_QUIT=0x0012
-HOTKEYS={0x72:'key:99',0x73:'key:118',0x75:'preset',0x76:'menu',0x77:'key:100',0x78:'key:101',0x79:'quit'}
+SETTINGS_KEY=user32.VkKeyScanW(ord('='))
+if SETTINGS_KEY==-1:raise RuntimeError('The active keyboard layout cannot type the settings key (=).')
+SETTINGS_VK=SETTINGS_KEY & 0xff
+SETTINGS_MODIFIERS=(SETTINGS_KEY >> 8) & 7
+# VkKeyScan shift bits are Shift/Ctrl/Alt; RegisterHotKey uses Alt/Ctrl/Shift.
+SETTINGS_MODIFIERS=((SETTINGS_MODIFIERS & 1) << 2) | (SETTINGS_MODIFIERS & 2) | ((SETTINGS_MODIFIERS & 4) >> 2)
+HOTKEYS={0x72:'key:99',0x73:'key:118',0x75:'preset',SETTINGS_VK:'menu',0x77:'key:100',0x78:'key:101',0x79:'quit'}
 
 
 class WindowsHotkeys(threading.Thread):
@@ -27,7 +33,8 @@ class WindowsHotkeys(threading.Thread):
             # Create this thread's message queue before publishing its ID as ready.
             user32.PeekMessageW(ctypes.byref(message),None,0,0,0)
             for virtual_key in HOTKEYS:
-                if user32.RegisterHotKey(None,virtual_key,0x4000,virtual_key):registered.append(virtual_key)
+                if user32.RegisterHotKey(None,virtual_key,0x4000 | (SETTINGS_MODIFIERS if virtual_key==SETTINGS_VK else 0),virtual_key):registered.append(virtual_key)
+                else:print('Could not register trainer shortcut: '+HOTKEYS[virtual_key],flush=True)
             self.ready.set()
             while user32.GetMessageW(ctypes.byref(message),None,0,0)>0:
                 if message.message==WM_HOTKEY:
@@ -44,12 +51,12 @@ class WindowsHotkeys(threading.Thread):
 class Overlay:
     def __init__(self, engine, quit_after=0):
         self.engine=engine;self.quit_at=time.monotonic()+quit_after if quit_after else 0
-        # Only the F7 settings dialog may create a visible native window. There is
+        # Only the = settings dialog may create a visible native window. There is
         # deliberately no transparent Toplevel/Canvas covering the Windows desktop.
         self.root=tk.Tk();self.root.withdraw();self.menu=None;self.closed=False;self.timer=None
         self.hotkeys=WindowsHotkeys(engine.commands);self.hotkeys.start();self.hotkeys.ready.wait(2)
         engine.thread.start();self.tick()
-        print('Windows trainer ready - F7 settings - F8 aim - F4 ESP',flush=True)
+        print('Windows trainer ready - = settings - F8 aim - F4 ESP',flush=True)
 
     def settings(self):
         if self.menu and self.menu.winfo_exists():

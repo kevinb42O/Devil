@@ -14,13 +14,14 @@ application=NSApplication.sharedApplication();application.setActivationPolicy_(N
 engine=Engine(demo=True);controller=Controller.alloc().init();controller.start(engine,12)
 for name in PRESETS:
     controller.fill(preset(name));assert controller.read_form()==preset(name),name
+controller.fill(Settings.validated({'godmode':True}));assert controller.read_form().godmode
 controller.fill(preset('Precision'));controller.menu.makeKeyAndOrderFront_(None)
 output=Path(__file__).parent/'.qa';output.mkdir(exist_ok=True)
 tabs=next(view for view in controller.menu.contentView().subviews() if view.isKindOfClass_(NSTabView))
 
 class Render(NSObject):
     def tick_(self,timer):
-        if self.index==4:
+        if self.index==5:
             controller.menu.orderOut_(None)
             engine.settings=Settings.validated({**asdict(engine.settings),'fov':60,'esp_fov':True})
             display=engine.displays[0];w,h=display['width']-80,display['height']-130
@@ -36,13 +37,13 @@ class Render(NSObject):
             engine.status=dict(connected=True,focused=True,active=False,targets=3,candidates=[selected,other,blocked,offscreen],target=selected,
                 cameraFov=90,region=dict(left=display['left']+40,top=display['top']+70,width=w,height=h),message='ESP drawing verification')
             self.index+=1;return
-        if self.index==5:
+        if self.index==6:
             subprocess.run(['/usr/sbin/screencapture','-x','-o','-l',str(controller.panel.windowNumber()),str(output/'overlay.png')],check=True,capture_output=True)
-            timer.invalidate();print('Native form roundtrips, four tabs and ESP rendering passed.',flush=True);controller.quit_(None);return
-        name=('aim','esp','targets','connection')[self.index]
+            timer.invalidate();print('Native form roundtrips, five tabs and ESP rendering passed.',flush=True);controller.quit_(None);return
+        name=('aim','survival','esp','targets','connection')[self.index]
         subprocess.run(['/usr/sbin/screencapture','-x','-o','-l',str(controller.menu.windowNumber()),str(output/(name+'.png'))],check=True,capture_output=True)
         self.index+=1
-        if self.index<4:tabs.selectTabViewItemAtIndex_(self.index)
+        if self.index<5:tabs.selectTabViewItemAtIndex_(self.index)
 
 renderer=Render.alloc().init();renderer.index=0
 renderer.timer=NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(1,renderer,'tick:',None,True)

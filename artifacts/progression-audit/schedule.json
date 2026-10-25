@@ -1,0 +1,366 @@
+{
+  "note": "Scheduled major enemies only. Excludes skulls emitted by surviving towers, egg hatches, actual deaths and player actions. Spawn counts are not measured difficulty.",
+  "environmentCycle": 510,
+  "firstHeaven": 498,
+  "windows": [
+    {
+      "start": 450,
+      "end": 500,
+      "spawns": 16,
+      "kinds": {
+        "thorn": 4,
+        "squid": 4,
+        "squid2": 1,
+        "squid3": 1,
+        "gigapede": 1,
+        "spider2": 1,
+        "spider": 4
+      },
+      "waveMin": -1,
+      "waveMax": 0,
+      "maxGap": 10
+    },
+    {
+      "start": 500,
+      "end": 550,
+      "spawns": 17,
+      "kinds": {
+        "squid": 5,
+        "squid2": 2,
+        "squid3": 1,
+        "gigapede": 1,
+        "spider2": 1,
+        "spider": 4,
+        "thorn": 3
+      },
+      "waveMin": 0,
+      "waveMax": 1,
+      "maxGap": 8.900000000000091
+    },
+    {
+      "start": 550,
+      "end": 600,
+      "spawns": 18,
+      "kinds": {
+        "squid": 6,
+        "squid2": 2,
+        "squid3": 1,
+        "ghostpede": 1,
+        "spider2": 1,
+        "spider": 4,
+        "thorn": 3
+      },
+      "waveMin": 1,
+      "waveMax": 2,
+      "maxGap": 8
+    },
+    {
+      "start": 600,
+      "end": 650,
+      "spawns": 23,
+      "kinds": {
+        "squid2": 4,
+        "squid": 8,
+        "squid3": 2,
+        "gigapede": 1,
+        "spider2": 1,
+        "spider": 4,
+        "thorn": 3
+      },
+      "waveMin": 2,
+      "waveMax": 4,
+      "maxGap": 7.266666666666765
+    },
+    {
+      "start": 650,
+      "end": 700,
+      "spawns": 22,
+      "kinds": {
+        "gigapede": 1,
+        "spider2": 2,
+        "spider": 6,
+        "thorn": 4,
+        "squid": 5,
+        "squid2": 2,
+        "squid3": 1,
+        "ghostpede": 1
+      },
+      "waveMin": 4,
+      "waveMax": 5,
+      "maxGap": 6.666666666666629
+    },
+    {
+      "start": 700,
+      "end": 750,
+      "spawns": 26,
+      "kinds": {
+        "thorn": 5,
+        "spider": 6,
+        "squid": 9,
+        "squid2": 3,
+        "squid3": 1,
+        "gigapede": 1,
+        "spider2": 1
+      },
+      "waveMin": 5,
+      "waveMax": 7,
+      "maxGap": 5.716666666666697
+    },
+    {
+      "start": 750,
+      "end": 800,
+      "spawns": 30,
+      "kinds": {
+        "squid2": 3,
+        "squid": 7,
+        "squid3": 2,
+        "gigapede": 1,
+        "spider2": 2,
+        "spider": 8,
+        "thorn": 6,
+        "ghostpede": 1
+      },
+      "waveMin": 7,
+      "waveMax": 8,
+      "maxGap": 5.333333333333371
+    },
+    {
+      "start": 800,
+      "end": 850,
+      "spawns": 33,
+      "kinds": {
+        "squid": 9,
+        "squid2": 4,
+        "squid3": 2,
+        "gigapede": 2,
+        "spider2": 2,
+        "spider": 8,
+        "thorn": 6
+      },
+      "waveMin": 8,
+      "waveMax": 10,
+      "maxGap": 4.716666666666697
+    },
+    {
+      "start": 900,
+      "end": 950,
+      "spawns": 41,
+      "kinds": {
+        "squid2": 6,
+        "squid": 13,
+        "squid3": 3,
+        "gigapede": 2,
+        "spider2": 2,
+        "spider": 8,
+        "thorn": 6,
+        "ghostpede": 1
+      },
+      "waveMin": 12,
+      "waveMax": 15,
+      "maxGap": 3.816666666666606
+    },
+    {
+      "start": 1000,
+      "end": 1050,
+      "spawns": 51,
+      "kinds": {
+        "squid": 15,
+        "squid2": 6,
+        "squid3": 3,
+        "gigapede": 2,
+        "spider2": 3,
+        "spider": 12,
+        "thorn": 9,
+        "ghostpede": 1
+      },
+      "waveMin": 18,
+      "waveMax": 20,
+      "maxGap": 3.0666666666667197
+    },
+    {
+      "start": 1100,
+      "end": 1150,
+      "spawns": 64,
+      "kinds": {
+        "thorn": 12,
+        "spider": 14,
+        "squid": 20,
+        "squid2": 8,
+        "squid3": 4,
+        "gigapede": 2,
+        "spider2": 3,
+        "ghostpede": 1
+      },
+      "waveMin": 24,
+      "waveMax": 28,
+      "maxGap": 2.5
+    }
+  ],
+  "waveStarts": [
+    {
+      "wave": 0,
+      "time": 456,
+      "schedulerRate": 1
+    },
+    {
+      "wave": 1,
+      "time": 511.43333333333334,
+      "schedulerRate": 1.125
+    },
+    {
+      "wave": 2,
+      "time": 560.7666666666667,
+      "schedulerRate": 1.25
+    },
+    {
+      "wave": 3,
+      "time": 605.2166666666667,
+      "schedulerRate": 1.375
+    },
+    {
+      "wave": 4,
+      "time": 645.6333333333333,
+      "schedulerRate": 1.5
+    },
+    {
+      "wave": 5,
+      "time": 682.7166666666667,
+      "schedulerRate": 1.625
+    },
+    {
+      "wave": 6,
+      "time": 716.95,
+      "schedulerRate": 1.75
+    },
+    {
+      "wave": 7,
+      "time": 748.7666666666667,
+      "schedulerRate": 1.875
+    },
+    {
+      "wave": 8,
+      "time": 778.4666666666667,
+      "schedulerRate": 2
+    },
+    {
+      "wave": 9,
+      "time": 806.3166666666667,
+      "schedulerRate": 2.125
+    },
+    {
+      "wave": 10,
+      "time": 832.5333333333333,
+      "schedulerRate": 2.25
+    },
+    {
+      "wave": 11,
+      "time": 857.3166666666667,
+      "schedulerRate": 2.375
+    },
+    {
+      "wave": 12,
+      "time": 880.7833333333333,
+      "schedulerRate": 2.5
+    },
+    {
+      "wave": 13,
+      "time": 903.1,
+      "schedulerRate": 2.625
+    },
+    {
+      "wave": 14,
+      "time": 924.3333333333334,
+      "schedulerRate": 2.75
+    },
+    {
+      "wave": 15,
+      "time": 944.6166666666667,
+      "schedulerRate": 2.875
+    },
+    {
+      "wave": 16,
+      "time": 964.0333333333333,
+      "schedulerRate": 3
+    },
+    {
+      "wave": 17,
+      "time": 982.6333333333333,
+      "schedulerRate": 3.125
+    },
+    {
+      "wave": 18,
+      "time": 1000.4833333333333,
+      "schedulerRate": 3.25
+    },
+    {
+      "wave": 19,
+      "time": 1017.6666666666666,
+      "schedulerRate": 3.375
+    },
+    {
+      "wave": 20,
+      "time": 1034.2,
+      "schedulerRate": 3.5
+    },
+    {
+      "wave": 21,
+      "time": 1050.15,
+      "schedulerRate": 3.625
+    },
+    {
+      "wave": 22,
+      "time": 1065.55,
+      "schedulerRate": 3.75
+    },
+    {
+      "wave": 23,
+      "time": 1080.45,
+      "schedulerRate": 3.875
+    },
+    {
+      "wave": 24,
+      "time": 1094.85,
+      "schedulerRate": 4
+    },
+    {
+      "wave": 25,
+      "time": 1108.8166666666666,
+      "schedulerRate": 4.125
+    },
+    {
+      "wave": 26,
+      "time": 1122.3666666666666,
+      "schedulerRate": 4.25
+    },
+    {
+      "wave": 27,
+      "time": 1135.5,
+      "schedulerRate": 4.375
+    },
+    {
+      "wave": 28,
+      "time": 1148.2666666666667,
+      "schedulerRate": 4.5
+    },
+    {
+      "wave": 29,
+      "time": 1160.6833333333334,
+      "schedulerRate": 4.625
+    },
+    {
+      "wave": 30,
+      "time": 1172.7666666666667,
+      "schedulerRate": 4.75
+    },
+    {
+      "wave": 31,
+      "time": 1184.5333333333333,
+      "schedulerRate": 4.875
+    },
+    {
+      "wave": 32,
+      "time": 1195.9833333333333,
+      "schedulerRate": 5
+    }
+  ]
+}

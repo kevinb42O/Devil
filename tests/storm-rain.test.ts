@@ -38,3 +38,7 @@ test('global drops cover all arena quadrants and remain fixed as the camera move
  }
  const before=seeds.array.slice();camera.position.set(27,2,-10);camera.updateMatrixWorld();rain.update(camera,90);assert.deepEqual(seeds.array,before,'moving camera cannot move the global rain anchors');rain.dispose();floor.dispose();
 });
+
+test('rain and floor wetness return on every environmental descent',()=>{
+ for(const time of [51,69,90,144,200,472])for(const cycle of [1,2,100])assert.deepEqual(rainAt(time+510*cycle),rainAt(time));
+});

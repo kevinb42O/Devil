@@ -44,14 +44,14 @@ for(const engine of [chromium,webkit]){
    return {decoded,wetDecoded,failed:s.diagnostics.failed,local,airborne,idle,positional,weather};
   });
   assert.equal(report.decoded,true);assert.deepEqual(report.failed,[]);assert.ok(report.local.length>=6);
-  assert.ok(report.local.every(c=>c.played&&!c.panner&&c.rate===1&&c.gain<=.0136),'native pitch and subdued voice gain');
+  assert.ok(report.local.every(c=>c.played&&!c.panner&&c.rate===1&&c.gain>.025&&c.gain<=.068),'native pitch and audible supporting voice gain');
   assert.equal(new Set(report.local.slice(0,Math.min(12,report.local.length)).map(c=>c.name)).size,Math.min(12,report.local.length),'shuffle bag has no repeated sample');
   assert.deepEqual(report.airborne,[]);assert.deepEqual(report.idle,[]);
   assert.ok(report.positional.length>=3);assert.ok(report.positional.every(c=>c.played&&c.panner&&c.position));assert.deepEqual(errors,[]);
   assert.equal(report.wetDecoded,true);
   for(const stage of report.weather){
    assert.ok(stage.calls.length>=2,'weather stage produces contacts');
-   assert.ok(stage.calls.every(c=>c.played&&c.rate===1&&c.gain<=.0136));
+   assert.ok(stage.calls.every(c=>c.played&&c.rate===1&&c.gain<=.068));
    if(stage.time===100)assert.ok(stage.calls.every(c=>c.name.startsWith('footstep-wet')),'storm and rewind use wet bank');
    else if(stage.time===241)assert.ok(stage.calls.every(c=>c.name.startsWith('footstep-stone')),'dry chapter restores stone');
    else{
@@ -60,7 +60,7 @@ for(const engine of [chromium,webkit]){
      const dry=stage.calls[i],wet=stage.calls[i+1];
      assert.ok(dry.name.startsWith('footstep-stone')&&wet.name.startsWith('footstep-wet'));
      assert.equal(dry.name.replace('footstep-stone',''),wet.name.replace('footstep-wet',''),'paired materials share contact');
-     assert.ok(dry.gain+wet.gain<=.0136,'transition never doubles the gain');
+     assert.ok(dry.gain+wet.gain<=.068,'transition never doubles the gain');
     }
    }
   }

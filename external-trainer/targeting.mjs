@@ -2,7 +2,7 @@
 export function createMemoryAim(access, environment = globalThis) {
   const clock=()=>environment.performance.now(), originalRAF=environment.requestAnimationFrame;
   const config={prediction:true,aim_mode:'snap',smooth_speed:720,fov:360,max_distance:196,
-    selection:'nearest',tower_priority:true,switch_bias:8,lock_ms:120,lead_limit:1.5,
+    godmode:false,emergency_targeting:true,auto_dodge:true,edge_guard:true,dodge_horizon:.75,selection:'nearest',tower_priority:true,switch_bias:8,lock_ms:120,lead_limit:1.5,
     excluded_kinds:'',esp_enabled:true,esp_max_targets:120,...access.config};
   let enabled=false,requestedEnabled=false,suspended=false,heartbeat=clock(),stopped=false,fault=null;
   let physical=0,selectedId=null,selectedAt=0,previous=new Map(),lastTime=-1,lastWorld=null,lastAimAt=null;
@@ -36,7 +36,7 @@ export function createMemoryAim(access, environment = globalThis) {
     const candidates=ordered.slice(0,config.esp_max_targets).map(projected);
     const target=chosen?(candidates.find(p=>p.id===chosen.id)||projected(chosen)):null;
     if(target&&access.project){try{target.lead=access.project(chosen.predicted,0);}catch{}}
-    return {...telemetry,target,candidates,espTargets:entries.length};
+    return {...telemetry,target,candidates,espTargets:entries.length,survival:access.survival?.snapshot(),godmode:access.godmode?.snapshot()};
   }
 
   function compute(forceFiring=false){
@@ -48,6 +48,8 @@ export function createMemoryAim(access, environment = globalThis) {
       message:!w?'Memory connected · start a run':!running?'Waiting for combat':!fresh?'Trainer heartbeat lost':!enabled?'OFF · F8 to enable':firing?'Tracking':'ON · fire either weapon to aim'};
     if(w!==lastWorld||(w&&w.time<lastTime)||!running){previous.clear();lastTime=w?.time??-1;selectedId=null;lastWorld=w;lastAimAt=null;}
     entries=[];chosen=null;
+    access.godmode?.sync(state,config,fresh);
+    access.survival?.sync(state,config,running&&enabled&&!fault&&!suspended&&focus&&fresh);
     if(!running){physical=0;return;}
     const origin=w.player.pos,next=new Map(),dt=w.time-lastTime,points=[];
     const canSelect=enabled&&!fault&&!suspended&&focus&&fresh;
@@ -62,6 +64,7 @@ export function createMemoryAim(access, environment = globalThis) {
     };
     const compare=(a,b)=>a.entry.priority-b.entry.priority||a.entry.score-b.entry.score||a.entry.id.localeCompare(b.entry.id);
     let enemyActive=true;
+    const dangerTimes=new Map();
     const add=(e,pos,index,tier,radius,health,eligible=true)=>{
       radius=access.radius?access.radius(e,index,radius):radius;
       if(!(radius>0)||!Number.isFinite(pos.x+pos.y+pos.z))return;
@@ -76,23 +79,26 @@ export function createMemoryAim(access, environment = globalThis) {
       const distance=Math.hypot(pos.x-origin.x,pos.y-origin.y,pos.z-origin.z);
       // In distance mode only hittable tower crystals get an elevated tier.
       // Other weak points must never outrank an enemy about to reach the player.
-      const priority=config.tower_priority?(config.selection==='nearest'?(tier===0?0:1):tier):0;
+      if(!dangerTimes.has(e.id))dangerTimes.set(e.id,config.emergency_targeting?(access.survival?.threat(e)??Infinity):Infinity);
+      const dangerTime=dangerTimes.get(e.id),emergency=dangerTime<=config.dodge_horizon;
+      const priority=emergency?-1:config.tower_priority?(config.selection==='nearest'?(tier===0?0:1):tier):0;
       const maxHealth=access.maxHealth?.(e,index)??health;
       const label=kindLabel(e.kind)+(index.startsWith('crystal')?' · CRYSTAL '+(Number(index.slice(7))+1):index.startsWith('segment')?' · SEGMENT '+(Number(index.slice(7))+1):'');
-      const entry={id,enemy:e.id,kind:e.kind,priority,category:tier===0?'tower':tier===1?'weak':'enemy',pos:copy(pos),predicted:copy(pos),radius,index,health,maxHealth,distance,label,aimable:false};
+      const entry={id,enemy:e.id,kind:e.kind,priority,category:tier===0?'tower':tier===1?'weak':'enemy',pos:copy(pos),predicted:copy(pos),radius,index,health,maxHealth,distance,label,emergency,dangerTime,aimable:false};
       entries.push(entry);
       if(!canSelect||!eligible||!enemyActive||excluded.has(e.kind)||distance>Math.min(config.max_distance,speed===42?336:196))return;
       // The aim circle gates expensive geometry queries, not just the final snap.
       // ESP still receives entries outside the circle without any armor checks.
-      if(direction(pos).angle>halfFov+1e-9)return;
+      if(!emergency&&direction(pos).angle>halfFov+1e-9)return;
       const predicted=config.prediction?intercept(origin,pos,velocity,speed):copy(pos);
       if(!Number.isFinite(predicted.x+predicted.y+predicted.z))return;
       const {aim,angle}=direction(predicted);
       const playerVelocity=w.player.vel||{x:0,y:0,z:0};
       const closing=Math.max(2,-((pos.x-origin.x)*(velocity.x-playerVelocity.x)+(pos.y-origin.y)*(velocity.y-playerVelocity.y)+(pos.z-origin.z)*(velocity.z-playerVelocity.z))/Math.max(.001,distance));
       let score=config.selection==='nearest'?distance:config.selection==='health'?health:config.selection==='threat'?Math.max(0,distance-e.radius-.35)/closing:angle;
+      if(emergency)score=dangerTime+distance/speed*.05;
       const bias=config.switch_bias*Math.PI/180;
-      if(id===selectedId&&config.selection!=='nearest')score-=config.selection==='crosshair'?bias:Math.abs(score)*Math.min(.4,bias);
+      if(!emergency&&id===selectedId&&config.selection!=='nearest')score-=config.selection==='crosshair'?bias:Math.abs(score)*Math.min(.4,bias);
       Object.assign(entry,{predicted,aim,score,angle,aimable:true});points.push({entry,e,velocity});
     };
     for(const e of w.enemies){
@@ -117,9 +123,9 @@ export function createMemoryAim(access, environment = globalThis) {
         if(config.prediction&&access.resolve&&e.weakpoints?.length&&
             !access.resolve(e,entry.pos,entry.radius,state,homing,predicted))predicted=copy(aimPoint);
         const {aim,angle}=direction(predicted);
-        if(Number.isFinite(predicted.x+predicted.y+predicted.z)&&Math.abs(aim.pitch)<=1.5&&angle<=halfFov+1e-9){
+        if(Number.isFinite(predicted.x+predicted.y+predicted.z)&&Math.abs(aim.pitch)<=1.5&&(entry.emergency||angle<=halfFov+1e-9)){
           Object.assign(entry,{predicted,aim,angle});
-          if(config.selection==='crosshair')entry.score=angle-(entry.id===selectedId?config.switch_bias*Math.PI/180:0);
+          if(!entry.emergency&&config.selection==='crosshair')entry.score=angle-(entry.id===selectedId?config.switch_bias*Math.PI/180:0);
           verified.set(candidate,entry);return entry;
         }
       }
@@ -132,7 +138,7 @@ export function createMemoryAim(access, environment = globalThis) {
       const clear=points.filter(candidate=>verify(candidate));clear.sort(compare);chosen=clear[0]?.entry??null;
     }else for(const candidate of points){chosen=verify(candidate);if(chosen)break;}
     const locked=points.find(p=>p.entry.id===selectedId);
-    if(config.selection!=='nearest'&&locked&&chosen&&locked.entry.priority===chosen.priority&&started-selectedAt<config.lock_ms)chosen=verify(locked)||chosen;
+    if(config.selection!=='nearest'&&locked&&chosen&&!chosen.emergency&&locked.entry.priority===chosen.priority&&started-selectedAt<config.lock_ms)chosen=verify(locked)||chosen;
     if(chosen?.id!==selectedId){selectedAt=started;selectedId=chosen?.id??null;}
     const canAim=canSelect&&firing;
     if(canAim&&chosen){
@@ -153,7 +159,7 @@ export function createMemoryAim(access, environment = globalThis) {
   function run(force=false){
     if(stopped)return;
     try{compute(force);}
-    catch(error){fault=String(error?.message||error);enabled=false;physical=0;chosen=null;entries=[];telemetry={...telemetry,active:false,error:true,message:'Aim stopped: '+fault};}
+    catch(error){access.godmode?.stop();access.survival?.stop();fault=String(error?.message||error);enabled=false;physical=0;chosen=null;entries=[];telemetry={...telemetry,active:false,error:true,message:'Aim stopped: '+fault};}
     if(fault){telemetry.error=true;telemetry.message='Aim stopped: '+fault;telemetry.active=false;}
   }
   function wrappedRAF(callback){
@@ -178,7 +184,7 @@ export function createMemoryAim(access, environment = globalThis) {
       if(dirty||!originalRAF)run();return snapshot();
     },
     snapshot,
-    stop(){stopped=true;enabled=false;physical=0;chosen=null;entries=[];if(environment.requestAnimationFrame===wrappedRAF)environment.requestAnimationFrame=originalRAF;for(const [event,handler]of Object.entries(handlers))environment.removeEventListener?.(event,handler,true);telemetry.active=false;}
+    stop(){access.godmode?.stop();access.survival?.stop();stopped=true;enabled=false;physical=0;chosen=null;entries=[];if(environment.requestAnimationFrame===wrappedRAF)environment.requestAnimationFrame=originalRAF;for(const [event,handler]of Object.entries(handlers))environment.removeEventListener?.(event,handler,true);telemetry.active=false;}
   };
 }
 // Find a shootable patch inside the crystal's actual damage sphere. A visible

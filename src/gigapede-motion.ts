@@ -1,11 +1,17 @@
 import type {Enemy,Vec} from './simulation';
+import type {GigapedeFlightPlan} from './gigapede-formation';
 
 // Replica tuning. Continuous flight and head-led emergence replace the old
 // whole-body teleport; these coefficients are not recovered original AI.
 export const GIGAPEDE_TUNING={speed:10,spacing:1.95,turnRate:1.05,turnAcceleration:2.4};
-export type GigapedeMotion={path:Vec[];yawRate:number;pitchRate:number;surfaceAt:number;exit:Vec;nextDust:number};
+export const GIGAPEDE_FORMATION_TUNING={sectorRadius:24,heightStep:4,passGap:4,bodyClearance:4,lookAhead:.8};
+export const GIGAPEDE_SWEEP_TUNING={cruiseHeight:13,passHeight:8,turnRate:.8,passRun:16,recoverTime:1.5};
+export type GigapedeFormationMember={group:number;slot:number;angle:number;lastAttack:number};
+type Sweep={stage:'climb'|'holding'|'approach'|'pass'|'recover';until:number;goal:Vec;direction:Vec};
+export type GigapedeMotion={formation?:GigapedeFormationMember;sweep?:Sweep;path:Vec[];yawRate:number;pitchRate:number;surfaceAt:number;exit:Vec;nextDust:number};
 const distance=(a:Vec,b:Vec)=>Math.hypot(a.x-b.x,a.y-b.y,a.z-b.z);
 const clamp=(x:number,n:number)=>Math.max(-n,Math.min(n,x));
+export function gigapedeMotion(e:Enemy):GigapedeMotion{return e.gigapedeMotion??(e.gigapedeMotion={path:[{...e.pos},...e.segments.map(s=>({...s.pos}))],yawRate:0,pitchRate:0,surfaceAt:e.activeAt,exit:{...e.pos},nextDust:e.age});}
 export function initializeGigapede(e:Enemy){
  e.pos.y=-4*.62;e.vel={x:0,y:0,z:0};
  for(let i=0;i<e.segments.length;i++)e.segments[i].pos={x:e.pos.x,y:e.pos.y-(i+1)*GIGAPEDE_TUNING.spacing,z:e.pos.z};
@@ -21,9 +27,9 @@ function follow(e:Enemy,m:GigapedeMotion){
  }
  m.path.length=Math.min(m.path.length,edge+3);
 }
-export function updateGigapede(e:Enemy,dt:number,player:Vec,floor:number,emit:(kind:'emerge'|'dust',pos:Vec)=>void){
+export function updateGigapede(e:Enemy,dt:number,player:Vec,floor:number,emit:(kind:'emerge'|'dust',pos:Vec)=>void,sweeps=false,formation?:GigapedeFlightPlan){
  const t=GIGAPEDE_TUNING;
- const m=e.gigapedeMotion??(e.gigapedeMotion={path:[{...e.pos},...e.segments.map(s=>({...s.pos}))],yawRate:0,pitchRate:0,surfaceAt:e.activeAt,exit:{...e.pos},nextDust:e.age});
+ const m=gigapedeMotion(e);
  if(e.age+1e-7<e.activeAt){
   const u=Math.max(0,Math.min(1,1-(e.activeAt-e.age)/3)),u2=u*u,u3=u2*u,u4=u3*u,u5=u4*u;
   e.pos.y=m.exit.y*(1-10*u3+15*u4-6*u5)+t.speed*3*(-4*u3+7*u4-3*u5);
@@ -38,14 +44,61 @@ export function updateGigapede(e:Enemy,dt:number,player:Vec,floor:number,emit:(k
  // head down onto the player's eyes. The tail samples this exact flight trail.
  const yaw=Math.hypot(e.vel.x,e.vel.z)>.001?Math.atan2(e.vel.x,e.vel.z):e.facingYaw;
  const pitch=Math.atan2(e.vel.y,Math.hypot(e.vel.x,e.vel.z));
- const targetYaw=Math.atan2(player.x-e.pos.x,player.z-e.pos.z);
- const height=Math.max(0,floor)+5.5+Math.sin((e.age-m.surfaceAt)*.55)*2;
- const targetPitch=Math.atan2(height-e.pos.y,Math.max(6,Math.hypot(player.x-e.pos.x,player.z-e.pos.z)));
+ const goal=sweeps?sweepGoal(e,m,player,Math.max(0,floor),formation):player;
+ if(formation&&e.age>8){goal.x+=formation.avoid.x*12;goal.z+=formation.avoid.z*12;goal.y+=Math.max(-1,formation.avoid.y*3);}
+ const targetYaw=Math.atan2(goal.x-e.pos.x,goal.z-e.pos.z);
+ const height=sweeps?goal.y:Math.max(0,floor)+5.5+Math.sin((e.age-m.surfaceAt)*.55)*2;
+ let targetPitch=Math.atan2(height-e.pos.y,Math.max(6,Math.hypot(goal.x-e.pos.x,goal.z-e.pos.z)));
+ // Bank out of a descent early enough for the heavy body to clear the floor.
+ if(sweeps&&e.pos.y<Math.max(0,floor)+7)targetPitch=Math.max(.4,targetPitch);
+ const turnRate=sweeps?GIGAPEDE_SWEEP_TUNING.turnRate:t.turnRate;
  const yawDelta=Math.atan2(Math.sin(targetYaw-yaw),Math.cos(targetYaw-yaw));
- m.yawRate+=clamp(clamp(yawDelta*1.8,t.turnRate)-m.yawRate,t.turnAcceleration*dt);
+ m.yawRate+=clamp(clamp(yawDelta*1.8,turnRate)-m.yawRate,t.turnAcceleration*dt);
  m.pitchRate+=clamp(clamp((targetPitch-pitch)*1.8,t.turnRate)-m.pitchRate,t.turnAcceleration*dt);
  const y=yaw+m.yawRate*dt,p=pitch+m.pitchRate*dt;
  e.vel={x:Math.sin(y)*Math.cos(p)*t.speed,y:Math.sin(p)*t.speed,z:Math.cos(y)*Math.cos(p)*t.speed};
  e.pos={x:e.pos.x+e.vel.x*dt,y:e.pos.y+e.vel.y*dt,z:e.pos.z+e.vel.z*dt};e.facingYaw=y;
  follow(e,m);
+}
+
+/** A committed fly-through breaks the pursuit orbit. Altitude and recovery are
+ * independent of player eye height; the body follows the same distance trail. */
+function sweepGoal(e:Enemy,m:GigapedeMotion,player:Vec,floor:number,formation?:GigapedeFlightPlan):Vec{
+ const t=GIGAPEDE_SWEEP_TUNING;
+ const s=m.sweep??(m.sweep={stage:'climb',until:e.age+3,goal:{...e.pos},direction:{x:Math.sin(e.facingYaw),y:0,z:Math.cos(e.facingYaw)}});
+ const heightOffset=formation?formation.member.slot*GIGAPEDE_FORMATION_TUNING.heightStep:0;
+ if(formation&&s.stage==='climb')s.direction={x:Math.sin(formation.member.angle),y:0,z:Math.cos(formation.member.angle)};
+ const horizontal=Math.hypot(player.x-e.pos.x,player.z-e.pos.z);
+ if(s.stage==='climb'&&e.age>=s.until&&e.pos.y>=floor+10){s.stage=formation?'holding':'approach';s.until=e.age+8;}
+ if(s.stage==='holding'&&formation?.mayApproach){
+  s.stage='approach';s.until=e.age+8;formation.member.lastAttack=formation.time;
+ }
+ if(s.stage==='approach'){
+  const dx=player.x-e.pos.x,dz=player.z-e.pos.z,length=horizontal||1;
+  const ahead=(dx*Math.sin(e.facingYaw)+dz*Math.cos(e.facingYaw))/length;
+  if((horizontal<20&&ahead>.7)||e.age>=s.until){
+   // Freeze this line until the head is well beyond the player. Moving or
+   // jumping underneath it cannot pull the head back into a tight circle.
+   s.direction=horizontal>1?{x:dx/length,y:0,z:dz/length}:{x:Math.sin(e.facingYaw),y:0,z:Math.cos(e.facingYaw)};
+   s.goal={x:player.x+s.direction.x*t.passRun,y:floor+t.passHeight+heightOffset,z:player.z+s.direction.z*t.passRun};
+   s.stage='pass';s.until=e.age+8;
+  }
+ }
+ if(s.stage==='pass'){
+  const remaining=(s.goal.x-e.pos.x)*s.direction.x+(s.goal.z-e.pos.z)*s.direction.z;
+  if(remaining<3||e.age>=s.until){
+   s.stage='recover';s.until=e.age+t.recoverTime;
+   s.goal={x:e.pos.x+s.direction.x*24,y:floor+t.cruiseHeight+3+heightOffset,z:e.pos.z+s.direction.z*24};
+  }
+ }
+ if(s.stage==='recover'&&e.age>=s.until){s.stage=formation?'holding':'approach';s.until=e.age+8;}
+ if(s.stage==='holding'&&formation){
+  // Each waiting snake flies outside the attack corridor, in a different
+  // sector and height lane. Slowly moving staging points prevent a pile-up.
+  const angle=formation.member.angle+(e.age-m.surfaceAt)*.12;
+  return {x:formation.center.x+Math.sin(angle)*GIGAPEDE_FORMATION_TUNING.sectorRadius,y:floor+t.cruiseHeight+heightOffset,z:formation.center.z+Math.cos(angle)*GIGAPEDE_FORMATION_TUNING.sectorRadius};
+ }
+ if(s.stage==='climb')return {x:e.pos.x+s.direction.x*18,y:floor+t.cruiseHeight+heightOffset,z:e.pos.z+s.direction.z*18};
+ if(s.stage==='approach')return {x:player.x,y:floor+t.cruiseHeight+heightOffset,z:player.z};
+ return {...s.goal};
 }

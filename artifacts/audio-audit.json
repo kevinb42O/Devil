@@ -1,6 +1,6 @@
 {
-  "totalDecoded": 261,
-  "used": 252,
+  "totalDecoded": 273,
+  "used": 264,
   "enemies": [
     {
       "kind": "skull",
@@ -13,7 +13,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killskull2"
+        "killskull1"
       ]
     },
     {
@@ -69,7 +69,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killskullblack3"
+        "killskullblack1"
       ]
     },
     {
@@ -230,7 +230,7 @@
       ],
       "cues": [
         "daggerhit1",
-        "killspiderling1"
+        "killspiderling3"
       ]
     },
     {
@@ -346,44 +346,44 @@
         "beds": []
       },
       "recent": [
-        "killskull2",
-        "killskull4",
-        "killskull2",
-        "killskull4",
-        "killskull2",
-        "killskull5",
-        "killskull2",
-        "killskull4",
-        "killskull2",
-        "killskull5",
-        "killskull4",
-        "killskull1",
-        "killskull5",
-        "killskull2",
-        "killskull4",
         "killskull3",
         "killskull2",
-        "killskull3",
+        "killskull5",
         "killskull1",
+        "killskull2",
+        "killskull3",
         "killskull4",
         "killskull1",
+        "killskull2",
         "killskull3",
+        "killskull4",
         "killskull5",
-        "killskull2",
+        "killskull4",
         "killskull1",
-        "killskull2",
+        "killskull4",
+        "killskull5",
         "killskull1",
+        "killskull4",
+        "killskull5",
+        "killskull1",
+        "killskull3",
+        "killskull1",
+        "killskull3",
+        "killskull4",
+        "killskull1",
+        "killskull4",
+        "killskull3",
         "killskull4",
         "jump3",
         "weapon1-start",
         "weapon1-stop",
-        "shot1alt2"
+        "shot1alt4"
       ],
-      "loaded": 252,
+      "loaded": 264,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
-        "shot1alt2"
+        "shot1alt4"
       ],
       "loops": []
     },
@@ -396,44 +396,44 @@
         "beds": []
       },
       "recent": [
-        "killskull2",
         "killskull1",
-        "killskull2",
+        "killskull3",
+        "killskull4",
         "killskull1",
+        "killskull4",
+        "killskull3",
         "killskull4",
         "jump3",
         "weapon1-start",
         "weapon1-stop",
-        "shot1alt2",
+        "shot1alt4",
         "weapon2-start",
-        "ricochet1",
-        "ricochet4",
-        "ricochet4",
+        "ricochet2",
         "ricochet3",
-        "ricochet1",
-        "ricochet2",
-        "ricochet5",
-        "ricochet2",
-        "ricochet4",
-        "ricochet4",
         "ricochet3",
         "ricochet5",
         "ricochet3",
         "ricochet4",
-        "ricochet2",
-        "ricochet4",
-        "ricochet2",
         "ricochet3",
+        "ricochet5",
+        "ricochet2",
+        "ricochet2",
+        "ricochet2",
+        "ricochet2",
+        "ricochet2",
         "ricochet1",
         "ricochet5",
+        "ricochet4",
+        "ricochet4",
+        "ricochet4",
         "weapon2-stop",
-        "shot2"
+        "shot2alt1"
       ],
-      "loaded": 252,
+      "loaded": 264,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
-        "shot2"
+        "shot2alt1"
       ],
       "loops": []
     },
@@ -446,44 +446,44 @@
         "beds": []
       },
       "recent": [
-        "ricochet4",
-        "ricochet5",
-        "ricochet3",
-        "ricochet5",
-        "ricochet4",
-        "ricochet5",
-        "ricochet2",
-        "ricochet4",
-        "ricochet4",
-        "ricochet5",
-        "ricochet2",
-        "ricochet5",
-        "ricochet5",
-        "ricochet2",
-        "ricochet5",
-        "ricochet2",
         "ricochet3",
         "ricochet4",
-        "ricochet2",
-        "ricochet2",
         "ricochet4",
+        "ricochet1",
+        "ricochet1",
+        "ricochet5",
+        "ricochet3",
+        "ricochet1",
         "ricochet2",
+        "ricochet1",
+        "ricochet5",
+        "ricochet1",
+        "ricochet2",
+        "ricochet3",
+        "ricochet5",
+        "ricochet3",
+        "ricochet1",
+        "ricochet5",
+        "ricochet4",
+        "ricochet1",
+        "ricochet1",
         "ricochet1",
         "ricochet1",
         "ricochet3",
-        "ricochet3",
-        "ricochet2",
+        "ricochet5",
         "ricochet4",
         "ricochet4",
         "ricochet3",
+        "ricochet5",
+        "ricochet1",
         "weapon3-stop",
-        "shot3alt3"
+        "shot3alt4"
       ],
-      "loaded": 252,
+      "loaded": 264,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
-        "shot3alt3"
+        "shot3alt4"
       ],
       "loops": []
     },
@@ -496,40 +496,40 @@
         "beds": []
       },
       "recent": [
-        "ricochet1",
-        "ricochet3",
-        "ricochet5",
-        "ricochet2",
-        "ricochet4",
-        "ricochet2",
         "ricochet5",
         "ricochet4",
-        "ricochet2",
-        "ricochet3",
-        "ricochet2",
-        "ricochet3",
-        "ricochet2",
-        "ricochet1",
-        "ricochet4",
-        "ricochet2",
-        "ricochet2",
-        "ricochet1",
-        "ricochet4",
-        "ricochet3",
         "ricochet5",
+        "ricochet4",
+        "ricochet1",
+        "ricochet3",
+        "ricochet3",
+        "ricochet3",
+        "ricochet1",
+        "ricochet3",
         "ricochet2",
-        "ricochet4",
-        "ricochet4",
-        "ricochet4",
+        "ricochet1",
         "ricochet3",
         "ricochet4",
         "ricochet3",
         "ricochet1",
+        "ricochet5",
+        "ricochet3",
+        "ricochet1",
+        "ricochet3",
+        "ricochet1",
+        "ricochet5",
+        "ricochet3",
+        "ricochet4",
+        "ricochet5",
+        "ricochet3",
+        "ricochet1",
+        "ricochet3",
+        "ricochet2",
         "ricochet3",
         "weapon4-stop",
         "shot4alt2"
       ],
-      "loaded": 252,
+      "loaded": 264,
       "failed": [],
       "oneShots": 1,
       "oneShotNames": [
@@ -541,129 +541,129 @@
   "rendered": [
     {
       "name": "rapid1",
-      "rms": 0.006926936669309393,
+      "rms": 0.00970435490620453,
       "tail": 0,
-      "peak": 0.021190419793128967
+      "peak": 0.029666345566511154
     },
     {
       "name": "seekrapid1",
-      "rms": 0.005934912128573464,
+      "rms": 0.008320562278071313,
       "tail": 0,
-      "peak": 0.018803786486387253
+      "peak": 0.026427557691931725
     },
     {
       "name": "shot1",
-      "rms": 0.03937164800806523,
-      "tail": 0.020553117617964745,
-      "peak": 0.1435234397649765
+      "rms": 0.023649949533709972,
+      "tail": 0.012366198934614658,
+      "peak": 0.08618447184562683
     },
     {
       "name": "rapid2",
-      "rms": 0.006972952982954996,
+      "rms": 0.009771286385084278,
       "tail": 0,
-      "peak": 0.020899059250950813
+      "peak": 0.029258308932185173
     },
     {
       "name": "seekrapid2",
-      "rms": 0.005964470237612288,
+      "rms": 0.008365832851563556,
       "tail": 0,
-      "peak": 0.01808890327811241
+      "peak": 0.025342628359794617
     },
     {
       "name": "shot2",
-      "rms": 0.037268284528377854,
-      "tail": 0.03604775294661522,
-      "peak": 0.11594890803098679
+      "rms": 0.02238872032152928,
+      "tail": 0.02163858152925968,
+      "peak": 0.06973657757043839
     },
     {
       "name": "rapid3",
-      "rms": 0.006928875608961194,
+      "rms": 0.009720646735456395,
       "tail": 0,
-      "peak": 0.021173754706978798
+      "peak": 0.029699722304940224
     },
     {
       "name": "seekrapid3",
-      "rms": 0.005924421251355787,
+      "rms": 0.008322225046361468,
       "tail": 0,
-      "peak": 0.01864009164273739
+      "peak": 0.026108482852578163
     },
     {
       "name": "shot3",
-      "rms": 0.03765109897045617,
-      "tail": 0.0325506366789341,
-      "peak": 0.16635724902153015
+      "rms": 0.022703338254587615,
+      "tail": 0.019695531576871872,
+      "peak": 0.10002192109823227
     },
     {
       "name": "rapid4",
-      "rms": 0.006908634681055642,
+      "rms": 0.009681024872195701,
       "tail": 0,
-      "peak": 0.021104102954268456
+      "peak": 0.029551569372415543
     },
     {
       "name": "seekrapid4",
-      "rms": 0.005919771134886321,
+      "rms": 0.00829979127814415,
       "tail": 0,
-      "peak": 0.018580423668026924
+      "peak": 0.02608284167945385
     },
     {
       "name": "shot4",
-      "rms": 0.03891752591183629,
-      "tail": 0.011928596533834934,
-      "peak": 0.12462089210748672
+      "rms": 0.023397768316493876,
+      "tail": 0.007168907672166824,
+      "peak": 0.0747913047671318
     },
     {
       "name": "rapid5",
-      "rms": 0.0071286854854002175,
+      "rms": 0.009986847795039307,
       "tail": 0,
-      "peak": 0.02066732943058014
+      "peak": 0.02894449234008789
     },
     {
       "name": "seekrapid5",
-      "rms": 0.005992649588596594,
+      "rms": 0.008399581543696449,
       "tail": 0,
-      "peak": 0.01836317777633667
+      "peak": 0.02571767009794712
     },
     {
       "name": "shot5",
-      "rms": 0.04332156417496534,
-      "tail": 0.014414645731449127,
-      "peak": 0.12450806051492691
+      "rms": 0.026005106834351685,
+      "tail": 0.008676162920892239,
+      "peak": 0.07477919012308121
     },
     {
       "name": "rapid6",
-      "rms": 0.006755315625880986,
+      "rms": 0.009464837196648944,
       "tail": 0,
-      "peak": 0.02069738134741783
+      "peak": 0.029040269553661346
     },
     {
       "name": "seekrapid6",
-      "rms": 0.005812963962337743,
+      "rms": 0.008150580219272771,
       "tail": 0,
-      "peak": 0.018628595396876335
+      "peak": 0.026133539155125618
     },
     {
       "name": "shot6",
-      "rms": 0.043967533623048005,
-      "tail": 0.03725931793451309,
-      "peak": 0.14003321528434753
+      "rms": 0.026420977470733208,
+      "tail": 0.022450381889939308,
+      "peak": 0.08415023982524872
     },
     {
       "name": "rapid7",
-      "rms": 0.007029793577902154,
+      "rms": 0.00984572237438814,
       "tail": 0,
-      "peak": 0.02233542501926422
+      "peak": 0.03127625212073326
     },
     {
       "name": "seekrapid7",
-      "rms": 0.006011879566261615,
+      "rms": 0.008423520100055355,
       "tail": 0,
-      "peak": 0.019069993868470192
+      "peak": 0.02671011909842491
     },
     {
       "name": "shot7",
-      "rms": 0.03741308317727385,
-      "tail": 0.020976966246962547,
-      "peak": 0.1230810284614563
+      "rms": 0.022467145135864303,
+      "tail": 0.012599165551364422,
+      "peak": 0.07393616437911987
     }
   ],
   "final": {
@@ -674,10 +674,11 @@
       "beds": []
     },
     "recent": [
+      "spawnegg2",
       "daggerhit1",
       "eggburst2",
       "daggerhit1",
-      "killspiderling1",
+      "killspiderling3",
       "spawncentipede",
       "damagecentipede",
       "killcentipede",
@@ -704,10 +705,9 @@
       "damagesquid",
       "damagesquid2",
       "damagesquid3",
-      "crystalhit2",
-      "shot1alt4"
+      "crystalhit2"
     ],
-    "loaded": 252,
+    "loaded": 264,
     "failed": [],
     "oneShots": 0,
     "oneShotNames": [],

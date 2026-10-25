@@ -1,0 +1,14 @@
+{
+  "duration": 23,
+  "frames": 552,
+  "fps": 24,
+  "segments": [
+    {
+      "start": 478,
+      "end": 501,
+      "speed": 1,
+      "at": 0
+    }
+  ],
+  "output": "artifacts/ascent/ascent-real-time.mp4"
+}

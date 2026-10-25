@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createDescentState,descentAt,DESCENT_CHAPTERS} from '../src/descent';
+import {createDescentState,descentAt,DESCENT_CHAPTERS,ENVIRONMENT_CYCLE} from '../src/descent';
 import {survivalSchedule} from '../src/survival';
 import {readFileSync} from 'node:fs';
 import {mistAt} from '../src/mist-state';
@@ -8,7 +8,7 @@ import {veilAt} from '../src/veil-shading';
 
 test('the original sky curves and mist timing survive the intro with the Veil art revision',()=>{
   const baseline=JSON.parse(readFileSync(new URL('./fixtures/environment-before-cosmos.json',import.meta.url),'utf8'));
-  for(const row of baseline){
+  for(const row of baseline.filter((row:{time:number})=>row.time+30<=482)){
     const sky=descentAt(row.time+30),mist=mistAt(row.time+30);
     for(const [key,value] of Object.entries(row.sky))if(key!=='time')assert.deepEqual(sky[key as keyof typeof sky],value,`sky ${row.time}: ${key}`);
     const veil=veilAt(row.time+30);
@@ -60,18 +60,17 @@ test('palette and landmark envelopes are continuous through every transition',()
   }
 });
 
-test('endless survival never recycles landmarks or returns to daylight',()=>{
-  const final=descentAt(472);delete (final as Partial<typeof final>).time;delete (final as Partial<typeof final>).environmentTime;
-  for(const time of [473,520,1000,100000]){
-    const state=descentAt(time);delete (state as Partial<typeof state>).time;delete (state as Partial<typeof state>).environmentTime;
-    assert.deepEqual(state,final);
+test('the environment repeats forever while absolute match time keeps advancing',()=>{
+  for(const cycle of [1,2,9,1000])for(const phase of [30,69,144,259,380,472,486,490,498,509]){
+    const first=descentAt(phase),repeat=descentAt(cycle*ENVIRONMENT_CYCLE+phase);
+    assert.equal(repeat.time,cycle*ENVIRONMENT_CYCLE+phase);assert.equal(repeat.cycle,cycle);
+    const {time:at,cycle:ac,...a}=first,{time:bt,cycle:bc,...b}=repeat;
+    assert.deepEqual(a,b);
   }
-  let previous=0;
-  for(let time=0;time<=520;time+=.25){
-    const state=descentAt(time);
-    assert.ok(state.travel>=previous);previous=state.travel;
-    for(const key of ['daylight','opening','furnace','cathedral','crown'] as const)assert.ok(state[key]>=0&&state[key]<=1);
-  }
+  assert.equal(descentAt(510).beyond,1);
+  assert.equal(descentAt(519).beyond,.5);assert.equal(descentAt(519).cosmic,.5);
+  assert.equal(descentAt(528).beyond,0);assert.equal(descentAt(528).cosmic,1);
+  assert.equal(descentAt(579).chapter,1);assert.equal(descentAt(1008).beyond,1);
 });
 
  test('cosmic arrival is continuous and reaches the original opening at thirty seconds',()=>{
@@ -82,5 +81,19 @@ test('endless survival never recycles landmarks or returns to daylight',()=>{
     const a=descentAt(time-1e-5),b=descentAt(time+1e-5);
     assert.ok(Math.abs(a.cosmic-b.cosmic)<1e-5);
     assert.ok(Math.abs(a.environmentTime-b.environmentTime)<2e-5);
+  }
+ });
+
+ test('the depths hold briefly before launch, space, and a luminous hold before the next descent',()=>{
+  assert.equal(descentAt(482).escape,0);
+  assert.equal(descentAt(486).escape,.5);
+  assert.equal(descentAt(490).cosmic,1);
+  assert.equal(descentAt(492).beyond,0);
+  assert.equal(descentAt(495).beyond,.5);
+  assert.equal(descentAt(498).beyond,1);
+  assert.equal(descentAt(498).cosmic,0);
+  for(const time of [480,482,486,490,492,498]){
+    const a=descentAt(time-1e-5),b=descentAt(time+1e-5);
+    for(const key of ['escape','cosmic','beyond'] as const)assert.ok(Math.abs(a[key]-b[key])<1e-5);
   }
  });

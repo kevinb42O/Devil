@@ -1,0 +1,204 @@
+✔ crew shares one clock, caps at six and moves/fires independently (183.842875ms)
+✔ individual fall deaths leave surviving crew in play, then end on team wipe (0.904458ms)
+✔ enemies attack the nearest living crew member and gems collect once (75.492917ms)
+✔ remote inputs reject non-finite values and clamp movement (5.449042ms)
+✔ host restart resets clock and deaths and guest snapshot chooses its own camera (42.71525ms)
+✔ one gem credits every player and homing spending stays personal (2.835125ms)
+✔ reliable input queues a complete tap before a simulation tick and preserves latest movement (10.741625ms)
+✔ multiple quick primary and homing transitions retain their order (3.649083ms)
+✔ remote demon aim and firing survive encoded snapshots and presentation interpolation (49.258834ms)
+✔ arena start preserves courtyard roster order when guests connect out of order (7.153833ms)
+✔ replacement lobby guest uses the empty spawn instead of overlapping another player (4.497792ms)
+✔ only an authenticated top-three personal best matching the solo board unlocks the option (1.34575ms)
+✔ verified skin travels in snapshots and replay metadata, allows gathering customization, color removes it (36.560834ms)
+✔ verification blocks launch, failed proofs clear cosmetics, stale requests cannot undo a color choice (3.172084ms)
+✔ destroyed tower crystals stop blocking immediately, including later shots in one tick (17.747916ms)
+✔ attached crystal centers follow the rendered emergence root and accept shots there (209.726042ms)
+✔ emerging crystal radii shrink with the rendered root instead of hitting empty space (1.52925ms)
+✔ ghostpede absorbs a grazing homing sweep at contact even with both endpoints outside (1.938959ms)
+✔ a nearer enemy wins over ghostpede absorption farther along the same homing path (0.939625ms)
+✔ moving enemy sweeps into a bullet even when its final hitbox misses, across cells (17.69525ms)
+✔ movement history is consumed once and does not affect later stationary queries (0.835209ms)
+✔ pede crystals use their own swept movement rather than only the enemy head (2.293542ms)
+✔ animated rigid armor contacts and normals agree with transformed render triangles (3554.008958ms)
+✔ large spawners expose shootable crystals at the crown above their solid core (172.7865ms)
+✖ skulls eject from the enlarged tower outlet rather than the old floating body (8.163084ms)
+✔ solo replay metadata preserves old and new tower rules through binary export and backward seek (1515.592166ms)
+✔ historical team checkpoints retain their exact digests with old tower targets and emissions (466.054333ms)
+✖ tower feet and chimney tops stop projectiles before they can hit enemies behind them (3.10575ms)
+✖ every tower stream clears the crown before descending into the swarm (27.492292ms)
+✖ tower streams rise from the top, then pursue the player instead of scattering (1.142958ms)
+✔ recorded input recreates gameplay exactly and backward seeking preserves the same result (1674.927ms)
+✔ replays retain practice setup and reject a different rules version (44.893875ms)
+✔ saved version-four replays retain their original camera projectile trajectories (176.260541ms)
+✔ saved replays preserve fractional movement from before analog speed correction (16.705709ms)
+✔ new controller recordings reproduce partial stick movement and jumping (8.266917ms)
+✔ saved fingertip-origin recordings retain their ballistics while new runs use the under-hand launch (104.136584ms)
+✔ saved combat retains old low-enemy contact and snake escape behavior (5.838791ms)
+✔ saved eye-seeking pede revisions preserve their trajectories (1024.10775ms)
+✔ saved replays retain reserve-based final hand unlocking (2.188583ms)
+✔ saved replays preserve hand III homing while current runs unlock it at hand II (7.17725ms)
+✔ Survival preserves simultaneous groups, boss milestones, and accelerating third-wave Ghostpede (93.503583ms)
+✔ arena shrinks by lowering reference tiles and preserves the center (3.009792ms)
+✔ all 22 reference enemy entries have the right aggregate HP and own rewards (34.179917ms)
+✔ squid tiers emit their own distinct offspring in the recorded opening burst (227.33125ms)
+✔ regular stream throughput remains exact over sustained firing at every hand (7016.442625ms)
+✔ homing uses tap release, sustained 40/s, and inherits primary stream without a burst (54.837875ms)
+✔ pede crystals cannot be damaged before their three-second emergence (1.748083ms)
+✔ Spider II lifts for nine seconds and converts gems to its own egg type (164.825292ms)
+✔ Leviathan death schedules Orb drop and activation relative to kill time (7.584083ms)
+✔ beckoning transmutation resets damaged skull HP; sustained Orb hits suppress beckons (3.799583ms)
+✔ practice start skips previous events, preserves equal-time spawns, and initializes hand/reserve (2.656958ms)
+✔ level IV splash damages adjacent weak points without double-damaging the direct target (3.322125ms)
+✔ homing does only one direct damage to bosses and cannot directly damage Ghostpede (1.073666ms)
+✔ homing stops on its first enemy and respects Squid III level-dependent damage (25.882ms)
+✔ the complete preloop enemy order matches the spawnset, with float countdown ticks (4.723083ms)
+✔ scheduled order and ticks are fixed; locations repeat for a seed independently of combat and co-op (6685.851459ms)
+✔ practice skips advance placement through every earlier event, including simultaneous spawns (801.141791ms)
+✔ pre-fix replays retain combat-dependent placement and replay seeking (396.675958ms)
+✔ every scheduled spawn tick and type matches both original standard Survival replays (1.931083ms)
+✔ original tower heights, fixed radii and float-shrinking spider radii match recorded coordinates (0.664208ms)
+✔ consecutive perimeter spawns obey the angular interval observed in both original runs (132.348208ms)
+✔ scheduled snakes start inside the observed central disk at the recorded depths and orientation (0.546084ms)
+✔ revision seven and eight recordings preserve their old fixed placements and timing (228.483708ms)
+✔ thorn anchors match the recorded tile-center grid and underground depth (0.512042ms)
+✔ mixed towers stay separated through entrance and three minutes of convergence (2876.274792ms)
+✖ dense coincident towers recover deterministically without consuming random state (5.991417ms)
+✔ isolated towers keep measured entrance and inward drift, and dead towers release space (72.725208ms)
+✖ checkpoint restores and new recordings keep separation while older recordings retain their motion (19.992125ms)
+✔ legacy tower batches retain crown ejection and flight before skulls hunt (1461.176542ms)
+✔ tower anticipation opens before ejection and closes after the stream (0.533875ms)
+✔ seeded flight keeps varied arcs and heights without diving into the floor (681.798083ms)
+ℹ tests 71
+ℹ suites 0
+ℹ pass 65
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11295.394792
+
+✖ failing tests:
+
+test at tests/remake-towers.test.ts:28:1
+✖ skulls eject from the enlarged tower outlet rather than the old floating body (8.163084ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 4.037088741883635
+  - 6.3170887418836354
+  
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/remake-towers.test.ts:32:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 4.037088741883635,
+    expected: 6.3170887418836354,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/remake-towers.test.ts:64:1
+✖ tower feet and chimney tops stop projectiles before they can hit enemies behind them (3.10575ms)
+  AssertionError [ERR_ASSERTION]: squid foot shields the enemy
+  
+  4 !== 5
+  
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/remake-towers.test.ts:75:10)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 4,
+    expected: 5,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/remake-towers.test.ts:80:1
+✖ every tower stream clears the crown before descending into the swarm (27.492292ms)
+  AssertionError [ERR_ASSERTION]: squid child drops into the crown at age 0.49166666666666736
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/remake-towers.test.ts:90:13)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/remake-towers.test.ts:99:1
+✖ tower streams rise from the top, then pursue the player instead of scattering (1.142958ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 4.038238410502672
+  - 6.318238410502672
+  
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/remake-towers.test.ts:108:11)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 4.038238410502672,
+    expected: 6.318238410502672,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/tower-movement.test.ts:27:1
+✖ dense coincident towers recover deterministically without consuming random state (5.991417ms)
+  AssertionError [ERR_ASSERTION]: squid/squid2 overlap at 0
+      at assertSeparated (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/tower-movement.test.ts:10:10)
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/tower-movement.test.ts:32:2)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/tower-movement.test.ts:47:1
+✖ checkpoint restores and new recordings keep separation while older recordings retain their motion (19.992125ms)
+  AssertionError [ERR_ASSERTION]: squid/squid2 overlap at 1.9999999999999953
+      at assertSeparated (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/tower-movement.test.ts:10:10)
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/tower-movement.test.ts:51:47)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

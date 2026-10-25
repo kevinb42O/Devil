@@ -1,0 +1,142 @@
+{
+  "inventory": [
+    {
+      "kind": "squid",
+      "meshes": 30,
+      "finishes": [
+        {
+          "tier": 1,
+          "finish": "metal"
+        },
+        {
+          "tier": 1,
+          "finish": "stone"
+        },
+        {
+          "tier": 1,
+          "finish": "interior"
+        }
+      ],
+      "shared": true
+    },
+    {
+      "kind": "squid2",
+      "meshes": 46,
+      "finishes": [
+        {
+          "tier": 2,
+          "finish": "metal"
+        },
+        {
+          "tier": 2,
+          "finish": "stone"
+        },
+        {
+          "tier": 2,
+          "finish": "interior"
+        }
+      ],
+      "shared": true
+    },
+    {
+      "kind": "squid3",
+      "meshes": 67,
+      "finishes": [
+        {
+          "tier": 3,
+          "finish": "metal"
+        },
+        {
+          "tier": 3,
+          "finish": "stone"
+        },
+        {
+          "tier": 3,
+          "finish": "interior"
+        }
+      ],
+      "shared": true
+    }
+  ],
+  "gameChecks": {
+    "texturedDraws": 174,
+    "baselineDraws": 174,
+    "maximumCrystalError": 1.9860273225978185e-15
+  },
+  "crystalChecks": [
+    {
+      "kind": "squid",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    },
+    {
+      "kind": "squid2",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    },
+    {
+      "kind": "squid3",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    }
+  ],
+  "structureChecks": [
+    {
+      "kind": "squid",
+      "radius": 2.257125880321396,
+      "limit": 2.9699999999999998
+    },
+    {
+      "kind": "squid2",
+      "radius": 3.5806527297714412,
+      "limit": 4.949999999999999
+    },
+    {
+      "kind": "squid3",
+      "radius": 4.941007183177436,
+      "limit": 6.93
+    }
+  ],
+  "anatomyChecks": [
+    {
+      "kind": "squid",
+      "joints": 20,
+      "tipTravel": 1.757032264917497,
+      "height": 6.139281234375488,
+      "width": 3.9869159363979216,
+      "scale": 0.868,
+      "increasePercent": 39.99999999999999,
+      "maxRadius": 2.339655418395996,
+      "limit": 2.5779599999999996
+    },
+    {
+      "kind": "squid2",
+      "joints": 30,
+      "tipTravel": 2.5757788829240993,
+      "height": 8.906336134251942,
+      "width": 7.516576092529297,
+      "scale": 0.899,
+      "increasePercent": 44.99999999999999,
+      "maxRadius": 3.7772599901061903,
+      "limit": 4.450049999999999
+    },
+    {
+      "kind": "squid3",
+      "joints": 45,
+      "tipTravel": 3.364769025871183,
+      "height": 12.766605891323088,
+      "width": 9.380088667577969,
+      "scale": 0.9299999999999999,
+      "increasePercent": 50,
+      "maxRadius": 5.393682301987641,
+      "limit": 6.4449
+    }
+  ],
+  "errors": []
+}

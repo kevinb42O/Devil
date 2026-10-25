@@ -140,6 +140,9 @@ class Engine:
                     except ValueError:
                         continue
                     if not isinstance(state,dict):continue
+                    if state.get('command')=='menu':
+                        self.commands.put('menu')
+                        continue
                     with self.lock:
                         newly_connected = state.get('connected') and not self.status.get('connected')
                         self.status = state
@@ -150,7 +153,7 @@ class Engine:
                     if newly_connected:
                         print('Game memory connected · aim '+('ON' if self.armed else 'OFF')+' · no modifier key.', flush=True)
                 if self.running:
-                    self.disconnected(self.status.get('message') if self.status.get('error') else 'Browser closed · F7 → Reconnect memory',bool(self.status.get('error')))
+                    self.disconnected(self.status.get('message') if self.status.get('error') else 'Browser closed · = → Reconnect memory',bool(self.status.get('error')))
             except Exception as error:
                 self.disconnected(str(error),True)
             finally:
@@ -181,12 +184,14 @@ class Engine:
 def main():
     parser = argparse.ArgumentParser(description='Native external memory aimbot overlay')
     parser.add_argument('--demo', action='store_true')
+    parser.add_argument('--settings', action='store_true', help='Open trainer settings on launch')
     parser.add_argument('--url', default=None, help='Game address (defaults to the production deployment)')
     parser.add_argument('--quit-after', type=float, default=0, help=argparse.SUPPRESS)
     args = parser.parse_args()
     if sys.platform not in ('darwin','win32'):
         parser.error('The native overlay currently supports macOS and Windows')
     engine = Engine(args.demo)
+    if args.settings:engine.commands.put('menu')
     if args.url:
         engine.settings = Settings.validated({**asdict(engine.settings),'game_url':args.url})
     try:
@@ -202,7 +207,7 @@ def main():
             with (ROOT / '.trainer.lock').open('a+') as lock:
                 try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
                 except BlockingIOError:
-                    print('The trainer is already running. F7 opens its settings.',flush=True)
+                    print('The trainer is already running. = opens its settings.',flush=True)
                     return
                 lock.seek(0);lock.truncate();lock.write(str(__import__('os').getpid()));lock.flush()
                 run(engine, quit_after=args.quit_after)

@@ -1,0 +1,52 @@
+{
+  "checks": {
+    "top": 2.3998650656684335,
+    "bottom": -2.3998650656684335,
+    "orbMeshes": [
+      "rift-heart",
+      "orb-corona"
+    ],
+    "spinAngle": 0.4800000000000005,
+    "axisDrift": 5.551115123125783e-17,
+    "centerDrift": 0,
+    "replayRotationError": 0,
+    "initialLights": 6,
+    "denseLights": 6,
+    "sources": [
+      {
+        "position": [
+          1.5712532861822592,
+          2.8747735661729017,
+          -2.6062584480334126
+        ],
+        "size": 0
+      },
+      {
+        "position": [
+          -1.5712532861822592,
+          15.925226433827099,
+          2.6062584480334126
+        ],
+        "size": 0
+      }
+    ],
+    "bandPixels": 56027,
+    "selfLitBands": 11099,
+    "pulsePixels": 110504
+  },
+  "poleCheck": {
+    "well": [
+      25,
+      20,
+      16,
+      255
+    ],
+    "lip": [
+      98,
+      27,
+      20,
+      255
+    ]
+  },
+  "errors": []
+}

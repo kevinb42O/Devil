@@ -1,7 +1,15 @@
 [
   {
     "time": 0,
-    "peak": 0.007366220932453871,
+    "peak": 0.012360746040940285,
+    "ascent": {
+      "playing": false,
+      "loaded": false,
+      "loading": false,
+      "failed": false,
+      "offset": 0,
+      "phase": 0
+    },
     "active": true,
     "failed": [],
     "beds": [
@@ -12,8 +20,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 0.03483,
-            "gain": 0.09907861053943634,
+            "time": 0.03816,
+            "gain": 0.15269950032234192,
             "ready": 4
           },
           {
@@ -28,7 +36,15 @@
   },
   {
     "time": 35,
-    "peak": 0.011095436289906502,
+    "peak": 0.014958929270505905,
+    "ascent": {
+      "playing": false,
+      "loaded": false,
+      "loading": false,
+      "failed": false,
+      "offset": 0,
+      "phase": 35
+    },
     "active": true,
     "failed": [],
     "beds": [
@@ -39,8 +55,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 0.081276,
-            "gain": 0.09500274807214737,
+            "time": 0.107897,
+            "gain": 0.10910429805517197,
             "ready": 4
           },
           {
@@ -58,8 +74,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 14.01161,
-            "gain": 0.0875367745757103,
+            "time": 14.009225,
+            "gain": 0.10460245609283447,
             "ready": 4
           },
           {
@@ -74,7 +90,15 @@
   },
   {
     "time": 80,
-    "peak": 0.012318285182118416,
+    "peak": 0.01479385420680046,
+    "ascent": {
+      "playing": false,
+      "loaded": false,
+      "loading": false,
+      "failed": false,
+      "offset": 0,
+      "phase": 80
+    },
     "active": true,
     "failed": [],
     "beds": [
@@ -85,8 +109,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 0.15093,
-            "gain": 0.039934515953063965,
+            "time": 0.195493,
+            "gain": 0.03675055503845215,
             "ready": 4
           },
           {
@@ -104,8 +128,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 14.08127,
-            "gain": 0.05247087776660919,
+            "time": 14.096814,
+            "gain": 0.04160001501441002,
             "ready": 4
           },
           {
@@ -123,8 +147,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.037732,
-            "gain": 0.0730726420879364,
+            "time": 29.056179,
+            "gain": 0.08253077417612076,
             "ready": 4
           },
           {
@@ -139,7 +163,15 @@
   },
   {
     "time": 150,
-    "peak": 0.012318285182118416,
+    "peak": 0.01479385420680046,
+    "ascent": {
+      "playing": false,
+      "loaded": false,
+      "loading": false,
+      "failed": false,
+      "offset": 0,
+      "phase": 150
+    },
     "active": true,
     "failed": [],
     "beds": [
@@ -150,8 +182,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 0.204245,
-            "gain": 0.020503081381320953,
+            "time": 0.260503,
+            "gain": 0.01654306799173355,
             "ready": 4
           },
           {
@@ -169,8 +201,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 14.131679,
-            "gain": 0.02693946659564972,
+            "time": 14.161829,
+            "gain": 0.01872606761753559,
             "ready": 4
           },
           {
@@ -188,8 +220,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.088236,
-            "gain": 0.05507645756006241,
+            "time": 29.121185,
+            "gain": 0.052983418107032776,
             "ready": 4
           },
           {
@@ -207,8 +239,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 24.009813,
-            "gain": 0.09907861053943634,
+            "time": 24.010905,
+            "gain": 0.11478766053915024,
             "ready": 4
           },
           {
@@ -223,7 +255,15 @@
   },
   {
     "time": 270,
-    "peak": 0.012519175186753273,
+    "peak": 0.012911317870020866,
+    "ascent": {
+      "playing": false,
+      "loaded": false,
+      "loading": false,
+      "failed": false,
+      "offset": 0,
+      "phase": 270
+    },
     "active": true,
     "failed": [],
     "beds": [
@@ -234,8 +274,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 0.261828,
-            "gain": 0.009847721084952354,
+            "time": 0.307664,
+            "gain": 0.009257828816771507,
             "ready": 4
           },
           {
@@ -253,8 +293,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 14.192166,
-            "gain": 0.012939182110130787,
+            "time": 14.20898,
+            "gain": 0.010479437187314034,
             "ready": 4
           },
           {
@@ -272,8 +312,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.148661,
-            "gain": 0.02645350992679596,
+            "time": 29.168345,
+            "gain": 0.029650568962097168,
             "ready": 4
           },
           {
@@ -291,8 +331,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 24.067411,
-            "gain": 0.0648052915930748,
+            "time": 24.05805,
+            "gain": 0.09591787308454514,
             "ready": 4
           },
           {
@@ -310,8 +350,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.030032,
-            "gain": 0.12575669586658478,
+            "time": 29.01161,
+            "gain": 0.09282660484313965,
             "ready": 4
           },
           {
@@ -326,7 +366,15 @@
   },
   {
     "time": 390,
-    "peak": 0.015104774385690689,
+    "peak": 0.012911317870020866,
+    "ascent": {
+      "playing": false,
+      "loaded": false,
+      "loading": false,
+      "failed": false,
+      "offset": 0,
+      "phase": 390
+    },
     "active": true,
     "failed": [],
     "beds": [
@@ -337,8 +385,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 0.301859,
-            "gain": 0.006175405345857143,
+            "time": 0.340335,
+            "gain": 0.005990026518702507,
             "ready": 4
           },
           {
@@ -356,8 +404,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 14.229297,
-            "gain": 0.00811401754617691,
+            "time": 14.241671,
+            "gain": 0.006780433468520641,
             "ready": 4
           },
           {
@@ -375,8 +423,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.188662,
-            "gain": 0.016588686034083366,
+            "time": 29.201022,
+            "gain": 0.019184574484825134,
             "ready": 4
           },
           {
@@ -394,8 +442,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 24.107392,
-            "gain": 0.04063873738050461,
+            "time": 24.090742,
+            "gain": 0.062060870230197906,
             "ready": 4
           },
           {
@@ -413,8 +461,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.06966,
-            "gain": 0.09924772381782532,
+            "time": 29.044292,
+            "gain": 0.07282407581806183,
             "ready": 4
           },
           {
@@ -432,8 +480,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 28.005805,
-            "gain": 0.0875367745757103,
+            "time": 28.003674,
+            "gain": 0.09282660484313965,
             "ready": 4
           },
           {
@@ -448,7 +496,15 @@
   },
   {
     "time": 480,
-    "peak": 0.015104774385690689,
+    "peak": 0.01202283427119255,
+    "ascent": {
+      "playing": false,
+      "loaded": false,
+      "loading": true,
+      "failed": false,
+      "offset": 0,
+      "phase": 480
+    },
     "active": true,
     "failed": [],
     "beds": [
@@ -459,8 +515,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 0.351316,
-            "gain": 0.003170563606545329,
+            "time": 0.412154,
+            "gain": 0.002507653320208192,
             "ready": 4
           },
           {
@@ -478,8 +534,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 14.281651,
-            "gain": 0.00416587246581912,
+            "time": 14.313469,
+            "gain": 0.0028385536279529333,
             "ready": 4
           },
           {
@@ -497,8 +553,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.23816,
-            "gain": 0.008516914211213589,
+            "time": 29.272834,
+            "gain": 0.008031390607357025,
             "ready": 4
           },
           {
@@ -516,8 +572,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 24.15691,
-            "gain": 0.02086462453007698,
+            "time": 24.16254,
+            "gain": 0.025981076061725616,
             "ready": 4
           },
           {
@@ -535,8 +591,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 29.122033,
-            "gain": 0.05095543712377548,
+            "time": 29.1161,
+            "gain": 0.030486956238746643,
             "ready": 4
           },
           {
@@ -554,8 +610,8 @@
         "streams": [
           {
             "playing": true,
-            "time": 28.058185,
-            "gain": 0.06408821791410446,
+            "time": 28.075465,
+            "gain": 0.06436090916395187,
             "ready": 4
           },
           {
@@ -573,8 +629,195 @@
         "streams": [
           {
             "playing": true,
-            "time": 26.020462,
-            "gain": 0.11802003532648087,
+            "time": 26.017415,
+            "gain": 0.1312161237001419,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "heaven",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "time": 504,
+    "peak": 0.016942409798502922,
+    "ascent": {
+      "playing": false,
+      "loaded": true,
+      "loading": false,
+      "failed": false,
+      "offset": 0,
+      "phase": 504
+    },
+    "active": true,
+    "failed": [],
+    "beds": [
+      {
+        "name": "space",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 0.464399,
+            "gain": 0.0013051050482317805,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "ash",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 14.365714,
+            "gain": 0.0014773246366530657,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "storm",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.325079,
+            "gain": 0.004179945215582848,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "veil",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 24.214785,
+            "gain": 0.013521864078938961,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "furnace",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 29.168345,
+            "gain": 0.015866916626691818,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "cathedral",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 28.12771,
+            "gain": 0.0334966704249382,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "depth",
+        "weight": 0,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 26.06966,
+            "gain": 0.10627652704715729,
+            "ready": 4
+          },
+          {
+            "playing": false,
+            "time": 0,
+            "gain": 0,
+            "ready": 4
+          }
+        ]
+      },
+      {
+        "name": "heaven",
+        "weight": 0.18,
+        "duration": 120,
+        "streams": [
+          {
+            "playing": true,
+            "time": 12.029025,
+            "gain": 0.09282660484313965,
             "ready": 4
           },
           {
@@ -594,74 +837,74 @@
         "incoming": "ash",
         "middle": {
           "time": 25.500000000000078,
-          "peak": 0.015839865431189537,
-          "outgoingRms": 0.009593757476586584,
-          "incomingRms": 0.006660660699755044
+          "peak": 0.016247764229774475,
+          "outgoingRms": 0.0100194559698198,
+          "incomingRms": 0.006611032507817122
         },
         "after": {
-          "time": 31.000000000000156,
-          "rms": 0.012043299643241618,
-          "peak": 0.02003338187932968
+          "time": 31.100000000000158,
+          "rms": 0.011785526640252559,
+          "peak": 0.01927938312292099
         }
       },
       {
         "outgoing": "ash",
         "incoming": "storm",
         "middle": {
-          "time": 60.00000000000014,
-          "peak": 0.01578672043979168,
-          "outgoingRms": 0.00981845137385718,
-          "incomingRms": 0.0034343654281680813
+          "time": 60.10000000000014,
+          "peak": 0.01860758289694786,
+          "outgoingRms": 0.01347380330943846,
+          "incomingRms": 0.003509499712232208
         },
         "after": {
-          "time": 70.09999999999985,
-          "rms": 0.005642552658746557,
-          "peak": 0.008183644153177738
+          "time": 70.29999999999984,
+          "rms": 0.004894484191795953,
+          "peak": 0.00854008924216032
         }
       },
       {
         "outgoing": "storm",
         "incoming": "veil",
         "middle": {
-          "time": 135.09999999999943,
-          "peak": 0.013363812118768692,
-          "outgoingRms": 0.004849248040312205,
-          "incomingRms": 0.007061744025681444
+          "time": 135.29999999999941,
+          "peak": 0.015886342152953148,
+          "outgoingRms": 0.004784416347415434,
+          "incomingRms": 0.007439866912501337
         },
         "after": {
-          "time": 145.09999999999886,
-          "rms": 0.011764724809068417,
-          "peak": 0.015335812233388424
+          "time": 145.19999999999885,
+          "rms": 0.010652954946093347,
+          "peak": 0.014887480065226555
         }
       },
       {
         "outgoing": "veil",
         "incoming": "furnace",
         "middle": {
-          "time": 250.09999999999943,
-          "peak": 0.01846671663224697,
-          "outgoingRms": 0.008398367695211692,
-          "incomingRms": 0.010373098469359222
+          "time": 250.3999999999994,
+          "peak": 0.025179173797369003,
+          "outgoingRms": 0.008077288367814734,
+          "incomingRms": 0.010099786975843059
         },
         "after": {
-          "time": 260.1,
-          "rms": 0.014056797126496883,
-          "peak": 0.043923839926719666
+          "time": 260.20000000000005,
+          "rms": 0.017196288982833288,
+          "peak": 0.03992616385221481
         }
       },
       {
         "outgoing": "furnace",
         "incoming": "cathedral",
         "middle": {
-          "time": 371.0000000000023,
-          "peak": 0.021740537136793137,
-          "outgoingRms": 0.008282532995367563,
-          "incomingRms": 0.008068281144523452
+          "time": 371.1000000000023,
+          "peak": 0.028721217066049576,
+          "outgoingRms": 0.00943505398493268,
+          "incomingRms": 0.007993573150661857
         },
         "after": {
-          "time": 381.00000000000455,
-          "rms": 0.01480815465008328,
-          "peak": 0.021693654358386993
+          "time": 381.10000000000457,
+          "rms": 0.013254045530340996,
+          "peak": 0.015687070786952972
         }
       },
       {
@@ -669,14 +912,44 @@
         "incoming": "depth",
         "middle": {
           "time": 463.1000000000023,
-          "peak": 0.02029278874397278,
-          "outgoingRms": 0.012158726261673029,
-          "incomingRms": 0.01033341144508391
+          "peak": 0.02215839922428131,
+          "outgoingRms": 0.017501228151624224,
+          "incomingRms": 0.008901707604149389
         },
         "after": {
-          "time": 473.00000000000455,
-          "rms": 0.013613013509904128,
-          "peak": 0.01953062415122986
+          "time": 473.10000000000457,
+          "rms": 0.01315740488644356,
+          "peak": 0.01953873410820961
+        }
+      },
+      {
+        "outgoing": "space",
+        "incoming": "heaven",
+        "middle": {
+          "time": 495.20000000000095,
+          "peak": 0.019975988194346428,
+          "outgoingRms": 0.010352120193771571,
+          "incomingRms": 0.006347055891543539
+        },
+        "after": {
+          "time": 499.0000000000018,
+          "rms": 0.007835829025301937,
+          "peak": 0.027254637330770493
+        }
+      },
+      {
+        "outgoing": "heaven",
+        "incoming": "space",
+        "middle": {
+          "time": 519.0000000000023,
+          "peak": 0.013807826675474644,
+          "outgoingRms": 0.005860522484655661,
+          "incomingRms": 0.005447510137951018
+        },
+        "after": {
+          "time": 529.0000000000045,
+          "rms": 0.006191753048234053,
+          "peak": 0.00934852845966816
         }
       }
     ]

@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import {buildTowerStructure} from './tower-geometry';
+import {towerOrganicPose,type TowerOrganicMotion} from './tower-anatomy-motion';
 import baked from './projectile-colliders.json';
 import remakeBaked from './remake-projectile-colliders.json';
 import {enemyYaw,enemyEmergenceScale,towerPartOffset,CREATURE_SCALE,CREATURE_SCALE_RATIO,towerRadius,towerFoundationPose,legacyTowerGeometry} from './enemy-presentation';
@@ -64,7 +65,7 @@ export function sweepArmor(e:Enemy,player:Vec,a:Vec,b:Vec,limit=1,time=0,origina
  return {t:closest,nx:normal.x/length*sign,ny:normal.y/length*sign,nz:normal.z/length*sign};
 }
 
-type TowerArmorPart={mesh:NonNullable<ReturnType<typeof meshes.get>>;motion:'fixed'|'foot'|'plinth'|'crown'};
+type TowerArmorPart={mesh:NonNullable<ReturnType<typeof meshes.get>>;motion:'fixed'|'foot'|'plinth'|'crown';organic?:{motion:TowerOrganicMotion;rest:THREE.Matrix4;inverse:THREE.Matrix4}[]};
 const towerArmor=new Map<Enemy['kind'],TowerArmorPart[]>();
 function towerArmorParts(kind:Enemy['kind']){
  let parts=towerArmor.get(kind);if(parts)return parts;
@@ -75,18 +76,24 @@ function towerArmorParts(kind:Enemy['kind']){
   const geometry=part.geometry.clone().applyMatrix4(part.matrixWorld);geometry.computeBoundingBox();
   const box=geometry.boundingBox!,vertices=Float32Array.from(geometry.getAttribute('position').array),indices=geometry.index?Uint32Array.from(geometry.index.array):Uint32Array.from({length:vertices.length/3},(_,i)=>i);
   const motion=part.parent?.name==='tower-foundation'?'foot':part.name==='tower-plinth'?'plinth':part.parent?.name==='warden-crest'?'crown':'fixed';
-  parts!.push({mesh:{vertices,indices,nodes:[[box.min.x,box.min.y,box.min.z,box.max.x,box.max.y,box.max.z,-1,0,indices.length/3]]},motion});
+  const organic:NonNullable<TowerArmorPart['organic']>=[];
+  for(let ancestor=part.parent;ancestor;ancestor=ancestor.parent){
+   if(ancestor.userData.towerOrganicMotion)organic.unshift({motion:ancestor.userData.towerOrganicMotion,rest:ancestor.matrixWorld.clone(),inverse:ancestor.matrixWorld.clone().invert()});
+  }
+  parts!.push({mesh:{vertices,indices,nodes:[[box.min.x,box.min.y,box.min.z,box.max.x,box.max.y,box.max.z,-1,0,indices.length/3]]},motion,...organic.length?{organic}:{}});
   geometry.dispose();part.geometry.dispose();
  });
  material.dispose();towerArmor.set(kind,parts);return parts;
 }
+const organicMatrix=new THREE.Matrix4(),organicPoseMatrix=new THREE.Matrix4(),organicJointMatrix=new THREE.Matrix4(),organicInverse=new THREE.Matrix4(),organicNormal=new THREE.Matrix3();
+const organicOrigin=new THREE.Vector3(),organicEnd=new THREE.Vector3(),organicScale=new THREE.Vector3(),organicRotation=new THREE.Quaternion(),organicEuler=new THREE.Euler(),organicZero=new THREE.Vector3(),organicHitNormal=new THREE.Vector3();
 /** Trace the same triangles as the visible tower, including its telescoping foot
  * and opening crown. Historical targets continue using their original BVH. */
 function sweepTowerStructure(e:Enemy,player:Vec,a:Vec,b:Vec,limit:number,time:number,originalCadence:boolean):ArmorHit|null{
  const scale=enemyEmergenceScale(e);if(scale<.0001)return null;
  const dx=b.x-a.x,dy=b.y-a.y,dz=b.z-a.z,length2=dx*dx+dz*dz;
  const along=length2?Math.max(0,Math.min(limit,((e.pos.x-a.x)*dx+(e.pos.z-a.z)*dz)/length2)):0;
- if((a.x+dx*along-e.pos.x)**2+(a.z+dz*along-e.pos.z)**2>(towerRadius(e.kind)*1.3*scale)**2)return null;
+ if((a.x+dx*along-e.pos.x)**2+(a.z+dz*along-e.pos.z)**2>(towerRadius(e.kind)*1.65*scale)**2)return null;
  const yaw=enemyYaw(e,player),c=Math.cos(yaw),s=Math.sin(yaw);
  const ax=((a.x-e.pos.x)*c-(a.z-e.pos.z)*s)/scale,ay=(a.y-e.pos.y)/scale,az=((a.x-e.pos.x)*s+(a.z-e.pos.z)*c)/scale;
  const vx=(dx*c-dz*s)/scale,vy=dy/scale,vz=(dx*s+dz*c)/scale;
@@ -95,8 +102,24 @@ function sweepTowerStructure(e:Enemy,player:Vec,a:Vec,b:Vec,limit:number,time:nu
  for(const part of towerArmorParts(e.kind)){
   const sy=part.motion==='foot'?foundation.footScale:1;
   const offset=part.motion==='foot'?foundation.footY:part.motion==='plinth'?foundation.plinthY-.3:part.motion==='crown'?towerPartOffset(e,'crest',originalCadence):0;
-  const hit=trace(part.mesh,ax,(ay-offset)/sy,az,vx,vy/sy,vz,closest);if(!hit)continue;
+  let ox=ax,oy=(ay-offset)/sy,oz=az,dx=vx,dy=vy/sy,dz=vz;
+  if(part.organic){
+   organicMatrix.identity();
+   for(const joint of part.organic){
+    const pose=towerOrganicPose(e.age,e.kind,joint.motion,originalCadence);
+    organicRotation.setFromEuler(organicEuler.set(pose.rx,0,pose.rz));
+    organicPoseMatrix.compose(organicZero,organicRotation,organicScale.set(1,pose.sy,1));
+    organicJointMatrix.copy(joint.rest).multiply(organicPoseMatrix).multiply(joint.inverse);
+    organicMatrix.multiply(organicJointMatrix);
+   }
+   organicInverse.copy(organicMatrix).invert();
+   organicOrigin.set(ax,ay,az).applyMatrix4(organicInverse);
+   organicEnd.set(ax+vx,ay+vy,az+vz).applyMatrix4(organicInverse).sub(organicOrigin);
+   ox=organicOrigin.x;oy=organicOrigin.y;oz=organicOrigin.z;dx=organicEnd.x;dy=organicEnd.y;dz=organicEnd.z;
+  }
+  const hit=trace(part.mesh,ox,oy,oz,dx,dy,dz,closest);if(!hit)continue;
   closest=hit.t;normal={...hit,ny:hit.ny/sy};
+  if(part.organic){organicNormal.getNormalMatrix(organicMatrix);organicHitNormal.set(hit.nx,hit.ny,hit.nz).applyMatrix3(organicNormal);normal={...hit,nx:organicHitNormal.x,ny:organicHitNormal.y,nz:organicHitNormal.z};}
  }
  if(!normal)return null;
  const nx=normal.nx*c+normal.nz*s,ny=normal.ny,nz=-normal.nx*s+normal.nz*c,length=Math.hypot(nx,ny,nz)||1;
@@ -158,4 +181,4 @@ function trace(mesh:NonNullable<ReturnType<typeof meshes.get>>,ax:number,ay:numb
 }
 
 // Conservative broad phase for the rotated mesh, once per enemy per tick.
-export function armorBounds(e:Enemy){return e.kind.startsWith('squid')&&!legacyTowerGeometry(e)?towerRadius(e.kind)*1.3:armorMesh(e)?.radius??null;}
+export function armorBounds(e:Enemy){return e.kind.startsWith('squid')&&!legacyTowerGeometry(e)?towerRadius(e.kind)*1.65:armorMesh(e)?.radius??null;}

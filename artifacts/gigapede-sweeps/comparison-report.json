@@ -1,0 +1,27 @@
+{
+  "mimeType": "video/mp4;codecs=avc1.42001E",
+  "bytes": 16705568,
+  "stages": [
+    [
+      "rising",
+      "flying",
+      "overpass",
+      "diving",
+      "underground"
+    ],
+    [
+      null,
+      "climb",
+      "approach",
+      "pass",
+      "recover"
+    ],
+    [
+      "emerging",
+      "hunting"
+    ]
+  ],
+  "simulationSeconds": 29.999999999998938,
+  "path": "artifacts/gigapede-sweeps/three-snakes.mp4",
+  "errors": []
+}

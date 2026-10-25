@@ -1,0 +1,33 @@
+{
+  "title": "Ambient F Sharp Minor Ethereal Choir Pad 1",
+  "author": "deadrobotmusic",
+  "page": "https://freesound.org/people/deadrobotmusic/sounds/808032/",
+  "media": "https://cdn.freesound.org/previews/808/808032_11532701-hq.mp3",
+  "sourceFormat": "public high-quality MP3 preview",
+  "license": "CC0-1.0",
+  "licenseURL": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "retrieved": "2026-10-25",
+  "sourceSha256": "fbbb1dc8becd61a500d26164aebd5e739b74739272bc10ac09781ff8783e5813",
+  "source": "assets/_sources/heaven-audio/ethereal-choir-808032.mp3",
+  "excerptStart": 25,
+  "excerptDuration": 120,
+  "changes": "Stereo excerpt, high/low pass, sustained loudness match, soft peak limiting, 25 ms edge fades, AAC encoding. Runtime overlaps loop tails.",
+  "output": {
+    "file": "heaven-f4432b98fe.m4a",
+    "duration": 120.0,
+    "gain": 0.18,
+    "bytes": 2913704,
+    "sha256": "cbad5f238a63ee1df35736aef155a091ad0e57d2c11a80809184d115715eb77d",
+    "rms": 0.07695,
+    "peak": 0.3104,
+    "minWindowRms": 0.06526,
+    "layers": [
+      {
+        "source": "ethereal-choir-808032",
+        "weight": 1,
+        "highPass": 70,
+        "lowPass": 8500
+      }
+    ]
+  }
+}

@@ -1,18 +1,32 @@
 # ABYSS / Memory Trainer
 
-A native macOS and Windows companion for memory-based aim assistance and ESP. There is no screen detector, screenshot preview, automatic firing, invincibility, damage modification, or modifier key to hold.
+A native macOS and Windows companion for memory-based aim assistance and ESP. There is no screen detector, screenshot preview, automatic firing or modifier key to hold. The Mac Survival tab includes optional godmode.
 
-On Windows the ESP/HUD is drawn in a canvas inside the managed game page with `pointer-events: none`. The companion creates no desktop overlay window; only F7 settings uses a visible native window. Production connections use the game's stable trainer interface without pausing the JavaScript debugger.
+On Windows the ESP/HUD is drawn in a canvas inside the managed game page with `pointer-events: none`. The companion creates no desktop overlay window; only = settings uses a visible native window. Production connections use the game's stable trainer interface without pausing the JavaScript debugger.
 
-Windows F7 settings has mouse-operated Aim, ESP, Targets and Connection tabs. Valid edits save automatically after a short typing pause. F7, Close, and the window close button also save before returning to the game. Invalid values or failed saves keep the menu open with an error. The save status shows your chosen aim mode and FOV; Connection shows what the running game has received. The ESP aim-cone indicator is enabled by default. Wide cones use a dashed screen-space indicator; 360° is labeled ALL DIRECTIONS because it also includes targets behind you.
+Windows = settings has mouse-operated Aim, ESP, Targets and Connection tabs. Valid edits save automatically after a short typing pause. =, Close, and the window close button also save before returning to the game. Invalid values or failed saves keep the menu open with an error. The save status shows your chosen aim mode and FOV; Connection shows what the running game has received. The ESP aim-cone indicator is enabled by default. Wide cones use a dashed screen-space indicator; 360° is labeled ALL DIRECTIONS because it also includes targets behind you.
 
 Use **Save as…** to give your current settings your own preset name. These presets live in `user-presets.json` and appear beside the built-in presets. Selecting one loads it immediately. Editing your named preset automatically updates it; built-in presets remain unchanged. Import/export includes your preset name.
 
 The Windows control studio groups tracking, selection, overlay layers, appearance, HUD and colors into panels. All numeric settings have sliders plus exact-value inputs that stay synchronized. Colors support both a picker and hex entry. Tabs scroll on smaller displays while save controls remain pinned. The in-game HUD displays the active preset, snap/smooth mode and FOV without capturing mouse input.
 
+## Godmode (macOS)
+
+Open settings with **=**, select **Survival**, enable **Godmode · cannot die**, then click **Apply**. It starts off by default and is saved with your settings. The HUD shows **GODMODE** while protection is active. Enemy collisions cannot kill you; falling returns you to the last safe ground position (or the arena center if that ground has collapsed).
+
+Godmode stays active with F8 aiming/movement assistance disabled, while settings are open, and when the browser loses focus. Turn off its checkbox and Apply to restore normal deaths. Quitting, reconnecting or reloading removes the old death hook; a new attachment reapplies your saved choice. Protection expires if the trainer heartbeat stops. It protects solo play and the host's local crew player; a guest cannot override deaths owned by the remote host. It does not revive an already dead player.
+
+## Survival assists
+
+Emergency targeting, automatic dodging and edge protection are enabled by default. The **Survival** settings tab controls each independently, with a 0.2–1.5 second prediction horizon (default 0.75 seconds). **F8** disables all aiming and movement assistance together; settings, lost focus, death and a stale trainer heartbeat suspend assistance.
+
+Emergency targeting promotes an enemy whose body is predicted to collide with the player, overriding tower priority, target hold and the normal aim cone. It still requires a hittable damage point and normal firing. Auto dodge compares the current movement with alternative directions, using player acceleration, momentum, enemy velocity and body/segment collisions. Edge protection samples the actual tiled floor and its timed collapse. Safe manual movement is passed through unchanged. The HUD reports when dodging or edge protection is active.
+
+The movement assists steer through normal movement physics; they do not change health, enemy damage, speed, or position. Predictions can miss sudden enemy turns and may have no safe escape in a crowded or already unavoidable situation. The local companion adapts the current deployed game at runtime; no site redeployment is needed. Stopping/reconnecting the adapter removes its movement hook. Movement is applied at the physics step; older game builds record solo replay inputs before that step, so those replays may not reproduce assisted steering accurately. Movement assists run for solo play and the local host player; guest prediction is left untouched because the host owns authoritative movement.
+
 ## Launch and controls
 
-On macOS, double-click **Start Trainer.command**. On Windows, double-click **Start Trainer.bat**. Play in the **Chrome window the trainer opens**; that is the session attached to memory. The default address is **https://devil-green.vercel.app**. Use F7 to switch to a local development address when needed.
+On macOS, double-click **Start Trainer.command**. On Windows, double-click **Start Trainer.bat**. Play in the **Chrome window the trainer opens**; that is the session attached to memory. The default address is **https://devilsdescent.vercel.app**. Use = to switch to a local development address when needed.
 
 The Windows launcher installs the trainer's browser bridge on its first run and leaves its console open if setup fails, so missing Node.js or Python is visible instead of looking like an immediate crash. Install Chrome, current Node.js LTS, and Python 3.9–3.12 with **Add Python to PATH** selected before launching it.
 
@@ -20,7 +34,7 @@ The trainer starts with aim enabled. Fire either weapon normally to aim. Homing 
 
 | Key | Action |
 | --- | --- |
-| F7 | Open/close settings |
+| = | Open/close settings |
 | F8 | Toggle aim |
 | F9 | Disable aim |
 | F4 | Toggle ESP independently of aim |
@@ -28,7 +42,9 @@ The trainer starts with aim enabled. Fire either weapon normally to aim. Homing 
 | F6 | Apply the next preset |
 | F10 | Quit and close the managed browser |
 
-Use Fn with these keys if your keyboard uses media controls. All trainer shortcuts are global on Windows; macOS keeps F7 and F10 global and scopes the others to the managed browser or settings. The native input handler consumes reserved function keys so Chrome does not also open Find, focus the address bar, or enable caret browsing. macOS may require Accessibility/Input Monitoring permission; Windows uses the built-in global-hotkey API. Escape remains available for the game's normal pause/menu behavior.
+Use Fn with the function keys if your keyboard uses media controls. All trainer shortcuts are global on Windows; macOS keeps = and F10 global and scopes the others to the managed browser or settings. The native input handler consumes reserved shortcut keys so Chrome does not also open Find, focus the address bar, or enable caret browsing. macOS may require Accessibility/Input Monitoring permission; Windows uses the built-in global-hotkey API. Escape remains available for the game's normal pause/menu behavior.
+
+On macOS, clicking **ABYSS =** in the menu bar also opens or closes settings. The `=` shortcut in the managed game window works without macOS global keyboard permissions, including while memory is still connecting.
 
 Screen Recording permission is **not used by the trainer**. The optional UI QA script captures only its own test windows.
 

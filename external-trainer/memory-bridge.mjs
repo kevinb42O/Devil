@@ -6,12 +6,16 @@ import { existsSync } from 'node:fs';
 import { createMemoryAim, resolveDamagePoint } from './targeting.mjs';
 import {desktopTelemetry} from './geometry.mjs';
 import {paintPageOverlay} from './page-overlay.mjs';
+import {connectSettingsShortcut} from './settings-shortcut.mjs';
+import {createSurvivalAssist} from './survival.mjs';
+import {createGodmode} from './godmode.mjs';
+import {arenaData} from './arena-data.mjs';
 
 export async function attachMemory(page) {
   await page.waitForFunction(()=>Object.getOwnPropertyDescriptor(window,'abyss')?.get, null, {timeout:60000});
   await page.waitForFunction(()=>!!window.__abyssMemoryHelpers, null, {timeout:60000});
   if(await page.evaluate(()=>!!window.__abyssTrainerAccess)){
-    await page.evaluate(({factory,resolve})=>{
+    await page.evaluate(({factory,resolve,survival,godmode,arena})=>{
       globalThis.__abyssMemoryAim?.stop();
       const helpers=globalThis.__abyssMemoryHelpers;
       const access={...globalThis.__abyssTrainerAccess,
@@ -20,9 +24,11 @@ export async function attachMemory(page) {
         resolve:(enemy,pos,radius,state,homing,trajectory)=>resolvePoint(enemy,pos,radius,state,homing,helpers,trajectory)
       };
       const resolvePoint=(0,eval)('('+resolve+')');
+      access.survival=(0,eval)('('+survival+')')(access,arena);
+      access.godmode=(0,eval)('('+godmode+')')(access);
       globalThis.__abyssMemoryAim=(0,eval)('('+factory+')')(access);
       globalThis.__abyssMemoryGetter=Object.getOwnPropertyDescriptor(window,'abyss').get;
-    },{factory:createMemoryAim.toString(),resolve:resolveDamagePoint.toString()});
+    },{factory:createMemoryAim.toString(),resolve:resolveDamagePoint.toString(),survival:createSurvivalAssist.toString(),godmode:createGodmode.toString(),arena:arenaData});
     return true;
   }
   // Legacy local development builds retain the scope-inspection fallback. Never
@@ -76,6 +82,8 @@ export async function attachMemory(page) {
         }
       };
       if(!globalThis.__abyssMemoryHelpers)throw Error('The game was built without trainer support. Set VITE_TRAINER_ENABLED=true before deploying.');
+      access.survival=(${createSurvivalAssist.toString()})(access,${JSON.stringify(arenaData)});
+      access.godmode=(${createGodmode.toString()})(access);
       globalThis.__abyssMemoryAim=(${createMemoryAim.toString()})(access);
       globalThis.__abyssMemoryGetter=Object.getOwnPropertyDescriptor(window,'abyss').get;
       return {attached:true};
@@ -122,6 +130,7 @@ async function main(){
     });
     if(!running)return;
     context.on('close',()=>{running=false;input.close();process.stdin.pause();});
+    await connectSettingsShortcut(context,()=>emit({command:'menu'}));
     let browserPid=0;
     const browserSession=await context.browser().newBrowserCDPSession();
     try{const processes=await browserSession.send('SystemInfo.getProcessInfo');browserPid=processes.processInfo.find(p=>p.type==='browser')?.id||0;}finally{await browserSession.detach();}
@@ -134,7 +143,7 @@ async function main(){
       try{
         if(control.generation!==generation){generation=control.generation;attached=false;}
         if(!attached||!(await page.evaluate(()=>!!window.__abyssMemoryAim&&window.__abyssMemoryGetter===Object.getOwnPropertyDescriptor(window,'abyss')?.get))){await attachMemory(page);attached=true;}
-        const options={...control,enabled:!!control.enabled&&Date.now()-lastControl<500};
+        const options={...control,enabled:!!control.enabled&&Date.now()-lastControl<500,godmode:!!control.godmode&&Date.now()-lastControl<500};
         const data=await page.evaluate(options=>{
           const state=window.__abyssMemoryAim.control(options),rect=document.querySelector('#game').getBoundingClientRect();
           return {...state,connected:true,appliedSettings:{revision:options.settings_revision,fov:options.fov,aim_mode:options.aim_mode},documentFocused:document.hasFocus(),viewport:{screenX,screenY,outerWidth,outerHeight,innerWidth,innerHeight,devicePixelRatio,

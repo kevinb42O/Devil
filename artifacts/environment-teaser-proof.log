@@ -1,0 +1,6 @@
+RENDER 01-cosmic-sweep 270 frames
+{"id":"01-cosmic-sweep","frames":270,"renderSeconds":66.133,"cameraDistance":66.96067791123359,"maxCameraStep":0.3576232605970828,"shots":0,"kills":0,"buffer":[1920,1080]}
+RENDER 07-serpent-drift 210 frames
+{"id":"07-serpent-drift","frames":210,"renderSeconds":12.343,"cameraDistance":67.63541828781472,"maxCameraStep":0.381740003404426,"shots":0,"kills":0,"buffer":[1920,1080]}
+RENDER 08-cathedral-ascent 300 frames
+{"id":"08-cathedral-ascent","frames":300,"renderSeconds":15.5,"cameraDistance":53.78365050572093,"maxCameraStep":0.25569817125905675,"shots":0,"kills":0,"buffer":[1920,1080]}

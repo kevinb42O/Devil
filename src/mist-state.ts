@@ -33,6 +33,13 @@ export function mistAt(time:number,reduced=false,out=createMistState(),sky=creat
     for(let i=0;i<3;i++)out.color[i]+=(COSMIC_COLOR[i]-out.color[i])*c;
     out.pulse+=(1-out.pulse)*c;
   }
+  // The launch clears the black fog; the far side has a thin sunlit haze.
+  if(s.escape>0){
+    out.density+=(.008-out.density)*s.escape;
+    out.height+=(34-out.height)*s.escape;out.falloff+=(.025-out.falloff)*s.escape;out.clear+=(1-out.clear)*s.escape;
+    out.smoke*=1-s.escape;out.shafts*=1-s.escape;out.bank*=1-s.escape;out.pulse+=(1-out.pulse)*s.escape;
+    for(let i=0;i<3;i++)out.color[i]+=([.46,.39,.27][i]-out.color[i])*s.beyond;
+  }
   return out;
 }
 export const mistChapterName=(state:MistState)=>state.cosmic>.5?'The Cosmic Expanse':DESCENT_CHAPTERS[state.chapter].name;

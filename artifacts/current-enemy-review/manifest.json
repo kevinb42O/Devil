@@ -1,0 +1,376 @@
+[
+  {
+    "kind": "squid",
+    "name": "Squid I",
+    "role": "Tower spawner · Skull I + Skull II",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      4.052999019622803,
+      13.201792361337333,
+      5.0354554653167725
+    ],
+    "camera": [
+      9.041028283886494,
+      8.503592251793233,
+      20.16458582025553
+    ]
+  },
+  {
+    "kind": "squid2",
+    "name": "Squid II",
+    "role": "Tower spawner · Skull I + Skull III",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      8.361041259765624,
+      19.53439330808578,
+      7.800000190734863
+    ],
+    "camera": [
+      13.818287257703842,
+      12.721489800518992,
+      31.09114632983364
+    ]
+  },
+  {
+    "kind": "squid3",
+    "name": "Squid III",
+    "role": "Tower spawner · Skull I + Skull IV",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      10.018220374323827,
+      26.875199769235422,
+      11.125585746765136
+    ],
+    "camera": [
+      18.92750328379946,
+      17.59296419187633,
+      42.68967522378438
+    ]
+  },
+  {
+    "kind": "spider",
+    "name": "Spider I",
+    "role": "Gem-eating spawner · Egg I",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      17.288305282592773,
+      7.028723478317261,
+      13.128345132027903
+    ],
+    "camera": [
+      10.217220478264583,
+      8.660692921259844,
+      22.862234800403936
+    ]
+  },
+  {
+    "kind": "spider2",
+    "name": "Spider II",
+    "role": "Gem-eating spawner · Egg II",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      34.57661056518555,
+      15.43485164642334,
+      26.256690264055806
+    ],
+    "camera": [
+      21.153267825003912,
+      18.3515309499396,
+      47.34183005487605
+    ]
+  },
+  {
+    "kind": "egg",
+    "name": "Egg I",
+    "role": "Hatches five spiderlings",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      1.3259999752044678,
+      1.5600000619888306,
+      1.3259999752044678
+    ],
+    "camera": [
+      1.4168355910797623,
+      3.6729969057628873,
+      3.187880079929465
+    ]
+  },
+  {
+    "kind": "egg2",
+    "name": "Egg II",
+    "role": "Hatches five spiderlings",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      1.6200000047683716,
+      1.9500000000000002,
+      1.6200000047683716
+    ],
+    "camera": [
+      1.7539992837727294,
+      3.8331496597920465,
+      3.946498388488641
+    ]
+  },
+  {
+    "kind": "skull",
+    "name": "Skull I",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      1.6499999016523361,
+      0.7622369304299355,
+      0.5190404176712036
+    ],
+    "camera": [
+      0.8278648169516084,
+      3.393235788052014,
+      1.862695838141119
+    ]
+  },
+  {
+    "kind": "skull2",
+    "name": "Skull II",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      4.125,
+      2.000810444355011,
+      1.4502782933413982
+    ],
+    "camera": [
+      2.0816827378278595,
+      3.988799300468233,
+      4.683786160112684
+    ]
+  },
+  {
+    "kind": "skull3",
+    "name": "Skull III",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      2.2,
+      2.1586969971656806,
+      1.7536930561065676
+    ],
+    "camera": [
+      1.9861002318388858,
+      3.943397610123471,
+      4.468725521637492
+    ]
+  },
+  {
+    "kind": "skull4",
+    "name": "Skull IV",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      6,
+      3.4633118859767924,
+      2.732246768474579
+    ],
+    "camera": [
+      3.5063317892147055,
+      5.097163542865381,
+      7.903123148648354
+    ]
+  },
+  {
+    "kind": "transmuted1",
+    "name": "Transmuted Skull I",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      1.6499999016523361,
+      1.2115242683339922,
+      0.5196763973286948
+    ],
+    "camera": [
+      1.026556188098117,
+      3.3226141893466057,
+      2.309751423220763
+    ]
+  },
+  {
+    "kind": "transmuted2",
+    "name": "Transmuted Skull II",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      4.125,
+      2.8389874530285732,
+      1.4502782933413982
+    ],
+    "camera": [
+      2.5148715590845407,
+      3.782063990565157,
+      5.6584610079402164
+    ]
+  },
+  {
+    "kind": "transmuted3",
+    "name": "Transmuted Skull III",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      2.013852393627167,
+      2.1999999999999997,
+      1.355785357952118
+    ],
+    "camera": [
+      1.8564071391361048,
+      3.8817933910896496,
+      4.176916063056235
+    ]
+  },
+  {
+    "kind": "transmuted4",
+    "name": "Transmuted Skull IV",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      6,
+      3.4633118859767924,
+      4.300000190734863
+    ],
+    "camera": [
+      3.9996728479398147,
+      5.331500545759808,
+      8.999263907864583
+    ]
+  },
+  {
+    "kind": "spiderling",
+    "name": "Spiderling",
+    "role": "Hatched swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      1.676189124584198,
+      0.667542427778244,
+      1.205292522907257
+    ],
+    "camera": [
+      0.9622038010808481,
+      3.3872171396439286,
+      2.1185860419391065
+    ]
+  },
+  {
+    "kind": "centipede",
+    "name": "Centipede",
+    "role": "25 weak-point segments",
+    "group": "Segmented enemies",
+    "segments": 25,
+    "bounds": [
+      16.171093921937647,
+      4.068903798060536,
+      16.37518988911117
+    ],
+    "camera": [
+      24.336463318503323,
+      20.42811467778959,
+      21.54775080639013
+    ]
+  },
+  {
+    "kind": "gigapede",
+    "name": "Gigapede",
+    "role": "50 weak-point segments",
+    "group": "Segmented enemies",
+    "segments": 50,
+    "bounds": [
+      43.13881116685118,
+      7.362697093887366,
+      43.4277196290473
+    ],
+    "camera": [
+      64.67683128158241,
+      42.08784802120977,
+      54.89008658992446
+    ]
+  },
+  {
+    "kind": "ghostpede",
+    "name": "Ghostpede",
+    "role": "10 weak-point segments · consumes homing daggers",
+    "group": "Segmented enemies",
+    "segments": 10,
+    "bounds": [
+      17.093104632001477,
+      7.426376871541747,
+      17.927403843614094
+    ],
+    "camera": [
+      26.53180367096705,
+      23.65516837936178,
+      25.374191443996196
+    ]
+  },
+  {
+    "kind": "leviathan",
+    "name": "Leviathan",
+    "role": "Boss · transmutation rings",
+    "group": "Bosses and hazard",
+    "segments": 0,
+    "bounds": [
+      20.99999874830246,
+      12.108798086643219,
+      18.4
+    ],
+    "camera": [
+      15.0463569049772,
+      23.44701952986417,
+      33.854303036198694
+    ]
+  },
+  {
+    "kind": "orb",
+    "name": "Orb",
+    "role": "Boss · transmutation rings",
+    "group": "Bosses and hazard",
+    "segments": 0,
+    "bounds": [
+      7.176226589986175,
+      7.201807387721033,
+      7.361013564095957
+    ],
+    "camera": [
+      7.078428415979822,
+      6.362253497590416,
+      15.926463935954597
+    ]
+  },
+  {
+    "kind": "thorn",
+    "name": "Thorn",
+    "role": "Stationary hazard",
+    "group": "Bosses and hazard",
+    "segments": 0,
+    "bounds": [
+      3.3519350886930823,
+      8.699999809265137,
+      3.0325448291938555
+    ],
+    "camera": [
+      5.9633498020365225,
+      5.482591155967349,
+      13.401264639985246
+    ]
+  }
+]

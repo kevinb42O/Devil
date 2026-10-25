@@ -1,3 +1,4 @@
+import {environmentClock} from './descent';
 import * as THREE from 'three';
 import {arenaRadius,TILE_SIZE} from './arena';
 import {createDescentState} from './descent';
@@ -142,7 +143,7 @@ export class VeilEnvironment {
  setSky(texture:THREE.Texture){this.uniforms.veilClouds.value=texture;}
  configure(quality:string,reduced=false){this.quality=quality;this.reduced=reduced;this.uniforms.veilDetail.value=quality==='low'?0:1;this.fragments.count=quality==='low'?64:160;this.dust.geometry.setDrawRange(0,quality==='low'?100:320);}
  update(camera:THREE.Camera,time:number,enabled=true){
-  const amount=enabled?veilAt(time,this.state):0,clock=this.reduced?0:Math.max(0,Math.min(133,time-126));
+  const amount=enabled?veilAt(time,this.state):0,clock=this.reduced?0:Math.max(0,Math.min(133,environmentClock(time)-126));
   this.uniforms.veilAmount.value=amount;this.uniforms.veilClock.value=clock;this.uniforms.veilRadius.value=arenaRadius(time);this.group.visible=amount>.001;
   if(!this.group.visible)return;
   for(let i=0;i<this.fragments.count;i++){

@@ -4,79 +4,79 @@
   "failed": [],
   "local": [
     {
-      "name": "footstep-stone1",
+      "name": "footstep-stone5",
       "rate": 1,
-      "gain": 0.013500000350177288,
-      "played": true,
-      "panner": false
-    },
-    {
-      "name": "footstep-stone6",
-      "rate": 1,
-      "gain": 0.013500000350177288,
+      "gain": 0.06750000268220901,
       "played": true,
       "panner": false
     },
     {
       "name": "footstep-stone8",
       "rate": 1,
-      "gain": 0.013500000350177288,
+      "gain": 0.06750000268220901,
       "played": true,
       "panner": false
     },
     {
-      "name": "footstep-stone4",
+      "name": "footstep-stone1",
       "rate": 1,
-      "gain": 0.013500000350177288,
-      "played": true,
-      "panner": false
-    },
-    {
-      "name": "footstep-stone7",
-      "rate": 1,
-      "gain": 0.013500000350177288,
-      "played": true,
-      "panner": false
-    },
-    {
-      "name": "footstep-stone5",
-      "rate": 1,
-      "gain": 0.013461349532008171,
-      "played": true,
-      "panner": false
-    },
-    {
-      "name": "footstep-stone10",
-      "rate": 1,
-      "gain": 0.013500000350177288,
-      "played": true,
-      "panner": false
-    },
-    {
-      "name": "footstep-stone2",
-      "rate": 1,
-      "gain": 0.013500000350177288,
+      "gain": 0.06750000268220901,
       "played": true,
       "panner": false
     },
     {
       "name": "footstep-stone12",
       "rate": 1,
-      "gain": 0.013500000350177288,
+      "gain": 0.06750000268220901,
+      "played": true,
+      "panner": false
+    },
+    {
+      "name": "footstep-stone11",
+      "rate": 1,
+      "gain": 0.06750000268220901,
       "played": true,
       "panner": false
     },
     {
       "name": "footstep-stone3",
       "rate": 1,
-      "gain": 0.013500000350177288,
+      "gain": 0.06750000268220901,
+      "played": true,
+      "panner": false
+    },
+    {
+      "name": "footstep-stone6",
+      "rate": 1,
+      "gain": 0.06750000268220901,
+      "played": true,
+      "panner": false
+    },
+    {
+      "name": "footstep-stone4",
+      "rate": 1,
+      "gain": 0.06750000268220901,
       "played": true,
       "panner": false
     },
     {
       "name": "footstep-stone9",
       "rate": 1,
-      "gain": 0.013500000350177288,
+      "gain": 0.06750000268220901,
+      "played": true,
+      "panner": false
+    },
+    {
+      "name": "footstep-stone2",
+      "rate": 1,
+      "gain": 0.06750000268220901,
+      "played": true,
+      "panner": false
+    },
+    {
+      "name": "footstep-stone7",
+      "rate": 1,
+      "gain": 0.06750000268220901,
       "played": true,
       "panner": false
     }
@@ -85,14 +85,26 @@
   "idle": [],
   "positional": [
     {
-      "name": "footstep-stone2",
+      "name": "footstep-stone3",
       "position": {
         "x": 2,
         "y": 0.08,
-        "z": 12.463000000119212
+        "z": 12.457499999999992
       },
       "rate": 1,
-      "gain": 0.008036591112613678,
+      "gain": 0.04025454446673393,
+      "played": true,
+      "panner": true
+    },
+    {
+      "name": "footstep-stone6",
+      "position": {
+        "x": 2,
+        "y": 0.08,
+        "z": 14.874000000357624
+      },
+      "rate": 1,
+      "gain": 0.04025454446673393,
       "played": true,
       "panner": true
     },
@@ -101,22 +113,10 @@
       "position": {
         "x": 2,
         "y": 0.08,
-        "z": 14.881999999880794
+        "z": 17.289500000476835
       },
       "rate": 1,
-      "gain": 0.008050909265875816,
-      "played": true,
-      "panner": true
-    },
-    {
-      "name": "footstep-stone12",
-      "position": {
-        "x": 2,
-        "y": 0.08,
-        "z": 17.300999999940405
-      },
-      "rate": 1,
-      "gain": 0.008037272840738297,
+      "gain": 0.04025454446673393,
       "played": true,
       "panner": true
     }
@@ -128,21 +128,21 @@
         {
           "name": "footstep-wet10",
           "rate": 1,
-          "gain": 0.013464407064020634,
+          "gain": 0.06750000268220901,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet11",
+          "name": "footstep-wet7",
           "rate": 1,
-          "gain": 0.013500000350177288,
+          "gain": 0.06730063259601593,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet8",
+          "name": "footstep-wet12",
           "rate": 1,
-          "gain": 0.013500000350177288,
+          "gain": 0.06750000268220901,
           "played": true,
           "panner": false
         }
@@ -154,56 +154,56 @@
         {
           "name": "footstep-stone3",
           "rate": 1,
-          "gain": 0.008009033277630806,
+          "gain": 0.03993326425552368,
           "played": true,
           "panner": false
         },
         {
           "name": "footstep-wet3",
           "rate": 1,
-          "gain": 0.005490966606885195,
+          "gain": 0.027378113940358162,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-stone1",
+          "name": "footstep-stone2",
           "rate": 1,
-          "gain": 0.007986517623066902,
+          "gain": 0.03993326425552368,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet1",
+          "name": "footstep-wet2",
           "rate": 1,
-          "gain": 0.0054755304008722305,
+          "gain": 0.027378113940358162,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-stone6",
+          "name": "footstep-stone11",
           "rate": 1,
-          "gain": 0.008009033277630806,
+          "gain": 0.03993714600801468,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet6",
+          "name": "footstep-wet11",
           "rate": 1,
-          "gain": 0.005490966606885195,
+          "gain": 0.027380773797631264,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-stone4",
+          "name": "footstep-stone5",
           "rate": 1,
-          "gain": 0.008009033277630806,
+          "gain": 0.03993714600801468,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet4",
+          "name": "footstep-wet5",
           "rate": 1,
-          "gain": 0.005490966606885195,
+          "gain": 0.027380775660276413,
           "played": true,
           "panner": false
         }
@@ -215,56 +215,56 @@
         {
           "name": "footstep-stone9",
           "rate": 1,
-          "gain": 0.005213544704020023,
+          "gain": 0.026067722588777542,
           "played": true,
           "panner": false
         },
         {
           "name": "footstep-wet9",
           "rate": 1,
-          "gain": 0.008286455646157265,
+          "gain": 0.041432276368141174,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-stone5",
+          "name": "footstep-stone4",
           "rate": 1,
-          "gain": 0.005213544704020023,
+          "gain": 0.026067722588777542,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet5",
+          "name": "footstep-wet4",
           "rate": 1,
-          "gain": 0.008286455646157265,
+          "gain": 0.041432276368141174,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-stone7",
+          "name": "footstep-stone8",
           "rate": 1,
-          "gain": 0.005213544704020023,
+          "gain": 0.026067722588777542,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet7",
+          "name": "footstep-wet8",
           "rate": 1,
-          "gain": 0.008286455646157265,
+          "gain": 0.041432276368141174,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-stone2",
+          "name": "footstep-stone6",
           "rate": 1,
-          "gain": 0.005213544704020023,
+          "gain": 0.026067722588777542,
           "played": true,
           "panner": false
         },
         {
-          "name": "footstep-wet2",
+          "name": "footstep-wet6",
           "rate": 1,
-          "gain": 0.008286455646157265,
+          "gain": 0.041432276368141174,
           "played": true,
           "panner": false
         }
@@ -274,30 +274,30 @@
       "time": 241,
       "calls": [
         {
-          "name": "footstep-stone12",
+          "name": "footstep-stone1",
           "rate": 1,
-          "gain": 0.013500000350177288,
-          "played": true,
-          "panner": false
-        },
-        {
-          "name": "footstep-stone7",
-          "rate": 1,
-          "gain": 0.013500000350177288,
-          "played": true,
-          "panner": false
-        },
-        {
-          "name": "footstep-stone4",
-          "rate": 1,
-          "gain": 0.013500000350177288,
+          "gain": 0.06750000268220901,
           "played": true,
           "panner": false
         },
         {
           "name": "footstep-stone10",
           "rate": 1,
-          "gain": 0.013500000350177288,
+          "gain": 0.06750000268220901,
+          "played": true,
+          "panner": false
+        },
+        {
+          "name": "footstep-stone11",
+          "rate": 1,
+          "gain": 0.06750000268220901,
+          "played": true,
+          "panner": false
+        },
+        {
+          "name": "footstep-stone1",
+          "rate": 1,
+          "gain": 0.06750000268220901,
           "played": true,
           "panner": false
         }
@@ -307,23 +307,30 @@
       "time": 100,
       "calls": [
         {
-          "name": "footstep-wet9",
-          "rate": 1,
-          "gain": 0.013500000350177288,
-          "played": true,
-          "panner": false
-        },
-        {
-          "name": "footstep-wet11",
-          "rate": 1,
-          "gain": 0.013500000350177288,
-          "played": true,
-          "panner": false
-        },
-        {
           "name": "footstep-wet2",
           "rate": 1,
-          "gain": 0.013500000350177288,
+          "gain": 0.06712722033262253,
+          "played": true,
+          "panner": false
+        },
+        {
+          "name": "footstep-wet8",
+          "rate": 1,
+          "gain": 0.06750000268220901,
+          "played": true,
+          "panner": false
+        },
+        {
+          "name": "footstep-wet5",
+          "rate": 1,
+          "gain": 0.06750000268220901,
+          "played": true,
+          "panner": false
+        },
+        {
+          "name": "footstep-wet6",
+          "rate": 1,
+          "gain": 0.06750000268220901,
           "played": true,
           "panner": false
         }

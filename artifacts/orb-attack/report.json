@@ -1,0 +1,27 @@
+{
+  "result": {
+    "ring": {
+      "id": 8,
+      "radius": 25.27499999999985,
+      "age": 2.808333333333326
+    },
+    "firstRadius": 25.274999618530273,
+    "stateUnchanged": true,
+    "replayStable": true,
+    "transmuted": 6,
+    "redPixels": 1676,
+    "initialLights": 6,
+    "finalLights": 6,
+    "attackDraws": 1
+  },
+  "emission": {
+    "visible": true,
+    "expired": true,
+    "restored": true
+  },
+  "cleanup": {
+    "active": 0,
+    "ground": true
+  },
+  "errors": []
+}

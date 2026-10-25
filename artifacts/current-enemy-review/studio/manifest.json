@@ -1,0 +1,376 @@
+[
+  {
+    "kind": "squid",
+    "name": "Rift Obelisk (Squid I)",
+    "role": "Tower spawner · Skull I + Skull II",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      3.6165220737457275,
+      13.724848928052573,
+      4.7834556102752686
+    ],
+    "camera": [
+      9.173651946490622,
+      8.828116774887814,
+      20.336989133594074
+    ]
+  },
+  {
+    "kind": "squid2",
+    "name": "Twin Foundry (Squid II)",
+    "role": "Tower spawner · Skull I + Skull III",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      8.361041259765624,
+      19.52939331285415,
+      6.960000038146973
+    ],
+    "camera": [
+      13.551346439050308,
+      12.592192914042748,
+      30.49052948786319
+    ]
+  },
+  {
+    "kind": "squid3",
+    "name": "Crown Citadel (Squid III)",
+    "role": "Tower spawner · Skull I + Skull IV",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      10.018220374323827,
+      27.325199757314493,
+      9.8655855178833
+    ],
+    "camera": [
+      18.765847797726117,
+      17.741177830031027,
+      42.95595049456027
+    ]
+  },
+  {
+    "kind": "spider",
+    "name": "Brood Weaver (Spider I)",
+    "role": "Gem-eating spawner · Egg I",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      17.288305282592773,
+      7.028723478317261,
+      13.128345132027903
+    ],
+    "camera": [
+      10.217220478264583,
+      8.660692921259844,
+      22.862234800403936
+    ]
+  },
+  {
+    "kind": "spider2",
+    "name": "Armored Matriarch (Spider II)",
+    "role": "Gem-eating spawner · Egg II",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      34.57661056518555,
+      15.43485164642334,
+      26.256690264055806
+    ],
+    "camera": [
+      21.153267825003912,
+      18.3515309499396,
+      47.34183005487605
+    ]
+  },
+  {
+    "kind": "egg",
+    "name": "Brood Capsule (Egg I)",
+    "role": "Hatches five spiderlings",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      1.3259999752044678,
+      1.5600000619888306,
+      1.3259999752044678
+    ],
+    "camera": [
+      1.4168355910797623,
+      3.6729969057628873,
+      3.187880079929465
+    ]
+  },
+  {
+    "kind": "egg2",
+    "name": "Armored Capsule (Egg II)",
+    "role": "Hatches five spiderlings",
+    "group": "Spawners and eggs",
+    "segments": 0,
+    "bounds": [
+      1.6200000047683716,
+      1.9500000000000002,
+      1.6200000047683716
+    ],
+    "camera": [
+      1.7539992837727294,
+      3.8331496597920465,
+      3.946498388488641
+    ]
+  },
+  {
+    "kind": "skull",
+    "name": "Cinder Wasp (Skull I)",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      1.5035295486450195,
+      1.8310919404029846,
+      1.1314346194267273
+    ],
+    "camera": [
+      1.5218898161436365,
+      3.6173629347968093,
+      3.368588008922021
+    ]
+  },
+  {
+    "kind": "skull2",
+    "name": "Iron Wasp (Skull II)",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      2.40687358379364,
+      2.4610400795936584,
+      1.2300000190734863
+    ],
+    "camera": [
+      2.001693638111333,
+      4.253959126943311,
+      4.533047702785983
+    ]
+  },
+  {
+    "kind": "skull3",
+    "name": "Veilwing (Skull III)",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      2,
+      2.8611193895339966,
+      1.0257148146629333
+    ],
+    "camera": [
+      2.0956217909119434,
+      3.7856791755084602,
+      4.627240672170052
+    ]
+  },
+  {
+    "kind": "skull4",
+    "name": "Drake (Skull IV)",
+    "role": "Swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      6,
+      3.4633118859767924,
+      2.732246768474579
+    ],
+    "camera": [
+      3.5063317892147055,
+      5.097163542865381,
+      7.903123148648354
+    ]
+  },
+  {
+    "kind": "transmuted1",
+    "name": "Hollow Wasp (Transmuted Skull I)",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      1.5035295486450195,
+      1.8310919404029846,
+      1.1314346194267273
+    ],
+    "camera": [
+      1.5218898161436365,
+      3.6173629347968093,
+      3.368588008922021
+    ]
+  },
+  {
+    "kind": "transmuted2",
+    "name": "Hollow Stinger (Transmuted Skull II)",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      2.40687358379364,
+      2.4610400795936584,
+      1.2300000190734863
+    ],
+    "camera": [
+      2.001693638111333,
+      4.253959126943311,
+      4.533047702785983
+    ]
+  },
+  {
+    "kind": "transmuted3",
+    "name": "Hollow Veilwing (Transmuted Skull III)",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      2,
+      2.8611193895339966,
+      1.0257148146629333
+    ],
+    "camera": [
+      2.0956217909119434,
+      3.7856791755084602,
+      4.627240672170052
+    ]
+  },
+  {
+    "kind": "transmuted4",
+    "name": "Hollow Drake (Transmuted Skull IV)",
+    "role": "Transmuted swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      6,
+      3.4633118859767924,
+      4.300000190734863
+    ],
+    "camera": [
+      3.9996728479398147,
+      5.331500545759808,
+      8.999263907864583
+    ]
+  },
+  {
+    "kind": "spiderling",
+    "name": "Skitter (Spiderling)",
+    "role": "Hatched swarm enemy",
+    "group": "Skulls and spiderling",
+    "segments": 0,
+    "bounds": [
+      1.676189124584198,
+      0.667542427778244,
+      1.205292522907257
+    ],
+    "camera": [
+      0.9622038010808481,
+      3.3872171396439286,
+      2.1185860419391065
+    ]
+  },
+  {
+    "kind": "centipede",
+    "name": "Iron Convoy (Centipede)",
+    "role": "25 weak-point segments",
+    "group": "Segmented enemies",
+    "segments": 25,
+    "bounds": [
+      16.171093921937647,
+      4.068903798060536,
+      16.37518988911117
+    ],
+    "camera": [
+      24.336463318503323,
+      20.42811467778959,
+      21.54775080639013
+    ]
+  },
+  {
+    "kind": "gigapede",
+    "name": "Gilded Convoy (Gigapede)",
+    "role": "50 weak-point segments",
+    "group": "Segmented enemies",
+    "segments": 50,
+    "bounds": [
+      43.13881116685118,
+      7.362697093887366,
+      43.4277196290473
+    ],
+    "camera": [
+      64.67683128158241,
+      42.08784802120977,
+      54.89008658992446
+    ]
+  },
+  {
+    "kind": "ghostpede",
+    "name": "Hollow Convoy (Ghostpede)",
+    "role": "10 weak-point segments · consumes homing daggers",
+    "group": "Segmented enemies",
+    "segments": 10,
+    "bounds": [
+      17.093104632001477,
+      7.426376871541747,
+      17.927403843614094
+    ],
+    "camera": [
+      26.53180367096705,
+      23.65516837936178,
+      25.374191443996196
+    ]
+  },
+  {
+    "kind": "leviathan",
+    "name": "Astral Sovereign (Leviathan)",
+    "role": "Boss · transmutation rings",
+    "group": "Bosses and hazard",
+    "segments": 0,
+    "bounds": [
+      20.99999874830246,
+      12.108798086643219,
+      18.4
+    ],
+    "camera": [
+      15.0463569049772,
+      23.44701952986417,
+      33.854303036198694
+    ]
+  },
+  {
+    "kind": "orb",
+    "name": "Orb (Orb)",
+    "role": "Boss · transmutation rings",
+    "group": "Bosses and hazard",
+    "segments": 0,
+    "bounds": [
+      7.135638718017271,
+      7.033250823739047,
+      7.293689928157107
+    ],
+    "camera": [
+      6.9636017645941735,
+      6.307710838182232,
+      15.668103970336889
+    ]
+  },
+  {
+    "kind": "thorn",
+    "name": "Fracture Spire (Thorn)",
+    "role": "Stationary hazard",
+    "group": "Bosses and hazard",
+    "segments": 0,
+    "bounds": [
+      3.3519350886930823,
+      8.699999809265137,
+      3.0325448291938555
+    ],
+    "camera": [
+      5.9633498020365225,
+      5.482591155967349,
+      13.401264639985246
+    ]
+  }
+]

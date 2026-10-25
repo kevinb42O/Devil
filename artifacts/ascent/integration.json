@@ -1,0 +1,174 @@
+{
+  "shakenPosition": [
+    0.1143469444435776,
+    1.6083621077052495,
+    8.945429597147278
+  ],
+  "stillPosition": [
+    0,
+    1.7,
+    9
+  ],
+  "rotation": [
+    0.2,
+    0,
+    0,
+    "YXZ"
+  ],
+  "stillRotation": [
+    0.2,
+    0,
+    0,
+    "YXZ"
+  ],
+  "shake": {
+    "x": 0.11434694444357758,
+    "y": -0.09163789229475054,
+    "z": -0.05457040285272145
+  },
+  "simulationStable": true,
+  "spectatorShake": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "reducedShake": {
+    "x": 0,
+    "y": 0,
+    "z": 0
+  },
+  "changed": 0.6106727430555555,
+  "paused": 0,
+  "rewind": 0,
+  "cost": 66,
+  "samples": [
+    {
+      "time": 481,
+      "visible": false,
+      "amount": 0,
+      "distance": 0,
+      "length": 0,
+      "speed": 14,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 482.25,
+      "visible": true,
+      "amount": 0.32999544833866273,
+      "distance": 4.0625,
+      "length": 2.3330678197543455,
+      "speed": 18.5,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 484,
+      "visible": true,
+      "amount": 1,
+      "distance": 64,
+      "length": 14,
+      "speed": 50,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 486,
+      "visible": true,
+      "amount": 1,
+      "distance": 200,
+      "length": 21.92,
+      "speed": 86,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 488,
+      "visible": true,
+      "amount": 1,
+      "distance": 408,
+      "length": 29.84,
+      "speed": 122,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 490,
+      "visible": true,
+      "amount": 1,
+      "distance": 688,
+      "length": 37.76,
+      "speed": 158,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 492,
+      "visible": true,
+      "amount": 0.4067382812499918,
+      "distance": 840.1481481481482,
+      "length": 2.7911284722221663,
+      "speed": 17.55555555555556,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 494,
+      "visible": false,
+      "amount": 0,
+      "distance": 846,
+      "length": 0,
+      "speed": 0,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 504,
+      "visible": false,
+      "amount": 0,
+      "distance": 846,
+      "length": 0,
+      "speed": 0,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 519,
+      "visible": false,
+      "amount": 0,
+      "distance": 0,
+      "length": 0,
+      "speed": 14,
+      "streaks": 640,
+      "reduced": false
+    },
+    {
+      "time": 996,
+      "visible": true,
+      "amount": 1,
+      "distance": 200,
+      "length": 21.92,
+      "speed": 86,
+      "streaks": 640,
+      "reduced": false
+    }
+  ],
+  "reduced": {
+    "visible": false,
+    "amount": 0,
+    "distance": 200,
+    "length": 21.92,
+    "speed": 86,
+    "streaks": 240,
+    "reduced": true
+  },
+  "audio": {
+    "playing": true,
+    "loaded": true,
+    "loading": false,
+    "failed": false,
+    "offset": 6.25,
+    "phase": 486.25,
+    "peak": 0.10775251686573029
+  }
+}

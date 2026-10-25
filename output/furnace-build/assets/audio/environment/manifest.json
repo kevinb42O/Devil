@@ -1,0 +1,164 @@
+{
+  "space": {
+    "file": "space-fc58eb4604.m4a",
+    "duration": 120,
+    "gain": 0.18,
+    "bytes": 2371619,
+    "sha256": "b2a7f6fe447e5d91d76c3052ea12640e45c561674878243f7d3b0f97b6363a02",
+    "rms": 0.07737,
+    "peak": 0.25114,
+    "minWindowRms": 0.07023,
+    "layers": [
+      {
+        "source": "space",
+        "weight": 1,
+        "highPass": 35,
+        "lowPass": 5000
+      }
+    ]
+  },
+  "ash": {
+    "file": "ash-80a968c8d8.m4a",
+    "duration": 120,
+    "gain": 0.18,
+    "bytes": 2787381,
+    "sha256": "8d306d3fa321df0e612047f9973d5c13db1ca612b6acc1c1c90f6dbd505b7acf",
+    "rms": 0.07671,
+    "peak": 0.30441,
+    "minWindowRms": 0.05696,
+    "layers": [
+      {
+        "source": "wind",
+        "weight": 1,
+        "highPass": 70,
+        "lowPass": 7500
+      },
+      {
+        "source": "rumble",
+        "weight": 0.18,
+        "highPass": 35,
+        "lowPass": 700
+      }
+    ]
+  },
+  "storm": {
+    "file": "storm-5e83a19b53.m4a",
+    "duration": 120,
+    "gain": 0.095,
+    "bytes": 2866060,
+    "sha256": "e7c6b52201d2c94abc524cb0d18a5461ae9e9505b099334e72949e036d66ed70",
+    "rms": 0.07686,
+    "peak": 0.38438,
+    "minWindowRms": 0.06246,
+    "layers": [
+      {
+        "source": "wind",
+        "weight": 0.7,
+        "highPass": 60,
+        "lowPass": 8000
+      },
+      {
+        "source": "thunder",
+        "weight": 0.8,
+        "highPass": 45,
+        "lowPass": 4500
+      }
+    ]
+  },
+  "veil": {
+    "file": "veil-5f95a9dc74.m4a",
+    "duration": 120,
+    "gain": 0.18,
+    "bytes": 2861980,
+    "sha256": "fcfbde5733ecf197ec4d11cfc8023e076590e5da0532c6429d81da2e53d0e3eb",
+    "rms": 0.07736,
+    "peak": 0.26027,
+    "minWindowRms": 0.07357,
+    "layers": [
+      {
+        "source": "electric",
+        "weight": 0.8,
+        "highPass": 45,
+        "lowPass": 6000
+      },
+      {
+        "source": "wind",
+        "weight": 0.35,
+        "highPass": 100,
+        "lowPass": 2200
+      }
+    ]
+  },
+  "furnace": {
+    "file": "furnace-3b9d5043b3.m4a",
+    "duration": 120,
+    "gain": 0.18,
+    "bytes": 2425992,
+    "sha256": "873546e0098ba8bc79b843d6b354f21adfeefd75a9ca13101e8ce2625a3a75ae",
+    "rms": 0.07438,
+    "peak": 0.3987,
+    "minWindowRms": 0.06967,
+    "layers": [
+      {
+        "source": "fire",
+        "weight": 0.85,
+        "highPass": 65,
+        "lowPass": 6500
+      },
+      {
+        "source": "rumble",
+        "weight": 0.55,
+        "highPass": 35,
+        "lowPass": 1200
+      }
+    ]
+  },
+  "cathedral": {
+    "file": "cathedral-1048b1a6f1.m4a",
+    "duration": 120,
+    "gain": 0.18,
+    "bytes": 2852229,
+    "sha256": "b5775a8f0ecaabb8f91b410a2ca0918c4f2a31ff1f8d756224b09399721d997e",
+    "rms": 0.07692,
+    "peak": 0.36617,
+    "minWindowRms": 0.05272,
+    "layers": [
+      {
+        "source": "bells",
+        "weight": 0.7,
+        "highPass": 80,
+        "lowPass": 5000
+      },
+      {
+        "source": "wind",
+        "weight": 0.2,
+        "highPass": 100,
+        "lowPass": 1300
+      }
+    ]
+  },
+  "depth": {
+    "file": "depth-00b4b23cf4.m4a",
+    "duration": 120,
+    "gain": 0.18,
+    "bytes": 2815501,
+    "sha256": "9a777e00d70a70ea0910b8eb7cb54e954f7b44ebbc18a819d12afc3cfbde8b52",
+    "rms": 0.07716,
+    "peak": 0.2776,
+    "minWindowRms": 0.07091,
+    "layers": [
+      {
+        "source": "rumble",
+        "weight": 0.65,
+        "highPass": 35,
+        "lowPass": 1800
+      },
+      {
+        "source": "pulse",
+        "weight": 0.55,
+        "highPass": 40,
+        "lowPass": 4000
+      }
+    ]
+  }
+}

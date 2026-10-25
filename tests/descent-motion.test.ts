@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {test} from 'node:test';
-import {descentDistance,descentBoundary,passageHeight,PASSAGE_BOTTOM,PASSAGE_SPAN} from '../src/descent-motion';
+import {descentDistance,passageDistance,descentBoundary,passageHeight,PASSAGE_BOTTOM,PASSAGE_SPAN} from '../src/descent-motion';
 import * as THREE from 'three';
 import {DescentPassage} from '../src/descent-passage';
 import {arenaRadius} from '../src/arena';
@@ -43,4 +43,19 @@ test('passing stone stays outside the largest arena and reduced motion freezes t
   passage.configure('low',true);passage.update(camera,137);const first=passage.uniforms.fallBoundary.value;
   passage.update(camera,410);assert.equal(passage.diagnostics.distance,0);assert.equal(passage.uniforms.fallBoundary.value,first);
   passage.update(camera,410,false);assert.equal(passage.group.visible,false);
+});
+
+test('launch brakes to a stop then accelerates upward, with continuous replayable travel',()=>{
+ assert.ok(passageDistance(480)<passageDistance(481));
+ assert.ok(passageDistance(482)>passageDistance(483));
+ assert.ok(passageDistance(489)-passageDistance(488)<passageDistance(484)-passageDistance(483));
+ assert.equal(passageDistance(498),passageDistance(509));
+ for(const time of [480,482,490])assert.ok(Math.abs(passageDistance(time-.00001)-passageDistance(time+.00001))<.003);
+});
+
+test('passage travel repeats on later descents and survives backward seeks',()=>{
+ for(const t of [30,69,144,259,380,472,480,482,487,498]){
+  assert.equal(passageDistance(t+510),passageDistance(t));
+  assert.equal(passageDistance(t+510*1000),passageDistance(t));
+ }
 });

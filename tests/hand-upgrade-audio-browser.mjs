@@ -20,7 +20,7 @@ try{
    const output=await offline.startRendering();let peak=0,energy=0,late=0,width=0;
    const a=output.getChannelData(0),b=output.getChannelData(1);
    for(let i=0;i<a.length;i++){peak=Math.max(peak,Math.abs(a[i]),Math.abs(b[i]));energy+=a[i]**2;width+=(a[i]-b[i])**2;if(i>48000*1.2&&i<48000*2.2)late+=a[i]**2;}
-   const rms=Math.sqrt(energy/a.length);check(rms>.018,'powerful hand '+level+' output');check(peak<.4,'hand '+level+' retains headroom');check(late>1,'hand '+level+' has sustained body after attack');check(width>.01,'dark stereo room');rendered.push({level,name:voice.name,duration:buffer.duration,rms,peak,late,width});
+   const rms=Math.sqrt(energy/a.length);check(rms>.009&&rms<.025,'audible, balanced hand '+level+' output');check(peak<.25,'hand '+level+' retains headroom');check(late>1,'hand '+level+' has sustained body after attack');check(width>.01,'dark stereo room');rendered.push({level,name:voice.name,duration:buffer.duration,rms,peak,late,width});
   }
   // Newer cold upgrades cancel older loads; stale audio cannot play after restart.
   sound.clear();const originalFetch=window.fetch;window.fetch=async(...args)=>{if(/\/levelup[23]\.wav$/.test(String(args[0])))await new Promise(r=>setTimeout(r,180));return originalFetch(...args);};

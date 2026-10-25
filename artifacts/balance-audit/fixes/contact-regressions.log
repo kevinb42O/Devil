@@ -1,0 +1,33 @@
+✔ new tower crowns stay reachable from the ground through their real entrance (197.209625ms)
+✔ ground-level primary fire reaches and destroys every tower crystal (130.126166ms)
+✔ hand-II ground pulses retain damage against all grounded tower tiers (235.006166ms)
+✔ spider tolerance doubles while creature bodies return to their earlier scale (7.233667ms)
+✔ persistent crowded towers never change their spawn rays or push each other outward (11545.311917ms)
+✔ a late blocker cannot displace an existing tower or bank stopped travel (2.946083ms)
+✔ emitted Skull II resumes wandering instead of gaining pursuit from its skin (63.348125ms)
+✔ homing damages exposed crystals instead of spending all twenty shots on hidden crystal zero (200.132583ms)
+✔ balance rules survive full and delta enemy packets for guest collision prediction (2.690875ms)
+✔ historical solo recordings captured before the edits retain outcomes and backward seeking (5215.113917ms)
+✔ historical crew checkpoints captured before the edits retain every exact digest (1185.146833ms)
+✔ current solo recordings and crew checkpoints retain corrected rules on restore (126.637334ms)
+✔ new thorn armor has real remake surfaces while legacy files retain original armor (0.475084ms)
+✔ running into every tower body at ground level is lethal in solo and crew (21.710917ms)
+✔ tower contact is bounded above the crown and outside the body (1.983917ms)
+✔ all 22 enemy types have lethal active body contact in solo and crew (17.272375ms)
+✔ ground eggs and spiderlings hit the legs of a standing player (0.570792ms)
+✔ fast eggs and moving players cannot tunnel through contact between ticks (0.746958ms)
+✔ capsule sweep keeps jumps above short enemies safe and thorns bounded (2.771167ms)
+✔ centipede commits to an overhead pass beneath its head after the grace period (3.089375ms)
+✔ gigapede vertical sweep is independent of player altitude (475.391834ms)
+✔ snake body remains lethal after its crystals have been destroyed (0.555708ms)
+✔ crew contacts use each player body height and kill only overlapping members (0.445458ms)
+✔ emerging and fully dead enemies cannot kill; invulnerability applies to crew (10.233792ms)
+✔ ghostpede flight does not react to player position (149.897875ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20288.06275

@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "top": 5.3,
+    "bottom": -1.7,
+    "upperHit": false,
+    "initialLights": 6,
+    "denseLights": 6,
+    "sources": [
+      {
+        "position": [
+          0,
+          -0.5,
+          1.535
+        ],
+        "size": 0.65
+      }
+    ],
+    "emberPixels": 4394
+  },
+  "errors": []
+}

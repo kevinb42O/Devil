@@ -1,0 +1,38 @@
+{
+  "duration": 37.41666666666667,
+  "frames": 899,
+  "fps": 24,
+  "segments": [
+    {
+      "start": 0,
+      "end": 472,
+      "speed": 24,
+      "at": 0
+    },
+    {
+      "start": 472,
+      "end": 482,
+      "speed": 5,
+      "at": 19.666666666666668
+    },
+    {
+      "start": 482,
+      "end": 498,
+      "speed": 2,
+      "at": 21.666666666666668
+    },
+    {
+      "start": 498,
+      "end": 510,
+      "speed": 6,
+      "at": 29.666666666666668
+    },
+    {
+      "start": 510,
+      "end": 579,
+      "speed": 12,
+      "at": 31.666666666666668
+    }
+  ],
+  "output": "artifacts/escape/endless-descent-preview.mp4"
+}

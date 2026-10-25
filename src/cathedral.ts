@@ -1,8 +1,10 @@
 import * as THREE from 'three';
+import {createDescentState,descentAt,environmentClock} from './descent';
 import {cathedralAt,CATHEDRAL_LIGHT_GLSL} from './cathedral-state';
 export {cathedralAt} from './cathedral-state';
 export class Cathedral {
  readonly group=new THREE.Group();readonly architecture:THREE.InstancedMesh;readonly dust:THREE.Mesh;
+ private skyState=createDescentState();
  private reduced=false;private highCount=0;private lowCount=0;private quality='high';
  readonly uniforms={cathedralPresence:{value:0},cathedralLight:{value:0},cathedralClosure:{value:0},cathedralClock:{value:0},cathedralRise:{value:0},cathedralCrown:{value:0},cathedralRight:{value:new THREE.Vector3()},cathedralUp:{value:new THREE.Vector3()}};
  constructor(scene:THREE.Scene,floor:THREE.MeshBasicMaterial){
@@ -80,7 +82,7 @@ export class Cathedral {
    #include <opaque_fragment>`);
  };material.customProgramCacheKey=()=>key+'-cathedral-limestone-v1';}
  configure(quality:string,reduced:boolean){this.quality=quality;this.reduced=reduced;this.architecture.count=quality==='high'?this.highCount:this.lowCount;(this.dust.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?1600:500;}
- update(camera:THREE.Camera,time:number,enabled=true){const s=cathedralAt(time);this.uniforms.cathedralPresence.value=enabled?Math.max(s.presence,s.crown*.22):0;this.uniforms.cathedralLight.value=enabled?s.light:0;this.uniforms.cathedralClosure.value=s.closure;this.uniforms.cathedralCrown.value=s.crown;this.uniforms.cathedralRise.value=this.reduced?0:s.rise;this.uniforms.cathedralClock.value=this.reduced?0:Math.max(0,time-356);this.uniforms.cathedralRight.value.setFromMatrixColumn(camera.matrixWorld,0);this.uniforms.cathedralUp.value.setFromMatrixColumn(camera.matrixWorld,1);this.group.visible=enabled&&this.uniforms.cathedralPresence.value>.001;this.dust.visible=s.light>.001;}
+ update(camera:THREE.Camera,time:number,enabled=true){const s=cathedralAt(time),remain=1-descentAt(time,this.skyState).escape;this.uniforms.cathedralPresence.value=enabled?Math.max(s.presence,s.crown*.22)*remain:0;this.uniforms.cathedralLight.value=enabled?s.light:0;this.uniforms.cathedralClosure.value=s.closure;this.uniforms.cathedralCrown.value=s.crown*remain;this.uniforms.cathedralRise.value=this.reduced?0:s.rise;this.uniforms.cathedralClock.value=this.reduced?0:Math.max(0,environmentClock(time)-356);this.uniforms.cathedralRight.value.setFromMatrixColumn(camera.matrixWorld,0);this.uniforms.cathedralUp.value.setFromMatrixColumn(camera.matrixWorld,1);this.group.visible=enabled&&this.uniforms.cathedralPresence.value>.001;this.dust.visible=s.light>.001;}
  dispose(){this.architecture.geometry.dispose();(this.architecture.material as THREE.Material).dispose();this.architecture.dispose();this.dust.geometry.dispose();(this.dust.material as THREE.Material).dispose();this.group.removeFromParent();}
  get diagnostics(){return {presence:this.uniforms.cathedralPresence.value,light:this.uniforms.cathedralLight.value,closure:this.uniforms.cathedralClosure.value,visible:this.group.visible,quality:this.quality,reduced:this.reduced,blocks:this.architecture.count,dust:(this.dust.geometry as THREE.InstancedBufferGeometry).instanceCount,interactive:false};}
 }

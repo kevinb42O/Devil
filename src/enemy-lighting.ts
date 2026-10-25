@@ -1,12 +1,16 @@
 import * as THREE from 'three';
 import {floorHeight} from './arena';
-import {isPede,type EnemyKind} from './enemy-kinds';
+import {isPede,isSkull,type EnemyKind} from './enemy-kinds';
 import {type World,type Vec,type Enemy} from './simulation';
 import {type GlowSource} from './enemy-glow-sources';
 
 // A shared palette keeps the aura and floor spill consistent.
 export function enemyGlowColor(kind:string):THREE.Color {
- if(kind.startsWith('transmuted')||kind.includes('lev')||kind==='orb'||kind.includes('immortal'))return new THREE.Color(.23,.19,.65);
+ if(kind==='skull')return new THREE.Color(.65,.22,.055);
+ if(kind==='skull2')return new THREE.Color(.10,.40,.48);
+ if(kind==='skull3')return new THREE.Color(.52,.045,.10);
+ if(kind==='orb')return new THREE.Color(1.,.025,.004);
+ if(kind.startsWith('transmuted')||kind.includes('lev')||kind.includes('immortal'))return new THREE.Color(.23,.19,.65);
  if(kind.includes('ghost')||kind.includes('ultrapede'))return new THREE.Color(.12,.5,.46);
  if(kind.includes('spider')||kind.includes('egg'))return new THREE.Color(.18,.42,.08);
  return new THREE.Color(.65,.12,.025);
@@ -47,7 +51,7 @@ export class EnemyLighting {
   if(world&&!menu)for(const e of world.enemies){
    let color=this.palette.get(e.kind);if(!color){color=enemyGlowColor(e.kind);this.palette.set(e.kind,color);}
    const emergence=isPede(e.kind)?1:Math.min(1,e.age/(e.kind==='spider2'?9:e.kind==='leviathan'?8.533333:1.1));
-   this.spill(e.pos,color,Math.min(6,2.5+e.radius*.7),emergence,world.time,e.radius);
+   this.spill(e.pos,color,e.kind==='orb'?10.5:e.kind==='thorn'?2.6:Math.min(6,2.5+e.radius*.7),emergence,world.time,e.radius,e.kind==='orb',isSkull(e.kind));
    if(isPede(e.kind))for(const segment of e.segments)this.spill(segment.pos,color,2.5,segment.hp>0?.55:.15,world.time,e.radius*.7);
   }
   // Preserve real source positions. Only virtually coincident source dots
@@ -63,7 +67,7 @@ export class EnemyLighting {
      ?(x+65536)*17179869184+(y+65536)*131072+z+65536:`${x},${y},${z}`;
     if(this.dotKeys.has(key))continue;this.dotKeys.add(key);
     const dot=this.dots[dotCount]??(this.dots[dotCount]={pos:source.pos,color,size:0,strength:0});
-    dot.pos=source.pos;dot.color=color;dot.size=source.size;dot.strength=Math.min(1,e.age/1.1);dotCount++;
+    dot.pos=source.pos;dot.color=color;dot.size=source.size;dot.strength=Math.min(1,e.age/1.1)*(source.strength??1);dotCount++;
    }
   }
   if(dotCount>this.capacity){
@@ -84,7 +88,7 @@ export class EnemyLighting {
   if(this.aura.count){this.aura.instanceMatrix.clearUpdateRanges();this.aura.instanceMatrix.addUpdateRange(0,this.aura.count*16);this.aura.instanceMatrix.needsUpdate=true;this.aura.instanceColor!.clearUpdateRanges();this.aura.instanceColor!.addUpdateRange(0,this.aura.count*3);this.aura.instanceColor!.needsUpdate=true;}
   this.field.needsUpdate=true;
  }
- private spill(pos:Vec,color:THREE.Color,baseRadius:number,emergence:number,time:number,footprint:number){
+ private spill(pos:Vec,color:THREE.Color,baseRadius:number,emergence:number,time:number,footprint:number,annular=false,surfaceOnly=false){
   const ground=floorHeight(pos.x,pos.z,time),altitude=pos.y-ground;
   if(altitude<-.4||!emergence||ground<-30)return;
   const height=Math.max(0,altitude);
@@ -103,7 +107,8 @@ export class EnemyLighting {
    const dz2=(z-cz)*(z-cz);let index=(z*FIELD_SIZE+minX)*4;
    for(let x=minX;x<=maxX;x++,index+=4){
     const distance2=this.xDistances[x]+dz2;
-    const falloff=Math.max(0,1-Math.sqrt(distance2)/r)**2*strength*255;
+    const radial=Math.sqrt(distance2)/r;
+    const falloff=(surfaceOnly?0:annular?Math.exp(-(((radial-.75)/.115)**2))*(.68+.12*Math.sin(time*1.9)):Math.max(0,1-radial)**2)*strength*255;
     const red=color.r*falloff,green=color.g*falloff,blue=color.b*falloff;
     if(red>this.pixels[index])this.pixels[index]=red;
     if(green>this.pixels[index+1])this.pixels[index+1]=green;

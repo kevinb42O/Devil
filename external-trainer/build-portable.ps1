@@ -16,7 +16,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Could not create packaging environment' }
 $buildPython = Join-Path $venvRoot 'Scripts\python.exe'
 & $buildPython -m pip install 'pyinstaller==6.16.0'
 if ($LASTEXITCODE -ne 0) { throw 'Could not install the packager' }
-foreach ($name in @('memory-bridge.mjs','targeting.mjs','geometry.mjs','page-overlay.mjs','package.json')) {
+foreach ($name in @('memory-bridge.mjs','targeting.mjs','geometry.mjs','page-overlay.mjs','settings-shortcut.mjs','survival.mjs','godmode.mjs','arena-data.mjs','package.json')) {
     Copy-Item -LiteralPath (Join-Path $trainerRoot $name) -Destination $bridgeRoot
 }
 $modules = Join-Path $bridgeRoot 'node_modules'

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {createDescentState,descentAt} from './descent';
-import {descentBoundary,descentDistance,PASSAGE_BOTTOM,PASSAGE_SPAN} from './descent-motion';
+import {descentBoundary,descentDistance,passageDistance,PASSAGE_BOTTOM,PASSAGE_SPAN} from './descent-motion';
 
 const FIELD=`
 float fallHash(vec3 p){p=fract(p*.3183099+vec3(.17,.31,.53));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
@@ -10,7 +10,7 @@ float fallNoise(vec3 p){vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
 float fallField(vec3 p){return fallNoise(p)*.58+fallNoise(p*2.03+9.)*.28+fallNoise(p*4.11-5.)*.14;}
 float fallFade(float y){return smoothstep(-92.,-60.,y)*(1.-smoothstep(92.,148.,y));}
 `;
-const UNIFORMS=`uniform float fallDistance,fallClock,fallFire,fallArchitecture,fallDark,fallCosmic;uniform vec3 fallTint,fallHaze;`;
+const UNIFORMS=`uniform float fallDistance,fallClock,fallFire,fallArchitecture,fallDark,fallCosmic,fallExit;uniform vec3 fallTint,fallHaze;`;
 
 /** World-space references outside the entire initial arena. Nothing follows the
  * player's horizontal translation: close/far objects retain real parallax.
@@ -25,7 +25,7 @@ export class DescentPassage {
   private reduced=false;
   private low=false;
   private dummy=new THREE.Object3D();
-  readonly uniforms={fallDistance:{value:0},fallClock:{value:0},fallFire:{value:0},fallArchitecture:{value:0},fallDark:{value:0},fallCosmic:{value:0},fallTint:{value:new THREE.Color()},fallHaze:{value:new THREE.Color()},fallRight:{value:new THREE.Vector3()},fallUp:{value:new THREE.Vector3()},fallForward:{value:new THREE.Vector3()},fallBoundary:{value:0},fallBoundaryPresence:{value:0},fallStone:{value:null as THREE.Texture|null}};
+  readonly uniforms={fallDistance:{value:0},fallClock:{value:0},fallFire:{value:0},fallArchitecture:{value:0},fallDark:{value:0},fallCosmic:{value:0},fallExit:{value:0},fallTint:{value:new THREE.Color()},fallHaze:{value:new THREE.Color()},fallRight:{value:new THREE.Vector3()},fallUp:{value:new THREE.Vector3()},fallForward:{value:new THREE.Vector3()},fallBoundary:{value:0},fallBoundaryPresence:{value:0},fallStone:{value:null as THREE.Texture|null}};
   constructor(scene:THREE.Scene,floor:THREE.MeshBasicMaterial){
     this.uniforms.fallStone.value=floor.map;
     this.group.name='descent-passage';this.group.visible=false;scene.add(this.group);
@@ -45,7 +45,7 @@ export class DescentPassage {
         color+=vec3(.025,.055,.095)*fallCosmic*rim;
         ${architecture?'float courses=1.-smoothstep(.025,.09,abs(sin(fallSurface.y*1.7)));color*=1.-courses*.3;':''}
         float haze=1.-exp(-length(fallWorld-cameraPosition)*.004);color=mix(color,fallHaze,haze);
-        float alpha=fallOpacity*${architecture?'fallArchitecture':'(1.-fallArchitecture*.64)'};
+        float alpha=(1.-fallExit)*fallOpacity*${architecture?'fallArchitecture':'(1.-fallArchitecture*.64)'};
         if(alpha<.015)discard;gl_FragColor=vec4(color*(1.-fallDark*.64),alpha);}`});
     const rock=new THREE.IcosahedronGeometry(1,2),p=rock.attributes.position;
     for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),s=.82+.17*Math.sin(x*13+y*8-z*11);p.setXYZ(i,x*s,y*s,z*s);}rock.computeVertexNormals();
@@ -89,7 +89,7 @@ export class DescentPassage {
          float a=1.-exp(-density*stepLength*1.7);color+=(1.-opacity)*a*tint*light;opacity+=(1.-opacity)*a;
         }
         float fade=fallFade(cloudCenter.y)*(1.-smoothstep(140.,200.,length(cloudCenter-cameraPosition)))*(1.-fallCosmic*.65)*(1.-fallDark*.65);
-        gl_FragColor=vec4(color/max(opacity,.001),opacity*fade*.64*cloudPresence);}`});
+        gl_FragColor=vec4(color/max(opacity,.001),opacity*fade*.64*cloudPresence*(1.-fallExit));}`});
     this.banks=new THREE.Mesh(cloudGeometry,bankMaterial);this.banks.name='crossing-cloud-strata';this.banks.frustumCulled=false;this.banks.renderOrder=3;
     const quad=new THREE.PlaneGeometry(1,1),motes=new THREE.InstancedBufferGeometry();motes.index=quad.index;motes.attributes=quad.attributes;
     const seeds=new Float32Array(640*4);for(let i=0;i<seeds.length;i++)seeds[i]=random();motes.setAttribute('fallSeed',new THREE.InstancedBufferAttribute(seeds,4));motes.instanceCount=640;
@@ -98,25 +98,26 @@ export class DescentPassage {
        void main(){float angle=fallSeed.x*6.2831853,r=34.+fallSeed.y*65.;vec3 p=vec3(cos(angle)*r,mod(fallSeed.z*150.+fallDistance*1.12+60.,150.)-60.,sin(angle)*r);
         float size=.018+fallSeed.w*.065;fallAlpha=smoothstep(-60.,-35.,p.y)*(1.-smoothstep(55.,90.,p.y));
         p+=fallRight*position.x*size+fallUp*position.y*size*(2.+fallSeed.w*5.);fallUV=uv;gl_Position=projectionMatrix*viewMatrix*vec4(p,1.);}`,
-      fragmentShader:`${UNIFORMS}varying vec2 fallUV;varying float fallAlpha;void main(){vec2 d=abs(fallUV-.5)*2.;float a=pow(max(0.,1.-d.x*d.x-d.y*d.y),2.);vec3 c=mix(fallTint*.9,vec3(.85,.18,.025),fallFire);gl_FragColor=vec4(c,a*fallAlpha*.55*(1.-fallDark*.8));}`}));
+      fragmentShader:`${UNIFORMS}varying vec2 fallUV;varying float fallAlpha;void main(){vec2 d=abs(fallUV-.5)*2.;float a=pow(max(0.,1.-d.x*d.x-d.y*d.y),2.);vec3 c=mix(fallTint*.9,vec3(.85,.18,.025),fallFire);gl_FragColor=vec4(c,a*fallAlpha*.55*(1.-fallDark*.8)*(1.-fallExit));}`}));
     this.motes.name='upward-slipstream';this.motes.frustumCulled=false;this.motes.renderOrder=5;
     this.group.add(this.rocks,this.masonry,this.banks,this.motes);
   }
   configure(quality:string,reduced=false){this.reduced=reduced;this.low=quality==='low';this.rocks.count=this.low?72:144;(this.motes.geometry as THREE.InstancedBufferGeometry).instanceCount=this.low?240:640;(this.banks.geometry as THREE.InstancedBufferGeometry).instanceCount=this.low?56:112;}
   update(camera:THREE.Camera,time:number,enabled=true){
-    this.group.visible=enabled;if(!enabled)return;
-    const s=descentAt(time,this.state),u=this.uniforms,t=this.reduced?0:s.time,distance=descentDistance(t);
-    u.fallDistance.value=distance;u.fallClock.value=t;u.fallFire.value=s.furnace;u.fallCosmic.value=s.cosmic;u.fallDark.value=s.crown;
+    const s=descentAt(time,this.state);
+    this.group.visible=enabled&&s.phaseTime<498&&s.escape<.99999;if(!this.group.visible)return;
+    const u=this.uniforms,t=this.reduced?0:s.phaseTime,distance=passageDistance(t);
+    u.fallExit.value=s.escape;u.fallDistance.value=distance;u.fallClock.value=t;u.fallFire.value=s.furnace;u.fallCosmic.value=Math.max(s.cosmic,s.beyond);u.fallDark.value=s.crown*(1-s.escape);
     const veil=s.chapter===1?s.blend:s.chapter===2?1-s.blend:0;
     u.fallArchitecture.value=Math.max(s.cathedral,veil*.5);
     u.fallTint.value.setRGB(.062+s.cosmic*.012+s.furnace*.025,.073-s.furnace*.042-veil*.025,.10-s.furnace*.072+veil*.012);
     u.fallHaze.value.fromArray(s.haze);
     u.fallRight.value.setFromMatrixColumn(camera.matrixWorld,0);u.fallUp.value.setFromMatrixColumn(camera.matrixWorld,1);
     u.fallForward.value.setFromMatrixColumn(camera.matrixWorld,2);
-    const boundaryDistance=Math.abs(s.time-descentBoundary(s.time));
+    const boundaryDistance=Math.abs(s.phaseTime-descentBoundary(s.phaseTime));
     const boundaryFade=Math.max(0,Math.min(1,(boundaryDistance-9)/6));
     u.fallBoundaryPresence.value=this.reduced?1:1-boundaryFade*boundaryFade*(3-2*boundaryFade);
-    u.fallBoundary.value=this.reduced?-55:distance-descentDistance(descentBoundary(s.time));
+    u.fallBoundary.value=this.reduced?-55:distance-descentDistance(descentBoundary(s.phaseTime));
   }
-  get diagnostics(){return {visible:this.group.visible,distance:this.uniforms.fallDistance.value,reduced:this.reduced,rocks:this.rocks.count,masonry:this.masonry.count,banks:(this.banks.geometry as THREE.InstancedBufferGeometry).instanceCount,motes:(this.motes.geometry as THREE.InstancedBufferGeometry).instanceCount,boundary:descentBoundary(this.state.time)};}
+  get diagnostics(){return {visible:this.group.visible,distance:this.uniforms.fallDistance.value,reduced:this.reduced,rocks:this.rocks.count,masonry:this.masonry.count,banks:(this.banks.geometry as THREE.InstancedBufferGeometry).instanceCount,motes:(this.motes.geometry as THREE.InstancedBufferGeometry).instanceCount,boundary:descentBoundary(this.state.phaseTime)};}
 }

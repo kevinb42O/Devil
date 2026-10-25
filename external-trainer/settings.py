@@ -12,14 +12,19 @@ DISPLAY_NAMES={
     'squid':'Tower I','squid2':'Tower II','squid3':'Tower III','spider':'Spider I','spider2':'Spider II','egg':'Egg I','egg2':'Egg II',
 }
 
-NUMERIC_RANGES=dict(smooth_speed=(30,3600), fov=(1,360), max_distance=(1,336), switch_bias=(0,45),
+NUMERIC_RANGES=dict(dodge_horizon=(.2,1.5), smooth_speed=(30,3600), fov=(1,360), max_distance=(1,336), switch_bias=(0,45),
                     lock_ms=(0,2000), lead_limit=(0,3), esp_opacity=(.1,1), esp_scale=(.6,2), esp_max_targets=(1,500))
 
 
 @dataclass
 class Settings:
-    game_url: str = 'https://devil-green.vercel.app'
+    game_url: str = 'https://devilsdescent.vercel.app'
     profile: str = 'Precision'
+    godmode: bool = False
+    emergency_targeting: bool = True
+    auto_dodge: bool = True
+    edge_guard: bool = True
+    dodge_horizon: float = .75
     prediction: bool = True
     aim_mode: str = 'snap'
     smooth_speed: float = 720.0
@@ -88,6 +93,8 @@ class Settings:
             result[key]=value
         if not result['profile'].strip() or len(result['profile'])>48 or any(ord(c)<32 for c in result['profile']):
             raise ValueError('Preset name must contain 1–48 printable characters')
+        if result['game_url'].rstrip('/') in ('http://devil-green.vercel.app','https://devil-green.vercel.app'):
+            result['game_url']=cls().game_url
         parsed=urlparse(result['game_url'])
         try:parsed.port
         except ValueError:raise ValueError('Game address has an invalid port') from None

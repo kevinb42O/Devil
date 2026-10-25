@@ -10,7 +10,7 @@ Keep Abyss Trainer.exe beside the _internal folder. Do not send only the EXE.
 Python and Node.js are included. No Python, Node, npm install or admin rights
 are required. Internet is needed for the game.
 
-F7: Settings
+=: Settings
 F8: Toggle aim
 F9: Disable aim
 F4: Toggle ESP
@@ -18,8 +18,8 @@ F3: Toggle HUD
 F6: Next preset
 F10: Quit trainer and close its Chrome window
 
-The default game is https://devil-green.vercel.app.
-Use F7 > Connection if you need a different address.
+The default game is https://devilsdescent.vercel.app.
+Use = > Connection if you need a different address.
 
 This package is for the ABYSS browser game, not native Devil Daggers or Warband.
 It requires a game build with the trainer connection enabled.

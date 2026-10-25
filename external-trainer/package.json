@@ -8,7 +8,9 @@
     "test:live": "node memory-live.test.mjs",
     "test:native": ".venv/bin/python -m unittest -v test_trainer.py test_hotkeys.py",
     "test:ui": ".venv/bin/python native-ui-smoke.py",
-    "test:native-live": ".venv/bin/python native-live-test.py"
+    "test:native-live": ".venv/bin/python native-live-test.py",
+    "test:godmode-live": "node godmode-live.test.mjs",
+    "test:survival": "node --import tsx --test survival.test.ts godmode.test.ts"
   },
   "dependencies": {
     "@playwright/test": "1.64.0"

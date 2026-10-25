@@ -1,0 +1,17 @@
+{
+  "result": {
+    "radius": 9.597295623994704,
+    "targetRadius": 9.6,
+    "height": 11.8,
+    "scaled": 4,
+    "halfway": 2,
+    "start": 0,
+    "legacyRadius": 2.4,
+    "legacyHeight": 5,
+    "legacyScale": 1,
+    "corona": true,
+    "screenHeight": 0.4829070849175403,
+    "outerHit": true
+  },
+  "errors": []
+}

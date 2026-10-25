@@ -31,7 +31,7 @@ try{
   return towers.map((e,i)=>({...drift[i],yaw:renderer.enemies.get(e.id).rotation.y,expected:enemyYaw(e,world.player.pos),target:localToEnemy(e,world.player.pos,e.weakpoints[0].local)}));
  });
  await page.locator('#tower-test').screenshot({path:'artifacts/towers-rotation-after.png'});
- for(let i=0;i<3;i++){assert.ok(Math.abs(after[i].yaw-before[i]+1.4)<1e-9);assert.equal(after[i].yaw,after[i].expected);assert.ok(Math.abs(after[i].inward-2.5)<1e-8);assert.ok(Math.abs(after[i].cross)<1e-8);}
+ for(let i=0;i<3;i++){assert.ok(Math.abs(after[i].yaw-before[i]+1.4+Math.PI*2)<1e-9);assert.equal(after[i].yaw,after[i].expected);assert.ok(Math.abs(after[i].inward-2.5)<1e-8);assert.ok(Math.abs(after[i].cross)<1e-8);}
  const performanceResult=await page.evaluate(()=>{
   const {renderer,world,idleInput,STEP}=window.towerFixture;world.enemies=[];world.player.pos={x:0,y:1.7,z:0};world.level=4;
   for(let i=0;i<300;i++){const e=world.spawn('skull',{x:Math.sin(i)*20,y:2,z:Math.cos(i)*20});e.age=2;}

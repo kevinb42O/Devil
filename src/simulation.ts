@@ -1,3 +1,5 @@
+import {ORB_RADIUS,ORB_HOVER_HEIGHT} from './orb-scale';
+import {heavenDropsBetween} from './heaven-reward';
 import {constrainHideSolids,HIDE_SOLIDS} from './courtyard-hide-and-seek';
 import {basketballDunkApproach} from './courtyard-basketball';
 import {courtyardFloor,COURTYARD_BOUNDS,constrainCourtyard,COURTYARD_SOLIDS,PIT,SPAWNS,insidePit,pitIsOpen,type CourtyardState} from './courtyard-state';
@@ -9,6 +11,7 @@ import {projectileRoll} from './projectile-presentation';
 import {sphereAimDistance} from './projectile-aim';
 import {daggerLaunch,type ShotLaunch} from './projectile-launch';
 import {touchesPede} from './pede-contact';
+import {planGigapedeFormation,type GigapedeFlightPlan} from './gigapede-formation';
 import {initializeGigapede,updateGigapede,type GigapedeMotion} from './gigapede-motion';
 import {updateCentipede as updateLegacyCentipede} from './legacy-centipede-motion';
 import {initializeCentipede,updateCentipede,type CentipedeMotion} from './centipede-motion';
@@ -46,7 +49,7 @@ export type Input={leftArm?:boolean;rightArm?:boolean;forward:number;strafe:numb
 // Gestures are presentation inputs: retain held flags without changing combat rules.
 function combatInput(input:Input):Input{const {leftArm,rightArm,...combat}=input;return {...combat,...(leftArm?{leftArm:true}:{}),...(rightArm?{rightArm:true}:{})};}
 export const idleInput=():Input=>({forward:0,strafe:0,yaw:0,pitch:0,jump:false,fire:false,homing:false});
-export type WorldOptions={legacyBalance?:boolean;legacyTowerSeparation?:boolean;legacyTowerArchitecture?:boolean;legacyPracticeReserve?:boolean;legacyHands?:boolean;legacyShotgun?:boolean;legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
+export type WorldOptions={legacySpiderFormation?:boolean;heavenRewards?:boolean;legacyGigapedeFormation?:boolean;legacyGigapedeSweeps?:boolean;legacyGroundSkulls?:boolean;legacyBalance?:boolean;legacyTowerSeparation?:boolean;legacyTowerArchitecture?:boolean;legacyPracticeReserve?:boolean;legacyHands?:boolean;legacyShotgun?:boolean;legacyUpgradePulse?:boolean;legacyRicochet?:boolean;legacyJumpMovement?:boolean;legacyHomingUnlock?:boolean;legacyFinalHandUnlock?:boolean;legacyGigapedeMotion?:boolean;legacyPedeContact?:boolean;legacyEnemyFloor?:boolean;schedule?:boolean;invulnerable?:boolean;cameraProjectiles?:boolean;legacyTowerOrbit?:boolean;legacyAnalogMovement?:boolean;legacyEnemyBehavior?:boolean;legacyPedePursuit?:boolean;legacyCentipedeCycle?:boolean;legacyCentipedeArc?:boolean;legacyWeaponOrigin?:boolean;legacyStreamRadius?:boolean;legacyWideStream?:boolean;legacySpawnPlacement?:boolean;legacyFloorSweep?:boolean;legacySpawnRules?:boolean;legacySpawnFixes?:boolean};
 type FireChannel={held:number;wasHeld:boolean;streaming:boolean;nextShot:number;recoverUntil:number;lastBurst:number};
 const channel=():FireChannel=>({held:0,wasHeld:false,streaming:false,nextShot:0,recoverUntil:0,lastBurst:-1000});
 export type CrewPlayer={id:string;player:World['player'];input:Input;alive:boolean;cause:string;deathSource?:DeathSource;respawnAt:number|null;life:number;protectedUntil:number;primary:FireChannel;secondary:FireChannel;wasJump:boolean;lastShotTick:number;shotSequence:number;shotSeed:number;level:number;reserve:number};
@@ -187,6 +190,8 @@ export class World {
  private projectileQueryStamp=0;
  private prediction=false;
  // Kept outside checkpoint options so revision-18 checkpoint digests stay exact.
+ private replayLegacyHeavenRewards=false;
+ get heavenRewardsEnabled(){return this.options.heavenRewards!==false&&!this.replayLegacyHeavenRewards;}
  private replayLegacyShotgun=false;private replayLegacyHands=false;
  get independentPracticeReserve(){return this.maxHandLevel>4&&!this.options.legacyPracticeReserve;}
  get maxHandLevel(){return this.options.legacyHands||this.replayLegacyHands?4:7;}
@@ -210,10 +215,11 @@ export class World {
  private spawnRng=80421;private spawnAngle=0;
  private spawnRandom(){this.spawnRng^=this.spawnRng<<13;this.spawnRng^=this.spawnRng>>>17;this.spawnRng^=this.spawnRng<<5;return(this.spawnRng>>>0)/4294967296;}
  // Always consume both samples, even when a spawn uses a fixed location.
- private scheduledPlacement(kind:EnemyKind){
+ private scheduledPlacement(event:ScheduledSpawn){
+  const {kind,spiderGroup}=event;
   const sample=this.spawnRandom(),radialSample=this.spawnRandom();
   if(this.options.legacySpawnRules)return {angle:sample*Math.PI*2,radialSample};
-  if(isSquid(kind)||isSpider(kind)){this.spawnAngle=nextPerimeterSpawnAngle(this.spawnAngle,sample);return {angle:this.spawnAngle,radialSample};}
+  if(isSquid(kind)||isSpider(kind)){this.spawnAngle=this.spiderFormationEnabled&&spiderGroup&&spiderGroup.index>0?this.spawnAngle+Math.PI*2/spiderGroup.count:nextPerimeterSpawnAngle(this.spawnAngle,sample);return {angle:this.spawnAngle,radialSample};}
   return {angle:sample*Math.PI*2,radialSample};
  }
  private primary=channel();private secondary=channel();private wasJump=false;private lastShotTick=-1;
@@ -222,10 +228,10 @@ export class World {
  constructor(seed=80421,options:WorldOptions={}){this.rng=this.shotRngSeed=seed>>>0||1;this.stats.upgradeTimes=Array(options.legacyHands?4:7).fill(0);this.options=options;this.schedule=options.legacySpawnRules?legacySurvivalSchedule():survivalSchedule();if(!options.legacySpawnRules){this.spawnRng=seed>>>0||1;this.spawnAngle=this.spawnRandom()*Math.PI*2;}this.nextEvent=this.schedule.next();}
  /** Complete simulation state at a tick boundary; transport snapshots are not checkpoints. */
  captureCrewCheckpoint(){
-  return structuredClone({...(this.contactOwners.length?{contacts:{owners:this.contactOwners,pending:[...this.pendingContacts.values()],incoming:this.incomingContacts,sources:[...this.contactSources],receipts:[...this.contactReceipts].map(([id,r])=>[id,r.ack,[...r.done]] as const)}}:{}),version:1 as const,options:{...this.options,...(this.balanceFixesEnabled?{legacyBalance:false}:{}),legacyTowerSeparation:!this.towerSeparationEnabled},scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
+  return structuredClone({...(this.contactOwners.length?{contacts:{owners:this.contactOwners,pending:[...this.pendingContacts.values()],incoming:this.incomingContacts,sources:[...this.contactSources],receipts:[...this.contactReceipts].map(([id,r])=>[id,r.ack,[...r.done]] as const)}}:{}),version:1 as const,options:{...this.options,...(this.spiderFormationEnabled?{legacySpiderFormation:false}:{}),...(this.heavenRewardsEnabled?{heavenRewards:true}:{}),...(this.balanceFixesEnabled?{legacyBalance:false}:{}),...(this.gigapedeFormationEnabled?{legacyGigapedeFormation:false}:{}),...(this.gigapedeSweepsEnabled?{legacyGigapedeSweeps:false}:{}),...(this.groundSkullsEnabled?{legacyGroundSkulls:false}:{}),legacyTowerSeparation:!this.towerSeparationEnabled},scheduleCursor:this.scheduleCursor,rng:this.rng,shotRngSeed:this.shotRngSeed,spawnRng:this.spawnRng,spawnAngle:this.spawnAngle,nextId:this.nextId,bloodSequence:this.bloodSequence,time:this.time,tick:this.tick,state:this.state,cause:this.cause,radius:this.radius,wave:this.wave,level:this.level,reserve:this.reserve,stats:this.stats,crew:this.crew,enemies:this.enemies,projectiles:this.projectiles,gems:this.gems,rings:this.rings,delayed:this.delayed,detonations:this.detonations,upgradePulses:this.upgradePulses.map(p=>({...p,hit:[...p.hit]})),selectedId:this.crew.find(p=>p.player===this.player)?.id??this.crew[0]?.id,playerStarts:this.crew.map(p=>this.playerStarts.get(p.player)??p.player.pos),wasJump:this.wasJump,lastShotTick:this.lastShotTick});
  }
  static restoreCrewCheckpoint(value:CrewCheckpoint,legacyShotgun=false,legacyHands=false,legacyTowers=false){
-  const s=structuredClone(value),w=new World(s.shotRngSeed,{...s.options,legacyTowerSeparation:s.options.legacyTowerSeparation??true});w.replayLegacyBalance=s.options.legacyBalance===undefined;w.replayLegacyTowers=legacyTowers;w.replayLegacyShotgun=legacyShotgun;w.replayLegacyHands=legacyHands;
+  const s=structuredClone(value),w=new World(s.shotRngSeed,{...s.options,legacyTowerSeparation:s.options.legacyTowerSeparation??true});w.replayLegacySpiderFormation=s.options.legacySpiderFormation!==false;w.replayLegacyHeavenRewards=s.options.heavenRewards!==true;w.replayLegacyGigapedeFormation=s.options.legacyGigapedeFormation!==false;w.replayLegacyGigapedeSweeps=s.options.legacyGigapedeSweeps!==false;w.replayLegacyGroundSkulls=s.options.legacyGroundSkulls!==false;w.replayLegacyBalance=s.options.legacyBalance===undefined;w.replayLegacyTowers=legacyTowers;w.replayLegacyShotgun=legacyShotgun;w.replayLegacyHands=legacyHands;
   if(s.contacts){w.contactOwners=s.contacts.owners;w.contactReceipts=new Map((s.contacts.receipts??[]).map(([id,ack,done])=>[id,{ack,done:new Set(done)}]));w.contactSources=new Map(s.contacts.sources??[]);w.incomingContacts=s.contacts.incoming;w.pendingContacts=new Map(s.contacts.pending.map(p=>[p.contact.shotKey,p]));}
   Object.assign(w,{rng:s.rng,shotRngSeed:s.shotRngSeed,spawnRng:s.spawnRng,spawnAngle:s.spawnAngle,nextId:s.nextId,bloodSequence:s.bloodSequence,time:s.time,tick:s.tick,state:s.state,cause:s.cause,radius:s.radius,wave:s.wave,stats:s.stats,crew:s.crew,enemies:s.enemies,projectiles:s.projectiles,gems:s.gems,rings:s.rings,delayed:s.delayed,detonations:s.detonations});
   for(let i=0;i<s.scheduleCursor;i++)w.nextEvent=w.schedule.next();w.scheduleCursor=s.scheduleCursor;
@@ -234,6 +240,14 @@ export class World {
   if(s.selectedId)w.selectCrew(s.selectedId);w.level=s.level;w.reserve=s.reserve;w.wasJump=s.wasJump;w.lastShotTick=s.lastShotTick;
   return w;
  }
+ private replayLegacySpiderFormation=false;
+ get spiderFormationEnabled(){return !this.options.legacySpawnRules&&!this.options.legacySpiderFormation&&!this.replayLegacySpiderFormation;}
+ private replayLegacyGigapedeFormation=false;
+ get gigapedeFormationEnabled(){return this.gigapedeSweepsEnabled&&!this.options.legacyGigapedeFormation&&!this.replayLegacyGigapedeFormation;}
+ private replayLegacyGigapedeSweeps=false;
+ get gigapedeSweepsEnabled(){return !this.options.legacyGigapedeSweeps&&!this.replayLegacyGigapedeSweeps;}
+ private replayLegacyGroundSkulls=false;
+ get groundSkullsEnabled(){return !this.options.legacyGroundSkulls&&!this.replayLegacyGroundSkulls;}
  private replayLegacyBalance=false;
  get balanceFixesEnabled(){return !this.options.legacyBalance&&!this.replayLegacyBalance;}
  private replayLegacyTowers=false;
@@ -245,7 +259,7 @@ export class World {
  emit(kind:Effect['kind'],pos:Vec,amount?:number,enemy?:EnemyKind,enemyId?:number){this.effects.push({kind,pos:{...pos},amount,enemy,enemyId,level:this.level,shooterId:kind==='jump'||kind==='land'||kind==='death'||kind==='pickup'?this.activeCrew?.id:undefined});if(kind==='death')this.effects[this.effects.length-1].deathCause=this.activeCrew?.cause??this.cause;if(kind==='upgrade')this.beginUpgradePulse(pos,this.level,this.activeCrew?.id);}
  spawn(kind:EnemyKind,pos:Vec,announce=true):Enemy{
   const spec=ENEMY_STATS[kind];const size=isSpider(kind)?SPIDER_SIZE*(kind==='spider2'?2:1):kind==='gigapede'?1.5:kind==='ghostpede'?2:1;
-  const e:Enemy={...(this.balanceFixesEnabled?{balance:true as const}:{}),id:this.nextId++,kind,pos:{...pos},hp:spec.hp,radius:spec.radius*(isSpider(kind)?SPIDER_SIZE:1)*(isSquid(kind)||isSpider(kind)||isPede(kind)?this.balanceFixesEnabled?1:CREATURE_SCALE_RATIO:1),gems:this.options.legacySpawnFixes&&isSpider(kind)?5:spec.gems,age:0,phase:isSquid(kind)||isSpider(kind)?Math.atan2(pos.x,pos.z):this.random()*Math.PI*2,nextSpawn:3,eaten:0,segments:[],weakpoints:[],vel:v(),headExposure:isSpider(kind)?0:1,lastHit:-99,duckUntil:0,pendingDuck:false,nextMove:3,orbitSpeed:0,radialOffset:3.8*size,facingYaw:Math.atan2(pos.x,pos.z)+Math.PI,eggCooldown:0,target:{...pos},status:'emerging',statusUntil:0,activeAt:kind==='leviathan'?8.533333333:kind==='orb'?6.683333333:isPede(kind)||kind==='thorn'?3:.6,nextBeckon:kind==='leviathan'?13.533333333:kind==='orb'?6.683333333:Infinity,size};
+  const e:Enemy={...(this.balanceFixesEnabled?{balance:true as const}:{}),id:this.nextId++,kind,pos:{...pos,...(kind==='orb'&&this.balanceFixesEnabled?{y:Math.max(pos.y,ORB_HOVER_HEIGHT)}:{})},hp:spec.hp,radius:(kind==='orb'&&this.balanceFixesEnabled?ORB_RADIUS:spec.radius)*(isSpider(kind)?SPIDER_SIZE:1)*(isSquid(kind)||isSpider(kind)||isPede(kind)?this.balanceFixesEnabled?1:CREATURE_SCALE_RATIO:1),gems:this.options.legacySpawnFixes&&isSpider(kind)?5:spec.gems,age:0,phase:isSquid(kind)||isSpider(kind)?Math.atan2(pos.x,pos.z):this.random()*Math.PI*2,nextSpawn:3,eaten:0,segments:[],weakpoints:[],vel:v(),headExposure:isSpider(kind)?0:1,lastHit:-99,duckUntil:0,pendingDuck:false,nextMove:3,orbitSpeed:0,radialOffset:3.8*size,facingYaw:Math.atan2(pos.x,pos.z)+Math.PI,eggCooldown:0,target:{...pos},status:'emerging',statusUntil:0,activeAt:kind==='leviathan'?8.533333333:kind==='orb'?6.683333333:isPede(kind)||kind==='thorn'?3:.6,nextBeckon:kind==='leviathan'?13.533333333:kind==='orb'?6.683333333:Infinity,size};
   const points=kind==='squid'?[!this.towerArchitectureEnabled?LEGACY_SQUID_I_GEM:SQUID_I_GEM]:kind==='squid2'?(!this.towerArchitectureEnabled?LEGACY_SQUID_II_GEMS:SQUID_II_GEMS):kind==='squid3'?(!this.towerArchitectureEnabled?LEGACY_SQUID_III_GEMS:SQUID_III_GEMS):kind==='leviathan'?LEVIATHAN_GEMS:[];
   if(this.options.legacyTowerOrbit)e.towerSpinDirection=1;
   e.weakpoints=points.map(local=>({local:{...local},hp:spec.hp/points.length}));
@@ -316,9 +330,10 @@ export class World {
   if(this.player.pos.y<-8&&!(this.courtyard&&pitIsOpen(this.courtyard)&&insidePit(this.player.pos))){this.state='playing';this.cause='';this.player.pos={...(this.courtyard?SPAWNS[Math.max(0,this.crew.findIndex(p=>p.player===this.player))%6]:ENTRANCE_SPAWN)};this.player.vel=v();this.player.grounded=true;this.playerStarts.clear();}
  }
  private advanceWorld(dt:number){
+  this.rainHeavenGems(dt);
   if(this.options.schedule!==false)while(!this.nextEvent.done&&this.time+1e-7>=this.nextEvent.value.time){const event=this.nextEvent.value;this.wave=event.wave;
    if(this.options.legacySpawnPlacement)this.spawnAt(event.kind,event.tick===180?Math.PI:this.random()*Math.PI*2);
-   else {const placement=this.scheduledPlacement(event.kind);this.spawnAt(event.kind,this.options.legacySpawnRules&&event.tick===180?Math.PI:placement.angle,placement.radialSample);}
+   else {const placement=this.scheduledPlacement(event);this.spawnAt(event.kind,this.options.legacySpawnRules&&event.tick===180?Math.PI:placement.angle,placement.radialSample);}
    this.nextEvent=this.schedule.next();this.scheduleCursor++;}
   for(const pending of this.delayed.filter(s=>s.time<=this.time+1e-7)){const e=this.spawn(pending.kind,pending.pos);if(pending.activeAt!==undefined){e.activeAt=pending.activeAt-this.time;e.nextBeckon=e.activeAt;}}
   this.delayed=this.delayed.filter(s=>s.time>this.time+1e-7);
@@ -330,7 +345,7 @@ export class World {
   this.time=Math.max(0,time);this.tick=Math.round(this.time/STEP);this.level=clamp(Math.round(level),1,this.maxHandLevel);this.reserve=this.homingUnlocked?Math.max(0,Math.round(reserve)):0;
   this.stats.collected=this.independentPracticeReserve?HAND_THRESHOLDS[this.level-1]:this.options.legacyHomingUnlock?(this.level===1?0:this.level===2?10:70+this.reserve):Math.max(HAND_THRESHOLDS[this.level-1],this.homingUnlocked?10+this.reserve:0);this.stats.maxReserve=this.reserve;
   this.radius=arenaRadius(this.time);this.player.pos=v(0,floorHeight(0,0,this.time)+TUNING.eyeHeight,0);
-  while(!this.nextEvent.done&&this.nextEvent.value.time<this.time-1e-7){if(!this.options.legacySpawnPlacement)this.scheduledPlacement(this.nextEvent.value.kind);this.nextEvent=this.schedule.next();this.scheduleCursor++;}
+  while(!this.nextEvent.done&&this.nextEvent.value.time<this.time-1e-7){if(!this.options.legacySpawnPlacement)this.scheduledPlacement(this.nextEvent.value);this.nextEvent=this.schedule.next();this.scheduleCursor++;}
  }
  private move(input:Input,dt:number,ground=(x:number,z:number)=>floorHeight(x,z,this.time),allowDeath=true){
   const p=this.player;this.playerStarts.set(p,{...p.pos});const pressed=input.jump&&!this.wasJump;this.wasJump=input.jump;p.hopPulse=Math.max(0,p.hopPulse-dt*4);
@@ -452,6 +467,7 @@ export class World {
  }
  private updateEnemies(dt:number){
   this.projectileTargetStarts.clear();
+  const gigapedePlans=this.gigapedeFormationEnabled&&!this.options.legacyGigapedeMotion&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit?planGigapedeFormation(this.enemies,this.crew.length?this.crew.filter(p=>p.alive).map(p=>p.player.pos):[this.player.pos],this.time):null;
   const towerMoves=this.towerSeparationEnabled?planTowerMovement(this.enemies,this.time,dt,TUNING.towerDriftSpeed):null;
   const cells=new Map<string,Enemy[]>();for(const e of this.enemies){const key=`${Math.floor(e.pos.x/3)},${Math.floor(e.pos.z/3)}`;const cell=cells.get(key)||[];cell.push(e);cells.set(key,cell);}
   for(const e of [...this.enemies]){
@@ -482,7 +498,7 @@ export class World {
     if(e.pos.y<floor&&e.vel.y<0){e.pos.y=floor;if(e.vel.y<-1)this.emit('bounce',e.pos,undefined,e.kind);e.vel.y=Math.abs(e.vel.y)*.35;e.vel.x*=.95;e.vel.z*=.95;}
     if(e.age+1e-7>=10){this.emit('hatch',e.pos,undefined,e.kind);for(let i=0;i<5;i++)this.spawn('spiderling',v(e.pos.x+this.random()*2-1,e.pos.y,e.pos.z+this.random()*2-1));e.hp=0;}
     if(e.pos.y<-15)e.hp=0;
-   }else if(isPede(e.kind))this.updatePede(e,dt);
+   }else if(isPede(e.kind))this.updatePede(e,dt,gigapedePlans?.get(e));
    else if(e.kind==='leviathan'||e.kind==='orb'){
     if(e.kind==='leviathan')e.phase-=dt*.12;
     if(this.active(e)&&e.age+1e-7>=e.nextBeckon&&(e.kind!=='orb'||this.time-e.lastHit>.2)){
@@ -537,9 +553,9 @@ export class World {
    if(e.eaten>0&&e.eggCooldown<=0){e.eaten--;e.eggCooldown=.65;const aim=direction(mouth,this.player.pos),egg=this.spawn(e.kind==='spider2'?'egg2':'egg',mouth);egg.vel=v(aim.x*12,3.5,aim.z*12);this.emit('egg',mouth);}
   }
  }
- private updatePede(e:Enemy,dt:number){
+ private updatePede(e:Enemy,dt:number,gigapedePlan?:GigapedeFlightPlan){
   if(e.kind==='gigapede'&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit&&!this.options.legacyGigapedeMotion){
-   updateGigapede(e,dt,this.player.pos,floorHeight(e.pos.x,e.pos.z,this.time,0),(kind,pos)=>this.emit(kind==='dust'?'spawn':kind,pos,kind==='dust'?-1:undefined,e.kind));return;
+   updateGigapede(e,dt,this.player.pos,floorHeight(e.pos.x,e.pos.z,this.time,0),(kind,pos)=>this.emit(kind==='dust'?'spawn':kind,pos,kind==='dust'?-1:undefined,e.kind),this.gigapedeSweepsEnabled,gigapedePlan);return;
   }
   if(e.kind==='centipede'&&!this.options.legacyEnemyBehavior&&!this.options.legacyPedePursuit&&!this.options.legacyCentipedeCycle){
    (this.options.legacyCentipedeArc?updateLegacyCentipede:updateCentipede)(e,dt,{radius:this.radius,players:this.crew.length?this.crew.filter(p=>p.alive).map(p=>p.player.pos):[this.player.pos],floor:(x,z)=>floorHeight(x,z,this.time,0),random:()=>this.random(),emit:(kind,pos)=>this.emit(kind==='dust'?'spawn':kind,pos,kind==='dust'?-1:undefined,e.kind)});return;
@@ -644,7 +660,7 @@ export class World {
   const launchSpeed=this.towerArchitectureEnabled&&!(tower.balance&&skull.kind==='skull2')?0:outward;
   skull.vel=v(Math.sin(angle)*launchSpeed,4.5+this.random()*2.5,Math.cos(angle)*launchSpeed);
   skull.towerFlight={gravity:14+this.random()*8,height:1.1+this.random()*2.5,descentSpeed:4.5+this.random()*3,agility:1.8+this.random()*1.5,curl:(this.random()-.5)*2.4};
-  if(this.towerArchitectureEnabled)skull.vel.y=Math.max(skull.vel.y,Math.sqrt(2*skull.towerFlight.gravity*(skull.radius+1.8)));
+  if(this.towerArchitectureEnabled)skull.vel.y=Math.max(skull.vel.y,Math.sqrt(2*skull.towerFlight.gravity*(skull.radius+1.8*enemyEmergenceScale(tower))));
   skull.target=this.towerArchitectureEnabled?{...this.player.pos}:v(skull.pos.x+Math.sin(angle)*6,3,skull.pos.z+Math.cos(angle)*6);return delay;
  }
  /** Keep an outgoing stream above the crown until it has crossed its edge. */
@@ -677,7 +693,15 @@ export class World {
   if((tier===2&&!pursuingTowerStream||e.kind==='spiderling')&&e.age>=e.nextMove){e.nextMove=e.age+(tier===2?1.6+this.random()*.9:.3+this.random()*.45);e.target=tier===2?v((this.random()-.5)*this.radius*1.5,1+this.random()*5,(this.random()-.5)*this.radius*1.5):v(this.player.pos.x+(this.random()-.5)*3,.55,this.player.pos.z+(this.random()-.5)*3);}
   const goal=tier===2&&!pursuingTowerStream||e.kind==='spiderling'?e.target:this.player.pos,d=direction(e.pos,goal),speed=tier===1?3.1:tier===2?5.6:tier===3?8:tier===4?9:Math.sin(e.age*6)>0?7:1;
   let aimX=d.x*speed,aimY=d.y*speed,aimZ=d.z*speed;
-  const flight=e.kind.startsWith('skull')?e.towerFlight:undefined;
+  const grounded=tier===4&&this.groundSkullsEnabled;
+  if(grounded){
+   // The Drake pursues across the floor, even when its target jumps. Tower
+   // ejection finishes above; gravity then brings it down without a hover lane.
+   const length=Math.hypot(goal.x-e.pos.x,goal.z-e.pos.z)||1;
+   aimX=(goal.x-e.pos.x)/length*speed;aimZ=(goal.z-e.pos.z)/length*speed;
+   aimY=e.vel.y-26*dt;
+  }
+  const flight=e.kind.startsWith('skull')&&!grounded?e.towerFlight:undefined;
   if(flight){
    // Individual low flight lanes blend into the actual target near contact.
    // Velocity steering brakes gently instead of snapping onto a height plane.
@@ -691,8 +715,14 @@ export class World {
    aimX+=d.z*curl;aimZ-=d.x*curl;
   }
   const blend=Math.min(1,dt*(flight?flight.agility:tier===2?3:tier>=3?5:4));
-  e.vel.x+=(aimX-e.vel.x)*blend;e.vel.y+=(aimY-e.vel.y)*(flight?Math.min(1,dt*(4+flight.agility)):blend);e.vel.z+=(aimZ-e.vel.z)*blend;
+  e.vel.x+=(aimX-e.vel.x)*blend;e.vel.y=grounded?aimY:e.vel.y+(aimY-e.vel.y)*(flight?Math.min(1,dt*(4+flight.agility)):blend);e.vel.z+=(aimZ-e.vel.z)*blend;
   e.pos.x+=e.vel.x*dt;e.pos.z+=e.vel.z*dt;e.pos.y=e.kind==='spiderling'?(this.options.legacyEnemyFloor?floorHeight(e.pos.x,e.pos.z,this.time,0):enemyFloorHeight(e,this.time))+.55:e.pos.y+e.vel.y*dt;
+  if(e.towerFlight&&this.towerArchitectureEnabled){
+   // Enlarged hovering spawners can rise while a child is already turning.
+   // Resolve the outgoing lane after integration so the stream clears the maw.
+   const clearance=this.towerFlightClearance(e);
+   if(e.pos.y<clearance&&e.vel.y<0){e.pos.y=clearance;e.vel.y=0;}
+  }
   const cx=Math.floor(e.pos.x/3),cz=Math.floor(e.pos.z/3);
   for(let x=cx-1;x<=cx+1;x++)for(let z=cz-1;z<=cz+1;z++)for(const other of cells.get(`${x},${z}`)||[]){if(other.id===e.id)continue;const dist=distance(e.pos,other.pos);if(dist<1.5&&dist>.01){const sep=direction(other.pos,e.pos);e.pos.x+=sep.x*(1.5-dist)*dt*3;e.pos.z+=sep.z*(1.5-dist)*dt*3;}}
  }
@@ -936,6 +966,20 @@ export class World {
    if(sweepFloor(from,end,this.time))continue;
    if(this.enemies.some(other=>other.hp>0&&armorBounds(other)!==null&&sweepArmor(other,this.player.pos,from,point,contact,this.time,this.spawnFixesEnabled)))continue;
    return point;
+  }
+ }
+ private rainHeavenGems(dt:number){
+  if(!this.heavenRewardsEnabled||this.prediction)return;
+  const drops=heavenDropsBetween(this.time-dt,this.time);
+  if(!drops.length)return;
+  const anchors=this.crew.length?this.crew.filter(p=>p.alive).map(p=>p.player.pos):[this.player.pos];
+  if(!anchors.length)return;
+  for(const {cycle,index} of drops){
+   const anchor=anchors[index%anchors.length],angle=index*2.3999632297+cycle*.7,spread=2+5*Math.sqrt(((index*37)%50)/50);
+   let x=anchor.x+Math.cos(angle)*spread,z=anchor.z+Math.sin(angle)*spread;
+   const limit=Math.max(1,this.radius-3),length=Math.hypot(x,z);if(length>limit){x*=limit/length;z*=limit/length;}
+   if(floorHeight(x,z,this.time,0)<-4){x=anchor.x;z=anchor.z;}
+   this.gems.push({id:this.nextId++,pos:v(x,anchor.y+17+((index*19)%9),z),vel:v(0,-14-(index%5),0),age:0});this.stats.released++;
   }
  }
  dropGems(pos:Vec,count:number){this.stats.released+=count;for(let i=0;i<count;i++)this.gems.push({id:this.nextId++,pos:{...pos},vel:v((this.random()-.5)*3,-2,(this.random()-.5)*3),age:0});}

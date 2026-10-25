@@ -1,4 +1,5 @@
 import {EnvironmentAudio} from './environment-audio';
+import {roleMixGain,overlapGroup,environmentMixGain} from './audio-mix';
 import {ArenaReverb} from './arena-reverb';
 import {FOOTSTEP_SOUNDS,WET_FOOTSTEP_SOUNDS,ALL_FOOTSTEP_SOUNDS,footstepSurface,bloodFootWetness,FootstepGait} from './footstep-audio';
 import {CHATTER_TRIM,distanceEnvelope,hearingProfile} from './spatial-audio';
@@ -13,9 +14,6 @@ const variants=(name:string,count:number)=>Array.from({length:count},(_,i)=>`${n
 const GEM_PICKUPS=['gibcollect','gibcollect2','gibcollect3'];
 const MAGIC_GEM_PICKUPS=['gibcollectmagic','gibcollectmagic2','gibcollectmagic3'];
 const GEM_SOUNDS=[...GEM_PICKUPS,...MAGIC_GEM_PICKUPS,...variants('crystalbreak',3),...variants('crystalhit',3),'gemchatter'];
-// Mix trims sit after asset mastering and before both the dry and room sends.
-// Frequent crystal cues belong beneath weapons and enemy threat information.
-const CRYSTAL_MIX:Readonly<Record<string,number>>={'crystal-hit':.32,'crystal-break':.28,'gem-chatter':.35,pickup:.55};
 // Jump/touchdown feedback should sit near the quiet footstep bed (-20 dB).
 const MOVEMENT_MIX=.1;
 export const handUpgradeSound=(level:number)=>level<=1?'leveldown':`levelup${Math.min(7,level)}`;
@@ -34,6 +32,7 @@ export class Sound{
  private master:GainNode|null=null;
  private reverb:ArenaReverb|null=null;
  private environmentAudio:EnvironmentAudio|null=null;
+ private environmentGain:GainNode|null=null;
  updateEnvironment(time:number|null,dt:number){this.environmentAudio?.update(this.volume>0?time:null,dt);}
  private buffers=new Map<string,AudioBuffer>();
  private pending=new Map<string,Promise<AudioBuffer|undefined>>();
@@ -63,7 +62,8 @@ export class Sound{
   this.context=new AudioContext();this.master=this.context.createGain();this.master.gain.value=this.volume;
   const limiter=this.context.createDynamicsCompressor();limiter.threshold.value=-4;limiter.knee.value=6;limiter.ratio.value=12;limiter.attack.value=.003;limiter.release.value=.15;
   this.reverb=new ArenaReverb(this.context,this.master);
-  this.environmentAudio=new EnvironmentAudio(this.context,this.master);
+  this.environmentGain=this.context.createGain();this.environmentGain.gain.value=environmentMixGain(false);this.environmentGain.connect(this.master);
+  this.environmentAudio=new EnvironmentAudio(this.context,this.environmentGain);
   this.master.connect(limiter);limiter.connect(this.context.destination);await this.context.resume();
   this.loading=(async()=>{
    // Warm only the opening weapon/movement cues. Enemy and later-hand sounds
@@ -154,7 +154,7 @@ export class Sound{
   if(!this.countdownVoice)return;
   this.countdownVoice.source.stop();this.disconnect(this.countdownVoice);this.countdownVoice=null;
  }
- private volumeFor(name:string){const asset=remakeAudioAsset(name);return asset.gain*(CHATTER_TRIM[name]??1)*(CRYSTAL_MIX[asset.role]??1);}
+ private volumeFor(name:string){const asset=remakeAudioAsset(name);return asset.gain*(CHATTER_TRIM[name]??1)*roleMixGain(asset.role);}
  private remember(name:string){this.recent.push(name);if(this.recent.length>32)this.recent.shift();}
  private choose(names:string|string[]){if(typeof names==='string')return names;const previous=this.choices.get(names[0])??-1;let index=Math.floor(Math.random()*names.length);if(index===previous)index=(index+1)%names.length;this.choices.set(names[0],index);return names[index];}
  private pickupChoice(key:string,count:number){
@@ -193,11 +193,9 @@ export class Sound{
   if(this.shots.size>=48){const candidate=[...this.shots].find(v=>v.priority<priority);if(!candidate)return;candidate.source.stop();this.disconnect(candidate);}
   if(throttle)this.cooldowns.set(throttleKey,c.currentTime+throttle);
   const role=remakeAudioAsset(name).role;
-  // Socket hits and fractures share long decays. Attenuate new overlapping
-  // strikes across all enemies, including simultaneous shotgun/crew hits.
-  const crystalOverlap=role==='crystal-hit'||role==='crystal-break'
-   ?[...this.shots].filter(v=>{const r=remakeAudioAsset(v.name).role;return r==='crystal-hit'||r==='crystal-break';}).length:0;
-  const source=c.createBufferSource();source.buffer=buffer;const gain=c.createGain();gain.gain.value=this.volumeFor(name)*scale/Math.sqrt(1+crystalOverlap);source.connect(gain);
+  const group=overlapGroup(role),overlap=group
+   ?[...this.shots].filter(v=>overlapGroup(remakeAudioAsset(v.name).role)===group).length:0;
+  const source=c.createBufferSource();source.buffer=buffer;const gain=c.createGain();gain.gain.value=this.volumeFor(name)*scale/Math.sqrt(1+overlap);source.connect(gain);
   const panner=pos?this.panner(pos,name):undefined,spatialGain=panner?c.createGain():undefined;if(panner&&spatialGain){gain.connect(panner);panner.connect(spatialGain);spatialGain.connect(this.master);}else gain.connect(this.master);
   const voice:Voice={source,gain,panner,spatialGain,position:pos?{...pos}:undefined,name,priority,rate,ended:false};voice.reverbSends=this.reverb?.connect(spatialGain??gain,remakeAudioAsset(name).role);this.updateSpatial(voice);this.shots.add(voice);source.onended=()=>this.disconnect(voice);source.playbackRate.value=this.playbackRate*rate;source.start();this.remember(name);
   return voice;
@@ -305,7 +303,7 @@ export class Sound{
  update(world:World,{weapons=true}:{weapons?:boolean}={}){
   const weaponAudio=weapons?world.weaponAudio:{primary:false,homing:false};
   this.updateFootsteps(world);
-  if(world.state!=='playing'){for(const id of this.loops.keys())this.stop(id);return;}
+  if(world.state!=='playing'){this.setEnvironmentCombat(false);for(const id of this.loops.keys())this.stop(id);return;}
   // Decode the next hand before its gem threshold, so its first attack and
   // upgrade cue are ready without loading the entire sound library at startup.
   for(const hand of new Set([weaponTier(world.level),weaponTier(world.level+1),...world.crew.map(p=>weaponTier(p.level))])){
@@ -333,6 +331,7 @@ export class Sound{
   }
   const retained=new Set([...this.loops.keys()].filter((id):id is number=>typeof id==='number'&&id>0));
   const selected=selectEnemyAudio(world.enemies,this.listenerPosition,e=>world.active(e),retained);
+  this.setEnvironmentCombat(weaponAudio.primary||weaponAudio.homing||selected.some(c=>c.distance<12));
   const threatEnergy=selected.reduce((sum,c)=>sum+c.scale*Math.max(0,1-c.distance/20),0);
   const streamMix=1/(1+Math.min(.55,threatEnergy*.09));
   const remoteStreams=world.crew.filter(p=>p.player!==world.player&&this.audible('rapid'+weaponTier(p.level),p.player.pos)&&(world.weaponAudioFor(p).primary||world.weaponAudioFor(p).homing)).length;
@@ -347,7 +346,7 @@ export class Sound{
   const homing:World['projectiles']=[],ranges:number[]=[];
   for(const p of world.projectiles){if(!weapons||!p.homing||!this.audible((p.level??1)>=4?'magentadrone':'daggerdrone',p.pos))continue;const range=(p.pos.x-this.listenerPosition.x)**2+(p.pos.y-this.listenerPosition.y)**2+(p.pos.z-this.listenerPosition.z)**2;let slot=0;while(slot<ranges.length&&ranges[slot]<=range)slot++;if(slot>=8)continue;homing.splice(slot,0,p);ranges.splice(slot,0,range);if(homing.length>8){homing.pop();ranges.pop();}}
 
-  for(const p of homing){const id=-100-p.id;ids.add(id);this.loop(id,(p.level??1)>=4?'magentadrone':'daggerdrone',p.pos,.3);}
+  for(const p of homing){const id=-100-p.id;ids.add(id);this.loop(id,(p.level??1)>=4?'magentadrone':'daggerdrone',p.pos,.3/Math.sqrt(homing.length));}
 
   for(const {enemy:e,pos,scale} of selected){ids.add(e.id);const name=e.kind==='centipede'&&!world.active(e)?'subchattercentipede':e.kind==='orb'&&world.time-e.lastHit<=.2?'eyepacifydrone':CHATTER[e.kind];this.loop(e.id,name,pos,scale,false,.975+((Math.imul(e.id,2654435761)>>>0)%1000)/1000*.05);}
   for(const [id,name,pos] of [[-1,'polarity1e',{x:32,y:0,z:0}],[-2,'polarity2w',{x:-32,y:0,z:0}],[-3,'polarity3n',{x:0,y:0,z:-32}],[-4,'polarity4s',{x:0,y:0,z:32}]] as const){ids.add(id);this.loop(id,name,pos,selected.some(c=>c.distance<12)?.1:.35);}
@@ -361,6 +360,7 @@ export class Sound{
    this.stop(id);
   }
  }
+ private setEnvironmentCombat(combat:boolean){if(this.environmentGain&&this.context)this.environmentGain.gain.setTargetAtTime(environmentMixGain(combat),this.context.currentTime,combat?.08:.4);}
  private sustainedFire(world:World){if(world.weaponAudio.primary||world.weaponAudio.homing)return true;return world.crew.some(p=>p.player!==world.player&&this.audible('rapid'+weaponTier(p.level),p.player.pos)&&(world.weaponAudioFor(p).primary||world.weaponAudioFor(p).homing));}
  private weaponStream(id:number|string,level:number,pos?:Vec,homing=false,scale=1){
   const tier=weaponTier(level),name=`${homing?'seekrapid':'rapid'}${tier}`;

@@ -1,6 +1,7 @@
+import {environmentClock} from './descent';
 const ease=(v:number)=>{const x=Math.max(0,Math.min(1,v));return x*x*(3-2*x);};
 export const CATHEDRAL_OPENINGS=7;
-export function cathedralAt(time:number){const t=Number.isFinite(time)?Math.max(0,time):0;return {presence:ease((t-356)/24)*(1-ease((t-454)/28)),light:ease((t-362)/18)*(1-ease((t-440)/32)),closure:ease((t-440)/32),rise:ease((t-356)/126)*12,crown:ease((t-454)/18)};}
+export function cathedralAt(time:number){const t=environmentClock(time);return {presence:ease((t-356)/24)*(1-ease((t-454)/28)),light:ease((t-362)/18)*(1-ease((t-440)/32)),closure:ease((t-440)/32),rise:ease((t-356)/126)*12,crown:ease((t-454)/18)};}
 /** Same seven world-space apertures for floor illumination, volumetrics and dust. */
 export const CATHEDRAL_LIGHT_GLSL=`
 float cathedralShaft(vec3 p,float closure){

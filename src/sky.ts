@@ -1,3 +1,5 @@
+import {ascentAt,createAscentState} from './ascent-state';
+import {createHeavenState,heavenAt} from './heaven-state';
 import {VEIL_RADIANCE,veilAt} from './veil-shading';
 import * as THREE from 'three';
 import {createDescentState,descentAt,DESCENT_CHAPTERS,type SkyMotion} from './descent';
@@ -8,12 +10,14 @@ export class AbyssSky {
   readonly ready:Promise<void>;
   private time={value:0};
   private state=createDescentState();
+  private heavenState=createHeavenState();
+  private rushState=createAscentState();
   private uniforms={
     veilAmount:{value:0},veilClock:{value:0},veilClouds:{value:new THREE.Texture()},time:this.time,menu:{value:1},octaves:{value:3},detail:{value:1},zenith:{value:new THREE.Vector3()},haze:{value:new THREE.Vector3()},cloudTint:{value:new THREE.Vector3()},
-    furnaceSky:{value:new THREE.Texture()},cathedralSky:{value:new THREE.Texture()},depthWeights:{value:new THREE.Vector2()},ashSky:{value:new THREE.Texture()},stormSky:{value:new THREE.Texture()},weatherWeights:{value:new THREE.Vector2()},galaxy:{value:new THREE.Texture()},cosmic:{value:0},cosmicTravel:{value:0},coverage:{value:0},daylight:{value:0},opening:{value:0},furnace:{value:0},cathedral:{value:0},crown:{value:0},travel:{value:0},furnaceHeight:{value:0},cathedralRise:{value:0},
+    furnaceSky:{value:new THREE.Texture()},cathedralSky:{value:new THREE.Texture()},depthWeights:{value:new THREE.Vector2()},ashSky:{value:new THREE.Texture()},stormSky:{value:new THREE.Texture()},weatherWeights:{value:new THREE.Vector2()},galaxy:{value:new THREE.Texture()},escape:{value:0},beyond:{value:0},escapeClock:{value:0},rushCharge:{value:0},heavenVeil:{value:0},heavenClock:{value:0},escapeMotion:{value:1},cosmic:{value:0},cosmicTravel:{value:0},coverage:{value:0},daylight:{value:0},opening:{value:0},furnace:{value:0},cathedral:{value:0},crown:{value:0},travel:{value:0},furnaceHeight:{value:0},cathedralRise:{value:0},
   };
   private motion:SkyMotion='full';
-  get diagnostics(){return {time:this.state.time,environmentTime:this.state.environmentTime,cosmic:this.state.cosmic,chapter:this.state.cosmic>.5?'The Cosmic Expanse':DESCENT_CHAPTERS[this.state.chapter].name,blend:this.state.blend,menu:this.uniforms.menu.value===1,motion:this.motion,octaves:this.uniforms.octaves.value,travel:this.uniforms.travel.value};}
+  get diagnostics(){return {time:this.state.time,environmentTime:this.state.environmentTime,cosmic:this.state.cosmic,escape:this.state.escape,beyond:this.state.beyond,chapter:this.state.beyond>.5?'Beyond the Last Star':this.state.escape>0?'The Rejection':this.state.cosmic>.5?'The Cosmic Expanse':DESCENT_CHAPTERS[this.state.chapter].name,blend:this.state.blend,menu:this.uniforms.menu.value===1,motion:this.motion,octaves:this.uniforms.octaves.value,travel:this.uniforms.travel.value};}
   get cosmicTexture(){return this.uniforms.galaxy.value;}
   get veilTexture(){return this.uniforms.veilClouds.value;}
   get reflectionTexture(){return this.uniforms.stormSky.value;}
@@ -26,7 +30,7 @@ export class AbyssSky {
       fragmentShader:`
         ${VEIL_RADIANCE}
         uniform float veilAmount;
-        uniform float cosmic,cosmicTravel,time,menu,octaves,detail,coverage,daylight,opening,furnace,cathedral,crown,travel,furnaceHeight,cathedralRise;
+        uniform float rushCharge,escape,beyond,escapeClock,heavenVeil,heavenClock,escapeMotion,cosmic,cosmicTravel,time,menu,octaves,detail,coverage,daylight,opening,furnace,cathedral,crown,travel,furnaceHeight,cathedralRise;
         uniform sampler2D galaxy,ashSky,stormSky,furnaceSky,cathedralSky;
         uniform vec2 weatherWeights,depthWeights;
         uniform vec3 zenith,haze,cloudTint;varying vec3 skyDirection;
@@ -117,9 +121,62 @@ export class AbyssSky {
           if(depthWeights.y>.00001)color+=depthPanorama(cathedralSky,d,5.868,.40)*depthWeights.y;
           return color/max(depthWeights.x+depthWeights.y,.00001);
         }
+        vec3 farSide(vec3 d){
+          // Sunlit cloud country all around the deck, above and below it.
+          float horizon=exp(-abs(d.y-.04)*3.8);
+          vec3 color=mix(vec3(.19,.135,.065),vec3(.86,.69,.40),horizon);
+          color=mix(color,vec3(.88,.75,.51),(1.-smoothstep(-.08,.8,d.y))*.18);
+          vec3 sun=normalize(vec3(-.65,.62,-.9));float angle=length(d-sun);
+          float drift=heavenClock*.0012*escapeMotion;
+          vec3 upper=d*4.4+vec3(drift,0.,0.);
+          float billow=cloud(upper),detailCloud=cloud(upper*2.2+vec3(13.,7.,3.));
+          float cloudBody=billow*.72+detailCloud*.28;
+          float clouds=smoothstep(.46,.65,cloudBody);
+          float sunlight=pow(max(0.,dot(d,sun)),4.);
+          vec3 cloudColor=mix(vec3(.36,.40,.46),vec3(.98,.89,.68),smoothstep(.35,.69,detailCloud)+sunlight*.35);
+          cloudColor+=vec3(.10,.07,.025)*exp(-abs(cloudBody-.53)*35.);
+          color=mix(color,cloudColor,clouds*.96);
+          // A dense sea of soft clouds hides the void below the floating arena.
+          vec3 sea=d*vec3(8.,14.,8.)+vec3(drift*.6,3.,9.);
+          float banks=cloud(sea),foam=cloud(sea*2.1+19.);
+          float bankTop=.075+banks*.16+.025*sin(atan(d.z,d.x)*9.);
+          float lower=1.-smoothstep(bankTop-.055,bankTop+.025,d.y);
+          vec3 cloudSea=mix(vec3(.45,.46,.45),vec3(.98,.91,.73),smoothstep(.28,.74,banks*.78+foam*.22));
+          cloudSea+=vec3(.06,.045,.018)*pow(foam,3.);
+          color=mix(color,cloudSea,lower);
+          // A living white-gold sun replaces the black eclipse. Its broad halo
+          // and soft rays stay above the combat horizon, without flashing.
+          float az=atan(d.y-sun.y,d.x-sun.x);
+          float rays=pow(.5+.5*sin(az*13.+.4),12.)*.7+pow(.5+.5*sin(az*7.),10.)*.3;
+          color+=vec3(.22,.17,.075)*exp(-angle*3.2);
+          color+=vec3(.25,.20,.10)*exp(-angle*6.)*rays*smoothstep(.06,.18,angle);
+          color+=vec3(.10,.075,.025)*exp(-abs(angle-.20)*90.);
+          float disk=1.-smoothstep(.012,.025,angle);
+          color=mix(color,vec3(.95,.85,.61),disk);
+          color+=vec3(.30,.23,.10)*exp(-angle*25.);
+          return color;
+        }
+        vec3 rejection(vec3 d){
+          if(beyond>.99999)return farSide(d);
+          float phase=clamp(escapeClock/8.,0.,1.);
+          // Revisit existing panoramas in reverse; no new assets or geometry.
+          vec2 uv=vec2(fract(atan(d.z,d.x)*.159154943+.5),asin(clamp(d.y,-1.,1.))*.318309886+.5);
+          vec3 color=mix(haze,zenith,smoothstep(-.4,.92,d.y));
+          float chapter=phase*5.;
+          if(chapter<1.)color=mix(color,wrappedSky(cathedralSky,uv)*.4,smoothstep(0.,1.,chapter));
+          else if(chapter<2.)color=mix(wrappedSky(cathedralSky,uv)*.4,wrappedSky(furnaceSky,uv)*.45,smoothstep(1.,2.,chapter));
+          else if(chapter<3.)color=mix(wrappedSky(furnaceSky,uv)*.45,veilRadiance(d,0.),smoothstep(2.,3.,chapter));
+          else if(chapter<4.)color=mix(veilRadiance(d,0.),wrappedSky(stormSky,uv)*.32,smoothstep(3.,4.,chapter));
+          else color=mix(wrappedSky(stormSky,uv)*.32,cosmos(d),smoothstep(4.,5.,chapter));
+          if(beyond<.00001)return color;
+          color=mix(color,farSide(d),beyond);
+          return mix(color,vec3(.9,.84,.68),heavenVeil*.72);
+        }
         void main(){
           vec3 d=normalize(skyDirection);
           if(menu>.5){gl_FragColor=vec4(abyss(d),1.);return;}
+          if(escape>0.){gl_FragColor=vec4(rejection(d),1.);return;}
+          if(rushCharge>.0001){vec3 compressed=mix(haze,zenith,smoothstep(-.4,.92,d.y));compressed*=1.-rushCharge*.48;gl_FragColor=vec4(compressed,1.);return;}
           if(cosmic>.99999){gl_FragColor=vec4(cosmos(d),1.);return;}
           if(veilAmount>.99999){gl_FragColor=vec4(veilRadiance(d,0.),1.);return;}
           float weather=weatherWeights.x+weatherWeights.y;
@@ -204,9 +261,10 @@ export class AbyssSky {
   update(camera:THREE.Camera,time:number,menu=false){
     this.mesh.position.copy(camera.position);descentAt(time,this.state);
     const u=this.uniforms,s=this.state;u.menu.value=menu?1:0;
-    u.veilAmount.value=menu?0:veilAt(time,this.state);u.veilClock.value=this.motion==='reduced'?0:Math.max(0,Math.min(133,time-126));this.time.value=this.motion==='reduced'?0:menu?time:s.environmentTime;
+    u.veilAmount.value=menu?0:veilAt(time,this.state);u.veilClock.value=this.motion==='reduced'?0:Math.max(0,Math.min(133,s.phaseTime-126));this.time.value=this.motion==='reduced'?0:menu?time:s.environmentTime;
     u.weatherWeights.value.set(s.chapter===0?1-s.blend:0,s.chapter===0?s.blend:s.chapter===1?1-s.blend:0);
     u.depthWeights.value.set(s.chapter===2?s.blend:s.chapter===3?1-s.blend:0,s.chapter===3?s.blend:s.chapter===4?1-s.blend:0);
+    u.rushCharge.value=menu||this.motion==='reduced'?0:ascentAt(time,this.rushState).charge;u.heavenVeil.value=menu?0:heavenAt(time,this.heavenState).veil;u.heavenClock.value=s.time;u.escape.value=menu?0:s.escape;u.beyond.value=menu?0:s.beyond;u.escapeClock.value=s.cycle>0&&s.phaseTime<18?16:Math.max(0,Math.min(16,s.phaseTime-482));u.escapeMotion.value=this.motion==='reduced'?0:1;
     u.cosmic.value=menu?0:s.cosmic;u.cosmicTravel.value=this.motion==='reduced'?0:s.cosmicTravel;
     // Trade small cloud detail for the cathedral silhouettes, with a continuous
     // fade into two octaves instead of stacking their shader costs.

@@ -63,7 +63,8 @@ test('packet-spaced remote motion preserves stride phase without phantom idle co
  assert.ok(count>=17&&count<=19,`remote contacts: ${count}`);
 });
 
-test('every shuffled recording has the same prompt impact and a quiet bounded output',()=>{
+test('every shuffled recording has the same prompt impact and an audible bounded output',async()=>{
+ const {roleMixGain}=await import('../src/audio-mix');
  const manifest=JSON.parse(readFileSync(new URL('../public/assets/audio/remake/manifest.json',import.meta.url),'utf8'));
  for(const name of ALL_FOOTSTEP_SOUNDS){
   const asset=manifest[name],data=readFileSync(new URL('../public/assets/audio/remake/'+asset.file,import.meta.url));
@@ -73,8 +74,9 @@ test('every shuffled recording has the same prompt impact and a quiet bounded ou
   for(let start=0;start+window<=pcm.length/2;start+=window){let sum=0;for(let j=0;j<window;j++)sum+=(pcm.readInt16LE((start+j)*2)/32768)**2;energy.push(sum/window);}
   const attack=energy.indexOf(Math.max(...energy))*window/sampleRate;
   assert.ok(attack<=.015,`${name}: main impact delayed by ${attack}s`);
-  assert.ok(asset.peak*asset.gain*.9*.55<.0053,`${name}: first-person peak ceiling`);
-  assert.ok(asset.rms*asset.gain*.9*.55<.00075,`${name}: first-person RMS ceiling`);
+  const gain=asset.gain*roleMixGain(asset.role)*.9*.55;
+  assert.ok(asset.peak*gain>.008&&asset.peak*gain<.027,`${name}: audible first-person attack with headroom`);
+  assert.ok(asset.rms*gain>.00085&&asset.rms*gain<.0035,`${name}: supporting first-person RMS range`);
  }
 });
 

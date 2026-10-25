@@ -88,7 +88,7 @@ try{
   pickupVoices.forEach((v,i)=>{const source=surge.createBufferSource(),gain=surge.createGain();source.buffer=sound.buffers.get(v.name);source.playbackRate.value=v.rate;gain.gain.value=v.gain*.55;source.connect(gain);gain.connect(surge.destination);source.start(i*.035);});
   const surgeOutput=await surge.startRendering();let surgePeak=0;
   for(let channel=0;channel<2;channel++)for(const sample of surgeOutput.getChannelData(channel))surgePeak=Math.max(surgePeak,Math.abs(sample));
-  check(surgePeak<.13,'rapid collection stays restrained in the mix');
+  check(surgePeak<.26,'rapid collection stays restrained in the mix');
   sound.clear();w.dropGems(v(0,w.player.pos.y,3),1);sound.update(w);w.state='dead';sound.update(w);
   check(!sound.diagnostics.loops.includes('gemchatter'),'death stops gem shimmer');
   const rendered=[];
@@ -100,7 +100,7 @@ try{
    const rms=Math.sqrt(square/length);check(rms>(.001),name+' renders audible output');check(peak<(name.startsWith('crystalbreak')?.4:.3),name+' retains output headroom');
    rendered.push({name,rms,peak,duration:source.buffer.duration});
    if(name.startsWith('crystalbreak')){
-    check(peak<.1,'fracture transient stays restrained');
+    check(peak>.1&&peak<.21,'fracture is audible with bounded attack');
     const buffer=source.buffer;check(buffer.duration>1.3&&buffer.duration<1.7,'detach retains shard and crystal resonance decay');
     check(buffer.numberOfChannels===1,'detach keeps a mono source for socket HRTF placement');
     const samples=buffer.getChannelData(0);let attack=0,tail=0;
@@ -108,7 +108,7 @@ try{
     check(tail>attack*.003&&tail<attack*.5,'crystal decay remains audible and falls beneath the initial fracture');
    }
    if(name.startsWith('crystalhit')){
-    check(peak<.055,'hit transient sits beneath combat');
+    check(peak>.07&&peak<.12,'hit transient is readable with bounded attack');
     const buffer=source.buffer;
     check(buffer.numberOfChannels===2&&buffer.duration>.7,'hit includes stereo reverb');
     const left=buffer.getChannelData(0),right=buffer.getChannelData(1);let tail=0,width=0;
@@ -116,7 +116,7 @@ try{
     check(tail>.0001&&width>.0001,'hit reverb has a real diffuse decay beyond the dry strike');
    }
    if(name.startsWith('gibcollect')){
-    check(peak<.035&&rms<.0047,'pickup remains quiet at the normal master volume');
+    check(peak>.045&&peak<.075&&rms>.0035&&rms<.006,'pickup stays audible and restrained at the normal master volume');
     const buffer=sound.buffers.get(name);check(buffer.numberOfChannels===2,'pickup has stereo reflections');
     const left=buffer.getChannelData(0),right=buffer.getChannelData(1);let tail=0,width=0;
     for(let i=0;i<left.length;i++){width+=(left[i]-right[i])**2;if(i>buffer.sampleRate*.35)tail+=left[i]**2;}

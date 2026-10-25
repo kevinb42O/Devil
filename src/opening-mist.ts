@@ -1,3 +1,4 @@
+import {environmentClock} from './descent';
 import {cathedralAt,CATHEDRAL_LIGHT_GLSL} from './cathedral-state';
 import * as THREE from 'three';
 import {ShaderPass} from 'three/addons/postprocessing/ShaderPass.js';
@@ -293,8 +294,8 @@ export class OpeningMist extends ShaderPass {
       for(const tile of ARENA_TILES)this.groundHeights[tile.z*ARENA_DIMENSION+tile.x]=tileHeight(tile.x,tile.z,s.time);
       this.groundTexture.needsUpdate=true;this.groundTime=s.time;
     }
-    this.uniforms.cosmicFall.value=this.reduced||entrance?0:descentDistance(Math.min(30,s.time));
-    this.uniforms.cosmicTime.value=this.reduced||entrance?0:Math.min(30,s.time);
+    this.uniforms.cosmicFall.value=this.reduced||entrance?0:descentDistance(Math.min(30,environmentClock(s.time)));
+    this.uniforms.cosmicTime.value=this.reduced||entrance?0:Math.min(30,environmentClock(s.time));
     this.uniforms.shape.value.set(s.height,s.falloff,s.bank,s.clear);
     const cathedral=cathedralAt(entrance?0:time);
     this.uniforms.cathedralClosure.value=cathedral.closure;this.uniforms.cathedralLight.value=cathedral.light;
@@ -307,7 +308,7 @@ export class OpeningMist extends ShaderPass {
   }
   setHeat(amount:number,time:number,radius:number){
     this.composite.uniforms.heatAmount.value=this.reduced?0:amount;
-    this.composite.uniforms.heatClock.value=Math.max(0,time-236);
+    this.composite.uniforms.heatClock.value=Math.max(0,environmentClock(time)-236);
     this.composite.uniforms.heatRadius.value=radius;
     this.composite.uniforms.heatInverseProjection.value.copy(this.uniforms.inverseProjection.value);
     this.composite.uniforms.heatCameraWorld.value.copy(this.uniforms.cameraWorld.value);

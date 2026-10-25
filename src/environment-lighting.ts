@@ -23,7 +23,7 @@ export class EnvironmentLighting {
   private state=createDescentState();
   daylight=0;
   update(time:number,menu=false){
-    const s=descentAt(time,this.state),day=menu?0:s.daylight,fire=menu?0:s.furnace*(1-Math.min(1,Math.max(0,(s.time-380)/30))),ribs=menu?0:cathedralAt(time).light;
+    const s=descentAt(time,this.state),day=menu?0:s.daylight,fire=menu?0:s.furnace*(1-Math.min(1,Math.max(0,(s.phaseTime-380)/30))),ribs=menu?0:cathedralAt(time).light;
     const cosmic=menu?0:s.cosmic;this.uniforms.cosmicLight.value=cosmic;
     this.daylight=day;
     const cathedral=cathedralAt(time);
@@ -36,6 +36,10 @@ export class EnvironmentLighting {
     const fill=this.uniforms.environmentFill.value;
     fill.x+=fire*.018;fill.y+=fire*.0045;fill.z+=fire*.0007;
     fill.x+=(.001-fill.x)*cosmic;fill.y+=(.003-fill.y)*cosmic;fill.z+=(.012-fill.z)*cosmic;
+    // A restrained minimum keeps the late arena readable even in the depths.
+    const visibility=menu?0:Math.max(s.crown,s.beyond)*(1-cosmic);
+    fill.x+=visibility*(.012+s.beyond*.068);fill.y+=visibility*(.015+s.beyond*.047);fill.z+=visibility*(.024+s.beyond*.019);
+    if(!menu){const gain=this.uniforms.environmentGain.value;gain.x+=s.beyond*.48;gain.y+=s.beyond*.37;gain.z+=s.beyond*.22;}
     return s;
   }
   bindShader(material:THREE.ShaderMaterial){Object.assign(material.uniforms,this.uniforms);}

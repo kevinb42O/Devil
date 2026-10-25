@@ -1,0 +1,42 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/edit/picture.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:01:21.00, start: 0.000000, bitrate: 20343 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709/unknown/unknown, progressive), 1920x1080, 20342 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+[aist#1:0/pcm_s24le @ 0x145e1bcf0] Guessed Channel Layout: stereo
+Input #1, wav, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/edit/continuous-mix.wav':
+  Duration: 00:01:21.00, bitrate: 2304 kb/s
+  Stream #1:0: Audio: pcm_s24le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s32 (24 bit), 2304 kb/s
+Stream mapping:
+  Stream #0:0 -> #0:0 (copy)
+  Stream #1:0 -> #0:1 (pcm_s24le (native) -> aac (native))
+Press [q] to stop, [?] for help
+Output #0, mp4, to '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/abyss-daggers-environment-film-master.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0(und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 20342 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+  Stream #0:1: Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 320 kb/s
+      Metadata:
+        encoder         : Lavc61.19.100 aac
+frame=  161 fps=0.0 q=-1.0 size=   14592KiB time=00:00:05.24 bitrate=22777.8kbits/s speed=10.4x    frame=  327 fps=324 q=-1.0 size=   29184KiB time=00:00:10.77 bitrate=22191.4kbits/s speed=10.7x    frame=  754 fps=498 q=-1.0 size=   68096KiB time=00:00:25.02 bitrate=22292.3kbits/s speed=16.5x    frame= 1043 fps=517 q=-1.0 size=   94720KiB time=00:00:34.66 bitrate=22383.1kbits/s speed=17.2x    frame= 1212 fps=480 q=-1.0 size=  108800KiB time=00:00:40.29 bitrate=22117.1kbits/s speed=  16x    frame= 1392 fps=460 q=-1.0 size=  125952KiB time=00:00:46.29 bitrate=22288.3kbits/s speed=15.3x    frame= 1738 fps=492 q=-1.0 size=  154880KiB time=00:00:57.81 bitrate=21946.1kbits/s speed=16.4x    frame= 2340 fps=579 q=-1.0 size=  200704KiB time=00:01:17.88 bitrate=21109.4kbits/s speed=19.3x    [mp4 @ 0x145e25b30] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x145e1c0d0] video:201139KiB audio:3184KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.034676%
+frame= 2430 fps=577 q=-1.0 Lsize=  204395KiB time=00:01:21.00 bitrate=20671.6kbits/s speed=19.2x    
+[aac @ 0x145e20410] Qavg: 11270.444

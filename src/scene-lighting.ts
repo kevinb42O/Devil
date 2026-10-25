@@ -16,6 +16,7 @@ const chapters=[
  profile(0x30263f,0x080610,0x61516f,0x45325d,.16,.12,.08,-12,30,8),
 ];
 const cosmic=profile(0x7184b4,0x151c36,0xadc4ff,0x937eaf,.65,1.65,.65,-12,30,8);
+const beyond=profile(0xfff1d4,0xb0a18b,0xfff0cf,0xffdf9a,1.25,1.9,.75,-12,30,8);
 const menuProfile=profile(0xcad5bc,0x18100c,0xe2e8cd,0x729786,1.15,2.1,1.8,-12,30,8);
 
 /** Reuses the existing four scene lights; no lights per tower or per flame. */
@@ -27,6 +28,9 @@ export class SceneLighting {
   for(const name of ['sky','ground','key','rim'] as const)p[name].copy(a[name]).lerp(b[name],blend).lerp(cosmic[name],c);
   for(const name of ['ambient','direct','edge'] as const)p[name]=THREE.MathUtils.lerp(THREE.MathUtils.lerp(a[name],b[name],blend),cosmic[name],c);
   p.position.copy(a.position).lerp(b.position,blend).lerp(cosmic.position,c);
+  const arrival=menu?0:state.beyond;
+  for(const name of ['sky','ground','key','rim'] as const)p[name].lerp(beyond[name],arrival);
+  for(const name of ['ambient','direct','edge'] as const)p[name]=THREE.MathUtils.lerp(p[name],beyond[name],arrival);
   sky.color.copy(p.sky);sky.groundColor.copy(p.ground);sky.intensity=p.ambient;
   key.color.copy(p.key);key.intensity=p.direct;key.position.copy(p.position);
   // The furnace edge light comes from the actual fire ring below the platform.
@@ -34,7 +38,7 @@ export class SceneLighting {
   if(menu)rim.position.set(20,10,-20);
   // Cathedral shafts supply the spatial detail in the tower shader; fade the
   // broad key with their closure rather than leaving a permanent studio light.
-  if(!menu&&state.chapter>=4)key.intensity*=.3+.7*cathedralAt(state.time).light;
+  if(!menu&&state.chapter>=4)key.intensity*=Math.max(state.cosmic,state.beyond,.3+.7*cathedralAt(state.time).light);
   fire.intensity=menu?90:0;
  }
 }

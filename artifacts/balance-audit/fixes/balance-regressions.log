@@ -1,0 +1,59 @@
+✔ new tower crowns stay reachable from the ground through their real entrance (60.456541ms)
+✔ ground-level primary fire reaches and destroys every tower crystal (44.438291ms)
+✔ hand-II ground pulses retain damage against all grounded tower tiers (38.046208ms)
+✔ spider tolerance doubles while creature bodies return to their earlier scale (0.701167ms)
+✔ persistent crowded towers never change their spawn rays or push each other outward (4580.197334ms)
+✔ a late blocker cannot displace an existing tower or bank stopped travel (1.750375ms)
+✔ emitted Skull II resumes wandering instead of gaining pursuit from its skin (12.622ms)
+✔ homing damages exposed crystals instead of spending all twenty shots on hidden crystal zero (75.999875ms)
+✖ balance rules survive full and delta enemy packets for guest collision prediction (3.425291ms)
+✔ historical solo recordings captured before the edits retain outcomes and backward seeking (2519.596666ms)
+✖ historical crew checkpoints captured before the edits retain every exact digest (709.999834ms)
+✔ current solo recordings and crew checkpoints retain corrected rules on restore (102.898458ms)
+✔ new thorn armor has real remake surfaces while legacy files retain original armor (0.445125ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 11
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8819.703167
+
+✖ failing tests:
+
+test at tests/combat-balance.test.ts:112:1
+✖ balance rules survive full and delta enemy packets for guest collision prediction (3.425291ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 1.4849999785423282
+  - 1.4849999999999999
+             ^
+  
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/combat-balance.test.ts:115:9)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1.4849999785423282,
+    expected: 1.4849999999999999,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/combat-balance.test.ts:128:1
+✖ historical crew checkpoints captured before the edits retain every exact digest (709.999834ms)
+  Error: Team replay validation failed. Playback stopped to avoid showing an inaccurate match.
+      at CrewReplayPlayer.step (/Users/kevin/Documents/ChatGPT/devildaggersV2/src/crew-replay.ts:99:182)
+      at TestContext.<anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/tests/combat-balance.test.ts:130:66)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)

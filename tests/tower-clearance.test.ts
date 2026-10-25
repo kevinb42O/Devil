@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {World,STEP,idleInput,v} from '../src/simulation';
 import {armorBottom} from '../src/projectile-collision';
 import {constrainEnemyFloor,towerFloorHeight,TOWER_FLOOR_CLEARANCE} from '../src/enemy-floor';
+import {towerHoverOffset} from '../src/tower-anatomy-motion';
 import {shotgunFeedback} from '../src/weapon-tuning';
 
 test('all enlarged tower tiers clear the full footprint during entrance, spitting and inward travel',()=>{
@@ -30,4 +31,18 @@ test('shotgun depth pullback increases at every one of the seven tiers',()=>{
   previousKick=t.kick;
  }
  assert.ok(shotgunFeedback(7).kick>shotgunFeedback(1).kick*3);
+});
+
+test('floating spawners bob at a deterministic altitude and never grow a ground attachment',()=>{
+ for(const kind of ['squid','squid2','squid3'] as const){
+  const w=new World(71,{schedule:false,invulnerable:true}),e=w.spawn(kind,v(0,-10,0));e.balance=true;
+  const heights:number[]=[];
+  for(const age of [12,13,14,15,16]){
+   e.age=age;constrainEnemyFloor(e,12);
+   const floor=towerFloorHeight(e,12),expected=floor+TOWER_FLOOR_CLEARANCE+towerHoverOffset(age,kind);
+   assert.ok(Math.abs(e.pos.y-expected)<1e-8);assert.ok(e.pos.y-floor>.9);heights.push(e.pos.y);
+  }
+  assert.ok(Math.max(...heights)-Math.min(...heights)>.1,'hover visibly changes over match time');
+  e.age=12;constrainEnemyFloor(e,12);assert.equal(e.pos.y,heights[0],'seeking restores the same levitation pose');
+ }
 });

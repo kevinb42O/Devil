@@ -1,0 +1,28 @@
+[aist#0:0/pcm_s24le @ 0x11ce1ddb0] Guessed Channel Layout: stereo
+Input #0, wav, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/edit/continuous-mix.wav':
+  Duration: 00:01:21.00, bitrate: 2304 kb/s
+  Stream #0:0: Audio: pcm_s24le ([1][0][0][0] / 0x0001), 48000 Hz, stereo, s32 (24 bit), 2304 kb/s
+Stream mapping:
+  Stream #0:0 -> #0:0 (pcm_s24le (native) -> pcm_s16le (native))
+Press [q] to stop, [?] for help
+Output #0, null, to 'pipe:':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Audio: pcm_s16le, 192000 Hz, stereo, s16, 6144 kb/s
+      Metadata:
+        encoder         : Lavc61.19.100 pcm_s16le
+size=N/A time=00:00:17.70 bitrate=N/A speed=  35x    size=N/A time=00:00:35.30 bitrate=N/A speed=34.9x    size=N/A time=00:00:53.20 bitrate=N/A speed=35.1x    size=N/A time=00:01:10.90 bitrate=N/A speed=35.1x    [Parsed_loudnorm_0 @ 0x11ce1c180] 
+{
+	"input_i" : "-19.74",
+	"input_tp" : "-5.13",
+	"input_lra" : "4.20",
+	"input_thresh" : "-29.94",
+	"output_i" : "-18.01",
+	"output_tp" : "-3.62",
+	"output_lra" : "3.20",
+	"output_thresh" : "-28.12",
+	"normalization_type" : "dynamic",
+	"target_offset" : "0.01"
+}
+[out#0/null @ 0x11ce1aac0] video:0KiB audio:60750KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+size=N/A time=00:01:21.00 bitrate=N/A speed=35.6x    

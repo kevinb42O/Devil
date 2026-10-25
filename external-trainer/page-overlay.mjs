@@ -78,12 +78,12 @@ export function paintPageOverlay({state,options,rect}){
     ctx.fillStyle=accent;ctx.fillRect(x+14,y+17,3,17);
     ctx.font='600 13px "Segoe UI",sans-serif';ctx.fillText('A B Y S S',x+27,y+30);
     ctx.textAlign='right';ctx.fillStyle=state.active?accent:'#a6b8cb';ctx.font='600 10px "Segoe UI",sans-serif';
-    ctx.fillText(options.suspended?'EDITING':state.active?'● TRACKING':options.enabled?'● ARMED':'○ DISABLED',x+width-15,y+29);ctx.textAlign='left';
+    ctx.fillText(options.suspended?'EDITING':state.survival?.active?state.survival.reason.toUpperCase():state.active?'● TRACKING':options.enabled?'● ARMED':'○ DISABLED',x+width-15,y+29);ctx.textAlign='left';
     ctx.font='11px "Segoe UI",sans-serif';ctx.fillStyle='#a2b6cb';
     const profile=options.profile||'Precision';
     ctx.fillText(`${profile.length>28?profile.slice(0,27)+'…':profile}  /  ${(options.aim_mode||'snap').toUpperCase()}  /  ${options.fov??360}°`,x+15,y+50);
     ctx.font='10px "Segoe UI",sans-serif';ctx.fillStyle='#6f879e';
-    ctx.fillText('F7 Settings   F8 Aim   F4 ESP   F3 HUD   F10 Exit',x+15,y+69);
+    ctx.fillText('= Settings   F8 Aim   F4 ESP   F3 HUD   F10 Exit',x+15,y+69);
     if(options.hud_compact===false){
       ctx.fillStyle='#d9e3ec';ctx.font='11px "Segoe UI",sans-serif';
       ctx.fillText(state.target?`${state.target.label||state.target.kind} / HP ${Math.round(state.target.health)} / ${(state.target.distance||0).toFixed(1)} u`:state.message||'Ready',x+15,y+90);

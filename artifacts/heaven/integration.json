@@ -1,0 +1,169 @@
+{
+  "reward": {
+    "released": 50,
+    "collected": 37,
+    "falling": 13,
+    "kills": 0
+  },
+  "collected": {
+    "released": 50,
+    "collected": 50,
+    "falling": 0,
+    "kills": 0
+  },
+  "architectureDifference": 4.326908998842592,
+  "floorDifference": 31.216221788194446,
+  "repeat": 0,
+  "rewind": 0,
+  "cost": 73,
+  "samples": [
+    {
+      "time": 488,
+      "visible": false,
+      "presence": 0,
+      "throne": 0,
+      "floor": 0,
+      "lift": -22,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 320
+    },
+    {
+      "time": 492,
+      "visible": true,
+      "presence": 0,
+      "throne": 0,
+      "floor": 0,
+      "lift": -22,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    },
+    {
+      "time": 494,
+      "visible": true,
+      "presence": 0.25925925925925924,
+      "throne": 0,
+      "floor": 0.10400000000000002,
+      "lift": -16.296296296296294,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    },
+    {
+      "time": 496,
+      "visible": true,
+      "presence": 0.7407407407407407,
+      "throne": 0.37037037037037035,
+      "floor": 0.648,
+      "lift": -5.703703703703704,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    },
+    {
+      "time": 498,
+      "visible": true,
+      "presence": 1,
+      "throne": 1,
+      "floor": 1,
+      "lift": 0,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    },
+    {
+      "time": 504,
+      "visible": true,
+      "presence": 1,
+      "throne": 1,
+      "floor": 1,
+      "lift": 0,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    },
+    {
+      "time": 510,
+      "visible": true,
+      "presence": 1,
+      "throne": 1,
+      "floor": 1,
+      "lift": 0,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    },
+    {
+      "time": 519,
+      "visible": true,
+      "presence": 0.5,
+      "throne": 0.7071067811865476,
+      "floor": 0.5,
+      "lift": 32.5,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    },
+    {
+      "time": 528,
+      "visible": false,
+      "presence": 0,
+      "throne": 0,
+      "floor": 0,
+      "lift": -22,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 320
+    },
+    {
+      "time": 579,
+      "visible": false,
+      "presence": 0,
+      "throne": 0,
+      "floor": 0,
+      "lift": -22,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 180
+    },
+    {
+      "time": 1008,
+      "visible": true,
+      "presence": 1,
+      "throne": 1,
+      "floor": 1,
+      "lift": 0,
+      "instances": 832,
+      "batches": 9,
+      "reduced": false,
+      "far": 520
+    }
+  ],
+  "low": {
+    "visible": true,
+    "presence": 1,
+    "throne": 1,
+    "floor": 1,
+    "lift": 0,
+    "instances": 768,
+    "batches": 9,
+    "reduced": true,
+    "calls": 60
+  },
+  "cycleSeam": 0.002271412037037037,
+  "audio": {
+    "peak": 0.1811661273241043,
+    "rms": 0.035423375454486976
+  }
+}

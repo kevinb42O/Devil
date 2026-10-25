@@ -1,0 +1,4 @@
+{
+  leviathan: { triangles: 7598, nodes: 2047, animated: true },
+  thorn: { triangles: 94, nodes: 31, animated: false }
+}

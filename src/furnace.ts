@@ -1,3 +1,4 @@
+import {environmentClock} from './descent';
 import * as THREE from 'three';
 import {arenaRadius,floorHeight} from './arena';
 import {descentAt} from './descent';
@@ -7,7 +8,7 @@ import {FurnaceFloorCache,FURNACE_FLOOR_SPAN,FURNACE_NOISE} from './furnace-floo
 import {createFireNoise,FIRE_VOLUME_VERTEX,FIRE_VOLUME_FRAGMENT} from './furnace-fire';
 const ease=(v:number)=>{const x=Math.max(0,Math.min(1,v));return x*x*(3-2*x);};
 /** Stone heat leads the descent; decorative fire follows the furnace sky chapter. */
-export function furnaceAt(time:number){const s=descentAt(time);return {fire:s.chapter===2?s.blend:s.chapter===3?1-s.blend:0,heat:ease((s.time-236)/30)*(1-ease((s.time-362)/48))};}
+export function furnaceAt(time:number){const s=descentAt(time);return {fire:s.chapter===2?s.blend:s.chapter===3?1-s.blend:0,heat:ease((s.phaseTime-236)/30)*(1-ease((s.phaseTime-362)/48))};}
 export const FURNACE_EMITTERS=Array.from({length:24},(_,i)=>{
  const r=(n:number)=>{const x=Math.sin(i*127.1+n*311.7)*43758.5453;return x-Math.floor(x);};
  const distant=i%2===1,angle=i*2.399963229728653,radius=(distant?70:47)+r(1)*(distant?8:3);
@@ -176,8 +177,8 @@ export class Furnace {
  prepare(renderer:THREE.WebGLRenderer){this.floorCache.prepare(renderer);}
  configure(quality:string,reduced:boolean){this.quality=quality;this.reduced=reduced;this.uniforms.fireSteps.value=quality==='high'?40:24;(this.deckFlames.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?48:28;(this.convection.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?56:24;for(const mesh of [this.flames,this.smoke])(mesh.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?24:16;(this.embers.geometry as THREE.InstancedBufferGeometry).instanceCount=quality==='high'?520:180;}
  update(camera:THREE.Camera,time:number,enabled=true){
- const clock=this.reduced?0:Math.max(0,time-236);
- if(enabled&&time>236&&time<410){
+ const clock=this.reduced?0:Math.max(0,environmentClock(time)-236);
+ if(enabled&&environmentClock(time)>236&&environmentClock(time)<410){
  for(let i=0;i<48;i++){
   const angle=i*2.39996323+.7,radius=Math.sqrt((i+.5)/48)*arenaRadius(time)*.94;
   const x=Math.cos(angle)*radius,z=Math.sin(angle)*radius;
@@ -197,7 +198,7 @@ export class Furnace {
   const x=Math.cos(angle)*radius+Math.sin(clock*.14+i)*.7,z=Math.sin(angle)*radius+Math.cos(clock*.11+i)*.7;
   this.convectionAnchors.set([x,floorHeight(x,z,time,0)+.08,z,(i*.6180339)%1],i*4);
  }this.convection.geometry.getAttribute('furnaceAnchor').needsUpdate=true;}
- const state=furnaceAt(time);this.uniforms.furnaceFire.value=enabled?state.fire:0;this.uniforms.furnaceHeat.value=enabled?state.heat:0;this.uniforms.furnaceClock.value=this.reduced?0:Math.max(0,time-236);this.uniforms.furnaceRadius.value=arenaRadius(time);this.uniforms.furnaceCamera.value.copy(camera.position);this.uniforms.furnaceRight.value.setFromMatrixColumn(camera.matrixWorld,0);this.uniforms.furnaceUp.value.setFromMatrixColumn(camera.matrixWorld,1);this.group.visible=enabled&&state.fire>.001;}
+ const state=furnaceAt(time);this.uniforms.furnaceFire.value=enabled?state.fire:0;this.uniforms.furnaceHeat.value=enabled?state.heat:0;this.uniforms.furnaceClock.value=this.reduced?0:Math.max(0,environmentClock(time)-236);this.uniforms.furnaceRadius.value=arenaRadius(time);this.uniforms.furnaceCamera.value.copy(camera.position);this.uniforms.furnaceRight.value.setFromMatrixColumn(camera.matrixWorld,0);this.uniforms.furnaceUp.value.setFromMatrixColumn(camera.matrixWorld,1);this.group.visible=enabled&&state.fire>.001;}
  get diagnostics(){return {fire:this.uniforms.furnaceFire.value,heat:this.uniforms.furnaceHeat.value,visible:this.group.visible,loaded:!!this.texture,quality:this.quality,reduced:this.reduced,emitters:(this.flames.geometry as THREE.InstancedBufferGeometry).instanceCount,fireTechnique:'ray-marched-volume',fireSteps:this.uniforms.fireSteps.value,deckEmitters:(this.deckFlames.geometry as THREE.InstancedBufferGeometry).instanceCount,emberCount:(this.embers.geometry as THREE.InstancedBufferGeometry).instanceCount,minimumFireRadius:Math.min(...FURNACE_EMITTERS.map(e=>Math.hypot(e.x,e.z)-e.width/2)),platformRadius:this.uniforms.furnaceRadius.value,interactive:false};}
  dispose(){this.floorCache.dispose();const materials=new Set<THREE.Material>();for(const mesh of [this.flames,this.deckFlames,this.smoke,this.embers,this.abyss,this.convection]){mesh.geometry.dispose();materials.add(mesh.material as THREE.Material);}for(const material of materials)material.dispose();this.fireNoise.dispose();this.texture?.dispose();this.secondary?.dispose();this.group.removeFromParent();}
 }

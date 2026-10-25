@@ -26,11 +26,22 @@ class SettingsFormTests(unittest.TestCase):
     def test_all_settings_and_presets_roundtrip(self):
         self.assertEqual(set(self.form.fields)|{'profile','excluded_kinds'},set(asdict(Settings())))
         self.assertEqual(set(self.form.kind_fields),set(KINDS))
-        self.assertEqual([self.form.tabs.tab(tab,'text') for tab in self.form.tabs.tabs()],['Aim','ESP','Targets','Connection'])
+        self.assertEqual([self.form.tabs.tab(tab,'text') for tab in self.form.tabs.tabs()],['Aim','Survival','ESP','Targets','Connection'])
         for name in PRESETS:
             with self.subTest(name=name):
                 value=preset(name,'http://localhost:1234');self.form.fill(value)
                 self.assertEqual(self.form.read_form(),value)
+
+    def test_survival_horizon_slider_and_toggles_persist(self):
+        self.form.move_slider('dodge_horizon',.75)
+        self.assertEqual(float(self.form.fields['dodge_horizon'].get()),.75)
+        self.form.fields['auto_dodge'].set(False)
+        self.form.fields['edge_guard'].set(False)
+        self.form.apply()
+        saved=app.Engine().settings
+        self.assertFalse(saved.auto_dodge)
+        self.assertFalse(saved.edge_guard)
+        self.assertEqual(saved.dodge_horizon,.75)
 
     def test_apply_preserves_custom_values_and_persists_across_restart(self):
         custom=Settings.validated(dict(profile='Custom',fov=73,max_distance=150,esp_boxes=False,esp_opacity=.4,excluded_kinds='skull,orb',hud_anchor='bottom_right'))

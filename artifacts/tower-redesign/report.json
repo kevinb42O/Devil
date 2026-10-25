@@ -1,0 +1,107 @@
+{
+  "inventory": [
+    {
+      "kind": "squid",
+      "meshes": 8,
+      "finishes": [
+        {
+          "tier": 1,
+          "finish": "interior"
+        },
+        {
+          "tier": 1,
+          "finish": "metal"
+        },
+        {
+          "tier": 1,
+          "finish": "stone"
+        }
+      ],
+      "shared": true
+    },
+    {
+      "kind": "squid2",
+      "meshes": 10,
+      "finishes": [
+        {
+          "tier": 2,
+          "finish": "interior"
+        },
+        {
+          "tier": 2,
+          "finish": "metal"
+        },
+        {
+          "tier": 2,
+          "finish": "stone"
+        }
+      ],
+      "shared": true
+    },
+    {
+      "kind": "squid3",
+      "meshes": 12,
+      "finishes": [
+        {
+          "tier": 3,
+          "finish": "interior"
+        },
+        {
+          "tier": 3,
+          "finish": "metal"
+        },
+        {
+          "tier": 3,
+          "finish": "stone"
+        }
+      ],
+      "shared": true
+    }
+  ],
+  "gameChecks": {
+    "texturedDraws": 61,
+    "baselineDraws": 61,
+    "maximumCrystalError": 1.7763568394002505e-15
+  },
+  "crystalChecks": [
+    {
+      "kind": "squid",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    },
+    {
+      "kind": "squid2",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    },
+    {
+      "kind": "squid3",
+      "normal": "remake-tower-crystal",
+      "hit": "remake-tower-crystal-hit",
+      "settled": "remake-tower-crystal",
+      "destroyedHidden": true
+    }
+  ],
+  "structureChecks": [
+    {
+      "kind": "squid",
+      "radius": 2.328003391525578,
+      "limit": 2.3400000000000003
+    },
+    {
+      "kind": "squid2",
+      "radius": 3.7174723083244587,
+      "limit": 3.9000000000000004
+    },
+    {
+      "kind": "squid3",
+      "radius": 5.112690176359896,
+      "limit": 5.460000000000001
+    }
+  ],
+  "errors": []
+}

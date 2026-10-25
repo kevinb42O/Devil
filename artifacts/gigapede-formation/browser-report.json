@@ -1,0 +1,35 @@
+{
+  "result": [
+    {
+      "coordinated": false,
+      "passes": [
+        2,
+        2,
+        3
+      ],
+      "overlappingPassTicks": 800,
+      "nearBodySamples": 2283,
+      "slots": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "coordinated": true,
+      "passes": [
+        2,
+        1,
+        1
+      ],
+      "overlappingPassTicks": 0,
+      "nearBodySamples": 0,
+      "slots": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "errors": []
+}

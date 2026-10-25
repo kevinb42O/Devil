@@ -1,0 +1,52 @@
+✔ the original sky curves and mist timing survive the intro with the Veil art revision (3.15125ms)
+✔ environment milestones shift thirty seconds while encounter ledger stays unchanged (2.64525ms)
+✔ practice and replay scrubbing reconstruct the same state without history (0.319417ms)
+✔ palette and landmark envelopes are continuous through every transition (0.484125ms)
+✔ endless survival never recycles landmarks or returns to daylight (4.501667ms)
+✔ cosmic arrival is continuous and reaches the original opening at thirty seconds (0.18375ms)
+✖ expanded rules preserve historical scores and isolate explicit v20 crew registration (2932.584625ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3488.440542
+
+✖ failing tests:
+
+test at tests/twin-rules-sql.test.mjs:2:1
+✖ expanded rules preserve historical scores and isolate explicit v20 crew registration (2932.584625ms)
+  error: A registered run is required. Refresh the game and start a new Survival run.
+      at pe.Oe (/Users/kevin/Documents/ChatGPT/devildaggersV2/node_modules/@electric-sql/pg-protocol/src/parser.ts:442:11)
+      at pe.tt (/Users/kevin/Documents/ChatGPT/devildaggersV2/node_modules/@electric-sql/pg-protocol/src/parser.ts:220:16)
+      at pe.parse (/Users/kevin/Documents/ChatGPT/devildaggersV2/node_modules/@electric-sql/pg-protocol/src/parser.ts:104:21)
+      at p.D_ (/Users/kevin/Documents/ChatGPT/devildaggersV2/node_modules/@electric-sql/pglite/dist/index.js:6:1759)
+      at <anonymous> (/Users/kevin/Documents/ChatGPT/devildaggersV2/node_modules/@electric-sql/pglite/dist/index.js:6:1151)
+      at wasm://wasm/0280c65e:wasm-function[10964]:0x58cc19
+      at wasm://wasm/0280c65e:wasm-function[3606]:0x2792af
+      at wasm://wasm/0280c65e:wasm-function[3648]:0x2807ba
+      at wasm://wasm/0280c65e:wasm-function[3658]:0x2809ef
+      at wasm://wasm/0280c65e:wasm-function[9946]:0x5393b2 {
+    length: 237,
+    severity: 'ERROR',
+    code: 'P0001',
+    detail: undefined,
+    hint: undefined,
+    position: undefined,
+    internalPosition: undefined,
+    internalQuery: undefined,
+    where: 'PL/pgSQL function public.abyss_submit_score(text,integer,integer,integer,integer) line 2 at RAISE',
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'pl_exec.c',
+    line: '3923',
+    routine: 'exec_stmt_raise',
+    query: "select public.abyss_submit_score('Host',5000,10,10,6)",
+    params: [],
+    queryOptions: undefined
+  }

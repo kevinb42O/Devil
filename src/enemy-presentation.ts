@@ -1,3 +1,4 @@
+import {ORB_CORE_RADIUS,ORB_REVEAL_SECONDS} from './orb-scale';
 import {type Enemy, type Vec} from './simulation';
 import {isSpider,isSkull,isPede} from './enemy-kinds';
 import {towerEmissionTick} from './tower-spawn';
@@ -52,21 +53,43 @@ export function towerSpitPulse(age:number,kind:Enemy['kind']='squid',originalCad
  return 0;
 }
 export function swarmEmergenceScale(enemy:Enemy){return Math.max(0,Math.min(1,enemy.age/(enemy.statusUntil>0&&isSkull(enemy.kind)?.12:1.1)));}
-/** The arena remains at .62; cosmetics must not enlarge its combatants. */
+/** Spawner creatures use a larger authored scale; targeting, armor, outlets and spacing share it. */
 export function enemyRigScale(enemy:Enemy){
- return enemy.balance&&(isSpider(enemy.kind)||isPede(enemy.kind)||(enemy.kind.startsWith('squid')&&!legacyTowerGeometry(enemy))) ? .62 : 1;
+ if(enemy.kind==='orb')return enemy.radius/ORB_CORE_RADIUS;
+ if(enemy.balance&&enemy.kind.startsWith('squid')&&!legacyTowerGeometry(enemy))return .62*(enemy.kind==='squid3'?1.5:enemy.kind==='squid2'?1.45:1.4);
+ return enemy.balance&&(isSpider(enemy.kind)||isPede(enemy.kind)) ? .62 : 1;
 }
 /** Crystal radius in rig coordinates; current spiders recover the pre-remake hit tolerance. */
 export function spiderCrystalRadius(enemy:Enemy){return SPIDER_CRYSTAL_RADIUS*enemy.size*(enemy.balance?2/.62:1);}
 export function enemyEmergenceScale(enemy:Enemy){
+ if(enemy.kind==='orb'&&enemy.radius>ORB_CORE_RADIUS+.01){const t=Math.max(0,Math.min(1,enemy.age/ORB_REVEAL_SECONDS));return enemyRigScale(enemy)*t*t*(3-2*t);}
  if(isPede(enemy.kind))return 1; // Pede rigs scale individually; segment positions are world-space.
  const growth=isSkull(enemy.kind)||enemy.kind==='spiderling'?swarmEmergenceScale(enemy):Math.max(0,Math.min(1,enemy.age/(enemy.kind==='spider2'?9:enemy.kind==='leviathan'?8.533333:1.1)));
  return enemyRigScale(enemy)*growth;
 }
-export function towerPartOffset(enemy:Enemy,name:string,originalCadence=true){return enemy.kind.startsWith('squid')&&/crest|jaw|teeth/.test(name)?towerSpitPulse(enemy.age,enemy.kind,originalCadence)*(name.includes('crest')?.4:-.18):0;}
+export function towerPartOffset(enemy:Enemy,name:string,originalCadence=true){
+ if(!enemy.kind.startsWith('squid')||!/crest|jaw|teeth/.test(name))return 0;
+ const lift=legacyTowerGeometry(enemy)?.4:enemy.kind==='squid3'?1.05:enemy.kind==='squid2'?.85:.65;
+ return towerSpitPulse(enemy.age,enemy.kind,originalCadence)*(name.includes('crest')?lift:-.18);
+}
+/** A reverse muscular wind-up, full release turn and small recovery overshoot.
+ * Integrated angle preserves continuity through repeated bursts and replay seeks. */
+export function towerSpitTurn(age:number,kind:Enemy['kind'],originalCadence=true){
+ const start=originalCadence?towerEmissionTick(kind,0,0)/60:3;
+ const period=originalCadence?(towerEmissionTick(kind,1,0)-towerEmissionTick(kind,0,0))/60:20;
+ const elapsed=age-start+.4;if(elapsed<=0)return 0;
+ const cycles=Math.floor(elapsed/period),t=elapsed-cycles*period,turn=Math.PI*2;
+ const ease=(x:number)=>{const u=Math.max(0,Math.min(1,x));return u*u*u*(u*(u*6-15)+10);};
+ const release=kind==='squid3'?1.05:.85;
+ let angle:number;
+ if(t<.4)angle=-.42*ease(t/.4);
+ else if(t<.4+release)angle=-.42+(turn+.54)*ease((t-.4)/release);
+ else angle=turn+.12*(1-ease((t-.4-release)/.35));
+ return cycles*turn+angle;
+}
 /** Attached damage targets share the render root's emergence transform. */
 export function crystalToEnemy(enemy:Enemy,player:Vec,local:Vec){const scale=enemyEmergenceScale(enemy);return localToEnemy(enemy,player,v(local.x*scale,local.y*scale,local.z*scale));}
-export function enemyYaw(enemy:Enemy,player:Vec){return isSpider(enemy.kind)?enemy.facingYaw:enemy.kind==='leviathan'?enemy.phase:isPede(enemy.kind)?(Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):enemy.facingYaw):enemy.kind.startsWith('squid')?enemy.facingYaw+(enemy.towerSpinDirection??-1)*enemy.age*TOWER_SPIN_SPEED:isSkull(enemy.kind)&&Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):Math.atan2(player.x-enemy.pos.x,player.z-enemy.pos.z);}
+export function enemyYaw(enemy:Enemy,player:Vec){return isSpider(enemy.kind)?enemy.facingYaw:enemy.kind==='leviathan'?enemy.phase:isPede(enemy.kind)?(Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):enemy.facingYaw):enemy.kind.startsWith('squid')?enemy.facingYaw+(enemy.towerSpinDirection??-1)*(enemy.age*TOWER_SPIN_SPEED+(legacyTowerGeometry(enemy)?0:towerSpitTurn(enemy.age,enemy.kind,!!enemy.towerEmission))):isSkull(enemy.kind)&&Math.hypot(enemy.vel.x,enemy.vel.z)>.01?Math.atan2(enemy.vel.x,enemy.vel.z):Math.atan2(player.x-enemy.pos.x,player.z-enemy.pos.z);}
 export function localToEnemy(enemy:Enemy,player:Vec,local:Vec):Vec {const yaw=enemyYaw(enemy,player);return v(enemy.pos.x+local.x*Math.cos(yaw)+local.z*Math.sin(yaw),enemy.pos.y+local.y,enemy.pos.z-local.x*Math.sin(yaw)+local.z*Math.cos(yaw));}
 export const LEGACY_SQUID_I_GEM=v(0,-.04*CREATURE_SCALE,-.51*CREATURE_SCALE);
 export const SQUID_I_GEM=v(0,towerOutletHeight('squid')-.4,-2.1);

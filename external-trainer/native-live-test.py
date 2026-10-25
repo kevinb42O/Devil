@@ -21,7 +21,10 @@ engine=TestEngine();engine.settings=preset('Precision')
 controller=Controller.alloc().init();controller.start(engine,60)
 
 def key(code):
-    for down in (True,False):q.CGEventPost(q.kCGHIDEventTap,q.CGEventCreateKeyboardEvent(None,code,down))
+    for down in (True,False):
+        event=q.CGEventCreateKeyboardEvent(None,code,down)
+        if code==24:q.CGEventKeyboardSetUnicodeString(event,1,'=')
+        q.CGEventPost(q.kCGHIDEventTap,event)
 
 class Verify(NSObject):
     def tick_(self,timer):
@@ -47,13 +50,13 @@ class Verify(NSObject):
             key(100);self.stage=4;return
         if self.stage==4:
             assert not engine.armed,'F8 must toggle aim'
-            key(98);self.stage=5;return
+            key(24);self.stage=5;return
         if self.stage==5:
-            assert controller.menu.isVisible(),'F7 must open native settings'
-            key(98);self.stage=6;return
+            assert controller.menu.isVisible(),'= must open native settings'
+            key(24);self.stage=6;return
         if self.stage==6:
-            assert not controller.menu.isVisible(),'F7 must close native settings'
-            self.passed=True;print('PASS: real memory connection, managed browser PID, reserved F6/F4/F8/F7 and browser focus preservation.',flush=True)
+            assert not controller.menu.isVisible(),'= must close native settings'
+            self.passed=True;print('PASS: real memory connection, managed browser PID, reserved F6/F4/F8/= and browser focus preservation.',flush=True)
             timer.invalidate();controller.quit_(None)
 
 verify=Verify.alloc().init();verify.stage=0;verify.error=None;verify.passed=False

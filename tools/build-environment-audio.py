@@ -75,7 +75,9 @@ recipes={
  'cathedral':[('bells',.7,80,5000),('wind',.2,100,1300)],
  'depth':[('rumble',.65,35,1800),('pulse',.55,40,4000)],
 }
-manifest={}
+manifestPath=ROOT/'src/environment-audio-manifest.json'
+previous=json.loads(manifestPath.read_text()) if manifestPath.exists() else {}
+manifest={'heaven':previous['heaven']} if 'heaven' in previous else {}
 for name,layers in recipes.items():
  y=sum(audio(k,lo,hi)*gain for k,gain,lo,hi in layers)
  # Match the sustained bed level first; a soft peak ceiling keeps occasional

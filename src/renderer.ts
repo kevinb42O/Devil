@@ -1,3 +1,8 @@
+import {AscentRumble,ASCENT_RUMBLE} from './ascent-rumble';
+import {SkullMotion} from './skull-motion';
+import {AscentRush} from './ascent-rush';
+import {TransmutationWaves} from './transmutation-waves';
+import {Heaven} from './heaven';
 import {Cathedral} from './cathedral';
 import {DescentPassage} from './descent-passage';
 import {VeilEnvironment} from './veil-environment';
@@ -64,7 +69,9 @@ function shape(parent:THREE.Object3D,geometry:THREE.BufferGeometry,material:THRE
 }
 export type VisualSettings={quality:string;fov:number;skyMotion?:'full'|'reduced';mist?:boolean;screenShake?:number;movementMotion?:number};
 export class GameRenderer {
+  readonly skullMotion=new SkullMotion();
   readonly cameraFeedback=new CameraFeedback();
+  readonly ascentRumble=new AscentRumble();
   readonly movementMotion=new MovementMotion();
   private courtyardNeck=new CourtyardNeck();
   private feedbackWorldOffset=new THREE.Vector3();
@@ -72,7 +79,7 @@ export class GameRenderer {
   private feedbackTime=-Infinity;
   private movementClock:number|null=null;
   readonly upgradeScreenFlash=new UpgradeScreenFlash();
-  resetFeedback(){this.upgradeScreenFlash.clear();this.courtyardNeck.clear();this.movementClock=null;this.movementMotion.clear();this.cameraFeedback.clear();this.feedbackWorldOffset.set(0,0,0);this.feedbackLife='';this.feedbackTime=-Infinity;this.originalWeapon?.resetMotion();}
+  resetFeedback(){this.ascentRumble.clear();this.upgradeScreenFlash.clear();this.courtyardNeck.clear();this.movementClock=null;this.movementMotion.clear();this.cameraFeedback.clear();this.feedbackWorldOffset.set(0,0,0);this.feedbackLife='';this.feedbackTime=-Infinity;this.originalWeapon?.resetMotion();}
   crewAvatarLoaded=false;readonly crewAvatarReady=loadCrewAvatar().then(()=>{this.crewAvatarLoaded=true;});
   private deathGhost:THREE.Group|null=null;
   private replayBody:THREE.Group|null=null;
@@ -178,7 +185,7 @@ export class GameRenderer {
   crewReplayMode=false;
   topDown=false;renderer:THREE.WebGLRenderer;scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(95,1,.05,180);composer:EffectComposer; bloom:UnrealBloomPass;
   private swarmBounds=new Map<EnemyKind,THREE.Sphere>();private swarmFrustum=new THREE.Frustum();private swarmProjection=new THREE.Matrix4();private swarmSphere=new THREE.Sphere();private swarmCopy=new THREE.Matrix4();
-  private swarmBatches=new Map<EnemyKind,{meshes:THREE.InstancedMesh[];capacity:number}>();private originalFloor=false;private tileHeights:number[]=[];private beckons=new Map<number,THREE.Mesh>();private baseFov=90;private enemies=new Map<number,THREE.Group>();private tiles:THREE.InstancedMesh;private tilePositions:THREE.Vector3[]=[];
+  private swarmBatches=new Map<EnemyKind,{meshes:THREE.InstancedMesh[];capacity:number}>();private originalFloor=false;private tileHeights:number[]=[];private transmutationWaves:TransmutationWaves;private baseFov=90;private enemies=new Map<number,THREE.Group>();private tiles:THREE.InstancedMesh;private tilePositions:THREE.Vector3[]=[];
   originalWeapon:OriginalWeapon;originalEnemies:OriginalEnemies;private gemMesh:THREE.InstancedMesh;private dummy=new THREE.Object3D();
   private renderScale=1;private slowFrames=0;private fastFrames=0;private resizeCooldown=0;private quality='high';
   readonly menuRelics=new MenuRelics();
@@ -195,6 +202,8 @@ export class GameRenderer {
   readonly veilEnvironment:VeilEnvironment;
   readonly furnace:Furnace;
   readonly cathedral:Cathedral;
+  readonly heaven:Heaven;
+  readonly ascentRush:AscentRush;
   readonly descentPassage:DescentPassage;
   readonly cosmicEnvironment:CosmicEnvironment;
   private skyLight=new THREE.HemisphereLight(0xcad5bc,0x18100c,1.15);
@@ -227,6 +236,7 @@ export class GameRenderer {
     this.gemLighting=new GemLighting(this.scene,stone);
     this.environment.attach(stone);
     this.enemyLighting=new EnemyLighting(this.scene,stone);
+    this.transmutationWaves=new TransmutationWaves(this.scene,stone);
     this.projectileLighting=new ProjectileLighting(this.scene,stone);
     this.blood=new BloodRenderer(this.scene,stone);
     this.upgradePulse=new UpgradeGroundPulse(stone);
@@ -236,6 +246,8 @@ export class GameRenderer {
     this.descentPassage=new DescentPassage(this.scene,stone);
     this.cosmicEnvironment=new CosmicEnvironment(this.scene,stone);
     this.veilEnvironment=new VeilEnvironment(this.scene,stone);
+    this.heaven=new Heaven(this.scene,stone);
+    this.ascentRush=new AscentRush(this.scene);
     this.environment.uniforms.veilClouds=this.veilEnvironment.uniforms.veilClouds;
     this.environment.uniforms.veilClock=this.veilEnvironment.uniforms.veilClock;
     this.deathBurst=new PlayerDeathBurst(this.scene,this.blood.field);
@@ -259,7 +271,7 @@ export class GameRenderer {
     this.configure(settings);window.addEventListener('resize',()=>this.resize());this.resize();
   }
   get skyDiagnostics(){return this.sky.diagnostics;}
-  configure(settings:VisualSettings) {this.entrance.configure(settings.quality,settings.skyMotion==='reduced');this.descentPassage.configure(settings.quality,settings.skyMotion==='reduced');this.cathedral.configure(settings.quality,settings.skyMotion==='reduced');this.veilEnvironment.configure(settings.quality,settings.skyMotion==='reduced');this.cosmicEnvironment.configure(settings.quality,settings.skyMotion==='reduced');this.furnace.configure(settings.quality,settings.skyMotion==='reduced');this.stormRain.configure(settings.quality,settings.skyMotion==='reduced');this.environmentMotionReduced=settings.skyMotion==='reduced';this.cameraFeedback.configure(settings.screenShake);this.movementMotion.configure(settings.movementMotion);this.originalWeapon.configureMotion(settings.movementMotion);this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=this.resizeCooldown=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
+  configure(settings:VisualSettings) {this.ascentRumble.configure(settings.screenShake,settings.skyMotion==='reduced');this.ascentRush.configure(settings.quality,settings.skyMotion==='reduced');this.heaven.configure(settings.quality,settings.skyMotion==='reduced');this.entrance.configure(settings.quality,settings.skyMotion==='reduced');this.descentPassage.configure(settings.quality,settings.skyMotion==='reduced');this.cathedral.configure(settings.quality,settings.skyMotion==='reduced');this.veilEnvironment.configure(settings.quality,settings.skyMotion==='reduced');this.cosmicEnvironment.configure(settings.quality,settings.skyMotion==='reduced');this.furnace.configure(settings.quality,settings.skyMotion==='reduced');this.stormRain.configure(settings.quality,settings.skyMotion==='reduced');this.environmentMotionReduced=settings.skyMotion==='reduced';this.cameraFeedback.configure(settings.screenShake);this.movementMotion.configure(settings.movementMotion);this.originalWeapon.configureMotion(settings.movementMotion);this.openingMist.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.menuRelics.configure(settings.quality,settings.skyMotion==='reduced',settings.mist!==false);this.baseFov=settings.fov;this.camera.fov=settings.fov;this.camera.updateProjectionMatrix();this.quality=settings.quality;this.sky.configure(settings.quality,settings.skyMotion);this.renderScale=1;this.slowFrames=this.fastFrames=this.resizeCooldown=0;if(this.bloom)this.bloom.enabled=settings.quality==='high';this.resize();}
   resize() {
     const {width:w,height:h}=gameViewport();
     // Bound fill cost on Retina/4K displays; UI and the canvas keep their CSS size.
@@ -289,6 +301,8 @@ export class GameRenderer {
     body.position.set(1000,0,0);ghost.position.set(1000,0,0);this.scene.add(body,ghost);
     const veilWasVisible=this.veilEnvironment.group.visible;this.veilEnvironment.group.visible=true;
     const spaceWasVisible=this.cosmicEnvironment.group.visible;this.cosmicEnvironment.group.visible=true;
+    const rushWasVisible=this.ascentRush.group.visible;this.ascentRush.group.visible=true;
+    const heavenWasVisible=this.heaven.group.visible;this.heaven.group.visible=true;
     const cathedralWasVisible=this.cathedral.group.visible;this.cathedral.group.visible=true;
     const passageWasVisible=this.descentPassage.group.visible;this.descentPassage.group.visible=true;
     const rainWasVisible=this.stormRain.group.visible,fireWasVisible=this.furnace.group.visible;this.stormRain.group.visible=true;this.furnace.group.visible=true;
@@ -296,7 +310,7 @@ export class GameRenderer {
       // Warm rain and both floor variants so falling doesn't compile a shader mid-frame.
       this.updateFloorSide(-Infinity);await this.renderer.compileAsync(this.scene,this.camera);
       this.updateFloorSide(Infinity);await this.renderer.compileAsync(this.scene,this.camera);
-    }finally{this.descentPassage.group.visible=passageWasVisible;this.cathedral.group.visible=cathedralWasVisible;this.veilEnvironment.group.visible=veilWasVisible;this.cosmicEnvironment.group.visible=spaceWasVisible;this.furnace.group.visible=fireWasVisible;this.stormRain.group.visible=rainWasVisible;this.scene.remove(body,ghost);disposeCrewAvatar(body);disposeCrewAvatar(ghost);}
+    }finally{this.ascentRush.group.visible=rushWasVisible;this.heaven.group.visible=heavenWasVisible;this.descentPassage.group.visible=passageWasVisible;this.cathedral.group.visible=cathedralWasVisible;this.veilEnvironment.group.visible=veilWasVisible;this.cosmicEnvironment.group.visible=spaceWasVisible;this.furnace.group.visible=fireWasVisible;this.stormRain.group.visible=rainWasVisible;this.scene.remove(body,ghost);disposeCrewAvatar(body);disposeCrewAvatar(ghost);}
     await this.renderer.compileAsync(this.entrance.scene,this.camera);
     await this.originalWeapon.prewarm(this.renderer);
   }
@@ -341,14 +355,21 @@ export class GameRenderer {
     const member=world.crew.find(p=>p.player===world.player),life=member?member.id+':'+member.life:'solo';
     if(document.hidden||suppressed||(this.feedbackLife&&this.feedbackLife!==life)||world.time<this.feedbackTime)this.resetFeedback();
     this.feedbackLife=life;this.feedbackTime=world.time;this.feedbackWorldOffset.set(0,0,0);
-    if(document.hidden||suppressed)return;
+    if(document.hidden||suppressed){this.ascentRumble.clear();return;}
     if(impacts)this.cameraFeedback.advance(dt);else this.cameraFeedback.clear();
     const clock=(impacts?world.time:world.tick*STEP)+(Math.max(0,Math.min(1,alpha))-1)*STEP;
     const travelDt=this.movementClock===null?dt:Math.max(0,clock-this.movementClock);this.movementClock=clock;
     if(world.state==='playing'&&member?.alive!==false)this.movementMotion.update(world.player,yaw,pitch,dt,travelDt);else this.movementMotion.clear();
     const impact=this.cameraFeedback.sample(),motion=this.movementMotion.pose.camera;
+    const rumble=this.ascentRumble.sample(world.time,impacts&&world.state==='playing'&&member?.alive!==false);
     const x=impact.x+motion.x,y=impact.y+motion.y,z=impact.z+motion.z;
     this.feedbackWorldOffset.set(x*Math.cos(yaw)+z*Math.sin(yaw),y,-x*Math.sin(yaw)+z*Math.cos(yaw)).clampLength(0,.04);
+    // Preserve the existing event-feedback cap, then add the independently bounded
+    // propulsion response. The weapon receives the same total world offset.
+    this.feedbackWorldOffset.x+=rumble.x*Math.cos(yaw)+rumble.z*Math.sin(yaw);
+    this.feedbackWorldOffset.y+=rumble.y;
+    this.feedbackWorldOffset.z+=-rumble.x*Math.sin(yaw)+rumble.z*Math.cos(yaw);
+    this.feedbackWorldOffset.clampLength(0,.04+ASCENT_RUMBLE.maxOffset);
     this.camera.position.add(this.feedbackWorldOffset);
   }
   render(world:World|null,yaw:number,pitch:number,dt:number,menu:boolean,projectileAlpha=1,spectatorPosition:Vec|null=null,crewInterpolated=false,entrance=false,bodyInput:Input|null=null) {
@@ -399,11 +420,12 @@ export class GameRenderer {
     this.chapterLighting.update(atmosphere,menu,this.skyLight,this.moonLight,this.rimLight,this.infernalLight);
     const cosmic=atmosphere.cosmic;this.blood.cosmic=cosmic;
     // Keep the orbital landmarks intact when viewed from the far edge of the arena.
-    const viewDistance=cosmic>.001?320:180;
+    const viewDistance=atmosphere.beyond>.001||atmosphere.phaseTime>=489?520:cosmic>.001?320:180;
     if(this.camera.far!==viewDistance){this.camera.far=viewDistance;this.camera.updateProjectionMatrix();}
-    if(this.scene.fog instanceof THREE.FogExp2){this.scene.fog.color.setRGB(.08*day+atmosphere.furnace*.007,.12*day+atmosphere.furnace*.002,.17*day+atmosphere.cathedral*.007);this.scene.fog.density=.015-day*.006;}
-    this.gemLighting.daylight=day;this.gemLighting.cosmic=atmosphere.cosmic;this.gemLighting.nebulaTime=this.environmentMotionReduced?0:Math.min(atmosphere.time,30);
+    if(this.scene.fog instanceof THREE.FogExp2){this.scene.fog.color.setRGB(.08*day+atmosphere.furnace*.007,.12*day+atmosphere.furnace*.002,.17*day+atmosphere.cathedral*.007);const beyond=atmosphere.beyond;this.scene.fog.color.r+=(.68-this.scene.fog.color.r)*beyond;this.scene.fog.color.g+=(.61-this.scene.fog.color.g)*beyond;this.scene.fog.color.b+=(.47-this.scene.fog.color.b)*beyond;this.scene.fog.density=(.015-day*.006)*(1-beyond*.9);}
+    this.gemLighting.daylight=day;this.gemLighting.cosmic=atmosphere.cosmic;this.gemLighting.nebulaTime=this.environmentMotionReduced?0:Math.min(atmosphere.phaseTime,30);
     if(menu) {
+      this.transmutationWaves.update(null,true);
       this.camera.position.set(29+Math.sin(t*.04)*2,13,30);this.camera.lookAt(-10,2,0);this.altar.rotation.y=t*.2;
       this.preview.children.forEach((o,i)=>{if(i>0){o.rotation.y+=dt*(o.name.startsWith('squid')?-TOWER_SPIN_SPEED:.045);}});
       for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const m of this.enemies.values())m.visible=false;for(const death of this.dyingTowers.values())death.model.visible=false;this.creatureDeaths?.hide();this.gemMesh.count=0;this.updateTiles(0);
@@ -415,9 +437,10 @@ export class GameRenderer {
       this.updateTiles(world.time);
       this.enemyEmergence.update(world,this.camera);
       const fov=this.baseFov+(spectatorPosition?0:world.player.hopPulse*3);if(this.camera.fov!==fov){this.camera.fov=fov;this.camera.updateProjectionMatrix();}
-      const ringIds=new Set<number>();for(const ring of world.rings){ringIds.add(ring.id);let mesh=this.beckons.get(ring.id);if(!mesh){mesh=new THREE.Mesh(new THREE.TorusGeometry(1,.035,4,64),new THREE.MeshBasicMaterial({color:0xff4422,transparent:true,opacity:.65}));mesh.rotation.x=Math.PI/2;this.beckons.set(ring.id,mesh);this.scene.add(mesh);}mesh.position.set(ring.pos.x,1,ring.pos.z);mesh.scale.setScalar(Math.max(.01,ring.radius));}for(const [id,mesh] of this.beckons)if(!ringIds.has(id)){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();this.beckons.delete(id);}
+      this.transmutationWaves.update(world);
       this.camera.updateWorldMatrix(true,false);this.swarmProjection.multiplyMatrices(this.camera.projectionMatrix,this.camera.matrixWorldInverse);this.swarmFrustum.setFromProjectionMatrix(this.swarmProjection);
       const swarmCounts=new Map<EnemyKind,number>();
+      this.skullMotion.begin(world,world.time);
       const present=new Set<number>();
       const spiderlings=new Map<number,Enemy>();
       this.creatureDeaths??=new EnemyDeaths(this.scene);
@@ -426,15 +449,25 @@ export class GameRenderer {
         if(isSkull(e.kind)||isEgg(e.kind)||e.kind==='spiderling'){
           let batch=this.swarmBatches.get(e.kind);if(!batch)continue;
           if(e.age<0)continue;
-          this.dummy.position.set(e.pos.x,e.pos.y,e.pos.z);this.dummy.rotation.set(0,enemyYaw(e,world.player.pos),0);this.dummy.scale.setScalar(swarmEmergenceScale(e));this.dummy.updateMatrix();
+          const skullPose=isSkull(e.kind)?this.skullMotion.sample(e,world.player.pos,this.environmentMotionReduced,(e.kind==='skull4'||e.kind==='transmuted4')&&world.groundSkullsEnabled):null;
+          this.dummy.position.set(e.pos.x,e.pos.y,e.pos.z);this.dummy.rotation.set(skullPose?.pitch??0,skullPose?.yaw??enemyYaw(e,world.player.pos),skullPose?.roll??0,'YXZ');this.dummy.scale.setScalar(swarmEmergenceScale(e));this.dummy.updateMatrix();
           this.swarmSphere.copy(this.swarmBounds.get(e.kind)!).applyMatrix4(this.dummy.matrix);
           // The native vertex shader snaps positions down to a 1/16 world grid.
           // Pad for that displacement so culling cannot remove an edge pixel.
-          this.swarmSphere.radius+=Math.sqrt(3)/16;
+          this.swarmSphere.radius+=Math.sqrt(3)/16+(skullPose?.18:0);
           if(!this.swarmFrustum.intersectsSphere(this.swarmSphere))continue;
           const index=swarmCounts.get(e.kind)??0;
-          if(index>=batch.capacity){for(const mesh of batch.meshes){this.scene.remove(mesh);mesh.geometry.dispose();mesh.dispose();}const capacity=batch.capacity*2,meshes=this.originalEnemies.createSwarmBatch(e.kind,capacity);for(let i=0;i<batch.capacity;i++)for(let j=0;j<meshes.length;j++){batch.meshes[j].getMatrixAt(i,this.swarmCopy);meshes[j].setMatrixAt(i,this.swarmCopy);if(batch.meshes[j].instanceColor){batch.meshes[j].getColorAt(i,this.swarmFlashCopy);meshes[j].setColorAt(i,this.swarmFlashCopy);}}batch={meshes,capacity};for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(e.kind,batch);}
-          for(const mesh of batch.meshes){mesh.material=this.enemyHitFlash.swarmMaterial(mesh.material as THREE.Material);mesh.setMatrixAt(index,this.dummy.matrix);mesh.setColorAt(index,enemyHitFlash(e,world.time)?this.enemyHitFlash.hit:this.enemyHitFlash.normal);}swarmCounts.set(e.kind,index+1);continue;
+          if(index>=batch.capacity){
+            const capacity=batch.capacity*2,meshes=this.originalEnemies.createSwarmBatch(e.kind,capacity);
+            for(let j=0;j<meshes.length;j++){
+              const previous=batch.meshes[j],motion=previous.geometry.getAttribute('skullMotion'),nextMotion=meshes[j].geometry.getAttribute('skullMotion');
+              if(motion&&nextMotion)(nextMotion.array as Float32Array).set(motion.array);
+              for(let i=0;i<batch.capacity;i++){previous.getMatrixAt(i,this.swarmCopy);meshes[j].setMatrixAt(i,this.swarmCopy);if(previous.instanceColor){previous.getColorAt(i,this.swarmFlashCopy);meshes[j].setColorAt(i,this.swarmFlashCopy);}}
+              this.scene.remove(previous);previous.geometry.dispose();previous.dispose();
+            }
+            batch={meshes,capacity};for(const mesh of meshes)this.scene.add(mesh);this.swarmBatches.set(e.kind,batch);
+          }
+          for(const mesh of batch.meshes){mesh.material=this.enemyHitFlash.swarmMaterial(mesh.material as THREE.Material);mesh.setMatrixAt(index,this.dummy.matrix);mesh.setColorAt(index,enemyHitFlash(e,world.time)?this.enemyHitFlash.hit:this.enemyHitFlash.normal);if(skullPose){const motion=mesh.geometry.getAttribute('skullMotion') as THREE.InstancedBufferAttribute|undefined;motion?.setXYZW(index,skullPose.phase,skullPose.follow,skullPose.lift,skullPose.energy);}}swarmCounts.set(e.kind,index+1);continue;
         }
         present.add(e.id);let model=this.enemies.get(e.id);
         if(model&&model.name!==e.kind){this.scene.remove(model);this.enemies.delete(e.id);model=undefined;}
@@ -466,7 +499,8 @@ export class GameRenderer {
           }}
         }
       }
-      for(const [kind,batch] of this.swarmBatches)for(const mesh of batch.meshes){mesh.count=swarmCounts.get(kind)??0;if(mesh.count){mesh.instanceMatrix.clearUpdateRanges();mesh.instanceMatrix.addUpdateRange(0,mesh.count*16);mesh.instanceMatrix.needsUpdate=true;if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;}}
+      for(const [kind,batch] of this.swarmBatches)for(const mesh of batch.meshes){mesh.count=swarmCounts.get(kind)??0;if(mesh.count){mesh.instanceMatrix.clearUpdateRanges();mesh.instanceMatrix.addUpdateRange(0,mesh.count*16);mesh.instanceMatrix.needsUpdate=true;const motion=mesh.geometry.getAttribute('skullMotion') as THREE.InstancedBufferAttribute|undefined;if(motion){motion.clearUpdateRanges();motion.addUpdateRange(0,mesh.count*4);motion.needsUpdate=true;}if(mesh.instanceColor)mesh.instanceColor.needsUpdate=true;}}
+      this.skullMotion.end();
       for(const [id,model] of this.enemies)if(!present.has(id)) {
         this.enemyHitFlash.restore(model);
         if(model.name.startsWith('squid')){
@@ -520,6 +554,8 @@ export class GameRenderer {
     this.cosmicEnvironment.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
     this.furnace.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
     this.cathedral.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
+    this.heaven.update(world?.time??0,!!world&&!menu&&!entrance);
+    this.ascentRush.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
     this.descentPassage.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
     this.veilEnvironment.setSky(this.sky.veilTexture);
     this.veilEnvironment.update(this.camera,world?.time??0,!!world&&!menu&&!entrance);
@@ -548,9 +584,10 @@ export class GameRenderer {
     }
   }
   clear() {
+    this.skullMotion.clear();
     this.creatureDeaths?.clear();this.lastSpiderlings.clear();
     // A crowded run must not leave the next run at its degraded resolution.
     this.slowFrames=this.fastFrames=this.resizeCooldown=0;
     if(this.renderScale!==1){this.renderScale=1;this.resize();}
-    if(this.emoteHands){disposeCrewAvatar(this.emoteHands);this.emoteHands.removeFromParent();this.emoteHands=null;}this.resetFeedback();this.enemyEmergence.clear();this.upgradePulse.clear();this.upgradeScreenFlash.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;for(const mesh of this.beckons.values()){this.scene.remove(mesh);mesh.geometry.dispose();(mesh.material as THREE.Material).dispose();}this.beckons.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
+    if(this.emoteHands){disposeCrewAvatar(this.emoteHands);this.emoteHands.removeFromParent();this.emoteHands=null;}this.resetFeedback();this.enemyEmergence.clear();this.upgradePulse.clear();this.upgradeScreenFlash.clear();this.setDeathGhost(null);if(this.replayBody){this.disposeCrew(this.replayBody);this.replayBody=null;}for(const slot of this.crewDeathBursts){slot.burst.clear();slot.id=null;}this.crewAlive.clear();this.crewExploded.clear();this.crewDeathTime=0;for(const death of this.dyingTowers.values())this.scene.remove(death.model);this.dyingTowers.clear();this.blood.clear();this.segmentBatches.clear();for(const model of this.crewModels.values()){this.disposeCrew(model);}this.crewModels.clear();for(const batch of this.swarmBatches.values())for(const mesh of batch.meshes)mesh.count=0;this.transmutationWaves.clear();for(const model of this.enemies.values())this.scene.remove(model);this.enemies.clear();this.gemLighting.clear();this.enemyLighting.clear();this.projectileLighting.clear();this.playerLight.intensity=0;this.originalWeapon.clear();}
 }

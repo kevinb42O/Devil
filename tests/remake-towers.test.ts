@@ -61,19 +61,22 @@ test('historical team checkpoints retain their exact digests with old tower targ
 });
 
 
-test('tower feet and chimney tops stop projectiles before they can hit enemies behind them',()=>{
- for(const kind of tiers)for(const zone of ['foot','exhaust'] as const){
+test('floating spawner flesh and siphons block projectiles, while space underneath stays open',()=>{
+ for(const kind of tiers)for(const zone of ['body','exhaust'] as const){
   const w=new World(71,{schedule:false,invulnerable:true}),tower=w.spawn(kind,v(0,5,0));tower.age=12;tower.facingYaw=0;
-  const scale=enemyEmergenceScale(tower),y=zone==='foot'?(towerFloorHeight(tower,0)+tower.pos.y)*.5:tower.pos.y+(towerOutletHeight(kind)-.06)*scale;
-  // A vertical ray through the exhaust disk also covers the old gap above the core.
-  const from=zone==='foot'?v(towerRadius(kind)*.85*scale,y,20):v(0,y+3,0);
-  const to=zone==='foot'?v(from.x,y,-20):v(0,y-3,0);
+  const scale=enemyEmergenceScale(tower),y=zone==='body'?tower.pos.y+towerOutletHeight(kind)*.55*scale:tower.pos.y+(towerOutletHeight(kind)-.06)*scale;
+  // Trace the actual outlet: the redesigned fork and citadel deliberately
+  // leave open space between their separate spawning chambers.
+  const outlet=towerOutlets(kind)[0],mouth=crystalToEnemy(tower,w.player.pos,{...outlet,y:outlet.y-.06});
+  const from=zone==='body'?v(0,y,20):v(mouth.x,mouth.y+3,mouth.z);
+  const to=zone==='body'?v(from.x,y,-20):v(mouth.x,mouth.y-3,mouth.z);
   const target=w.spawn('skull2',to);target.age=2;
   const hp=target.hp;
   w.projectiles.push({id:900,pos:from,vel:v((to.x-from.x)/STEP,(to.y-from.y)/STEP,(to.z-from.z)/STEP),age:0,homing:false});
   (w as any).updateProjectiles(STEP);
   assert.equal(target.hp,hp,`${kind} ${zone} shields the enemy`);
   assert.ok(w.effects.some(e=>e.kind==='impact'&&e.enemy===kind),`${kind} ${zone} absorbs the shot`);
+  assert.equal(sweepArmor(tower,w.player.pos,v(0,tower.pos.y-.2,20),v(0,tower.pos.y-.2,-20)),null,'floating body has no hidden pedestal');
  }
 });
 

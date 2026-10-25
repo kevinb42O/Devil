@@ -1,4 +1,4 @@
-import {CREATURE_SCALE,CREATURE_SCALE_RATIO,SPIDER_CRYSTAL_RADIUS} from '../src/enemy-presentation.ts';
+import {CREATURE_SCALE,CREATURE_SCALE_RATIO,SPIDER_CRYSTAL_RADIUS,enemyRigScale,towerCrystalRadius} from '../src/enemy-presentation.ts';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
@@ -35,7 +35,7 @@ test('attached crystal centers follow the rendered emergence root and accept sho
 test('emerging crystal radii shrink with the rendered root instead of hitting empty space',()=>{
  for(const kind of ['squid','squid2','squid3','spider2'] as const){
   const w=new World(1,{schedule:false}),e=w.spawn(kind,v(0,8,0));e.age=.6;e.headExposure=1;e.pos=v(0,8,0);
-  const center=w.weakPoint(e),fullRadius=kind==='spider2'?SPIDER_CRYSTAL_RADIUS*e.size:.63*CREATURE_SCALE_RATIO;
+  const center=w.weakPoint(e),fullRadius=kind==='spider2'?SPIDER_CRYSTAL_RADIUS*e.size:towerCrystalRadius(kind,true)*enemyRigScale(e);
   const outside=v(center.x,center.y+fullRadius*.8,center.z),hp=e.hp;
   shot(w,outside,outside);tick(w);
   assert.equal(e.hp,hp,kind);assert.equal(w.projectiles.length,1,kind);

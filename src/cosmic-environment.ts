@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {mergeVertices} from 'three/addons/utils/BufferGeometryUtils.js';
-import {createDescentState,descentAt} from './descent';
+import {createDescentState,descentAt,environmentClock} from './descent';
 
 const FIELD=`
 float spaceHash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
@@ -200,8 +200,9 @@ export class CosmicEnvironment {
  setSky(texture:THREE.Texture){this.uniforms.spaceSky.value=texture;}
  configure(quality:string,reduced=false){this.quality=quality;this.reduced=reduced;this.debris.count=quality==='low'?72:180;this.dust.geometry.setDrawRange(0,quality==='low'?220:700);this.meteors.visible=quality!=='low'&&!reduced;}
  update(camera:THREE.Camera,time:number,active=true){
-  const amount=active?descentAt(time,this.state).cosmic:0,clock=this.reduced?0:Math.min(30,Math.max(0,time));
-  this.uniforms.spaceAmount.value=amount;this.uniforms.spaceClock.value=clock;this.uniforms.spaceTravel.value=this.reduced?0:this.state.cosmicTravel;this.uniforms.spaceCamera.value.copy(camera.position);this.group.visible=amount>.001;
+  const phase=environmentClock(time);
+  const amount=active?descentAt(time,this.state).cosmic:0,clock=this.reduced?0:phase>=482?30-Math.min(30,Math.max(0,phase-486)*5):Math.min(30,Math.max(0,phase));
+  this.uniforms.spaceAmount.value=amount;this.uniforms.spaceClock.value=clock;this.uniforms.spaceTravel.value=this.reduced?0:phase>=482?1-this.state.escape:this.state.cosmicTravel;this.uniforms.spaceCamera.value.copy(camera.position);this.group.visible=amount>.001;
   if(!this.group.visible)return;
   for(let i=0;i<this.debris.count;i++){const s=this.seeds[i],angle=s.angle+clock*.0008;this.dummy.position.set(Math.cos(angle)*s.radius,s.y+clock*.085+Math.sin(s.spin+clock*.13)*.25,Math.sin(angle)*s.radius);this.dummy.rotation.set(s.spin+clock*.007,s.angle+clock*.012,s.spin*.7);this.dummy.scale.set(s.scale,s.scale*(.5+.4*Math.sin(s.spin)**2),s.scale*.78);this.dummy.updateMatrix();this.debris.setMatrixAt(i,this.dummy.matrix);}this.debris.instanceMatrix.needsUpdate=true;
  }

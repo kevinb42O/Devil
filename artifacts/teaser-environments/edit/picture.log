@@ -1,0 +1,233 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/01-cosmic-sweep.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:09.00, start: 0.000000, bitrate: 24489 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24487 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #1, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/02-orbital-stone.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:07.00, start: 0.000000, bitrate: 24390 kb/s
+  Stream #1:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24387 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #2, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/03-storm-voyage.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:09.00, start: 0.000000, bitrate: 24021 kb/s
+  Stream #2:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24018 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #3, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/04-waterline.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:06.00, start: 0.000000, bitrate: 24274 kb/s
+  Stream #3:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24271 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #4, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/05-violet-passage.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:08.00, start: 0.000000, bitrate: 24378 kb/s
+  Stream #4:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24376 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #5, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/06-furnace-crane.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:09.00, start: 0.000000, bitrate: 24426 kb/s
+  Stream #5:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24423 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #6, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/07-serpent-drift.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:07.00, start: 0.000000, bitrate: 24440 kb/s
+  Stream #6:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24437 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #7, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/08-cathedral-ascent.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:10.00, start: 0.000000, bitrate: 23911 kb/s
+  Stream #7:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 23908 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #8, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/09-light-and-limestone.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:07.00, start: 0.000000, bitrate: 23337 kb/s
+  Stream #8:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 23335 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #9, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/10-cathedral-recession.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:09.00, start: 0.000000, bitrate: 24131 kb/s
+  Stream #9:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 24129 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #10, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/11-beneath-the-world.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:06.00, start: 0.000000, bitrate: 13112 kb/s
+  Stream #10:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 13109 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Input #11, mov,mp4,m4a,3gp,3g2,mj2, from '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/shots/12-title.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:00:05.00, start: 0.000000, bitrate: 8808 kb/s
+  Stream #11:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, smpte170m/unknown/unknown, progressive), 1920x1080, 8804 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Stream mapping:
+  Stream #0:0 (h264) -> scale:default
+  Stream #1:0 (h264) -> scale:default
+  Stream #2:0 (h264) -> scale:default
+  Stream #3:0 (h264) -> scale:default
+  Stream #4:0 (h264) -> scale:default
+  Stream #5:0 (h264) -> scale:default
+  Stream #6:0 (h264) -> scale:default
+  Stream #7:0 (h264) -> scale:default
+  Stream #8:0 (h264) -> scale:default
+  Stream #9:0 (h264) -> scale:default
+  Stream #10:0 (h264) -> scale:default
+  Stream #11:0 (h264) -> scale:default
+  setpts:default -> Stream #0:0 (h264_videotoolbox)
+Press [q] to stop, [?] for help
+[swscaler @ 0x1524a0000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x158f80000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x159b80000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x159be0000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x110038000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x110600000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x148b30000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x148b50000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x148910000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x14b5b0000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x14b5d0000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x14c1d8000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x14c238000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x14c258000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x14ce58000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x123258000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x152aa0000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x1530b0000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x1530f0000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x153110000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x153d10000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x124600000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x124620000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x125220000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x125280000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x153d50000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x154950000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x1549b0000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x1549d0000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x1555d8000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x155638000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x155658000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x156260000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x1562c0000] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x1562e0000] No accelerated colorspace conversion found from yuv420p to bgr24.
+[swscaler @ 0x156ee8000] No accelerated colorspace conversion found from yuv420p to bgr24.
+Output #0, mp4, to '/Users/kevin/Documents/ChatGPT/devildaggersV2/artifacts/teaser-environments/edit/picture.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 22000 kb/s, 30 fps, 15360 tbn
+      Metadata:
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A    frame=   34 fps= 22 q=-0.0 size=    2816KiB time=00:00:01.10 bitrate=20971.9kbits/s speed=0.727x    frame=   72 fps= 36 q=-0.0 size=    6400KiB time=00:00:02.36 bitrate=22153.2kbits/s speed=1.17x    frame=  109 fps= 43 q=-0.0 size=    9728KiB time=00:00:03.60 bitrate=22136.7kbits/s speed=1.43x    frame=  146 fps= 48 q=-0.0 size=   13312KiB time=00:00:04.83 bitrate=22562.5kbits/s speed= 1.6x    frame=  180 fps= 51 q=-0.0 size=   16384KiB time=00:00:05.96 bitrate=22494.7kbits/s speed=1.69x    frame=  213 fps= 53 q=-0.0 size=   19456KiB time=00:00:07.06 bitrate=22554.3kbits/s speed=1.75x    frame=  242 fps= 53 q=-0.0 size=   22016KiB time=00:00:08.03 bitrate=22450.9kbits/s speed=1.77x    frame=  268 fps= 53 q=-0.0 size=   23808KiB time=00:00:08.90 bitrate=21914.1kbits/s speed=1.77x    frame=  298 fps= 54 q=-0.0 size=   26368KiB time=00:00:09.90 bitrate=21818.9kbits/s speed=1.79x    frame=  328 fps= 54 q=-0.0 size=   29184KiB time=00:00:10.90 bitrate=21933.6kbits/s speed=1.81x    frame=  357 fps= 55 q=-0.0 size=   32000KiB time=00:00:11.86 bitrate=22090.8kbits/s speed=1.81x    frame=  384 fps= 54 q=-0.0 size=   34304KiB time=00:00:12.76 bitrate=22011.9kbits/s speed=1.81x    frame=  411 fps= 54 q=-0.0 size=   36864KiB time=00:00:13.66 bitrate=22096.8kbits/s speed=1.81x    frame=  431 fps= 53 q=-0.0 size=   38656KiB time=00:00:14.33 bitrate=22093.3kbits/s speed=1.78x    frame=  452 fps= 53 q=-0.0 size=   39936KiB time=00:00:15.03 bitrate=21762.0kbits/s speed=1.76x    frame=  473 fps= 52 q=-0.0 size=   41984KiB time=00:00:15.73 bitrate=21860.2kbits/s speed=1.74x    frame=  497 fps= 52 q=-0.0 size=   44544KiB time=00:00:16.53 bitrate=22070.9kbits/s speed=1.73x    frame=  520 fps= 52 q=-0.0 size=   46592KiB time=00:00:17.30 bitrate=22062.5kbits/s speed=1.72x    frame=  542 fps= 51 q=-0.0 size=   48640KiB time=00:00:18.03 bitrate=22095.7kbits/s speed=1.71x    frame=  565 fps= 51 q=-0.0 size=   50688KiB time=00:00:18.80 bitrate=22087.0kbits/s speed= 1.7x    frame=  588 fps= 51 q=-0.0 size=   52736KiB time=00:00:19.56 bitrate=22079.1kbits/s speed=1.69x    frame=  612 fps= 51 q=-0.0 size=   54784KiB time=00:00:20.36 bitrate=22035.6kbits/s speed=1.69x    frame=  634 fps= 50 q=-0.0 size=   56832KiB time=00:00:21.10 bitrate=22064.8kbits/s speed=1.68x    frame=  654 fps= 50 q=-0.0 size=   58624KiB time=00:00:21.76 bitrate=22063.5kbits/s speed=1.66x    frame=  669 fps= 49 q=-0.0 size=   59904KiB time=00:00:22.26 bitrate=22038.9kbits/s speed=1.64x    frame=  686 fps= 49 q=-0.0 size=   61184KiB time=00:00:22.83 bitrate=21951.2kbits/s speed=1.62x    frame=  707 fps= 48 q=-0.0 size=   63232KiB time=00:00:23.53 bitrate=22011.2kbits/s speed=1.61x    frame=  727 fps= 48 q=-0.0 size=   65280KiB time=00:00:24.20 bitrate=22098.1kbits/s speed= 1.6x    frame=  737 fps= 47 q=-0.0 size=   66048KiB time=00:00:24.53 bitrate=22054.3kbits/s speed=1.57x    frame=  750 fps= 47 q=-0.0 size=   67328KiB time=00:00:24.96 bitrate=22091.5kbits/s speed=1.55x    frame=  759 fps= 46 q=-0.0 size=   68096KiB time=00:00:25.26 bitrate=22078.2kbits/s speed=1.52x    frame=  770 fps= 45 q=-0.0 size=   69120KiB time=00:00:25.63 bitrate=22089.7kbits/s speed= 1.5x    frame=  780 fps= 44 q=-0.0 size=   69888KiB time=00:00:25.96 bitrate=22048.4kbits/s speed=1.47x    frame=  786 fps= 43 q=-0.0 size=   70656KiB time=00:00:26.16 bitrate=22120.3kbits/s speed=1.44x    frame=  790 fps= 42 q=-0.0 size=   70912KiB time=00:00:26.30 bitrate=22087.9kbits/s speed=1.41x    frame=  796 fps= 42 q=-0.0 size=   71424KiB time=00:00:26.50 bitrate=22079.5kbits/s speed=1.38x    frame=  799 fps= 41 q=-0.0 size=   71680KiB time=00:00:26.60 bitrate=22075.3kbits/s speed=1.35x    frame=  801 fps= 40 q=-0.0 size=   71680KiB time=00:00:26.66 bitrate=22020.1kbits/s speed=1.32x    frame=  801 fps= 39 q=-0.0 size=   71680KiB time=00:00:26.66 bitrate=22020.1kbits/s speed=1.28x    frame=  803 fps= 38 q=-0.0 size=   71936KiB time=00:00:26.73 bitrate=22043.6kbits/s speed=1.26x    frame=  804 fps= 37 q=-0.0 size=   71936KiB time=00:00:26.76 bitrate=22016.2kbits/s speed=1.23x    frame=  809 fps= 36 q=-0.0 size=   72448KiB time=00:00:26.93 bitrate=22035.7kbits/s speed=1.21x    frame=  821 fps= 36 q=-0.0 size=   73472KiB time=00:00:27.33 bitrate=22020.1kbits/s speed= 1.2x    frame=  835 fps= 36 q=-0.0 size=   74752KiB time=00:00:27.80 bitrate=22027.7kbits/s speed=1.19x    frame=  856 fps= 36 q=-0.0 size=   77056KiB time=00:00:28.50 bitrate=22148.9kbits/s speed= 1.2x    frame=  880 fps= 36 q=-0.0 size=   79360KiB time=00:00:29.30 bitrate=22188.3kbits/s speed=1.21x    frame=  899 fps= 36 q=-0.0 size=   81152KiB time=00:00:29.93 bitrate=22209.3kbits/s speed=1.21x    frame=  918 fps= 36 q=-0.0 size=   82688KiB time=00:00:30.56 bitrate=22160.8kbits/s speed=1.21x    frame=  941 fps= 36 q=-0.0 size=   84992KiB time=00:00:31.33 bitrate=22220.9kbits/s speed=1.21x    frame=  966 fps= 37 q=-0.0 size=   87040KiB time=00:00:32.16 bitrate=22166.8kbits/s speed=1.22x    frame=  991 fps= 37 q=-0.0 size=   89344KiB time=00:00:33.00 bitrate=22179.0kbits/s speed=1.23x    frame= 1017 fps= 37 q=-0.0 size=   91648KiB time=00:00:33.86 bitrate=22168.7kbits/s speed=1.24x    frame= 1036 fps= 37 q=-0.0 size=   93184KiB time=00:00:34.50 bitrate=22126.5kbits/s speed=1.24x    frame= 1058 fps= 37 q=-0.0 size=   94720KiB time=00:00:35.23 bitrate=22023.1kbits/s speed=1.24x    frame= 1082 fps= 38 q=-0.0 size=   96768KiB time=00:00:36.03 bitrate=21999.7kbits/s speed=1.25x    frame= 1110 fps= 38 q=-0.0 size=   99328KiB time=00:00:36.96 bitrate=22011.6kbits/s speed=1.26x    frame= 1135 fps= 38 q=-0.0 size=  101376KiB time=00:00:37.80 bitrate=21970.2kbits/s speed=1.27x    frame= 1159 fps= 38 q=-0.0 size=  103680KiB time=00:00:38.60 bitrate=22003.8kbits/s speed=1.27x    frame= 1185 fps= 38 q=-0.0 size=  105984KiB time=00:00:39.46 bitrate=21998.9kbits/s speed=1.28x    frame= 1211 fps= 39 q=-0.0 size=  108032KiB time=00:00:40.33 bitrate=21942.1kbits/s speed=1.29x    frame= 1238 fps= 39 q=-0.0 size=  110592KiB time=00:00:41.23 bitrate=21971.8kbits/s speed=1.29x    frame= 1261 fps= 39 q=-0.0 size=  112640KiB time=00:00:42.00 bitrate=21970.2kbits/s speed= 1.3x    frame= 1283 fps= 39 q=-0.0 size=  114688KiB time=00:00:42.73 bitrate=21985.8kbits/s speed= 1.3x    frame= 1307 fps= 39 q=-0.0 size=  117248KiB time=00:00:43.53 bitrate=22063.5kbits/s speed=1.31x    frame= 1334 fps= 39 q=-0.0 size=  120064KiB time=00:00:44.43 bitrate=22135.7kbits/s speed=1.31x    frame= 1362 fps= 40 q=-0.0 size=  122368KiB time=00:00:45.36 bitrate=22096.4kbits/s speed=1.32x    frame= 1391 fps= 40 q=-0.0 size=  124928KiB time=00:00:46.33 bitrate=22088.0kbits/s speed=1.33x    frame= 1419 fps= 40 q=-0.0 size=  127232KiB time=00:00:47.26 bitrate=22051.2kbits/s speed=1.34x    frame= 1445 fps= 40 q=-0.0 size=  129792KiB time=00:00:48.13 bitrate=22089.8kbits/s speed=1.34x    frame= 1467 fps= 40 q=-0.0 size=  131328KiB time=00:00:48.86 bitrate=22015.8kbits/s speed=1.34x    frame= 1493 fps= 40 q=-0.0 size=  133632KiB time=00:00:49.73 bitrate=22011.7kbits/s speed=1.35x    frame= 1521 fps= 41 q=-0.0 size=  135936KiB time=00:00:50.66 bitrate=21978.7kbits/s speed=1.36x    frame= 1551 fps= 41 q=-0.0 size=  138752KiB time=00:00:51.66 bitrate=21999.8kbits/s speed=1.36x    frame= 1582 fps= 41 q=-0.0 size=  141568KiB time=00:00:52.70 bitrate=22006.2kbits/s speed=1.37x    frame= 1612 fps= 41 q=-0.0 size=  144384KiB time=00:00:53.70 bitrate=22026.0kbits/s speed=1.38x    frame= 1642 fps= 42 q=-0.0 size=  146944KiB time=00:00:54.70 bitrate=22006.7kbits/s speed=1.39x    frame= 1672 fps= 42 q=-0.0 size=  149760KiB time=00:00:55.70 bitrate=22025.8kbits/s speed= 1.4x    frame= 1688 fps= 42 q=-0.0 size=  151040KiB time=00:00:56.23 bitrate=22003.3kbits/s speed=1.39x    frame= 1709 fps= 42 q=-0.0 size=  152832KiB time=00:00:56.93 bitrate=21990.6kbits/s speed=1.39x    frame= 1717 fps= 41 q=-0.0 size=  153344KiB time=00:00:57.20 bitrate=21961.4kbits/s speed=1.38x    frame= 1726 fps= 41 q=-0.0 size=  154112KiB time=00:00:57.50 bitrate=21956.3kbits/s speed=1.37x    frame= 1736 fps= 41 q=-0.0 size=  154880KiB time=00:00:57.83 bitrate=21938.5kbits/s speed=1.36x    frame= 1747 fps= 41 q=-0.0 size=  156160KiB time=00:00:58.20 bitrate=21980.5kbits/s speed=1.36x    frame= 1770 fps= 41 q=-0.0 size=  158464KiB time=00:00:58.96 bitrate=22014.8kbits/s speed=1.36x    frame= 1805 fps= 41 q=-0.0 size=  161792KiB time=00:01:00.13 bitrate=22041.0kbits/s speed=1.37x    frame= 1842 fps= 41 q=-0.0 size=  164864KiB time=00:01:01.36 bitrate=22008.1kbits/s speed=1.38x    frame= 1880 fps= 42 q=-0.0 size=  167168KiB time=00:01:02.63 bitrate=21864.4kbits/s speed=1.39x    frame= 1909 fps= 42 q=-0.0 size=  169216KiB time=00:01:03.60 bitrate=21795.9kbits/s speed= 1.4x    frame= 1937 fps= 42 q=-0.0 size=  172288KiB time=00:01:04.53 bitrate=21870.6kbits/s speed= 1.4x    frame= 1968 fps= 42 q=-0.0 size=  175360KiB time=00:01:05.56 bitrate=21909.8kbits/s speed=1.41x    frame= 1996 fps= 42 q=-0.0 size=  177920KiB time=00:01:06.50 bitrate=21917.6kbits/s speed=1.42x    frame= 2025 fps= 43 q=-0.0 size=  180736KiB time=00:01:07.46 bitrate=21945.5kbits/s speed=1.42x    frame= 2058 fps= 43 q=-0.0 size=  183808KiB time=00:01:08.56 bitrate=21960.5kbits/s speed=1.43x    frame= 2091 fps= 43 q=-0.0 size=  186880KiB time=00:01:09.66 bitrate=21974.9kbits/s speed=1.44x    frame= 2123 fps= 43 q=-0.0 size=  189952KiB time=00:01:10.73 bitrate=21999.3kbits/s speed=1.44x    frame= 2149 fps= 43 q=-0.0 size=  192000KiB time=00:01:11.60 bitrate=21967.4kbits/s speed=1.45x    frame= 2190 fps= 44 q=-0.0 size=  193792KiB time=00:01:12.96 bitrate=21757.1kbits/s speed=1.46x    frame= 2230 fps= 44 q=-0.0 size=  195584KiB time=00:01:14.30 bitrate=21564.3kbits/s speed=1.47x    frame= 2278 fps= 45 q=-0.0 size=  197632KiB time=00:01:15.90 bitrate=21330.7kbits/s speed=1.49x    frame= 2300 fps= 45 q=-0.0 size=  198144KiB time=00:01:16.63 bitrate=21181.3kbits/s speed=1.49x    frame= 2348 fps= 45 q=-0.0 size=  200448KiB time=00:01:18.23 bitrate=20989.4kbits/s speed= 1.5x    frame= 2400 fps= 46 q=-0.0 size=  203008KiB time=00:01:19.96 bitrate=20796.7kbits/s speed=1.52x    [mp4 @ 0x12e8187f0] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x12e8186e0] video:203825KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.006795%
+frame= 2428 fps= 46 q=-0.0 Lsize=  203839KiB time=00:01:20.90 bitrate=20640.9kbits/s speed=1.53x    

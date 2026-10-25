@@ -1,3 +1,4 @@
+import {towerHoverOffset} from './tower-anatomy-motion';
 import {tileHeight,TILE_SIZE} from './arena';
 import {isEgg,isSkull,isSquid} from './enemy-kinds';
 import {legacyTowerGeometry,enemyRigScale} from './enemy-presentation';
@@ -13,7 +14,8 @@ export function enemyFloorHeight(e:Enemy,time:number){
 }
 export function constrainEnemyFloor(e:Enemy,time:number){
  if(isSquid(e.kind)){
-  const minimum=towerFloorHeight(e,time)-armorBottom(e)+TOWER_FLOOR_CLEARANCE;
+  const floating=e.balance&&!legacyTowerGeometry(e);
+  const minimum=towerFloorHeight(e,time)-armorBottom(e)+TOWER_FLOOR_CLEARANCE+(floating?towerHoverOffset(e.age,e.kind):0);
   if(e.balance&&!legacyTowerGeometry(e)||e.pos.y<minimum){e.pos.y=minimum;e.vel.y=Math.max(0,e.vel.y);}return;
  }
  // Pedes, thorns and perimeter spider entrances have intentional emergence.

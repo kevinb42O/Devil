@@ -12,8 +12,13 @@ const FUNCTIONS=/* glsl */`
 uniform vec3 eShell,eSecondary,eEdge,eMembrane,eBone,eMetal,eEye,eEnergy;
 uniform float eRough,eMetalness,eScale,eRelief,eHollow,eMarking,eTime,eHit;
 uniform float towerVeilAmount,towerCathedralLight,towerCathedralClosure;
+uniform vec3 eSkullFill,eSkullAccent;
+uniform float eSkullLightStrength,eSkullTier;
 varying vec3 vEnemyP,vEnemyObjectNormal;
 varying float vEnemyRegion;
+#if ENEMY_FAMILY == 7
+varying float vThornPhase;
+#endif
 float eHash(vec3 p){p=fract(p*.3183099+vec3(.17,.31,.73));p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
 float eNoise(vec3 p){
  vec3 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
@@ -81,6 +86,12 @@ float ridge=scales.y;
  albedo=mix(albedo,eSecondary*(.76+cloud*.27)*(1.-shield*.4),ventral);
  height+=scales.y*.42+ventral*(1.-shield)*.3;
  rough+=(1.-scales.x)*.14;
+ #ifdef DRAKE_DETAIL
+  // Broken scale lips catch the inner heat; broad hide remains dark.
+  float warmSeams=(1.-scales.x)*smoothstep(-.06,.08,ep.y);
+  emission=eEnergy*warmSeams*.13;
+  albedo=mix(albedo,eEdge,scales.y*.16);
+ #endif
 #elif ENEMY_FAMILY == 3 || ENEMY_FAMILY == 6
  // Folded wraith tissue with longitudinal capillaries and a pearlescent finish.
  float folds=sin(ep.y*74.+sin(ep.x*18.)*1.4+ep.z*31.);
@@ -126,7 +137,20 @@ float ridge=scales.y;
  albedo=mix(eShell*.55,eSecondary,cloud*.6)*(1.-cleft*.48);
  albedo*=.90+grain*.17;
  height+=strata*.13;rough=.27+cloud*.19;
- emission=eEnergy*cleft*smoothstep(.52,.76,cloud)*.18;
+ #if ENEMY_ROLE == 1
+ // Long, interrupted fissures follow each tapered spike. Derivative filtering
+ // keeps the narrow seams readable at distance without sparkling.
+ float angle=atan(ep.x,ep.z);
+ float fault=sin(angle*2.+sin(ep.y*17.+vThornPhase)*.31+ep.y*2.3+(eNoise(ep*vec3(14.,62.,14.))-.5)*.55);
+ float faultAA=max(fwidth(fault),.018);
+ float fracture=eLine(fault,.028,faultAA)*smoothstep(.40,.66,cloud);
+ float hotCore=eLine(fault,.008,faultAA*.65)*smoothstep(.57,.76,cloud);
+ float tipFade=1.-smoothstep(.43,.5,ep.y);
+ float breath=.90+.10*sin(eTime*1.65+vThornPhase);
+ float upward=pow(.5+.5*sin(ep.y*9.-eTime*1.15+vThornPhase),8.);
+ emission=(eEnergy*fracture*(.70+upward*.20)+vec3(1.,.48,.15)*hotCore*.38)*tipFade*breath;
+ albedo=mix(albedo,eEnergy*.16,fracture*.28);
+ #endif
 #endif
 // Actual imported material regions override the family shell finish.
 if(region>.5&&region<1.5){
@@ -144,16 +168,30 @@ if(region>.5&&region<1.5){
  albedo=eMembrane*(.70+cloud*.32)*(1.-veins*.35);
  albedo+=eEdge*(1.-veins)*.08;
  height=veins*.12+(grain-.5)*.012;rough=.46+veins*.16;metal=.16;
+ #ifdef DRAKE_DETAIL
+  // Continuous radial spars and finer cross veins belong to the membrane,
+  // in object coordinates, so the illumination follows every wing stroke.
+  float litSpar=pow(.5+.5*cos(angle*18.),96.);
+  float wingLight=litSpar*.36+crossVein*.075;
+  emission=eEnergy*wingLight*smoothstep(.12,.22,abs(ep.x));
+  albedo=mix(albedo,eEdge,veins*.30);rough=.54;
+ #endif
 }else if(region>2.5&&region<3.5){
  // Worn keratin: fine lengthwise grain and accumulated growth rings.
  float fibers=eNoise(ep*vec3(280.,17.,280.));
  float rings=pow(.5+.5*sin(ep.y*290.+cloud*4.),12.);
  albedo=eBone*(.64+cloud*.24+fibers*.10)*(.74+smoothstep(-.12,.36,ep.y)*.26)*(1.-rings*.13);
  height=fibers*.05-rings*.035;rough=.43+fibers*.14;metal=.02;
+ #ifdef DRAKE_DETAIL
+  albedo=mix(albedo,eBone,.25);rough=.35+fibers*.12;
+ #endif
 }else if(region>3.5&&region<4.5){
  albedo=eShell*.075;rough=.24;metal=.10;height=0.;emission=vec3(0.);
 }else if(region>4.5&&region<5.5){
  albedo=eEye*.32;rough=.14;metal=.20;height=0.;emission=eEye*(.75+cloud*.16);
+ #ifdef DRAKE_DETAIL
+  emission=eEye*.22;
+ #endif
 }else if(region>5.5&&region<6.5){
  albedo=vec3(.15,.028,.035)*(.75+cloud*.5);rough=.27;metal=.02;height=(grain-.5)*.04;
 }else if(region>6.5&&region<7.5){
@@ -196,8 +234,93 @@ if(eHollow>.5&&region<3.5){
  albedo=mix(albedo,eEdge*(.52+cloud*.23),.24);
  emission+=eEnergy*pow(.5+.5*sin(ep.y*87.+ep.x*29.+cloud*8.),24.)*.12;
 }
+#if defined(GIGAPEDE_ENAMEL) && ENEMY_ROLE == 1
+ // Broad cobalt enamel remains legible between the warm crystal windows.
+ // Brass belongs to the raised piping, rather than tinting every armor plate.
+ float enamelWear=smoothstep(.65,.88,cloud)*.12;
+ albedo=mix(eShell*(.84+cloud*.30),eEdge,enamelWear);
+ float enamelCourse=eLine(fract(ep.z*9.+abs(ep.x)*1.6)-.5,.014,.025);
+ albedo*=1.-enamelCourse*.16;
+ rough=.34+cloud*.10;metal=.34;
+ emission=eShell*.035;
+#endif
 #ifdef SERPENT_RECESS
  albedo=eShell*(.7+cloud*.3);rough=.48;metal=.15;height=(grain-.5)*.008;
+#endif
+#ifdef ORB_CORE
+ // Attached surface ribbons carry energy from the equator into both poles.
+ // A slower counterflow under the crust gives the red core a separate depth.
+ vec3 orbN=normalize(ep+vec3(.00001));
+ float orbLongitude=atan(orbN.z,orbN.x);
+ float orbLatitude=asin(clamp(orbN.y,-1.,1.));
+ float orbFlow=orbLongitude*14.+sin(orbLatitude*5.)*.5+sin(orbLatitude*13.+orbLongitude*2.)*.15;
+ float orbFault=sin(orbFlow);
+ float orbAA=max(fwidth(orbFault)*.7,.025);
+ float orbBand=eLine(orbFault,.035,orbAA);
+ float orbBreaks=.10+.90*smoothstep(.35,.65,eNoise(ep*vec3(29.,13.,29.)));
+ float orbSurge=pow(.5+.5*cos(abs(orbLatitude)*10.-eTime*2.8),12.);
+ float orbTravel=.48+orbSurge*1.55;
+ // Angular distance to a pole is continuous across the longitude seam.
+ // Keep angular detail outside the central well, where atan is singular.
+ float poleDistance=acos(clamp(abs(orbN.y),0.,1.));
+ float poleAA=max(fwidth(poleDistance)*.85,.006);
+ float poleWell=1.-smoothstep(.085,.155,poleDistance);
+ float poleZone=1.-smoothstep(.34,.64,poleDistance);
+ float ribbonLanding=smoothstep(.16,.42,poleDistance);
+ float orbBeat=.5+.5*sin(eTime*1.9);
+ float poleBreath=orbBeat*orbBeat*(3.-2.*orbBeat);
+ float poleWarp=(eNoise(orbN*19.)-.5)*.014;
+ float poleLip=exp(-pow((poleDistance+poleWarp-.177)/max(.010,poleAA*.65),2.));
+ float poleInnerLip=exp(-pow((poleDistance-.132)/max(.005,poleAA*.65),2.));
+ float poleEmbers=.72+.28*sin(orbLongitude*3.-poleDistance*24.+eTime*.7);
+ float polePhase=fract(eTime*.34);
+ float poleEnvelope=pow(sin(polePhase*3.14159265),2.);
+ float poleWave=exp(-pow((poleDistance-(.19+polePhase*.43))/max(.028,poleAA*1.5),2.))*poleEnvelope;
+ float poleWake=exp(-pow((poleDistance-(.16+polePhase*.43))/.09,2.))*poleEnvelope;
+ float orbPlasma=eNoise(ep*8.+vec3(sin(eTime*.28)*.6,eTime*.12,cos(eTime*.28)*.6));
+ float orbUndercurrent=pow(.5+.5*sin(orbLongitude*6.+orbLatitude*11.+orbPlasma*7.+eTime*.65),12.);
+ albedo=mix(eShell*.32,eSecondary*.45,cloud)*(.8+grain*.22);
+ // The matte well absorbs the scene highlight instead of becoming a white dot.
+ albedo=mix(albedo,eShell*.055,poleWell);
+ rough=mix(.40+cloud*.18,.86,poleZone);metal=mix(.18,.015,poleZone);
+ height=(grain-.5)*.025*(1.-poleZone);
+ emission=eEnergy*orbBand*orbBreaks*orbTravel*ribbonLanding*(.86+.14*poleBreath);
+ emission+=eEnergy*orbUndercurrent*.05*(1.-orbBand)*(1.-poleZone);
+ emission+=vec3(1.,.12,.018)*orbBand*orbBreaks*orbSurge*.20*ribbonLanding;
+ // A finite red lip encloses a black center. A broad wake supports the thin
+ // pulse front; neither uses a billboard, a white core or unresolved spokes.
+ emission+=eEnergy*(poleLip*(.24+.16*poleBreath)*poleEmbers+poleInnerLip*.025);
+ emission+=eEnergy*(poleWave*.10+poleWake*.025)*(1.-poleWell);
+
+#endif
+#ifdef SKULL_HORROR
+ // Aged bone and hammered funerary iron, without the old insect bands or
+ // regular diamond lattice. Thin branching fractures stay dark at distance.
+ float fractureField=sin(ep.y*23.+sin(ep.z*21.)*1.7+sin(ep.x*16.)*2.4);
+ float fissure=eLine(fractureField,.022,max(fwidth(fractureField)*.65,.018))*smoothstep(.43,.67,cloud);
+ if(region>2.5&&region<3.5){
+  float stain=eNoise(ep*vec3(17.,11.,23.));
+  albedo=eBone*(.54+cloud*.28+stain*.20);
+  float mineral=eNoise(ep*vec3(83.,31.,77.));
+  float cavities=smoothstep(.55,.80,stain)*(1.-smoothstep(.08,.22,ep.z));
+  albedo*=.83+mineral*.22;
+  albedo=mix(albedo,eSecondary*.40,cavities*.28+fissure*.20);
+  height=(mineral-.5)*.20+(grain-.5)*.08-fissure*.07;rough=.57+stain*.23;metal=.015;
+ }else if(region>6.5&&region<7.5){
+  float hammer=eNoise(ep*67.);
+  albedo=mix(eShell,eMetal,.22+cloud*.26)*(.64+hammer*.34);
+  float patina=smoothstep(.43,.73,eNoise(ep*vec3(23.,46.,31.)));
+  albedo=mix(albedo,eSecondary*.44,patina*.38);
+  albedo=mix(albedo,eSecondary*.35,fissure*.23);
+  height=(hammer-.5)*.12-fissure*.08;rough=.48+cloud*.16;metal=.62;
+ }
+ if(region>3.5&&region<4.5){rough=.94;metal=0.;}
+ if(region>4.5&&region<5.5){
+  float flow=.5+.5*sin(ep.y*29.-eTime*(eSkullTier<1.5?2.1:eSkullTier<2.5?1.5:2.8)+ep.x*17.);
+  float breath=.86+.14*sin(eTime*1.65+eSkullTier*2.);
+  emission=eEye*(.62+pow(flow,5.)*.72)*breath;
+  albedo=eEye*.16;
+ }
 #endif
 albedo*=.98+pores*.025*detailFade;
 diffuseColor.rgb=albedo;
@@ -213,27 +336,42 @@ normal=normalize(abs(eDet)*normal-eGradient*eRelief*eWorldScale*.6);
 `;
 
 export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,environment:EnvironmentLighting,time:{value:number},options:{green?:boolean;hit?:boolean}={}){
+ const horror=/^(skull[23]?|transmuted[123])$/.test(kind);
+ const drake=kind==='skull4'||kind==='transmuted4';
  const spider=kind==='spider'||kind==='spider2'||kind==='spiderling';
  const base=enemySurfaceProfile(kind),serpent=kind==='centipede'||kind==='gigapede'||kind==='ghostpede';
- const profile=serpent&&role==='body'?{...base,shell:0x101c21,secondary:0x192b2c,metalness:.12,roughness:.57}:base,p:EnemySurfaceProfile=options.green?{...profile,shell:spider?0x173a28:0x365129,edge:spider?0x60915a:0xceef94,energy:spider?0x4c843c:0x9bea52}:role==='jewel'?{...profile,shell:serpent?0x661e0b:0x8d481a,edge:serpent?0xffb85c:0xffd88a,energy:serpent?0xff772c:0xff9d43}:profile;
+ const profile=serpent&&role==='body'?{...base,shell:kind==='gigapede'?0x071125:0x101c21,secondary:kind==='gigapede'?0x132c55:0x192b2c,metalness:.12,roughness:.57}:base,p:EnemySurfaceProfile=options.green?{...profile,shell:spider?0x173a28:0x365129,edge:spider?0x60915a:0xceef94,energy:spider?0x4c843c:0x9bea52}:role==='jewel'?{...profile,shell:serpent?0x661e0b:0x8d481a,edge:serpent?0xffb85c:0xffd88a,energy:serpent?0xff772c:0xff9d43}:profile;
  const material=new THREE.MeshStandardMaterial({color:0xffffff,roughness:p.roughness,metalness:p.metalness,toneMapped:false});
+ if(kind==='orb')material.flatShading=false;
  material.name=`enemy-surface-${kind}-${role}${options.green?'-green':''}${options.hit?'-hit':''}`;
  material.userData.enemySurface={kind,role,description:p.description};
 
  const color=(hex:number)=>({value:new THREE.Color(hex)});
- const uniforms={eShell:color(p.shell),eSecondary:color(p.secondary),eEdge:color(p.edge),eMembrane:color(p.membrane),eBone:color(p.bone),eMetal:color(p.metal),eEye:color(p.eye),eEnergy:color(p.energy),eRough:{value:p.roughness},eMetalness:{value:p.metalness},eScale:{value:p.scale},eRelief:{value:p.relief},eHollow:{value:p.hollow?1:0},eMarking:{value:p.marking??0},eTime:time,eHit:{value:options.hit?1:0}};
+ const skullTier=horror?Number(kind.match(/[123]$/)?.[0]??1):0;
+ const skullLight={value:1};
+ if(horror)material.userData.skullLight=skullLight;
+ const skullAccent=kind.startsWith('transmuted')?p.eye:[0,0xff9955,0x72cfde,0xef4968][skullTier];
+ const skullFill=[0,0xe6d0ae,0xb3cfd6,0xbfb0d0][skullTier];
+ const uniforms={eSkullFill:color(skullFill),eSkullAccent:color(skullAccent),eSkullLightStrength:skullLight,eSkullTier:{value:skullTier},eShell:color(p.shell),eSecondary:color(p.secondary),eEdge:color(p.edge),eMembrane:color(p.membrane),eBone:color(p.bone),eMetal:color(p.metal),eEye:color(p.eye),eEnergy:color(p.energy),eRough:{value:p.roughness},eMetalness:{value:p.metalness},eScale:{value:p.scale},eRelief:{value:p.relief},eHollow:{value:p.hollow?1:0},eMarking:{value:p.marking??0},eTime:time,eHit:{value:options.hit?1:0}};
  material.onBeforeCompile=shader=>{
-  shader.fragmentShader=`${spider&&role==='jewel'?'#define SPIDER_CRYSTAL\n':''}${serpent?'#define SERPENT_ANATOMY\n':''}${serpent&&role==='body'?'#define SERPENT_RECESS\n':''}#define ENEMY_FAMILY ${FAMILIES.indexOf(p.family)}\n#define ENEMY_ROLE ${ROLES.indexOf(role)}\n`+shader.fragmentShader;
+  shader.fragmentShader=`${horror?'#define SKULL_HORROR\n':''}${kind==='gigapede'?'#define GIGAPEDE_ENAMEL\n':''}${kind==='orb'?'#define ORB_CORE\n':''}${drake?'#define DRAKE_DETAIL\n':''}${spider&&role==='jewel'?'#define SPIDER_CRYSTAL\n':''}${serpent?'#define SERPENT_ANATOMY\n':''}${serpent&&role==='body'?'#define SERPENT_RECESS\n':''}#define ENEMY_FAMILY ${FAMILIES.indexOf(p.family)}\n#define ENEMY_ROLE ${ROLES.indexOf(role)}\n`+shader.fragmentShader;
   Object.assign(shader.uniforms,environment.uniforms,uniforms);
   shader.vertexShader=shader.vertexShader.replace('#include <common>',`#include <common>
    attribute vec3 creatureCoord;attribute float creatureRegion;
    varying vec3 vEnemyP,vEnemyObjectNormal;varying float vEnemyRegion;
-   ${role==='body'?`attribute float motionWeight;uniform float eTime;${spider?'attribute vec4 spiderGait;':''}`:''}`)
+   ${kind==='thorn'?'varying float vThornPhase;':''}
+   ${role==='body'?`attribute float motionWeight;uniform float eTime;${spider?'attribute vec4 spiderGait;':''}
+   ${horror||drake?'#ifdef USE_INSTANCING\nattribute vec4 skullMotion;\n#endif':''}`:''}`)
    .replace('#include <begin_vertex>',`#include <begin_vertex>
     vEnemyP=creatureCoord;vEnemyObjectNormal=normal;vEnemyRegion=creatureRegion;
+    ${kind==='thorn'?`vThornPhase=dot(modelMatrix[3].xz,vec2(.73,.41));
+    #ifdef USE_INSTANCING
+    vThornPhase+=dot(instanceMatrix[3].xz,vec2(.73,.41));
+    #endif`:''}
     ${role==='body'?`float motionPhase=0.;
     #ifdef USE_INSTANCING
     motionPhase=instanceMatrix[3].x*.7+instanceMatrix[3].z*.4;
+    ${horror||drake?'motionPhase=skullMotion.x;':''}
     #endif
     ${spider?`
     float stride=eTime*${kind==='spiderling'?'19.':'3.6'}+motionPhase+spiderGait.w;
@@ -241,6 +379,12 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
     vec2 radial=transformed.xz-spiderGait.xy;
     transformed.xz=spiderGait.xy+mat2(cos(swing),sin(swing),-sin(swing),cos(swing))*radial;
     transformed.y+=max(0.,cos(stride))*.32*spiderGait.z*${kind==='spiderling'?'.16':kind==='spider2'?'3.3':'1.65'};
+    `:horror?`float skullEnergy=1.;vec2 skullFollow=vec2(0.);
+    #ifdef USE_INSTANCING
+    skullEnergy=.35+skullMotion.w*.65;skullFollow=skullMotion.yz;
+    #endif
+    transformed.y+=(sin(eTime*3.8+motionPhase+position.y*2.4)*.055*skullEnergy+skullFollow.y*.14)*motionWeight;
+    transformed.x+=(sin(eTime*2.7+motionPhase+position.y*3.)*.035*skullEnergy-skullFollow.x*.24)*motionWeight;
     `:'transformed.y+=sin(eTime*16.+motionPhase)*motionWeight*abs(position.x)*.32;'}`:''}`);
   shader.fragmentShader=shader.fragmentShader.replace('#include <common>','#include <common>\n'+FUNCTIONS+CATHEDRAL_LIGHT_GLSL+VEIL_RADIANCE)
    .replace('#include <color_fragment>','#include <color_fragment>\n'+COLOR)
@@ -252,6 +396,26 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
     // Creatures receive the same sky and spatial shafts as the arena and towers.
     vec3 enemyWorldPosition=cameraPosition-inverseTransformDirection(normalize(vViewPosition),viewMatrix)*length(vViewPosition);
     vec3 worldSurfaceNormal=inverseTransformDirection(normal,viewMatrix);
+    #ifdef SKULL_HORROR
+     // A fixed per-material fill and surface-bound inner light survive the
+     // unlit depths without adding a light, sprite or draw call per enemy.
+     // Sockets stay black; the bone, helm and tissue retain sculpted shading.
+     float skullRim=pow(1.-abs(dot(normal,normalize(vViewPosition))),3.);
+     // Light is embedded in the geometry's luminous channels, not projected
+     // from a virtual key or a point light. Keep a small neutral depth floor.
+     if(region<3.5||region>6.5){
+      reflectedLight.indirectDiffuse+=diffuseColor.rgb*.15*eSkullLightStrength;
+      reflectedLight.indirectSpecular+=eSkullAccent*skullRim*.045*eSkullLightStrength;
+     }
+    #endif
+    #if ENEMY_FAMILY == 7 && ENEMY_ROLE == 1
+     // Restrained cold facet sheen: broad directional reflection with only a
+     // little grazing light, so the spires retain dark faces and sharp tips.
+     vec3 thornEye=normalize(vViewPosition);
+     float thornRim=pow(1.-abs(dot(normal,thornEye)),3.);
+     float thornFacing=max(0.,dot(worldSurfaceNormal,normalize(vec3(-.45,.65,.5))));
+     reflectedLight.indirectSpecular+=vec3(.045,.075,.125)*(thornFacing*.55+thornRim*.32);
+    #endif
     if(towerVeilAmount>.001){
      vec3 enemySky=veilRadiance(normalize(worldSurfaceNormal+vec3(0.,.6,0.)),6.);
      reflectedLight.indirectDiffuse+=BRDF_Lambert(diffuseColor.rgb)*(1.-metalnessFactor)*enemySky*2.5*towerVeilAmount;
@@ -268,6 +432,11 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
    .replace('#include <emissivemap_fragment>',`#include <emissivemap_fragment>
     // Only authored eyes, veins and mineral cores emit light. Ordinary skin,
     // wings, bone and armor must be allowed to fall into shadow.
+    #ifdef DRAKE_DETAIL
+     // A low grazing sheen describes the silhouette, without billboard glows.
+     float drakeRim=pow(1.-abs(dot(normal,normalize(vViewPosition))),3.);
+     if(region<3.5)emission+=eEnergy*drakeRim*.10;
+    #endif
     totalEmissiveRadiance+=emission;`);
   if(spider){
    const start=shader.fragmentShader.indexOf(' // Cuticle has overlapping scutes');
@@ -286,7 +455,7 @@ export function createEnemySurfaceMaterial(kind:EnemyKind,role:EnemySurfaceRole,
    `+shader.fragmentShader.slice(end);
   }
  };
- material.customProgramCacheKey=()=>`enemy-authored-surfaces-v3-${p.family}-${role}-${spider?kind:serpent?'serpent':'standard'}`;
+ material.customProgramCacheKey=()=>`enemy-authored-surfaces-v7-${p.family}-${role}-${horror?'skull-horror':spider?kind:drake?'drake':kind==='gigapede'?'gigapede-enamel':serpent?'serpent':'standard'}`;
  return material;
 }
 

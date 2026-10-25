@@ -1,0 +1,33 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'artifacts/teaser-environments/edit/picture.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Duration: 00:01:20.93, start: 0.000000, bitrate: 20632 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(tv, bt709/unknown/unknown, progressive), 1920x1080, 20630 kb/s, SAR 1:1 DAR 16:9, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> h264 (h264_videotoolbox))
+Press [q] to stop, [?] for help
+Output #0, mp4, to 'artifacts/teaser-environments/edit/picture-fixed.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0(und): Video: h264 (avc1 / 0x31637661), yuv420p(tv, bt709/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 22000 kb/s, 30 fps, 15360 tbn (default)
+      Metadata:
+        handler_name    : VideoHandler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+frame=   58 fps=0.0 q=-0.0 size=    4864KiB time=00:00:01.90 bitrate=20971.7kbits/s speed=3.79x    frame=  160 fps=159 q=-0.0 size=   14592KiB time=00:00:05.30 bitrate=22554.3kbits/s speed=5.27x    frame=  262 fps=173 q=-0.0 size=   23552KiB time=00:00:08.70 bitrate=22176.8kbits/s speed=5.76x    frame=  365 fps=181 q=-0.0 size=   32768KiB time=00:00:12.13 bitrate=22123.8kbits/s speed=6.02x    frame=  467 fps=185 q=-0.0 size=   41216KiB time=00:00:15.53 bitrate=21736.6kbits/s speed=6.17x    frame=  569 fps=188 q=-0.0 size=   50944KiB time=00:00:18.93 bitrate=22042.3kbits/s speed=6.27x    frame=  673 fps=191 q=-0.0 size=   59904KiB time=00:00:22.40 bitrate=21907.8kbits/s speed=6.35x    frame=  773 fps=192 q=-0.0 size=   69376KiB time=00:00:25.73 bitrate=22085.3kbits/s speed=6.39x    frame=  876 fps=193 q=-0.0 size=   78848KiB time=00:00:29.16 bitrate=22145.9kbits/s speed=6.44x    frame=  978 fps=194 q=-0.0 size=   88064KiB time=00:00:32.56 bitrate=22152.1kbits/s speed=6.47x    frame= 1080 fps=195 q=-0.0 size=   96512KiB time=00:00:35.96 bitrate=21982.2kbits/s speed= 6.5x    frame= 1180 fps=195 q=-0.0 size=  104960KiB time=00:00:39.30 bitrate=21878.7kbits/s speed=6.51x    frame= 1281 fps=196 q=-0.0 size=  112896KiB time=00:00:42.66 bitrate=21676.0kbits/s speed=6.52x    frame= 1382 fps=196 q=-0.0 size=  123392KiB time=00:00:46.03 bitrate=21958.6kbits/s speed=6.53x    frame= 1483 fps=197 q=-0.0 size=  132096KiB time=00:00:49.40 bitrate=21905.5kbits/s speed=6.55x    frame= 1571 fps=195 q=-0.0 size=  139008KiB time=00:00:52.33 bitrate=21759.6kbits/s speed= 6.5x    frame= 1663 fps=194 q=-0.0 size=  147200KiB time=00:00:55.40 bitrate=21766.5kbits/s speed=6.48x    frame= 1746 fps=193 q=-0.0 size=  153600KiB time=00:00:58.16 bitrate=21632.5kbits/s speed=6.42x    frame= 1842 fps=193 q=-0.0 size=  162048KiB time=00:01:01.36 bitrate=21632.2kbits/s speed=6.41x    frame= 1929 fps=192 q=-0.0 size=  168960KiB time=00:01:04.26 bitrate=21537.1kbits/s speed=6.38x    frame= 2010 fps=190 q=-0.0 size=  177152KiB time=00:01:06.96 bitrate=21670.9kbits/s speed=6.33x    frame= 2089 fps=189 q=-0.0 size=  184064KiB time=00:01:09.60 bitrate=21664.5kbits/s speed=6.28x    frame= 2186 fps=189 q=-0.0 size=  191232KiB time=00:01:12.83 bitrate=21509.0kbits/s speed=6.29x    frame= 2288 fps=189 q=-0.0 size=  195584KiB time=00:01:16.23 bitrate=21017.4kbits/s speed=6.31x    frame= 2392 fps=190 q=-0.0 size=  199936KiB time=00:01:19.70 bitrate=20550.5kbits/s speed=6.33x    [mp4 @ 0x14b7052b0] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x14b7051d0] video:201139KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.006806%
+frame= 2430 fps=188 q=-0.0 Lsize=  201153KiB time=00:01:20.96 bitrate=20352.2kbits/s speed=6.26x    

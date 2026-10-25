@@ -1,0 +1,17 @@
+Input #0, image2pipe, from 'pipe:0':
+  Duration: N/A, bitrate: N/A
+  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1920x1080 [SAR 1:1 DAR 16:9], 30 fps, 30 tbr, 30 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (mjpeg (native) -> h264 (h264_videotoolbox))
+[swscaler @ 0x150008000] deprecated pixel format used, make sure you did set range correctly
+Output #0, mp4, to 'artifacts/teaser-environments/shots/09-light-and-limestone.mp4':
+  Metadata:
+    encoder         : Lavf61.7.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 24000 kb/s, 30 fps, 15360 tbn
+      Metadata:
+        encoder         : Lavc61.19.100 h264_videotoolbox
+      Side data:
+        ICC Profile
+frame=    8 fps=0.0 q=-0.0 size=     512KiB time=00:00:00.23 bitrate=17977.3kbits/s speed=0.462x    frame=   14 fps= 14 q=-0.0 size=    1280KiB time=00:00:00.43 bitrate=24198.8kbits/s speed=0.429x    frame=   21 fps= 14 q=-0.0 size=    2048KiB time=00:00:00.66 bitrate=25166.4kbits/s speed=0.44x    frame=   28 fps= 14 q=-0.0 size=    2816KiB time=00:00:00.90 bitrate=25632.3kbits/s speed=0.447x    frame=   34 fps= 13 q=-0.0 size=    3328KiB time=00:00:01.10 bitrate=24784.9kbits/s speed=0.437x    frame=   39 fps= 13 q=-0.0 size=    3840KiB time=00:00:01.26 bitrate=24835.0kbits/s speed=0.419x    frame=   46 fps= 13 q=-0.0 size=    4352KiB time=00:00:01.50 bitrate=23768.0kbits/s speed=0.426x    frame=   54 fps= 13 q=-0.0 size=    5376KiB time=00:00:01.76 bitrate=24928.6kbits/s speed=0.439x    frame=   64 fps= 14 q=-0.0 size=    6400KiB time=00:00:02.10 bitrate=24966.3kbits/s speed=0.464x    frame=   75 fps= 15 q=-0.0 size=    7424KiB time=00:00:02.46 bitrate=24655.9kbits/s speed=0.49x    frame=   87 fps= 16 q=-0.0 size=    8448KiB time=00:00:02.86 bitrate=24141.8kbits/s speed=0.518x    frame=   99 fps= 16 q=-0.0 size=    9728KiB time=00:00:03.26 bitrate=24395.6kbits/s speed=0.541x    frame=  110 fps= 17 q=-0.0 size=   10752KiB time=00:00:03.63 bitrate=24242.4kbits/s speed=0.556x    frame=  122 fps= 17 q=-0.0 size=   11776KiB time=00:00:04.03 bitrate=23918.0kbits/s speed=0.573x    frame=  133 fps= 18 q=-0.0 size=   12800KiB time=00:00:04.40 bitrate=23831.4kbits/s speed=0.583x    frame=  142 fps= 18 q=-0.0 size=   13568KiB time=00:00:04.70 bitrate=23648.8kbits/s speed=0.584x    frame=  150 fps= 18 q=-0.0 size=   14336KiB time=00:00:04.96 bitrate=23645.8kbits/s speed=0.58x    frame=  157 fps= 17 q=-0.0 size=   15104KiB time=00:00:05.20 bitrate=23794.7kbits/s speed=0.574x    frame=  165 fps= 17 q=-0.0 size=   15872KiB time=00:00:05.46 bitrate=23784.8kbits/s speed=0.571x    frame=  175 fps= 17 q=-0.0 size=   16896KiB time=00:00:05.80 bitrate=23864.2kbits/s speed=0.576x    frame=  184 fps= 17 q=-0.0 size=   17664KiB time=00:00:06.10 bitrate=23721.9kbits/s speed=0.577x    frame=  192 fps= 17 q=-0.0 size=   18432KiB time=00:00:06.36 bitrate=23716.5kbits/s speed=0.575x    frame=  199 fps= 17 q=-0.0 size=   18944KiB time=00:00:06.60 bitrate=23513.6kbits/s speed=0.57x    [mp4 @ 0x143f13790] Starting second pass: moving the moov atom to the beginning of the file
+[out#0/mp4 @ 0x143f13630] video:19940KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.012043%
+frame=  210 fps= 18 q=-0.0 Lsize=   19942KiB time=00:00:06.96 bitrate=23449.6kbits/s speed=0.595x    

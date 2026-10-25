@@ -1,0 +1,7278 @@
+{
+  "duration": 23,
+  "frames": 552,
+  "fps": 24,
+  "segments": [
+    {
+      "start": 478,
+      "end": 501,
+      "speed": 1,
+      "at": 0
+    }
+  ],
+  "output": "artifacts/ascent/ascent-real-time.mp4",
+  "mix": [
+    {
+      "time": 0,
+      "gameTime": 478,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.041666666666666664,
+      "gameTime": 478.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.08333333333333333,
+      "gameTime": 478.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.125,
+      "gameTime": 478.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.16666666666666666,
+      "gameTime": 478.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.20833333333333334,
+      "gameTime": 478.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.25,
+      "gameTime": 478.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.2916666666666667,
+      "gameTime": 478.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.3333333333333333,
+      "gameTime": 478.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.375,
+      "gameTime": 478.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.4166666666666667,
+      "gameTime": 478.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.4583333333333333,
+      "gameTime": 478.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.5,
+      "gameTime": 478.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.5416666666666666,
+      "gameTime": 478.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.5833333333333334,
+      "gameTime": 478.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.625,
+      "gameTime": 478.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.6666666666666666,
+      "gameTime": 478.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.7083333333333334,
+      "gameTime": 478.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.75,
+      "gameTime": 478.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.7916666666666666,
+      "gameTime": 478.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.8333333333333334,
+      "gameTime": 478.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.875,
+      "gameTime": 478.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.9166666666666666,
+      "gameTime": 478.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 0.9583333333333334,
+      "gameTime": 478.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1,
+      "gameTime": 479,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.0416666666666667,
+      "gameTime": 479.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.0833333333333333,
+      "gameTime": 479.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.125,
+      "gameTime": 479.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.1666666666666667,
+      "gameTime": 479.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.2083333333333333,
+      "gameTime": 479.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.25,
+      "gameTime": 479.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.2916666666666667,
+      "gameTime": 479.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.3333333333333333,
+      "gameTime": 479.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.375,
+      "gameTime": 479.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.4166666666666667,
+      "gameTime": 479.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.4583333333333333,
+      "gameTime": 479.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.5,
+      "gameTime": 479.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.5416666666666667,
+      "gameTime": 479.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.5833333333333333,
+      "gameTime": 479.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.625,
+      "gameTime": 479.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.6666666666666667,
+      "gameTime": 479.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.7083333333333333,
+      "gameTime": 479.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.75,
+      "gameTime": 479.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.7916666666666667,
+      "gameTime": 479.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.8333333333333333,
+      "gameTime": 479.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.875,
+      "gameTime": 479.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.9166666666666667,
+      "gameTime": 479.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 1.9583333333333333,
+      "gameTime": 479.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2,
+      "gameTime": 480,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.0416666666666665,
+      "gameTime": 480.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.0833333333333335,
+      "gameTime": 480.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.125,
+      "gameTime": 480.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.1666666666666665,
+      "gameTime": 480.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.2083333333333335,
+      "gameTime": 480.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.25,
+      "gameTime": 480.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.2916666666666665,
+      "gameTime": 480.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.3333333333333335,
+      "gameTime": 480.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.375,
+      "gameTime": 480.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.4166666666666665,
+      "gameTime": 480.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.4583333333333335,
+      "gameTime": 480.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.5,
+      "gameTime": 480.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.5416666666666665,
+      "gameTime": 480.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.5833333333333335,
+      "gameTime": 480.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.625,
+      "gameTime": 480.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.6666666666666665,
+      "gameTime": 480.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.7083333333333335,
+      "gameTime": 480.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.75,
+      "gameTime": 480.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.7916666666666665,
+      "gameTime": 480.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.8333333333333335,
+      "gameTime": 480.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.875,
+      "gameTime": 480.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.9166666666666665,
+      "gameTime": 480.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 2.9583333333333335,
+      "gameTime": 480.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3,
+      "gameTime": 481,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.0416666666666665,
+      "gameTime": 481.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.0833333333333335,
+      "gameTime": 481.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.125,
+      "gameTime": 481.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.1666666666666665,
+      "gameTime": 481.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.2083333333333335,
+      "gameTime": 481.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.25,
+      "gameTime": 481.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.2916666666666665,
+      "gameTime": 481.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.3333333333333335,
+      "gameTime": 481.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.375,
+      "gameTime": 481.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.4166666666666665,
+      "gameTime": 481.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.4583333333333335,
+      "gameTime": 481.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.5,
+      "gameTime": 481.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.5416666666666665,
+      "gameTime": 481.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.5833333333333335,
+      "gameTime": 481.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.625,
+      "gameTime": 481.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.6666666666666665,
+      "gameTime": 481.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.7083333333333335,
+      "gameTime": 481.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.75,
+      "gameTime": 481.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.7916666666666665,
+      "gameTime": 481.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.8333333333333335,
+      "gameTime": 481.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.875,
+      "gameTime": 481.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.9166666666666665,
+      "gameTime": 481.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 3.9583333333333335,
+      "gameTime": 481.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4,
+      "gameTime": 482,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.041666666666667,
+      "gameTime": 482.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.083333333333333,
+      "gameTime": 482.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.125,
+      "gameTime": 482.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.166666666666667,
+      "gameTime": 482.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.208333333333333,
+      "gameTime": 482.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.25,
+      "gameTime": 482.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.291666666666667,
+      "gameTime": 482.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.333333333333333,
+      "gameTime": 482.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.375,
+      "gameTime": 482.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.416666666666667,
+      "gameTime": 482.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.458333333333333,
+      "gameTime": 482.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.5,
+      "gameTime": 482.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.541666666666667,
+      "gameTime": 482.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.583333333333333,
+      "gameTime": 482.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.625,
+      "gameTime": 482.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.666666666666667,
+      "gameTime": 482.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.708333333333333,
+      "gameTime": 482.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.75,
+      "gameTime": 482.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.791666666666667,
+      "gameTime": 482.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.833333333333333,
+      "gameTime": 482.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.875,
+      "gameTime": 482.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.916666666666667,
+      "gameTime": 482.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 4.958333333333333,
+      "gameTime": 482.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5,
+      "gameTime": 483,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.041666666666667,
+      "gameTime": 483.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.083333333333333,
+      "gameTime": 483.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.125,
+      "gameTime": 483.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.166666666666667,
+      "gameTime": 483.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.208333333333333,
+      "gameTime": 483.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.25,
+      "gameTime": 483.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.291666666666667,
+      "gameTime": 483.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.333333333333333,
+      "gameTime": 483.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.375,
+      "gameTime": 483.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.416666666666667,
+      "gameTime": 483.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.458333333333333,
+      "gameTime": 483.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.5,
+      "gameTime": 483.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.541666666666667,
+      "gameTime": 483.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.583333333333333,
+      "gameTime": 483.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.625,
+      "gameTime": 483.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.666666666666667,
+      "gameTime": 483.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.708333333333333,
+      "gameTime": 483.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.75,
+      "gameTime": 483.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.791666666666667,
+      "gameTime": 483.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.833333333333333,
+      "gameTime": 483.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.875,
+      "gameTime": 483.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.916666666666667,
+      "gameTime": 483.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 5.958333333333333,
+      "gameTime": 483.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6,
+      "gameTime": 484,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.041666666666667,
+      "gameTime": 484.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.083333333333333,
+      "gameTime": 484.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.125,
+      "gameTime": 484.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.166666666666667,
+      "gameTime": 484.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.208333333333333,
+      "gameTime": 484.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.25,
+      "gameTime": 484.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.291666666666667,
+      "gameTime": 484.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.333333333333333,
+      "gameTime": 484.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.375,
+      "gameTime": 484.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.416666666666667,
+      "gameTime": 484.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.458333333333333,
+      "gameTime": 484.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.5,
+      "gameTime": 484.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.541666666666667,
+      "gameTime": 484.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.583333333333333,
+      "gameTime": 484.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.625,
+      "gameTime": 484.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.666666666666667,
+      "gameTime": 484.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.708333333333333,
+      "gameTime": 484.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.75,
+      "gameTime": 484.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.791666666666667,
+      "gameTime": 484.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.833333333333333,
+      "gameTime": 484.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.875,
+      "gameTime": 484.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.916666666666667,
+      "gameTime": 484.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 6.958333333333333,
+      "gameTime": 484.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7,
+      "gameTime": 485,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.041666666666667,
+      "gameTime": 485.0416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.083333333333333,
+      "gameTime": 485.0833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.125,
+      "gameTime": 485.125,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.166666666666667,
+      "gameTime": 485.1666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.208333333333333,
+      "gameTime": 485.2083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.25,
+      "gameTime": 485.25,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.291666666666667,
+      "gameTime": 485.2916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.333333333333333,
+      "gameTime": 485.3333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.375,
+      "gameTime": 485.375,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.416666666666667,
+      "gameTime": 485.4166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.458333333333333,
+      "gameTime": 485.4583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.5,
+      "gameTime": 485.5,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.541666666666667,
+      "gameTime": 485.5416666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.583333333333333,
+      "gameTime": 485.5833333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.625,
+      "gameTime": 485.625,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.666666666666667,
+      "gameTime": 485.6666666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.708333333333333,
+      "gameTime": 485.7083333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.75,
+      "gameTime": 485.75,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.791666666666667,
+      "gameTime": 485.7916666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.833333333333333,
+      "gameTime": 485.8333333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.875,
+      "gameTime": 485.875,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.916666666666667,
+      "gameTime": 485.9166666666667,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 7.958333333333333,
+      "gameTime": 485.9583333333333,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8,
+      "gameTime": 486,
+      "beds": [
+        {
+          "name": "depth",
+          "weight": 1,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.041666666666666,
+      "gameTime": 486.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0003232602719910337,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.999676739728009,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.083333333333334,
+      "gameTime": 486.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0012839988425920128,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.998716001157408,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.125,
+      "gameTime": 486.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.00286865234375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.99713134765625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.166666666666666,
+      "gameTime": 486.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.005063657407408543,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9949363425925914,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.208333333333334,
+      "gameTime": 486.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.007855450665507855,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9921445493344921,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.25,
+      "gameTime": 486.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.01123046875,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.98876953125,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.291666666666666,
+      "gameTime": 486.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.015175148292825996,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.984824851707174,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.333333333333334,
+      "gameTime": 486.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.019675925925923755,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9803240740740763,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.375,
+      "gameTime": 486.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.02471923828125,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.97528076171875,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.416666666666666,
+      "gameTime": 486.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.030291521990743392,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9697084780092566,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.458333333333334,
+      "gameTime": 486.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.03637921368633971,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9636207863136603,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.5,
+      "gameTime": 486.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.04296875,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.95703125,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.541666666666666,
+      "gameTime": 486.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.050046567563660736,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9499534324363392,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.583333333333334,
+      "gameTime": 486.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.05759910300925572,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9424008969907443,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.625,
+      "gameTime": 486.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.06561279296875,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.93438720703125,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.666666666666666,
+      "gameTime": 486.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.07407407407407803,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9259259259259219,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.708333333333334,
+      "gameTime": 486.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0829693829571718,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.9170306170428282,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.75,
+      "gameTime": 486.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.09228515625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.90771484375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.791666666666666,
+      "gameTime": 486.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.10200783058449525,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.8979921694155047,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.833333333333334,
+      "gameTime": 486.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.11212384259258791,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.8878761574074121,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.875,
+      "gameTime": 486.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.12261962890625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.87738037109375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.916666666666666,
+      "gameTime": 486.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.13348162615741244,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.8665183738425876,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 8.958333333333334,
+      "gameTime": 486.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.14469627097800408,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.8553037290219959,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9,
+      "gameTime": 487,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.15625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.84375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.041666666666666,
+      "gameTime": 487.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.16812924985532957,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.8318707501446705,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.083333333333334,
+      "gameTime": 487.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.18032045717592032,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.8196795428240797,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.125,
+      "gameTime": 487.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.19281005859375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.80718994140625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.166666666666666,
+      "gameTime": 487.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.2055844907407466,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.7944155092592534,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.208333333333334,
+      "gameTime": 487.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.2186301902488366,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.7813698097511634,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.25,
+      "gameTime": 487.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.23193359375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.76806640625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.291666666666666,
+      "gameTime": 487.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.24548113787616363,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.7545188621238363,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.333333333333334,
+      "gameTime": 487.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.25925925925925297,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.740740740740747,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.375,
+      "gameTime": 487.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.27325439453125,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.72674560546875,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.416666666666666,
+      "gameTime": 487.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.28745298032408056,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.7125470196759194,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.458333333333334,
+      "gameTime": 487.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3018414532696693,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.6981585467303306,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.5,
+      "gameTime": 487.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.31640625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.68359375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.541666666666666,
+      "gameTime": 487.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.33113380714699747,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.6688661928530025,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.583333333333334,
+      "gameTime": 487.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3460105613425858,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.6539894386574142,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.625,
+      "gameTime": 487.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.36102294921875,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.63897705078125,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.666666666666666,
+      "gameTime": 487.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.37615740740741427,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.6238425925925857,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.708333333333334,
+      "gameTime": 487.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3914003725405023,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.6085996274594977,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.75,
+      "gameTime": 487.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.40673828125,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.59326171875,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.791666666666666,
+      "gameTime": 487.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.42215757016783106,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.5778424298321689,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.833333333333334,
+      "gameTime": 487.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.4376446759259188,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.5623553240740812,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.875,
+      "gameTime": 487.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.45318603515625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.54681396484375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.916666666666666,
+      "gameTime": 487.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.4687680844907478,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.5312319155092522,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 9.958333333333334,
+      "gameTime": 487.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.48437726056133545,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.5156227394386645,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10,
+      "gameTime": 488,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.5,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.041666666666666,
+      "gameTime": 488.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5156227394386644,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.48437726056133557,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.083333333333334,
+      "gameTime": 488.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5312319155092522,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.4687680844907478,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.125,
+      "gameTime": 488.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.54681396484375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.45318603515625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.166666666666666,
+      "gameTime": 488.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5623553240740811,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.43764467592591894,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.208333333333334,
+      "gameTime": 488.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5778424298321688,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.4221575701678312,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.25,
+      "gameTime": 488.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.59326171875,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.40673828125,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.291666666666666,
+      "gameTime": 488.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6085996274594977,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.3914003725405023,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.333333333333334,
+      "gameTime": 488.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6238425925925857,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.3761574074074143,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.375,
+      "gameTime": 488.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.63897705078125,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.36102294921875,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.416666666666666,
+      "gameTime": 488.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6539894386574142,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.3460105613425858,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.458333333333334,
+      "gameTime": 488.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6688661928530025,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.33113380714699747,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.5,
+      "gameTime": 488.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.68359375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.31640625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.541666666666666,
+      "gameTime": 488.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6981585467303306,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.3018414532696694,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.583333333333334,
+      "gameTime": 488.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7125470196759194,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.2874529803240806,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.625,
+      "gameTime": 488.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.72674560546875,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.27325439453125,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.666666666666666,
+      "gameTime": 488.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.740740740740747,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.25925925925925297,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.708333333333334,
+      "gameTime": 488.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7545188621238363,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.24548113787616366,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.75,
+      "gameTime": 488.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.76806640625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.23193359375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.791666666666666,
+      "gameTime": 488.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7813698097511633,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.21863019024883668,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.833333333333334,
+      "gameTime": 488.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7944155092592534,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.20558449074074658,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.875,
+      "gameTime": 488.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.80718994140625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.19281005859375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.916666666666666,
+      "gameTime": 488.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8196795428240796,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.18032045717592038,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 10.958333333333334,
+      "gameTime": 488.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8318707501446704,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.16812924985532962,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11,
+      "gameTime": 489,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.84375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.15625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.041666666666666,
+      "gameTime": 489.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8553037290219959,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.14469627097800408,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.083333333333334,
+      "gameTime": 489.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8665183738425876,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.13348162615741244,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.125,
+      "gameTime": 489.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.87738037109375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.12261962890625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.166666666666666,
+      "gameTime": 489.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8878761574074121,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.1121238425925879,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.208333333333334,
+      "gameTime": 489.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8979921694155047,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.10200783058449525,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.25,
+      "gameTime": 489.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.90771484375,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.09228515625,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.291666666666666,
+      "gameTime": 489.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9170306170428282,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.08296938295717182,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.333333333333334,
+      "gameTime": 489.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9259259259259219,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.07407407407407807,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.375,
+      "gameTime": 489.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.93438720703125,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.06561279296875,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.416666666666666,
+      "gameTime": 489.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9424008969907443,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.05759910300925575,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.458333333333334,
+      "gameTime": 489.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9499534324363392,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.05004656756366077,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.5,
+      "gameTime": 489.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.95703125,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.04296875,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.541666666666666,
+      "gameTime": 489.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9636207863136603,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.03637921368633967,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.583333333333334,
+      "gameTime": 489.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9697084780092566,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.030291521990743364,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.625,
+      "gameTime": 489.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.97528076171875,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.02471923828125,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.666666666666666,
+      "gameTime": 489.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9803240740740762,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.01967592592592382,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.708333333333334,
+      "gameTime": 489.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.984824851707174,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.015175148292825957,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.75,
+      "gameTime": 489.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.98876953125,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.01123046875,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.791666666666666,
+      "gameTime": 489.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9921445493344921,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.007855450665507857,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.833333333333334,
+      "gameTime": 489.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9949363425925914,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.0050636574074085505,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.875,
+      "gameTime": 489.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.99713134765625,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.00286865234375,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.916666666666666,
+      "gameTime": 489.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.998716001157408,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.0012839988425920046,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 11.958333333333334,
+      "gameTime": 489.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.999676739728009,
+          "origin": 482
+        },
+        {
+          "name": "depth",
+          "weight": 0.0003232602719910327,
+          "origin": 454
+        }
+      ]
+    },
+    {
+      "time": 12,
+      "gameTime": 490,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.041666666666666,
+      "gameTime": 490.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.083333333333334,
+      "gameTime": 490.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.125,
+      "gameTime": 490.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.166666666666666,
+      "gameTime": 490.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.208333333333334,
+      "gameTime": 490.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.25,
+      "gameTime": 490.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.291666666666666,
+      "gameTime": 490.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.333333333333334,
+      "gameTime": 490.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.375,
+      "gameTime": 490.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.416666666666666,
+      "gameTime": 490.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.458333333333334,
+      "gameTime": 490.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.5,
+      "gameTime": 490.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.541666666666666,
+      "gameTime": 490.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.583333333333334,
+      "gameTime": 490.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.625,
+      "gameTime": 490.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.666666666666666,
+      "gameTime": 490.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.708333333333334,
+      "gameTime": 490.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.75,
+      "gameTime": 490.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.791666666666666,
+      "gameTime": 490.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.833333333333334,
+      "gameTime": 490.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.875,
+      "gameTime": 490.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.916666666666666,
+      "gameTime": 490.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 12.958333333333334,
+      "gameTime": 490.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13,
+      "gameTime": 491,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.041666666666666,
+      "gameTime": 491.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.083333333333334,
+      "gameTime": 491.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.125,
+      "gameTime": 491.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.166666666666666,
+      "gameTime": 491.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.208333333333334,
+      "gameTime": 491.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.25,
+      "gameTime": 491.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.291666666666666,
+      "gameTime": 491.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.333333333333334,
+      "gameTime": 491.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.375,
+      "gameTime": 491.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.416666666666666,
+      "gameTime": 491.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.458333333333334,
+      "gameTime": 491.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.5,
+      "gameTime": 491.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.541666666666666,
+      "gameTime": 491.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.583333333333334,
+      "gameTime": 491.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.625,
+      "gameTime": 491.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.666666666666666,
+      "gameTime": 491.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.708333333333334,
+      "gameTime": 491.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.75,
+      "gameTime": 491.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.791666666666666,
+      "gameTime": 491.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.833333333333334,
+      "gameTime": 491.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.875,
+      "gameTime": 491.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.916666666666666,
+      "gameTime": 491.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 13.958333333333334,
+      "gameTime": 491.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 14,
+      "gameTime": 492,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 1,
+          "origin": 482
+        }
+      ]
+    },
+    {
+      "time": 14.041666666666666,
+      "gameTime": 492.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9998559938700273,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.00014400612997269582,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.083333333333334,
+      "gameTime": 492.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9994266546639234,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.000573345336076558,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.125,
+      "gameTime": 492.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9987160011574074,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.0012839988425925927,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.166666666666666,
+      "gameTime": 492.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9977280521261997,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.0022719478738002373,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.208333333333334,
+      "gameTime": 492.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9964668263460226,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.003533173653977418,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.25,
+      "gameTime": 492.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9949363425925926,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.0050636574074074065,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.291666666666666,
+      "gameTime": 492.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9931406196416315,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.006859380358368503,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.333333333333334,
+      "gameTime": 492.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9910836762688624,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.00891632373113755,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.375,
+      "gameTime": 492.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.98876953125,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.01123046875,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.416666666666666,
+      "gameTime": 492.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9862022033607669,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.013797796639233048,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.458333333333334,
+      "gameTime": 492.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9833857113768875,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.016614288623112518,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.5,
+      "gameTime": 492.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9803240740740741,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.019675925925925927,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.541666666666666,
+      "gameTime": 492.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9770213102280506,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.022978689771949428,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.583333333333334,
+      "gameTime": 492.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9734814386145422,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.026518561385457867,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.625,
+      "gameTime": 492.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9697084780092593,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.03029152199074074,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.666666666666666,
+      "gameTime": 492.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9657064471879268,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.034293552812073205,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.708333333333334,
+      "gameTime": 492.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9614793649262708,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.038520635073729166,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.75,
+      "gameTime": 492.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.95703125,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.04296875,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.791666666666666,
+      "gameTime": 492.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9523661211848401,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.04763387881515993,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.833333333333334,
+      "gameTime": 492.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.947487997256518,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.05251200274348195,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.875,
+      "gameTime": 492.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9424008969907407,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.05759910300925927,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.916666666666666,
+      "gameTime": 492.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9371088391632348,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.06289116083676513,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 14.958333333333334,
+      "gameTime": 492.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9316158425497282,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.0683841574502718,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15,
+      "gameTime": 493,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9259259259259259,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.07407407407407407,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.041666666666666,
+      "gameTime": 493.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9200431080675556,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.07995689193244442,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.083333333333334,
+      "gameTime": 493.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9139714077503458,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.08602859224965424,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.125,
+      "gameTime": 493.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.90771484375,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.09228515625,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.166666666666666,
+      "gameTime": 493.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.9012774348422466,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.09872256515775332,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.208333333333334,
+      "gameTime": 493.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8946631998028152,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.10533680019718487,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.25,
+      "gameTime": 493.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8878761574074074,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.11212384259259262,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.291666666666666,
+      "gameTime": 493.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8809203264317527,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.11907967356824735,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.333333333333334,
+      "gameTime": 493.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8737997256515808,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.12620027434841924,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.375,
+      "gameTime": 493.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8665183738425926,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.13348162615740738,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.416666666666666,
+      "gameTime": 493.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8590802897805179,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.14091971021948216,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.458333333333334,
+      "gameTime": 493.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8514894922410872,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.1485105077589128,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.5,
+      "gameTime": 493.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.84375,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.15625,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.541666666666666,
+      "gameTime": 493.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8358658318329868,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.1641341681670132,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.583333333333334,
+      "gameTime": 493.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8278410065157787,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.17215899348422128,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.625,
+      "gameTime": 493.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8196795428240741,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.1803204571759259,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.666666666666666,
+      "gameTime": 493.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8113854595336039,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.1886145404663961,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.708333333333334,
+      "gameTime": 493.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.8029627754200999,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.1970372245799001,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.75,
+      "gameTime": 493.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7944155092592592,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.20558449074074078,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.791666666666666,
+      "gameTime": 493.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7857476798268136,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.21425232017318643,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.833333333333334,
+      "gameTime": 493.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.776963305898495,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.22303669410150492,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.875,
+      "gameTime": 493.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.76806640625,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.23193359375,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.916666666666666,
+      "gameTime": 493.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7590609996570603,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.24093900034293964,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 15.958333333333334,
+      "gameTime": 493.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7499511048954088,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.25004889510459116,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16,
+      "gameTime": 494,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7407407407407407,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.25925925925925924,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.041666666666668,
+      "gameTime": 494.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7314339259687885,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.2685660740312114,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.083333333333332,
+      "gameTime": 494.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7220346793552855,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.27796532064471446,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.125,
+      "gameTime": 494.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7125470196759259,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.28745298032407407,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.166666666666668,
+      "gameTime": 494.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.7029749657064428,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.29702503429355714,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.208333333333332,
+      "gameTime": 494.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6933225362225695,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.3066774637774305,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.25,
+      "gameTime": 494.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.68359375,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.31640625,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.291666666666668,
+      "gameTime": 494.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6737926258144674,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.3262073741855326,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.333333333333332,
+      "gameTime": 494.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6639231824417056,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.3360768175582945,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.375,
+      "gameTime": 494.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6539894386574074,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.34601056134259256,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.416666666666668,
+      "gameTime": 494.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6439954132373068,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.3560045867626932,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.458333333333332,
+      "gameTime": 494.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6339451249571377,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.3660548750428623,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.5,
+      "gameTime": 494.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6238425925925926,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.37615740740740744,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.541666666666668,
+      "gameTime": 494.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6136918349194056,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.38630816508059446,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.583333333333332,
+      "gameTime": 494.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.6034968707133106,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.39650312928668946,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.625,
+      "gameTime": 494.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.59326171875,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.40673828125,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.666666666666668,
+      "gameTime": 494.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.582990397805208,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.41700960219479205,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.708333333333332,
+      "gameTime": 494.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5726869266546686,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.42731307334533136,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.75,
+      "gameTime": 494.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5623553240740741,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.43764467592592593,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.791666666666668,
+      "gameTime": 494.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5519996088391586,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.44800039116084145,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.833333333333332,
+      "gameTime": 494.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5416237997256563,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.45837620027434367,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.875,
+      "gameTime": 494.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5312319155092593,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.46876808449074076,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.916666666666668,
+      "gameTime": 494.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5208279749657017,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.4791720250342983,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 16.958333333333332,
+      "gameTime": 494.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.510415996870718,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.48958400312928196,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17,
+      "gameTime": 495,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.5,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.5,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.041666666666668,
+      "gameTime": 495.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.48958400312928196,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.510415996870718,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.083333333333332,
+      "gameTime": 495.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.47917202503429823,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.5208279749657018,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.125,
+      "gameTime": 495.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.4687680844907407,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.5312319155092593,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.166666666666668,
+      "gameTime": 495.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.4583762002743438,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.5416237997256562,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.208333333333332,
+      "gameTime": 495.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.44800039116084145,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.5519996088391586,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.25,
+      "gameTime": 495.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.43764467592592604,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.562355324074074,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.291666666666668,
+      "gameTime": 495.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.4273130733453313,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.5726869266546687,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.333333333333332,
+      "gameTime": 495.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.4170096021947921,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.5829903978052079,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.375,
+      "gameTime": 495.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.40673828125,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.59326171875,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.416666666666668,
+      "gameTime": 495.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3965031292866894,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6034968707133106,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.458333333333332,
+      "gameTime": 495.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3863081650805944,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6136918349194056,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.5,
+      "gameTime": 495.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.37615740740740733,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6238425925925927,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.541666666666668,
+      "gameTime": 495.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3660548750428625,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6339451249571375,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.583333333333332,
+      "gameTime": 495.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3560045867626931,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6439954132373069,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.625,
+      "gameTime": 495.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.34601056134259267,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6539894386574073,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.666666666666668,
+      "gameTime": 495.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.33607681755829455,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6639231824417055,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.708333333333332,
+      "gameTime": 495.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3262073741855326,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6737926258144674,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.75,
+      "gameTime": 495.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.31640625,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.68359375,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.791666666666668,
+      "gameTime": 495.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.3066774637774303,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.6933225362225697,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.833333333333332,
+      "gameTime": 495.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.2970250342935572,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7029749657064428,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.875,
+      "gameTime": 495.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.28745298032407407,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7125470196759259,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.916666666666668,
+      "gameTime": 495.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.27796532064471446,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7220346793552855,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 17.958333333333332,
+      "gameTime": 495.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.26856607403121135,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7314339259687886,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18,
+      "gameTime": 496,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.2592592592592593,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7407407407407407,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.041666666666668,
+      "gameTime": 496.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.25004889510459116,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7499511048954088,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.083333333333332,
+      "gameTime": 496.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.2409390003429397,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7590609996570603,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.125,
+      "gameTime": 496.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.23193359375,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.76806640625,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.166666666666668,
+      "gameTime": 496.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.22303669410150484,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7769633058984952,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.208333333333332,
+      "gameTime": 496.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.2142523201731864,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7857476798268136,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.25,
+      "gameTime": 496.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.2055844907407407,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.7944155092592593,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.291666666666668,
+      "gameTime": 496.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.19703722457990014,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8029627754200999,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.333333333333332,
+      "gameTime": 496.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.18861454046639603,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.811385459533604,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.375,
+      "gameTime": 496.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.18032045717592604,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.819679542824074,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.416666666666668,
+      "gameTime": 496.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.17215899348422126,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8278410065157787,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.458333333333332,
+      "gameTime": 496.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.1641341681670132,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8358658318329868,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.5,
+      "gameTime": 496.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.15625,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.84375,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.541666666666668,
+      "gameTime": 496.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.14851050775891272,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8514894922410873,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.583333333333332,
+      "gameTime": 496.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.14091971021948213,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8590802897805179,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.625,
+      "gameTime": 496.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.13348162615740744,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8665183738425926,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.666666666666668,
+      "gameTime": 496.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.12620027434841918,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8737997256515808,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.708333333333332,
+      "gameTime": 496.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.11907967356824734,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8809203264317527,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.75,
+      "gameTime": 496.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.11212384259259267,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8878761574074073,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.791666666666668,
+      "gameTime": 496.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.10533680019718483,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.8946631998028152,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.833333333333332,
+      "gameTime": 496.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.09872256515775335,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9012774348422466,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.875,
+      "gameTime": 496.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.09228515625,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.90771484375,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.916666666666668,
+      "gameTime": 496.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0860285922496542,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9139714077503458,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 18.958333333333332,
+      "gameTime": 496.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.07995689193244437,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9200431080675556,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19,
+      "gameTime": 497,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.07407407407407396,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.925925925925926,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.041666666666668,
+      "gameTime": 497.0416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.06838415745027182,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9316158425497282,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.083333333333332,
+      "gameTime": 497.0833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.06289116083676516,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9371088391632348,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.125,
+      "gameTime": 497.125,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.05759910300925919,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9424008969907408,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.166666666666668,
+      "gameTime": 497.1666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.05251200274348189,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9474879972565181,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.208333333333332,
+      "gameTime": 497.2083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0476338788151599,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9523661211848401,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.25,
+      "gameTime": 497.25,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.04296875,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.95703125,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.291666666666668,
+      "gameTime": 497.2916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.03852063507372916,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9614793649262708,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.333333333333332,
+      "gameTime": 497.3333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.034293552812073136,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9657064471879269,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.375,
+      "gameTime": 497.375,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0302915219907407,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9697084780092593,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.416666666666668,
+      "gameTime": 497.4166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.02651856138545783,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9734814386145422,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.458333333333332,
+      "gameTime": 497.4583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.02297868977194939,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9770213102280506,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.5,
+      "gameTime": 497.5,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.01967592592592593,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9803240740740741,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.541666666666668,
+      "gameTime": 497.5416666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.01661428862311254,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9833857113768875,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.583333333333332,
+      "gameTime": 497.5833333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.013797796639233084,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9862022033607669,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.625,
+      "gameTime": 497.625,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.01123046875,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.98876953125,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.666666666666668,
+      "gameTime": 497.6666666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.008916323731137488,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9910836762688625,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.708333333333332,
+      "gameTime": 497.7083333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0068593803583685276,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9931406196416315,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.75,
+      "gameTime": 497.75,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.005063657407407329,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9949363425925927,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.791666666666668,
+      "gameTime": 497.7916666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0035331736539774283,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9964668263460226,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.833333333333332,
+      "gameTime": 497.8333333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0022719478738002508,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9977280521261997,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.875,
+      "gameTime": 497.875,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0012839988425925597,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9987160011574074,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.916666666666668,
+      "gameTime": 497.9166666666667,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0005733453360765584,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9994266546639234,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 19.958333333333332,
+      "gameTime": 497.9583333333333,
+      "beds": [
+        {
+          "name": "space",
+          "weight": 0.0001440061299726736,
+          "origin": 482
+        },
+        {
+          "name": "heaven",
+          "weight": 0.9998559938700273,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20,
+      "gameTime": 498,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.041666666666668,
+      "gameTime": 498.0416666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.083333333333332,
+      "gameTime": 498.0833333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.125,
+      "gameTime": 498.125,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.166666666666668,
+      "gameTime": 498.1666666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.208333333333332,
+      "gameTime": 498.2083333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.25,
+      "gameTime": 498.25,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.291666666666668,
+      "gameTime": 498.2916666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.333333333333332,
+      "gameTime": 498.3333333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.375,
+      "gameTime": 498.375,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.416666666666668,
+      "gameTime": 498.4166666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.458333333333332,
+      "gameTime": 498.4583333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.5,
+      "gameTime": 498.5,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.541666666666668,
+      "gameTime": 498.5416666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.583333333333332,
+      "gameTime": 498.5833333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.625,
+      "gameTime": 498.625,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.666666666666668,
+      "gameTime": 498.6666666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.708333333333332,
+      "gameTime": 498.7083333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.75,
+      "gameTime": 498.75,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.791666666666668,
+      "gameTime": 498.7916666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.833333333333332,
+      "gameTime": 498.8333333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.875,
+      "gameTime": 498.875,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.916666666666668,
+      "gameTime": 498.9166666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 20.958333333333332,
+      "gameTime": 498.9583333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21,
+      "gameTime": 499,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.041666666666668,
+      "gameTime": 499.0416666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.083333333333332,
+      "gameTime": 499.0833333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.125,
+      "gameTime": 499.125,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.166666666666668,
+      "gameTime": 499.1666666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.208333333333332,
+      "gameTime": 499.2083333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.25,
+      "gameTime": 499.25,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.291666666666668,
+      "gameTime": 499.2916666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.333333333333332,
+      "gameTime": 499.3333333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.375,
+      "gameTime": 499.375,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.416666666666668,
+      "gameTime": 499.4166666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.458333333333332,
+      "gameTime": 499.4583333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.5,
+      "gameTime": 499.5,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.541666666666668,
+      "gameTime": 499.5416666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.583333333333332,
+      "gameTime": 499.5833333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.625,
+      "gameTime": 499.625,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.666666666666668,
+      "gameTime": 499.6666666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.708333333333332,
+      "gameTime": 499.7083333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.75,
+      "gameTime": 499.75,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.791666666666668,
+      "gameTime": 499.7916666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.833333333333332,
+      "gameTime": 499.8333333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.875,
+      "gameTime": 499.875,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.916666666666668,
+      "gameTime": 499.9166666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 21.958333333333332,
+      "gameTime": 499.9583333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22,
+      "gameTime": 500,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.041666666666668,
+      "gameTime": 500.0416666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.083333333333332,
+      "gameTime": 500.0833333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.125,
+      "gameTime": 500.125,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.166666666666668,
+      "gameTime": 500.1666666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.208333333333332,
+      "gameTime": 500.2083333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.25,
+      "gameTime": 500.25,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.291666666666668,
+      "gameTime": 500.2916666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.333333333333332,
+      "gameTime": 500.3333333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.375,
+      "gameTime": 500.375,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.416666666666668,
+      "gameTime": 500.4166666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.458333333333332,
+      "gameTime": 500.4583333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.5,
+      "gameTime": 500.5,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.541666666666668,
+      "gameTime": 500.5416666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.583333333333332,
+      "gameTime": 500.5833333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.625,
+      "gameTime": 500.625,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.666666666666668,
+      "gameTime": 500.6666666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.708333333333332,
+      "gameTime": 500.7083333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.75,
+      "gameTime": 500.75,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.791666666666668,
+      "gameTime": 500.7916666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.833333333333332,
+      "gameTime": 500.8333333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.875,
+      "gameTime": 500.875,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.916666666666668,
+      "gameTime": 500.9166666666667,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    },
+    {
+      "time": 22.958333333333332,
+      "gameTime": 500.9583333333333,
+      "beds": [
+        {
+          "name": "heaven",
+          "weight": 1,
+          "origin": 492
+        }
+      ]
+    }
+  ]
+}

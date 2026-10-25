@@ -13,6 +13,7 @@ from AppKit import (
     NSWindowCollectionBehaviorStationary, NSWindowStyleMaskBorderless, NSWindowStyleMaskNonactivatingPanel,
     NSWindowStyleMaskTitled, NSPopUpButton, NSTabView, NSTabViewItem, NSOpenPanel, NSSavePanel,
     NSModalResponseOK, NSAppearance, NSAppearanceNameDarkAqua, NSGraphicsContext,
+    NSStatusBar, NSVariableStatusItemLength,
 )
 from Foundation import NSObject, NSTimer, NSString
 from settings import Settings, KINDS, PRESETS, DISPLAY_NAMES, preset, import_document, export_document
@@ -127,9 +128,12 @@ class OverlayView(NSView):
         message=state.get('message','Starting')
         if target and not state.get('error'):
             message='%s · HP %.0f · %.1f u'%(target.get('label',target['kind']),target.get('health',0),target.get('distance',0))
+        survival=state.get('survival') or {}
+        if survival.get('active'):message=survival.get('reason','Avoiding danger')
+        if (state.get('godmode') or {}).get('active'):message='GODMODE · '+message
         if time.monotonic()<owner.notice_until and not state.get('error'):message=owner.notice
         text(str(message)[:65 if not settings.hud_compact else 49],x+12,y+30,11)
-        text('F7 settings  F8 aim  F4 ESP  F3 HUD  F10 quit',x+12,y+53,10,ink('#A4B5C3'))
+        text('= settings  F8 aim  F4 ESP  F3 HUD  F10 quit',x+12,y+53,10,ink('#A4B5C3'))
         if not settings.hud_compact:
             text('%s targets · %.2f ms · %s aim updates'%(state.get('targets',0),state.get('averageMs',0),state.get('aimApplications',0)),x+12,y+80,11)
 
@@ -176,21 +180,27 @@ class Controller(NSObject):
         self.hotkeys=NativeHotkeys(engine)
         self.global_monitor=self.local_monitor=None
         if not self.hotkeys.tap:
-            engine.hotkey_warning='Enable Accessibility for the launcher to reserve trainer function keys.'
+            engine.hotkey_warning='Global shortcuts unavailable. Press = in the managed game window or click ABYSS = in the menu bar.'
             mask=NSEventMaskKeyDown|NSEventMaskKeyUp
-            self.global_monitor=NSEvent.addGlobalMonitorForEventsMatchingMask_handler_(mask,self.handleKey)
+            self.global_monitor=NSEvent.addGlobalMonitorForEventsMatchingMask_handler_(mask,self.handleGlobalKey)
             self.local_monitor=NSEvent.addLocalMonitorForEventsMatchingMask_handler_(mask,self.handleLocalKey)
         self.buildMenu()
+        self.status_item=NSStatusBar.systemStatusBar().statusItemWithLength_(NSVariableStatusItemLength)
+        self.status_item.button().setTitle_('ABYSS =')
+        self.status_item.button().setToolTip_('Open or close trainer settings')
+        self.status_item.button().setTarget_(self)
+        self.status_item.button().setAction_('toggleSettings:')
         self.timer=NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(1/30,self,'tick:',None,True)
         engine.thread.start()
         if engine.config_warning:self.say(engine.config_warning)
         elif engine.hotkey_warning:self.say(engine.hotkey_warning)
-        print('Native memory overlay ready · F7 settings · F8 aim · F4 ESP',flush=True)
+        print('Native memory overlay ready · = settings · F8 aim · F4 ESP',flush=True)
 
     @objc.python_method
     def handleKey(self,event):
         if event.type()!=NSEventTypeKeyDown or event.isARepeat():return
-        self.key(event.keyCode())
+        if event.characters()=='=':self.engine.commands.put('menu')
+        else:self.key(event.keyCode())
 
     @objc.python_method
     def key(self,code):
@@ -204,9 +214,15 @@ class Controller(NSObject):
                 if hasattr(self,'profile_popup'):self.profile_popup.selectItemWithTitle_('Custom')
             elif code==97:self.engine.commands.put('preset')
             else:
-                command={98:'menu',109:'quit'}.get(code)
+                command={109:'quit'}.get(code)
                 if command:self.engine.commands.put(command)
         except (ValueError,OSError) as error:self.say(error)
+
+    @objc.python_method
+    def handleGlobalKey(self,event):
+        # Without an event tap Chrome also sees the key; its bridge owns '=' so
+        # the global observer must not toggle a second time and close the menu.
+        if event.characters()!='=':self.handleKey(event)
 
     @objc.python_method
     def handleLocalKey(self,event):self.handleKey(event);return event
@@ -216,7 +232,7 @@ class Controller(NSObject):
         screen=NSScreen.mainScreen().visibleFrame();width,height=660,660
         frame=((screen.origin.x+max(10,(screen.size.width-width)/2),screen.origin.y+max(10,(screen.size.height-height)/2)),(width,height))
         self.menu=NSPanel.alloc().initWithContentRect_styleMask_backing_defer_(frame,NSWindowStyleMaskTitled|NSWindowStyleMaskNonactivatingPanel,NSBackingStoreBuffered,False)
-        self.menu.setTitle_('ABYSS / Trainer settings · F7 close');self.menu.setLevel_(NSScreenSaverWindowLevel+1)
+        self.menu.setTitle_('ABYSS / Trainer settings · = close');self.menu.setLevel_(NSScreenSaverWindowLevel+1)
         self.menu.setCollectionBehavior_(NSWindowCollectionBehaviorCanJoinAllSpaces|NSWindowCollectionBehaviorFullScreenAuxiliary)
         self.menu.setHidesOnDeactivate_(False);self.menu.setReleasedWhenClosed_(False)
         self.menu.setAppearance_(NSAppearance.appearanceNamed_(NSAppearanceNameDarkAqua))
@@ -227,7 +243,7 @@ class Controller(NSObject):
         self.button(content,'Load preset','loadPreset:',545,616,95)
         tabs=NSTabView.alloc().initWithFrame_(((16,90),(628,510)));content.addSubview_(tabs)
         pages={}
-        for name in ('Aim','ESP','Targets','Connection'):
+        for name in ('Aim','Survival','ESP','Targets','Connection'):
             item=NSTabViewItem.alloc().initWithIdentifier_(name);item.setLabel_(name)
             view=NSView.alloc().initWithFrame_(((0,0),(600,460)));item.setView_(view);tabs.addTabViewItem_(item);pages[name]=view
         aim=pages['Aim']
@@ -243,6 +259,15 @@ class Controller(NSObject):
         self.number(aim,'lead_limit','Maximum prediction · seconds',98)
         self.label(aim,'Aim activates only when you fire. No modifier key. No automatic firing.',16,48,570,11)
         self.label(aim,'Blocked crystals yield to enemies. Nearest distance ignores lock preference and hold time.',16,28,570,10)
+        survival=pages['Survival']
+        self.check(survival,'godmode',"Godmode · cannot die (collisions and falls)",420)
+        self.check(survival,'emergency_targeting','Emergency targets override towers and target locking',376)
+        self.check(survival,'auto_dodge','Automatically dodge predicted enemy collisions',332)
+        self.check(survival,'edge_guard','Steer away from unsafe arena edges',288)
+        self.number(survival,'dodge_horizon','Look ahead · seconds (0.2–1.5)',236)
+        self.label(survival,'Movement changes only when the current route predicts danger.',16,192,570,12)
+        self.label(survival,'F8 disables aim and movement. Opening settings suspends both.',16,160,570,11)
+        self.label(survival,'Godmode stays on with F8 off and settings open. Turn it off here.',16,128,570,11)
         esp=pages['ESP']
         for i,(key,title) in enumerate([('esp_enabled','Enable ESP'),('esp_boxes','Target boxes'),('esp_labels','Enemy / crystal labels'),
             ('esp_health','Health bars'),('esp_distance','Distance'),('esp_lines','Selected target tracer'),('esp_prediction','Predicted intercept marker'),
@@ -269,7 +294,7 @@ class Controller(NSObject):
         self.connection_status=self.label(conn,'',16,228,570,12,height=74)
         self.button(conn,'Reconnect memory','reconnect:',16,174,170)
         self.label(conn,'Reconnect reattaches to the current session when the browser is still open.',16,142,570,11)
-        self.label(conn,'F8 aim · F9 off · F6 next preset · F7 settings · F10 quit',16,64,570,12)
+        self.label(conn,'F8 aim · F9 off · F6 next preset · = settings · F10 quit',16,64,570,12)
         self.label(conn,'Profiles and exported settings are stored locally. Game source files are untouched.',16,34,570,11)
         self.form_notice=self.label(content,'',20,66,620,11)
         for title,action,x,w in [('Apply','apply:',20,110),('Defaults','defaults:',140,92),('Import…','importSettings:',244,90),('Export…','exportSettings:',346,90),('Close','closeMenu:',540,100)]:self.button(content,title,action,x,20,w)
@@ -366,6 +391,8 @@ class Controller(NSObject):
             Path(panel.URL().path()).write_text(json.dumps(data,indent=2));self.form_notice.setStringValue_('Settings exported')
         except OSError as error:self.form_notice.setStringValue_(str(error))
 
+    def toggleSettings_(self,sender):self.engine.commands.put('menu')
+
     def closeMenu_(self,sender):self.menu.orderOut_(None);self.engine.suspended=False
 
     def quit_(self,sender):
@@ -382,7 +409,10 @@ class Controller(NSObject):
             if command.startswith('key:'):self.key(int(command.split(':',1)[1]))
             elif command=='menu':
                 if self.menu.isVisible():self.closeMenu_(None)
-                else:self.engine.suspended=True;self.fill(self.engine.settings);self.menu.makeKeyAndOrderFront_(None)
+                else:
+                    self.engine.suspended=True;self.fill(self.engine.settings)
+                    NSApplication.sharedApplication().activateIgnoringOtherApps_(True)
+                    self.menu.makeKeyAndOrderFront_(None);self.menu.orderFrontRegardless()
             elif command=='preset':
                 try:
                     names=list(PRESETS);name=names[(names.index(self.engine.settings.profile)+1)%len(names)] if self.engine.settings.profile in names else names[0]
@@ -406,4 +436,5 @@ def run(engine,quit_after=0):
         engine.stop();controller.timer.invalidate();controller.hotkeys.close()
         if controller.global_monitor:NSEvent.removeMonitor_(controller.global_monitor)
         if controller.local_monitor:NSEvent.removeMonitor_(controller.local_monitor)
+        NSStatusBar.systemStatusBar().removeStatusItem_(controller.status_item)
         controller.panel.orderOut_(None);controller.menu.orderOut_(None)

@@ -15,6 +15,30 @@ class SettingsTests(unittest.TestCase):
         for name in ('Precision','Smooth','Minimal'):
             self.assertEqual(preset(name).selection,'nearest')
 
+    def test_saved_old_game_address_moves_to_new_deployment(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            file=Path(tmp)/'settings.json'
+            file.write_text(json.dumps(dict(game_url='https://devil-green.vercel.app/',fov=90)))
+            engine=app.Engine(config_root=tmp)
+            self.assertEqual(engine.settings.game_url,'https://devilsdescent.vercel.app')
+            self.assertEqual(engine.settings.fov,90)
+            engine.update(dict(esp_enabled=False))
+            self.assertEqual(json.loads(file.read_text())['game_url'],'https://devilsdescent.vercel.app')
+        self.assertEqual(Settings.validated(dict(game_url='http://localhost:5173')).game_url,'http://localhost:5173')
+
+    def test_survival_settings_defaults_ranges_and_saved_toggles(self):
+        value=Settings()
+        self.assertFalse(value.godmode)
+        custom_god=Settings.validated(dict(godmode=True))
+        self.assertTrue(import_document(export_document(custom_god)).godmode)
+        with self.assertRaises(ValueError):Settings.validated(dict(godmode="true"))
+        self.assertTrue(value.emergency_targeting and value.auto_dodge and value.edge_guard)
+        self.assertEqual(value.dodge_horizon,.75)
+        for invalid in (0,1.6,float('nan'),True):
+            with self.assertRaises(ValueError):Settings.validated(dict(dodge_horizon=invalid))
+        custom=Settings.validated(dict(auto_dodge=False,edge_guard=False,emergency_targeting=False,dodge_horizon=.5))
+        self.assertEqual(import_document(export_document(custom)),custom)
+
     def test_invalid_settings(self):
         for values in [dict(game_url='file:///tmp/game'),dict(game_url='invalid'),dict(prediction='yes'),dict(unknown=1)]:
             with self.subTest(values=values),self.assertRaises((ValueError,TypeError)):
@@ -25,7 +49,7 @@ class SettingsTests(unittest.TestCase):
             (Path(tmp)/'settings.json').write_text(json.dumps(dict(colors='#ff0000',width=500,auto_fire=True)))
             engine=app.Engine()
             self.assertTrue(engine.armed)
-            self.assertEqual(engine.settings.game_url,'https://devil-green.vercel.app')
+            self.assertEqual(engine.settings.game_url,'https://devilsdescent.vercel.app')
             engine.update(dict(prediction=False))
             saved=json.loads((Path(tmp)/'settings.json').read_text())
             self.assertEqual(set(saved),set(asdict(Settings())))
@@ -86,15 +110,32 @@ class NativeHotkeyTests(unittest.TestCase):
             def type(self):return NSEventTypeKeyDown
             def isARepeat(self):return self.repeat
             def keyCode(self):return self.code
+            def characters(self):return '=' if self.code==44 else ''
         controller.handleKey(Event(100));self.assertFalse(engine.armed)
         controller.handleKey(Event(100,repeat=True));self.assertFalse(engine.armed)
         controller.handleKey(Event(100));self.assertTrue(engine.armed)
         controller.handleKey(Event(101));self.assertFalse(engine.armed)
         controller.handleKey(Event(118));self.assertFalse(engine.settings.esp_enabled)
         controller.handleKey(Event(99));self.assertFalse(engine.settings.hud_enabled)
-        for code,command in [(98,'menu'),(109,'quit')]:
+        for code,command in [(44,'menu'),(109,'quit')]:
             controller.handleKey(Event(code));self.assertEqual(engine.commands.get_nowait(),command)
         controller.handleKey(Event(97));self.assertEqual(engine.commands.get_nowait(),'preset')
+
+    def test_permission_fallback_does_not_toggle_settings_twice(self):
+        from overlay import Controller,NSEventTypeKeyDown
+        engine=app.Engine(demo=True)
+        controller=Controller.alloc().init();controller.engine=engine
+        class Event:
+            def type(self):return NSEventTypeKeyDown
+            def isARepeat(self):return False
+            def keyCode(self):return 44
+            def characters(self):return '='
+        event=Event()
+        controller.handleGlobalKey(event)
+        self.assertTrue(engine.commands.empty(),'Browser binding owns settings outside the trainer')
+        self.assertIs(controller.handleLocalKey(event),event)
+        self.assertEqual(engine.commands.get_nowait(),'menu')
+        self.assertTrue(engine.commands.empty())
 
     def test_multiple_monitor_coordinates(self):
         from overlay import Controller

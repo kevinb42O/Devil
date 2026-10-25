@@ -1,3 +1,4 @@
+import {environmentClock} from './descent';
 import * as THREE from 'three';
 import {ARENA_DIMENSION,ARENA_TILES,TILE_SIZE,tileHeight} from './arena';
 import {rainAt} from './rain-state';
@@ -160,7 +161,7 @@ export class StormRain {
   const state=rainAt(time),rain=enabled?state.rain:0,wet=enabled?state.wetness:0;
   this.uniforms.rainAmount.value=rain;this.uniforms.rainWetness.value=wet;
   this.group.visible=rain>.001;
-  this.uniforms.rainClock.value=(this.reduced?.35:1)*Math.max(0,time-51);
+  this.uniforms.rainClock.value=(this.reduced?.35:1)*Math.max(0,environmentClock(time)-51);
   this.uniforms.rainCamera.value.copy(camera.position);this.uniforms.rainRight.value.setFromMatrixColumn(camera.matrixWorld,0);
   this.streaks.visible=!this.reduced;
   if(rain>.001&&Math.floor(time*4)!==this.floorTick)this.updateHeights(time);

@@ -1,7 +1,7 @@
 """Reserve trainer keys before Chrome handles them; callbacks stay on the main loop."""
 import os
 
-CODES={99,118,97,98,100,101,109}  # F3/F4/F6/F7/F8/F9/F10
+CODES={99,118,97,100,101,109}  # F3/F4/F6/F8/F9/F10; settings uses the typed character
 
 
 class NativeHotkeys:
@@ -24,16 +24,19 @@ class NativeHotkeys:
             if event_type in (q.kCGEventTapDisabledByTimeout,q.kCGEventTapDisabledByUserInput):
                 q.CGEventTapEnable(self.tap,True);return event
             code=q.CGEventGetIntegerValueField(event,q.kCGKeyboardEventKeycode)
-            if code not in CODES:return event
             if event_type==q.kCGEventKeyUp:
                 if code in self.captured:self.captured.discard(code);return None
                 return event
+            _,characters=q.CGEventKeyboardGetUnicodeString(event,8,None,None)
+            settings_key=characters=='='
+            if code not in CODES and not settings_key:return event
             app=self.workspace.frontmostApplication();pid=app.processIdentifier() if app else 0
             managed=pid in (os.getpid(),self.engine.browser_pid)
-            if not managed and code not in (98,109):return event
+            if not managed and not settings_key and code!=109:return event
             self.captured.add(code)
             if not q.CGEventGetIntegerValueField(event,q.kCGKeyboardEventAutorepeat):
-                if code==100:self.engine.armed=not self.engine.armed
+                if settings_key:self.engine.commands.put('menu')
+                elif code==100:self.engine.armed=not self.engine.armed
                 elif code==101:self.engine.armed=False
                 else:self.engine.commands.put('key:'+str(code))
             return None

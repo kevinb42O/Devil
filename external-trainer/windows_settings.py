@@ -45,10 +45,10 @@ class SettingsForm:
         self.profile_picker=ttk.Combobox(header,textvariable=self.profile,values=['Custom',*PRESETS,*self.library.names()],state='readonly',width=18)
         self.profile_picker.pack(side='right',padx=8)
         self.profile_picker.bind('<<ComboboxSelected>>',lambda event:self.load_preset())
-        ttk.Label(frame,text='Changes save automatically  ·  F7 saves and closes  ·  Save as… creates your named preset',style='Muted.TLabel').pack(anchor='w',pady=(0,16))
+        ttk.Label(frame,text='Changes save automatically  ·  = saves and closes  ·  Save as… creates your named preset',style='Muted.TLabel').pack(anchor='w',pady=(0,16))
         self.tabs=ttk.Notebook(frame);self.tabs.pack(fill='both',expand=True)
         pages={};self.scroll_pages={}
-        for name in ('Aim','ESP','Targets','Connection'):
+        for name in ('Aim','Survival','ESP','Targets','Connection'):
             page=ScrollablePage(self.tabs);self.tabs.add(page,text=name);pages[name]=page.content
             self.scroll_pages[str(page)]=page
         window.bind('<MouseWheel>',self.scroll)
@@ -64,6 +64,11 @@ class SettingsForm:
         self.check(selection,'tower_priority','Prioritize hittable tower crystals')
         for key,label in [('switch_bias','Lock preference'),('lock_ms','Target hold / milliseconds'),('lead_limit','Prediction horizon / seconds')]:self.entry(selection,key,label)
         ttk.Label(aim,text='ACTIVE WHEN FIRING   /   Nearest selection ignores lock preference and target hold.',style='Muted.TLabel',wraplength=670).grid(column=0,row=2,columnspan=2,sticky='w',pady=16)
+        survival=pages['Survival'];self.heading(survival,'SURVIVAL ASSIST','Normal movement. Earlier reactions to danger.')
+        protection=self.card(survival,'PROTECTION',0,1);protection.grid_configure(columnspan=2,padx=0)
+        for key,label in [('emergency_targeting','Emergency enemies override towers and target locks'),('auto_dodge','Automatically dodge predicted collisions'),('edge_guard','Steer away from unsafe arena edges')]:self.check(protection,key,label)
+        self.entry(protection,'dodge_horizon','Look ahead / seconds (0.2–1.5)')
+        ttk.Label(survival,text='Intervenes only when your route predicts danger. F8 disables aim and movement assists. Settings suspend both. Escape is not guaranteed.',style='Muted.TLabel',wraplength=670).grid(column=0,row=2,columnspan=2,sticky='w',pady=16)
         esp=pages['ESP'];self.heading(esp,'02 / VISUAL INTELLIGENCE','Only the information you want. Exactly where you want it.')
         left=self.card(esp,'VISIBLE LAYERS',0,1);right=self.card(esp,'APPEARANCE',1,1)
         for key,label in [('esp_enabled','Enable ESP'),('esp_boxes','Target boxes'),('esp_labels','Enemy / crystal labels'),('esp_health','Health bars'),('esp_distance','Distance'),('esp_lines','Selected target tracer'),('esp_prediction','Predicted intercept marker'),('esp_arrows','Off-screen indicators'),('esp_fov','Draw aim cone')]:self.check(left,key,label)
@@ -96,7 +101,7 @@ class SettingsForm:
             button=ttk.Button(actions,text=label,command=command,width=7,style='Accent.TButton' if label=='Apply' else 'TButton')
             button.pack(side='left',padx=(0,8));self.buttons[label]=button
         ttk.Button(actions,text='Close',command=close,width=7).pack(side='right')
-        self.fill(engine.settings);self.refresh_status();self.notice.set(self.library.warning or 'Settings loaded. Valid edits save automatically; F7 saves and returns to the game.')
+        self.fill(engine.settings);self.refresh_status();self.notice.set(self.library.warning or 'Settings loaded. Valid edits save automatically; = saves and returns to the game.')
 
     def heading(self,parent,title,subtitle):
         parent.columnconfigure(0,weight=1);parent.columnconfigure(1,weight=1)
@@ -186,7 +191,7 @@ class SettingsForm:
 
     def move_slider(self,key,value):
         low,high=NUMERIC_RANGES[key]
-        step={'esp_opacity':.01,'esp_scale':.01,'lead_limit':.01,'switch_bias':.1,'lock_ms':10,'smooth_speed':10}.get(key,1)
+        step={'dodge_horizon':.05,'esp_opacity':.01,'esp_scale':.01,'lead_limit':.01,'switch_bias':.1,'lock_ms':10,'smooth_speed':10}.get(key,1)
         number=max(low,min(high,low+round((float(value)-low)/step)*step))
         self.fields[key].set(f'{number:.2f}'.rstrip('0').rstrip('.') if step<1 else str(round(number)))
 
@@ -249,7 +254,7 @@ class SettingsForm:
             # Do not refill the fields here: autosave must not move the cursor or
             # replace partially selected text while the user continues typing.
             self.profile.set(settings.profile);self.source_profile=settings.profile
-            self.notice.set(f'Saved: {settings.profile} / {settings.aim_mode} / FOV {settings.fov:g}°. F7 returns to game.')
+            self.notice.set(f'Saved: {settings.profile} / {settings.aim_mode} / FOV {settings.fov:g}°. = returns to game.')
             return True
         except (ValueError,TypeError,OSError) as error:
             self.notice.set('Could not save: '+str(error));return False
