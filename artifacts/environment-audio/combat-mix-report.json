@@ -1,0 +1,90 @@
+[
+  {
+    "name": "space",
+    "tier": 2,
+    "environmentRms": 0.015648061628767522,
+    "effectsRms": 0.08164178442101243,
+    "relativeDb": -14.349038810257495,
+    "peak": 0.39686331152915955
+  },
+  {
+    "name": "ash",
+    "tier": 2,
+    "environmentRms": 0.012924723352410844,
+    "effectsRms": 0.086543689319719,
+    "relativeDb": -16.51628298088195,
+    "peak": 0.38112521171569824
+  },
+  {
+    "name": "storm",
+    "tier": 2,
+    "environmentRms": 0.00782367270719369,
+    "effectsRms": 0.08908134998478007,
+    "relativeDb": -21.12752231799327,
+    "peak": 0.39489004015922546
+  },
+  {
+    "name": "veil",
+    "tier": 2,
+    "environmentRms": 0.017485537957192477,
+    "effectsRms": 0.07833743593722343,
+    "relativeDb": -13.025807085346042,
+    "peak": 0.37939319014549255
+  },
+  {
+    "name": "furnace",
+    "tier": 2,
+    "environmentRms": 0.0161104607436298,
+    "effectsRms": 0.07195501501467372,
+    "relativeDb": -12.999062142896868,
+    "peak": 0.43605509400367737
+  },
+  {
+    "name": "cathedral",
+    "tier": 2,
+    "environmentRms": 0.011247375993134126,
+    "effectsRms": 0.08323612558835891,
+    "relativeDb": -17.385212864203634,
+    "peak": 0.3865489959716797
+  },
+  {
+    "name": "depth",
+    "tier": 2,
+    "environmentRms": 0.015682533203803677,
+    "effectsRms": 0.0854812511234639,
+    "relativeDb": -14.729093085086276,
+    "peak": 0.4119652807712555
+  },
+  {
+    "name": "heaven",
+    "tier": 2,
+    "environmentRms": 0.011476379287601,
+    "effectsRms": 0.08667315533435836,
+    "relativeDb": -17.561594286880315,
+    "peak": 0.3968925476074219
+  },
+  {
+    "name": "storm",
+    "tier": 1,
+    "environmentRms": 0.007886699284139553,
+    "effectsRms": 0.040719076606757956,
+    "relativeDb": -14.258052783200586,
+    "peak": 0.27721405029296875
+  },
+  {
+    "name": "storm",
+    "tier": 3,
+    "environmentRms": 0.007986614260136315,
+    "effectsRms": 0.04572713662239307,
+    "relativeDb": -15.156225959704226,
+    "peak": 0.244206041097641
+  },
+  {
+    "name": "storm",
+    "tier": 4,
+    "environmentRms": 0.009461061607478711,
+    "effectsRms": 0.07112306300425696,
+    "relativeDb": -17.52141162642435,
+    "peak": 0.30147796869277954
+  }
+]

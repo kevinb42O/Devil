@@ -1,6 +1,7 @@
 import {AscentAudio} from './ascent-audio';
 import {ascentAt,createAscentState} from './ascent-state';
 import {HeavenAudio} from './heaven-audio';
+import {ENVIRONMENT_BED_GAIN} from './audio-mix';
 import {COSMIC_INTRO_DURATION,DESCENT_CHAPTERS,descentAt,ENVIRONMENT_CYCLE,environmentClock} from './descent';
 import manifest from './environment-audio-manifest.json';
 
@@ -64,7 +65,7 @@ export class EnvironmentAudio {
   const next=[{name:'ash' as EnvironmentBed,start:21},...DESCENT_CHAPTERS.slice(1).map((c,i)=>({name:ENVIRONMENT_BEDS[i+2],start:COSMIC_INTRO_DURATION+c.time-18}))].find(b=>b.start>phase);
   if(next&&next.start-phase<12)this.bed(next.name);
   for(const [name,b] of this.beds){
-   const layer=wanted.get(name);b.target=layer?Math.sqrt(layer.weight)*manifest[name].gain*bedGain:0;
+   const layer=wanted.get(name);b.target=layer?Math.sqrt(layer.weight)*manifest[name].gain*bedGain*ENVIRONMENT_BED_GAIN:0;
    if(!layer){for(const s of b.streams){s.gain.gain.setTargetAtTime(0,this.context.currentTime,.08);if(s.gain.gain.value<.001){s.gain.gain.value=0;s.audio.pause();}}continue;}
    if(jumped){for(const s of b.streams){s.audio.pause();s.gain.gain.value=0;}b.current=0;}
    if(b.streams[b.current].audio.ended){

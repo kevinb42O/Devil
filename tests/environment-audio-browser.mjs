@@ -48,7 +48,7 @@ try{
   await page.evaluate(()=>window.advance=.1);
   await page.waitForFunction(({start,end,incoming})=>time>(start+end)/2&&bedRms(incoming)>.001,{start,end,incoming});
   const middle=await page.evaluate(({outgoing,incoming})=>({time,peak:peak(),outgoingRms:bedRms(outgoing),incomingRms:bedRms(incoming)}),{outgoing,incoming});
-  assert.ok(middle.peak<.065,'ambience stays below the lowered mix ceiling');
+  assert.ok(middle.peak<.21,'restored ambience retains headroom through crossfades');
   await page.waitForFunction(({end,incoming})=>time>end+1&&bedRms(incoming)>.005,{end,incoming});
   await page.evaluate(()=>window.advance=0);await page.waitForTimeout(650);
   assert.ok(await page.evaluate(name=>ambience.diagnostics.beds.find(b=>b.name===name).streams.every(s=>!s.playing&&s.gain===0),outgoing),'outgoing bed stops after handover');

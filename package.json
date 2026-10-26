@@ -28,7 +28,7 @@
     "test:performance": "node tests/tower-performance-browser.mjs",
     "test:optimization": "node tests/optimization-comparison-browser.mjs",
     "profile:rendering": "node tests/optimization-browser.mjs baseline",
-    "test:audio": "tsx --test tests/original-mix.test.ts tests/audio-routing.test.ts tests/original-audio.test.ts tests/footstep-audio.test.ts && node tests/audio-routing-browser.mjs",
+    "test:audio": "tsx --test tests/original-mix.test.ts tests/audio-routing.test.ts tests/original-audio.test.ts tests/footstep-audio.test.ts tests/environment-audio.test.ts && node tests/audio-routing-browser.mjs && node tests/environment-combat-audio-browser.mjs",
     "test:music": "node tests/music-startup-browser.mjs && node tests/music-browser.mjs",
     "test:shotgun": "tsx --test tests/shotgun.test.ts && node tests/shotgun-browser.mjs",
     "test:projectiles": "node tests/projectile-browser.mjs",
@@ -93,7 +93,7 @@
     "test:basketball": "tsx --test tests/courtyard-basketball.test.ts && node tests/courtyard-basketball-browser.mjs && node tests/basketball-polish-browser.mjs",
     "test:football-feedback": "node tests/football-feedback-browser.mjs",
     "test:remake-audio": "npm run test:original-audio",
-    "test:original-audio": "tsx --test tests/original-audio.test.ts tests/original-mix.test.ts tests/audio-routing.test.ts tests/audio.test.ts tests/footstep-audio.test.ts tests/spatial-audio.test.ts tests/enemy-audio.test.ts && tsx tools/audit-original-audio.ts && node tests/audio-routing-browser.mjs && node tests/original-audio-browser.mjs",
+    "test:original-audio": "tsx --test tests/original-audio.test.ts tests/original-mix.test.ts tests/audio-routing.test.ts tests/audio.test.ts tests/footstep-audio.test.ts tests/spatial-audio.test.ts tests/enemy-audio.test.ts tests/environment-audio.test.ts && tsx tools/audit-original-audio.ts && node tests/audio-routing-browser.mjs && node tests/original-audio-browser.mjs && node tests/environment-combat-audio-browser.mjs",
     "assets:original-audio": "python3 tools/prepare-original-audio.py && tsx tools/audit-original-audio.ts"
   },
   "dependencies": {
